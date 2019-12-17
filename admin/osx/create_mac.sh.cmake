@@ -23,7 +23,7 @@ identity="$3"
 prjfile=$build_path/admin/osx/macosx.pkgproj
 
 # The name of the installer package
-installer="@APPLICATION_SHORTNAME@-qt@Qt5Core_VERSION@-@MIRALL_VERSION_FULL@@MIRALL_VERSION_SUFFIX@"
+installer="@APPLICATION_SHORTNAME@-@MIRALL_VERSION_FULL@"
 installer_file="$installer.pkg"
 installer_file_tar="$installer.pkg.tar"
 installer_file_tar_bz2="$installer.pkg.tar.bz2"
@@ -35,7 +35,7 @@ installer_file_tbz="$installer.pkg.tbz"
 # The command line tool of the "Packages" tool, see link above.
 pkgbuild=/usr/local/bin/packagesbuild
 
-$pkgbuild -F $install_path $prjfile
+$pkgbuild -F $install_path --build-folder $install_path $prjfile
 rc=$?
 
 if [ $rc == 0 ]; then
@@ -47,13 +47,13 @@ fi
 
 # Sign the finished package if desired.
 if [ ! -z "$identity" ]; then
-	echo "Will try to sign the installer"
-	pushd $install_path
-	productsign --sign "$identity" "$installer_file" "$installer_file.new"
-	mv "$installer_file".new "$installer_file"
-	popd
+  echo "Will try to sign the installer"
+  pushd $install_path
+  productsign --sign "$identity" "$installer_file" "$installer_file.new"
+  mv "$installer_file".new "$installer_file"
+  popd
 else
-	echo "No certificate given, will not sign the pkg"
+  echo "No certificate given, will not sign the pkg"
 fi
 
 # FIXME: OEMs?

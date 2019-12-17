@@ -184,6 +184,8 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
 
     connect(&_quotaInfo, &QuotaInfo::quotaUpdated,
         this, &AccountSettings::slotUpdateQuota);
+
+    setStyleSheet("QToolButton#sslButton {border: none} QToolButton#sslButton::menu-indicator {image: none}");
 }
 
 
@@ -663,18 +665,23 @@ void AccountSettings::showConnectionLabel(const QString &message, QStringList er
     const QString errStyle = QLatin1String("color:#ffffff; background-color:#bb4d4d;padding:5px;"
                                            "border-width: 1px; border-style: solid; border-color: #aaaaaa;"
                                            "border-radius:5px;");
+
+    QString msg;
+
     if (errors.isEmpty()) {
-        ui->connectLabel->setText(message);
+        msg = message;
         ui->connectLabel->setToolTip(QString());
         ui->connectLabel->setStyleSheet(QString());
     } else {
         errors.prepend(message);
-        const QString msg = errors.join(QLatin1String("\n"));
+        QString msg = errors.join(QLatin1String("\n"));
         qCDebug(lcAccountSettings) << msg;
-        ui->connectLabel->setText(msg);
         ui->connectLabel->setToolTip(QString());
         ui->connectLabel->setStyleSheet(errStyle);
     }
+
+    msg.replace("<a ", "<a style=\"color: #489EF3\"");
+    ui->connectLabel->setText(msg);
     ui->accountStatus->setVisible(!message.isEmpty());
 }
 
@@ -958,7 +965,7 @@ void AccountSettings::refreshSelectiveSyncStatus()
             }
             QModelIndex theIndx = _model->indexForPath(folder, myFolder);
             if (theIndx.isValid()) {
-                msg += QString::fromLatin1("<a href=\"%1?folder=%2\">%1</a>")
+                msg += QString::fromLatin1("<a style=\"color: #489EF3\" href=\"%1?folder=%2\">%1</a>")
                            .arg(Utility::escape(myFolder), Utility::escape(folder->alias()));
             } else {
                 msg += myFolder; // no link because we do not know the index yet.

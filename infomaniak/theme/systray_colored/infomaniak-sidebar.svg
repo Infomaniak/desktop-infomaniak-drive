@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>infomaniak-sidebar</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Images-desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="infomaniak-sidebar" fill="#5A605F" fill-rule="nonzero">
+            <path d="M22.2222223,83.3333331 L42.6580922,83.3333331 L42.6580922,69.7767144 L50.1179032,62.4789221 L60.7359771,83.3333331 L83.3333331,83.3333331 L63.4049406,49.5686929 L82.1543406,31.4987634 L57.5919971,31.4987634 L42.6580922,48.643899 L42.6580922,0 L77.7777777,0 C90.0507722,-2.25451251e-15 100,9.94922779 100,22.2222223 L100,77.7777777 C100,90.0507722 90.0507722,100 77.7777777,100 L22.2222223,100 C9.94922779,100 1.50300834e-15,90.0507722 0,77.7777777 L0,22.2222223 C-1.50300834e-15,9.94922779 9.94922779,2.25451251e-15 22.2222223,0 L22.2222223,83.3333331 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</svg>

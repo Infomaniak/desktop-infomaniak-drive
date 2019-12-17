@@ -957,7 +957,7 @@ Dies bedeutet, dass der Synchronisationsclient lokale Änderungen möglicherweis
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>Alle Dateien im Synchronisationsordner &apos;%1&apos; wurden auf dem Server gelöscht.
@@ -3836,6 +3836,32 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Zur Verfügung gestellt durch %1 und lizenziert unter der GNU General Public License (GPL) Version 2.0.&lt;br&gt;%2 und das %2 Logo sind eingetragene Warenzeichen von %1 in den Vereinigten Staaten, anderen Ländern oder beides.&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>Ungültiges Zertifikat gefunden</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation>Der Server &quot;%1&quot; hat ein ungültiges Zertifikat. Fortsetzen?</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>Sie wurden von %1 als Benutzer %2 abgemeldet. Bitte melden Sie sich erneut an</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation>Mit folgendem Benutzer anmelden: %1</translation>
     </message>
 </context>
 <context>

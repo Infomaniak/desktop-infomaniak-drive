@@ -958,7 +958,7 @@ Cela veut dire que le client de synchronisation ne peut pas téléverser les cha
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>Tous les fichiers contenus dans le dossier synchronisé &apos;%1&apos; ont été supprimés du serveur.
@@ -2037,7 +2037,7 @@ Veuillez noter qu’utiliser les options de journalisation en ligne de commande 
         <location filename="../src/gui/updater/ocupdater.cpp" line="109"/>
         <source>A new update for %1 is about to be installed. The updater may ask
 for additional privileges during the process.</source>
-        <translation>Une mise à jour de %1 est sur le point d&apos;être installée. 
+        <translation>Une mise à jour de %1 est sur le point d&apos;être installée.
 L&apos;assistant de mise à jour peut vous demandez des autorisations supplémentaires afin de procéder à l&apos;installation.</translation>
     </message>
     <message>
@@ -3830,6 +3830,32 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Distribué par %1 et sous licence GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 et le logo %2  sont des marques enregistrées de %1 aux Etats-Unis, dans d&apos;autres pays, ou les deux.&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>Certificat invalide</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation>L’hôte &quot;%1&quot; utilise un certificat invalide. Continuer ?</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>Vous avez été déconnecté de %1 en tant qu&apos;utilisateur %2. Veuillez vous reconnecter</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation>Veuillez vous connecter avec l’utilisateur : %1</translation>
     </message>
 </context>
 <context>

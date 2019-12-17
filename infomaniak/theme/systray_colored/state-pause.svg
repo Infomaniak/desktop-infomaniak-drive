@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <title>theme/colored/state-pause</title>
+    <desc>Created with Sketch.</desc>
+    <g id="theme/colored/state-pause" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="alert-circle-copy">
+            <path d="M7.98905098,0.00178769219 C5.85162834,0.0367796752 3.81383458,0.9115224 2.31618346,2.43692107 C0.802084506,3.9443576 -0.0336809866,6.00284825 0.00104022636,8.13911952 C-0.00144305169,10.2256496 0.826647929,12.2273668 2.30248622,13.7023296 C3.77832451,15.1772924 5.78053277,16.0041954 7.867061,16.0004865 L8.00971595,16.0004865 C12.4615051,15.9546715 16.0359871,12.313686 15.9997265,7.86180896 L15.9997265,7.86180896 C16.0046957,5.74941569 15.157391,3.72431954 13.6495881,2.24487349 C12.1417853,0.76542744 10.1009693,-0.0432812307 7.98905098,0.00178769219 Z" id="Shape" fill="#9F9F9F"></path>
+            <rect id="Rectangle" fill="#FFFFFF" fill-rule="nonzero" x="4" y="4" width="3" height="8" rx="0.719999968"></rect>
+            <rect id="Rectangle" fill="#FFFFFF" fill-rule="nonzero" x="9" y="4" width="3" height="8" rx="0.719999968"></rect>
+        </g>
+    </g>
+</svg>

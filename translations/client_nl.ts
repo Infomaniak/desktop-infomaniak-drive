@@ -953,11 +953,11 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>Alle bestanden in de syncmap &apos;%1&apos; werden verwijderd van de server.
-Deze verwijderingen worden gesynchroniseerd naar uw lokale syncmap, waardoor deze bestanden niet meer beschikbaar zijn, tenzij u het recht hebt om ze te herstellen. 
+Deze verwijderingen worden gesynchroniseerd naar uw lokale syncmap, waardoor deze bestanden niet meer beschikbaar zijn, tenzij u het recht hebt om ze te herstellen.
 Als u de bestanden wilt behouden, worden ze opnieuw gesynchroniseerd met de server als u die autorisatie hebt.
 Als u de bestanden wilt verwijderen, worden ze niet beschikbaar, tenzij u de eigenaar bent.</translation>
     </message>
@@ -966,7 +966,7 @@ Als u de bestanden wilt verwijderen, worden ze niet beschikbaar, tenzij u de eig
         <source>All the files in your local sync folder '%1' were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
 Are you sure you want to sync those actions with the server?
 If this was an accident and you decide to keep your files, they will be re-synced from the server.</source>
-        <translation>Alle bestanden in de lokale syncmap &apos;%1&apos; werden verwijderd van de server. Deze verwijderingen worden gesynchroniseerd naar uw server, Weet u zeker dat ik deze acties wilt synchroniseren met de server? 
+        <translation>Alle bestanden in de lokale syncmap &apos;%1&apos; werden verwijderd van de server. Deze verwijderingen worden gesynchroniseerd naar uw server, Weet u zeker dat ik deze acties wilt synchroniseren met de server?
 Als dit een ongelukje was en u de bestanden wilt behouden, worden ze opnieuw gesynchroniseerd met de server.</translation>
     </message>
     <message>
@@ -3824,6 +3824,32 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Gedistribueerd door %1 en gelicenseerd onder de GNU General Public License (GPL) Versie 2.0.&lt;br/&gt;%2 en het %2 logo zijn geregistreerde handelsmerken van %1 in de Verenigde Staten, in andere landen of beide.&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>Ongeldig certificaat gedetecteerd</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation>De server &quot;%1&quot; heeft een ongeldig certificaat . Wilt u doorgaan?</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>Je bent uitgelogd van %1 als gebruiker %2. Log opnieuw in</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation>Login met gebruiker: %1</translation>
     </message>
 </context>
 <context>

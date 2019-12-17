@@ -2,46 +2,13 @@
 Categories=Utility;X-SuSE-SyncUtility;
 Type=Application
 Exec=@APPLICATION_EXECUTABLE@
-Name=@APPLICATION_NAME@ desktop sync client 
+Name=@APPLICATION_NAME@ desktop sync client
 Comment=@APPLICATION_NAME@ desktop synchronization client
 GenericName=Folder Sync
-Icon=@APPLICATION_EXECUTABLE@
+Icon=@APPLICATION_ICON_NAME@
 Keywords=@APPLICATION_NAME@;syncing;file;sharing;
 X-GNOME-Autostart-Delay=3
 MimeType=application/vnd.@APPLICATION_EXECUTABLE@;
-
-
-# Translations
-
-
-# Translations
-
-
-# Translations
-
-
-# Translations
-
-
-# Translations
-
-
-# Translations
-
-
-# Translations
-
-
-# Translations
-
-
-# Translations
-
-
-# Translations
-
-
-# Translations
 
 
 # Translations
@@ -79,7 +46,7 @@ Name[el]=@ΟΝΟΜΑ_ΕΦΑΡΜΟΓΗΣ@  συγχρονισμός επιφάν�
 Icon[el]=@APPLICATION_EXECUTABLE@
 Comment[en_GB]=@APPLICATION_NAME@ desktop synchronisation client
 GenericName[en_GB]=Folder Sync
-Name[en_GB]=@APPLICATION_NAME@ desktop sync client 
+Name[en_GB]=@APPLICATION_NAME@ desktop sync client
 Icon[en_GB]=@APPLICATION_EXECUTABLE@
 Comment[es]=@APPLICATION_NAME@ cliente de sincronización de escritorio
 GenericName[es]=Sincronización de carpeta
@@ -106,10 +73,10 @@ Name[gl]=@APPLICATION_NAME@ cliente de sincronización para escritorio
 Icon[gl]=@APPLICATION_EXECUTABLE@
 Comment[he]=@APPLICATION_NAME@ לקוח סנכון שולחן עבודה
 GenericName[he]=סנכון תיקייה
-Name[he]=@APPLICATION_NAME@ לקוח סנכרון שולחן עבודה 
+Name[he]=@APPLICATION_NAME@ לקוח סנכרון שולחן עבודה
 Icon[he]=@APPLICATION_EXECUTABLE@
 Comment[ia]=@APPLICATION_NAME@ cliente de synchronisation pro scriptorio
-GenericName[ia]=Synchronisar Dossier 
+GenericName[ia]=Synchronisar Dossier
 Name[ia]=@APPLICATION_NAME@ cliente de synchronisation pro scriptorio
 Icon[ia]=@APPLICATION_EXECUTABLE@
 Comment[id]=Klien sinkronisasi desktop @APPLICATION_NAME@
@@ -130,7 +97,7 @@ Name[ko]=@APPLICATION_NAME@ 데스크톱 동기화 클라이언트
 Icon[ko]=@APPLICATION_EXECUTABLE@
 Comment[lo]=@APPLICATION_NAME@ ການປະສານຂໍ້ມູນຄອມພິວເຕີລູກຂ່າຍ
 GenericName[lo]=ໂຟນເດີຊິງ
-Name[lo]=@APPLICATION_NAME@ ຊິງຄອມພິວເຕີລູກຂ່າຍ 
+Name[lo]=@APPLICATION_NAME@ ຊິງຄອມພິວເຕີລູກຂ່າຍ
 Icon[lo]=@APPLICATION_EXECUTABLE@
 Comment[mk]=@APPLICATION_NAME@ десктор клиент за синхронизација
 GenericName[mk]=Папка за синхронизација
@@ -146,7 +113,7 @@ Name[af_ZA]=@APPLICATION_NAME@ werkskermsinchroniseerkliënt
 Icon[af_ZA]=@APPLICATION_EXECUTABLE@
 Comment[nl]=@APPLICATION_NAME@ desktop synchronisatie client
 GenericName[nl]=Mappen sync
-Name[nl]=@APPLICATION_NAME@ desktop sync client 
+Name[nl]=@APPLICATION_NAME@ desktop sync client
 Icon[nl]=@APPLICATION_EXECUTABLE@
 Comment[et_EE]=@APPLICATION_NAME@ sünkroonimise klient töölauale
 GenericName[et_EE]=Kaustade sünkroonimine
@@ -164,7 +131,7 @@ Comment[cs_CZ]=@APPLICATION_NAME@ počítačový synchronizační klient
 GenericName[cs_CZ]=Synchronizace adresáře
 Name[cs_CZ]=@APPLICATION_NAME@ počítačový synchronizační klient
 Icon[cs_CZ]=@APPLICATION_EXECUTABLE@
-Comment[ru]=Настольный клиент синхронизации @APPLICATION_NAME@ 
+Comment[ru]=Настольный клиент синхронизации @APPLICATION_NAME@
 GenericName[ru]=Синхронизация каталогов
 Name[ru]=Настольный клиент синхронизации @APPLICATION_NAME@
 Icon[ru]=@APPLICATION_EXECUTABLE@
@@ -205,9 +172,9 @@ Comment[zh_TW]=@APPLICATION_NAME@ 桌面同步客戶端
 GenericName[zh_TW]=資料夾同步
 Name[zh_TW]=@APPLICATION_NAME@ 桌面同步客戶端
 Icon[zh_TW]=@APPLICATION_EXECUTABLE@
-Comment[es_AR]=Cliente de sincronización para escritorio @APPLICATION_NAME@ 
+Comment[es_AR]=Cliente de sincronización para escritorio @APPLICATION_NAME@
 GenericName[es_AR]=Sincronización de directorio
-Name[es_AR]=Cliente de sincronización para escritorio @APPLICATION_NAME@ 
+Name[es_AR]=Cliente de sincronización para escritorio @APPLICATION_NAME@
 Icon[es_AR]=@APPLICATION_EXECUTABLE@
 Comment[lt_LT]=@APPLICATION_NAME@ darbalaukio sinchronizavimo programa
 GenericName[lt_LT]=Katalogo sinchnorizacija
@@ -223,7 +190,7 @@ Name[es_MX]=Cliente de escritorio para  sincronziación de @APPLICATION_NAME@
 Icon[es_MX]=@APPLICATION_EXECUTABLE@
 Comment[nb_NO]=@APPLICATION_NAME@ skrivebordssynkroniseringsklient
 GenericName[nb_NO]=Mappesynkronisering
-Name[nb_NO]=@APPLICATION_NAME@ skrivebordssynkroniseringsklient 
+Name[nb_NO]=@APPLICATION_NAME@ skrivebordssynkroniseringsklient
 Icon[nb_NO]=@APPLICATION_EXECUTABLE@
 Comment[nn_NO]=@APPLICATION_NAME@ klient for å synkronisera frå skrivebord
 GenericName[nn_NO]=Mappe synkronisering

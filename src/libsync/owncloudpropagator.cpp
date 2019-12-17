@@ -857,26 +857,32 @@ void PropagatorCompositeJob::slotSubJobFinished(SyncFileItem::Status status)
     PropagatorJob *subJob = static_cast<PropagatorJob *>(sender());
     ASSERT(subJob);
 
-    // Delete the job and remove it from our list of jobs.
-    subJob->deleteLater();
-    int i = _runningJobs.indexOf(subJob);
-    ENFORCE(i >= 0); // should only happen if this function is called more than once
-    _runningJobs.remove(i);
+    if (subJob) {
+        // Delete the job and remove it from our list of jobs.
+        int i = _runningJobs.indexOf(subJob);
+        ASSERT(i >= 0);
 
-    // Any sub job error will cause the whole composite to fail. This is important
-    // for knowing whether to update the etag in PropagateDirectory, for example.
-    if (status == SyncFileItem::FatalError
-        || status == SyncFileItem::NormalError
-        || status == SyncFileItem::SoftError
-        || status == SyncFileItem::DetailError
-        || status == SyncFileItem::BlacklistedError) {
-        _hasError = status;
-    }
+        // When // chunk upload failed at the same time, the application crashed by trying to remove multiple time the same job
+        if (i>=0) {
+            subJob->deleteLater();
+            _runningJobs.remove(i);
 
-    if (_jobsToDo.isEmpty() && _tasksToDo.isEmpty() && _runningJobs.isEmpty()) {
-        finalize();
-    } else {
-        propagator()->scheduleNextJob();
+            // Any sub job error will cause the whole composite to fail. This is important
+            // for knowing whether to update the etag in PropagateDirectory, for example.
+            if (status == SyncFileItem::FatalError
+                || status == SyncFileItem::NormalError
+                || status == SyncFileItem::SoftError
+                || status == SyncFileItem::DetailError
+                || status == SyncFileItem::BlacklistedError) {
+                _hasError = status;
+            }
+
+            if (_jobsToDo.isEmpty() && _tasksToDo.isEmpty() && _runningJobs.isEmpty()) {
+                finalize();
+            } else {
+                propagator()->scheduleNextJob();
+            }
+        }
     }
 }
 

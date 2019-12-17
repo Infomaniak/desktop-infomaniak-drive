@@ -839,7 +839,7 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/gui/folder.cpp" line="1087"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation type="unfinished"/>
@@ -3676,6 +3676,32 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <location filename="../src/libsync/theme.cpp" line="350"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>檢測到無效憑證</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation>主機「%1」所提供的憑證無效。確定繼續？</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>您已從%1登出%2帳戶。請再次登入。</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation>請以%1的身份登入</translation>
     </message>
 </context>
 <context>

@@ -2,72 +2,73 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-        <key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-	<key>LSUIElement</key>
-	<true/>
-	<key>CFBundleDevelopmentRegion</key>
-        <string>English</string>
-        <key>CFBundleExecutable</key>
-        <string>@APPLICATION_EXECUTABLE@</string>
-        <key>CFBundleIconFile</key>
-        <string>@APPLICATION_ICON_NAME@.icns</string>
-        <key>CFBundleIdentifier</key>
-        <string>@APPLICATION_REV_DOMAIN@</string>
-        <key>CFBundleInfoDictionaryVersion</key>
-        <string>6.0</string>
-        <key>CFBundleLongVersionString</key>
-        <string>@APPLICATION_NAME_XML_ESCAPED@ @MIRALL_VERSION_STRING@</string>
-        <key>CFBundlePackageType</key>
-        <string>APPL</string>
-        <key>CFBundleSignature</key>
-        <string>????</string>
-        <key>CFBundleVersion</key>
-        <string>@MIRALL_VERSION_FULL@</string>
-        <key>CFBundleShortVersionString</key>
-        <string>@MIRALL_VERSION_STRING@</string>
-        <key>NSHumanReadableCopyright</key>
-        <string>(C) 2014-2019 @APPLICATION_VENDOR@</string>
-        <key>SUShowReleaseNotes</key>
-        <false/>
-        <key>SUPublicDSAKeyFile</key>
-        <string>dsa_pub.pem</string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <key>CFBundleExecutable</key>
+    <string>@APPLICATION_EXECUTABLE@</string>
+    <key>CFBundleIconFile</key>
+    <string>@APPLICATION_ICON_NAME@.icns</string>
+    <key>CFBundleIdentifier</key>
+    <string>@APPLICATION_REV_DOMAIN@</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleLongVersionString</key>
+    <string>@APPLICATION_NAME_XML_ESCAPED@ @MIRALL_VERSION_STRING@</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleVersion</key>
+    <string>@MIRALL_VERSION_FULL@</string>
+    <key>CFBundleShortVersionString</key>
+    <string>@MIRALL_VERSION_STRING@</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2019 @APPLICATION_VENDOR@. All rights reserved.</string>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+    <key>SUShowReleaseNotes</key>
+    <false/>
+    <key>SUPublicEDKey</key>
+    <string>l5dGUIy6ioi7sWaIiarEV4RXXXdzKqoSn3g0TbqAdxA=</string>
+    <key>SUFeedURL</key>
+    <string>@APPLICATION_UPDATE_URL@</string>
 
-<key>UTExportedTypeDeclarations</key>
-<array>
-    <dict>
-        <key>UTTypeIdentifier</key>
-        <string>@APPLICATION_REV_DOMAIN@.VIRTUALFILE</string>
-        <key>UTTypeTagSpecification</key>
+    <key>UTExportedTypeDeclarations</key>
+    <array>
         <dict>
-            <key>public.filename-extension</key>
-            <string>@APPLICATION_VIRTUALFILE_SUFFIX@</string>
-            <key>public.mime-type</key>
-            <string>application/octet-stream</string>
-        </dict>
-        <key>UTTypeConformsTo</key>
-         <array>
-             <string>public.data</string>
-         </array>
-    </dict>
-</array>
-
-<key>CFBundleDocumentTypes</key>
-<array>
-    <dict>
-        <key>CFBundleTypeName</key>
-        <string>@APPLICATION_EXECUTABLE@ Download Virtual File</string>
-        <key>CFBundleTypeRole</key>
-        <string>Editor</string>
-        <key>LSHandlerRank</key>
-        <string>Owner</string>
-        <key>LSItemContentTypes</key>
-        <array>
+            <key>UTTypeIdentifier</key>
             <string>@APPLICATION_REV_DOMAIN@.VIRTUALFILE</string>
-        </array>
-    </dict>
-</array>
-
-
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <string>@APPLICATION_VIRTUALFILE_SUFFIX@</string>
+                <key>public.mime-type</key>
+                <string>application/octet-stream</string>
+            </dict>
+            <key>UTTypeConformsTo</key>
+             <array>
+                 <string>public.data</string>
+             </array>
+        </dict>
+    </array>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>@APPLICATION_EXECUTABLE@ Download Virtual File</string>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>@APPLICATION_REV_DOMAIN@.VIRTUALFILE</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

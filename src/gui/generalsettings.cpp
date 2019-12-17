@@ -72,6 +72,7 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     connect(_ui->deltaSyncCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::saveMiscSettings);
     connect(_ui->deltaSyncSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &GeneralSettings::saveMiscSettings);
 
+    _ui->newExternalStorage->setVisible(false);
 #ifndef WITH_CRASHREPORTER
     _ui->crashreporterCheckBox->setVisible(false);
 #endif
@@ -111,13 +112,14 @@ GeneralSettings::GeneralSettings(QWidget *parent)
 #endif
     }
 
-    _ui->versionLabel->setText(QStringLiteral("<a href='%1'>%1</a>").arg(MIRALL_VERSION_STRING));
+    _ui->versionLabel->setText(QStringLiteral("<a style=\"color: #489EF3\" href='%1'>%1</a>").arg(MIRALL_VERSION_STRING));
     QObject::connect(_ui->versionLabel, &QLabel::linkActivated, this, &GeneralSettings::showAbout);
 
     if (!theme->aboutShowCopyright()) {
         _ui->copyrightLabelDotBefore->hide();
         _ui->copyrightLabel->hide();
     }
+    _ui->copyrightLabel->setText(QStringLiteral("Copyright Infomaniak Network SA"));
 }
 
 GeneralSettings::~GeneralSettings()

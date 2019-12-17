@@ -957,7 +957,7 @@ Isto significa que o cliente de sincronización podería non enviar os cambios i
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>Todos os ficheiros no cartafol de sincronización «%1» foron eliminados no servidor.
@@ -3841,6 +3841,32 @@ Este é un modo novo e experimental. Se decide usalo, informe de calquera proble
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Distribuído por %1 e licenciado baixo a Licenza Pública Xeral (GPL) GNU Versión 2.0.&lt;br/&gt;Os logotipos %2 e %2 son marcas rexistradas de %1 nos Estados Unidos de Norte América e/ou outros países.&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>Detectouse un certificado non válido</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation>O servidor «%1» forneceu un certificado non válido. Continuar?</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>Foi desconectado de %1 como o usuario %2. Volva acceder de novo</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation>Acceda co usuario: %1</translation>
     </message>
 </context>
 <context>

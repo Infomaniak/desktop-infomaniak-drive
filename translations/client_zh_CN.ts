@@ -949,7 +949,7 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>同步文件夹&apos;%1&apos;的所有文件已经在服务器端删除。
@@ -3816,6 +3816,32 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;%1 使用GNU通用公共许可证 (GPL) 2.0。&lt;br/&gt;%2 以及 %2 标识已由 %1 注册使用。&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>检测到无效证书</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation>主机 “%1” 提供了无效证书。是否继续？</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>您已经以用户 %2 的身份从 %1 中注销，请重新登录</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation>请以 %1 用户身份登陆</translation>
     </message>
 </context>
 <context>

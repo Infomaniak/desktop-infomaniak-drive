@@ -953,7 +953,7 @@ Bu yüzden senkronizasyon yerel değişiklikler anlık olarak karşı tarafa yü
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>Senkronizasyon klasörlerinden &apos;%1&apos; klasörü, sunucudan silindi.
@@ -1576,7 +1576,7 @@ Note that this selects only what pool upgrades are taken from, and that there ar
     <message>
         <location filename="../src/gui/creds/httpcredentialsgui.cpp" line="167"/>
         <source>&lt;a href=&quot;%1&quot;&gt;Click here&lt;/a&gt; to request an app password from the web interface.</source>
-        <translation>Web arayüzünden app şifrenizi talep etmek için&lt;a href=&quot;%1&quot;&gt;lütfen tıklayınız&lt;/a&gt; 
+        <translation>Web arayüzünden app şifrenizi talep etmek için&lt;a href=&quot;%1&quot;&gt;lütfen tıklayınız&lt;/a&gt;
 </translation>
     </message>
 </context>
@@ -3820,6 +3820,32 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;%1 tarafından dağıtılmış ve GNU Genel Kamu Lisansı (GPL) Sürüm 2.0 ile lisanslanmıştır.&lt;br/&gt;%2 ve %2 logoları ABD ve/veya diğer ülkelerde %1 tescili markalarıdır.&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>Sertifika geçersiz</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation>&quot;%1&quot; sunucusunun sertifikası geçersiz. Devam etmek ister misiniz?</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>%1 üzerindeki %2 kullanıcısı oturumunuzu kapattınız. Lütfen yeniden oturum açın</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation>Lütfen şu kullanıcı ile oturum açın: %1</translation>
     </message>
 </context>
 <context>

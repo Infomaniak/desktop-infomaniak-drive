@@ -24,6 +24,7 @@
 #include "wizard/owncloudoauthcredspage.h"
 #include "wizard/owncloudadvancedsetuppage.h"
 #include "wizard/owncloudwizardresultpage.h"
+#include "wizard/webviewpage.h"
 
 #include "common/vfs.h"
 
@@ -48,7 +49,9 @@ OwncloudWizard::OwncloudWizard(QWidget *parent)
     , _advancedSetupPage(new OwncloudAdvancedSetupPage)
     , _resultPage(new OwncloudWizardResultPage)
     , _credentialsPage(0)
+    , _webViewPage(new WebViewPage(this))
     , _setupLog()
+    , _registration(false)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setPage(WizardCommon::Page_ServerSetup, _setupPage);
@@ -56,6 +59,7 @@ OwncloudWizard::OwncloudWizard(QWidget *parent)
     setPage(WizardCommon::Page_OAuthCreds, _browserCredsPage);
     setPage(WizardCommon::Page_AdvancedSetup, _advancedSetupPage);
     setPage(WizardCommon::Page_Result, _resultPage);
+    setPage(WizardCommon::Page_WebView, _webViewPage);
 
     connect(this, &QDialog::finished, this, &OwncloudWizard::basicSetupFinished);
 
@@ -67,6 +71,7 @@ OwncloudWizard::OwncloudWizard(QWidget *parent)
     connect(_setupPage, &OwncloudSetupPage::determineAuthType, this, &OwncloudWizard::determineAuthType);
     connect(_httpCredsPage, &OwncloudHttpCredsPage::connectToOCUrl, this, &OwncloudWizard::connectToOCUrl);
     connect(_browserCredsPage, &OwncloudOAuthCredsPage::connectToOCUrl, this, &OwncloudWizard::connectToOCUrl);
+    connect(_webViewPage, &WebViewPage::connectToOCUrl, this, &OwncloudWizard::connectToOCUrl);
     connect(_advancedSetupPage, &OwncloudAdvancedSetupPage::createLocalAndRemoteFolders,
         this, &OwncloudWizard::createLocalAndRemoteFolders);
 
@@ -74,11 +79,12 @@ OwncloudWizard::OwncloudWizard(QWidget *parent)
     Theme *theme = Theme::instance();
     setWindowTitle(tr("%1 Connection Wizard").arg(theme->appNameGUI()));
     setWizardStyle(QWizard::ModernStyle);
-    setPixmap(QWizard::BannerPixmap, theme->wizardHeaderBanner());
-    setPixmap(QWizard::LogoPixmap, theme->wizardHeaderLogo());
+    // setPixmap(QWizard::BannerPixmap, theme->wizardHeaderBanner());
+    // setPixmap(QWizard::LogoPixmap, theme->wizardHeaderLogo());
     setOption(QWizard::NoBackButtonOnStartPage);
     setOption(QWizard::NoBackButtonOnLastPage);
     setOption(QWizard::NoCancelButton);
+    setOption(QWizard::IgnoreSubTitles);
     setTitleFormat(Qt::RichText);
     setSubTitleFormat(Qt::RichText);
 }
@@ -124,6 +130,16 @@ QString OwncloudWizard::ocUrl() const
     return url;
 }
 
+bool OwncloudWizard::registration()
+{
+    return _registration;
+}
+
+void OwncloudWizard::setRegistration(bool registration)
+{
+    _registration = registration;
+}
+
 void OwncloudWizard::enableFinishOnResultWidget(bool enable)
 {
     _resultPage->setComplete(enable);
@@ -148,6 +164,10 @@ void OwncloudWizard::successfulStep()
         _browserCredsPage->setConnected();
         break;
 
+    case WizardCommon::Page_WebView:
+        _webViewPage->setConnected();
+        break;
+
     case WizardCommon::Page_AdvancedSetup:
         _advancedSetupPage->directoriesCreated();
         break;
@@ -166,6 +186,8 @@ void OwncloudWizard::setAuthType(DetermineAuthTypeJob::AuthType type)
     _setupPage->setAuthType(type);
     if (type == DetermineAuthTypeJob::OAuth) {
         _credentialsPage = _browserCredsPage;
+    } else if (type == DetermineAuthTypeJob::WebViewFlow) {
+        _credentialsPage = _webViewPage;
     } else { // try Basic auth even for "Unknown"
         _credentialsPage = _httpCredsPage;
     }
@@ -189,8 +211,8 @@ void OwncloudWizard::slotCurrentPageChanged(int id)
         done(Accepted);
     }
 
-    if (id == WizardCommon::Page_AdvancedSetup && _credentialsPage == _browserCredsPage) {
-        // For OAuth, disable the back button in the Page_AdvancedSetup because we don't want
+    if (id == WizardCommon::Page_AdvancedSetup && (_credentialsPage == _browserCredsPage || _credentialsPage == _webViewPage)) {
+        // For OAuth & Webflow, disable the back button in the Page_AdvancedSetup because we don't want
         // to re-open the browser.
         button(QWizard::BackButton)->setEnabled(false);
     }

@@ -165,7 +165,7 @@ public:
     virtual QString enforcedLocale() const { return QString(); }
 
     /** colored, white or black */
-    QString systrayIconFlavor(bool mono, bool sysTrayMenuVisible = false) const;
+    virtual QString systrayIconFlavor(bool mono, bool sysTrayMenuVisible = false) const;
 
 #ifndef TOKEN_AUTH_ONLY
     /**
@@ -197,7 +197,7 @@ public:
     /**
      * The SHA sum of the released git commit
      */
-    QString gitSHA1() const;
+    virtual QString gitSHA1() const;
 
     /**
      * About dialog contents

@@ -957,11 +957,11 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>Όλα τα αρχεία στο φάκελο συγχρονισμού &apos;%1&apos; έχουν διαγραφεί στον διακομιστή.
-Αυτές οι διαγραφές θα συγχρονιστούν στον τοπικό σας φάκελο συγχρονισμού, κάνοντας τέτοιου είδους αρχεία μη διαθέσιμα, εκτός εάν έχετε δικαίωμα επαναφοράς. 
+Αυτές οι διαγραφές θα συγχρονιστούν στον τοπικό σας φάκελο συγχρονισμού, κάνοντας τέτοιου είδους αρχεία μη διαθέσιμα, εκτός εάν έχετε δικαίωμα επαναφοράς.
 Εάν αποφασίσετε να διατηρήσετε αυτά τα αρχεία, θα συγχρονιστούν εκ νέου με το διακομιστή, εφόσον έχετε δικαιώματα να το κάνετε.
 Εφόσον επιλέξετε να διαγράψετε τα αρχεία, δε θα είναι διαθέσιμα σε εσάς, εκτός εάν είστε ο ιδιοκτήτης τους.  </translation>
     </message>
@@ -971,7 +971,7 @@ If you decide to delete the files, they will be unavailable to you, unless you a
 Are you sure you want to sync those actions with the server?
 If this was an accident and you decide to keep your files, they will be re-synced from the server.</source>
         <translation>Όλα τα αρχεία στον τοπικό φάκελο συγχρονισμού σας &apos;% 1&apos; διαγράφηκαν. Αυτές οι διαγραφές θα συγχρονιστούν με το διακομιστή σας, καθιστώντας αυτά τα αρχεία μη διαθέσιμα εκτός εάν τα έχετε επαναφέρει.
-Είστε βέβαιοι ότι θέλετε να συγχρονίσετε αυτές τις ενέργειες με το διακομιστή; 
+Είστε βέβαιοι ότι θέλετε να συγχρονίσετε αυτές τις ενέργειες με το διακομιστή;
 Αν αυτό ήταν ένα ατύχημα και αποφασίσατε να διατηρήσετε τα αρχεία σας, θα συγχρονιστούν εκ νέου από το διακομιστή.</translation>
     </message>
     <message>
@@ -3838,6 +3838,32 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Διανέμεται από 1% και υπό την άδεια GNU General Public License (GPL) έκδοση 2.0.&lt;br/&gt;% 2 και το 2% το λογότυπο είναι σήματα κατατεθέντα της 1% στις Ηνωμένες Πολιτείες, άλλες χώρες, ή και τα δύο.&lt;/ p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>Εντοπίστηκε μη έγκυρο πιστοποιητικό</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

@@ -19,6 +19,7 @@
 #include "common/asserts.h"
 #include <theme.h>
 #include <creds/httpcredentialsgui.h>
+#include <creds/webflowcredentials.h>
 #include <cookiejar.h>
 #include <QSettings>
 #include <QDir>
@@ -268,6 +269,7 @@ AccountPtr AccountManager::loadAccountHelper(QSettings &settings)
 
     auto acc = createAccount();
 
+    QString authType = "webflow";
     QString overrideUrl = Theme::instance()->overrideServerUrl();
     QString forceAuth = Theme::instance()->forceConfigAuthType();
     if (!forceAuth.isEmpty() && !overrideUrl.isEmpty()) {
@@ -283,14 +285,19 @@ AccountPtr AccountManager::loadAccountHelper(QSettings &settings)
 
     // We want to only restore settings for that auth type and the user value
     acc->_settingsMap.insert(QLatin1String(userC), settings.value(userC));
-    QString authTypePrefix = "http_";
+    QString authTypePrefix = authType + "_";
     Q_FOREACH (QString key, settings.childKeys()) {
         if (!key.startsWith(authTypePrefix))
             continue;
         acc->_settingsMap.insert(key, settings.value(key));
     }
 
-    acc->setCredentials(new HttpCredentialsGui);
+    if (authType=="webflow") {
+        acc->setCredentials(new WebFlowCredentials);
+
+    } else {
+        acc->setCredentials(new HttpCredentialsGui);
+    }
 
     // now the server cert, it is in the general group
     settings.beginGroup(QLatin1String("General"));
