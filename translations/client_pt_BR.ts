@@ -957,12 +957,12 @@ Isso significa que o cliente de sincronização pode não fazer envios de altera
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation>Todos os arquivos na pasta &apos;%1&apos; de sincronização foram excluídos no servidor. 
- Essas exclusões serão sincronizadas com a pasta de sincronização local, tornando esses arquivos indisponíveis, a menos que você tenha o direito de restaurar. 
- Se você decidir manter os arquivos, eles serão re-sincronizados com o servidor se você tiver direitos para fazê-lo. 
+        <translation>Todos os arquivos na pasta &apos;%1&apos; de sincronização foram excluídos no servidor.
+ Essas exclusões serão sincronizadas com a pasta de sincronização local, tornando esses arquivos indisponíveis, a menos que você tenha o direito de restaurar.
+ Se você decidir manter os arquivos, eles serão re-sincronizados com o servidor se você tiver direitos para fazê-lo.
 Se você decidir excluir os arquivos, eles não estarão disponíveis para você, a menos que você seja o proprietário.</translation>
     </message>
     <message>
@@ -3839,6 +3839,32 @@ Este é um novo modo experimental. Se você decidir usá-lo, relate quaisquer pr
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Distribuído por %1 e licenciado sobre a GNU General Public License (GPL) Versão 2.0.&lt;br/&gt;%2 e o %2 logo são marcas registradas de %1 nos Estados Unidos, outros países ou ambos.&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>Certificado inválido detectado</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation>O host &quot;%1&quot; forneceu um certificado inválido. Continuar?</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>Você foi deslogado de %1 como usuário %2. Logue-se novamente</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation>Por favor, faça o login com o usuário: %1</translation>
     </message>
 </context>
 <context>

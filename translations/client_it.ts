@@ -958,11 +958,11 @@ Ciò significa che il client di sincronizzazione potrebbe non inviare le modific
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>Tutti i file nella cartella sincronizzata &apos;%1&apos; sono stati eliminati sul server.
-Queste eliminazioni verranno sincronizzate nella tua cartella locale, perdendo questi file a meno che tu non sia autorizzato al ripristino. 
+Queste eliminazioni verranno sincronizzate nella tua cartella locale, perdendo questi file a meno che tu non sia autorizzato al ripristino.
 Se decidi di mantenere i file, saranno risincronizzati con il server se hai l&apos;autorizzazione di farlo.
 Se decidi di eliminarli, non ti saranno più disponibili, a meno che tu non sia il proprietario.</translation>
     </message>
@@ -3825,6 +3825,32 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Distribuito da %1 e sotto licenza GNU General Public License (GPL) versione 2.0.&lt;br/&gt;%2 e il logo di %2 sono marchi registrati di %1 negli Stati Uniti, in altri paesi o entrambi.&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>Rilevato certificato non valido</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation>L&apos;host &quot;%1&quot; ha fornito un certificato non valido. Vuoi continuare?</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>Sei stato disconnesso da %1 come utente %2. Accedi nuovamente</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation>Accedi con l&apos;utente: %1</translation>
     </message>
 </context>
 <context>

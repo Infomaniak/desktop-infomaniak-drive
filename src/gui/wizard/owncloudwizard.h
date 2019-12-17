@@ -36,6 +36,7 @@ class OwncloudAdvancedSetupPage;
 class OwncloudWizardResultPage;
 class AbstractCredentials;
 class AbstractCredentialsWizardPage;
+class WebViewPage;
 
 /**
  * @brief The OwncloudWizard class
@@ -55,6 +56,8 @@ public:
     void setAccount(AccountPtr account);
     AccountPtr account() const;
     void setOCUrl(const QString &);
+    bool registration();
+    void setRegistration(bool registration);
 
     void setupCustomMedia(QVariant, QLabel *);
     QString ocUrl() const;
@@ -107,8 +110,11 @@ private:
     OwncloudAdvancedSetupPage *_advancedSetupPage;
     OwncloudWizardResultPage *_resultPage;
     AbstractCredentialsWizardPage *_credentialsPage;
+    WebViewPage *_webViewPage;
 
     QStringList _setupLog;
+
+    bool _registration;
 
     friend class OwncloudSetupWizard;
 };

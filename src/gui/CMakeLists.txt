@@ -41,6 +41,7 @@ set(client_UI_SRCS
     wizard/owncloudoauthcredspage.ui
     wizard/owncloudsetupnocredspage.ui
     wizard/owncloudwizardresultpage.ui
+    wizard/webview.ui
 )
 
 set(client_SRCS
@@ -101,6 +102,8 @@ set(client_SRCS
     elidedlabel.cpp
     creds/httpcredentialsgui.cpp
     creds/oauth.cpp
+    creds/webflowcredentials.cpp
+    creds/webflowcredentialsdialog.cpp
     wizard/postfixlineedit.cpp
     wizard/abstractcredswizardpage.cpp
     wizard/owncloudadvancedsetuppage.cpp
@@ -111,6 +114,8 @@ set(client_SRCS
     wizard/owncloudwizardcommon.cpp
     wizard/owncloudwizard.cpp
     wizard/owncloudwizardresultpage.cpp
+    wizard/webviewpage.cpp
+    wizard/webview.cpp
 )
 
 set(updater_SRCS
@@ -224,9 +229,11 @@ if(NOT BUILD_OWNCLOUD_OSX_BUNDLE)
             string(REPLACE "-${APPLICATION_ICON_NAME}-icon.png" "" _res ${_res})
             install(FILES ${_file} RENAME ${APPLICATION_ICON_NAME}.png DESTINATION ${DATADIR}/icons/hicolor/${_res}x${_res}/apps)
         endforeach(_file)
-    endif(NOT WIN32)
+        install(FILES ${client_I18N} DESTINATION ${SHAREDIR}/${APPLICATION_EXECUTABLE}/i18n)
+    else()
+        install(FILES ${client_I18N} DESTINATION i18n)
+    endif()
 
-    install(FILES ${client_I18N} DESTINATION ${SHAREDIR}/${APPLICATION_EXECUTABLE}/i18n)
 
     # we may not add MACOSX_BUNDLE here, if not building one
 
@@ -252,10 +259,15 @@ else()
     install(FILES ${qtbase_I18N} DESTINATION ${QM_DIR})
     file(GLOB qtkeychain_I18N ${QT_TRANSLATIONS_DIR}/qtkeychain*.qm)
     install(FILES ${qtkeychain_I18N} DESTINATION ${QM_DIR})
+    foreach (LPROJ_DIR in ${TRANSLATIONS})
+        string(REPLACE "${CMAKE_SOURCE_DIR}/translations/client_" "\${CMAKE_INSTALL_PREFIX}/${OWNCLOUD_OSX_BUNDLE}/Contents/Resources/" LPROJ_DIR ${LPROJ_DIR})
+        string(REPLACE ".ts" ".lproj" LPROJ_DIR ${LPROJ_DIR})
+        install(CODE "file(MAKE_DIRECTORY ${LPROJ_DIR})")
+    endforeach()
 endif()
 
 add_library(updater STATIC ${updater_SRCS})
-target_link_libraries(updater ${synclib_NAME} ${updater_DEPS} Qt5::Widgets Qt5::Network Qt5::Xml)
+target_link_libraries(updater ${synclib_NAME} ${updater_DEPS} Qt5::Widgets Qt5::Network Qt5::Xml Qt5::WebEngineWidgets)
 target_include_directories(updater PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 set_target_properties( ${APPLICATION_EXECUTABLE} PROPERTIES
@@ -301,9 +313,9 @@ target_compile_definitions(${APPLICATION_EXECUTABLE} PRIVATE "QT_DISABLE_DEPRECA
 include(libcloudproviders/libcloudproviders.cmake)
 
 install(TARGETS ${APPLICATION_EXECUTABLE}
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         BUNDLE  DESTINATION "."
  )
 
@@ -323,7 +335,12 @@ if(NOT BUILD_OWNCLOUD_OSX_BUNDLE AND NOT WIN32)
     endif(SharedMimeInfo_FOUND)
 endif()
 
-if(BUILD_OWNCLOUD_OSX_BUNDLE)
+if(BUILD_OWNCLOUD_OSX_BUNDLE AND NOT BUILD_LIBRARIES_ONLY)
   get_target_property (QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-  add_custom_target(macdeployqt "${CMAKE_SOURCE_DIR}/admin/osx/macdeployqt.py" "${CMAKE_INSTALL_PREFIX}/${OWNCLOUD_OSX_BUNDLE}" "${QT_QMAKE_EXECUTABLE}")
+  install(CODE "
+    message(STATUS \"Deploying (Qt) dependencies and fixing library paths...\")
+    execute_process(COMMAND \"install_name_tool\" -add_rpath @executable_path/. -add_rpath @executable_path/../Frameworks \$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${OWNCLOUD_OSX_BUNDLE}/Contents/MacOS/${APPLICATION_EXECUTABLE})
+    execute_process(COMMAND \"\$ENV{QT5_DIR}/bin/macdeployqt\" \$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${OWNCLOUD_OSX_BUNDLE})
+    " COMPONENT RUNTIME)
 endif()
+

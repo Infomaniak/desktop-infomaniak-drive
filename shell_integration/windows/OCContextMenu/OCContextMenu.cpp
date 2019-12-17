@@ -24,7 +24,7 @@
 
 extern long g_cDllRef;
 
-OCContextMenu::OCContextMenu(void) 
+OCContextMenu::OCContextMenu(void)
     : m_cRef(1)
 {
     InterlockedIncrement(&g_cDllRef);
@@ -89,7 +89,7 @@ IFACEMETHODIMP OCContextMenu::Initialize(
         HDROP hDrop = static_cast<HDROP>(GlobalLock(stm.hGlobal));
         if (hDrop) {
             UINT nFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
-            for (int i = 0; i < nFiles; ++i) {
+            for (UINT i = 0; i < nFiles; ++i) {
                 // Get the path of the file.
                 wchar_t buffer[MAX_PATH];
 
@@ -109,7 +109,7 @@ IFACEMETHODIMP OCContextMenu::Initialize(
         ReleaseStgMedium(&stm);
     }
 
-    // If any value other than S_OK is returned from the method, the context 
+    // If any value other than S_OK is returned from the method, the context
     // menu item is not displayed.
     return m_selectedFiles.empty() ? E_FAIL : S_OK;
 }
@@ -172,8 +172,8 @@ IFACEMETHODIMP OCContextMenu::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT
         indexSubMenu++;
     }
 
-    // Return an HRESULT value with the severity set to SEVERITY_SUCCESS. 
-    // Set the code value to the offset of the largest command identifier 
+    // Return an HRESULT value with the severity set to SEVERITY_SUCCESS.
+    // Set the code value to the offset of the largest command identifier
     // that was assigned, plus one (1).
     return MAKE_HRESULT(SEVERITY_SUCCESS, 0, USHORT(indexSubMenu));
 }
@@ -186,8 +186,8 @@ IFACEMETHODIMP OCContextMenu::InvokeCommand(LPCMINVOKECOMMANDINFO pici)
     if (pici->cbSize == sizeof(CMINVOKECOMMANDINFOEX))
         piciEx = (CMINVOKECOMMANDINFOEX*)pici;
 
-    // For the Unicode case, if the high-order word is not zero, the 
-    // command's verb string is in lpcmi->lpVerbW. 
+    // For the Unicode case, if the high-order word is not zero, the
+    // command's verb string is in lpcmi->lpVerbW.
     if (piciEx
         && (piciEx->fMask & CMIC_MASK_UNICODE)
         && HIWORD(((CMINVOKECOMMANDINFOEX*)pici)->lpVerbW)) {

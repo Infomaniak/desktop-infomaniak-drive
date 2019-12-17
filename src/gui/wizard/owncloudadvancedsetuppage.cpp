@@ -46,7 +46,8 @@ OwncloudAdvancedSetupPage::OwncloudAdvancedSetupPage()
     _ui.setupUi(this);
 
     Theme *theme = Theme::instance();
-    setTitle(WizardCommon::titleTemplate().arg(tr("Connect to %1").arg(theme->appNameGUI())));
+    // setTitle(WizardCommon::titleTemplate().arg(tr("Connect to %1").arg(theme->appNameGUI())));
+    setTitle("");
     setSubTitle(WizardCommon::subTitleTemplate().arg(tr("Setup local folder options")));
 
     registerField(QLatin1String("OCSyncFromScratch"), _ui.cbSyncFromScratch);
@@ -382,6 +383,7 @@ void OwncloudAdvancedSetupPage::slotSyncEverythingClicked()
 void OwncloudAdvancedSetupPage::slotQuotaRetrieved(const QVariantMap &result)
 {
     _ui.lSyncEverythingSizeLabel->setText(tr("(%1)").arg(Utility::octetsToString(result["size"].toDouble())));
+    updateStatus();
 }
 
 void OwncloudAdvancedSetupPage::setRadioChecked(QRadioButton *radio)

@@ -462,17 +462,24 @@ static void mergeSslConfigurationForSslButton(const QSslConfiguration &config, A
 {
     if (config.peerCertificateChain().length() > 0) {
         account->_peerCertificateChain = config.peerCertificateChain();
+    } else {
+        qCWarning(lcCheckServerJob) << "No peer certificate chain";
     }
     if (!config.sessionCipher().isNull()) {
         account->_sessionCipher = config.sessionCipher();
+    } else {
+        qCWarning(lcCheckServerJob) << "No session cipher";
     }
     if (config.sessionTicket().length() > 0) {
         account->_sessionTicket = config.sessionTicket();
+    } else {
+        qCWarning(lcCheckServerJob) << "No session ticket";
     }
 }
 
 void CheckServerJob::encryptedSlot()
 {
+    qCDebug(lcCheckServerJob) << "SSL/TLS initialized";
     mergeSslConfigurationForSslButton(reply()->sslConfiguration(), account());
 }
 
@@ -882,7 +889,7 @@ void DetermineAuthTypeJob::start()
     propfind->setIgnoreCredentialFailure(true);
     connect(propfind, &SimpleNetworkJob::finishedSignal, this, [this](QNetworkReply *reply) {
         auto authChallenge = reply->rawHeader("WWW-Authenticate").toLower();
-        auto result = Basic;
+        auto result = WebViewFlow;
         if (authChallenge.contains("bearer ")) {
             result = OAuth;
         } else if (authChallenge.isEmpty()) {

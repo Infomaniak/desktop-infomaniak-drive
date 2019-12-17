@@ -949,11 +949,11 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>Todos os ficheiros na pasta sincronizada &apos;%1&apos; foram apagados do servidor.
-Estas deleções irão ser sincronizadas para a sua pasta local de sincronização, fazendo com que os ficheiros fiquem indisponíveis, a não ser que tenha permissões para restaurar os mesmos . 
+Estas deleções irão ser sincronizadas para a sua pasta local de sincronização, fazendo com que os ficheiros fiquem indisponíveis, a não ser que tenha permissões para restaurar os mesmos .
 Se decidir manter os ficheiros, eles serão sincronizados novamento para o servidor se tiver permissões para tal.
 Se decidir apagar os ficheiros, eles ficaram indisponíveis para si, a não ser que seja o seu proprietário.</translation>
     </message>
@@ -2023,7 +2023,7 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/updater/ocupdater.cpp" line="109"/>
         <source>A new update for %1 is about to be installed. The updater may ask
 for additional privileges during the process.</source>
-        <translation>Está prestes a ser instalada uma nova atualização para %1. O atualizador 
+        <translation>Está prestes a ser instalada uma nova atualização para %1. O atualizador
 poderá pedir por privilégios adicionais durante o processo.</translation>
     </message>
     <message>
@@ -3815,6 +3815,32 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Distribuído por %1 e licenciado sob a GNU General Public License (GPL) Versão 2.0.&lt;br/&gt;%2 e o logótipo %2 são marcas registadas da %1 nos Estados Unidos, outros países, ou ambos &lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

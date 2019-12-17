@@ -2,7 +2,7 @@
 if(NOT TOKEN_AUTH_ONLY)
 endif()
 
-find_package(Qt5 5.6 COMPONENTS Core Network Xml Concurrent REQUIRED)
+find_package(Qt5 5.6 COMPONENTS Core Network Xml Concurrent WebEngineWidgets WebEngine REQUIRED)
 if (Qt5Core_VERSION VERSION_LESS 5.9.0)
 message(STATUS "For HTTP/2 support, compile with Qt 5.9 or higher.")
 endif()

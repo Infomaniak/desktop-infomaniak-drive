@@ -40,6 +40,12 @@ class QNetworkReply;
 class QUrl;
 class QNetworkAccessManager;
 
+namespace QKeychain {
+class Job;
+class WritePasswordJob;
+class ReadPasswordJob;
+}
+
 namespace OCC {
 
 class AbstractCredentials;
@@ -229,6 +235,11 @@ public:
     /// Called by network jobs on credential errors, emits invalidCredentials()
     void handleInvalidCredentials();
 
+    /// Used in RemoteWipe
+    void retrieveAppPassword();
+    void setAppPassword(QString appPassword);
+    void deleteAppPassword();
+
 public slots:
     /// Used when forgetting credentials
     void clearQNAMCache();
@@ -254,6 +265,9 @@ signals:
 
     void accountChangedAvatar();
     void accountChangedDisplayName();
+
+    /// Used in RemoteWipe
+    void appPasswordRetrieved(QString);
 
 protected Q_SLOTS:
     void slotCredentialsFetched();

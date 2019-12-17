@@ -948,11 +948,11 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>Alle filene i synkroniseringsmappen &apos;%1&apos; ble slettet på serveren.
-Disse slettingene vil bli synkronisert til din lokale synkroniseringsmappe og gjøre filene utilgjengelige hvis du ikke har lov til å gjenopprette. 
+Disse slettingene vil bli synkronisert til din lokale synkroniseringsmappe og gjøre filene utilgjengelige hvis du ikke har lov til å gjenopprette.
 Hvis du velger å beholde filene, vil de bli synkronisert tilbake til serveren hvis du har lov til det.
 Hvis du velger å slette filene, blir de utilgjengelige for deg hvis du ikke er eieren av filen.</translation>
     </message>
@@ -961,7 +961,7 @@ Hvis du velger å slette filene, blir de utilgjengelige for deg hvis du ikke er 
         <source>All the files in your local sync folder '%1' were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
 Are you sure you want to sync those actions with the server?
 If this was an accident and you decide to keep your files, they will be re-synced from the server.</source>
-        <translation>Alle filene i din lokale synkroniseringsmappe &apos;%1&apos; ble slettet. Disse slettingene vil bli synkronisert med serveren og gjøre filene utilgjengelige hvis de ikke gjenopprettes. 
+        <translation>Alle filene i din lokale synkroniseringsmappe &apos;%1&apos; ble slettet. Disse slettingene vil bli synkronisert med serveren og gjøre filene utilgjengelige hvis de ikke gjenopprettes.
 Er du sikker på at du ønsker å synkronisere denne handlingen med serveren?
 Hvis det var et uhell og du velger å beholde filene, vil de bli synkronisert tilbake fra serveren.</translation>
     </message>
@@ -3817,6 +3817,32 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Distribuert av %1 og lisensiert under GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 og %2-logoet er registrerte varemerker for %1 i USA, i andre land eller begge deler.&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

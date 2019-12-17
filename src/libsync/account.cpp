@@ -34,9 +34,14 @@
 #include <QAuthenticator>
 #include <QStandardPaths>
 
+#include <keychain.h>
+
+using namespace QKeychain;
+
 namespace OCC {
 
 Q_LOGGING_CATEGORY(lcAccount, "sync.account", QtInfoMsg)
+const char app_password[] = "_app-password";
 
 Account::Account(QObject *parent)
     : QObject(parent)
@@ -490,5 +495,63 @@ void Account::setNonShib(bool nonShib)
     }
 }
 
+void Account::setAppPassword(QString appPassword){
+    const QString kck = AbstractCredentials::keychainKey(
+                url().toString(),
+                davUser() + app_password,
+                id()
+    );
+
+    WritePasswordJob *job = new WritePasswordJob(Theme::instance()->appName());
+    job->setInsecureFallback(false);
+    job->setKey(kck);
+    job->setBinaryData(appPassword.toLatin1());
+    connect(job, &WritePasswordJob::finished, [](Job *) {
+        qCInfo(lcAccount) << "appPassword stored in keychain";
+    });
+    job->start();
+}
+
+void Account::retrieveAppPassword(){
+    const QString kck = AbstractCredentials::keychainKey(
+                url().toString(),
+                credentials()->user() + app_password,
+                id()
+    );
+
+    ReadPasswordJob *job = new ReadPasswordJob(Theme::instance()->appName());
+    job->setInsecureFallback(false);
+    job->setKey(kck);
+    connect(job, &WritePasswordJob::finished, [this](Job *incoming) {
+        ReadPasswordJob *readJob = static_cast<ReadPasswordJob *>(incoming);
+        QString pwd("");
+        // Error or no valid public key error out
+        if (readJob->error() == NoError &&
+                readJob->binaryData().length() > 0) {
+            pwd = readJob->binaryData();
+        }
+
+        emit appPasswordRetrieved(pwd);
+    });
+    job->start();
+}
+
+void Account::deleteAppPassword(){
+    const QString kck = AbstractCredentials::keychainKey(
+                url().toString(),
+                credentials()->user() + app_password,
+                id()
+    );
+
+    if (kck.isEmpty()) {
+        qCDebug(lcAccount) << "appPassword is empty";
+        return;
+    }
+
+    DeletePasswordJob *job = new DeletePasswordJob(Theme::instance()->appName());
+    job->setInsecureFallback(false);
+    job->setKey(kck);
+    job->start();
+}
 
 } // namespace OCC

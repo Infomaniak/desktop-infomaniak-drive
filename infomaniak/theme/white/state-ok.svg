@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>theme/white/state-ok</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M8,0 C12.418278,0 16,3.581722 16,8 C16,12.418278 12.418278,16 8,16 C3.583788,15.9950162 0.00498379363,12.416212 5.68434189e-14,8 C5.68434189e-14,5.0393493 1.60827437,2.45433121 3.9988403,1.07092854 L4,12.7072 L7.1616,12.7072 L7.1616,10.64 L8.31569515,9.5271859 L9.9584,12.7072 L13.4544,12.7072 L10.371311,7.55855154 L13.272,4.80313304 L9.472,4.80313304 L7.1616,7.41753304 L7.16094308,0.0434744369 C7.43670487,0.0147328811 7.71663191,0 8,0 Z" id="path-1"></path>
+    </defs>
+    <g id="theme/white/state-ok" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Combined-Shape" fill="#FFFFFF" xlink:href="#path-1"></use>
+    </g>
+</svg>

@@ -910,7 +910,7 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/gui/folder.cpp" line="1207"/>
         <source>All files in the sync folder '%1' folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
+These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
         <translation>A kiszolgáló egy &quot;% 1&quot; mappában levő összes fájlt törölték.Ezek a törlések szinkronizálódnak a helyi szinkronizálási mappájukhoz, így az ilyen fájlok nem érhetők el, hacsak nem jogosult a visszaállításra. Ha úgy dönt, hogy megtartja a fájlokat, akkor újra szinkronizálódik a szerverrel, ha jogosult erre.Ha úgy dönt, hogy törli a fájlokat, akkor nem lesznek elérhetők, hacsak nem vagy egy tulajdonos.</translation>
@@ -3790,6 +3790,32 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <location filename="../src/libsync/theme.cpp" line="351"/>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1 in the United States, other countries, or both.&lt;/p&gt;</source>
         <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>OCC::WebEnginePage</name>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="208"/>
+        <source>Invalid certificate detected</source>
+        <translation>Érvénytelen tanúsítvány észlelve</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/wizard/webview.cpp" line="209"/>
+        <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
+        <translation>A(z) „%1” kiszolgáló érvénytelen tanúsítványt adott meg. Folytatja?</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::WebFlowCredentials</name>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="162"/>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>Kijelentkezett a(z) %1 fiókjából, mint %2 felhasználó. Jelentkezzen be újra</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/creds/webflowcredentials.cpp" line="179"/>
+        <source>Please login with the user: %1</source>
+        <translation>Jelentkezzen be a következő felhasználóval: %1</translation>
     </message>
 </context>
 <context>

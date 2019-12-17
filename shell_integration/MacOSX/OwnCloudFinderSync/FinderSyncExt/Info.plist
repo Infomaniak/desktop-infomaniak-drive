@@ -37,6 +37,8 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>FinderSync</string>
 	</dict>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2019 Infomaniak Network SA. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

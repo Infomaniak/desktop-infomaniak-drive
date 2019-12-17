@@ -20,8 +20,9 @@
 
 - (instancetype)init
 {
+	NSLog(@"%s launched from %@ ; compiled at %s", __PRETTY_FUNCTION__, [[NSBundle mainBundle] bundlePath], __TIME__);
 	self = [super init];
-	
+
 	FIFinderSyncController *syncController = [FIFinderSyncController defaultController];
 	NSBundle *extBundle = [NSBundle bundleForClass:[self class]];
 	// This was added to the bundle's Info.plist to get it from the build system
@@ -55,7 +56,7 @@
 	// the sandboxed App Extension needs.
 	// https://developer.apple.com/library/mac/documentation/Security/Conceptual/AppSandboxDesignGuide/AppSandboxInDepth/AppSandboxInDepth.html#//apple_ref/doc/uid/TP40011183-CH3-SW24
 	NSString *serverName = [socketApiPrefix stringByAppendingString:@".socketApi"];
-	//NSLog(@"FinderSync serverName %@", serverName);
+	NSLog(@"FinderSync serverName %@", serverName);
 
 	_syncClientProxy = [[SyncClientProxy alloc] initWithDelegate:self serverName:serverName];
 	_registeredDirectories = [[NSMutableSet alloc] init];
