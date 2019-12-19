@@ -83,7 +83,7 @@ QString InfomaniakTheme::helpUrl() const
 #ifdef APPLICATION_HELP_URL
     return QString::fromLatin1(APPLICATION_HELP_URL);
 #else
-    return QString::fromLatin1("https://faq.infomaniak.com/2353");
+    return QString::fromLatin1("https://faq.infomaniak.com/2366");
 #endif
 }
 
