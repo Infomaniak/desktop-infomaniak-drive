@@ -120,6 +120,9 @@ GeneralSettings::GeneralSettings(QWidget *parent)
         _ui->copyrightLabel->hide();
     }
     _ui->copyrightLabel->setText(QStringLiteral("Copyright Infomaniak Network SA"));
+
+    // Hide Experimental options
+    _ui->experimentalGroupBox->hide();
 }
 
 GeneralSettings::~GeneralSettings()

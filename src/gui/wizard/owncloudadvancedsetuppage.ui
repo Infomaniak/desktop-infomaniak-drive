@@ -277,6 +277,17 @@
           <property name="horizontalSpacing">
            <number>0</number>
           </property>
+          <item row="1" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QCheckBox" name="confCheckBoxExternal">
+              <property name="text">
+               <string>Ask for confirmation before synchronizing e&amp;xternal storages</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
           <item row="0" column="0">
            <spacer name="horizontalSpacer_4">
             <property name="orientation">
@@ -320,13 +331,6 @@
              </widget>
             </item>
            </layout>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="confCheckBoxExternal">
-            <property name="text">
-             <string>Ask for confirmation before synchronizing e&amp;xternal storages</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </item>
@@ -486,8 +490,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>899</width>
-        <height>164</height>
+        <width>893</width>
+        <height>69</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -536,7 +540,6 @@
   <tabstop>rSyncEverything</tabstop>
   <tabstop>confCheckBoxSize</tabstop>
   <tabstop>confSpinBox</tabstop>
-  <tabstop>confCheckBoxExternal</tabstop>
   <tabstop>rSelectiveSync</tabstop>
   <tabstop>bSelectiveSync</tabstop>
   <tabstop>rManualFolder</tabstop>
@@ -547,70 +550,6 @@
  </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>rSyncEverything</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>confCheckBoxSize</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>217</x>
-     <y>78</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>298</x>
-     <y>126</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rSyncEverything</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>confSpinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>311</x>
-     <y>83</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>864</x>
-     <y>147</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rSyncEverything</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>confTraillingSizeLabel</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>277</x>
-     <y>76</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>902</x>
-     <y>147</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rSyncEverything</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>confCheckBoxExternal</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>181</x>
-     <y>78</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>382</x>
-     <y>174</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>rManualFolder</sender>
    <signal>toggled(bool)</signal>
@@ -672,6 +611,70 @@
     <hint type="destinationlabel">
      <x>54</x>
      <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rSyncEverything</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>confSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>311</x>
+     <y>83</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>864</x>
+     <y>147</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rSyncEverything</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>confCheckBoxSize</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>217</x>
+     <y>78</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>298</x>
+     <y>126</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rSyncEverything</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>confTraillingSizeLabel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>277</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>902</x>
+     <y>147</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rSyncEverything</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>confCheckBoxExternal</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>181</x>
+     <y>78</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>382</x>
+     <y>174</y>
     </hint>
    </hints>
   </connection>

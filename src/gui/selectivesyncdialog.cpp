@@ -76,7 +76,7 @@ SelectiveSyncWidget::SelectiveSyncWidget(AccountPtr account, QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
 
     auto header = new QLabel(this);
-    header->setText(tr("Deselect remote folders you do not wish to synchronize."));
+    header->setText(tr("Select remote folders you wish to synchronize."));
     header->setWordWrap(true);
     layout->addWidget(header);
 
