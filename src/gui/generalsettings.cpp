@@ -121,8 +121,9 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     }
     _ui->copyrightLabel->setText(QStringLiteral("Copyright Infomaniak Network SA"));
 
-    // Hide Experimental options
-    _ui->experimentalGroupBox->hide();
+    if (!theme->deltaSynchronizationAvailable()) {
+        _ui->experimentalGroupBox->hide();
+    }
 }
 
 GeneralSettings::~GeneralSettings()

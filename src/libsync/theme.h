@@ -226,6 +226,11 @@ public:
     virtual QString updateCheckUrl() const;
 
     /**
+     * Check if delta-synchronization is available
+     */
+    virtual bool deltaSynchronizationAvailable() const;
+
+    /**
      * When true, the setup wizard will show the selective sync dialog by default and default
      * to nothing selected
      */

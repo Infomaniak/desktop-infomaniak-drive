@@ -296,6 +296,11 @@ QString Theme::updateCheckUrl() const
     return QLatin1String("https://updates.owncloud.com/client/");
 }
 
+bool Theme::deltaSynchronizationAvailable() const
+{
+    return true;
+}
+
 qint64 Theme::newBigFolderSizeLimit() const
 {
     // Default to 500MB
