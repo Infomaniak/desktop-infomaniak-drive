@@ -174,9 +174,9 @@ void SelectiveSyncWidget::recursiveInsert(QTreeWidgetItem *parent, QStringList p
             item->setText(0, pathTrail.first());
             if (size >= 0) {
                 item->setText(1, Utility::octetsToString(size));
-                item->setData(1, Qt::UserRole, size);
+                item->setData(1, Qt::UserRole, size); // Display size
+                item->setData(1, Qt::UserRole + 1, size); // Full size
             }
-            //            item->setData(0, Qt::UserRole, pathTrail.first());
             item->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
         }
 
@@ -240,7 +240,8 @@ void SelectiveSyncWidget::slotUpdateDirectories(QStringList list)
         qint64 size = job ? job->_sizes.value(pathToRemove, -1) : -1;
         if (size >= 0) {
             root->setText(1, Utility::octetsToString(size));
-            root->setData(1, Qt::UserRole, size);
+            root->setData(1, Qt::UserRole, size); // Display size
+            root->setData(1, Qt::UserRole + 1, size); // Full size
         }
     }
 
@@ -304,6 +305,9 @@ void SelectiveSyncWidget::slotItemChanged(QTreeWidgetItem *item, int col)
         return;
 
     if (item->checkState(0) == Qt::Checked) {
+        // Update item display size
+        item->setData(1, Qt::UserRole, item->data(1, Qt::UserRole + 1));
+
         // If we are checked, check that we may need to check the parent as well if
         // all the siblings are also checked
         QTreeWidgetItem *parent = item->parent();
@@ -319,6 +323,9 @@ void SelectiveSyncWidget::slotItemChanged(QTreeWidgetItem *item, int col)
                 parent->setCheckState(0, Qt::Checked);
             } else if (parent->checkState(0) == Qt::Unchecked) {
                 parent->setCheckState(0, Qt::PartiallyChecked);
+            } else {
+                // Refresh parent
+                slotItemChanged(parent, col);
             }
         }
         // also check all the children
@@ -330,9 +337,18 @@ void SelectiveSyncWidget::slotItemChanged(QTreeWidgetItem *item, int col)
     }
 
     if (item->checkState(0) == Qt::Unchecked) {
+        // Update item display size
+        item->setData(1, Qt::UserRole, 0);
+
         QTreeWidgetItem *parent = item->parent();
-        if (parent && parent->checkState(0) == Qt::Checked) {
-            parent->setCheckState(0, Qt::PartiallyChecked);
+        if (parent) {
+            if (parent->checkState(0) == Qt::Checked) {
+                parent->setCheckState(0, Qt::PartiallyChecked);
+            }
+            else {
+                // Refresh parent
+                slotItemChanged(parent, col);
+            }
         }
 
         // Uncheck all the children
@@ -349,11 +365,24 @@ void SelectiveSyncWidget::slotItemChanged(QTreeWidgetItem *item, int col)
     }
 
     if (item->checkState(0) == Qt::PartiallyChecked) {
+        // Update item display size
+        auto size = estimatedSize(item);
+        item->setData(1, Qt::UserRole, size);
+
         QTreeWidgetItem *parent = item->parent();
-        if (parent && parent->checkState(0) != Qt::PartiallyChecked) {
-            parent->setCheckState(0, Qt::PartiallyChecked);
+        if (parent) {
+            if (parent->checkState(0) == Qt::Checked) {
+                parent->setCheckState(0, Qt::PartiallyChecked);
+            }
+            else {
+                // Refresh parent
+                slotItemChanged(parent, col);
+            }
         }
     }
+
+    // Display size
+    item->setText(1, Utility::octetsToString(item->data(1, Qt::UserRole).toLongLong()));
 }
 
 QStringList SelectiveSyncWidget::createBlackList(QTreeWidgetItem *root) const
@@ -414,11 +443,18 @@ qint64 SelectiveSyncWidget::estimatedSize(QTreeWidgetItem *root)
 
     qint64 result = 0;
     if (root->childCount()) {
+        result = root->data(1, Qt::UserRole + 1).toLongLong();
         for (int i = 0; i < root->childCount(); ++i) {
-            auto r = estimatedSize(root->child(i));
-            if (r < 0)
-                return r;
-            result += r;
+            if (root->child(i)->checkState(0) == Qt::Unchecked) {
+                result -= root->child(i)->data(1, Qt::UserRole + 1).toLongLong();
+            }
+            else if (root->child(i)->checkState(0) == Qt::PartiallyChecked) {
+                auto r = estimatedSize(root->child(i));
+                if (r < 0)
+                    return r;
+
+                result -= root->child(i)->data(1, Qt::UserRole + 1).toLongLong() - r;
+            }
         }
     } else {
         // We did not load from the server so we have no idea how much we will sync from this branch
