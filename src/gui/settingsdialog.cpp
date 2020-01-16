@@ -107,6 +107,16 @@ SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
     NetworkSettings *networkSettings = new NetworkSettings;
     _ui->stack->addWidget(networkSettings);
 
+    // Add spacer
+    /*QWidget* empty = new QWidget();
+    empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    _toolBar->addWidget(empty);*/
+
+    // Add new drive button
+    /*QAction *newDriveAction = new QAction(QIcon(Theme::instance()->svgThemeIcon("add")), "", this);
+    _actionGroup->addAction(newDriveAction);
+    _toolBar->addAction(newDriveAction);*/
+
     _actionGroupWidgets.insert(_activityAction, _activitySettings);
     _actionGroupWidgets.insert(generalAction, generalSettings);
     _actionGroupWidgets.insert(networkAction, networkSettings);

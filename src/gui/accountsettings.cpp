@@ -136,7 +136,16 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
     ui->_folderList->setAttribute(Qt::WA_Hover, true);
     ui->_folderList->installEventFilter(mouseCursorChanger);
 
-    createAccountToolbox();
+    // Add tool buttons
+    ui->_deleteButton->setIcon(QIcon(Theme::instance()->svgThemeIcon("delete")));
+    ui->_deleteButton->setToolTip(tr("Remove"));
+    ui->_addButton->setIcon(QIcon(Theme::instance()->svgThemeIcon("add")));
+    ui->_addButton->setToolTip(tr("Add new"));
+    connect(ui->_disconnectButton, &QToolButton::clicked, this, &AccountSettings::slotToggleSignInState);
+    connect(ui->_deleteButton, &QToolButton::clicked, this, &AccountSettings::slotDeleteAccount);
+    connect(ui->_addButton, &QToolButton::clicked, this, &AccountSettings::slotOpenAccountWizard);
+    slotAccountAdded(_accountState);
+
     connect(AccountManager::instance(), &AccountManager::accountAdded,
         this, &AccountSettings::slotAccountAdded);
     connect(ui->_folderList, &QWidget::customContextMenuRequested,
@@ -186,29 +195,6 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
         this, &AccountSettings::slotUpdateQuota);
 
     setStyleSheet("QToolButton#sslButton {border: none} QToolButton#sslButton::menu-indicator {image: none}");
-}
-
-
-void AccountSettings::createAccountToolbox()
-{
-    QMenu *menu = new QMenu();
-    _addAccountAction = new QAction(tr("Add new"), this);
-    menu->addAction(_addAccountAction);
-    connect(_addAccountAction, &QAction::triggered, this, &AccountSettings::slotOpenAccountWizard);
-
-    _toggleSignInOutAction = new QAction(tr("Log out"), this);
-    connect(_toggleSignInOutAction, &QAction::triggered, this, &AccountSettings::slotToggleSignInState);
-    menu->addAction(_toggleSignInOutAction);
-
-    QAction *action = new QAction(tr("Remove"), this);
-    menu->addAction(action);
-    connect(action, &QAction::triggered, this, &AccountSettings::slotDeleteAccount);
-
-    ui->_accountToolbox->setText(tr("Account") + QLatin1Char(' '));
-    ui->_accountToolbox->setMenu(menu);
-    ui->_accountToolbox->setPopupMode(QToolButton::InstantPopup);
-
-    slotAccountAdded(_accountState);
 }
 
 QString AccountSettings::selectedFolderAlias() const
@@ -818,6 +804,11 @@ void AccountSettings::slotAccountStateChanged()
     int state = _accountState ? _accountState->state() : AccountState::Disconnected;
     if (_accountState) {
         ui->sslButton->updateAccountState(_accountState);
+
+        ui->_disconnectButton->setIcon(QIcon(Theme::instance()->svgThemeIcon(
+                                                 state == AccountState::Connected ? "logout" : "login")));
+        ui->_disconnectButton->setToolTip(tr(state == AccountState::Connected ? "Log out" : "Log in"));
+
         AccountPtr account = _accountState->account();
         QUrl safeUrl(account->url());
         safeUrl.setPassword(QString()); // Remove the password from the URL to avoid showing it in the UI
@@ -890,15 +881,6 @@ void AccountSettings::slotAccountStateChanged()
     // Disabling expansion of folders might require hiding the selective
     // sync user interface buttons.
     refreshSelectiveSyncStatus();
-
-    /* set the correct label for the Account toolbox button */
-    if (_accountState) {
-        if (_accountState->isSignedOut()) {
-            _toggleSignInOutAction->setText(tr("Log in"));
-        } else {
-            _toggleSignInOutAction->setText(tr("Log out"));
-        }
-    }
 }
 
 void AccountSettings::slotLinkActivated(const QString &link)
@@ -1027,9 +1009,9 @@ void AccountSettings::slotAccountAdded(AccountState *)
     // there is already one account.
     int s = AccountManager::instance()->accounts().size();
     if (s > 0 && !Theme::instance()->multiAccount()) {
-        _addAccountAction->setVisible(false);
+        ui->_addButton->setVisible(false);
     } else {
-        _addAccountAction->setVisible(true);
+        ui->_addButton->setVisible(true);
     }
 }
 

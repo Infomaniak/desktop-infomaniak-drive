@@ -121,6 +121,24 @@ QIcon Theme::applicationIcon() const
     return themeIcon(QStringLiteral(APPLICATION_ICON_NAME "-icon"));
 }
 
+QIcon Theme::svgThemeIcon(const QString &name) const
+{
+    QString flavor = systrayIconFlavor(true);
+
+    QString key = name + "," + flavor;
+    QIcon &cached = _iconCache[key]; // Take reference, this will also "set" the cache entry
+    if (cached.isNull()) {
+        // Search for svg icon
+        QString pixmapName = QString::fromLatin1(":/client/theme/%1/%2.svg").arg(flavor).arg(name);
+        if (QFile::exists(pixmapName)) {
+            QPixmap px(pixmapName);
+            cached.addPixmap(px);
+        }
+    }
+
+    return cached;
+}
+
 /*
  * helper to load a icon from either the icon theme the desktop provides or from
  * the apps Qt resources.

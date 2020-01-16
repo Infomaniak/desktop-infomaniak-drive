@@ -97,7 +97,6 @@ private:
     void showConnectionLabel(const QString &message,
         QStringList errors = QStringList());
     bool event(QEvent *) Q_DECL_OVERRIDE;
-    void createAccountToolbox();
 
     /// Returns the alias of the selected folder, empty string if none
     QString selectedFolderAlias() const;
@@ -109,8 +108,6 @@ private:
     bool _wasDisabledBefore;
     AccountState *_accountState;
     QuotaInfo _quotaInfo;
-    QAction *_toggleSignInOutAction;
-    QAction *_addAccountAction;
 };
 
 } // namespace OCC
