@@ -26,6 +26,7 @@
 #include "activitywidget.h"
 #include "accountmanager.h"
 #include "protocolwidget.h"
+#include "owncloudsetupwizard.h"
 
 #include <QLabel>
 #include <QStandardItemModel>
@@ -108,14 +109,24 @@ SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
     _ui->stack->addWidget(networkSettings);
 
     // Add spacer
-    /*QWidget* empty = new QWidget();
-    empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    _toolBar->addWidget(empty);*/
+    QWidget* emptyMiddle = new QWidget(this);
+    emptyMiddle->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    _toolBar->addWidget(emptyMiddle);
 
     // Add new drive button
-    /*QAction *newDriveAction = new QAction(QIcon(Theme::instance()->svgThemeIcon("add")), "", this);
-    _actionGroup->addAction(newDriveAction);
-    _toolBar->addAction(newDriveAction);*/
+    _addDriveButton = new QPushButton(this);
+    _addDriveButton->setIcon(QIcon(Theme::instance()->svgThemeIcon("add")));
+    _addDriveButton->setToolTip(tr("Add new"));
+    _toolBar->addWidget(_addDriveButton);
+    connect(_addDriveButton, &QPushButton::clicked, this, &SettingsDialog::slotOpenAccountWizard);
+    slotAccountAdded();
+    connect(AccountManager::instance(), &AccountManager::accountAdded, this, &SettingsDialog::slotAccountAdded);
+
+    // Add spacer
+    QWidget* emptyRight = new QWidget(this);
+    emptyRight->setFixedSize(QSize(10, 0));
+    emptyRight->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    _toolBar->addWidget(emptyRight);
 
     _actionGroupWidgets.insert(_activityAction, _activitySettings);
     _actionGroupWidgets.insert(generalAction, generalSettings);
@@ -315,6 +326,28 @@ void SettingsDialog::accountRemoved(AccountState *s)
     // configured.
     if (AccountManager::instance()->accounts().isEmpty()) {
         hide();
+    }
+}
+
+void SettingsDialog::slotOpenAccountWizard()
+{
+    // We can't call isSystemTrayAvailable with appmenu-qt5 because it breaks the systemtray
+    // (issue #4693, #4944)
+    if (qgetenv("QT_QPA_PLATFORMTHEME") == "appmenu-qt5" || QSystemTrayIcon::isSystemTrayAvailable()) {
+        topLevelWidget()->close();
+    }
+    OwncloudSetupWizard::runWizard(qApp, SLOT(slotownCloudWizardDone(int)), 0);
+}
+
+void SettingsDialog::slotAccountAdded()
+{
+    // if the theme is limited to single account, the button must hide if
+    // there is already one account.
+    int s = AccountManager::instance()->accounts().size();
+    if (s > 0 && !Theme::instance()->multiAccount()) {
+        _addDriveButton->setVisible(false);
+    } else {
+        _addDriveButton->setVisible(true);
     }
 }
 

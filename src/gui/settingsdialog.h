@@ -71,6 +71,8 @@ protected:
 private slots:
     void accountAdded(AccountState *);
     void accountRemoved(AccountState *);
+    void slotOpenAccountWizard();
+    void slotAccountAdded();
 
 private:
     void customizeStyle();
@@ -90,6 +92,7 @@ private:
     QHash<Account *, QAction *> _actionForAccount;
 
     QToolBar *_toolBar;
+    QPushButton* _addDriveButton;
 
     ActivitySettings *_activitySettings;
 

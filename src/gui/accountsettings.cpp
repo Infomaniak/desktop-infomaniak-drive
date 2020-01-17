@@ -28,7 +28,6 @@
 #include "accountstate.h"
 #include "quotainfo.h"
 #include "accountmanager.h"
-#include "owncloudsetupwizard.h"
 #include "creds/abstractcredentials.h"
 #include "creds/httpcredentialsgui.h"
 #include "tooltipupdater.h"
@@ -139,15 +138,9 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
     // Add tool buttons
     ui->_deleteButton->setIcon(QIcon(Theme::instance()->svgThemeIcon("delete")));
     ui->_deleteButton->setToolTip(tr("Remove"));
-    ui->_addButton->setIcon(QIcon(Theme::instance()->svgThemeIcon("add")));
-    ui->_addButton->setToolTip(tr("Add new"));
     connect(ui->_disconnectButton, &QToolButton::clicked, this, &AccountSettings::slotToggleSignInState);
     connect(ui->_deleteButton, &QToolButton::clicked, this, &AccountSettings::slotDeleteAccount);
-    connect(ui->_addButton, &QToolButton::clicked, this, &AccountSettings::slotOpenAccountWizard);
-    slotAccountAdded(_accountState);
 
-    connect(AccountManager::instance(), &AccountManager::accountAdded,
-        this, &AccountSettings::slotAccountAdded);
     connect(ui->_folderList, &QWidget::customContextMenuRequested,
         this, &AccountSettings::slotCustomContextMenuRequested);
     connect(ui->_folderList, &QAbstractItemView::clicked,
@@ -203,16 +196,6 @@ QString AccountSettings::selectedFolderAlias() const
     if (!selected.isValid())
         return "";
     return _model->data(selected, FolderStatusDelegate::FolderAliasRole).toString();
-}
-
-void AccountSettings::slotOpenAccountWizard()
-{
-    // We can't call isSystemTrayAvailable with appmenu-qt5 because it breaks the systemtray
-    // (issue #4693, #4944)
-    if (qgetenv("QT_QPA_PLATFORMTHEME") == "appmenu-qt5" || QSystemTrayIcon::isSystemTrayAvailable()) {
-        topLevelWidget()->close();
-    }
-    OwncloudSetupWizard::runWizard(qApp, SLOT(slotownCloudWizardDone(int)), 0);
 }
 
 void AccountSettings::slotToggleSignInState()
@@ -1000,18 +983,6 @@ void AccountSettings::refreshSelectiveSyncStatus()
                 ui->selectiveSyncStatus->hide();
             }
         });
-    }
-}
-
-void AccountSettings::slotAccountAdded(AccountState *)
-{
-    // if the theme is limited to single account, the button must hide if
-    // there is already one account.
-    int s = AccountManager::instance()->accounts().size();
-    if (s > 0 && !Theme::instance()->multiAccount()) {
-        ui->_addButton->setVisible(false);
-    } else {
-        ui->_addButton->setVisible(true);
     }
 }
 
