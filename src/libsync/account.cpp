@@ -140,6 +140,16 @@ QString Account::id() const
     return _id;
 }
 
+void Account::setDriveName(const QString &name)
+{
+    _driveName = name;
+}
+
+QString Account::driveName() const
+{
+    return _driveName;
+}
+
 AbstractCredentials *Account::credentials() const
 {
     return _credentials.data();

@@ -316,6 +316,10 @@ void ConnectionValidator::slotUserFetched(const QJsonDocument &json)
     if (!displayName.isEmpty()) {
         _account->setDavDisplayName(displayName);
     }
+    QString driveName = json.object().value("ocs").toObject().value("data").toObject().value("drive-name").toString();
+    if (!driveName.isEmpty()) {
+        _account->setDriveName(driveName);
+    }
 #ifndef TOKEN_AUTH_ONLY
     AvatarJob *job = new AvatarJob(_account, _account->davUser(), 128, this);
     job->setTimeout(20 * 1000);

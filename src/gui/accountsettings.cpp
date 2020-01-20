@@ -800,16 +800,14 @@ void AccountSettings::slotAccountStateChanged()
             _model->slotUpdateFolderState(folder);
         }
 
-        QString server = QString::fromLatin1("<a href=\"%1\">%2</a>")
-                             .arg(Utility::escape(account->url().toString()),
-                                 Utility::escape(safeUrl.toString()));
-        QString serverWithUser = server;
+        QString drive = account->driveName();
+        QString driveWithUser = drive;
         if (AbstractCredentials *cred = account->credentials()) {
             QString user = account->davDisplayName();
             if (user.isEmpty()) {
                 user = cred->user();
             }
-            serverWithUser = tr("%1 as <i>%2</i>").arg(server, Utility::escape(user));
+            driveWithUser = tr("<i>%1</i> as <i>%2</i>").arg(drive, Utility::escape(user));
         }
 
         if (state == AccountState::Connected) {
@@ -817,13 +815,13 @@ void AccountSettings::slotAccountStateChanged()
             if (account->serverVersionUnsupported()) {
                 errors << tr("The server version %1 is unsupported! Proceed at your own risk.").arg(account->serverVersion());
             }
-            showConnectionLabel(tr("Connected to %1.").arg(serverWithUser), errors);
+            showConnectionLabel(tr("Connected to %1.").arg(driveWithUser), errors);
         } else if (state == AccountState::ServiceUnavailable) {
-            showConnectionLabel(tr("Server %1 is temporarily unavailable.").arg(server));
+            showConnectionLabel(tr("Drive %1 is temporarily unavailable.").arg(drive));
         } else if (state == AccountState::MaintenanceMode) {
-            showConnectionLabel(tr("Server %1 is currently in maintenance mode.").arg(server));
+            showConnectionLabel(tr("Drive %1 is currently in maintenance mode.").arg(drive));
         } else if (state == AccountState::SignedOut) {
-            showConnectionLabel(tr("Signed out from %1.").arg(serverWithUser));
+            showConnectionLabel(tr("Signed out from %1.").arg(driveWithUser));
         } else if (state == AccountState::AskingCredentials) {
             QUrl url;
             if (auto cred = qobject_cast<HttpCredentialsGui *>(account->credentials())) {
@@ -836,11 +834,11 @@ void AccountSettings::slotAccountStateChanged()
                                        "<a href='%1'>Click here</a> to re-open the browser.")
                                         .arg(url.toString(QUrl::FullyEncoded)));
             } else {
-                showConnectionLabel(tr("Connecting to %1...").arg(serverWithUser));
+                showConnectionLabel(tr("Connecting to %1...").arg(driveWithUser));
             }
         } else {
             showConnectionLabel(tr("No connection to %1 at %2.")
-                                    .arg(Utility::escape(Theme::instance()->appNameGUI()), server),
+                                    .arg(Utility::escape(Theme::instance()->appNameGUI()), drive),
                 _accountState->connectionErrors());
         }
     } else {

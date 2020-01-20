@@ -120,7 +120,7 @@ bool ActivityListModel::canFetchMore(const QModelIndex &) const
 
 void ActivityListModel::startFetchJob(AccountState *s)
 {
-    if (!s->isConnected()) {
+ if (!s->isConnected()) {
         return;
     }
     JsonApiJob *job = new JsonApiJob(s->account(), QLatin1String("ocs/v1.php/cloud/activity"), this);

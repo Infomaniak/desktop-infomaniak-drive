@@ -53,7 +53,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Connected with &lt;server&gt; as &lt;user&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Connected with KDrive &amp;lt;server&amp;gt; as &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>
