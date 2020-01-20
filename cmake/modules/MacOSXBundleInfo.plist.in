@@ -13,7 +13,7 @@
     <key>CFBundleIconFile</key>
     <string>@APPLICATION_ICON_NAME@.icns</string>
     <key>CFBundleName</key>
-    <string>@APPLICATION_NAME@.icns</string>
+    <string>@APPLICATION_NAME@</string>
     <key>CFBundleIdentifier</key>
     <string>@APPLICATION_REV_DOMAIN@</string>
     <key>CFBundleInfoDictionaryVersion</key>
