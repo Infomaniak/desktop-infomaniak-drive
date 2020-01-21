@@ -268,7 +268,7 @@ signals:
     void serverVersionChanged(Account *account, const QString &newVersion, const QString &oldVersion);
 
     void accountChangedAvatar();
-    void accountChangedDisplayName();
+    void accountChangedDriveName();
 
     /// Used in RemoteWipe
     void appPasswordRetrieved(QString);

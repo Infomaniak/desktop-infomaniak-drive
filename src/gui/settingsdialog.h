@@ -61,7 +61,7 @@ public slots:
     void slotRefreshActivity(AccountState *accountState);
     void slotRefreshActivityAccountStateSender();
     void slotAccountAvatarChanged();
-    void slotAccountDisplayNameChanged();
+    void slotAccountDriveNameChanged();
 
 protected:
     void reject() Q_DECL_OVERRIDE;

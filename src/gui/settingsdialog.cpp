@@ -227,25 +227,8 @@ void SettingsDialog::showIssuesList(const QString &folderAlias)
 
 void SettingsDialog::accountAdded(AccountState *s)
 {
-    auto height = _toolBar->sizeHint().height();
-
-    bool brandingSingleAccount = !Theme::instance()->multiAccount();
-
-    QAction *accountAction;
-    QImage avatar = s->account()->avatar();
-    const QString actionText = brandingSingleAccount ? tr("Account") : s->account()->displayName();
-    if (avatar.isNull()) {
-        accountAction = createColorAwareAction(QLatin1String(":/client/resources/account.png"),
-            actionText);
-    } else {
-        QIcon icon(QPixmap::fromImage(AvatarJob::makeCircularAvatar(avatar)));
-        accountAction = createActionWithIcon(icon, actionText);
-    }
-
-    if (!brandingSingleAccount) {
-        accountAction->setToolTip(s->account()->displayName());
-        accountAction->setIconText(SettingsDialogCommon::shortDisplayNameForSettings(s->account().data(),  height * buttonSizeRatio));
-    }
+    QAction *accountAction = new QAction(this);
+    accountAction->setCheckable(true);
     _toolBar->insertAction(_toolBar->actions().at(0), accountAction);
     auto accountSettings = new AccountSettings(s, this);
     _ui->stack->insertWidget(0, accountSettings);
@@ -255,11 +238,10 @@ void SettingsDialog::accountAdded(AccountState *s)
     accountAction->trigger();
 
     connect(accountSettings, &AccountSettings::folderChanged, _gui, &ownCloudGui::slotFoldersChanged);
-    connect(accountSettings, &AccountSettings::openFolderAlias,
-        _gui, &ownCloudGui::slotFolderOpenAction);
+    connect(accountSettings, &AccountSettings::openFolderAlias, _gui, &ownCloudGui::slotFolderOpenAction);
     connect(accountSettings, &AccountSettings::showIssuesList, this, &SettingsDialog::showIssuesList);
     connect(s->account().data(), &Account::accountChangedAvatar, this, &SettingsDialog::slotAccountAvatarChanged);
-    connect(s->account().data(), &Account::accountChangedDisplayName, this, &SettingsDialog::slotAccountDisplayNameChanged);
+    connect(s->account().data(), &Account::accountChangedDriveName, this, &SettingsDialog::slotAccountDriveNameChanged);
 
     // Refresh immediatly when getting online
     connect(s, &AccountState::isConnectedChanged, this, &SettingsDialog::slotRefreshActivityAccountStateSender);
@@ -274,23 +256,32 @@ void SettingsDialog::slotAccountAvatarChanged()
         QAction *action = _actionForAccount[account];
         if (action) {
             QImage pix = account->avatar();
-            if (!pix.isNull()) {
-                action->setIcon(QPixmap::fromImage(AvatarJob::makeCircularAvatar(pix)));
+            QIcon icon;
+            if (pix.isNull()) {
+                icon = createColorAwareIcon(":/client/resources/account.png");
             }
+            else {
+                icon = QPixmap::fromImage(AvatarJob::makeCircularAvatar(pix));
+            }
+            action->setIcon(icon);
         }
     }
 }
 
-void SettingsDialog::slotAccountDisplayNameChanged()
+void SettingsDialog::slotAccountDriveNameChanged()
 {
     Account *account = static_cast<Account *>(sender());
     if (account && _actionForAccount.contains(account)) {
         QAction *action = _actionForAccount[account];
         if (action) {
-            QString displayName = account->displayName();
-            action->setText(displayName);
-            auto height = _toolBar->sizeHint().height();
-            action->setIconText(SettingsDialogCommon::shortDisplayNameForSettings(account, height * buttonSizeRatio));
+            bool brandingSingleAccount = !Theme::instance()->multiAccount();
+            const QString driveName = brandingSingleAccount ? tr("Account") : account->driveName();
+            action->setText(driveName);
+            if (!brandingSingleAccount) {
+                action->setToolTip(driveName);
+                auto height = _toolBar->sizeHint().height();
+                action->setIconText(SettingsDialogCommon::shortDisplayNameForSettings(account, height * buttonSizeRatio));
+            }
         }
     }
 }

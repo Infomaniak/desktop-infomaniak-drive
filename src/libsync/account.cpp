@@ -132,7 +132,6 @@ QString Account::davDisplayName() const
 void Account::setDavDisplayName(const QString &newDisplayName)
 {
     _displayName = newDisplayName;
-    emit accountChangedDisplayName();
 }
 
 QString Account::id() const
@@ -143,6 +142,7 @@ QString Account::id() const
 void Account::setDriveName(const QString &name)
 {
     _driveName = name;
+    emit accountChangedDriveName();
 }
 
 QString Account::driveName() const
