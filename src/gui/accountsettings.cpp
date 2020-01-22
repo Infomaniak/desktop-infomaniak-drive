@@ -362,6 +362,24 @@ void AccountSettings::slotFolderListClicked(const QModelIndex &indx)
             ui->_folderList->setExpanded(indx, expanded);
         }
     }
+    else if (_model->classify(indx) == FolderStatusModel::SubFolder) {
+        bool refresh = false;
+        auto subIndx = indx;
+        auto parentIndx = subIndx.parent();
+        while (parentIndx != QModelIndex() && parentIndx.isValid() && _model->classify(parentIndx) == FolderStatusModel::SubFolder) {
+            auto &parentFolderInfo = static_cast<FolderStatusModel::SubFolderInfo *>(parentIndx.internalPointer())->_subs[parentIndx.row()];
+            auto &subFolderInfo = static_cast<FolderStatusModel::SubFolderInfo *>(indx.internalPointer())->_subs[indx.row()];
+            parentFolderInfo._size = (subFolderInfo._checked == Qt::Checked
+                                      ? parentFolderInfo._size + subFolderInfo._size
+                                      : parentFolderInfo._size - subFolderInfo._size);
+            refresh = true;
+            subIndx = parentIndx;
+            parentIndx = subIndx.parent();
+        }
+        if (refresh) {
+            _model->layoutChanged();
+        }
+    }
 }
 
 void AccountSettings::slotAddFolder()
