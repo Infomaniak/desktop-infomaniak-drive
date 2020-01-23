@@ -371,19 +371,19 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Connected with KDrive &amp;lt;server&amp;gt; as &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Connessione al &amp;lt;server&amp;gt; KDrive come &amp;lt;utente&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&lt;i&gt;%1&lt;/i&gt; as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;i&gt;%1&lt;/i&gt; come &lt;i&gt;%2&lt;/i&gt;</translation>
     </message>
     <message>
         <source>Drive %1 is temporarily unavailable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il drive %1 è temporaneamente non disponibile.</translation>
     </message>
     <message>
         <source>Drive %1 is currently in maintenance mode.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il drive %1 è attualmente in manutenzione.</translation>
     </message>
 </context>
 <context>
@@ -504,25 +504,25 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
     </message>
     <message numerus="yes">
         <source>You received %n new request(s) from %1.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Hai ricevuto %n nuova richiesta da %1.</numerusform>
+            <numerusform>Hai ricevuto %n nuove richieste da %1.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>You received %n new request(s) from %1 and %2.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Hai ricevuto %n nuova richiesta da %1 e %2.</numerusform>
+            <numerusform>Hai ricevuto %n nuove richieste da %1 e %2.</numerusform>
         </translation>
     </message>
     <message>
         <source>You received new request from %1, %2 and other accounts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hai ricevuto una richiesta da %1, %2 e altri account.</translation>
     </message>
     <message>
         <source>Action required. Open the activity view to react.</source>
-        <translation type="unfinished"></translation>
+        <translation>Azione richiesta. Apri la visualizzazione attività per reagire.</translation>
     </message>
 </context>
 <context>
@@ -853,7 +853,10 @@ Se è stato un errore e decidi di mantenere i tuoi file, verranno risincronizzat
 These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tutti i file nella cartella di sincronizzazione &apos;%1&apos; sono stati eliminati dal server.
+Queste eliminazioni verranno sincronizzate sulla tua cartella di sincronizzazione, rendendole indisponibili se non disponi dei diritti di ripristino. 
+Se scegli di mantenere i file, saranno sincronizzati nuovamente con il server se hai diritto a farlo.
+Se decidi di eliminare i file, non saranno più a tua disposizione, a meno che tu non sia il proprietario.</translation>
     </message>
 </context>
 <context>
@@ -1086,14 +1089,14 @@ If you decide to delete the files, they will be unavailable to you, unless you a
     <name>OCC::FolderWatcher</name>
     <message>
         <source>The watcher did not receive a test notification.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il watcher non ha ricevuto alcuna notifica di test.</translation>
     </message>
 </context>
 <context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
-        <translation type="unfinished"></translation>
+        <translation>Questo problema si verifica solitamente quando i watcher inotify sono esauriti. Controlla la sezione FAQ per maggiori dettagli.</translation>
     </message>
 </context>
 <context>
@@ -1173,7 +1176,7 @@ If you decide to delete the files, they will be unavailable to you, unless you a
     </message>
     <message>
         <source>Use virtual files instead of downloading content immediately %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Usa file virtuali invece di scaricare immediatamente i contenuti %1</translation>
     </message>
 </context>
 <context>
@@ -1191,19 +1194,19 @@ If you decide to delete the files, they will be unavailable to you, unless you a
     <name>OCC::GETFileZsyncJob</name>
     <message>
         <source>Unable to parse zsync.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile analizzare zsync.</translation>
     </message>
     <message>
         <source>Failed to get zsync byte ranges.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile ottenere gli intervalli di byte di zsync.</translation>
     </message>
     <message>
         <source>Failed to initialize zsync receive structure.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile avviare la struttura di ricezione di zsync.</translation>
     </message>
     <message>
         <source>We received a different E-Tag for delta. Retrying next time.</source>
-        <translation type="unfinished"></translation>
+        <translation>È stato ricevuto un E-Tag diverso per delta. Riproveremo al prossimo tentativo.</translation>
     </message>
 </context>
 <context>
@@ -1322,7 +1325,7 @@ Nota che ciò seleziona solo da dove vengono presi gli aggiornamenti e che non c
     </message>
     <message>
         <source>Enable Delta-Synchronization for files larger than</source>
-        <translation type="unfinished"></translation>
+        <translation>Abilita sincronizzazione delta per file di dimensioni superiori a</translation>
     </message>
 </context>
 <context>
@@ -1402,22 +1405,24 @@ Nota che ciò seleziona solo da dove vengono presi gli aggiornamenti e che non c
         <source>Files or folders matching a pattern will not be synchronized. Changes take effect the next time folders are synchronized.
 
 Items where deletion is allowed will be deleted if they prevent a directory from being removed. This is useful for meta data.</source>
-        <translation type="unfinished"></translation>
+        <translation>I file o le cartelle che corrispondono a un pattern non verrano sincronizzati. Le modifiche entreranno in vigore alla prossima sincronizzazione delle cartelle.
+
+Gli elementi che è possibile eliminare non saranno rimossi se impediscono l&apos;eliminazione di una cartella. Questa funzione è utile per i metadati.</translation>
     </message>
 </context>
 <context>
     <name>OCC::InfomaniakTheme</name>
     <message>
         <source>&lt;p&gt;Version %2. For more information visit &lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Versione %2. Per maggiori informazioni, visita &lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Copyright Infomaniak Network SA, ownCloud GmbH and Nextcloud GmbH&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Copyright Infomaniak Network SA, ownCloud GmbH e Nextcloud GmbH&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Distribuito da %1 e sotto licenza GNU General Public License (GPL) versione 2.0.&lt;br/&gt;%2 e il logo di %2 sono marchi registrati di %1.&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -1504,20 +1509,23 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
 Since log files can get large, the client will start a new one for each sync run and compress older ones. It is also recommended to enable deleting log files after a couple of hours to avoid consuming too much disk space.
 If enabled, logs will be written to %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Il client non è in grado di creare log di debug in una cartella temporanea. Questi log sono molto utili per la diagnostica di problemi.
+Poiché i file di log possono avere grandi dimensioni, il client ne inizierà uno nuovo per ogni ciclo di sincronizzazione e comprimerà quelli precedenti. Si raccomanda anche di abilitare l&apos;eliminazione dei file di log dopo alcune ore per evitare di occupare troppo spazio sul disco.
+Se abilitati, i log verranno memorizzati in %1</translation>
     </message>
     <message>
         <source>Enable logging to temporary folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Abilita la memorizzazione dei log in una cartella temporanea</translation>
     </message>
     <message>
         <source>Delete logs older than %1 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimina i log meno recenti di %1 ore</translation>
     </message>
     <message>
         <source>These settings persist across client restarts.
 Note that using any logging command line options will override the settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>Queste impostazioni si conservano anche in caso di riavvio del client.
+L&apos;utilizzo di qualsiasi opzione per i log tramite linea di comando sovrascriverà le impostazioni.</translation>
     </message>
 </context>
 <context>
@@ -1555,23 +1563,23 @@ Note that using any logging command line options will override the settings.</so
     </message>
     <message>
         <source>Update Failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiornamento fallito</translation>
     </message>
     <message>
         <source>&lt;p&gt;A new version of the %1 Client is available but the updating process failed.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; has been downloaded. The installed version is %3.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;È disponibile una nuova versione del client %1, ma il processo di aggiornamento è fallito.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; è stato scaricato. La versione installata è %3.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Ask again later</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiedi di nuovo più tardi</translation>
     </message>
     <message>
         <source>Restart and update</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavvia e aggiorna</translation>
     </message>
     <message>
         <source>Update manually</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiorna manualmente</translation>
     </message>
 </context>
 <context>
@@ -1706,7 +1714,7 @@ Note that using any logging command line options will override the settings.</so
     </message>
     <message>
         <source>Empty JSON from OAuth2 redirect</source>
-        <translation type="unfinished"></translation>
+        <translation>Svuota JSON da reindirizzamento OAuth2</translation>
     </message>
 </context>
 <context>
@@ -1746,15 +1754,15 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Downloading %1. Please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Scaricamento %1. Attendere...</translation>
     </message>
     <message>
         <source>%1 available. Restart application to start the update.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 disponibile. Riavvia applicazione per avviare l&apos;aggiornamento.</translation>
     </message>
     <message>
         <source>New %1 available. Please use the system&apos;s update tool to install it.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuovo %1 disponibile. Utilizza lo strumento di aggiornamento del sistema per installarlo.</translation>
     </message>
 </context>
 <context>
@@ -1801,7 +1809,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Use &amp;virtual files instead of downloading content immediately %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Usa file &amp;virtuali invece di scaricare immediatamente i contenuti %1</translation>
     </message>
 </context>
 <context>
@@ -2025,21 +2033,23 @@ Non è consigliabile utilizzarlo.</translation>
     </message>
     <message>
         <source>Enable technical preview feature?</source>
-        <translation type="unfinished"></translation>
+        <translation>Abilitare la funzionalità di anteprima tecnico?</translation>
     </message>
     <message>
         <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead a virtual file will be created for each file that exists on the server. When a file is opened its contents will be downloaded automatically. Alternatively, files can be downloaded manually by using their context menu.
 
 The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.</source>
-        <translation type="unfinished"></translation>
+        <translation>Se la modalità &quot;file virtuali&quot; è abilitata, inizialmente non sarà scaricato alcun file. Invece, un file virtuale verrà creato per ogni file esistente sul server. Quando un file è aperto, i suoi contenuti verranno scaricati automaticamente. In alternativa, è possibile scaricare i file manualmente utilizzando il relativo menu contestuale.
+
+La modalità file virtuali non è compatibile con la sincronizzazione selettiva. Le cartelle attualmente non selezionate verranno convertite in cartelle disponibili solo online e le tue impostazione di sincronizzazione selettiva verranno ripristinate.</translation>
     </message>
     <message>
         <source>Enable virtual files</source>
-        <translation type="unfinished"></translation>
+        <translation>Abilita file virtuali</translation>
     </message>
     <message>
         <source>Continue to use selective sync</source>
-        <translation type="unfinished"></translation>
+        <translation>Continua a usare la sincronizzazione selettiva</translation>
     </message>
     <message>
         <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead, a tiny &quot;%1&quot; file will be created for each file that exists on the server. The contents can be downloaded by running these files or by using their context menu.
@@ -2049,11 +2059,17 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
 Switching to this mode will abort any currently running synchronization.
 
 This is a new, experimental mode. If you decide to use it, please report any issues that come up.</source>
-        <translation type="unfinished"></translation>
+        <translation>Se la modalità &quot;file virtuali&quot; è abilitata, inizialmente non sarà scaricato alcun file. Invece, un file &quot;%1&quot; di piccole dimensioni verrà creato per ogni file esistente sul server. I contenuti possono essere scaricati eseguendo questi file o utilizzando il relativo menu contestuale.
+
+La modalità file virtuali non è compatibile con la sincronizzazione selettiva. Le cartelle attualmente non selezionate verranno convertite in cartelle disponibili solo online e le tue impostazione di sincronizzazione selettiva verranno ripristinate.
+
+Il passaggio a questa modalità annullerà qualsiasi sincronizzazione in corso.
+
+Questa è una nuova modalità sperimentale. Se decidi di usarla, ti preghiamo di indicare qualsiasi problema tu possa riscontrare.</translation>
     </message>
     <message>
         <source>Enable experimental placeholder mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Abilita la modalità sperimentale contrassegno</translation>
     </message>
 </context>
 <context>
@@ -2150,43 +2166,43 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>The filename is blacklisted on the server.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il nome del file è sulla blacklist del server.</translation>
     </message>
     <message>
         <source>File has extension reserved for virtual files.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il file ha un&apos;estensione riservata ai file virtuali.</translation>
     </message>
     <message>
         <source>size</source>
-        <translation type="unfinished"></translation>
+        <translation>dimensione</translation>
     </message>
     <message>
         <source>permissions</source>
-        <translation type="unfinished"></translation>
+        <translation>permessi</translation>
     </message>
     <message>
         <source>etag</source>
-        <translation type="unfinished"></translation>
+        <translation>etag</translation>
     </message>
     <message>
         <source>file id</source>
-        <translation type="unfinished"></translation>
+        <translation>id file</translation>
     </message>
     <message>
         <source>server reported no %1</source>
-        <translation type="unfinished"></translation>
+        <translation>il server non ha riportato %1</translation>
     </message>
     <message>
         <source>Moved to invalid target, restoring</source>
-        <translation type="unfinished"></translation>
+        <translation>Spostato su target non valido, ripristino in corso</translation>
     </message>
     <message>
         <source>Error while reading the database</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore di lettura del database</translation>
     </message>
     <message>
         <source>Server replied with an error while reading directory &apos;%1&apos; : %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Il server ha riportato un errore durante la lettura della cartella &apos;%1&apos;: %2</translation>
     </message>
 </context>
 <context>
@@ -2236,7 +2252,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Download slot finished, but there was no reply!</source>
-        <translation type="unfinished"></translation>
+        <translation>Slot di download completato senza ottenere risposta!</translation>
     </message>
 </context>
 <context>
@@ -2288,7 +2304,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Error setting pin state</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore durante l&apos;impostazione dello stato del pin</translation>
     </message>
 </context>
 <context>
@@ -2321,11 +2337,11 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Could not rename %1 to %2, error: %3</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile rinominare %1 in %2, errore: %3</translation>
     </message>
     <message>
         <source>Error setting pin state</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore durante l&apos;impostazione dello stato del pin</translation>
     </message>
 </context>
 <context>
@@ -2383,11 +2399,11 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Failed to get zsync byte ranges.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile ottenere gli intervalli di byte di zsync.</translation>
     </message>
     <message>
         <source>Failed to generate zsync file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile generare il file zsync.</translation>
     </message>
 </context>
 <context>
@@ -2518,7 +2534,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Select remote folders you wish to synchronize.</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona le cartelle remote che desideri sincronizzare.</translation>
     </message>
 </context>
 <context>
@@ -2552,7 +2568,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Add new</source>
-        <translation type="unfinished">Aggiungi nuovo</translation>
+        <translation>Aggiungi nuovo</translation>
     </message>
 </context>
 <context>
@@ -2726,23 +2742,23 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Download / View / Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Scarica / Visiona / Modifica</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome:</translation>
     </message>
     <message>
         <source>Enter name of new share...</source>
-        <translation type="unfinished"></translation>
+        <translation>Inserisci il nome della nuova condivisione...</translation>
     </message>
     <message>
         <source>&amp;Create</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Crea</translation>
     </message>
     <message>
         <source>Create new...</source>
-        <translation type="unfinished"></translation>
+        <translation>Crea nuovo...</translation>
     </message>
 </context>
 <context>
@@ -2876,61 +2892,63 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Context menu share %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Menu contestuale condivisione %1</translation>
     </message>
     <message>
         <source>Confirm deletion</source>
-        <translation type="unfinished"></translation>
+        <translation>Conferma eliminazione</translation>
     </message>
     <message>
         <source>Do you want to delete the directory &lt;i&gt;%1&lt;/i&gt; and all its contents permanently?</source>
-        <translation type="unfinished"></translation>
+        <translation>Desideri eliminare permanentemente la cartella &lt;i&gt;%1&lt;/i&gt; e tutti i suoi contenuti?</translation>
     </message>
     <message>
         <source>Do you want to delete the file &lt;i&gt;%1&lt;/i&gt; permanently?</source>
-        <translation type="unfinished"></translation>
+        <translation>Desideri eliminare permanentemente il file &lt;i&gt;%1&lt;/i&gt;?</translation>
     </message>
     <message>
         <source>Select new location...</source>
-        <translation type="unfinished"></translation>
+        <translation>Selezione nuova posizione...</translation>
     </message>
     <message>
         <source>Moving file failed:
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Spostamento file fallito:
+
+%1</translation>
     </message>
     <message>
         <source>Resharing this folder is not allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Non è consentito ricondividere questa cartella</translation>
     </message>
     <message>
         <source>Show file versions in browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra versione file nel browser</translation>
     </message>
     <message>
         <source>Rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ridenominazione...</translation>
     </message>
     <message>
         <source>Rename and upload...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ridenominazione e upload...</translation>
     </message>
     <message>
         <source>Move and rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>Spostamento e ridenominazione...</translation>
     </message>
     <message>
         <source>Move, rename and upload...</source>
-        <translation type="unfinished"></translation>
+        <translation>Spostamento, ridenominazione e upload...</translation>
     </message>
     <message>
         <source>Delete local changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimina modifiche locali</translation>
     </message>
     <message>
         <source>Move and upload...</source>
-        <translation type="unfinished"></translation>
+        <translation>Spostamento e upload...</translation>
     </message>
 </context>
 <context>
@@ -3029,11 +3047,11 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Server version: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Versione server: %1</translation>
     </message>
     <message>
         <source>The connection is not secure</source>
-        <translation type="unfinished"></translation>
+        <translation>La connessione non è sicura</translation>
     </message>
 </context>
 <context>
@@ -3140,11 +3158,11 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Could not update virtual file metadata: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aggiornare i metadati del file virtuale: %1</translation>
     </message>
     <message>
         <source>Using virtual files with suffix, but suffix is not set</source>
-        <translation type="unfinished"></translation>
+        <translation>Sono in uso file virtuali con suffisso, ma il suffisso non è stato impostato</translation>
     </message>
 </context>
 <context>
@@ -3217,30 +3235,30 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <name>OCC::ZsyncGenerateRunnable</name>
     <message>
         <source>Failed to open input file %1: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aprire il file di input %1: %2</translation>
     </message>
     <message>
         <source>Failed to open input file: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aprire il file di input: %1</translation>
     </message>
     <message>
         <source>Failed to write block sums:</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile scrivere somme blocchi:</translation>
     </message>
     <message>
         <source>Failed to write zsync metadata file:</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile scrivere il file dei metadati zsync:</translation>
     </message>
 </context>
 <context>
     <name>OCC::ZsyncSeedRunnable</name>
     <message>
         <source>Unable to parse zsync file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile analizzare il file zsync.</translation>
     </message>
     <message>
         <source>Unable to open file: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aprire il file: %1</translation>
     </message>
 </context>
 <context>
@@ -3703,7 +3721,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <name>nextcloudTheme::about()</name>
     <message>
         <source>&lt;p&gt;&lt;small&gt;Built from Git revision &lt;a style=&quot;color: #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; on %3, %4 using Qt %5, %6&lt;/small&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;&lt;small&gt;Compilato dalla revisione Git &lt;a style=&quot;color: #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; on %3, %4 utilizzando Qt %5, %6&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -3785,11 +3803,11 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Virtual file created</source>
-        <translation type="unfinished"></translation>
+        <translation>File virtuale creato</translation>
     </message>
     <message>
         <source>Replaced by virtual file</source>
-        <translation type="unfinished"></translation>
+        <translation>Sostituito da file virtuale</translation>
     </message>
 </context>
 <context>
@@ -3855,27 +3873,27 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Always available locally</source>
-        <translation type="unfinished"></translation>
+        <translation>Sempre disponibile localmente</translation>
     </message>
     <message>
         <source>Currently available locally</source>
-        <translation type="unfinished"></translation>
+        <translation>Attualmente disponibile localmente</translation>
     </message>
     <message>
         <source>Some available online only</source>
-        <translation type="unfinished"></translation>
+        <translation>Alcuni disponibili solo online</translation>
     </message>
     <message>
         <source>Available online only</source>
-        <translation type="unfinished"></translation>
+        <translation>Disponibile solo online</translation>
     </message>
     <message>
         <source>Make always available locally</source>
-        <translation type="unfinished"></translation>
+        <translation>Rendi sempre disponibile localmente</translation>
     </message>
     <message>
         <source>Free up local space</source>
-        <translation type="unfinished"></translation>
+        <translation>Libera spazio locale</translation>
     </message>
 </context>
 </TS>

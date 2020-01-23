@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors de la suppression de &apos;%1’&#xa0;: %2</translation>
     </message>
 </context>
 <context>
@@ -82,7 +82,7 @@
     </message>
     <message>
         <source>We received an unexpected download Content-Length.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nous avons reçu une longueur de contenu téléchargé inattendue.</translation>
     </message>
 </context>
 <context>
@@ -135,7 +135,7 @@
     </message>
     <message>
         <source>Unchecked folders will be &lt;b&gt;removed&lt;/b&gt; from your local file system and will not be synchronized to this computer anymore</source>
-        <translation>Décochez les dossiers qui doivent être &lt;b&gt;supprimés&lt;/b&gt; de votre disque local et qui ne doivent pas être synchronisés avec cet ordinateur.</translation>
+        <translation>Les dossiers non sélectionnés seront &lt;b&gt;supprimés&lt;/b&gt; de votre disque local et ne seront plus synchronisés avec cet ordinateur.</translation>
     </message>
     <message>
         <source>Synchronize all</source>
@@ -355,23 +355,23 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Connected with KDrive &amp;lt;server&amp;gt; as &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Connecté au serveur KDrive &amp;lt;server&amp;gt; en tant que &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Open folder in browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir le dossier dans le navigateur</translation>
     </message>
     <message>
         <source>Enable virtual file support %1...</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer le support des fichiers virtuels %1...</translation>
     </message>
     <message>
         <source>(tech preview)</source>
-        <translation type="unfinished"></translation>
+        <translation>(aperçu technique)</translation>
     </message>
     <message>
         <source>Disable support</source>
-        <translation type="unfinished"></translation>
+        <translation>Désactiver le support</translation>
     </message>
     <message>
         <source>&lt;i&gt;%1&lt;/i&gt; as &lt;i&gt;%2&lt;/i&gt;</source>
@@ -379,11 +379,11 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>Drive %1 is temporarily unavailable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le lecteur %1 est temporairement indisponible.</translation>
     </message>
     <message>
         <source>Drive %1 is currently in maintenance mode.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le lecteur %1 est en cours de maintenance.</translation>
     </message>
 </context>
 <context>
@@ -504,25 +504,25 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message numerus="yes">
         <source>You received %n new request(s) from %1.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Vous avez reçu %n nouvelle(s) requête(s) de %1.</numerusform>
+            <numerusform>Vous avez reçu %n nouvelle(s) requête(s) de %1.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>You received %n new request(s) from %1 and %2.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Vous avez reçu %n nouvelle(s) requête(s) de %1 et %2.</numerusform>
+            <numerusform>Vous avez reçu %n nouvelle(s) requête(s) de %1 et %2.</numerusform>
         </translation>
     </message>
     <message>
         <source>You received new request from %1, %2 and other accounts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous avez reçu une nouvelle requête de %1, %2 et d’autres comptes.</translation>
     </message>
     <message>
         <source>Action required. Open the activity view to react.</source>
-        <translation type="unfinished"></translation>
+        <translation>Action requise Ouvrez la vue des activités pour réagir.</translation>
     </message>
 </context>
 <context>
@@ -557,7 +557,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>An encrypted pkcs12 bundle is strongly recommended as a copy will be stored in the configuration file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Un paquet pkcs12 chiffré est vivement recommandé car une copie va être stockée dans le fichier de configuration.</translation>
     </message>
 </context>
 <context>
@@ -853,7 +853,10 @@ S&apos;il s&apos;agissait d&apos;un accident et que vous choisissiez de conserve
 These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tous les fichiers contenus dans le dossier synchronisé &apos;%1&apos; ont été supprimés du serveur.
+Ces suppressions seront synchronisées sur votre dossier local synchronisé, rendant ces fichiers inaccessibles, à moins que vous n’ayez le droit de les restaurer. 
+Si vous décidez de conserver ces fichiers, ils seront synchronisés à nouveau avec le serveur si vous en avez le droit.
+Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf si vous en êtes le/la propriétaire.</translation>
     </message>
 </context>
 <context>
@@ -951,7 +954,7 @@ If you decide to delete the files, they will be unavailable to you, unless you a
     </message>
     <message>
         <source>Synchronizing with local folder</source>
-        <translation>Sélectionnez les sous-dossiers à synchroniser à partir du dossier local</translation>
+        <translation>Synchroniser avec le répertoire local</translation>
     </message>
     <message>
         <source>File</source>
@@ -1075,18 +1078,18 @@ If you decide to delete the files, they will be unavailable to you, unless you a
     </message>
     <message>
         <source>↓ %1/s</source>
-        <translation type="unfinished"></translation>
+        <translation>↓ %1/s</translation>
     </message>
     <message>
         <source>↑ %1/s</source>
-        <translation type="unfinished"></translation>
+        <translation>↑ %1/s</translation>
     </message>
 </context>
 <context>
     <name>OCC::FolderWatcher</name>
     <message>
         <source>The watcher did not receive a test notification.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le contrôleur n’a pas reçu de notification de test.</translation>
     </message>
 </context>
 <context>
@@ -1169,11 +1172,11 @@ If you decide to delete the files, they will be unavailable to you, unless you a
     </message>
     <message>
         <source>Use virtual files instead of downloading content immediately %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilisez des fichiers virtuels au lieu de télécharger le contenu immédiatement %1</translation>
     </message>
     <message>
         <source>(tech preview)</source>
-        <translation type="unfinished"></translation>
+        <translation>(aperçu technique)</translation>
     </message>
 </context>
 <context>
@@ -1191,19 +1194,19 @@ If you decide to delete the files, they will be unavailable to you, unless you a
     <name>OCC::GETFileZsyncJob</name>
     <message>
         <source>Unable to parse zsync.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d’analyser zsync.</translation>
     </message>
     <message>
         <source>Failed to get zsync byte ranges.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d’obtenir les plages d’octets zsync.</translation>
     </message>
     <message>
         <source>Failed to initialize zsync receive structure.</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec d’initialisation de la structure de réception zsync.</translation>
     </message>
     <message>
         <source>We received a different E-Tag for delta. Retrying next time.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nous avons reçu un E-Tag différent pour le delta. Nouvel essai la prochaine fois.</translation>
     </message>
 </context>
 <context>
@@ -1314,15 +1317,15 @@ Veuillez noter que cela sélectionne seulement la zone de mises à jour, et qu&a
     </message>
     <message>
         <source>Enable Delta-Synchronization for files larger than</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer la synchronisation du delta pour les fichiers de taille supérieure à</translation>
     </message>
     <message>
         <source>&amp;Update Channel</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Canal de mise à jour</translation>
     </message>
     <message>
         <source>You cannot disable autostart because system-wide autostart is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous ne pouvez pas désactiver le démarrage automatique car il est activé pour tout le système.</translation>
     </message>
 </context>
 <context>
@@ -1402,22 +1405,24 @@ Veuillez noter que cela sélectionne seulement la zone de mises à jour, et qu&a
         <source>Files or folders matching a pattern will not be synchronized. Changes take effect the next time folders are synchronized.
 
 Items where deletion is allowed will be deleted if they prevent a directory from being removed. This is useful for meta data.</source>
-        <translation type="unfinished"></translation>
+        <translation>Les fichiers ou dossiers correspondant à un certain motif ne seront pas synchronisés. Les modifications prendront effet lors de la prochaine synchronisation des dossiers.
+
+Les éléments dont la suppression est autorisée seront supprimés s’ils empêchent la suppression d’un répertoire. Cela est utile pour les métadonnées.</translation>
     </message>
 </context>
 <context>
     <name>OCC::InfomaniakTheme</name>
     <message>
         <source>&lt;p&gt;Version %2. For more information visit &lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Version %2. Pour plus d’informations, visiter&lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Copyright Infomaniak Network SA, ownCloud GmbH and Nextcloud GmbH&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Copyright Infomaniak Network SA, ownCloud GmbH et Nextcloud GmbH&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Distribué par %1 et sous licence GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 et le logo %2  sont des marques enregistrées de %1.&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -1520,7 +1525,7 @@ Veuillez noter qu’utiliser les options de journalisation en ligne de commande 
     </message>
     <message>
         <source>Enable logging to temporary folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer la journalisation dans un dossier temporaire</translation>
     </message>
 </context>
 <context>
@@ -1574,7 +1579,7 @@ Veuillez noter qu’utiliser les options de journalisation en ligne de commande 
     </message>
     <message>
         <source>Ask again later</source>
-        <translation type="unfinished"></translation>
+        <translation>Redemander ultérieurement</translation>
     </message>
 </context>
 <context>
@@ -1709,7 +1714,7 @@ Veuillez noter qu’utiliser les options de journalisation en ligne de commande 
     </message>
     <message>
         <source>Empty JSON from OAuth2 redirect</source>
-        <translation type="unfinished"></translation>
+        <translation>Le fichier JSON de redirection OAuth2 est vide</translation>
     </message>
 </context>
 <context>
@@ -1801,11 +1806,11 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     </message>
     <message>
         <source>Use &amp;virtual files instead of downloading content immediately %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilisez les &amp;fichiers virtuels au lieu de télécharger le contenu immédiatement %1</translation>
     </message>
     <message>
         <source>(tech preview)</source>
-        <translation type="unfinished"></translation>
+        <translation>(aperçu technique)</translation>
     </message>
 </context>
 <context>
@@ -2029,21 +2034,23 @@ Il est déconseillé de l&apos;utiliser.</translation>
     </message>
     <message>
         <source>Enable technical preview feature?</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer les fonctionnalités d’aperçu technique&#xa0;?</translation>
     </message>
     <message>
         <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead a virtual file will be created for each file that exists on the server. When a file is opened its contents will be downloaded automatically. Alternatively, files can be downloaded manually by using their context menu.
 
 The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.</source>
-        <translation type="unfinished"></translation>
+        <translation>Quand le mode &quot;fichiers virtuels&quot; est activé, aucun fichier n’est téléchargé initialement. À la place, un fichier virtuel est créé pour chaque fichier présent sur le serveur. Quand un fichier sera ouvert, son contenu sera téléchargé automatiquement. Il est également possible de télécharger les fichiers manuellement à l’aide de leur menu contextuel.
+
+Le mode &quot;fichiers mutuels&quot; et la synchronisation sélective s’excluent mutuellement. Les dossier non sélectionnés actuellement seront convertis en dossiers disponibles seulement en ligne et vos paramètres de synchronisation sélective seront réinitialisés.</translation>
     </message>
     <message>
         <source>Enable virtual files</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer les fichiers virtuels</translation>
     </message>
     <message>
         <source>Continue to use selective sync</source>
-        <translation type="unfinished"></translation>
+        <translation>Continuer à utiliser la synchronisation sélective</translation>
     </message>
     <message>
         <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead, a tiny &quot;%1&quot; file will be created for each file that exists on the server. The contents can be downloaded by running these files or by using their context menu.
@@ -2053,11 +2060,17 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
 Switching to this mode will abort any currently running synchronization.
 
 This is a new, experimental mode. If you decide to use it, please report any issues that come up.</source>
-        <translation type="unfinished"></translation>
+        <translation>Quand le mode &quot;fichiers virtuels&quot; est activé, aucun fichier n’est téléchargé initialement. À la place, un petit fichier &quot;%1&quot; est créé pour chaque fichier présent sur le serveur. Les contenus peuvent être téléchargés en exécutant ces fichiers ou à l’aide de leur menu contextuel.
+
+Le mode &quot;fichiers mutuels&quot; et la synchronisation sélective s’excluent mutuellement. Les dossier non sélectionnés actuellement seront convertis en dossiers disponibles seulement en ligne et vos paramètres de synchronisation sélective seront réinitialisés.
+
+Le passage dans ce mode stoppera toute synchronisation en cours.
+
+Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser, veuillez signaler les problèmes rencontrés.</translation>
     </message>
     <message>
         <source>Enable experimental placeholder mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer le mode expérimental &quot;placeholder&quot;</translation>
     </message>
 </context>
 <context>
@@ -2162,35 +2175,35 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>The filename is blacklisted on the server.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le nom de fichier figure sur la liste noire du serveur.</translation>
     </message>
     <message>
         <source>File has extension reserved for virtual files.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le fichier a une extension réservée aux fichiers virtuels.</translation>
     </message>
     <message>
         <source>permissions</source>
-        <translation type="unfinished"></translation>
+        <translation>permissions</translation>
     </message>
     <message>
         <source>etag</source>
-        <translation type="unfinished"></translation>
+        <translation>etag</translation>
     </message>
     <message>
         <source>file id</source>
-        <translation type="unfinished"></translation>
+        <translation>Identifiant de fichier</translation>
     </message>
     <message>
         <source>server reported no %1</source>
-        <translation type="unfinished"></translation>
+        <translation>serveur signale aucun %1</translation>
     </message>
     <message>
         <source>Moved to invalid target, restoring</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacement vers une cible non valable</translation>
     </message>
     <message>
         <source>Server replied with an error while reading directory &apos;%1&apos; : %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Le serveur à répondu par une erreur lors de la lecture du répertoire %1 : %2</translation>
     </message>
 </context>
 <context>
@@ -2240,7 +2253,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Download slot finished, but there was no reply!</source>
-        <translation type="unfinished"></translation>
+        <translation>Créneau de téléchargement terminé mais aucune réponse reçue!</translation>
     </message>
 </context>
 <context>
@@ -2292,7 +2305,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Error setting pin state</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors de la définition de l’état de broche</translation>
     </message>
 </context>
 <context>
@@ -2329,7 +2342,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Error setting pin state</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors de la définition de l’état de broche</translation>
     </message>
 </context>
 <context>
@@ -2387,11 +2400,11 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Failed to get zsync byte ranges.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d’obtenir les plages d’octets zsync.</translation>
     </message>
     <message>
         <source>Failed to generate zsync file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec de génération du fichier zsync.</translation>
     </message>
 </context>
 <context>
@@ -2522,7 +2535,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Select remote folders you wish to synchronize.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez les dossiers distants que vous souhaitez synchroniser.</translation>
     </message>
 </context>
 <context>
@@ -2556,7 +2569,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Add new</source>
-        <translation type="unfinished">Ajouter un nouveau compte</translation>
+        <translation>Ajouter un kDrive</translation>
     </message>
 </context>
 <context>
@@ -2739,15 +2752,15 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Download / View / Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Télécharger / Voir / Modifier</translation>
     </message>
     <message>
         <source>&amp;Create</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Créer</translation>
     </message>
     <message>
         <source>Create new...</source>
-        <translation type="unfinished"></translation>
+        <translation>Créer nouveau...</translation>
     </message>
 </context>
 <context>
@@ -2885,57 +2898,59 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Context menu share</source>
-        <translation type="unfinished"></translation>
+        <translation>Partage de menu contextuel</translation>
     </message>
     <message>
         <source>Context menu share %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Partage de menu contextuel %1</translation>
     </message>
     <message>
         <source>Do you want to delete the file &lt;i&gt;%1&lt;/i&gt; permanently?</source>
-        <translation type="unfinished"></translation>
+        <translation>Êtes-vous sûr de vouloir supprimer le fichier &lt;i&gt;%1&lt;/i&gt; de manière permanente ?</translation>
     </message>
     <message>
         <source>Select new location...</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner le nouvel emplacement...</translation>
     </message>
     <message>
         <source>Moving file failed:
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec de déplacement du fichier:
+
+%1</translation>
     </message>
     <message>
         <source>Resharing this folder is not allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Le repartage de ce dossier n&apos;est pas permis</translation>
     </message>
     <message>
         <source>Show file versions in browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Voir les version du fichier dans le navigateur</translation>
     </message>
     <message>
         <source>Rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>Renommer...</translation>
     </message>
     <message>
         <source>Rename and upload...</source>
-        <translation type="unfinished"></translation>
+        <translation>Renommer et téléverser...</translation>
     </message>
     <message>
         <source>Move and rename...</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer et renommer...</translation>
     </message>
     <message>
         <source>Move, rename and upload...</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer, renommer et téléverser...</translation>
     </message>
     <message>
         <source>Delete local changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer les modifications locales</translation>
     </message>
     <message>
         <source>Move and upload...</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer et téléverser...</translation>
     </message>
 </context>
 <context>
@@ -3034,11 +3049,11 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Server version: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Version du serveur : %1</translation>
     </message>
     <message>
         <source>The connection is not secure</source>
-        <translation type="unfinished"></translation>
+        <translation>La connexion n’est pas sécurisée</translation>
     </message>
 </context>
 <context>
@@ -3145,11 +3160,11 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Could not update virtual file metadata: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de mettre à jour les métadonnées du fichier virtuel: %1</translation>
     </message>
     <message>
         <source>Using virtual files with suffix, but suffix is not set</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilisation de fichiers virtuels avec suffixe mais suffixe non défini</translation>
     </message>
 </context>
 <context>
@@ -3178,7 +3193,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>&lt;p&gt;Version %2. For more information visit &lt;a href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://central.owncloud.org/c/desktop-client&quot;&gt;https://central.owncloud.org&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;small&gt;By Klaas Freitag, Daniel Molkentin, Olivier Goffart, Markus Götz,  Jan-Christoph Borchardt, and others.&lt;/small&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Version %2. Pour plus d’informations visiter &lt;a href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Pour consulter les problèmes connus et obtenir de l’aide, visiter: &lt;a href=&quot;https://central.owncloud.org/c/desktop-client&quot;&gt;https://central.owncloud.org&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;small&gt;Par Klaas Freitag, Daniel Molkentin, Olivier Goffart, Markus Götz,  Jan-Christoph Borchardt, et d’autres.&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -3222,30 +3237,30 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <name>OCC::ZsyncGenerateRunnable</name>
     <message>
         <source>Failed to open input file %1: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec d’ouverture du fichier d’entrée %1: %2</translation>
     </message>
     <message>
         <source>Failed to open input file: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec d’ouverture du fichier d’entrée : %1</translation>
     </message>
     <message>
         <source>Failed to write block sums:</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec d’écriture des sommes de bloc:</translation>
     </message>
     <message>
         <source>Failed to write zsync metadata file:</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec d’écriture du fichier de métadonnées zsync:</translation>
     </message>
 </context>
 <context>
     <name>OCC::ZsyncSeedRunnable</name>
     <message>
         <source>Unable to parse zsync file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d’analyser le fichier zsync.</translation>
     </message>
     <message>
         <source>Unable to open file: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d’ouvrir le fichier: %1</translation>
     </message>
 </context>
 <context>
@@ -3436,7 +3451,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le serveur sur le compte %1 exécute une version non prise en charge %2. L’utilisation de ce client avec des versions du serveur non prises en charge n’a pas été testée et peut être dangereuse. Vous poursuivez à vos propres risques.</translation>
     </message>
 </context>
 <context>
@@ -3496,15 +3511,15 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>S&amp;ynchronize everything from server (recommended)</source>
-        <translation type="unfinished"></translation>
+        <translation>Tout s&amp;ynchroniser depuis le serveur (recommandé)</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When this option is selected, the wizard will close without synchronizing anything. You can use the &amp;quot;Add Folder Sync Connection&amp;quot; button from the account settings to choose which pair of local and remote folder you wish to synchronize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lorsque cette option est sélectionnée, l’assistant se ferme sans effectuer aucune synchronisation. Vous pouvez utiliser le bouton &amp;quot;Ajouter une synchronisation de dossier&amp;quot; dans les paramètres du compte pour choisir la paire de fichier local et distant que vous souhaitez synchroniser&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Manually create folder sync connections </source>
-        <translation type="unfinished"></translation>
+        <translation>Créer manuellement des synchronisations de dossier </translation>
     </message>
 </context>
 <context>
@@ -3708,7 +3723,7 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <name>nextcloudTheme::about()</name>
     <message>
         <source>&lt;p&gt;&lt;small&gt;Built from Git revision &lt;a style=&quot;color: #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; on %3, %4 using Qt %5, %6&lt;/small&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;&lt;small&gt;Construit à partir de la révision Git &lt;a style=&quot;color : #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; du %3, %4 en utilisant Qt %5, %6&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -3790,11 +3805,11 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Virtual file created</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier virtuel créé</translation>
     </message>
     <message>
         <source>Replaced by virtual file</source>
-        <translation type="unfinished"></translation>
+        <translation>Remplacé par un fichier virtuel</translation>
     </message>
 </context>
 <context>
@@ -3860,27 +3875,27 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Always available locally</source>
-        <translation type="unfinished"></translation>
+        <translation>Toujours disponible localement</translation>
     </message>
     <message>
         <source>Currently available locally</source>
-        <translation type="unfinished"></translation>
+        <translation>Actuellement disponible localement</translation>
     </message>
     <message>
         <source>Some available online only</source>
-        <translation type="unfinished"></translation>
+        <translation>Certains disponible seulement en ligne</translation>
     </message>
     <message>
         <source>Available online only</source>
-        <translation type="unfinished"></translation>
+        <translation>Disponible seulement en ligne</translation>
     </message>
     <message>
         <source>Make always available locally</source>
-        <translation type="unfinished"></translation>
+        <translation>Rendre toujours disponible localement</translation>
     </message>
     <message>
         <source>Free up local space</source>
-        <translation type="unfinished"></translation>
+        <translation>Libérer de l’espace local</translation>
     </message>
 </context>
 </TS>

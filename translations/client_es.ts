@@ -359,31 +359,31 @@ Esta acción abortará cualquier sincronización actualmente en ejecución.</tra
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Connected with KDrive &amp;lt;server&amp;gt; as &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conectado con KDrive &amp;lt;server&amp;gt; como &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Enable virtual file support %1...</source>
-        <translation type="unfinished"></translation>
+        <translation>Habilitar soporte de archivo virtual %1...</translation>
     </message>
     <message>
         <source>(tech preview)</source>
-        <translation type="unfinished"></translation>
+        <translation>(vista previa tech)</translation>
     </message>
     <message>
         <source>(experimental)</source>
-        <translation type="unfinished"></translation>
+        <translation>(experimental)</translation>
     </message>
     <message>
         <source>&lt;i&gt;%1&lt;/i&gt; as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;i&gt;%1&lt;/i&gt; como &lt;i&gt;%2&lt;/i&gt;</translation>
     </message>
     <message>
         <source>Drive %1 is temporarily unavailable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Drive %1 no está disponible temporalmente.</translation>
     </message>
     <message>
         <source>Drive %1 is currently in maintenance mode.</source>
-        <translation type="unfinished"></translation>
+        <translation>Drive %1 está actualmente en modo mantenimiento.</translation>
     </message>
 </context>
 <context>
@@ -504,25 +504,25 @@ Esta acción abortará cualquier sincronización actualmente en ejecución.</tra
     </message>
     <message numerus="yes">
         <source>You received %n new request(s) from %1.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Has recibido %n nueva(s) solitud(es) de %1.</numerusform>
+            <numerusform>Has recibido %n nueva(s) solitud(es) de %1.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>You received %n new request(s) from %1 and %2.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Has recibido %n nueva(s) solitud(es) de %1 y %2.</numerusform>
+            <numerusform>Has recibido %n nueva(s) solitud(es) de %1 y %2.</numerusform>
         </translation>
     </message>
     <message>
         <source>You received new request from %1, %2 and other accounts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Has recibido una nueva solicitud de %1, %2 y otras cuentas.</translation>
     </message>
     <message>
         <source>Action required. Open the activity view to react.</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir la vista de actividad para reaccionar.</translation>
     </message>
 </context>
 <context>
@@ -852,7 +852,10 @@ Si ha sido un accidente, y decide mantener los archivos, serán re-sincronizados
 These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="unfinished"></translation>
+        <translation>Todos los archivos en la carpeta de sincronización &apos;%1&apos; carpeta fueron borrados en el servidor.
+Estas eliminaciones serán sincronizadas con tu carpeta de sincronización local, y los archivos no estarán disponibles, salvo si dispones de derechos para recuperarlos. 
+Si decides conservar los archivos, estos serán resincronizados con el servidor si dispones de los derechos para hacerlo.
+Si decides borrar los archivos, ya no estarán disponibles para ti, a menos que tú seas el propietario.</translation>
     </message>
 </context>
 <context>
@@ -1164,15 +1167,15 @@ If you decide to delete the files, they will be unavailable to you, unless you a
     <name>OCC::FolderWizardSelectiveSync</name>
     <message>
         <source>Use virtual files instead of downloading content immediately %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Usar archivos virtuales en lugar de descargar contenido inmediatamente %1</translation>
     </message>
     <message>
         <source>(tech preview)</source>
-        <translation type="unfinished"></translation>
+        <translation>(vista previa tech)</translation>
     </message>
     <message>
         <source>(experimental)</source>
-        <translation type="unfinished"></translation>
+        <translation>(experimental)</translation>
     </message>
 </context>
 <context>
@@ -1410,15 +1413,15 @@ Los objetos donde se permite el borrado serán borrados si impiden que un direct
     <name>OCC::InfomaniakTheme</name>
     <message>
         <source>&lt;p&gt;Version %2. For more information visit &lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Versión %2. Para más información, visitar &lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Copyright Infomaniak Network SA, ownCloud GmbH and Nextcloud GmbH&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Copyright Infomaniak Network SA, ownCloud GmbH and Nextcloud GmbH&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Distribuido por %1 y bajo la licencia GNU General Public License (GPL) versión 2.0.&lt;br/&gt;%2 y el logotipo de %2 son marcas registradas de %1.&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -1797,15 +1800,15 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Use &amp;virtual files instead of downloading content immediately %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Usar &amp;archivos virtuales en lugar de descargar contenido inmediatamente %1</translation>
     </message>
     <message>
         <source>(tech preview)</source>
-        <translation type="unfinished"></translation>
+        <translation>(vista previa tech)</translation>
     </message>
     <message>
         <source>(experimental)</source>
-        <translation type="unfinished"></translation>
+        <translation>(experimental)</translation>
     </message>
 </context>
 <context>
@@ -2045,25 +2048,27 @@ Este es un nuevo modo experimental. Si decide utilizarlo, reporte cualquier prob
     </message>
     <message>
         <source>Enable technical preview feature?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Habilitar función de vista previa técnica?</translation>
     </message>
     <message>
         <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead a virtual file will be created for each file that exists on the server. When a file is opened its contents will be downloaded automatically. Alternatively, files can be downloaded manually by using their context menu.
 
 The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.</source>
-        <translation type="unfinished"></translation>
+        <translation>Si está habilitado el modo &quot;archivos virtuales&quot;, no se descargarán archivos inicialmente. En lugar de ello, se creará un archivo virtutal para cada archivo que exista en el servidor. Si se abre un archivo, su contenido será descargado automáticamente. Alternativamente, los archivos se pueden descargar manualmente usando su menú de contexto.
+
+El modo de archivos virtuales se excluye mutuamente con una sincronización selectiva.</translation>
     </message>
     <message>
         <source>Enable virtual files</source>
-        <translation type="unfinished"></translation>
+        <translation>Habilitar archivos virtuales</translation>
     </message>
     <message>
         <source>Continue to use selective sync</source>
-        <translation type="unfinished"></translation>
+        <translation>Continuar usando la sincronización selectiva</translation>
     </message>
     <message>
         <source>Enable experimental placeholder mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Habilitar el modo de marcador de posición experimental</translation>
     </message>
 </context>
 <context>
@@ -2196,7 +2201,7 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
     </message>
     <message>
         <source>Moved to invalid target, restoring</source>
-        <translation type="unfinished"></translation>
+        <translation>Movido a objetivo no válido, restaurando</translation>
     </message>
 </context>
 <context>
@@ -2528,7 +2533,7 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
     </message>
     <message>
         <source>Select remote folders you wish to synchronize.</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar las carpetas remotas que se desea sincronizar.</translation>
     </message>
 </context>
 <context>
@@ -2562,7 +2567,7 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
     </message>
     <message>
         <source>Add new</source>
-        <translation type="unfinished">Añadir nuevo</translation>
+        <translation>Añadir nuevo</translation>
     </message>
 </context>
 <context>
@@ -2752,7 +2757,7 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
     </message>
     <message>
         <source>Download / View / Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Descargar / Ver / Editar</translation>
     </message>
 </context>
 <context>
@@ -3715,7 +3720,7 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
     <name>nextcloudTheme::about()</name>
     <message>
         <source>&lt;p&gt;&lt;small&gt;Built from Git revision &lt;a style=&quot;color: #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; on %3, %4 using Qt %5, %6&lt;/small&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;&lt;small&gt;Revisión Git &lt;a style=&quot;color: #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; on %3, %4 compilada usando Qt %5, %6&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
 </context>
 <context>

@@ -371,19 +371,19 @@ Diese Aktion wird gerade laufende Synchronisationen abbrechen.</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Connected with KDrive &amp;lt;server&amp;gt; as &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mit KDrive verbunden &amp;lt;server&amp;gt; als &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&lt;i&gt;%1&lt;/i&gt; as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;i&gt;%1&lt;/i&gt; als &lt;i&gt;%2&lt;/i&gt;</translation>
     </message>
     <message>
         <source>Drive %1 is temporarily unavailable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Drive %1 ist derzeit nicht verfügbar.</translation>
     </message>
     <message>
         <source>Drive %1 is currently in maintenance mode.</source>
-        <translation type="unfinished"></translation>
+        <translation>Drive %1 befindet sich im Wartungsmodus.</translation>
     </message>
 </context>
 <context>
@@ -504,25 +504,25 @@ Diese Aktion wird gerade laufende Synchronisationen abbrechen.</translation>
     </message>
     <message numerus="yes">
         <source>You received %n new request(s) from %1.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Sie haben %n neue Anfrage(n) von %1 erhalten.</numerusform>
+            <numerusform>Sie haben %n neue Anfrage(n) von %1 erhalten.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>You received %n new request(s) from %1 and %2.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Sie haben %n neue Anfrage(n) von %1 und %2 erhalten.</numerusform>
+            <numerusform>Sie haben %n neue Anfrage(n) von %1 und %2 erhalten.</numerusform>
         </translation>
     </message>
     <message>
         <source>You received new request from %1, %2 and other accounts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sie haben eine neue Anfrage von %1, %2 und anderen Konten erhalten.</translation>
     </message>
     <message>
         <source>Action required. Open the activity view to react.</source>
-        <translation type="unfinished"></translation>
+        <translation>Massnahme erforderlich. Öffnen Sie die Aktivitätsansicht, um zu reagieren.</translation>
     </message>
 </context>
 <context>
@@ -852,7 +852,10 @@ Falls dies ein Missgeschick war und Sie sich zum Behalten der Dateien entscheide
 These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle Dateien im Synchronisationsordner &apos;%1&apos; Ordner wurden vom Server gelöscht.
+Diese Löschungen wird in Ihren lokalen Synchronisationsordner übernommen, wodurch solche Dateien nicht mehr verfügbar sind, sofern Sie keine Berechtigung für die Wiederherstellung besitzen. 
+Wenn Sie sich dazu entscheiden, die Dateien zu behalten, werden diese wieder zum Server synchronisiert, sofern Sie die Rechte dazu haben.
+Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht mehr verfügbar, sofern Sie nicht der Eigentümer sind.</translation>
     </message>
 </context>
 <context>
@@ -1409,15 +1412,15 @@ Objekte, bei denen Löschen erlaubt ist, werden gelöscht, wenn sie die Löschun
     <name>OCC::InfomaniakTheme</name>
     <message>
         <source>&lt;p&gt;Version %2. For more information visit &lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Version %2. Mehr dazu unter &lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Copyright Infomaniak Network SA, ownCloud GmbH and Nextcloud GmbH&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Copyright Infomaniak Network SA, ownCloud GmbH und Nextcloud GmbH&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Zur Verfügung gestellt durch %1 und lizenziert unter der GNU General Public License (GPL) Version 2.0.&lt;br&gt;%2 und das %2 Logo sind eingetragene Warenzeichen von %1.&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -2527,7 +2530,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
     <message>
         <source>Select remote folders you wish to synchronize.</source>
-        <translation type="unfinished"></translation>
+        <translation>Remote-Ordner auswählen, die Sie synchronisieren möchten.</translation>
     </message>
 </context>
 <context>
@@ -2561,7 +2564,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
     <message>
         <source>Add new</source>
-        <translation type="unfinished">Neues Konto hinzufügen</translation>
+        <translation>Neues Konto hinzufügen</translation>
     </message>
 </context>
 <context>
@@ -2751,7 +2754,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
     <message>
         <source>Download / View / Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Herunterladen / Ansehen / Bearbeiten</translation>
     </message>
 </context>
 <context>
@@ -3714,7 +3717,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     <name>nextcloudTheme::about()</name>
     <message>
         <source>&lt;p&gt;&lt;small&gt;Built from Git revision &lt;a style=&quot;color: #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; on %3, %4 using Qt %5, %6&lt;/small&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;&lt;small&gt;Gebaut aus der Git-Revision &lt;a style=&quot;color: #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; am %3, %4 verwendet Qt %5, %6&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
