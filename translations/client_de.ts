@@ -1525,6 +1525,10 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <source>Open folder</source>
         <translation>Ordner öffnen</translation>
     </message>
+    <message>
+        <source>Minimum log level: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::Logger</name>
@@ -3635,6 +3639,26 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Critical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

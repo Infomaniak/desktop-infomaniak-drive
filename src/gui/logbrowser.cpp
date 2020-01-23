@@ -21,6 +21,7 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QLabel>
+#include <QComboBox>
 #include <QDir>
 #include <QTextStream>
 #include <QMessageBox>
@@ -38,6 +39,10 @@ namespace OCC {
 
 const std::chrono::hours defaultExpireDuration(4);
 
+static const QStringList logLevels = {
+    QObject::tr("Info"), QObject::tr("Debug"), QObject::tr("Warning"), QObject::tr("Critical"), QObject::tr("Fatal")
+};
+
 LogBrowser::LogBrowser(QWidget *parent)
     : QDialog(parent)
 {
@@ -48,6 +53,23 @@ LogBrowser::LogBrowser(QWidget *parent)
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
 
+    // Label + combobox to select log level
+    QHBoxLayout *logLevelLayout = new QHBoxLayout;
+
+    auto minLogLevelLabel = new QLabel(tr("Minimum log level: "));
+    logLevelLayout->addWidget(minLogLevelLabel);
+
+    auto minLogLevelComboBox = new QComboBox;
+    minLogLevelComboBox->addItems(logLevels);
+    minLogLevelComboBox->setCurrentIndex(ConfigFile().minLogLevel());
+    connect(minLogLevelComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &LogBrowser::setMinLogLevel);
+    logLevelLayout->addWidget(minLogLevelComboBox);
+
+    logLevelLayout->addStretch(0);
+
+    mainLayout->addLayout(logLevelLayout);
+
+    // Label + checkbox to activate logging in temporary folder
     auto label = new QLabel(
         tr("The client can write debug logs to a temporary folder. "
            "These logs are very helpful for diagnosing problems.\n"
@@ -61,13 +83,13 @@ LogBrowser::LogBrowser(QWidget *parent)
     label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
     mainLayout->addWidget(label);
 
-    // button to permanently save logs
     auto enableLoggingButton = new QCheckBox;
     enableLoggingButton->setText(tr("Enable logging to temporary folder"));
     enableLoggingButton->setChecked(ConfigFile().automaticLogDir());
     connect(enableLoggingButton, &QCheckBox::toggled, this, &LogBrowser::togglePermanentLogging);
     mainLayout->addWidget(enableLoggingButton);
 
+    // Checkbox to activate auto deletion of logs
     auto deleteLogsButton = new QCheckBox;
     deleteLogsButton->setText(tr("Delete logs older than %1 hours").arg(QString::number(defaultExpireDuration.count())));
     deleteLogsButton->setChecked(bool(ConfigFile().automaticDeleteOldLogsAge()));
@@ -119,6 +141,8 @@ void LogBrowser::setupLoggingFromConfig()
     ConfigFile config;
     auto logger = Logger::instance();
 
+    logger->setMinLogLevel(config.minLogLevel());
+
     if (config.automaticLogDir()) {
         // Don't override other configured logging
         if (logger->isLoggingToFile())
@@ -155,6 +179,13 @@ void LogBrowser::toggleLogDeletion(bool enabled)
         config.setAutomaticDeleteOldLogsAge({});
         logger->setLogExpire(std::chrono::hours(0));
     }
+}
+
+void LogBrowser::setMinLogLevel(int index)
+{
+    ConfigFile config;
+    config.setMinLogLevel(index);
+    setupLoggingFromConfig();
 }
 
 } // namespace

@@ -1526,6 +1526,10 @@ Tenga en cuenta que el uso de cualquier opción de línea de comando de registro
         <source>Open folder</source>
         <translation>Abrir carpeta</translation>
     </message>
+    <message>
+        <source>Minimum log level: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::Logger</name>
@@ -3638,6 +3642,26 @@ El modo de archivos virtuales se excluye mutuamente con una sincronización sele
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Critical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1527,6 +1527,10 @@ Veuillez noter qu’utiliser les options de journalisation en ligne de commande 
         <source>Enable logging to temporary folder</source>
         <translation>Activer la journalisation dans un dossier temporaire</translation>
     </message>
+    <message>
+        <source>Minimum log level: </source>
+        <translation>Niveau minimum de trace: </translation>
+    </message>
 </context>
 <context>
     <name>OCC::Logger</name>
@@ -3641,6 +3645,26 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1 : %2</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation>Info</translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation>Debug</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <source>Critical</source>
+        <translation>Critical</translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation>Fatal</translation>
     </message>
 </context>
 <context>

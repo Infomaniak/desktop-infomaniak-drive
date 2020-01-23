@@ -1524,6 +1524,10 @@ Teña en conta que o uso de calquera opción de rexistro por liña de ordes anul
         <source>Open folder</source>
         <translation>Abrir o cartafol</translation>
     </message>
+    <message>
+        <source>Minimum log level: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::Logger</name>
@@ -3637,6 +3641,26 @@ Este é un modo novo e experimental. Se decide usalo, informe de calquera proble
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Critical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1516,6 +1516,10 @@ If enabled, logs will be written to %1</source>
 Note that using any logging command line options will override the settings.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Minimum log level: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::Logger</name>
@@ -3622,6 +3626,26 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Critical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

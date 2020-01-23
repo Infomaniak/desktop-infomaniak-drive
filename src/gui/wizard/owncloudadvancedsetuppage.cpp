@@ -382,7 +382,10 @@ void OwncloudAdvancedSetupPage::slotSyncEverythingClicked()
 
 void OwncloudAdvancedSetupPage::slotQuotaRetrieved(const QVariantMap &result)
 {
-    _ui.lSyncEverythingSizeLabel->setText(tr("(%1)").arg(Utility::octetsToString(result["size"].toDouble())));
+    QString size = result["size"].toLongLong() > 0
+            ? tr("(%1)").arg(Utility::octetsToString(result["size"].toLongLong()))
+            : QString();
+    _ui.lSyncEverythingSizeLabel->setText(size);
     updateStatus();
 }
 

@@ -1527,6 +1527,10 @@ Note that using any logging command line options will override the settings.</so
         <translation>Queste impostazioni si conservano anche in caso di riavvio del client.
 L&apos;utilizzo di qualsiasi opzione per i log tramite linea di comando sovrascriverà le impostazioni.</translation>
     </message>
+    <message>
+        <source>Minimum log level: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::Logger</name>
@@ -3639,6 +3643,26 @@ Questa è una nuova modalità sperimentale. Se decidi di usarla, ti preghiamo di
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Critical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
