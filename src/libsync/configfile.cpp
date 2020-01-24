@@ -801,7 +801,7 @@ void ConfigFile::setCrashReporter(bool enabled)
 bool ConfigFile::automaticLogDir() const
 {
     QSettings settings(configFile(), QSettings::IniFormat);
-    return settings.value(QLatin1String(automaticLogDirC), false).toBool();
+    return settings.value(QLatin1String(automaticLogDirC), true).toBool();
 }
 
 void ConfigFile::setAutomaticLogDir(bool enabled)
