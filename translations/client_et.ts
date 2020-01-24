@@ -219,7 +219,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Logi sisse</translation>
+        <translation>Logi sisse</translation>
     </message>
     <message>
         <source>Confirm Account Removal</source>
@@ -235,7 +235,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Logi välja</translation>
+        <translation>Logi välja</translation>
     </message>
     <message>
         <source>Resume sync</source>

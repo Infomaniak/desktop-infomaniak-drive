@@ -58,6 +58,8 @@ private slots:
 
 private:
     void showSharingUi();
+    void changeEvent(QEvent *) Q_DECL_OVERRIDE;
+    void customizeStyle();
 
     Ui::ShareDialog *_ui;
     QPointer<AccountState> _accountState;

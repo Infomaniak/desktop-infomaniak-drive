@@ -42,7 +42,7 @@
 namespace OCC {
 
 GeneralSettings::GeneralSettings(QWidget *parent)
-    : QWidget(parent)
+    : WidgetSettings(parent)
     , _ui(new Ui::GeneralSettings)
     , _currentlyLoading(false)
 {

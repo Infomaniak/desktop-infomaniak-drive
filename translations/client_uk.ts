@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Увійти</translation>
+        <translation>Увійти</translation>
     </message>
     <message>
         <source>Confirm Account Removal</source>
@@ -267,7 +267,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Вихід</translation>
+        <translation>Вихід</translation>
     </message>
     <message>
         <source>Resume sync</source>

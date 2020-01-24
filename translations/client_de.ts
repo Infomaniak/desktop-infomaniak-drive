@@ -287,7 +287,7 @@ Diese Aktion wird gerade laufende Synchronisationen abbrechen.</translation>
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Einloggen</translation>
+        <translation>Einloggen</translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big: </source>
@@ -319,7 +319,7 @@ Diese Aktion wird gerade laufende Synchronisationen abbrechen.</translation>
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Abmelden</translation>
+        <translation>Abmelden</translation>
     </message>
     <message>
         <source>Open local folder</source>

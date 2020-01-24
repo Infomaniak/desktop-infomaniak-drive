@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Bejelentkezés</translation>
+        <translation>Bejelentkezés</translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big: </source>
@@ -287,7 +287,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Kilépés</translation>
+        <translation>Kilépés</translation>
     </message>
     <message>
         <source>Resume sync</source>

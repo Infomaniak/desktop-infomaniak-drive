@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Prijava</translation>
+        <translation>Prijava</translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big: </source>
@@ -287,7 +287,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Odjava</translation>
+        <translation>Odjava</translation>
     </message>
     <message>
         <source>Resume sync</source>

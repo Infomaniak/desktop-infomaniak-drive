@@ -38,6 +38,11 @@ namespace OCC {
 FolderStatusDelegate::FolderStatusDelegate()
     : QStyledItemDelegate()
 {
+    customizeStyle();
+}
+
+void FolderStatusDelegate::customizeStyle()
+{
     m_moreIcon = QIcon(Theme::instance()->svgThemeIcon("more"));
 }
 

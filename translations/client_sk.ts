@@ -239,7 +239,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Prihlásiť sa</translation>
+        <translation>Prihlásiť sa</translation>
     </message>
     <message>
         <source>Confirm Account Removal</source>
@@ -259,7 +259,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Odhlásiť</translation>
+        <translation>Odhlásiť</translation>
     </message>
     <message>
         <source>Resume sync</source>

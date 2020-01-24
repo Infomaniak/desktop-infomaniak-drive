@@ -17,6 +17,7 @@
 
 #include "folderman.h"
 #include "theme.h"
+#include "widgetsettings.h"
 #include "generalsettings.h"
 #include "networksettings.h"
 #include "accountsettings.h"
@@ -58,6 +59,13 @@ namespace OCC {
 
 #include "settingsdialogcommon.cpp"
 
+static const char propertyIcon[] = "propertyIcon";
+
+static const QString accountIconPath(":/client/resources/account.png");
+static const QString activityIconPath(":/client/resources/activity.png");
+static const QString settingsIconPath(":/client/resources/settings.png");
+static const QString networkIconPath(":/client/resources/network.png");
+
 SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
     : QDialog(parent)
     , _ui(new Ui::SettingsDialog)
@@ -86,7 +94,7 @@ SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
 
     // Note: all the actions have a '\n' because the account name is in two lines and
     // all buttons must have the same size in order to keep a good layout
-    _activityAction = createColorAwareAction(QLatin1String(":/client/resources/activity.png"), tr("Activity"));
+    _activityAction = createColorAwareAction(activityIconPath, tr("Activity"));
     _actionGroup->addAction(_activityAction);
     _toolBar->addAction(_activityAction);
     _activitySettings = new ActivitySettings;
@@ -95,14 +103,14 @@ SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
         &ownCloudGui::slotShowOptionalTrayMessage);
     _activitySettings->setNotificationRefreshInterval(cfg.notificationRefreshInterval());
 
-    QAction *generalAction = createColorAwareAction(QLatin1String(":/client/resources/settings.png"), tr("General"));
+    QAction *generalAction = createColorAwareAction(settingsIconPath, tr("General"));
     _actionGroup->addAction(generalAction);
     _toolBar->addAction(generalAction);
     GeneralSettings *generalSettings = new GeneralSettings;
     _ui->stack->addWidget(generalSettings);
     QObject::connect(generalSettings, &GeneralSettings::showAbout, gui, &ownCloudGui::slotAbout);
 
-    QAction *networkAction = createColorAwareAction(QLatin1String(":/client/resources/network.png"), tr("Network"));
+    QAction *networkAction = createColorAwareAction(networkIconPath, tr("Network"));
     _actionGroup->addAction(networkAction);
     _toolBar->addAction(networkAction);
     NetworkSettings *networkSettings = new NetworkSettings;
@@ -115,7 +123,6 @@ SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
 
     // Add new drive button
     _addDriveButton = new QPushButton(this);
-    _addDriveButton->setIcon(QIcon(Theme::instance()->svgThemeIcon("add")));
     _addDriveButton->setToolTip(tr("Add new"));
     _toolBar->addWidget(_addDriveButton);
     connect(_addDriveButton, &QPushButton::clicked, this, &SettingsDialog::slotOpenAccountWizard);
@@ -258,12 +265,14 @@ void SettingsDialog::slotAccountAvatarChanged()
             QImage pix = account->avatar();
             QIcon icon;
             if (pix.isNull()) {
-                icon = createColorAwareIcon(":/client/resources/account.png");
+                icon = createColorAwareIcon(QIcon(accountIconPath));
             }
             else {
-                icon = QPixmap::fromImage(AvatarJob::makeCircularAvatar(pix));
+                QImage image = AvatarJob::makeCircularAvatar(pix);
+                icon = QPixmap::fromImage(image);
             }
             action->setIcon(icon);
+            action->setProperty(propertyIcon, icon);
         }
     }
 }
@@ -351,26 +360,41 @@ void SettingsDialog::customizeStyle()
     _toolBar->setStyleSheet(QString::fromLatin1(TOOLBAR_CSS).arg(background, dark, highlightColor, highlightTextColor));
 
     Q_FOREACH (QAction *a, _actionGroup->actions()) {
-        QIcon icon = createColorAwareIcon(a->property("iconPath").toString());
+        QIcon icon = createColorAwareIcon(a->property(propertyIcon).value<QIcon>());
         a->setIcon(icon);
         QToolButton *btn = qobject_cast<QToolButton *>(_toolBar->widgetForAction(a));
         if (btn) {
             btn->setIcon(icon);
         }
     }
+
+    Theme::instance()->clearIconCache();
+    _addDriveButton->setIcon(QIcon(Theme::instance()->svgThemeIcon("add")));
+
+    // Customize widgets
+    for (auto it = _actionGroupWidgets.begin(); it != _actionGroupWidgets.end(); ++it) {
+        auto as = qobject_cast<WidgetSettings *>(*it);
+        if (as) {
+            as->customizeStyle();
+        }
+    }
 }
 
-QIcon SettingsDialog::createColorAwareIcon(const QString &name)
+QIcon SettingsDialog::createColorAwareIcon(const QIcon &icon)
 {
+    QIcon newIcon;
     QColor bg(palette().base().color());
-    QImage img(name);
-    // account for different sensitivity of the human eye to certain colors
-    double treshold = 1.0 - (0.299 * bg.red() + 0.587 * bg.green() + 0.114 * bg.blue()) / 255.0;
-    if (treshold > 0.5) {
-        img.invertPixels(QImage::InvertRgb);
+    for (QSize size : icon.availableSizes()) {
+        QImage img(icon.pixmap(size).toImage());
+        // account for different sensitivity of the human eye to certain colors
+        double treshold = 1.0 - (0.299 * bg.red() + 0.587 * bg.green() + 0.114 * bg.blue()) / 255.0;
+        if (treshold > 0.5) {
+            img.invertPixels(QImage::InvertRgb);
+        }
+        newIcon.addPixmap(QPixmap::fromImage(img));
     }
 
-    return QIcon(QPixmap::fromImage(img));
+    return newIcon;
 }
 
 class ToolButtonAction : public QWidgetAction
@@ -402,21 +426,19 @@ public:
     }
 };
 
-QAction *SettingsDialog::createActionWithIcon(const QIcon &icon, const QString &text, const QString &iconPath)
+QAction *SettingsDialog::createActionWithIcon(const QIcon &icon, const QString &text)
 {
     QAction *action = new ToolButtonAction(icon, text, this);
     action->setCheckable(true);
-    if (!iconPath.isEmpty()) {
-        action->setProperty("iconPath", iconPath);
-    }
+    action->setProperty(propertyIcon, icon);
     return action;
 }
 
 QAction *SettingsDialog::createColorAwareAction(const QString &iconPath, const QString &text)
 {
     // all buttons must have the same size in order to keep a good layout
-    QIcon coloredIcon = createColorAwareIcon(iconPath);
-    return createActionWithIcon(coloredIcon, text, iconPath);
+    QIcon coloredIcon = createColorAwareIcon(QIcon(iconPath));
+    return createActionWithIcon(coloredIcon, text);
 }
 
 void SettingsDialog::slotRefreshActivityAccountStateSender()

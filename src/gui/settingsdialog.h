@@ -77,9 +77,9 @@ private slots:
 private:
     void customizeStyle();
 
-    QIcon createColorAwareIcon(const QString &name);
+    QIcon createColorAwareIcon(const QIcon &icon);
     QAction *createColorAwareAction(const QString &iconName, const QString &fileName);
-    QAction *createActionWithIcon(const QIcon &icon, const QString &text, const QString &iconPath = QString());
+    QAction *createActionWithIcon(const QIcon &icon, const QString &text);
 
     Ui::SettingsDialog *const _ui;
 

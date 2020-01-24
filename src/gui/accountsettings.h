@@ -25,6 +25,7 @@
 #include "quotainfo.h"
 #include "progressdispatcher.h"
 #include "owncloudgui.h"
+#include "widgetsettings.h"
 
 class QModelIndex;
 class QNetworkReply;
@@ -47,7 +48,7 @@ class FolderStatusModel;
  * @brief The AccountSettings class
  * @ingroup gui
  */
-class AccountSettings : public QWidget
+class AccountSettings : public WidgetSettings
 {
     Q_OBJECT
 
@@ -55,7 +56,6 @@ public:
     explicit AccountSettings(AccountState *accountState, QWidget *parent = 0);
     ~AccountSettings();
     QSize sizeHint() const Q_DECL_OVERRIDE { return ownCloudGui::settingsDialogSize(); }
-
 
 signals:
     void folderChanged();
@@ -92,6 +92,8 @@ protected slots:
     void slotLinkActivated(const QString &link);
 
 private:
+    void customizeStyle() override;
+
     void showConnectionLabel(const QString &message,
         QStringList errors = QStringList());
     bool event(QEvent *) Q_DECL_OVERRIDE;

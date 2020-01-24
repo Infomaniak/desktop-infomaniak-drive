@@ -263,7 +263,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">登录</translation>
+        <translation>登录</translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big: </source>
@@ -295,7 +295,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">注销</translation>
+        <translation>注销</translation>
     </message>
     <message>
         <source>Open local folder</source>

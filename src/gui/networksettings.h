@@ -15,6 +15,8 @@
 #ifndef MIRALL_NETWORKSETTINGS_H
 #define MIRALL_NETWORKSETTINGS_H
 
+#include "widgetsettings.h"
+
 #include <QWidget>
 
 
@@ -28,7 +30,7 @@ namespace Ui {
  * @brief The NetworkSettings class
  * @ingroup gui
  */
-class NetworkSettings : public QWidget
+class NetworkSettings : public WidgetSettings
 {
     Q_OBJECT
 

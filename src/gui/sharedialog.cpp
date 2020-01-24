@@ -225,6 +225,27 @@ void ShareDialog::showSharingUi()
     }
 }
 
+void ShareDialog::changeEvent(QEvent *e)
+{
+    switch (e->type()) {
+    case QEvent::StyleChange:
+    case QEvent::PaletteChange:
+    case QEvent::ThemeChange:
+        customizeStyle();
+        break;
+    default:
+        break;
+    }
+
+    QDialog::changeEvent(e);
+}
+
+void ShareDialog::customizeStyle()
+{
+    Theme::instance()->clearIconCache();
+    _userGroupWidget->customizeStyle();
+}
+
 void ShareDialog::slotThumbnailFetched(const int &statusCode, const QByteArray &reply)
 {
     if (statusCode != 200) {

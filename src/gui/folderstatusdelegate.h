@@ -29,6 +29,8 @@ public:
     QIcon m_moreIcon;
     FolderStatusDelegate();
 
+    void customizeStyle();
+
     enum datarole { FolderAliasRole = Qt::UserRole + 100,
         HeaderRole,
         FolderPathRole, // for a SubFolder it's the complete path

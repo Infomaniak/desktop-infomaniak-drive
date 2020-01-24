@@ -247,7 +247,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Kirjaudu sisään</translation>
+        <translation>Kirjaudu sisään</translation>
     </message>
     <message>
         <source>Confirm Account Removal</source>
@@ -267,7 +267,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Kirjaudu ulos</translation>
+        <translation>Kirjaudu ulos</translation>
     </message>
     <message>
         <source>Resume sync</source>

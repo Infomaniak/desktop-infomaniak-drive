@@ -275,7 +275,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Se connecter</translation>
+        <translation>Se connecter</translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big: </source>
@@ -307,7 +307,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Se déconnecter</translation>
+        <translation>Se déconnecter</translation>
     </message>
     <message>
         <source>Open local folder</source>
@@ -2699,7 +2699,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Create public link share</source>
-        <translation>Créer une lien de partage public</translation>
+        <translation>Créer un lien de partage public</translation>
     </message>
     <message>
         <source>Delete</source>

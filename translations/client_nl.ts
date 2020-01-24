@@ -275,7 +275,7 @@ Deze actie annuleert alle huidig lopende synchronisatie.</translation>
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Meld u aan</translation>
+        <translation>Meld u aan</translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big: </source>
@@ -307,7 +307,7 @@ Deze actie annuleert alle huidig lopende synchronisatie.</translation>
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Afmelden</translation>
+        <translation>Afmelden</translation>
     </message>
     <message>
         <source>Open local folder</source>

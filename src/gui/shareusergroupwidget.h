@@ -60,6 +60,7 @@ public:
         const QString &privateLinkUrl,
         QWidget *parent = 0);
     ~ShareUserGroupWidget();
+    void customizeStyle();
 
 public slots:
     void getShares();
@@ -117,6 +118,7 @@ public:
     ~ShareUserLine();
 
     QSharedPointer<Share> share() const;
+    void customizeStyle();
 
 signals:
     void visualDeletionDone();

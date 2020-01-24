@@ -207,7 +207,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Пријава</translation>
+        <translation>Пријава</translation>
     </message>
     <message>
         <source>Confirm Account Removal</source>
@@ -223,7 +223,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Одјава</translation>
+        <translation>Одјава</translation>
     </message>
     <message>
         <source>Resume sync</source>

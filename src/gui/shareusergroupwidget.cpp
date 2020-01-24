@@ -342,7 +342,14 @@ void ShareUserGroupWidget::slotPrivateLinkEmail()
     Utility::openEmailComposer(
         tr("I shared something with you"),
         _privateLinkUrl,
-        this);
+                this);
+}
+
+void ShareUserGroupWidget::customizeStyle()
+{
+    foreach (auto sw, _ui->scrollArea->findChildren<ShareUserLine *>()) {
+        sw->customizeStyle();
+    }
 }
 
 ShareUserLine::ShareUserLine(QSharedPointer<Share> share,
@@ -380,9 +387,6 @@ ShareUserLine::ShareUserLine(QSharedPointer<Share> share,
     }
     _ui->permissionToolButton->setMenu(menu);
     _ui->permissionToolButton->setPopupMode(QToolButton::InstantPopup);
-
-    QIcon icon(Theme::instance()->svgThemeIcon("more"));
-    _ui->permissionToolButton->setIcon(icon);
 
     // If there's only a single entry in the detailed permission menu, hide it
     if (menu->actions().size() == 1) {
@@ -424,6 +428,7 @@ ShareUserLine::ShareUserLine(QSharedPointer<Share> share,
     }
 
     loadAvatar();
+    customizeStyle();
 }
 
 void ShareUserLine::loadAvatar()
@@ -589,6 +594,12 @@ void ShareUserLine::slotPermissionsSet()
 QSharedPointer<Share> ShareUserLine::share() const
 {
     return _share;
+}
+
+void ShareUserLine::customizeStyle()
+{
+    QIcon icon(Theme::instance()->svgThemeIcon("more"));
+    _ui->permissionToolButton->setIcon(icon);
 }
 
 void ShareUserLine::displayPermissions()

@@ -243,7 +243,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Inici de sessió</translation>
+        <translation>Inici de sessió</translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big: </source>
@@ -275,7 +275,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Surt</translation>
+        <translation>Surt</translation>
     </message>
     <message>
         <source>Resume sync</source>

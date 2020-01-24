@@ -1278,6 +1278,14 @@ This action will abort any currently running synchronization.</source>
         <source>Remove connection</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Log out</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log in</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::AccountState</name>

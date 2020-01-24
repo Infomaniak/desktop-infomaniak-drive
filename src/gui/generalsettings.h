@@ -15,6 +15,8 @@
 #ifndef MIRALL_GENERALSETTINGS_H
 #define MIRALL_GENERALSETTINGS_H
 
+#include "widgetsettings.h"
+
 #include <QWidget>
 #include <QPointer>
 
@@ -30,7 +32,7 @@ namespace Ui {
  * @brief The GeneralSettings class
  * @ingroup gui
  */
-class GeneralSettings : public QWidget
+class GeneralSettings : public WidgetSettings
 {
     Q_OBJECT
 

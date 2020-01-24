@@ -128,12 +128,12 @@ QIcon Theme::svgThemeIcon(const QString &name) const
     QString key = name + "," + flavor;
     QIcon &cached = _iconCache[key]; // Take reference, this will also "set" the cache entry
     if (cached.isNull()) {
-        QList<int> sizes;
-        sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
-        foreach (int size, sizes) {
-            // Search for svg icon
-            QString pixmapName = QString::fromLatin1(":/client/theme/%1/%2.svg").arg(flavor).arg(name);
-            if (QFile::exists(pixmapName)) {
+        QString pixmapName = QString::fromLatin1(":/client/theme/%1/%2.svg").arg(flavor).arg(name);
+        if (QFile::exists(pixmapName)) {
+            QList<int> sizes;
+            sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
+            foreach (int size, sizes) {
+                // Search for svg icon
                 cached.addPixmap(QIcon(pixmapName).pixmap(QSize(size, size)));
             }
         }
@@ -318,6 +318,11 @@ bool Theme::monoIconsAvailable() const
 {
     QString themeDir = QString::fromLatin1(":/client/theme/%1/").arg(Theme::instance()->systrayIconFlavor(true));
     return QDir(themeDir).exists();
+}
+
+void Theme::clearIconCache()
+{
+    _iconCache.clear();
 }
 
 QString Theme::updateCheckUrl() const

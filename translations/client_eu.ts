@@ -247,7 +247,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Hasi saioa</translation>
+        <translation>Hasi saioa</translation>
     </message>
     <message>
         <source>Confirm Account Removal</source>
@@ -263,7 +263,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Saioa bukatu</translation>
+        <translation>Saioa bukatu</translation>
     </message>
     <message>
         <source>Resume sync</source>

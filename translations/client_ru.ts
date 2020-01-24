@@ -287,7 +287,7 @@ This action will abort any currently running synchronization.</source>
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">Войти</translation>
+        <translation>Войти</translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big: </source>
@@ -319,7 +319,7 @@ This action will abort any currently running synchronization.</source>
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">Выйти</translation>
+        <translation>Выйти</translation>
     </message>
     <message>
         <source>Open local folder</source>

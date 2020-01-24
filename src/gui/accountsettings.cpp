@@ -104,7 +104,7 @@ protected:
 };
 
 AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
-    : QWidget(parent)
+    : WidgetSettings(parent)
     , ui(new Ui::AccountSettings)
     , _wasDisabledBefore(false)
     , _accountState(accountState)
@@ -136,7 +136,6 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
     ui->_folderList->installEventFilter(mouseCursorChanger);
 
     // Add tool buttons
-    ui->_deleteButton->setIcon(QIcon(Theme::instance()->svgThemeIcon("delete")));
     ui->_deleteButton->setToolTip(tr("Remove"));
     connect(ui->_disconnectButton, &QToolButton::clicked, this, &AccountSettings::slotToggleSignInState);
     connect(ui->_deleteButton, &QToolButton::clicked, this, &AccountSettings::slotDeleteAccount);
@@ -165,7 +164,6 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
     connect(syncNowWithRemoteDiscovery, &QAction::triggered, this, &AccountSettings::slotScheduleCurrentFolderForceFullDiscovery);
     addAction(syncNowWithRemoteDiscovery);
 
-
     connect(ui->selectiveSyncApply, &QAbstractButton::clicked, _model, &FolderStatusModel::slotApplySelectiveSync);
     connect(ui->selectiveSyncCancel, &QAbstractButton::clicked, _model, &FolderStatusModel::resetFolders);
     connect(ui->bigFolderApply, &QAbstractButton::clicked, _model, &FolderStatusModel::slotApplySelectiveSync);
@@ -174,7 +172,6 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
 
     connect(FolderMan::instance(), &FolderMan::folderListChanged, _model, &FolderStatusModel::resetFolders);
     connect(this, &AccountSettings::folderChanged, _model, &FolderStatusModel::resetFolders);
-
 
     QColor color = palette().highlight().color();
     ui->quotaProgressBar->setStyleSheet(QString::fromLatin1(progressBarStyleC).arg(color.name()));
@@ -188,6 +185,8 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
         this, &AccountSettings::slotUpdateQuota);
 
     setStyleSheet("QToolButton#sslButton {border: none} QToolButton#sslButton::menu-indicator {image: none}");
+
+    customizeStyle();
 }
 
 QString AccountSettings::selectedFolderAlias() const
@@ -806,10 +805,6 @@ void AccountSettings::slotAccountStateChanged()
     if (_accountState) {
         ui->sslButton->updateAccountState(_accountState);
 
-        ui->_disconnectButton->setIcon(QIcon(Theme::instance()->svgThemeIcon(
-                                                 state == AccountState::Connected ? "logout" : "login")));
-        ui->_disconnectButton->setToolTip(tr(state == AccountState::Connected ? "Log out" : "Log in"));
-
         AccountPtr account = _accountState->account();
         QUrl safeUrl(account->url());
         safeUrl.setPassword(QString()); // Remove the password from the URL to avoid showing it in the UI
@@ -859,6 +854,8 @@ void AccountSettings::slotAccountStateChanged()
                                     .arg(Utility::escape(Theme::instance()->appNameGUI()), drive),
                 _accountState->connectionErrors());
         }
+
+        customizeStyle();
     } else {
         // ownCloud is not yet configured.
         showConnectionLabel(tr("No %1 connection configured.")
@@ -915,6 +912,20 @@ void AccountSettings::slotLinkActivated(const QString &link)
             qCWarning(lcAccountSettings) << "Unable to find a valid index for " << myFolder;
         }
     }
+}
+
+void AccountSettings::customizeStyle()
+{
+    Theme::instance()->clearIconCache();
+    ui->_deleteButton->setIcon(QIcon(Theme::instance()->svgThemeIcon("delete")));
+
+    int state = _accountState ? _accountState->state() : AccountState::Disconnected;
+    ui->_disconnectButton->setIcon(QIcon(Theme::instance()->svgThemeIcon(
+                                             state == AccountState::Connected ? "logout" : "login")));
+    ui->_disconnectButton->setToolTip(state == AccountState::Connected ? tr("Log out") : tr("Log in"));
+
+    FolderStatusDelegate *delegate = qobject_cast<FolderStatusDelegate *>(ui->_folderList->itemDelegate());
+    delegate->customizeStyle();
 }
 
 AccountSettings::~AccountSettings()

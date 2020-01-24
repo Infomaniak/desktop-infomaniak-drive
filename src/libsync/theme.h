@@ -222,6 +222,11 @@ public:
     bool monoIconsAvailable() const;
 
     /**
+     * Clean icon cache
+     */
+    virtual void clearIconCache();
+
+    /**
      * @brief Where to check for new Updates.
      */
     virtual QString updateCheckUrl() const;

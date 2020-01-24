@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>Log in</source>
-        <translation type="vanished">登入</translation>
+        <translation>登入</translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big: </source>
@@ -283,7 +283,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation type="vanished">登出</translation>
+        <translation>登出</translation>
     </message>
     <message>
         <source>Resume sync</source>
