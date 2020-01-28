@@ -28,7 +28,6 @@
 #include "accountstate.h"
 #include "quotainfo.h"
 #include "accountmanager.h"
-#include "owncloudsetupwizard.h"
 #include "creds/abstractcredentials.h"
 #include "creds/httpcredentialsgui.h"
 #include "tooltipupdater.h"
@@ -105,7 +104,7 @@ protected:
 };
 
 AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
-    : QWidget(parent)
+    : WidgetSettings(parent)
     , ui(new Ui::AccountSettings)
     , _wasDisabledBefore(false)
     , _accountState(accountState)
@@ -136,13 +135,14 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
     ui->_folderList->setAttribute(Qt::WA_Hover, true);
     ui->_folderList->installEventFilter(mouseCursorChanger);
 
-    createAccountToolbox();
-    connect(AccountManager::instance(), &AccountManager::accountAdded,
-        this, &AccountSettings::slotAccountAdded);
+    // Add tool buttons
+    ui->_deleteButton->setToolTip(tr("Remove"));
+    connect(ui->_disconnectButton, &QToolButton::clicked, this, &AccountSettings::slotToggleSignInState);
+    connect(ui->_deleteButton, &QToolButton::clicked, this, &AccountSettings::slotDeleteAccount);
+
     connect(ui->_folderList, &QWidget::customContextMenuRequested,
         this, &AccountSettings::slotCustomContextMenuRequested);
-    connect(ui->_folderList, &QAbstractItemView::clicked,
-        this, &AccountSettings::slotFolderListClicked);
+    connect(ui->_folderList, &QAbstractItemView::clicked, this, &AccountSettings::slotFolderListClicked);
     connect(ui->_folderList, &QTreeView::expanded, this, &AccountSettings::refreshSelectiveSyncStatus);
     connect(ui->_folderList, &QTreeView::collapsed, this, &AccountSettings::refreshSelectiveSyncStatus);
     connect(ui->selectiveSyncNotification, &QLabel::linkActivated,
@@ -150,8 +150,7 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
     connect(_model, &FolderStatusModel::suggestExpand, ui->_folderList, &QTreeView::expand);
     connect(_model, &FolderStatusModel::dirtyChanged, this, &AccountSettings::refreshSelectiveSyncStatus);
     refreshSelectiveSyncStatus();
-    connect(_model, &QAbstractItemModel::rowsInserted,
-        this, &AccountSettings::refreshSelectiveSyncStatus);
+    connect(_model, &QAbstractItemModel::rowsInserted, this, &AccountSettings::refreshSelectiveSyncStatus);
 
     QAction *syncNowAction = new QAction(this);
     syncNowAction->setShortcut(QKeySequence(Qt::Key_F6));
@@ -163,7 +162,6 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
     connect(syncNowWithRemoteDiscovery, &QAction::triggered, this, &AccountSettings::slotScheduleCurrentFolderForceFullDiscovery);
     addAction(syncNowWithRemoteDiscovery);
 
-
     connect(ui->selectiveSyncApply, &QAbstractButton::clicked, _model, &FolderStatusModel::slotApplySelectiveSync);
     connect(ui->selectiveSyncCancel, &QAbstractButton::clicked, _model, &FolderStatusModel::resetFolders);
     connect(ui->bigFolderApply, &QAbstractButton::clicked, _model, &FolderStatusModel::slotApplySelectiveSync);
@@ -172,7 +170,6 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
 
     connect(FolderMan::instance(), &FolderMan::folderListChanged, _model, &FolderStatusModel::resetFolders);
     connect(this, &AccountSettings::folderChanged, _model, &FolderStatusModel::resetFolders);
-
 
     QColor color = palette().highlight().color();
     ui->quotaProgressBar->setStyleSheet(QString::fromLatin1(progressBarStyleC).arg(color.name()));
@@ -186,29 +183,8 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
         this, &AccountSettings::slotUpdateQuota);
 
     setStyleSheet("QToolButton#sslButton {border: none} QToolButton#sslButton::menu-indicator {image: none}");
-}
 
-
-void AccountSettings::createAccountToolbox()
-{
-    QMenu *menu = new QMenu();
-    _addAccountAction = new QAction(tr("Add new"), this);
-    menu->addAction(_addAccountAction);
-    connect(_addAccountAction, &QAction::triggered, this, &AccountSettings::slotOpenAccountWizard);
-
-    _toggleSignInOutAction = new QAction(tr("Log out"), this);
-    connect(_toggleSignInOutAction, &QAction::triggered, this, &AccountSettings::slotToggleSignInState);
-    menu->addAction(_toggleSignInOutAction);
-
-    QAction *action = new QAction(tr("Remove"), this);
-    menu->addAction(action);
-    connect(action, &QAction::triggered, this, &AccountSettings::slotDeleteAccount);
-
-    ui->_accountToolbox->setText(tr("Account") + QLatin1Char(' '));
-    ui->_accountToolbox->setMenu(menu);
-    ui->_accountToolbox->setPopupMode(QToolButton::InstantPopup);
-
-    slotAccountAdded(_accountState);
+    customizeStyle();
 }
 
 QString AccountSettings::selectedFolderAlias() const
@@ -217,16 +193,6 @@ QString AccountSettings::selectedFolderAlias() const
     if (!selected.isValid())
         return "";
     return _model->data(selected, FolderStatusDelegate::FolderAliasRole).toString();
-}
-
-void AccountSettings::slotOpenAccountWizard()
-{
-    // We can't call isSystemTrayAvailable with appmenu-qt5 because it breaks the systemtray
-    // (issue #4693, #4944)
-    if (qgetenv("QT_QPA_PLATFORMTHEME") == "appmenu-qt5" || QSystemTrayIcon::isSystemTrayAvailable()) {
-        topLevelWidget()->close();
-    }
-    OwncloudSetupWizard::runWizard(qApp, SLOT(slotownCloudWizardDone(int)), 0);
 }
 
 void AccountSettings::slotToggleSignInState()
@@ -818,6 +784,7 @@ void AccountSettings::slotAccountStateChanged()
     int state = _accountState ? _accountState->state() : AccountState::Disconnected;
     if (_accountState) {
         ui->sslButton->updateAccountState(_accountState);
+
         AccountPtr account = _accountState->account();
         QUrl safeUrl(account->url());
         safeUrl.setPassword(QString()); // Remove the password from the URL to avoid showing it in the UI
@@ -826,16 +793,14 @@ void AccountSettings::slotAccountStateChanged()
             _model->slotUpdateFolderState(folder);
         }
 
-        QString server = QString::fromLatin1("<a href=\"%1\">%2</a>")
-                             .arg(Utility::escape(account->url().toString()),
-                                 Utility::escape(safeUrl.toString()));
-        QString serverWithUser = server;
+        QString drive = account->driveName();
+        QString driveWithUser = drive;
         if (AbstractCredentials *cred = account->credentials()) {
             QString user = account->davDisplayName();
             if (user.isEmpty()) {
                 user = cred->user();
             }
-            serverWithUser = tr("%1 as <i>%2</i>").arg(server, Utility::escape(user));
+            driveWithUser = tr("<i>%1</i> as <i>%2</i>").arg(drive, Utility::escape(user));
         }
 
         if (state == AccountState::Connected) {
@@ -843,13 +808,13 @@ void AccountSettings::slotAccountStateChanged()
             if (account->serverVersionUnsupported()) {
                 errors << tr("The server version %1 is unsupported! Proceed at your own risk.").arg(account->serverVersion());
             }
-            showConnectionLabel(tr("Connected to %1.").arg(serverWithUser), errors);
+            showConnectionLabel(tr("Connected to %1.").arg(driveWithUser), errors);
         } else if (state == AccountState::ServiceUnavailable) {
-            showConnectionLabel(tr("Server %1 is temporarily unavailable.").arg(server));
+            showConnectionLabel(tr("Drive %1 is temporarily unavailable.").arg(drive));
         } else if (state == AccountState::MaintenanceMode) {
-            showConnectionLabel(tr("Server %1 is currently in maintenance mode.").arg(server));
+            showConnectionLabel(tr("Drive %1 is currently in maintenance mode.").arg(drive));
         } else if (state == AccountState::SignedOut) {
-            showConnectionLabel(tr("Signed out from %1.").arg(serverWithUser));
+            showConnectionLabel(tr("Signed out from %1.").arg(driveWithUser));
         } else if (state == AccountState::AskingCredentials) {
             QUrl url;
             if (auto cred = qobject_cast<HttpCredentialsGui *>(account->credentials())) {
@@ -862,13 +827,15 @@ void AccountSettings::slotAccountStateChanged()
                                        "<a href='%1'>Click here</a> to re-open the browser.")
                                         .arg(url.toString(QUrl::FullyEncoded)));
             } else {
-                showConnectionLabel(tr("Connecting to %1...").arg(serverWithUser));
+                showConnectionLabel(tr("Connecting to %1...").arg(driveWithUser));
             }
         } else {
             showConnectionLabel(tr("No connection to %1 at %2.")
-                                    .arg(Utility::escape(Theme::instance()->appNameGUI()), server),
+                                    .arg(Utility::escape(Theme::instance()->appNameGUI()), drive),
                 _accountState->connectionErrors());
         }
+
+        customizeStyle();
     } else {
         // ownCloud is not yet configured.
         showConnectionLabel(tr("No %1 connection configured.")
@@ -890,15 +857,6 @@ void AccountSettings::slotAccountStateChanged()
     // Disabling expansion of folders might require hiding the selective
     // sync user interface buttons.
     refreshSelectiveSyncStatus();
-
-    /* set the correct label for the Account toolbox button */
-    if (_accountState) {
-        if (_accountState->isSignedOut()) {
-            _toggleSignInOutAction->setText(tr("Log in"));
-        } else {
-            _toggleSignInOutAction->setText(tr("Log out"));
-        }
-    }
 }
 
 void AccountSettings::slotLinkActivated(const QString &link)
@@ -934,6 +892,20 @@ void AccountSettings::slotLinkActivated(const QString &link)
             qCWarning(lcAccountSettings) << "Unable to find a valid index for " << myFolder;
         }
     }
+}
+
+void AccountSettings::customizeStyle()
+{
+    Theme::instance()->clearIconCache();
+    ui->_deleteButton->setIcon(QIcon(Theme::instance()->svgThemeIcon("delete")));
+
+    int state = _accountState ? _accountState->state() : AccountState::Disconnected;
+    ui->_disconnectButton->setIcon(QIcon(Theme::instance()->svgThemeIcon(
+                                             state == AccountState::Connected ? "logout" : "login")));
+    ui->_disconnectButton->setToolTip(state == AccountState::Connected ? tr("Log out") : tr("Log in"));
+
+    FolderStatusDelegate *delegate = qobject_cast<FolderStatusDelegate *>(ui->_folderList->itemDelegate());
+    delegate->customizeStyle();
 }
 
 AccountSettings::~AccountSettings()
@@ -1021,18 +993,6 @@ void AccountSettings::refreshSelectiveSyncStatus()
     }
 }
 
-void AccountSettings::slotAccountAdded(AccountState *)
-{
-    // if the theme is limited to single account, the button must hide if
-    // there is already one account.
-    int s = AccountManager::instance()->accounts().size();
-    if (s > 0 && !Theme::instance()->multiAccount()) {
-        _addAccountAction->setVisible(false);
-    } else {
-        _addAccountAction->setVisible(true);
-    }
-}
-
 void AccountSettings::slotDeleteAccount()
 {
     // Deleting the account potentially deletes 'this', so
@@ -1042,7 +1002,7 @@ void AccountSettings::slotDeleteAccount()
             tr("Confirm Account Removal"),
             tr("<p>Do you really want to remove the connection to the account <i>%1</i>?</p>"
                "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
-                .arg(_accountState->account()->displayName()),
+                .arg(_accountState->account()->driveName()),
             QMessageBox::NoButton,
             this);
         QPushButton *yesButton =

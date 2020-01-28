@@ -70,8 +70,10 @@ private slots:
     void slotAccountAdded(AccountState *account);
     void slotAccountRemoved(AccountState *account);
     void slotItemContextMenu(const QPoint &pos);
+    void slotSyncStateChange(Folder *);
 
 private:
+    void updateAccountList();
     void updateAccountChoiceVisibility();
     AccountState *currentAccountFilter() const;
     QString currentFolderFilter() const;

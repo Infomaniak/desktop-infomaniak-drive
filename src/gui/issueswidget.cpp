@@ -75,16 +75,10 @@ IssuesWidget::IssuesWidget(QWidget *parent)
     connect(_ui->filterAccount, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &IssuesWidget::slotRefreshIssues);
     connect(_ui->filterAccount, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &IssuesWidget::slotUpdateFolderFilters);
     connect(_ui->filterFolder, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &IssuesWidget::slotRefreshIssues);
-    for (auto account : AccountManager::instance()->accounts()) {
-        slotAccountAdded(account.data());
-    }
-    connect(AccountManager::instance(), &AccountManager::accountAdded,
-        this, &IssuesWidget::slotAccountAdded);
-    connect(AccountManager::instance(), &AccountManager::accountRemoved,
-        this, &IssuesWidget::slotAccountRemoved);
-    connect(FolderMan::instance(), &FolderMan::folderListChanged,
-        this, &IssuesWidget::slotUpdateFolderFilters);
-
+    connect(AccountManager::instance(), &AccountManager::accountAdded, this, &IssuesWidget::slotAccountAdded);
+    connect(AccountManager::instance(), &AccountManager::accountRemoved, this, &IssuesWidget::slotAccountRemoved);
+    connect(FolderMan::instance(), &FolderMan::folderSyncStateChange, this, &IssuesWidget::slotSyncStateChange);
+    connect(FolderMan::instance(), &FolderMan::folderListChanged, this, &IssuesWidget::slotUpdateFolderFilters);
 
     // Adjust copyToClipboard() when making changes here!
     QStringList header;
@@ -315,7 +309,7 @@ void IssuesWidget::slotRefreshIssues()
 
 void IssuesWidget::slotAccountAdded(AccountState *account)
 {
-    _ui->filterAccount->addItem(account->account()->displayName(), QVariant::fromValue(account));
+    _ui->filterAccount->addItem(account->account()->driveName(), QVariant::fromValue(account));
     updateAccountChoiceVisibility();
 }
 
@@ -337,6 +331,26 @@ void IssuesWidget::slotItemContextMenu(const QPoint &pos)
     ProtocolItem::openContextMenu(globalPos, item, this);
 }
 
+void IssuesWidget::slotSyncStateChange(Folder *)
+{
+    updateAccountList();
+}
+
+void IssuesWidget::updateAccountList()
+{
+    // Add/update new accounts
+    for (auto account : AccountManager::instance()->accounts()) {
+        int index = _ui->filterAccount->findData(QVariant::fromValue(account));
+        if (index == -1) {
+            _ui->filterAccount->addItem(account->account()->driveName(), QVariant::fromValue(account));
+        }
+        else {
+            _ui->filterAccount->setItemText(index, account->account()->driveName());
+            _ui->filterAccount->setItemData(index, QVariant::fromValue(account));
+        }
+    }
+}
+
 void IssuesWidget::updateAccountChoiceVisibility()
 {
     bool visible = _ui->filterAccount->count() > 2;
@@ -347,7 +361,7 @@ void IssuesWidget::updateAccountChoiceVisibility()
 
 AccountState *IssuesWidget::currentAccountFilter() const
 {
-    return _ui->filterAccount->currentData().value<AccountState *>();
+    return _ui->filterAccount->currentData().value<AccountStatePtr>().data();
 }
 
 QString IssuesWidget::currentFolderFilter() const

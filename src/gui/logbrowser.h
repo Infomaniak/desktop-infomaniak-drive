@@ -50,6 +50,7 @@ public:
 protected slots:
     void togglePermanentLogging(bool enabled);
     void toggleLogDeletion(bool enabled);
+    void setMinLogLevel(int index);
 };
 
 } // namespace

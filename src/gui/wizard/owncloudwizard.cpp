@@ -211,10 +211,9 @@ void OwncloudWizard::slotCurrentPageChanged(int id)
         done(Accepted);
     }
 
-    if (id == WizardCommon::Page_AdvancedSetup && (_credentialsPage == _browserCredsPage || _credentialsPage == _webViewPage)) {
-        // For OAuth & Webflow, disable the back button in the Page_AdvancedSetup because we don't want
-        // to re-open the browser.
-        button(QWizard::BackButton)->setEnabled(false);
+    if (id == WizardCommon::Page_OAuthCreds || id == WizardCommon::Page_WebView) {
+        // Set OAuth & Webflow pages as Commit page because we don't want to re-open the browser.
+        currentPage()->setCommitPage(true);
     }
 }
 

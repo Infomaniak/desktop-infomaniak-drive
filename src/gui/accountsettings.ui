@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>575</width>
+    <width>678</width>
     <height>557</height>
    </rect>
   </property>
@@ -30,6 +30,20 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="3">
+       <widget class="QToolButton" name="_deleteButton">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QToolButton" name="_disconnectButton">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1">
        <widget class="QLabel" name="connectLabel">
         <property name="sizePolicy">
@@ -39,7 +53,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Connected with &lt;server&gt; as &lt;user&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Connected with KDrive &amp;lt;server&amp;gt; as &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>
@@ -49,13 +63,6 @@
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QToolButton" name="_accountToolbox">
-        <property name="text">
-         <string>...</string>
         </property>
        </widget>
       </item>

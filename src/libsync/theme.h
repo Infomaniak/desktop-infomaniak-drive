@@ -97,6 +97,7 @@ public:
     virtual QIcon folderDisabledIcon() const;
     virtual QIcon folderOfflineIcon(bool sysTray = false, bool sysTrayMenuVisible = false) const;
     virtual QIcon applicationIcon() const;
+    virtual QIcon svgThemeIcon(QString const &name) const;
 #endif
 
     virtual QString statusHeaderText(SyncResult::Status) const;
@@ -221,9 +222,19 @@ public:
     bool monoIconsAvailable() const;
 
     /**
+     * Clean icon cache
+     */
+    virtual void clearIconCache();
+
+    /**
      * @brief Where to check for new Updates.
      */
     virtual QString updateCheckUrl() const;
+
+    /**
+     * Check if delta-synchronization is available
+     */
+    virtual bool deltaSynchronizationAvailable() const;
 
     /**
      * When true, the setup wizard will show the selective sync dialog by default and default

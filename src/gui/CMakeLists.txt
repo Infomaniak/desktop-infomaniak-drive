@@ -100,6 +100,7 @@ set(client_SRCS
     servernotificationhandler.cpp
     guiutility.cpp
     elidedlabel.cpp
+    widgetsettings.cpp
     creds/httpcredentialsgui.cpp
     creds/oauth.cpp
     creds/webflowcredentials.cpp

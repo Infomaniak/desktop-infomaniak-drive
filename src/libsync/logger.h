@@ -82,6 +82,9 @@ public:
     /** For switching off via logwindow */
     void disableTemporaryFolderLogDir();
 
+    int minLogLevel() const;
+    void setMinLogLevel(int level);
+
 signals:
     void logWindowLog(const QString &);
 
@@ -105,6 +108,7 @@ private:
     mutable QMutex _mutex;
     QString _logDirectory;
     bool _temporaryFolderLogDir = false;
+    int _minLogLevel;
 };
 
 } // namespace OCC

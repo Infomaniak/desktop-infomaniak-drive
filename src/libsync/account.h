@@ -106,6 +106,10 @@ public:
     /// The internal id of the account.
     QString id() const;
 
+    /// The drive name
+    void setDriveName(const QString &name);
+    QString driveName() const;
+
     /** Server url of the account */
     void setUrl(const QUrl &url);
     QUrl url() const { return _url; }
@@ -264,7 +268,7 @@ signals:
     void serverVersionChanged(Account *account, const QString &newVersion, const QString &oldVersion);
 
     void accountChangedAvatar();
-    void accountChangedDisplayName();
+    void accountChangedDriveName();
 
     /// Used in RemoteWipe
     void appPasswordRetrieved(QString);
@@ -281,6 +285,7 @@ private:
     QString _id;
     QString _davUser;
     QString _displayName;
+    QString _driveName;
 #ifndef TOKEN_AUTH_ONLY
     QImage _avatarImg;
 #endif

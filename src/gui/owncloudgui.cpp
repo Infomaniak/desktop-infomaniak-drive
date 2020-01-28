@@ -638,7 +638,7 @@ void ownCloudGui::updateContextMenu()
 
     if (accountList.count() > 1) {
         foreach (AccountStatePtr account, accountList) {
-            QMenu *accountMenu = new QMenu(account->account()->displayName(), _contextMenu.data());
+            QMenu *accountMenu = new QMenu(account->account()->driveName(), _contextMenu.data());
             _accountMenus.append(accountMenu);
             _contextMenu->addMenu(accountMenu);
 

@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>917</width>
-    <height>604</height>
+    <width>818</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+   <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -174,41 +174,87 @@
      </item>
      <item row="4" column="1" colspan="2">
       <widget class="QWidget" name="resolutionWidget" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <layout class="QFormLayout" name="formLayout_2">
+       <layout class="QFormLayout" name="verticalLayout_5">
         <property name="sizeConstraint">
-         <enum>QLayout::SetMinimumSize</enum>
+         <enum>QLayout::SetDefaultConstraint</enum>
         </property>
         <property name="fieldGrowthPolicy">
          <enum>QFormLayout::ExpandingFieldsGrow</enum>
         </property>
-        <item row="1" column="0" colspan="2">
-         <widget class="QRadioButton" name="radioButton">
-          <property name="text">
-           <string>&amp;Keep local data</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0" colspan="2">
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QRadioButton" name="cbSyncFromScratch">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If this box is checked, existing content in the local folder will be erased to start a clean sync from the server.&lt;/p&gt;&lt;p&gt;Do not check this if the local content should be uploaded to the servers folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Start a &amp;clean sync (Erases the local folder!)</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
-        <item row="2" column="0" colspan="2">
-         <widget class="QRadioButton" name="cbSyncFromScratch">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If this box is checked, existing content in the local folder will be erased to start a clean sync from the server.&lt;/p&gt;&lt;p&gt;Do not check this if the local content should be uploaded to the servers folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>Start a &amp;clean sync (Erases the local folder!)</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
+        <item row="1" column="0" colspan="2">
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QRadioButton" name="radioButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>&amp;Keep local data</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_8">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -237,8 +283,17 @@
         </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
           <item>
            <widget class="QRadioButton" name="rSyncEverything">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>S&amp;ynchronize everything from server (recommended)</string>
             </property>
@@ -249,6 +304,12 @@
           </item>
           <item>
            <widget class="QLabel" name="lSyncEverythingSizeLabel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>TextLabel</string>
             </property>
@@ -274,9 +335,29 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_2">
-          <property name="horizontalSpacing">
-           <number>0</number>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
           </property>
+          <item row="1" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetFixedSize</enum>
+            </property>
+            <item>
+             <widget class="QCheckBox" name="confCheckBoxExternal">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Ask for confirmation before synchronizing e&amp;xternal storages</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
           <item row="0" column="0">
            <spacer name="horizontalSpacer_4">
             <property name="orientation">
@@ -295,8 +376,17 @@
           </item>
           <item row="0" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetFixedSize</enum>
+            </property>
             <item>
              <widget class="QCheckBox" name="confCheckBoxSize">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>Ask for confirmation before synchroni&amp;zing folders larger than</string>
               </property>
@@ -304,6 +394,12 @@
             </item>
             <item>
              <widget class="QSpinBox" name="confSpinBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="maximum">
                <number>999999</number>
               </property>
@@ -314,6 +410,12 @@
             </item>
             <item>
              <widget class="QLabel" name="confTraillingSizeLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string extracomment="Trailing part of &quot;Ask confirmation before syncing folder larger than&quot; ">MB</string>
               </property>
@@ -321,21 +423,17 @@
             </item>
            </layout>
           </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="confCheckBoxExternal">
-            <property name="text">
-             <string>Ask for confirmation before synchronizing e&amp;xternal storages</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
           <item>
            <widget class="QRadioButton" name="rSelectiveSync">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -350,6 +448,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="bSelectiveSync">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Choose what to sync</string>
             </property>
@@ -357,6 +461,12 @@
           </item>
           <item>
            <widget class="QLabel" name="lSelectiveSyncSizeLabel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>TextLabel</string>
             </property>
@@ -382,10 +492,13 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_40">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
           <item>
            <widget class="QRadioButton" name="rManualFolder">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -418,10 +531,13 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="lVirtualFileSync">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
           <item>
            <widget class="QRadioButton" name="rVirtualFileSync">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -456,6 +572,12 @@
    </item>
    <item>
     <widget class="QLabel" name="syncModeLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Status message</string>
      </property>
@@ -486,8 +608,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>899</width>
-        <height>164</height>
+        <width>794</width>
+        <height>69</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -536,81 +658,14 @@
   <tabstop>rSyncEverything</tabstop>
   <tabstop>confCheckBoxSize</tabstop>
   <tabstop>confSpinBox</tabstop>
-  <tabstop>confCheckBoxExternal</tabstop>
   <tabstop>rSelectiveSync</tabstop>
   <tabstop>bSelectiveSync</tabstop>
   <tabstop>rManualFolder</tabstop>
   <tabstop>rVirtualFileSync</tabstop>
   <tabstop>pbSelectLocalFolder</tabstop>
-  <tabstop>radioButton</tabstop>
-  <tabstop>cbSyncFromScratch</tabstop>
  </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>rSyncEverything</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>confCheckBoxSize</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>217</x>
-     <y>78</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>298</x>
-     <y>126</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rSyncEverything</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>confSpinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>311</x>
-     <y>83</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>864</x>
-     <y>147</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rSyncEverything</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>confTraillingSizeLabel</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>277</x>
-     <y>76</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>902</x>
-     <y>147</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rSyncEverything</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>confCheckBoxExternal</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>181</x>
-     <y>78</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>382</x>
-     <y>174</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>rManualFolder</sender>
    <signal>toggled(bool)</signal>
@@ -672,6 +727,70 @@
     <hint type="destinationlabel">
      <x>54</x>
      <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rSyncEverything</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>confSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>311</x>
+     <y>83</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>864</x>
+     <y>147</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rSyncEverything</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>confCheckBoxSize</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>217</x>
+     <y>78</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>298</x>
+     <y>126</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rSyncEverything</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>confTraillingSizeLabel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>277</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>902</x>
+     <y>147</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rSyncEverything</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>confCheckBoxExternal</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>181</x>
+     <y>78</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>382</x>
+     <y>174</y>
     </hint>
    </hints>
   </connection>

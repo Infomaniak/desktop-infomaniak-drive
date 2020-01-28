@@ -69,6 +69,7 @@ static const char maxChunkSizeC[] = "maxChunkSize";
 static const char targetChunkUploadDurationC[] = "targetChunkUploadDuration";
 static const char automaticLogDirC[] = "logToTemporaryLogDir";
 static const char deleteOldLogsAfterHoursC[] = "temporaryLogDirDeleteOldLogsAfterHours";
+static const char minLogLevelC[] = "minLogLevel";
 static const char showExperimentalOptionsC[] = "showExperimentalOptions";
 static const char clientVersionC[] = "clientVersion";
 
@@ -800,13 +801,25 @@ void ConfigFile::setCrashReporter(bool enabled)
 bool ConfigFile::automaticLogDir() const
 {
     QSettings settings(configFile(), QSettings::IniFormat);
-    return settings.value(QLatin1String(automaticLogDirC), false).toBool();
+    return settings.value(QLatin1String(automaticLogDirC), true).toBool();
 }
 
 void ConfigFile::setAutomaticLogDir(bool enabled)
 {
     QSettings settings(configFile(), QSettings::IniFormat);
     settings.setValue(QLatin1String(automaticLogDirC), enabled);
+}
+
+void ConfigFile::setMinLogLevel(int level)
+{
+    QSettings settings(configFile(), QSettings::IniFormat);
+    settings.setValue(QLatin1String(minLogLevelC), level);
+}
+
+int ConfigFile::minLogLevel() const
+{
+    QSettings settings(configFile(), QSettings::IniFormat);
+    return settings.value(QLatin1String(minLogLevelC), 3).toInt(); // Default = Critical
 }
 
 Optional<chrono::hours> ConfigFile::automaticDeleteOldLogsAge() const

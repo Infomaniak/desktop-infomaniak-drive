@@ -38,7 +38,12 @@ namespace OCC {
 FolderStatusDelegate::FolderStatusDelegate()
     : QStyledItemDelegate()
 {
-    m_moreIcon = QIcon(QLatin1String(":/client/resources/more.svg"));
+    customizeStyle();
+}
+
+void FolderStatusDelegate::customizeStyle()
+{
+    m_moreIcon = QIcon(Theme::instance()->svgThemeIcon("more"));
 }
 
 QString FolderStatusDelegate::addFolderText()

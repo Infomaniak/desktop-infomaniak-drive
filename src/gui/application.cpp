@@ -81,7 +81,11 @@ namespace {
 
     QString applicationTrPath()
     {
+#if defined(Q_OS_MAC)
+        QString devTrPath = qApp->applicationDirPath() + QString::fromLatin1("/../../../../src/gui/");
+#elif
         QString devTrPath = qApp->applicationDirPath() + QString::fromLatin1("/../src/gui/");
+#endif
         if (QDir(devTrPath).exists()) {
             // might miss Qt, QtKeyChain, etc.
             qCWarning(lcApplication) << "Running from build location! Translations may be incomplete!";

@@ -61,7 +61,7 @@ public slots:
     void slotRefreshActivity(AccountState *accountState);
     void slotRefreshActivityAccountStateSender();
     void slotAccountAvatarChanged();
-    void slotAccountDisplayNameChanged();
+    void slotAccountDriveNameChanged();
 
 protected:
     void reject() Q_DECL_OVERRIDE;
@@ -71,13 +71,15 @@ protected:
 private slots:
     void accountAdded(AccountState *);
     void accountRemoved(AccountState *);
+    void slotOpenAccountWizard();
+    void slotAccountAdded();
 
 private:
     void customizeStyle();
 
-    QIcon createColorAwareIcon(const QString &name);
+    QIcon createColorAwareIcon(const QIcon &icon);
     QAction *createColorAwareAction(const QString &iconName, const QString &fileName);
-    QAction *createActionWithIcon(const QIcon &icon, const QString &text, const QString &iconPath = QString());
+    QAction *createActionWithIcon(const QIcon &icon, const QString &text);
 
     Ui::SettingsDialog *const _ui;
 
@@ -90,6 +92,7 @@ private:
     QHash<Account *, QAction *> _actionForAccount;
 
     QToolBar *_toolBar;
+    QPushButton* _addDriveButton;
 
     ActivitySettings *_activitySettings;
 
