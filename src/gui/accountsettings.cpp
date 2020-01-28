@@ -142,8 +142,7 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
 
     connect(ui->_folderList, &QWidget::customContextMenuRequested,
         this, &AccountSettings::slotCustomContextMenuRequested);
-    connect(ui->_folderList, &QAbstractItemView::clicked,
-        this, &AccountSettings::slotFolderListClicked);
+    connect(ui->_folderList, &QAbstractItemView::clicked, this, &AccountSettings::slotFolderListClicked);
     connect(ui->_folderList, &QTreeView::expanded, this, &AccountSettings::refreshSelectiveSyncStatus);
     connect(ui->_folderList, &QTreeView::collapsed, this, &AccountSettings::refreshSelectiveSyncStatus);
     connect(ui->selectiveSyncNotification, &QLabel::linkActivated,
@@ -151,8 +150,7 @@ AccountSettings::AccountSettings(AccountState *accountState, QWidget *parent)
     connect(_model, &FolderStatusModel::suggestExpand, ui->_folderList, &QTreeView::expand);
     connect(_model, &FolderStatusModel::dirtyChanged, this, &AccountSettings::refreshSelectiveSyncStatus);
     refreshSelectiveSyncStatus();
-    connect(_model, &QAbstractItemModel::rowsInserted,
-        this, &AccountSettings::refreshSelectiveSyncStatus);
+    connect(_model, &QAbstractItemModel::rowsInserted, this, &AccountSettings::refreshSelectiveSyncStatus);
 
     QAction *syncNowAction = new QAction(this);
     syncNowAction->setShortcut(QKeySequence(Qt::Key_F6));
@@ -359,24 +357,6 @@ void AccountSettings::slotFolderListClicked(const QModelIndex &indx)
         if (_accountState && _accountState->state() == AccountState::Connected) {
             bool expanded = !(ui->_folderList->isExpanded(indx));
             ui->_folderList->setExpanded(indx, expanded);
-        }
-    }
-    else if (_model->classify(indx) == FolderStatusModel::SubFolder) {
-        bool refresh = false;
-        auto subIndx = indx;
-        auto parentIndx = subIndx.parent();
-        while (parentIndx != QModelIndex() && parentIndx.isValid() && _model->classify(parentIndx) == FolderStatusModel::SubFolder) {
-            auto &parentFolderInfo = static_cast<FolderStatusModel::SubFolderInfo *>(parentIndx.internalPointer())->_subs[parentIndx.row()];
-            auto &subFolderInfo = static_cast<FolderStatusModel::SubFolderInfo *>(indx.internalPointer())->_subs[indx.row()];
-            parentFolderInfo._size = (subFolderInfo._checked == Qt::Checked
-                                      ? parentFolderInfo._size + subFolderInfo._size
-                                      : parentFolderInfo._size - subFolderInfo._size);
-            refresh = true;
-            subIndx = parentIndx;
-            parentIndx = subIndx.parent();
-        }
-        if (refresh) {
-            _model->layoutChanged();
         }
     }
 }
@@ -1022,7 +1002,7 @@ void AccountSettings::slotDeleteAccount()
             tr("Confirm Account Removal"),
             tr("<p>Do you really want to remove the connection to the account <i>%1</i>?</p>"
                "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
-                .arg(_accountState->account()->displayName()),
+                .arg(_accountState->account()->driveName()),
             QMessageBox::NoButton,
             this);
         QPushButton *yesButton =

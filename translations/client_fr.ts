@@ -32,7 +32,7 @@
     </message>
     <message>
         <source>Pick a local folder on your computer to sync</source>
-        <translation>Sélectionner un dossier local de votre ordinateur à synchroniser</translation>
+        <translation>Sélectionner un dossier local à synchroniser</translation>
     </message>
     <message>
         <source>&amp;Choose...</source>
@@ -1414,7 +1414,7 @@ Les éléments dont la suppression est autorisée seront supprimés s’ils emp�
     <name>OCC::InfomaniakTheme</name>
     <message>
         <source>&lt;p&gt;Version %2. For more information visit &lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Version %2. Pour plus d’informations, visiter&lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Version %2. Pour plus d’informations, visiter &lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Copyright Infomaniak Network SA, ownCloud GmbH and Nextcloud GmbH&lt;/p&gt;</source>
@@ -1441,7 +1441,7 @@ Les éléments dont la suppression est autorisée seront supprimés s’ils emp�
     </message>
     <message>
         <source>&lt;no filter&gt;</source>
-        <translation>&lt;no filter&gt;</translation>
+        <translation>&lt;pas de filtre&gt;</translation>
     </message>
     <message>
         <source>Folder</source>
@@ -3229,12 +3229,16 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
 <context>
     <name>OCC::WebFlowCredentials</name>
     <message>
-        <source>You have been logged out of %1 as user %2. Please login again</source>
-        <translation>Vous avez été déconnecté de %1 en tant qu&apos;utilisateur %2. Veuillez vous reconnecter</translation>
+        <source>You have been logged out of %1 as user %2. Please login again.</source>
+        <translation type="vanished">Vous avez été déconnecté de %1 en tant qu&apos;utilisateur %2. Veuillez vous reconnecter.</translation>
     </message>
     <message>
         <source>Please login with the user: %1</source>
         <translation>Veuillez vous connecter avec l’utilisateur : %1</translation>
+    </message>
+    <message>
+        <source>You have been logged out of %1 as user %2. Please login again</source>
+        <translation>Vous avez été déconnecté de %1 en tant qu&apos;utilisateur %2. Veuillez vous reconnecter</translation>
     </message>
 </context>
 <context>

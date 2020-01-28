@@ -60,6 +60,7 @@ namespace OCC {
 #include "settingsdialogcommon.cpp"
 
 static const char propertyIcon[] = "propertyIcon";
+static const char propertyAvatar[] = "propertyAvatar";
 
 static const QString accountIconPath(":/client/resources/account.png");
 static const QString activityIconPath(":/client/resources/activity.png");
@@ -266,10 +267,12 @@ void SettingsDialog::slotAccountAvatarChanged()
             QIcon icon;
             if (pix.isNull()) {
                 icon = createColorAwareIcon(QIcon(accountIconPath));
+                action->setProperty(propertyAvatar, false);
             }
             else {
                 QImage image = AvatarJob::makeCircularAvatar(pix);
                 icon = QPixmap::fromImage(image);
+                action->setProperty(propertyAvatar, true);
             }
             action->setIcon(icon);
             action->setProperty(propertyIcon, icon);
@@ -360,7 +363,10 @@ void SettingsDialog::customizeStyle()
     _toolBar->setStyleSheet(QString::fromLatin1(TOOLBAR_CSS).arg(background, dark, highlightColor, highlightTextColor));
 
     Q_FOREACH (QAction *a, _actionGroup->actions()) {
-        QIcon icon = createColorAwareIcon(a->property(propertyIcon).value<QIcon>());
+        QIcon icon = a->property(propertyIcon).value<QIcon>();
+        if (!a->property(propertyAvatar).value<bool>()) {
+            icon = createColorAwareIcon(icon);
+        }
         a->setIcon(icon);
         QToolButton *btn = qobject_cast<QToolButton *>(_toolBar->widgetForAction(a));
         if (btn) {

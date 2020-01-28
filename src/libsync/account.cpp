@@ -126,7 +126,7 @@ QString Account::displayName() const
 
 QString Account::davDisplayName() const
 {
-    return _displayName;
+    return _displayName.isEmpty() ? _credentials->user() : _displayName;
 }
 
 void Account::setDavDisplayName(const QString &newDisplayName)
@@ -147,7 +147,7 @@ void Account::setDriveName(const QString &name)
 
 QString Account::driveName() const
 {
-    return _driveName;
+    return _driveName.isEmpty() ? displayName() : _driveName;
 }
 
 AbstractCredentials *Account::credentials() const
