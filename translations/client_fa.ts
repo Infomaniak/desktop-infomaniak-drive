@@ -2,6 +2,61 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fa">
 <context>
+    <name>CrashReporter</name>
+    <message>
+        <source>Tomahawk Crash Reporter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send this report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t send</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You can disable sending crash reports in the configuration dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>We cannot gather useful debug information on your system.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ready to send debug information (&lt;a href=&quot;%1&quot;&gt;view backtrace&lt;/a&gt;).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gathering debug information...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uploaded %L1 of %L2 KB.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to send crash info.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FileSystem</name>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
@@ -139,11 +194,11 @@
     </message>
     <message>
         <source>Synchronize all</source>
-        <translation>همگام‌سازی همه</translation>
+        <translation type="vanished">همگام‌سازی همه</translation>
     </message>
     <message>
         <source>Synchronize none</source>
-        <translation>همگام سازی هیچ</translation>
+        <translation type="vanished">همگام سازی هیچ</translation>
     </message>
     <message>
         <source>Apply manual changes</source>
@@ -379,6 +434,14 @@ This action will abort any currently running synchronization.</source>
     </message>
     <message>
         <source>Drive %1 is currently in maintenance mode.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronize these items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do not synchronize</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -202,14 +202,14 @@
              <item>
               <widget class="QPushButton" name="bigFolderSyncAll">
                <property name="text">
-                <string>Synchronize all</string>
+                <string>Synchronize these items</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QPushButton" name="bigFolderSyncNone">
                <property name="text">
-                <string>Synchronize none</string>
+                <string>Do not synchronize</string>
                </property>
               </widget>
              </item>
