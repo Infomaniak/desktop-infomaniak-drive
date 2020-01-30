@@ -83,7 +83,7 @@ namespace {
     {
 #if defined(Q_OS_MAC)
         QString devTrPath = qApp->applicationDirPath() + QString::fromLatin1("/../../../../src/gui/");
-#elif
+#else
         QString devTrPath = qApp->applicationDirPath() + QString::fromLatin1("/../src/gui/");
 #endif
         if (QDir(devTrPath).exists()) {
