@@ -42,7 +42,7 @@
 namespace OCC {
 
 GeneralSettings::GeneralSettings(QWidget *parent)
-    : QWidget(parent)
+    : WidgetSettings(parent)
     , _ui(new Ui::GeneralSettings)
     , _currentlyLoading(false)
 {
@@ -120,6 +120,10 @@ GeneralSettings::GeneralSettings(QWidget *parent)
         _ui->copyrightLabel->hide();
     }
     _ui->copyrightLabel->setText(QStringLiteral("Copyright Infomaniak Network SA"));
+
+    if (!theme->deltaSynchronizationAvailable()) {
+        _ui->experimentalGroupBox->hide();
+    }
 }
 
 GeneralSettings::~GeneralSettings()

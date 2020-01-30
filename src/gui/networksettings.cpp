@@ -29,7 +29,7 @@
 namespace OCC {
 
 NetworkSettings::NetworkSettings(QWidget *parent)
-    : QWidget(parent)
+    : WidgetSettings(parent)
     , _ui(new Ui::NetworkSettings)
 {
     _ui->setupUi(this);

@@ -13,6 +13,8 @@ WebFlowCredentialsDialog::WebFlowCredentialsDialog(Account *account, QWidget *pa
     : QDialog(parent),
       _webView(nullptr)
 {
+    Q_UNUSED(account)
+
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     _layout = new QVBoxLayout(this);

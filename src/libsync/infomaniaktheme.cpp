@@ -136,4 +136,9 @@ bool InfomaniakTheme::userGroupSharing() const
     return false;
 }
 
+bool InfomaniakTheme::deltaSynchronizationAvailable() const
+{
+    return false;
+}
+
 }

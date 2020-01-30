@@ -19,6 +19,7 @@
 #include <QDir>
 #include <QStringList>
 #include <QThread>
+#include <QMap>
 #include <QtGlobal>
 #include <qmetaobject.h>
 
@@ -34,13 +35,30 @@
 
 namespace OCC {
 
+static const QMap<QtMsgType, int> qtMsgTypeLevel = {
+    {QtInfoMsg, 0}, {QtDebugMsg, 1}, {QtWarningMsg, 2}, {QtCriticalMsg, 3}, {QtSystemMsg, 3}, {QtFatalMsg, 4}
+};
+
 static void mirallLogCatcher(QtMsgType type, const QMessageLogContext &ctx, const QString &message)
 {
     auto logger = Logger::instance();
+    if (qtMsgTypeLevel[type] < logger->minLogLevel())
+        return;
+
+    // Create new context
+    const char *fileName = ctx.file;
+    if (fileName) {
+        const char *lastDirSep = strrchr(fileName, '/');
+        if (lastDirSep) {
+            fileName = lastDirSep + 1;
+        }
+    }
+    QMessageLogContext ctxNew(fileName, ctx.line, ctx.function, ctx.category);
+
     if (!logger->isNoop()) {
-        logger->doLog(qFormatLogMessage(type, ctx, message));
+        logger->doLog(qFormatLogMessage(type, ctxNew, message));
     } else if(type >= QtCriticalMsg) {
-        std::cerr << qPrintable(qFormatLogMessage(type, ctx, message)) << std::endl;
+        std::cerr << qPrintable(qFormatLogMessage(type, ctxNew, message)) << std::endl;
     }
 
 #if defined(Q_OS_WIN)
@@ -65,7 +83,8 @@ Logger::Logger(QObject *parent)
     , _logExpire(0)
     , _logDebug(false)
 {
-    qSetMessagePattern("%{time MM-dd hh:mm:ss:zzz} [ %{type} %{category} ]%{if-debug}\t[ %{function} ]%{endif}:\t%{message}");
+    //qSetMessagePattern("%{time MM-dd hh:mm:ss:zzz} [ %{type} %{category} ]%{if-debug}\t[ %{function} ]%{endif}:\t%{message}");
+    qSetMessagePattern("%{time yyyy-MM-dd hh:mm:ss:zzz} [%{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-critical}C%{endif}%{if-fatal}F%{endif}] (%{threadid}) %{file}:%{line} - %{message}");
 #ifndef NO_MSG_HANDLER
     qInstallMessageHandler(mirallLogCatcher);
 #else
@@ -80,6 +99,15 @@ Logger::~Logger()
 #endif
 }
 
+int Logger::minLogLevel() const
+{
+    return _minLogLevel;
+}
+
+void Logger::setMinLogLevel(int level)
+{
+    _minLogLevel = level;
+}
 
 void Logger::postGuiLog(const QString &title, const QString &message)
 {

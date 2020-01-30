@@ -28,15 +28,16 @@ class InfomaniakTheme : public Theme
     Q_OBJECT
 public:
     InfomaniakTheme();
-    bool wizardHideExternalStorageConfirmationCheckbox() const;
-    QString systrayIconFlavor(bool mono, bool sysTrayMenuVisible = false) const;
-    QString gitSHA1() const;
-    QString helpUrl() const;
-    QString conflictHelpUrl() const;
-    QString overrideServerUrl() const;
-    QString about() const;
-    QString updateCheckUrl() const;
-    bool userGroupSharing() const;
+    bool wizardHideExternalStorageConfirmationCheckbox() const override;
+    QString systrayIconFlavor(bool mono, bool sysTrayMenuVisible = false) const override;
+    QString gitSHA1() const override;
+    QString helpUrl() const override;
+    QString conflictHelpUrl() const override;
+    QString overrideServerUrl() const override;
+    QString about() const override;
+    QString updateCheckUrl() const override;
+    bool userGroupSharing() const override;
+    bool deltaSynchronizationAvailable() const override;
 };
 }
 #endif // INFOMANIAK_THEME_H

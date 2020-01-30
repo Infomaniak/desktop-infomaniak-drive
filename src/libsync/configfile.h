@@ -99,6 +99,8 @@ public:
      */
     bool automaticLogDir() const;
     void setAutomaticLogDir(bool enabled);
+    int minLogLevel() const;
+    void setMinLogLevel(int level);
 
     /** Wheter the automaticLogDir should expire logs, and after how many hours */
     Optional<std::chrono::hours> automaticDeleteOldLogsAge() const;

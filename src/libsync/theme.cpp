@@ -121,6 +121,35 @@ QIcon Theme::applicationIcon() const
     return themeIcon(QStringLiteral(APPLICATION_ICON_NAME "-icon"));
 }
 
+QIcon Theme::svgThemeIcon(const QString &name) const
+{
+    QString flavor = systrayIconFlavor(true);
+
+    QString key = name + "," + flavor;
+    QIcon &cached = _iconCache[key]; // Take reference, this will also "set" the cache entry
+    if (cached.isNull()) {
+        QString pixmapName = QString::fromLatin1(":/client/theme/%1/%2.svg").arg(flavor).arg(name);
+        if (QFile::exists(pixmapName)) {
+            QList<int> sizes;
+            sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
+            foreach (int size, sizes) {
+                // Search for svg icon
+                cached.addPixmap(QIcon(pixmapName).pixmap(QSize(size, size)));
+            }
+        }
+    }
+
+#ifdef Q_OS_MAC
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+    // This defines the icon as a template and enables automatic macOS color handling
+    // See https://bugreports.qt.io/browse/QTBUG-42109
+    cached.setIsMask(false);
+#endif
+#endif
+
+    return cached;
+}
+
 /*
  * helper to load a icon from either the icon theme the desktop provides or from
  * the apps Qt resources.
@@ -291,9 +320,19 @@ bool Theme::monoIconsAvailable() const
     return QDir(themeDir).exists();
 }
 
+void Theme::clearIconCache()
+{
+    _iconCache.clear();
+}
+
 QString Theme::updateCheckUrl() const
 {
     return QLatin1String("https://updates.owncloud.com/client/");
+}
+
+bool Theme::deltaSynchronizationAvailable() const
+{
+    return true;
 }
 
 qint64 Theme::newBigFolderSizeLimit() const

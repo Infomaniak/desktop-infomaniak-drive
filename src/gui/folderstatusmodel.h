@@ -59,6 +59,7 @@ public:
         SubFolderInfo()
             : _folder(0)
             , _size(0)
+            , _fullSize(0)
             , _isExternal(false)
             , _fetched(false)
             , _hasError(false)
@@ -72,7 +73,8 @@ public:
         QString _path;
         QVector<int> _pathIdx;
         QVector<SubFolderInfo> _subs;
-        qint64 _size;
+        qint64 _size; // Display size
+        qint64 _fullSize; // Full size
         bool _isExternal;
 
         bool _fetched; // If we did the LSCOL for this folder already

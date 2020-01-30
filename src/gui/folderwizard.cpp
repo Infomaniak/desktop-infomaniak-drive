@@ -76,6 +76,7 @@ FolderWizardLocalPath::FolderWizardLocalPath(const AccountPtr &account)
 
     _ui.warnLabel->setTextFormat(Qt::RichText);
     _ui.warnLabel->hide();
+    _ui.warnLabel->setStyleSheet("background-color: #FFFFC0; color: #000000;");
 }
 
 FolderWizardLocalPath::~FolderWizardLocalPath()
@@ -99,7 +100,6 @@ bool FolderWizardLocalPath::isComplete() const
 
     QString errorStr = FolderMan::instance()->checkPathValidityForNewFolder(
         QDir::fromNativeSeparators(_ui.localFolderLineEdit->text()), serverUrl);
-
 
     bool isOk = errorStr.isEmpty();
     QStringList warnStrings;
