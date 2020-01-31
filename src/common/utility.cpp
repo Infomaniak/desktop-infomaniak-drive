@@ -391,11 +391,7 @@ QByteArray Utility::normalizeEtag(QByteArray etag)
 
 bool Utility::hasDarkSystray()
 {
-#ifdef Q_OS_MAC
     return hasDarkSystray_private();
-#else
-    return true;
-#endif
 }
 
 
@@ -660,6 +656,11 @@ QString Utility::sanitizeForFileName(const QString &name)
         }
     }
     return result;
+}
+
+bool Utility::colorThresholdCheck(int red, int green, int blue)
+{
+    return 1.0 - (0.299 * red + 0.587 * green + 0.114 * blue) / 255.0 > 0.5;
 }
 
 } // namespace OCC
