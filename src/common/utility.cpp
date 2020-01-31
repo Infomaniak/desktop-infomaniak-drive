@@ -391,7 +391,11 @@ QByteArray Utility::normalizeEtag(QByteArray etag)
 
 bool Utility::hasDarkSystray()
 {
+#ifdef Q_OS_MAC
     return hasDarkSystray_private();
+#else
+    return true;
+#endif
 }
 
 
