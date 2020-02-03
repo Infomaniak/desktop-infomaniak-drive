@@ -125,7 +125,7 @@ namespace Utility {
     inline bool isBSD(); // use with care, does not match OS X
 
     // Color threshold check
-    bool colorThresholdCheck(int red, int green, int blue); // account for different sensitivity of the human eye to certain colors
+    OCSYNC_EXPORT bool colorThresholdCheck(int red, int green, int blue); // account for different sensitivity of the human eye to certain colors
 
     OCSYNC_EXPORT QString platformName();
     // crash helper for --debug
