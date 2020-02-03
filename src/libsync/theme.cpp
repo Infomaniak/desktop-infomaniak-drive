@@ -37,6 +37,8 @@
 #undef Mirall
 #endif
 
+Q_LOGGING_CATEGORY(lcTheme, "sync.theme", QtInfoMsg)
+
 namespace OCC {
 
 Theme *Theme::_instance = 0;
@@ -123,7 +125,12 @@ QIcon Theme::applicationIcon() const
 
 QIcon Theme::svgThemeIcon(const QString &name) const
 {
-    QString flavor = systrayIconFlavor(true);
+    QColor bg(qApp->palette().base().color());
+    qCInfo(lcTheme) << "RGB: " << bg.red() << "." << bg.green() << "." << bg.blue();
+    QString flavor = Utility::colorThresholdCheck(bg.red(), bg.green(), bg.blue()) > 0.5
+            ? QLatin1String("white")
+            : QLatin1String("black");
+    qCInfo(lcTheme) << "Flavor: " << flavor;
 
     QString key = name + "," + flavor;
     QIcon &cached = _iconCache[key]; // Take reference, this will also "set" the cache entry
@@ -133,7 +140,6 @@ QIcon Theme::svgThemeIcon(const QString &name) const
             QList<int> sizes;
             sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
             foreach (int size, sizes) {
-                // Search for svg icon
                 cached.addPixmap(QIcon(pixmapName).pixmap(QSize(size, size)));
             }
         }
