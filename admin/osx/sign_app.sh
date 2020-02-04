@@ -6,7 +6,8 @@ src_app="$1"
 identity="$2"
 team_identifier="$3"
 
-codesign -s "$identity" --force --preserve-metadata=entitlements --verbose=4 --deep "$src_app"
+codesign -s "$identity" --force --preserve-metadata=entitlements --verbose=4 --deep --options=runtime "$src_app/Contents/Frameworks/Sparkle.framework/Versions/A/Resources/Autoupdate.app"
+codesign -s "$identity" --force --preserve-metadata=entitlements --verbose=4 --deep --options=runtime "$src_app"
 
 # Verify the signature
 codesign -dv $src_app
