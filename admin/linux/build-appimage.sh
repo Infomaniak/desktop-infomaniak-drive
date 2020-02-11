@@ -5,34 +5,34 @@ set -xe
 mkdir -p /app
 mkdir -p /build
 
-#Set Qt-5.12
-export QT_BASE_DIR=/opt/qt512
+# Set Qt-5.12
+export QT_BASE_DIR=/opt/qt5.12.5
 export QTDIR=$QT_BASE_DIR
 export PATH=$QT_BASE_DIR/bin:$PATH
-export LD_LIBRARY_PATH=$QT_BASE_DIR/lib/x86_64-linux-gnu:$QT_BASE_DIR/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$QT_BASE_DIR/lib:$LD_LIBRARY_PATH
 export PKG_CONFIG_PATH=$QT_BASE_DIR/lib/pkgconfig:$PKG_CONFIG_PATH
 
-#set defaults
+# Set defaults
 export SUFFIX=${DRONE_PULL_REQUEST:=master}
 if [ $SUFFIX != "master" ]; then
     SUFFIX="PR-$SUFFIX"
 fi
 
-apt update
-apt install --yes --no-install-recommends libkf5config-dev kio-dev extra-cmake-modules python-nautilus libsecret-1-dev libgnome-keyring-dev
-
-#QtKeyChain 0.9.1
+# Build QtKeyChain 0.10.0
 cd /build
 git clone https://github.com/frankosterfeld/qtkeychain.git
 cd qtkeychain
-git checkout v0.9.1
+git checkout v0.10.0
 mkdir build
 cd build
-cmake -D CMAKE_INSTALL_PREFIX=/usr ../
+cmake -DCMAKE_PREFIX_PATH=$QT_BASE_DIR \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    ../
 make -j4
 make DESTDIR=/app install
+rm -Rf /build/*
 
-#Build client
+# Build client
 cd /build
 mkdir -p client
 cd client
@@ -47,7 +47,8 @@ if [ -n "$MIRALL_VERSION_BUILD" ]; then
 	CMAKE_PARAMS+=(-DMIRALL_VERSION_BUILD="$MIRALL_VERSION_BUILD")
 fi
 
-cmake -D CMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_PREFIX_PATH=$QT_BASE_DIR \
+    -DCMAKE_INSTALL_PREFIX=/usr \
     -DNO_SHIBBOLETH=1 \
     -DUNIT_TESTING=0 \
     -DQTKEYCHAIN_LIBRARY=/app/usr/lib/x86_64-linux-gnu/libqt5keychain.so \
@@ -88,10 +89,9 @@ rm -rf ./etc
 # sed -i -e 's|Icon=nextcloud|Icon=Nextcloud|g' usr/share/applications/kDrive.desktop # Bug in desktop file?
 cp ./usr/share/icons/hicolor/512x512/apps/infomaniak.png . # Workaround for linuxeployqt bug, FIXME
 
-
 # Because distros need to get their shit together
-cp -R /lib/x86_64-linux-gnu/libssl.so* ./usr/lib/
-cp -R /lib/x86_64-linux-gnu/libcrypto.so* ./usr/lib/
+#cp -R /lib/x86_64-linux-gnu/libssl.so* ./usr/lib/
+#cp -R /lib/x86_64-linux-gnu/libcrypto.so* ./usr/lib/
 cp -P /usr/local/lib/libssl.so* ./usr/lib/
 cp -P /usr/local/lib/libcrypto.so* ./usr/lib/
 
