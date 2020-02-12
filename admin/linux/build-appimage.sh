@@ -77,12 +77,12 @@ rm -rf ./usr/lib/x86_64-linux-gnu/
 # Don't bundle kDrivecmd as we don't run it anyway
 rm -rf ./usr/bin/kDrivecmd
 
-# Don't bundle the explorer extentions as we can't do anything with them in the AppImage
+# Don't bundle the explorer extensions as we can't do anything with them in the AppImage
 rm -rf ./usr/share/caja-python/
 rm -rf ./usr/share/nautilus-python/
 rm -rf ./usr/share/nemo-python/
 
-# Move sync exlucde to right location
+# Move sync exclude to right location
 mv ./etc/kDrive/sync-exclude.lst ./usr/bin/
 rm -rf ./etc
 
@@ -90,8 +90,6 @@ rm -rf ./etc
 cp ./usr/share/icons/hicolor/512x512/apps/infomaniak.png . # Workaround for linuxeployqt bug, FIXME
 
 # Because distros need to get their shit together
-#cp -R /lib/x86_64-linux-gnu/libssl.so* ./usr/lib/
-#cp -R /lib/x86_64-linux-gnu/libcrypto.so* ./usr/lib/
 cp -P /usr/local/lib/libssl.so* ./usr/lib/
 cp -P /usr/local/lib/libcrypto.so* ./usr/lib/
 
@@ -100,19 +98,19 @@ cp -P -r /usr/lib/x86_64-linux-gnu/nss ./usr/lib/
 
 # Use linuxdeployqt to deploy
 cd /build
-wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+wget --no-check-certificate -c "https://github.com/probonopd/linuxdeployqt/releases/download/6/linuxdeployqt-6-x86_64.AppImage"
 chmod a+x linuxdeployqt*.AppImage
-./linuxdeployqt-continuous-x86_64.AppImage --appimage-extract
-rm ./linuxdeployqt-continuous-x86_64.AppImage
+./linuxdeployqt-6-x86_64.AppImage --appimage-extract
+rm ./linuxdeployqt-6-x86_64.AppImage
 unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/app/usr/lib/
-./squashfs-root/AppRun /app/usr/share/applications/kDrive.desktop -bundle-non-qt-libs
+./squashfs-root/AppRun /app/usr/share/applications/kDrive.desktop -bundle-non-qt-libs -unsupported-allow-new-glibc
 
 # Set origin
 ./squashfs-root/usr/bin/patchelf --set-rpath '$ORIGIN/' /app/usr/lib/libkDrivesync.so.0
 
 # Build AppImage
-./squashfs-root/AppRun /app/usr/share/applications/kDrive.desktop -appimage
+./squashfs-root/AppRun /app/usr/share/applications/kDrive.desktop -appimage -unsupported-allow-new-glibc
 
 rm -rf ./squashfs-root
 mv Infomaniak_Drive*.AppImage /install/kDrive-${SUFFIX}-${DRONE_COMMIT}-x86_64.AppImage
