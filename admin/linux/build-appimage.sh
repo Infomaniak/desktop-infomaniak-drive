@@ -30,7 +30,7 @@ cmake -DCMAKE_PREFIX_PATH=$QT_BASE_DIR \
     ../
 make -j4
 make DESTDIR=/app install
-rm -Rf /build/*
+rm -Rf /build/qtkeychain
 
 # Build client
 cd /build
