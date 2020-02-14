@@ -243,7 +243,9 @@ void ShareDialog::changeEvent(QEvent *e)
 void ShareDialog::customizeStyle()
 {
     Theme::instance()->clearIconCache();
-    _userGroupWidget->customizeStyle();
+    if (_userGroupWidget) {
+        _userGroupWidget->customizeStyle();
+    }
 }
 
 void ShareDialog::slotThumbnailFetched(const int &statusCode, const QByteArray &reply)
