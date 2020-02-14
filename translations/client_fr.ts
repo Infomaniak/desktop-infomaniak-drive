@@ -1814,7 +1814,7 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     </message>
     <message>
         <source>New %1 available. Please use the system&apos;s update tool to install it.</source>
-        <translation>Nouvel(le) %1 disponible. Veuillez utiliser l’outils de mise à jour système afin de l’installer.</translation>
+        <translation>Nouvel(le) %1 disponible. Veuillez utiliser l’outil de mise à jour système afin de l’installer.</translation>
     </message>
     <message>
         <source>Checking update server...</source>
