@@ -64,23 +64,26 @@ make DESTDIR=/app install
 # Move stuff around
 cd /app
 
-mkdir -p ./usr/lib/x86_64-linux-gnu/plugins
-mv ./usr/lib/x86_64-linux-gnu/kDrive/plugins/* ./usr/lib/x86_64-linux-gnu/plugins
-rmdir ./usr/lib/x86_64-linux-gnu/kDrive/plugins
+mkdir -p ./usr/plugins
+mv ./usr/lib/x86_64-linux-gnu/kDrive/plugins/* ./usr/plugins/
+mv ./usr/lib/x86_64-linux-gnu/plugins/* ./usr/plugins/
 mv ./usr/lib/x86_64-linux-gnu/* ./usr/lib/
+rm -rf ./usr/lib/x86_64-linux-gnu/
 rm -rf ./usr/lib/kDrive
 rm -rf ./usr/lib/cmake
 rm -rf ./usr/include
 rm -rf ./usr/mkspecs
-rm -rf ./usr/lib/x86_64-linux-gnu/
 
 # Don't bundle kDrivecmd as we don't run it anyway
 rm -rf ./usr/bin/kDrivecmd
 
-# Don't bundle the explorer extensions as we can't do anything with them in the AppImage
-rm -rf ./usr/share/caja-python/
-rm -rf ./usr/share/nautilus-python/
-rm -rf ./usr/share/nemo-python/
+# Move file managers plugins to install directory
+cp -P -r ./usr/share/caja-python/ /install/
+cp -P -r ./usr/share/nautilus-python/ /install/
+cp -P -r ./usr/share/nemo-python/ /install/
+rm -rf ./usr/share/caja-python
+rm -rf ./usr/share/nautilus-python
+rm -rf ./usr/share/nemo-python
 
 # Move sync exclude to right location
 mv ./etc/kDrive/sync-exclude.lst ./usr/bin/
