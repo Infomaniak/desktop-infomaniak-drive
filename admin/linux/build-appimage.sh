@@ -78,12 +78,24 @@ rm -rf ./usr/mkspecs
 rm -rf ./usr/bin/kDrivecmd
 
 # Move file managers plugins to install directory
-cp -P -r ./usr/share/caja-python/ /install/
+# Nautilus
 cp -P -r ./usr/share/nautilus-python/ /install/
-cp -P -r ./usr/share/nemo-python/ /install/
-rm -rf ./usr/share/caja-python
 rm -rf ./usr/share/nautilus-python
+# Caja
+cp -P -r ./usr/share/caja-python/ /install/
+rm -rf ./usr/share/caja-python
+# Nemo
+cp -P -r ./usr/share/nemo-python/ /install/
 rm -rf ./usr/share/nemo-python
+# Dolphin
+cp -P -r ./usr/share/kservices5/ /install/
+rm -rf ./usr/share/kservices5
+mkdir -p /install/dolphin/usr/plugins
+mv ./usr/plugins/kDrivedolphinactionplugin.so /install/dolphin/usr/plugins/
+cp -P -r ./usr/plugins/kf5 /install/dolphin/usr/plugins/
+rm -rf ./usr/plugins/kf5
+mkdir -p /install/dolphin/usr/lib
+mv ./usr/lib/libkDrivedolphinpluginhelper.so /install/dolphin/usr/lib/
 
 # Move sync exclude to right location
 mv ./etc/kDrive/sync-exclude.lst ./usr/bin/
