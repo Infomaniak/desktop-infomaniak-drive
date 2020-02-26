@@ -175,6 +175,7 @@ Application::Application(int &argc, char **argv)
     , _logDebug(false)
     , _userTriggeredConnect(false)
     , _debugMode(false)
+    , _alert(false)
 {
     _startedAt.start();
 
@@ -744,6 +745,18 @@ bool Application::versionOnly()
 void Application::showSettingsDialog()
 {
     _gui->slotShowSettings();
+}
+
+void Application::setAlert(bool alert)
+{
+    _alert = alert;
+    if (_gui)
+        _gui->slotComputeOverallSyncStatus();
+}
+
+bool Application::getAlert()
+{
+    return _alert;
 }
 
 void Application::openVirtualFile(const QString &filename)

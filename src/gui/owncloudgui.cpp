@@ -296,7 +296,8 @@ void ownCloudGui::slotComputeOverallSyncStatus()
         iconStatus = SyncResult::Problem;
     }
 
-    QIcon statusIcon = Theme::instance()->syncStateIcon(iconStatus, true, contextMenuVisible());
+    Application *app = static_cast<Application *>(qApp);
+    QIcon statusIcon = Theme::instance()->syncStateIcon(iconStatus, true, contextMenuVisible(), app->getAlert());
     _tray->setIcon(statusIcon);
 
     // create the tray blob message, check if we have an defined state

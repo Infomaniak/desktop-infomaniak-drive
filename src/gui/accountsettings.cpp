@@ -949,6 +949,7 @@ void AccountSettings::refreshSelectiveSyncStatus()
     // if this variable ends up true.
     bool shouldBeVisible = false;
 
+    bool alert = false;
     if (msg.isEmpty()) {
         // Show the ui if the model is dirty only
         shouldBeVisible = _model->isDirty() && _accountState->isConnected();
@@ -971,7 +972,12 @@ void AccountSettings::refreshSelectiveSyncStatus()
         ui->selectiveSyncButtons->setVisible(false);
         ui->bigFolderUi->setVisible(true);
         ui->bigFolderApply->setEnabled(_model->isDirty());
+
+        alert = true;
     }
+
+    Application *app = static_cast<Application *>(qApp);
+    app->setAlert(alert);
 
     bool wasVisible = !ui->selectiveSyncStatus->isHidden();
     if (wasVisible != shouldBeVisible) {
