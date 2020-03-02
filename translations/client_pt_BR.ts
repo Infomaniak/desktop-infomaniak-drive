@@ -68,7 +68,7 @@
     </message>
     <message>
         <source>Moving to the trash is not implemented on this platform</source>
-        <translation>Mover para o lixo não está implementado nesta plataforma</translation>
+        <translation type="vanished">Mover para o lixo não está implementado nesta plataforma</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -77,6 +77,14 @@
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
         <translation>Não foi possível remover a pasta &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>File doesn&apos;t exist!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete canceled because move to trash failed!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1383,6 +1391,14 @@ Observe que isso seleciona apenas de qual conjunto de atualizações são retira
     <message>
         <source>Cancel</source>
         <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Move to trash files/directories deleted on the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>state</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -68,7 +68,7 @@
     </message>
     <message>
         <source>Moving to the trash is not implemented on this platform</source>
-        <translation>Spostare il cestino non è implementato in questa piattaforma</translation>
+        <translation type="vanished">Spostare il cestino non è implementato in questa piattaforma</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -77,6 +77,14 @@
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
         <translation>Impossibile rimuovere la cartella &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>File doesn&apos;t exist!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete canceled because move to trash failed!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1389,6 +1397,14 @@ Nota che ciò seleziona solo da dove vengono presi gli aggiornamenti e che non c
     <message>
         <source>Enable Delta-Synchronization for files larger than</source>
         <translation>Abilita sincronizzazione delta per file di dimensioni superiori a</translation>
+    </message>
+    <message>
+        <source>Move to trash files/directories deleted on the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>state</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

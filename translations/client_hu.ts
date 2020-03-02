@@ -68,7 +68,7 @@
     </message>
     <message>
         <source>Moving to the trash is not implemented on this platform</source>
-        <translation>A kukába mozgatás ezen a platformon nem lehetséges</translation>
+        <translation type="vanished">A kukába mozgatás ezen a platformon nem lehetséges</translation>
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
@@ -76,6 +76,14 @@
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File doesn&apos;t exist!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete canceled because move to trash failed!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1378,6 +1386,14 @@ Note that this selects only what pool upgrades are taken from, and that there ar
     </message>
     <message>
         <source>Change update channel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move to trash files/directories deleted on the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>state</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
