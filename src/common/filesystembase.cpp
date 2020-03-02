@@ -398,6 +398,7 @@ bool FileSystem::moveToTrash(const QString &fileName, QString *errorString)
         *errorString = QCoreApplication::translate("FileSystem", "Delete canceled because move to trash failed!");
         return false;
     }
+    return true;
 #elif defined Q_OS_MAC
     QString cmd = QString("osascript -e 'set theFile to POSIX file \"%1\"' -e 'tell application \"Finder\" to delete theFile'").arg(fileName);
     int status = system(cmd.toLocal8Bit());
@@ -408,9 +409,6 @@ bool FileSystem::moveToTrash(const QString &fileName, QString *errorString)
         *errorString = QCoreApplication::translate("FileSystem", "Delete canceled because move to trash failed!");
         return false;
     }
-    //Q_UNUSED(fileName)
-    //*errorString = QCoreApplication::translate("FileSystem", "Moving to the trash is not implemented on this platform");
-    //return false;
 #elif defined Q_OS_UNIX
     QString trashPath, trashFilePath, trashInfoPath;
     QString xdgDataHome = QFile::decodeName(qgetenv("XDG_DATA_HOME"));
