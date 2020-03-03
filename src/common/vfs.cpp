@@ -122,7 +122,7 @@ static QString modeToPluginName(Vfs::Mode mode)
     return QString();
 }
 
-Q_LOGGING_CATEGORY(lcPlugin, "plugins", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcPlugin, "sync.plugins", QtInfoMsg)
 
 bool OCC::isVfsPluginAvailable(Vfs::Mode mode)
 {
@@ -139,7 +139,7 @@ bool OCC::isVfsPluginAvailable(Vfs::Mode mode)
         qCDebug(lcPlugin) << "Plugin doesn't exist" << pluginPath;
         return false;
     }
-    if (basemeta["IID"].toString() != "org.owncloud.PluginFactory") {
+    if (basemeta["IID"].toString() != "org.kdrive.PluginFactory") {
         qCWarning(lcPlugin) << "Plugin has wrong IID" << pluginPath << basemeta["IID"];
         return false;
     }

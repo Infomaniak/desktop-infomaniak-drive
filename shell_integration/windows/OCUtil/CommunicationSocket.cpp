@@ -17,6 +17,7 @@
 #include "CommunicationSocket.h"
 #include "UtilConstants.h"
 #include "StringUtil.h"
+#include "config.h"
 
 #include <iostream>
 #include <vector>

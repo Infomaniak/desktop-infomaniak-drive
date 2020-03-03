@@ -393,8 +393,7 @@ QIcon SettingsDialog::createColorAwareIcon(const QIcon &icon)
     for (QSize size : icon.availableSizes()) {
         QImage img(icon.pixmap(size).toImage());
         // account for different sensitivity of the human eye to certain colors
-        double treshold = 1.0 - (0.299 * bg.red() + 0.587 * bg.green() + 0.114 * bg.blue()) / 255.0;
-        if (treshold > 0.5) {
+        if (Utility::colorThresholdCheck(bg.red(), bg.green(), bg.blue())) {
             img.invertPixels(QImage::InvertRgb);
         }
         newIcon.addPixmap(QPixmap::fromImage(img));
