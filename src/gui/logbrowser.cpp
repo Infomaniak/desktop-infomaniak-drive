@@ -37,7 +37,7 @@ namespace OCC {
 
 // ==============================================================================
 
-const std::chrono::hours defaultExpireDuration(4);
+const std::chrono::hours defaultExpireDuration(24);
 
 static const QStringList logLevels = {
     QObject::tr("Info"), QObject::tr("Debug"), QObject::tr("Warning"), QObject::tr("Critical"), QObject::tr("Fatal")

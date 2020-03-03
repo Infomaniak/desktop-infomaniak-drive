@@ -214,6 +214,29 @@ QIcon Theme::themeIcon(const QString &name, bool sysTray, bool sysTrayMenuVisibl
     return cached;
 }
 
+void Theme:: updateIconWithText(QIcon &icon, QString text) const
+{
+    QList<QSize> sizes = icon.availableSizes();
+    for (QSize size : sizes) {
+        QPixmap px = icon.pixmap(size);
+        QPainter painter(&px);
+        int pictSize = size.width() / 2;
+        QRect rect(size.width() - pictSize, size.height() - pictSize, pictSize, pictSize);
+
+        // Draw red circle
+        painter.setPen(Qt::red);
+        painter.setBrush(Qt::red);
+        painter.drawEllipse(rect);
+
+        // Draw text
+        painter.setPen(Qt::white);
+        painter.setFont(QFont("Arial", pictSize - 2, QFont::Bold));
+        painter.drawText(rect, Qt::AlignCenter, text);
+
+        icon.addPixmap(px);
+    }
+}
+
 QString Theme::hidpiFileName(const QString &fileName, QPaintDevice *dev)
 {
     qreal devicePixelRatio = dev ? dev->devicePixelRatio() : qApp->primaryScreen()->devicePixelRatio();
@@ -444,7 +467,7 @@ QVariant Theme::customMedia(CustomMediaType type)
     return re;
 }
 
-QIcon Theme::syncStateIcon(SyncResult::Status status, bool sysTray, bool sysTrayMenuVisible) const
+QIcon Theme::syncStateIcon(SyncResult::Status status, bool sysTray, bool sysTrayMenuVisible, bool alert) const
 {
     // FIXME: Mind the size!
     QString statusIcon;
@@ -476,7 +499,13 @@ QIcon Theme::syncStateIcon(SyncResult::Status status, bool sysTray, bool sysTray
         statusIcon = QLatin1String("state-error");
     }
 
-    return themeIcon(statusIcon, sysTray, sysTrayMenuVisible);
+    QIcon icon = themeIcon(statusIcon, sysTray, sysTrayMenuVisible);
+
+    if (sysTray && alert) {
+        updateIconWithText(icon, QString("!"));
+    }
+
+    return icon;
 }
 
 QIcon Theme::folderDisabledIcon() const

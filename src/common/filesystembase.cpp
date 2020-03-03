@@ -377,7 +377,39 @@ bool FileSystem::remove(const QString &fileName, QString *errorString)
 
 bool FileSystem::moveToTrash(const QString &fileName, QString *errorString)
 {
-#if defined Q_OS_UNIX && !defined Q_OS_MAC
+#ifdef Q_OS_WIN
+    QFileInfo fileinfo(fileName);
+    if(!fileinfo.exists()) {
+        *errorString = QCoreApplication::translate("FileSystem", "File doesn't exist!");
+        return false;
+    }
+    WCHAR from[MAX_PATH];
+    memset( from, 0, sizeof( from ));
+    int l = fileinfo.absoluteFilePath().toWCharArray( from );
+    Q_ASSERT(0 <= l && l < MAX_PATH);
+    from[l] = '\0';
+    SHFILEOPSTRUCT fileop;
+    memset( &fileop, 0, sizeof( fileop ) );
+    fileop.wFunc = FO_DELETE;
+    fileop.pFrom = from;
+    fileop.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
+    int rv = SHFileOperation( &fileop );
+    if(0 != rv) {
+        *errorString = QCoreApplication::translate("FileSystem", "Delete canceled because move to trash failed!");
+        return false;
+    }
+    return true;
+#elif defined Q_OS_MAC
+    QString cmd = QString("osascript -e 'set theFile to POSIX file \"%1\"' -e 'tell application \"Finder\" to delete theFile'").arg(fileName);
+    int status = system(cmd.toLocal8Bit());
+    if (status == 0) {
+        return true;
+    }
+    else {
+        *errorString = QCoreApplication::translate("FileSystem", "Delete canceled because move to trash failed!");
+        return false;
+    }
+#elif defined Q_OS_UNIX
     QString trashPath, trashFilePath, trashInfoPath;
     QString xdgDataHome = QFile::decodeName(qgetenv("XDG_DATA_HOME"));
     if (xdgDataHome.isEmpty()) {
@@ -445,10 +477,6 @@ bool FileSystem::moveToTrash(const QString &fileName, QString *errorString)
     // create info file format of trash file----- END
 
     return true;
-#else
-    Q_UNUSED(fileName)
-    *errorString = QCoreApplication::translate("FileSystem", "Moving to the trash is not implemented on this platform");
-    return false;
 #endif
 }
 

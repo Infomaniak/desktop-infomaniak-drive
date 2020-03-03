@@ -68,7 +68,7 @@
     </message>
     <message>
         <source>Moving to the trash is not implemented on this platform</source>
-        <translation>Le déplacement dans la corbeille n&apos;est pas implémenté sur cette plateforme</translation>
+        <translation type="vanished">Le déplacement dans la corbeille n&apos;est pas implémenté sur cette plateforme</translation>
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
@@ -77,6 +77,14 @@
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
         <translation>Erreur lors de la suppression de &apos;%1’&#xa0;: %2</translation>
+    </message>
+    <message>
+        <source>File doesn&apos;t exist!</source>
+        <translation>Le fichier n&apos;existe pas!</translation>
+    </message>
+    <message>
+        <source>Delete canceled because move to trash failed!</source>
+        <translation>Suppression annulée car la mise à la poubelle a échoué!</translation>
     </message>
 </context>
 <context>
@@ -334,15 +342,15 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big: </source>
-        <translation>Certains dossiers n&apos;ont pas été synchronisés parce qu&apos;ils sont de taille trop importante :</translation>
+        <translation>Certains dossiers n&apos;ont pas été synchronisés parce qu&apos;ils sont de taille trop importante: </translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are external storages: </source>
-        <translation>Certains dossiers n&apos;ont pas été synchronisés parce qu&apos;ils sont localisés sur un stockage externe :</translation>
+        <translation>Certains dossiers n&apos;ont pas été synchronisés parce qu&apos;ils sont localisés sur un stockage externe: </translation>
     </message>
     <message>
         <source>There are folders that were not synchronized because they are too big or external storages: </source>
-        <translation>Certains dossiers n&apos;ont pas été synchronisés parce qu&apos;ils sont localisés sur un stockage externe ou qu&apos;ils sont de taille trop importante :</translation>
+        <translation>Certains dossiers n&apos;ont pas été synchronisés parce qu&apos;ils sont localisés sur un stockage externe ou qu&apos;ils sont de taille trop importante: </translation>
     </message>
     <message>
         <source>Confirm Account Removal</source>
@@ -1390,6 +1398,14 @@ Veuillez noter que cela sélectionne seulement la zone de mises à jour, et qu&a
         <source>You cannot disable autostart because system-wide autostart is enabled.</source>
         <translation>Vous ne pouvez pas désactiver le démarrage automatique car il est activé pour tout le système.</translation>
     </message>
+    <message>
+        <source>Move to trash files/directories deleted on the server</source>
+        <translation>Mettre à la poubelle les fichiers/dossiers supprimés sur le serveur</translation>
+    </message>
+    <message>
+        <source>state</source>
+        <translation>état</translation>
+    </message>
 </context>
 <context>
     <name>OCC::HttpCredentialsGui</name>
@@ -1814,7 +1830,7 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     </message>
     <message>
         <source>New %1 available. Please use the system&apos;s update tool to install it.</source>
-        <translation>Nouvel(le) %1 disponible. Veuillez utiliser l’outils de mise à jour système afin de l’installer.</translation>
+        <translation>Nouvel(le) %1 disponible. Veuillez utiliser l’outil de mise à jour système afin de l’installer.</translation>
     </message>
     <message>
         <source>Checking update server...</source>

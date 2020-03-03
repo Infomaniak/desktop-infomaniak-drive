@@ -68,7 +68,7 @@
     </message>
     <message>
         <source>Moving to the trash is not implemented on this platform</source>
-        <translation>Mover a la papelera no está implementado en esta plataforma.</translation>
+        <translation type="vanished">Mover a la papelera no está implementado en esta plataforma.</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -77,6 +77,14 @@
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
         <translation>No se pudo eliminar la carpeta &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>File doesn&apos;t exist!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete canceled because move to trash failed!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1388,6 +1396,14 @@ Nota: esto solo selecciona el canal deseado y no permite vueltas atras. Por lo q
     <message>
         <source>Cancel</source>
         <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Move to trash files/directories deleted on the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>state</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

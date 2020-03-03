@@ -67,6 +67,8 @@ public:
     void showVersion();
 
     void showSettingsDialog();
+    void setAlert(bool alert);
+    bool getAlert();
 
 public slots:
     // TODO: this should not be public
@@ -129,6 +131,7 @@ private:
     bool _logDebug;
     bool _userTriggeredConnect;
     bool _debugMode;
+    bool _alert;
 
     ClientProxy _proxy;
 

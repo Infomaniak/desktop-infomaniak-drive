@@ -68,7 +68,7 @@
     </message>
     <message>
         <source>Moving to the trash is not implemented on this platform</source>
-        <translation>Flytting til søppelbøtten er ikke støttet på denne plattformen</translation>
+        <translation type="vanished">Flytting til søppelbøtten er ikke støttet på denne plattformen</translation>
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
@@ -76,6 +76,14 @@
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File doesn&apos;t exist!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete canceled because move to trash failed!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1375,6 +1383,14 @@ Vær oppmerksom på at dette bare velger hvor oppgraderinger kommer ifra, og at 
     </message>
     <message>
         <source>You cannot disable autostart because system-wide autostart is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move to trash files/directories deleted on the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>state</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

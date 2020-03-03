@@ -65,12 +65,14 @@ void setLaunchOnStartup_private(const QString &appName, const QString &guiName, 
             qCWarning(lcUtility) << "Could not write auto start entry" << desktopFileLocation;
             return;
         }
+        QByteArray appimageDir = qgetenv("APPIMAGE");
+        qCWarning(lcUtility) << "APPIMAGE" << appimageDir;
         QTextStream ts(&iniFile);
         ts.setCodec("UTF-8");
         ts << QLatin1String("[Desktop Entry]") << endl
            << QLatin1String("Name=") << guiName << endl
            << QLatin1String("GenericName=") << QLatin1String("File Synchronizer") << endl
-           << QLatin1String("Exec=") << QCoreApplication::applicationFilePath() << endl
+           << QLatin1String("Exec=\"") << appimageDir << "\"" << endl
            << QLatin1String("Terminal=") << "false" << endl
            << QLatin1String("Icon=") << appName.toLower() << endl // always use lowercase for icons
            << QLatin1String("Categories=") << QLatin1String("Network") << endl

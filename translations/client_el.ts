@@ -68,7 +68,7 @@
     </message>
     <message>
         <source>Moving to the trash is not implemented on this platform</source>
-        <translation>Η μετακίνηση στα απορρίμματα δεν υποστηρίζεται σε αυτήν την πλατφόρμα</translation>
+        <translation type="vanished">Η μετακίνηση στα απορρίμματα δεν υποστηρίζεται σε αυτήν την πλατφόρμα</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -77,6 +77,14 @@
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
         <translation>Αδυναμία αφαίρεσης του φακέλου &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>File doesn&apos;t exist!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete canceled because move to trash failed!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1385,6 +1393,14 @@ Note that this selects only what pool upgrades are taken from, and that there ar
     <message>
         <source>Cancel</source>
         <translation>Ακύρωση</translation>
+    </message>
+    <message>
+        <source>Move to trash files/directories deleted on the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>state</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

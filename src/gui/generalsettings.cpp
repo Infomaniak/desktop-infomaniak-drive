@@ -68,11 +68,12 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     connect(_ui->crashreporterCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::saveMiscSettings);
     connect(_ui->newFolderLimitCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::saveMiscSettings);
     connect(_ui->newFolderLimitSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &GeneralSettings::saveMiscSettings);
-    connect(_ui->newExternalStorage, &QAbstractButton::toggled, this, &GeneralSettings::saveMiscSettings);
+    connect(_ui->newExternalStorageCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::saveMiscSettings);
     connect(_ui->deltaSyncCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::saveMiscSettings);
     connect(_ui->deltaSyncSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &GeneralSettings::saveMiscSettings);
+    connect(_ui->moveToTrashCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::saveMiscSettings);
 
-    _ui->newExternalStorage->setVisible(false);
+    _ui->newExternalStorageCheckBox->setVisible(false);
 #ifndef WITH_CRASHREPORTER
     _ui->crashreporterCheckBox->setVisible(false);
 #endif
@@ -82,7 +83,7 @@ GeneralSettings::GeneralSettings(QWidget *parent)
 #ifdef Q_OS_WIN
     if (QSysInfo::windowsVersion() < QSysInfo::WV_WINDOWS10)
 #endif
-        _ui->showInExplorerNavigationPaneCheckBox->setVisible(false);
+    _ui->showInExplorerNavigationPaneCheckBox->setVisible(false);
 
     /* Set the left contents margin of the layout to zero to make the checkboxes
      * align properly vertically , fixes bug #3758
@@ -102,7 +103,7 @@ GeneralSettings::GeneralSettings(QWidget *parent)
 
     // Only our standard brandings currently support beta channel
     Theme *theme = Theme::instance();
-    if (theme->appName() != QLatin1String("ownCloud") && theme->appName() != QLatin1String("testpilotcloud") ) {
+    //if (theme->appName() != QLatin1String("kDrive")) {
 #ifdef Q_OS_MAC
         // Because we don't have any statusString from the SparkleUpdater anyway we can hide the whole thing
         _ui->updaterWidget->hide();
@@ -110,7 +111,7 @@ GeneralSettings::GeneralSettings(QWidget *parent)
         _ui->updateChannelLabel->hide();
         _ui->updateChannel->hide();
 #endif
-    }
+    //}
 
     _ui->versionLabel->setText(QStringLiteral("<a style=\"color: #489EF3\" href='%1'>%1</a>").arg(MIRALL_VERSION_STRING));
     QObject::connect(_ui->versionLabel, &QLabel::linkActivated, this, &GeneralSettings::showAbout);
@@ -148,10 +149,11 @@ void GeneralSettings::loadMiscSettings()
     auto newFolderLimit = cfgFile.newBigFolderSizeLimit();
     _ui->newFolderLimitCheckBox->setChecked(newFolderLimit.first);
     _ui->newFolderLimitSpinBox->setValue(newFolderLimit.second);
-    _ui->newExternalStorage->setChecked(cfgFile.confirmExternalStorage());
+    _ui->newExternalStorageCheckBox->setChecked(cfgFile.confirmExternalStorage());
     _ui->monoIconsCheckBox->setChecked(cfgFile.monoIcons());
     _ui->deltaSyncCheckBox->setChecked(cfgFile.deltaSyncEnabled());
     _ui->deltaSyncSpinBox->setValue(cfgFile.deltaSyncMinFileSize() / (1024 * 1024));
+    _ui->moveToTrashCheckBox->setChecked(cfgFile.moveToTrash());
 }
 
 void GeneralSettings::slotUpdateInfo()
@@ -243,9 +245,10 @@ void GeneralSettings::saveMiscSettings()
 
     cfgFile.setNewBigFolderSizeLimit(_ui->newFolderLimitCheckBox->isChecked(),
         _ui->newFolderLimitSpinBox->value());
-    cfgFile.setConfirmExternalStorage(_ui->newExternalStorage->isChecked());
+    cfgFile.setConfirmExternalStorage(_ui->newExternalStorageCheckBox->isChecked());
     cfgFile.setDeltaSyncEnabled(_ui->deltaSyncCheckBox->isChecked());
     cfgFile.setDeltaSyncMinFileSize(_ui->deltaSyncSpinBox->value() * 1024 * 1024);
+    cfgFile.setMoveToTrash(_ui->moveToTrashCheckBox->isChecked());
 }
 
 void GeneralSettings::slotToggleLaunchOnStartup(bool enable)

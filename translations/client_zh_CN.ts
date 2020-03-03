@@ -68,7 +68,7 @@
     </message>
     <message>
         <source>Moving to the trash is not implemented on this platform</source>
-        <translation>移动到回收站无法在此平台执行</translation>
+        <translation type="vanished">移动到回收站无法在此平台执行</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -77,6 +77,14 @@
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
         <translation>无法删除文件夹 %1</translation>
+    </message>
+    <message>
+        <source>File doesn&apos;t exist!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete canceled because move to trash failed!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1364,6 +1372,14 @@ If you decide to delete the files, they will be unavailable to you, unless you a
         <source>The update channel determines which client updates will be offered for installation. The &quot;stable&quot; channel contains only upgrades that are considered reliable, while the versions in the &quot;beta&quot; channel may contain newer features and bugfixes, but have not yet been tested thoroughly.
 
 Note that this selects only what pool upgrades are taken from, and that there are no downgrades: So going back from the beta channel to the stable channel usually cannot be done immediately and means waiting for a stable version that is newer than the currently installed beta version.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move to trash files/directories deleted on the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>state</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
