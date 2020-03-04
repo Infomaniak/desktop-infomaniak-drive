@@ -119,7 +119,7 @@ chmod a+x linuxdeployqt*.AppImage
 rm ./linuxdeployqt-6-x86_64.AppImage
 unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/app/usr/lib/
-./squashfs-root/AppRun /app/usr/share/applications/kDrive.desktop -bundle-non-qt-libs -unsupported-allow-new-glibc
+./squashfs-root/AppRun /app/usr/share/applications/kDrive.desktop -bundle-non-qt-libs -extra-plugins=iconengines,imageformats -unsupported-allow-new-glibc
 
 # Set origin
 ./squashfs-root/usr/bin/patchelf --set-rpath '$ORIGIN/' /app/usr/lib/libkDrivesync.so.0
