@@ -95,7 +95,7 @@ mv ./usr/plugins/kDrivedolphinactionplugin.so /install/dolphin/usr/plugins/
 cp -P -r ./usr/plugins/kf5 /install/dolphin/usr/plugins/
 rm -rf ./usr/plugins/kf5
 mkdir -p /install/dolphin/usr/lib
-#mv ./usr/lib/libkDrivedolphinpluginhelper.so /install/dolphin/usr/lib/
+mv ./usr/lib/libkDrivedolphinpluginhelper.so /install/dolphin/usr/lib/
 
 # Move sync exclude to right location
 mv ./etc/kDrive/sync-exclude.lst ./usr/bin/
