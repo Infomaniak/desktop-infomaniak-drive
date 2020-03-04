@@ -67,16 +67,20 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Error removing &apos;%1&apos;: %2</source>
         <translation type="unfinished">移除時發生錯誤 &apos;%1&apos;: %2; {1&apos;?} {2?}</translation>
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
         <translation type="unfinished">無法移除資料夾 &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>File doesn&apos;t exist!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete canceled because move to trash failed!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1415,6 +1419,14 @@ Note that this selects only what pool upgrades are taken from, and that there ar
     </message>
     <message>
         <source>Change update channel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move to trash files/directories deleted on the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>state</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

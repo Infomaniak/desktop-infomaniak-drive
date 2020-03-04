@@ -68,7 +68,7 @@
     </message>
     <message>
         <source>Moving to the trash is not implemented on this platform</source>
-        <translation>Le déplacement dans la corbeille n&apos;est pas implémenté sur cette plateforme</translation>
+        <translation type="vanished">Le déplacement dans la corbeille n&apos;est pas implémenté sur cette plateforme</translation>
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
@@ -77,6 +77,14 @@
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
         <translation>Erreur lors de la suppression de &apos;%1’&#xa0;: %2</translation>
+    </message>
+    <message>
+        <source>File doesn&apos;t exist!</source>
+        <translation>Le fichier n&apos;existe pas!</translation>
+    </message>
+    <message>
+        <source>Delete canceled because move to trash failed!</source>
+        <translation>Suppression annulée car la mise à la poubelle a échoué!</translation>
     </message>
 </context>
 <context>
@@ -1389,6 +1397,14 @@ Veuillez noter que cela sélectionne seulement la zone de mises à jour, et qu&a
     <message>
         <source>You cannot disable autostart because system-wide autostart is enabled.</source>
         <translation>Vous ne pouvez pas désactiver le démarrage automatique car il est activé pour tout le système.</translation>
+    </message>
+    <message>
+        <source>Move to trash files/directories deleted on the server</source>
+        <translation>Mettre à la poubelle les fichiers/dossiers supprimés sur le serveur</translation>
+    </message>
+    <message>
+        <source>state</source>
+        <translation>état</translation>
     </message>
 </context>
 <context>
