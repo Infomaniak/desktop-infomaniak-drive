@@ -208,6 +208,22 @@ static CSYNC_EXCLUDE_TYPE _csync_excluded_common(const QString &path, bool exclu
             break;
         }
     }
+#else
+#ifdef __APPLE__
+    // Filter out characters not allowed in a filename on Mac OS
+    for (auto p : path) {
+        if (p == QChar(0xFFF9)
+                || p == QChar(0xFFFA)
+                || p == QChar(0xFFFB)
+                || p == QChar(0xFFFC)
+                || p == QChar(0xFFFD)
+                || p == QChar(0xFFFE)
+                || p == QChar(0xFFFF)) {
+            match = CSYNC_FILE_EXCLUDE_INVALID_CHAR;
+            goto out;
+        }
+    }
+#endif
 #endif
 
     /* We create a Desktop.ini on Windows for the sidebar icon, make sure we don't sync it. */
