@@ -55,11 +55,7 @@ class PropagateLocalMkdir : public PropagateItemJob
 {
     Q_OBJECT
 public:
-    PropagateLocalMkdir(OwncloudPropagator *propagator, const SyncFileItemPtr &item)
-        : PropagateItemJob(propagator, item)
-        , _deleteExistingFile(false)
-    {
-    }
+    PropagateLocalMkdir(OwncloudPropagator *propagator, const SyncFileItemPtr &item);
     void start() Q_DECL_OVERRIDE;
 
     /**
@@ -71,7 +67,12 @@ public:
     void setDeleteExistingFile(bool enabled);
 
 private:
+    bool isPathValid(const QString &path) const;
+    bool isDirOrFileNameValid(const QString &dirOrFileName) const;
+
     bool _deleteExistingFile;
+    static QList<QChar> _forbiddenCharList;
+    static QList<QString> _forbiddenWordList;
 };
 
 /**
