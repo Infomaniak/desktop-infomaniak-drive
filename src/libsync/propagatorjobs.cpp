@@ -128,34 +128,6 @@ void PropagateLocalRemove::start()
     done(SyncFileItem::Success);
 }
 
-QList<QChar> PropagateLocalMkdir::_forbiddenCharList = QList<QChar>();
-QList<QString> PropagateLocalMkdir::_forbiddenWordList = QList<QString>();
-
-PropagateLocalMkdir::PropagateLocalMkdir(OwncloudPropagator *propagator, const SyncFileItemPtr &item)
-    : PropagateItemJob(propagator, item)
-    , _deleteExistingFile(false)
-{
-    // Initialize the list of characters forbidden in directories/files
-    if (Utility::isWindows()) {
-        for (int i = 0; i <= 31; i++) {
-            _forbiddenCharList << QChar(i);
-        }
-        _forbiddenCharList << '<' << '>' << ':' << '"' << '\\' << '|' << '?' << '*';
-
-        _forbiddenWordList << "CON" << "PRN" << "AUX" << "NUL"
-                           << "COM1" << "COM2" << "COM3" << "COM4" << "COM5" << "COM6" << "COM7" << "COM8" << "COM9"
-                           << "LPT1" << "LPT2" << "LPT3" << "LPT4" << "LPT5" << "LPT6" << "LPT7" << "LPT8" << "LPT9"
-                           << "CLOCK$" << "$Recycle.Bin";
-    }
-    else if (Utility::isMac()) {
-        _forbiddenCharList << QChar(0xFFF9) << QChar(0xFFFA) << QChar(0xFFFB) << QChar(0xFFFC)
-                           << QChar(0xFFFD) << QChar(0xFFFE) << QChar(0xFFFF);
-    }
-    else if (Utility::isLinux()) {
-        _forbiddenCharList << QChar(0);
-    }
-}
-
 void PropagateLocalMkdir::start()
 {
     if (propagator()->_abortRequested.fetchAndAddRelaxed(0))
@@ -193,10 +165,7 @@ void PropagateLocalMkdir::start()
     emit propagator()->touchedFile(newDirStr);
     QDir localDir(propagator()->_localDir);
     if (!localDir.mkpath(_item->_file)) {
-        // Check Path validity
-        bool isValid = isPathValid(newDirStr);
-        done(isValid ? SyncFileItem::NormalError : SyncFileItem::FileIgnored,
-             tr("could not create folder %1").arg(newDirStr));
+        done(SyncFileItem::NormalError, tr("could not create folder %1").arg(newDirStr));
         return;
     }
 
@@ -222,71 +191,6 @@ void PropagateLocalMkdir::start()
 void PropagateLocalMkdir::setDeleteExistingFile(bool enabled)
 {
     _deleteExistingFile = enabled;
-}
-
-bool PropagateLocalMkdir::isPathValid(const QString &path) const
-{
-    bool isValid = true;
-
-    // Check path
-    if (Utility::isWindows()) {
-        isValid &= path.size() < 32000;
-    }
-    else if (Utility::isMac()) {
-        isValid &= path.size() < 1024;
-    }
-    else if (Utility::isLinux()) {
-        isValid &= path.size() < 4096;
-    }
-
-    if (isValid) {
-        // Check dirs & files names
-        QStringList pathPartList = QDir::cleanPath(path).split('/');
-        for (QString pathPart : pathPartList) {
-            if (!isDirOrFileNameValid(pathPart)) {
-                isValid = false;
-                break;
-            }
-        }
-    }
-
-    return isValid;
-}
-
-bool PropagateLocalMkdir::isDirOrFileNameValid(const QString &dirOrFileName) const
-{
-    bool isValid = dirOrFileName.size() < 256;
-
-    if (isValid) {
-        for (QChar c : _forbiddenCharList) {
-            if (dirOrFileName.contains(c)) {
-                isValid = false;
-                break;
-            }
-        }
-
-        if (isValid) {
-            for (QString s : _forbiddenWordList) {
-                if (dirOrFileName.startsWith(s)) {
-                    isValid = false;
-                    break;
-                }
-            }
-
-            if (isValid) {
-                if (Utility::isWindows()) {
-                    QChar lastChar = dirOrFileName[dirOrFileName.size() - 1];
-                    isValid &= (lastChar != ' ' && lastChar != '.');
-                }
-                else if (Utility::isMac()) {
-                }
-                else if (Utility::isLinux()) {
-                }
-            }
-        }
-    }
-
-    return isValid;
 }
 
 void PropagateLocalRename::start()
