@@ -3530,6 +3530,10 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <source>Up to date</source>
         <translation>Aktuell</translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>

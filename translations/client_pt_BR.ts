@@ -3530,6 +3530,10 @@ Este é um novo modo experimental. Se você decidir usá-lo, relate quaisquer pr
         <source>Up to date</source>
         <translation>Até a data</translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>

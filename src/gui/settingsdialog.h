@@ -52,6 +52,7 @@ public:
     ~SettingsDialog();
 
     void addAccount(const QString &title, QWidget *widget);
+    int getErrorCount();
 
 public slots:
     void showFirstPage();

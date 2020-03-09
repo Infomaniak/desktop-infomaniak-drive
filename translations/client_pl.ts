@@ -3514,6 +3514,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>

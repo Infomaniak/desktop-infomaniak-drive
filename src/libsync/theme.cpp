@@ -649,4 +649,9 @@ bool Theme::noUnauthedRequests() const
     return false;
 }
 
+QIcon Theme::stateErrorIcon() const
+{
+    return themeIcon(QLatin1String("state-error"));
+}
+
 } // end namespace client

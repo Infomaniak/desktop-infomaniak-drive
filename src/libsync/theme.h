@@ -378,6 +378,8 @@ public:
      */
     virtual bool noUnauthedRequests() const;
 
+    virtual QIcon stateErrorIcon() const;
+
 protected:
 #ifndef TOKEN_AUTH_ONLY
     QIcon themeIcon(const QString &name, bool sysTray = false, bool sysTrayMenuVisible = false) const;

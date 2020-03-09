@@ -3540,6 +3540,10 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>Le serveur sur le compte %1 exécute une version non prise en charge %2. L’utilisation de ce client avec des versions du serveur non prises en charge n’a pas été testée et peut être dangereuse. Vous poursuivez à vos propres risques.</translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation>Voir les erreurs de synchronisation</translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>

@@ -3707,6 +3707,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>Syncing %1 of %2</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>

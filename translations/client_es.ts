@@ -3533,6 +3533,10 @@ El modo de archivos virtuales se excluye mutuamente con una sincronización sele
         <source>Up to date</source>
         <translation>Actualizado</translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>

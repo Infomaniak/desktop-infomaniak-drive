@@ -70,6 +70,7 @@ public:
      * available.
      */
     void checkActivityTabVisibility();
+    int getErrorCount();
 
 public slots:
     void slotOpenFile(QModelIndex indx);
@@ -133,6 +134,7 @@ public:
     explicit ActivitySettings(QWidget *parent = 0);
     ~ActivitySettings();
     QSize sizeHint() const Q_DECL_OVERRIDE { return ownCloudGui::settingsDialogSize(); }
+    int getErrorCount();
 
 public slots:
     void slotRefresh(AccountState *ptr);
@@ -159,6 +161,7 @@ private:
     int _activityTabId;
     int _protocolTabId;
     int _syncIssueTabId;
+    int _issueItemCount;
 
     ActivityWidget *_activityWidget;
     ProtocolWidget *_protocolWidget;

@@ -3529,6 +3529,10 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
         <source>Up to date</source>
         <translation>Ενημερωμένο</translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>

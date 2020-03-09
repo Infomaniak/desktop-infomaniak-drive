@@ -3532,6 +3532,10 @@ Este é un modo novo e experimental. Se decide usalo, informe de calquera proble
         <source>Up to date</source>
         <translation>Actualizado</translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>

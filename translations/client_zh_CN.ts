@@ -3497,6 +3497,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>Up to date</source>
         <translation>更新</translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>

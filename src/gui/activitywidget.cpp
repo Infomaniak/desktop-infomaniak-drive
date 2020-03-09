@@ -228,6 +228,11 @@ void ActivityWidget::checkActivityTabVisibility()
     emit hideActivityTab(!hasAccountsWithActivity && !hasNotifications);
 }
 
+int ActivityWidget::getErrorCount()
+{
+    return _ui->_activityList->model() ? _ui->_activityList->model()->rowCount() : 0;
+}
+
 void ActivityWidget::slotOpenFile(QModelIndex indx)
 {
     qCDebug(lcActivity) << indx.isValid() << indx.data(ActivityItemDelegate::PathRole).toString() << QFile::exists(indx.data(ActivityItemDelegate::PathRole).toString());
@@ -503,7 +508,8 @@ void ActivityWidget::slotCheckToCleanWidgets()
 /* ==================================================================== */
 
 ActivitySettings::ActivitySettings(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      _issueItemCount(0)
 {
     QHBoxLayout *hbox = new QHBoxLayout(this);
     setLayout(hbox);
@@ -568,6 +574,7 @@ void ActivitySettings::setActivityTabHidden(bool hidden)
 
 void ActivitySettings::slotShowIssueItemCount(int cnt)
 {
+    _issueItemCount = cnt;
     QString cntText = tr("Not Synced");
     if (cnt) {
         //: %1 is the number of not synced files.
@@ -667,5 +674,10 @@ bool ActivitySettings::event(QEvent *e)
 
 ActivitySettings::~ActivitySettings()
 {
+}
+
+int ActivitySettings::getErrorCount()
+{
+    return _issueItemCount;
 }
 }

@@ -3534,6 +3534,10 @@ Questa è una nuova modalità sperimentale. Se decidi di usarla, ti preghiamo di
         <source>Up to date</source>
         <translation>Aggiornato</translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>
