@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>无法移动 &apos;%1&apos; 到 &apos;%2&apos;</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">移动到回收站无法在此平台执行</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -201,14 +201,6 @@
         <translation>取消选中的文件夹将会从本地&lt;b&gt;删除&lt;/b&gt;，并不再同步到这台电脑上。</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">同步全部</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">都不同步</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>应用手工修改</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>取消</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">&lt;user&gt; 已经连接到 &lt;server&gt; </translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>没有配置的帐号。</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">添加</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>移除</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">账户</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -293,20 +273,8 @@
         <translation>%1 使用中</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1, &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>连接到 %1。</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">远程服务器%1暂时不可用。</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">服务器%1处于维护模式。</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -858,16 +826,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>The file %1 was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>%1 文件被创建但在之前的同步中被拒绝了.它将不会被同步.</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">同步文件夹&apos;%1&apos;的所有文件已经在服务器端删除。
-删除动作会被同步到本地的同步文件夹，内部的文件将不可用，您需要有相应权限来恢复。
-如果您想保留这些文件，同时您有相应权限的话，它们将被重新同步到服务器。
-如果您决定删除这些文件，它们将不再可用，除非您是其所有者。</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1823,10 +1781,6 @@ for additional privileges during the process.</source>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">连接到 %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>设置本地文件夹</translation>
     </message>
@@ -2559,10 +2513,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>加载中...</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">反选您不想同步的那些远端文件夹</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>名称</translation>
     </message>
@@ -2713,10 +2663,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>下载 / 查看</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">下载 / 查看 / 上传</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>

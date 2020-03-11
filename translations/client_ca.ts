@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -197,14 +201,6 @@
         <translation>Les carpetes desmarcades &lt;b&gt;s&apos;eliminaran&lt;/b&gt; del vostre sistema de fitxers local i ja no es sincronitzaran en aquest ordinador</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Sincronitza-ho tot</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">No sincronitzis res</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Aplica els canvis manuals</translation>
     </message>
@@ -217,24 +213,12 @@
         <translation>Cancel·la</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Connectat amb &lt;server&gt; com a &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>No hi ha cap compte configurat</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Afegeix-ne un de nou</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Elimina</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Compte</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -281,16 +265,8 @@
         <translation>%1 en ús</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 com a &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Connectat a %1</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">El servidor %1 no està disponible temporalment</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -562,28 +538,6 @@ This action will abort any currently running synchronization.</source>
         <translation>&lt;br/&gt;El compte %1 no té les activitats habilitades.</translation>
     </message>
     <message numerus="yes">
-        <source>You received %n new notification(s) from %2.</source>
-        <translation type="vanished">
-            <numerusform>Heu rebut %n nova notificació de %2.</numerusform>
-            <numerusform>Heu rebut %n noves notificacions de %2.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>You received %n new notification(s) from %1 and %2.</source>
-        <translation type="vanished">
-            <numerusform>Heu rebut %n nova notificació de %1 i %2.</numerusform>
-            <numerusform>Heu rebut %n noves notificacions de %1 i %2.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>You received new notifications from %1, %2 and other accounts.</source>
-        <translation type="vanished">Heu rebut noves notificacions de %1, %2 i altres comptes.</translation>
-    </message>
-    <message>
-        <source>%1 Notifications - Action Required</source>
-        <translation type="vanished">%1 notificacions - Es requereix una acció</translation>
-    </message>
-    <message numerus="yes">
         <source>You received %n new request(s) from %1.</source>
         <translation type="unfinished">
             <numerusform></numerusform>
@@ -730,13 +684,6 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
-    <name>OCC::DiscoveryMainThread</name>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Aturat per l&apos;usuari</translation>
-    </message>
-</context>
-<context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
@@ -786,11 +733,6 @@ This action will abort any currently running synchronization.</source>
         <translation>S&apos;ha esborrat &apos;%1&apos;</translation>
     </message>
     <message>
-        <source>%1 has been downloaded.</source>
-        <comment>%1 names a file.</comment>
-        <translation type="vanished">S&apos;ha descarregat %1</translation>
-    </message>
-    <message>
         <source>%1 has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>S&apos;ha actualitzat %1</translation>
@@ -809,13 +751,6 @@ This action will abort any currently running synchronization.</source>
         <translation>
             <numerusform>%1 i %n altre fitxer s&apos;ha esborrat.</numerusform>
             <numerusform>%1 i %n altres fitxers s&apos;han esborrat.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%1 and %n other file(s) have been downloaded.</source>
-        <translation type="vanished">
-            <numerusform>%1 i %n altre fitxer s&apos;han descarregat.</numerusform>
-            <numerusform>%1 i %n altres fitxers s&apos;han descarregat.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -894,18 +829,6 @@ Consulteu el registre per obtenir més informació.</numerusform>
     <message>
         <source>Keep files</source>
         <translation>Mantén els fitxers</translation>
-    </message>
-    <message>
-        <source>Backup detected</source>
-        <translation type="vanished">Copia de seguretat detectada</translation>
-    </message>
-    <message>
-        <source>Normal Synchronisation</source>
-        <translation type="vanished">Sincronització normal</translation>
-    </message>
-    <message>
-        <source>Keep Local Files as Conflict</source>
-        <translation type="vanished">Manté els fitxers locals com a conflicte</translation>
     </message>
     <message numerus="yes">
         <source>%1 and %n other file(s) have been added.</source>
@@ -1285,25 +1208,6 @@ If this was an accident and you decide to keep your files, they will be re-synce
     </message>
 </context>
 <context>
-    <name>OCC::GETFileJob</name>
-    <message>
-        <source>No E-Tag received from server, check Proxy/Gateway</source>
-        <translation type="vanished">No s&apos;ha rebut cap E-Tag del servidor, comproveu el Proxy/Gateway</translation>
-    </message>
-    <message>
-        <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation type="vanished">Hem rebut un E-Tag diferent en la represa. Es comprovarà la pròxima vegada.</translation>
-    </message>
-    <message>
-        <source>Server returned wrong content-range</source>
-        <translation type="vanished">El servidor retorna un error de contingut o rang</translation>
-    </message>
-    <message>
-        <source>Connection Timeout</source>
-        <translation type="vanished">Temps de connexió excedit</translation>
-    </message>
-</context>
-<context>
     <name>OCC::GETFileZsyncJob</name>
     <message>
         <source>Unable to parse zsync.</source>
@@ -1501,14 +1405,6 @@ Note that this selects only what pool upgrades are taken from, and that there ar
         <translation>Elimina</translation>
     </message>
     <message>
-        <source>Files or folders matching a pattern will not be synchronized.
-
-Items where deletion is allowed will be deleted if they prevent a directory from being removed. This is useful for meta data.</source>
-        <translation type="vanished">Els fitxers o directoris que concordin amb algun patró no es sincronitzaran.
-
-Els elements que poden ser eliminats s&apos;eliminaran si impedeixen que una carpeta sigui eliminada. Això és útil per les metadades.</translation>
-    </message>
-    <message>
         <source>Could not open file</source>
         <translation>No s&apos;ha pogut obrir el fitxer</translation>
     </message>
@@ -1625,42 +1521,6 @@ Items where deletion is allowed will be deleted if they prevent a directory from
     <message>
         <source>Log Output</source>
         <translation>Sortida de registre</translation>
-    </message>
-    <message>
-        <source>&amp;Search:</source>
-        <translation type="vanished">&amp;Cerca:</translation>
-    </message>
-    <message>
-        <source>&amp;Find</source>
-        <translation type="vanished">&amp;Troba</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="vanished">Neteja</translation>
-    </message>
-    <message>
-        <source>Clear the log display.</source>
-        <translation type="vanished">Neteja l&apos;inici de sessió.</translation>
-    </message>
-    <message>
-        <source>S&amp;ave</source>
-        <translation type="vanished">Des&amp;a</translation>
-    </message>
-    <message>
-        <source>Save the log file to a file on disk for debugging.</source>
-        <translation type="vanished">Desa el fitxer de registre al disc per depuració</translation>
-    </message>
-    <message>
-        <source>Save log file</source>
-        <translation type="vanished">Desa el fitxer de registre</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Error</translation>
-    </message>
-    <message>
-        <source>Could not write to log file %1</source>
-        <translation type="vanished">No es pot escriure al fitxer de registre %1</translation>
     </message>
     <message>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
@@ -1892,24 +1752,12 @@ for additional privileges during the process.</source>
 privilegis addicionals durant el procés.</translation>
     </message>
     <message>
-        <source>Downloading version %1. Please wait...</source>
-        <translation type="vanished">Descarregat la versió %1. Espeu si us play...</translation>
-    </message>
-    <message>
         <source>Could not download update. Please click &lt;a href=&apos;%1&apos;&gt;here&lt;/a&gt; to download the update manually.</source>
         <translation>No s&apos;ha pogut decarregar l&apos;actualització. Si us plau, cliqueu &lt;a href=&apos;%1&apos;&gt;aqui&lt;/a&gt;per descarregar l&apos;actualització manualment.</translation>
     </message>
     <message>
         <source>Could not check for new updates.</source>
         <translation>No s&apos;ha pogut comprovar si hi ha actualitzacions.</translation>
-    </message>
-    <message>
-        <source>%1 version %2 available. Restart application to start the update.</source>
-        <translation type="vanished">Versió %2 de %1 disponible. Reinicieu l&apos;aplicació per començar l&apos;actualització.</translation>
-    </message>
-    <message>
-        <source>New %1 version %2 available. Please use the system&apos;s update tool to install it.</source>
-        <translation type="vanished">Nova versió %1 de %2 disponible. Utilitzeu l&apos;eina d&apos;actualització del sistema per instal·lar-la.</translation>
     </message>
     <message>
         <source>Checking update server...</source>
@@ -1942,10 +1790,6 @@ privilegis addicionals durant el procés.</translation>
 </context>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Connecta a %1</translation>
-    </message>
     <message>
         <source>Setup local folder options</source>
         <translation>Estableix les opcions de carpeta local</translation>
@@ -2455,14 +2299,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::PropagateLocalRemove</name>
     <message>
-        <source>Error removing &apos;%1&apos;: %2;</source>
-        <translation type="vanished">Error en eliminar &apos;%1&apos;: %2;</translation>
-    </message>
-    <message>
-        <source>Could not remove folder &apos;%1&apos;</source>
-        <translation type="vanished">No s&apos;ha pogut eliminar la carpeta &apos;%1&apos;</translation>
-    </message>
-    <message>
         <source>Could not remove %1 because of a local file name clash</source>
         <translation>No es pot eliminar %1 perquè hi ha un xoc amb el nom d&apos;un fitxer local</translation>
     </message>
@@ -2743,29 +2579,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
 </context>
 <context>
-    <name>OCC::SettingsDialogMac</name>
-    <message>
-        <source>%1</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation type="vanished">Activitat</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="vanished">General</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">Xarxa</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Compte</translation>
-    </message>
-</context>
-<context>
     <name>OCC::ShareDialog</name>
     <message>
         <source>TextLabel</source>
@@ -2831,10 +2644,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>Estableix la &amp;contrasenya</translation>
     </message>
     <message>
-        <source>Enter a name to create a new public link...</source>
-        <translation type="vanished">Escriu un nom per crear un enllaç públic...</translation>
-    </message>
-    <message>
         <source>Set &amp;expiration date</source>
         <translation>Estableix la data de &amp;venciment</translation>
     </message>
@@ -2845,10 +2654,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>Descarregar / Veure</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Descarregar / Veure / Pujar</translation>
     </message>
     <message>
         <source>Anyone with the link has access to the file/folder</source>
@@ -2881,10 +2686,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Public link</source>
         <translation>Enllaç públic</translation>
-    </message>
-    <message>
-        <source>Public sh&amp;aring requires a password</source>
-        <translation type="vanished">La comp&amp;artició pública requereix una contrasenya</translation>
     </message>
     <message>
         <source>Please Set Password</source>
@@ -3043,32 +2844,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>%1 (%2)</source>
         <comment>sharee (shareWithAdditionalInfo)</comment>
         <translation>%1 (%2)</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethCredentials</name>
-    <message>
-        <source>Login Error</source>
-        <translation type="vanished">Error d&apos;accés</translation>
-    </message>
-    <message>
-        <source>You must sign in as user %1</source>
-        <translation type="vanished">Cal identificar-se com a usuari %1</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethWebView</name>
-    <message>
-        <source>%1 - Authenticate</source>
-        <translation type="vanished">%1 - Autenticat</translation>
-    </message>
-    <message>
-        <source>Reauthentication required</source>
-        <translation type="vanished">Es requereix nova acreditació</translation>
-    </message>
-    <message>
-        <source>Your session has expired. You need to re-login to continue to use the client.</source>
-        <translation type="vanished">La vostra sessió ha vençut. Heu d&apos;acreditar-vos de nou per continuar usant el client.</translation>
     </message>
 </context>
 <context>
@@ -3342,108 +3117,8 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::SyncEngine</name>
     <message>
-        <source>Success.</source>
-        <translation type="vanished">Èxit.</translation>
-    </message>
-    <message>
-        <source>A network connection timeout happened.</source>
-        <translation type="vanished">Temps excedit en la connexió.</translation>
-    </message>
-    <message>
-        <source>A HTTP transmission error happened.</source>
-        <translation type="vanished">S&apos;ha produït un error en la transmissió HTTP.</translation>
-    </message>
-    <message>
-        <source>An error occurred while opening a folder</source>
-        <translation type="vanished">S&apos;ha produït un error en obrir una carpeta</translation>
-    </message>
-    <message>
-        <source>Error while reading folder.</source>
-        <translation type="vanished">Error en llegir la carpeta.</translation>
-    </message>
-    <message>
-        <source>File/Folder is ignored because it&apos;s hidden.</source>
-        <translation type="vanished">El fitxer/carpeta s&apos;ha ignorat perquè és ocult.</translation>
-    </message>
-    <message>
-        <source>CSync unspecified error.</source>
-        <translation type="vanished">Error inespecífic de CSync.</translation>
-    </message>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Aturat per l&apos;usuari</translation>
-    </message>
-    <message>
-        <source>The service is temporarily unavailable</source>
-        <translation type="vanished">El servei no està disponible temporalment</translation>
-    </message>
-    <message>
-        <source>Access is forbidden</source>
-        <translation type="vanished">Accés prohibit</translation>
-    </message>
-    <message>
-        <source>An internal error number %1 occurred.</source>
-        <translation type="vanished">S&apos;ha produït l&apos;error intern número %1.</translation>
-    </message>
-    <message>
-        <source>Symbolic links are not supported in syncing.</source>
-        <translation type="vanished">La sincronització d&apos;enllaços simbòlics no està implementada.</translation>
-    </message>
-    <message>
-        <source>File is listed on the ignore list.</source>
-        <translation type="vanished">El fitxer està a la llista d&apos;ignorats.</translation>
-    </message>
-    <message>
-        <source>Filename is too long.</source>
-        <translation type="vanished">El nom de fitxer és massa llarg.</translation>
-    </message>
-    <message>
-        <source>Filename encoding is not valid</source>
-        <translation type="vanished">La codificació del nom de fitxer no és vàlida</translation>
-    </message>
-    <message>
-        <source>Invalid characters, please rename &quot;%1&quot;</source>
-        <translation type="vanished">Caràcters no vàlids. Reanomeneu &quot;%1&quot;</translation>
-    </message>
-    <message>
         <source>Cannot open the sync journal</source>
         <translation>No es pot obrir el diari de sincronització</translation>
-    </message>
-    <message>
-        <source>File name contains at least one invalid character</source>
-        <translation type="vanished">El nom del fitxer conté al menys un caràcter invàlid</translation>
-    </message>
-    <message>
-        <source>Ignored because of the &quot;choose what to sync&quot; blacklist</source>
-        <translation type="vanished">S&apos;ignora degut al filtre a «Trieu què sincronitzar»</translation>
-    </message>
-    <message>
-        <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
-        <translation type="vanished">No es permet pujar aquest fitxer perquè només és de lectura en el servidor, es restaura</translation>
-    </message>
-    <message>
-        <source>Not allowed to remove, restoring</source>
-        <translation type="vanished">No es permet l&apos;eliminació, es restaura</translation>
-    </message>
-    <message>
-        <source>Local files and share folder removed.</source>
-        <translation type="vanished">Fitxers locals i carpeta compartida esborrats.</translation>
-    </message>
-    <message>
-        <source>Move not allowed, item restored</source>
-        <translation type="vanished">No es permet moure&apos;l, l&apos;element es restaura</translation>
-    </message>
-    <message>
-        <source>Move not allowed because %1 is read-only</source>
-        <translation type="vanished">No es permet moure perquè %1 només és de lectura</translation>
-    </message>
-    <message>
-        <source>the destination</source>
-        <translation type="vanished">el destí</translation>
-    </message>
-    <message>
-        <source>the source</source>
-        <translation type="vanished">l&apos;origen</translation>
     </message>
     <message>
         <source>%1 (skipped due to earlier error, trying again in %2)</source>

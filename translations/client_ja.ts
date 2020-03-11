@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -197,14 +201,6 @@
         <translation>チェックしていないフォルダーはローカルファイルシステムから &lt;b&gt;削除&lt;/b&gt;され､このコンピューターと同期されなくなります。</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">すべてを同期</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">同期なし</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>手動による変更を適用</translation>
     </message>
@@ -217,24 +213,12 @@
         <translation>キャンセル</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">&lt;server&gt; に &lt;user&gt; で接続中</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>アカウントが未設定です。</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">新規追加</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>削除</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">アカウント</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -281,20 +265,8 @@
         <translation>%1 を使用中</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">&lt;i&gt;%2&lt;/i&gt; の %1</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>%1 に接続</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">サーバー %1 は一時的に利用できません</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">サーバー %1 は現在メンテナンスモードです。</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -839,16 +811,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>Please go in the settings to select it if you wish to download it.</source>
         <translation>このフォルダーをダウンロードするには設定画面で選択してください。</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">サーバー上のフォルダー &apos;%1&apos; 内に存在するすべてのファイルが削除されました。
-これらはローカルに存在する同期フォルダーにも適用され、復元する権利がない限り、ファイルは使用できなくなります。
-「ファイルを残す」を選択すると、復元可能な場合はサーバーと再同期されます。
-「すべてのファイルを削除」を選択すると、あなたが所有者でない限り、ファイルは使用できなくなります。</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1818,10 +1780,6 @@ for additional privileges during the process.</source>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">%1 に接続中</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>ローカルフォルダーのオプションを設定</translation>
     </message>
@@ -2554,10 +2512,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>読込中 ...</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">同期したくないリモートのサブフォルダーは、同期対象から外せます。</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>名前</translation>
     </message>
@@ -2692,10 +2646,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>ダウンロード / 表示</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">ダウンロード / 表示 / アップロード</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>

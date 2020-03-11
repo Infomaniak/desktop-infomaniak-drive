@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -197,14 +201,6 @@
         <translation>پوشه های بررسی نشده از سیستم فایل محلی شما &lt;b&gt;حذف&lt;/b&gt; خواهد شد و دیگر در این کامپیوتر همگام سازی نخواهد شد.</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">همگام‌سازی همه</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">همگام سازی هیچ</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>تایید تغییرات دستی</translation>
     </message>
@@ -217,24 +213,12 @@
         <translation>منصرف شدن</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">متصل به &lt;server&gt;  به عنوان &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>هیچ حساب‌کاربری‌ای تنظیم نشده‌ است.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">اضافه کردن جدید</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>حذف</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">حساب کاربری</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -277,20 +261,8 @@
         <translation>1% در استفاده</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">1% به عنوان &lt;i&gt;2%&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>متصل به %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">سرور %1 بصورت موقت خارج از دسترس است.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">سرور 1% اکنون در حالت تعمیر است.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -839,16 +811,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>Please go in the settings to select it if you wish to download it.</source>
         <translation>اگر می خواهید این را دانلود کنید لطفا به تنظیمات بروید تا آن را انتخاب کنید.</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">تمامی پرونده های پوشه همگام ساز پوشه &apos;1%&apos; در سرور حذف شد.
-این حذف ها با پوشه همگام ساز محلی شما هماهنگ خواهند شد، ساخت چنین پرونده هایی در دسترس نیستند مگر اینکه حق بازگرداندن داشته باشید.
-اگر شما تصمیم بگیرید پرونده ها را نگهداری کنید، آن ها با سرور مجددا همگام سازی می شوند در صورتی که شما حق انجام آن را داشته باشید.
-اگر شما تصمیم بگیرید پرونده ها را حذف کنید، آن ها در دسترس شما نخواهند بود، مگر اینکه مالک باشید.</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1818,10 +1780,6 @@ for additional privileges during the process.</source>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">متصل به %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>راه اندازی گزینه های پوشه محلی</translation>
     </message>
@@ -2553,10 +2511,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Loading ...</source>
         <translation>درحال بارگذاری...</translation>
-    </message>
-    <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">پوشه‌های از راه دور را که نمی خواهید همگام سازی کنید، انتخاب نکنید.</translation>
     </message>
     <message>
         <source>Name</source>

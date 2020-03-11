@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>Não foi possível mover &apos;%1&apos; para &apos;%2&apos;</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Mover para o lixo não está implementado nesta plataforma</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -201,14 +201,6 @@
         <translation>Pastas não marcadas serão &lt;b&gt;removidos&lt;/b&gt; de seu sistema de arquivos local e não serão mais sincronizadas com este computador</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Sincronizar tudo</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Não sincronizar</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Aplicar alterações manuais</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>Cancelar</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Conectado com &lt;server&gt; como &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Nenhuma conta configurada.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Adicionar nova</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Remover</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Conta</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -317,20 +297,8 @@ Esta ação irá anular qualquer sincronização atualmente em execução.</tran
         <translation>%1 em uso</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 como &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Conectado a %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">O Servidor %1 está temporariamente indisponível.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Servidor %1 está atualmente em modo de manutenção.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -887,16 +855,6 @@ This means that the synchronization client might not upload local changes immedi
 Isso significa que o cliente de sincronização pode não fazer envios de alterações locais imediatamente e, em vez disso, só varre as alterações locais e as carrega ocasionalmente (a cada duas horas, por padrão).
 
 %1</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">Todos os arquivos na pasta &apos;%1&apos; de sincronização foram excluídos no servidor.
- Essas exclusões serão sincronizadas com a pasta de sincronização local, tornando esses arquivos indisponíveis, a menos que você tenha o direito de restaurar.
- Se você decidir manter os arquivos, eles serão re-sincronizados com o servidor se você tiver direitos para fazê-lo.
-Se você decidir excluir os arquivos, eles não estarão disponíveis para você, a menos que você seja o proprietário.</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1846,10 +1804,6 @@ for additional privileges during the process.</source>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Conectar a %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Configurar opções de pastas locais</translation>
     </message>
@@ -2591,10 +2545,6 @@ Este é um novo modo experimental. Se você decidir usá-lo, relate quaisquer pr
         <translation>Carregando...</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Desmarque as pastas remotas que não deseja sincronizar.</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
@@ -2749,10 +2699,6 @@ Este é um novo modo experimental. Se você decidir usá-lo, relate quaisquer pr
     <message>
         <source>Download / View</source>
         <translation>Baixar / Visualizar</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Baixar / Visualizar / Enviar</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>

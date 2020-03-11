@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>ย้ายข้อมูลจาก &apos;%1&apos;  ไป &apos;%1&apos;&#xa0;ไม่ได้</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">การย้ายไปที่ถังขยะยังใช้งานไม่ได้บนแพลตฟอร์มนี้</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -201,14 +201,6 @@
         <translation>โฟลเดอร์ที่ไม่ถูกตรวจสอบจะถูก &lt;b&gt;ลบ&lt;/b&gt; จากไฟล์ในเครื่องของคุณและจะไม่ประสานข้อมูลกับคอมพิวเตอร์เครื่องนี้อีกต่อไป</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">ประสานข้อมูลทั้งหมด</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">ไม่ต้องประสานข้อมูล</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>ใช้การเปลี่ยนแปลงด้วยตนเอง</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>ยกเลิก</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">เชื่อมต่อกับ &lt;server&gt; ด้วยผู้ใช้ &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>ไม่มีการกำหนดค่าบัญชี</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">เพิ่มใหม่</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>ลบออก</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">บัญชี</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -317,20 +297,8 @@ This action will abort any currently running synchronization.</source>
         <translation>%1 กำลังถูกใช้งาน</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 เช่น &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>เชื่อมต่อกับ %1</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">เซิร์ฟเวอร์ %1 ไม่สามารถใช้ได้ชั่วคราว</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">เซิร์ฟเวอร์ %1 กำลังอยู่ในโหมดการบำรุงรักษา</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -876,16 +844,6 @@ This means that the synchronization client might not upload local changes immedi
         <translation>ไม่สามารถติดตามการเปลี่ยนแปลงโฟลเดอร์ที่ประสานข้อมูลได้
 
 หมายความว่าการประสานข้อมูลของไคลเอ็นต์อาจยังไม่ได้อัปโหลดการเปลี่ยนแปลงในระบบทันทีและจะสแกนเฉพาะการเปลี่ยนแปลงในเครื่องและอัปโหลดไฟล์เหล่านั้นเป็นครั้งคราว (ทุกสองชั่วโมงตามค่าเริ่มต้น)</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">ไฟล์ทั้งหมดในโฟลเดอร์ &apos;%1&apos; ที่ประสานข้อมูลเอาไว้ในเซิฟเวอร์จะถูกลบด้วย
-การลบข้อมูลนี้จะถูกประสานข้อมูลกับโฟลเดอร์ในเครื่อง ทำให้ไฟล์ดังกล่าวไม่สามารถใช้งานได้จนกว่าจะถูกกู้คืน
-ถ้าคุณตัดสินใจเก็บไฟล์เอาไว้ ไฟล์ของคุณก็จะถูกประสานข้อมูลใหม่อีกครั้ง
-หากคุณตัดสินใจลบไฟล์ก็จะทำให้ไม่มีใครสามารถใช้งานโฟลเดอร์นี้ได้เพราะคุณเป็นเจ้าของ</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1836,10 +1794,6 @@ for additional privileges during the process.</source>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">เชื่อมต่อไปยัง %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>ตั้งค่าตัวเลือกโฟลเดอร์ในเครื่อง</translation>
     </message>
@@ -2577,10 +2531,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>กำลังโหลด ...</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">ไม่ต้องเลือกรีโมทโฟลเดอร์ที่คุณไม่ต้องการประสานข้อมูล</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>ชื่อ</translation>
     </message>
@@ -2735,10 +2685,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>ดาวน์โหลดหรือดู</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">ดาวน์โหลด ดู หรืออัปโหลด</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>

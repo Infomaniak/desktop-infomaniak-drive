@@ -14,6 +14,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/THEME.cmake")
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
+set(commonlib_NAME "${APPLICATION_EXECUTABLE}common")
 set(synclib_NAME "${APPLICATION_EXECUTABLE}sync")
 set(csync_NAME "${APPLICATION_EXECUTABLE}_csync")
 

@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>Не вдалося перемістити &apos;%1&apos; в &apos;%2&apos;</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Переміщення в смітник неможливе на цій платформі</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -201,14 +201,6 @@
         <translation>Не позначені теки будуть &lt;b&gt;видалені&lt;/b&gt; з вашої системи та більше не будуть синхронізуватися</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Синхронізувати все</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Не синхронізувати нічого</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Застосувати ручні зміни</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>Скасувати</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Підключено до &lt;server&gt; як &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Обліковий запис не налаштовано.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Додати</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Видалити</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Обліковий запис</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -255,10 +235,6 @@
     <message>
         <source>Remove folder sync connection</source>
         <translation>Видалити синхронізацію теки</translation>
-    </message>
-    <message>
-        <source>Create virtual files for new files (Experimental)</source>
-        <translation type="vanished">Створити віртуальні файли для нових файлів (Експриментально)</translation>
     </message>
     <message>
         <source>Folder creation failed</source>
@@ -289,20 +265,8 @@
         <translation>%1 використовується</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 як &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Підключено до %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Сервер %1 тимчасово недоступний.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Сервер %1 наразі в режимі технічного обслуговування</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -569,30 +533,6 @@ This action will abort any currently running synchronization.</source>
         <source>Action Required: Notifications</source>
         <translation>Необхідна Дія: Сповіщення</translation>
     </message>
-    <message numerus="yes">
-        <source>You received %n new notification(s) from %2.</source>
-        <translation type="vanished">
-            <numerusform>Ви отримали %n нове сповіщення від %2.</numerusform>
-            <numerusform>Ви отримали %n нових сповіщень від %2.</numerusform>
-            <numerusform>Ви отримали %n нових сповіщень від %2.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>You received %n new notification(s) from %1 and %2.</source>
-        <translation type="vanished">
-            <numerusform>Ви отримали %n нове сповіщення від %1 та %2.</numerusform>
-            <numerusform>Ви отримали %n нових сповіщень від %1 та %2.</numerusform>
-            <numerusform>Ви отримали %n нових сповіщень від %1 та %2.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>You received new notifications from %1, %2 and other accounts.</source>
-        <translation type="vanished">Ви отримали нові сповіщення від %1, %2 та інших облікових записів.</translation>
-    </message>
-    <message>
-        <source>%1 Notifications - Action Required</source>
-        <translation type="vanished">%1 Сповіщень - Необхідна Дія</translation>
-    </message>
     <message>
         <source>&lt;br/&gt;Account %1 does not have activities enabled.</source>
         <translation type="unfinished"></translation>
@@ -746,13 +686,6 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
-    <name>OCC::DiscoveryMainThread</name>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Скасовано користувачем</translation>
-    </message>
-</context>
-<context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
@@ -802,11 +735,6 @@ This action will abort any currently running synchronization.</source>
         <translation>%1 видалено.</translation>
     </message>
     <message>
-        <source>%1 has been downloaded.</source>
-        <comment>%1 names a file.</comment>
-        <translation type="vanished">%1 завантажено.</translation>
-    </message>
-    <message>
         <source>%1 has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>%1 оновлено.</translation>
@@ -843,10 +771,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>Keep files</source>
         <translation>Зберегти файли</translation>
-    </message>
-    <message>
-        <source>Backup detected</source>
-        <translation type="vanished">Резервну копію знайдено</translation>
     </message>
     <message numerus="yes">
         <source>%1 and %n other file(s) have been removed.</source>
@@ -1290,25 +1214,6 @@ If this was an accident and you decide to keep your files, they will be re-synce
     </message>
 </context>
 <context>
-    <name>OCC::GETFileJob</name>
-    <message>
-        <source>No E-Tag received from server, check Proxy/Gateway</source>
-        <translation type="vanished">Не отримано E-Tag від серверу, перевірте мережеві налаштування (проксі, шлюз)</translation>
-    </message>
-    <message>
-        <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation type="vanished">Ми отримали інший E-Tag для відновлення. Спробуйте ще раз пізніше.</translation>
-    </message>
-    <message>
-        <source>Server returned wrong content-range</source>
-        <translation type="vanished">Сервер повернув невірний content-range</translation>
-    </message>
-    <message>
-        <source>Connection Timeout</source>
-        <translation type="vanished">Час з&apos;єднання вичерпано</translation>
-    </message>
-</context>
-<context>
     <name>OCC::GETFileZsyncJob</name>
     <message>
         <source>Unable to parse zsync.</source>
@@ -1624,42 +1529,6 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <translation>Вивід журналу</translation>
     </message>
     <message>
-        <source>&amp;Search:</source>
-        <translation type="vanished">&amp;Пошук:</translation>
-    </message>
-    <message>
-        <source>&amp;Find</source>
-        <translation type="vanished">&amp;Знайти</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="vanished">Очистити</translation>
-    </message>
-    <message>
-        <source>Clear the log display.</source>
-        <translation type="vanished">Очистити дисплей журналу.</translation>
-    </message>
-    <message>
-        <source>S&amp;ave</source>
-        <translation type="vanished">З&amp;берегти</translation>
-    </message>
-    <message>
-        <source>Save the log file to a file on disk for debugging.</source>
-        <translation type="vanished">Зберегти файл журналу у файл на диску для обробки.</translation>
-    </message>
-    <message>
-        <source>Save log file</source>
-        <translation type="vanished">Зберегти файл журналу</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Помилка</translation>
-    </message>
-    <message>
-        <source>Could not write to log file %1</source>
-        <translation type="vanished">Не вдалося записати в файл журналу %1</translation>
-    </message>
-    <message>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
 Since log files can get large, the client will start a new one for each sync run and compress older ones. It is also recommended to enable deleting log files after a couple of hours to avoid consuming too much disk space.
 If enabled, logs will be written to %1</source>
@@ -1888,10 +1757,6 @@ for additional privileges during the process.</source>
         <translation>Буде встановлено оновлення для %1. Програма оновлення може запитати додаткові привілеї.</translation>
     </message>
     <message>
-        <source>Downloading version %1. Please wait...</source>
-        <translation type="vanished">Завантаження файлів %1. Будь ласка, почекайте...</translation>
-    </message>
-    <message>
         <source>Could not download update. Please click &lt;a href=&apos;%1&apos;&gt;here&lt;/a&gt; to download the update manually.</source>
         <translation>Неможливо завантажити оновлення. Будь ласка, натисніть &lt;a href=&apos;%1&apos;&gt;тут&lt;/a&gt;, щоб самостійно завантажити оновлення.</translation>
     </message>
@@ -1930,10 +1795,6 @@ for additional privileges during the process.</source>
 </context>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">З&apos;єднати з %1</translation>
-    </message>
     <message>
         <source>Setup local folder options</source>
         <translation>Налаштування локальної теки</translation>
@@ -2443,10 +2304,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::PropagateLocalRemove</name>
     <message>
-        <source>Error removing &apos;%1&apos;: %2;</source>
-        <translation type="vanished">Помилка видалення &apos;%1&apos;: %2;</translation>
-    </message>
-    <message>
         <source>Could not remove %1 because of a local file name clash</source>
         <translation>Неможливо видалити %1 через локальний конфлікт назви файлу</translation>
     </message>
@@ -2727,29 +2584,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
 </context>
 <context>
-    <name>OCC::SettingsDialogMac</name>
-    <message>
-        <source>%1</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation type="vanished">Активність</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="vanished">Загалом</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">Мережа</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Обліковий запис</translation>
-    </message>
-</context>
-<context>
     <name>OCC::ShareDialog</name>
     <message>
         <source>TextLabel</source>
@@ -2827,10 +2661,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>Завантаження / Перегляд</translation>
     </message>
     <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Завантаження / Перегляд / Вивантаження</translation>
-    </message>
-    <message>
         <source>Anyone with the link has access to the file/folder</source>
         <translation>Будь хто з цім посиланням має доступ до файлу/теки</translation>
     </message>
@@ -2853,10 +2683,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Cancel</source>
         <translation>Скасувати</translation>
-    </message>
-    <message>
-        <source>Public sh&amp;aring requires a password</source>
-        <translation type="vanished">Публічне по&amp;ширення вимагає пароль</translation>
     </message>
     <message>
         <source>Recipients can view or download contents.</source>
@@ -3026,32 +2852,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
 </context>
 <context>
-    <name>OCC::ShibbolethCredentials</name>
-    <message>
-        <source>Login Error</source>
-        <translation type="vanished">Помилка входу</translation>
-    </message>
-    <message>
-        <source>You must sign in as user %1</source>
-        <translation type="vanished">Ви маєте увійти як %1</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethWebView</name>
-    <message>
-        <source>%1 - Authenticate</source>
-        <translation type="vanished">%1 - Аутентифікація</translation>
-    </message>
-    <message>
-        <source>Reauthentication required</source>
-        <translation type="vanished">Потрібна повторна аутентифікація</translation>
-    </message>
-    <message>
-        <source>Your session has expired. You need to re-login to continue to use the client.</source>
-        <translation type="vanished">Ваша сесія скінчилася. Вам потрібно ввійти знову, щоб продовжити користуватися програмою.</translation>
-    </message>
-</context>
-<context>
     <name>OCC::SocketApi</name>
     <message>
         <source>Share with %1</source>
@@ -3061,14 +2861,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Open in browser</source>
         <translation>Відкрити у переглядачі</translation>
-    </message>
-    <message numerus="yes">
-        <source>Download file(s)</source>
-        <translation type="vanished">
-            <numerusform>Завантажити файл</numerusform>
-            <numerusform>Завантажити файли</numerusform>
-            <numerusform>Завантажити файли</numerusform>
-        </translation>
     </message>
     <message>
         <source>Context menu share</source>
@@ -3330,101 +3122,13 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::SyncEngine</name>
     <message>
-        <source>Success.</source>
-        <translation type="vanished">Успішно.</translation>
-    </message>
-    <message>
-        <source>A network connection timeout happened.</source>
-        <translation type="vanished">Час під&apos;єднання до мережі вичерпався.</translation>
-    </message>
-    <message>
-        <source>A HTTP transmission error happened.</source>
-        <translation type="vanished">Сталася помилка передачі даних по HTTP.</translation>
-    </message>
-    <message>
         <source>Only %1 are available, need at least %2 to start</source>
         <comment>Placeholders are postfixed with file sizes using Utility::octetsToString()</comment>
         <translation>Доступно лише %1, для початку необхідно хоча б %2</translation>
     </message>
     <message>
-        <source>CSync unspecified error.</source>
-        <translation type="vanished">Невизначена помилка CSync.</translation>
-    </message>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Скасовано користувачем</translation>
-    </message>
-    <message>
-        <source>The service is temporarily unavailable</source>
-        <translation type="vanished">Служба тимчасово недоступна</translation>
-    </message>
-    <message>
-        <source>Access is forbidden</source>
-        <translation type="vanished">Доступ заборонений</translation>
-    </message>
-    <message>
-        <source>An internal error number %1 occurred.</source>
-        <translation type="vanished">Виникла внутрішня помилка за номером %1.</translation>
-    </message>
-    <message>
-        <source>Symbolic links are not supported in syncing.</source>
-        <translation type="vanished">Синхронізація символічних посилань не підтримується. </translation>
-    </message>
-    <message>
-        <source>File is listed on the ignore list.</source>
-        <translation type="vanished">Файл присутній у списку ігнорованих.</translation>
-    </message>
-    <message>
-        <source>Filename is too long.</source>
-        <translation type="vanished">Шлях до файлу занадто довгий.</translation>
-    </message>
-    <message>
-        <source>Filename encoding is not valid</source>
-        <translation type="vanished">Кодування файлу не припустиме</translation>
-    </message>
-    <message>
         <source>Cannot open the sync journal</source>
         <translation>Не вдається відкрити протокол синхронізації</translation>
-    </message>
-    <message>
-        <source>File name contains at least one invalid character</source>
-        <translation type="vanished">Ім’я файлу містить принаймні один некоректний символ</translation>
-    </message>
-    <message>
-        <source>Ignored because of the &quot;choose what to sync&quot; blacklist</source>
-        <translation type="vanished">Ігнорується через чорний список в &quot;обрати що синхронізувати&quot;</translation>
-    </message>
-    <message>
-        <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
-        <translation type="vanished">Заборонено через відсутність прав додавання підкаталогів в цю теку.</translation>
-    </message>
-    <message>
-        <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
-        <translation type="vanished">Не дозволено завантажувати цей файл, оскільки він має дозвіл лише на перегляд, відновлюємо</translation>
-    </message>
-    <message>
-        <source>Not allowed to remove, restoring</source>
-        <translation type="vanished">Не дозволено видаляти, відновлюємо</translation>
-    </message>
-    <message>
-        <source>Local files and share folder removed.</source>
-        <translation type="vanished">Локальні файли та теки в загальному доступі було видалено.</translation>
-    </message>
-    <message>
-        <source>Move not allowed, item restored</source>
-        <translation type="vanished">Переміщення не дозволено, елемент відновлено </translation>
-    </message>
-    <message>
-        <source>Move not allowed because %1 is read-only</source>
-        <translation type="vanished">Переміщення не дозволено, оскільки %1 помічений тільки для перегляду</translation>
-    </message>
-    <message>
-        <source>the destination</source>
-        <translation type="vanished">призначення</translation>
-    </message>
-    <message>
-        <source>the source</source>
-        <translation type="vanished">джерело</translation>
     </message>
     <message>
         <source>%1 (skipped due to earlier error, trying again in %2)</source>

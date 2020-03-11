@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>Kunne ikke flytte &apos;%1&apos; til &apos;%2&apos;</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Flytting til søppelbøtten er ikke støttet på denne plattformen</translation>
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
@@ -201,14 +201,6 @@
         <translation>Umarkerte mapper vil bli &lt;b&gt;fjernet&lt;/b&gt; fra ditt lokale filsystem og vil ikke bli synkronisert med denne maskinen lenger</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Synkroniser alle</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Synkroniser ingen</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Bruk manuelle endringer</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>Avbryt</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Tilkoblet &lt;server&gt; som &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Ingen konto konfigurert.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Legg til ny</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Fjern</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Konto</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -285,20 +265,8 @@
         <translation>%1 i bruk</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 som &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Tilkoblet %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Server %1 er midlertidig utilgjengelig.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Server %1 er for øyeblikket i vedlikeholdsmodus.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -854,16 +822,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>The folder %1 was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>Mappen %1&#xa0; var laget, men har tidligere blitt ekskludert fra synkronisering. Data i mappen vil derfor ikke bli synkronisert. </translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">Alle filene i synkroniseringsmappen &apos;%1&apos; ble slettet på serveren.
-Disse slettingene vil bli synkronisert til din lokale synkroniseringsmappe og gjøre filene utilgjengelige hvis du ikke har lov til å gjenopprette.
-Hvis du velger å beholde filene, vil de bli synkronisert tilbake til serveren hvis du har lov til det.
-Hvis du velger å slette filene, blir de utilgjengelige for deg hvis du ikke er eieren av filen.</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1835,10 +1793,6 @@ kan be om flere rettigheter underveis.</translation>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Koble til %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Sett opp valg for lokal mappe</translation>
     </message>
@@ -2572,10 +2526,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>Laster ...</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Fjern valg for eksterne mapper  som du ikke ønsker å synkronisere.</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Navn</translation>
     </message>
@@ -2718,10 +2668,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>Last ned / Se</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Last ned / Se / Last opp</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>
