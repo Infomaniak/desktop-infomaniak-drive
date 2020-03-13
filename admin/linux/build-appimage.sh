@@ -55,6 +55,7 @@ cmake -DCMAKE_PREFIX_PATH=$QT_BASE_DIR \
     -DQTKEYCHAIN_INCLUDE_DIR=/app/usr/include/qt5keychain/ \
     -DMIRALL_VERSION_SUFFIX=$SUFFIX \
     -DOEM_THEME_DIR="/src/infomaniak" \
+    -DWITH_CRASHREPORTER=1 \
     "${CMAKE_PARAMS[@]}" \
     $DRONE_WORKSPACE
 #    -DMIRALL_VERSION_BUILD=$DRONE_BUILD_NUMBER \
@@ -123,6 +124,7 @@ export LD_LIBRARY_PATH=/app/usr/lib/
 
 # Set origin
 ./squashfs-root/usr/bin/patchelf --set-rpath '$ORIGIN/' /app/usr/lib/libkDrivesync.so.0
+./squashfs-root/usr/bin/patchelf --set-rpath '$ORIGIN/../lib/' /app/usr/bin/kDrive_crash_reporter
 
 # Build AppImage
 ./squashfs-root/AppRun /app/usr/share/applications/kDrive.desktop -appimage -unsupported-allow-new-glibc

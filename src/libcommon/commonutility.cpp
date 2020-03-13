@@ -1,4 +1,5 @@
 #include "commonutility.h"
+#include "config.h"
 
 // Note:  This file must compile without QtGui
 #include <QDir>

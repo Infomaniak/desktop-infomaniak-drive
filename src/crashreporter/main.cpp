@@ -26,8 +26,12 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+#ifdef Q_OS_LINUX
+    if (app.arguments().size() != 8) {
+#else
     if (app.arguments().size() != 2) {
-        qDebug() << "You need to pass the .dmp file path as only argument";
+#endif
+        qDebug() << "Invalid number of arguments";
         return 1;
     }
 
