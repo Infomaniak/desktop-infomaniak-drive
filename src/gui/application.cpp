@@ -172,6 +172,7 @@ Application::Application(int &argc, char **argv)
     setOrganizationDomain(QLatin1String(APPLICATION_REV_DOMAIN));
     setApplicationName(_theme->appName());
     setWindowIcon(_theme->applicationIcon());
+    setApplicationVersion(_theme->version());
     setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 
     if (!ConfigFile().exists()) {
