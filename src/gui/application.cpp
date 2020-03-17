@@ -706,7 +706,7 @@ bool Application::event(QEvent *event)
         QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
         qCDebug(lcApplication) << "QFileOpenEvent" << openEvent->file();
         // virtual file, open it after the Folder were created (if the app is not terminated)
-        QString fn = openEvent->file();
+        QString fn = openEvent->file().normalized(QString::NormalizationForm_C);
         QTimer::singleShot(0, this, [this, fn] { openVirtualFile(fn); });
     }
 #endif
