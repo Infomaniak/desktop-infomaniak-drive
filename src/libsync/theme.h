@@ -232,6 +232,11 @@ public:
     virtual QString updateCheckUrl() const;
 
     /**
+     * @brief Debug reporter URL
+     */
+    virtual QString debugReporterUrl() const;
+
+    /**
      * Check if delta-synchronization is available
      */
     virtual bool deltaSynchronizationAvailable() const;

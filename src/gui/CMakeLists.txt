@@ -117,6 +117,7 @@ set(client_SRCS
     wizard/owncloudwizardresultpage.cpp
     wizard/webviewpage.cpp
     wizard/webview.cpp
+    debugreporter.cpp
 )
 
 set(updater_SRCS

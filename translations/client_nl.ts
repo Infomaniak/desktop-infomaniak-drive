@@ -510,6 +510,26 @@ Deze actie annuleert alle huidig lopende synchronisatie.</translation>
         <source>Copied to clipboard</source>
         <translation>Gekopieerd naar het klembord</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -685,6 +705,17 @@ Deze actie annuleert alle huidig lopende synchronisatie.</translation>
     <message>
         <source>The provided credentials are not correct</source>
         <translation>De verstrekte inloggegevens zijn niet juist</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Annuleren</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

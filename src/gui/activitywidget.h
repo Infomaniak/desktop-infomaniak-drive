@@ -25,11 +25,13 @@
 #include "owncloudgui.h"
 #include "account.h"
 #include "activitydata.h"
+#include "debugreporter.h"
 
 #include "ui_activitywidget.h"
 
 class QPushButton;
 class QProgressIndicator;
+class QProgressDialog;
 
 namespace OCC {
 
@@ -150,12 +152,15 @@ private slots:
     void slotRegularNotificationCheck();
     void slotShowIssueItemCount(int cnt);
     void slotShowActivityTab();
+    void slotSendDebugData();
+    void slotDebugReporterDone(bool retCode);
 
 signals:
     void guiLog(const QString &, const QString &);
 
 private:
     bool event(QEvent *e) Q_DECL_OVERRIDE;
+    QByteArray contents(const QString& path);
 
     QTabWidget *_tab;
     int _activityTabId;
@@ -169,6 +174,7 @@ private:
     QProgressIndicator *_progressIndicator;
     QTimer _notificationCheckTimer;
     QHash<AccountState *, QElapsedTimer> _timeSinceLastCheck;
+    DebugReporter *_debugReporter;
 };
 }
 #endif // ActivityWIDGET_H

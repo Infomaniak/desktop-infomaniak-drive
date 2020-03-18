@@ -510,6 +510,26 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <source>Copied to clipboard</source>
         <translation>Copié dans le presse-papier</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation>Si vous rencontrez des erreurs de synchronisation, vous pouvez transmettre des informations de débogage à notre support.</translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation>Transmettre les informations de débogage</translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation>Merci de confirmer la transmission des informations de débogage à notre support.</translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation>Transmission terminée!</translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation>Echec de la transmission!</translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -685,6 +705,17 @@ Cette action stoppera toute synchronisation en cours.</translation>
     <message>
         <source>The provided credentials are not correct</source>
         <translation>Les informations d&apos;identification fournies ne sont pas correctes</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation>Envoi des informations de débogage</translation>
     </message>
 </context>
 <context>

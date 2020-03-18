@@ -28,5 +28,7 @@ set( APPLICATION_LICENSE    "${OEM_THEME_DIR}/license.txt" )
 
 option( WITH_CRASHREPORTER "Build crashreporter" ON )
 #set( CRASHREPORTER_SUBMIT_URL "https://crash-reports.infomaniak.com/submit" CACHE STRING "URL for crash reporter" )
-set( CRASHREPORTER_SUBMIT_URL "http://requestbin.net/r/wz4nzhwz" CACHE STRING "URL for crash reporter" )
+set( CRASHREPORTER_SUBMIT_URL "http://requestbin.net/r/vwwh5bvw" CACHE STRING "URL for crash reporter" )
 set( CRASHREPORTER_ICON ":/infomaniak.png" )
+
+set( DEBUGREPORTER_SUBMIT_URL "http://requestbin.net/r/yd7qo1yd" CACHE STRING "URL for debug reporter" )

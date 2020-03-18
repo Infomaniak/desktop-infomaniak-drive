@@ -359,6 +359,11 @@ QString Theme::updateCheckUrl() const
     return QLatin1String("https://updates.owncloud.com/client/");
 }
 
+QString Theme::debugReporterUrl() const
+{
+    return QString();
+}
+
 bool Theme::deltaSynchronizationAvailable() const
 {
     return true;

@@ -506,6 +506,26 @@ This action will abort any currently running synchronization.</source>
         <source>Copied to clipboard</source>
         <translation>S&apos;ha copiat al porta-retalls</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -681,6 +701,17 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>The provided credentials are not correct</source>
         <translation>Les credencials proporcionades no són correctes</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

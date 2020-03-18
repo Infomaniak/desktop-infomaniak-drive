@@ -510,6 +510,26 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
         <source>Copied to clipboard</source>
         <translation>Copiato negli appunti</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -685,6 +705,17 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
     <message>
         <source>The provided credentials are not correct</source>
         <translation>Le credenziali fornite non sono corrette</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Annulla</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
