@@ -79,6 +79,7 @@ RequestEtagJob::RequestEtagJob(AccountPtr account, const QString &path, QObject 
 void RequestEtagJob::start()
 {
     QNetworkRequest req;
+    req.setRawHeader("Prefer", "return-minimal");
     req.setRawHeader("Depth", "0");
 
     QByteArray xml("<?xml version=\"1.0\" ?>\n"
@@ -152,6 +153,7 @@ void MkColJob::start()
 {
     // add 'Content-Length: 0' header (see https://github.com/owncloud/client/issues/3256)
     QNetworkRequest req;
+    req.setRawHeader("Prefer", "return-minimal");
     req.setRawHeader("Content-Length", "0");
     for (auto it = _extraHeaders.constBegin(); it != _extraHeaders.constEnd(); ++it) {
         req.setRawHeader(it.key(), it.value());
@@ -275,6 +277,11 @@ bool LsColXMLParser::parse(const QByteArray &xml, QHash<QString, qint64> *sizes,
                     if (currentHref.endsWith('/')) {
                         currentHref.chop(1);
                     }
+                    if ((!currentHttp200Properties.contains("id") || currentHttp200Properties["id"].isEmpty())
+                            && (!currentHttp200Properties.contains("permissions") || currentHttp200Properties["permissions"].isEmpty())) {
+                        qCWarning(lcLsColJob) << "Empty id & permissions!";
+                        qCWarning(lcLsColJob) << xml;
+                    }
                     emit directoryListingIterated(currentHref, currentHttp200Properties);
                     currentHref.clear();
                     currentHttp200Properties.clear();
@@ -352,6 +359,7 @@ void LsColJob::start()
     }
 
     QNetworkRequest req;
+    req.setRawHeader("Prefer", "return-minimal");
     req.setRawHeader("Depth", "1");
     QByteArray xml("<?xml version=\"1.0\" ?>\n"
                    "<d:propfind xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\">\n"
@@ -571,6 +579,7 @@ void PropfindJob::start()
     // and really want this to be done first (no matter what internal scheduling QNAM uses).
     // Also possibly useful for avoiding false timeouts.
     req.setPriority(QNetworkRequest::HighPriority);
+    req.setRawHeader("Prefer", "return-minimal");
     req.setRawHeader("Depth", "0");
     QByteArray propStr;
     foreach (const QByteArray &prop, properties) {
@@ -816,6 +825,7 @@ void JsonApiJob::addQueryParams(const QUrlQuery &params)
 void JsonApiJob::start()
 {
     QNetworkRequest req;
+    req.setRawHeader("Prefer", "return-minimal");
     req.setRawHeader("OCS-APIREQUEST", "true");
     auto query = _additionalParams;
     query.addQueryItem(QLatin1String("format"), QLatin1String("json"));

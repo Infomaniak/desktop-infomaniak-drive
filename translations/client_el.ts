@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>Αδυναμία μετακίνησης του &apos;%1&apos; σε &apos;%2&apos;</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Η μετακίνηση στα απορρίμματα δεν υποστηρίζεται σε αυτήν την πλατφόρμα</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -201,14 +201,6 @@
         <translation>Οι μη επιλεγμένοι φάκελοι θα &lt;b&gt;αφαιρεθούν&lt;/ b&gt; από το τοπικό σύστημα αρχείων σας και δεν θα συγχρονιστούν πια με αυτόν τον υπολογιστή</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Συγχρονισμός όλων</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Κανένας συγχρονισμός</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Χειροκίνητη αλλαγή εφαρμογών</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>Άκυρο</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Συνδεδεμένοι με το &lt;server&gt; ως &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Δεν ρυθμίστηκε λογαριασμός.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Προσθήκη νέου</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Αφαίρεση</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Λογαριασμός</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -305,20 +285,8 @@ This action will abort any currently running synchronization.</source>
         <translation>%1 σε χρήση</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 ως &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Συνδεδεμένο με %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Ο διακομιστής %1 δεν είναι διαθέσιμος προσωρινά.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Ο διακομιστής %1 είναι προς το παρόν σε κατάσταση συντήρησης.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -542,6 +510,26 @@ This action will abort any currently running synchronization.</source>
         <source>Copied to clipboard</source>
         <translation>Αντιγράφηκε στο πρόχειρο</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -720,6 +708,17 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
@@ -887,16 +886,6 @@ This means that the synchronization client might not upload local changes immedi
 Αυτό σημαίνει ότι ο πελάτης συγχρονισμού ενδέχεται να μην μεταφορτώνει άμεσα τις τοπικές αλλαγές και αντίθετα, θα ανιχνεύει μόνο τοπικές αλλαγές και θα τις ανεβάζει περιστασιακά (κάθε δύο ώρες από προεπιλογή).
 
 %1</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">Όλα τα αρχεία στο φάκελο συγχρονισμού &apos;%1&apos; έχουν διαγραφεί στον διακομιστή.
-Αυτές οι διαγραφές θα συγχρονιστούν στον τοπικό σας φάκελο συγχρονισμού, κάνοντας τέτοιου είδους αρχεία μη διαθέσιμα, εκτός εάν έχετε δικαίωμα επαναφοράς.
-Εάν αποφασίσετε να διατηρήσετε αυτά τα αρχεία, θα συγχρονιστούν εκ νέου με το διακομιστή, εφόσον έχετε δικαιώματα να το κάνετε.
-Εφόσον επιλέξετε να διαγράψετε τα αρχεία, δε θα είναι διαθέσιμα σε εσάς, εκτός εάν είστε ο ιδιοκτήτης τους.  </translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1848,10 +1837,6 @@ for additional privileges during the process.</source>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Σύνδεση με %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Ρύθμιση επιλογών τοπικών φακέλων</translation>
     </message>
@@ -2591,10 +2576,6 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
         <translation>Φόρτωση ...</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Απορρίψτε τους απομακρυσμένους φακέλους που δεν θέλετε να συγχρονιστούν.</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Όνομα</translation>
     </message>
@@ -2749,10 +2730,6 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
     <message>
         <source>Download / View</source>
         <translation>Λήψη / Προβολή</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Λήψη / Προβολή / Μεταφόρτωση</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>
@@ -3528,6 +3505,10 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
     <message>
         <source>Up to date</source>
         <translation>Ενημερωμένο</translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

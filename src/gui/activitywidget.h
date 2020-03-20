@@ -25,11 +25,13 @@
 #include "owncloudgui.h"
 #include "account.h"
 #include "activitydata.h"
+#include "debugreporter.h"
 
 #include "ui_activitywidget.h"
 
 class QPushButton;
 class QProgressIndicator;
+class QProgressDialog;
 
 namespace OCC {
 
@@ -70,6 +72,7 @@ public:
      * available.
      */
     void checkActivityTabVisibility();
+    int getErrorCount();
 
 public slots:
     void slotOpenFile(QModelIndex indx);
@@ -133,6 +136,7 @@ public:
     explicit ActivitySettings(QWidget *parent = 0);
     ~ActivitySettings();
     QSize sizeHint() const Q_DECL_OVERRIDE { return ownCloudGui::settingsDialogSize(); }
+    int getErrorCount();
 
 public slots:
     void slotRefresh(AccountState *ptr);
@@ -148,17 +152,21 @@ private slots:
     void slotRegularNotificationCheck();
     void slotShowIssueItemCount(int cnt);
     void slotShowActivityTab();
+    void slotSendDebugData();
+    void slotDebugReporterDone(bool retCode);
 
 signals:
     void guiLog(const QString &, const QString &);
 
 private:
     bool event(QEvent *e) Q_DECL_OVERRIDE;
+    QByteArray contents(const QString& path);
 
     QTabWidget *_tab;
     int _activityTabId;
     int _protocolTabId;
     int _syncIssueTabId;
+    int _issueItemCount;
 
     ActivityWidget *_activityWidget;
     ProtocolWidget *_protocolWidget;
@@ -166,6 +174,7 @@ private:
     QProgressIndicator *_progressIndicator;
     QTimer _notificationCheckTimer;
     QHash<AccountState *, QElapsedTimer> _timeSinceLastCheck;
+    DebugReporter *_debugReporter;
 };
 }
 #endif // ActivityWIDGET_H

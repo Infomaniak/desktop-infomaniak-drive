@@ -204,6 +204,12 @@ void ownCloudGui::slotTrayMessageIfServerUnsupported(Account *account)
     }
 }
 
+void ownCloudGui::slotShowErrors()
+{
+    slotShowSettings();
+    _settingsDialog->showIssuesList("");
+}
+
 void ownCloudGui::slotComputeOverallSyncStatus()
 {
     bool allSignedOut = true;
@@ -296,9 +302,12 @@ void ownCloudGui::slotComputeOverallSyncStatus()
         iconStatus = SyncResult::Problem;
     }
 
+    // Set sytray icon
     Application *app = static_cast<Application *>(qApp);
     QIcon statusIcon = Theme::instance()->syncStateIcon(iconStatus, true, contextMenuVisible(), app->getAlert());
     _tray->setIcon(statusIcon);
+
+    _actionShowErrors->setEnabled(_settingsDialog ? _settingsDialog->getErrorCount() > 0 : false);
 
     // create the tray blob message, check if we have an defined state
     if (map.count() > 0) {
@@ -651,6 +660,10 @@ void ownCloudGui::updateContextMenu()
 
     _contextMenu->addSeparator();
 
+    _contextMenu->addAction(_actionShowErrors);
+
+    _contextMenu->addSeparator();
+
     _contextMenu->addAction(_actionStatus);
     if (isConfigured && atLeastOneConnected) {
         _contextMenu->addMenu(_recentActionsMenu);
@@ -786,6 +799,8 @@ void ownCloudGui::slotFolderOpenAction(const QString &alias)
 
 void ownCloudGui::setupActions()
 {
+    _actionShowErrors = new QAction(Theme::instance()->stateErrorIcon(), tr("See synchronization errors"), this);
+    _actionShowErrors->setEnabled(false);
     _actionStatus = new QAction(tr("Unknown status"), this);
     _actionStatus->setEnabled(false);
     _actionSettings = new QAction(tr("Settings..."), this);
@@ -793,6 +808,7 @@ void ownCloudGui::setupActions()
     _actionRecent = new QAction(tr("Details..."), this);
     _actionRecent->setEnabled(true);
 
+    QObject::connect(_actionShowErrors, &QAction::triggered, this, &ownCloudGui::slotShowErrors);
     QObject::connect(_actionRecent, &QAction::triggered, this, &ownCloudGui::slotShowSyncProtocol);
     QObject::connect(_actionSettings, &QAction::triggered, this, &ownCloudGui::slotShowSettings);
     QObject::connect(_actionNewAccountWizard, &QAction::triggered, this, &ownCloudGui::slotNewAccountWizard);

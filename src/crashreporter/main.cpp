@@ -15,6 +15,8 @@
 
 #include "CrashReporterConfig.h"
 
+#include "commonutility.h"
+
 #include <libcrashreporter-gui/CrashReporter.h>
 
 #include <QApplication>
@@ -24,10 +26,16 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+#ifdef Q_OS_LINUX
+    if (app.arguments().size() != 8) {
+#else
     if (app.arguments().size() != 2) {
-        qDebug() << "You need to pass the .dmp file path as only argument";
+#endif
+        qDebug() << "Invalid number of arguments";
         return 1;
     }
+
+    OCC::CommonUtility::setupTranslations(&app);
 
     // TODO: install socorro ....
     CrashReporter reporter(QUrl(CRASHREPORTER_SUBMIT_URL), app.arguments());
@@ -36,7 +44,11 @@ int main(int argc, char *argv[])
     reporter.setLogo(QPixmap(CRASHREPORTER_ICON));
 #endif
     reporter.setWindowTitle(CRASHREPORTER_PRODUCT_NAME);
-    reporter.setText("<html><head/><body><p><span style=\" font-weight:600;\">Sorry!</span> " CRASHREPORTER_PRODUCT_NAME " crashed. Please tell us about it! " CRASHREPORTER_PRODUCT_NAME " has created an error report for you that can help improve the stability in the future. You can now send this report directly to the " CRASHREPORTER_PRODUCT_NAME " developers.</p></body></html>");
+    reporter.setText(app.translate("CrashReporter", "<html><head/><body><p><span style=\"font-weight:600;\">Sorry!</span> %1 crashed."
+                                   " Please tell us about it!"
+                                   " %1 has created an error report for you that can help improve the stability of the product."
+                                   " You can now send this report directly to the developers.</p></body></html>")
+                     .arg(CRASHREPORTER_PRODUCT_NAME));
 
     reporter.setReportData("BuildID", CRASHREPORTER_BUILD_ID);
     reporter.setReportData("ProductName", CRASHREPORTER_PRODUCT_NAME);

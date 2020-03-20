@@ -232,6 +232,11 @@ public:
     virtual QString updateCheckUrl() const;
 
     /**
+     * @brief Debug reporter URL
+     */
+    virtual QString debugReporterUrl() const;
+
+    /**
      * Check if delta-synchronization is available
      */
     virtual bool deltaSynchronizationAvailable() const;
@@ -377,6 +382,8 @@ public:
      * https://github.com/owncloud/enterprise/issues/2951
      */
     virtual bool noUnauthedRequests() const;
+
+    virtual QIcon stateErrorIcon() const;
 
 protected:
 #ifndef TOKEN_AUTH_ONLY

@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -197,14 +201,6 @@
         <translation>De mappar som inte väljs kommer att &lt;b&gt;raderas&lt;/b&gt; från det lokala filsystemet och kommer inte att synkroniseras till den här datorn längre.</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Synkronisera alla</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Synkronisera inga</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Spara manuella ändringar</translation>
     </message>
@@ -217,24 +213,12 @@
         <translation>Avbryt</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Ansluten till &lt;server&gt; som &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Inget konto är konfigurerat.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Lägg till ny</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Radera</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Konto</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -281,20 +265,8 @@
         <translation>%1 används</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 som &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Ansluten till %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Servern %1 är för tillfället inte tillgänglig.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Servern %1 är för närvarande i underhållsläge.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -534,6 +506,26 @@ This action will abort any currently running synchronization.</source>
         <source>Copied to clipboard</source>
         <translation>Kopierat till urklipp</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -709,6 +701,17 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>The provided credentials are not correct</source>
         <translation>De angivna uppgifterna stämmer ej</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1817,10 +1820,6 @@ ytterligare rättigheter under processen.</translation>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Anslut till %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Inställningar för lokala mappar.</translation>
     </message>
@@ -2552,10 +2551,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Loading ...</source>
         <translation>Laddar  ...</translation>
-    </message>
-    <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Avmarkera mappar du inte vill synkronisera.</translation>
     </message>
     <message>
         <source>Name</source>
@@ -3484,6 +3479,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Checking for changes in local &apos;%1&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

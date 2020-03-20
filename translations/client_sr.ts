@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -205,24 +209,12 @@
         <translation>Одустани</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Повезан са &lt;server&gt; као &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Није подешен налог.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Додај нови</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Уклони</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Налог</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -249,16 +241,8 @@
         <translation>%1 искоришћено</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 као &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Повезан са %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Сервер %1 је привремено недоступан.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -522,6 +506,26 @@ This action will abort any currently running synchronization.</source>
         <source>The list of unsynced items has been copied to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -702,10 +706,14 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
-    <name>OCC::DiscoveryMainThread</name>
+    <name>OCC::DebugReporter</name>
     <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Прекинуо корисник</translation>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -756,11 +764,6 @@ This action will abort any currently running synchronization.</source>
         <source>%1 has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>%1 је уклоњен.</translation>
-    </message>
-    <message>
-        <source>%1 has been downloaded.</source>
-        <comment>%1 names a file.</comment>
-        <translation type="vanished">%1 је преузет.</translation>
     </message>
     <message>
         <source>%1 has been updated.</source>
@@ -1051,17 +1054,9 @@ If this was an accident and you decide to keep your files, they will be re-synce
         <translation>преузми %1/s</translation>
     </message>
     <message>
-        <source>u2193 %1/s</source>
-        <translation type="vanished">u2193 %1/s</translation>
-    </message>
-    <message>
         <source>upload %1/s</source>
         <extracomment>Example text: &quot;upload 24Kb/s&quot; (%1 is replaced by 24Kb (translated))</extracomment>
         <translation>отпреми %1/s</translation>
-    </message>
-    <message>
-        <source>u2191 %1/s</source>
-        <translation type="vanished">u2191 %1/s</translation>
     </message>
     <message>
         <source>%1 %2 (%3 of %4)</source>
@@ -1247,25 +1242,6 @@ If this was an accident and you decide to keep your files, they will be re-synce
     <message>
         <source>&lt;b&gt;Warning:&lt;/b&gt;</source>
         <translation>&lt;b&gt;Упозорење:&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::GETFileJob</name>
-    <message>
-        <source>No E-Tag received from server, check Proxy/Gateway</source>
-        <translation type="vanished">Нема е-ознаке са сервера. Проверите прокси или мрежни излаз</translation>
-    </message>
-    <message>
-        <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation type="vanished">Добијена је различита е-ознака за наставак преноса. Покушаћу поново следећи пут.</translation>
-    </message>
-    <message>
-        <source>Server returned wrong content-range</source>
-        <translation type="vanished">Сервер је вратио погрешан опсег садржаја</translation>
-    </message>
-    <message>
-        <source>Connection Timeout</source>
-        <translation type="vanished">Време за повезивање је истекло</translation>
     </message>
 </context>
 <context>
@@ -1584,42 +1560,6 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <translation>Бележи излаз</translation>
     </message>
     <message>
-        <source>&amp;Search:</source>
-        <translation type="vanished">&amp;Тражи:</translation>
-    </message>
-    <message>
-        <source>&amp;Find</source>
-        <translation type="vanished">&amp;Нађи</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="vanished">Очисти</translation>
-    </message>
-    <message>
-        <source>Clear the log display.</source>
-        <translation type="vanished">Очисти приказ записника.</translation>
-    </message>
-    <message>
-        <source>S&amp;ave</source>
-        <translation type="vanished">С&amp;ачувај</translation>
-    </message>
-    <message>
-        <source>Save the log file to a file on disk for debugging.</source>
-        <translation type="vanished">Сачувајте фајл записника на диску.</translation>
-    </message>
-    <message>
-        <source>Save log file</source>
-        <translation type="vanished">Сачувај фајл записника</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Грешка</translation>
-    </message>
-    <message>
-        <source>Could not write to log file %1</source>
-        <translation type="vanished">Не могу да пишем у записник %1</translation>
-    </message>
-    <message>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
 Since log files can get large, the client will start a new one for each sync run and compress older ones. It is also recommended to enable deleting log files after a couple of hours to avoid consuming too much disk space.
 If enabled, logs will be written to %1</source>
@@ -1849,10 +1789,6 @@ for additional privileges during the process.</source>
 потребне додатне дозволе током процеса.</translation>
     </message>
     <message>
-        <source>Downloading version %1. Please wait...</source>
-        <translation type="vanished">Преузимам верзију %1. Сачекајте...</translation>
-    </message>
-    <message>
         <source>Could not download update. Please click &lt;a href=&apos;%1&apos;&gt;here&lt;/a&gt; to download the update manually.</source>
         <translation>Не могу да преузмем ажурирање. Кликните &lt;a href=&apos;%1&apos;&gt;овде&lt;/a&gt; да бисте га преузели ручно.</translation>
     </message>
@@ -1891,10 +1827,6 @@ for additional privileges during the process.</source>
 </context>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Повежи се са %1</translation>
-    </message>
     <message>
         <source>Setup local folder options</source>
         <translation>Опције поставке локалне фасцикле</translation>
@@ -2404,14 +2336,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::PropagateLocalRemove</name>
     <message>
-        <source>Error removing &apos;%1&apos;: %2;</source>
-        <translation type="vanished">Грешка при уклањању %1: %2;</translation>
-    </message>
-    <message>
-        <source>Could not remove folder &apos;%1&apos;</source>
-        <translation type="vanished">Не могу да уклоним фасциклу „%1“</translation>
-    </message>
-    <message>
         <source>Could not remove %1 because of a local file name clash</source>
         <translation>Не могу да уклоним %1 због сударања са називом локалног фајла</translation>
     </message>
@@ -2692,29 +2616,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
 </context>
 <context>
-    <name>OCC::SettingsDialogMac</name>
-    <message>
-        <source>%1</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation type="vanished">Активност</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="vanished">Опште</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">Мрежа</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Налог</translation>
-    </message>
-</context>
-<context>
     <name>OCC::ShareDialog</name>
     <message>
         <source>TextLabel</source>
@@ -2806,10 +2707,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Cancel</source>
         <translation>Откажи</translation>
-    </message>
-    <message>
-        <source>Public sh&amp;aring requires a password</source>
-        <translation type="vanished">Јавно дељење з&amp;хтева лозинку</translation>
     </message>
     <message>
         <source>Please Set Password</source>
@@ -2984,32 +2881,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>%1 (%2)</source>
         <comment>sharee (shareWithAdditionalInfo)</comment>
         <translation>%1 (%2)</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethCredentials</name>
-    <message>
-        <source>Login Error</source>
-        <translation type="vanished">Грешка пријављивања</translation>
-    </message>
-    <message>
-        <source>You must sign in as user %1</source>
-        <translation type="vanished">Морате се пријавити као %1</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethWebView</name>
-    <message>
-        <source>%1 - Authenticate</source>
-        <translation type="vanished">%1 - аутентификација</translation>
-    </message>
-    <message>
-        <source>Reauthentication required</source>
-        <translation type="vanished">Неопходна поновна аутентификација</translation>
-    </message>
-    <message>
-        <source>Your session has expired. You need to re-login to continue to use the client.</source>
-        <translation type="vanished">Ваша сесија је истекла. Поново се пријавите да бисте наставили да користите клијента.</translation>
     </message>
 </context>
 <context>
@@ -3283,92 +3154,8 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::SyncEngine</name>
     <message>
-        <source>Success.</source>
-        <translation type="vanished">Успешно.</translation>
-    </message>
-    <message>
-        <source>A network connection timeout happened.</source>
-        <translation type="vanished">Истекло је време за повезивање.</translation>
-    </message>
-    <message>
-        <source>A HTTP transmission error happened.</source>
-        <translation type="vanished">Дошло је до грешке ХТТП преноса.</translation>
-    </message>
-    <message>
-        <source>CSync unspecified error.</source>
-        <translation type="vanished">CSync недефинисана грешка.</translation>
-    </message>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Прекинуо корисник</translation>
-    </message>
-    <message>
-        <source>The service is temporarily unavailable</source>
-        <translation type="vanished">Услуга је привремено недоступна</translation>
-    </message>
-    <message>
-        <source>Access is forbidden</source>
-        <translation type="vanished">Приступ је забрањен</translation>
-    </message>
-    <message>
-        <source>An internal error number %1 occurred.</source>
-        <translation type="vanished">Десила се интерна грешка број %1.</translation>
-    </message>
-    <message>
-        <source>Symbolic links are not supported in syncing.</source>
-        <translation type="vanished">Симболичке везе нису подржане у синхронизацији.</translation>
-    </message>
-    <message>
-        <source>File is listed on the ignore list.</source>
-        <translation type="vanished">Фајл се налази на листи за игнорисање.</translation>
-    </message>
-    <message>
-        <source>Filename is too long.</source>
-        <translation type="vanished">Назив фајла је предугачак.</translation>
-    </message>
-    <message>
-        <source>Filename encoding is not valid</source>
-        <translation type="vanished">Кодирање назива фајла није исправно</translation>
-    </message>
-    <message>
         <source>Cannot open the sync journal</source>
         <translation>Не могу да отворим дневник синхронизације</translation>
-    </message>
-    <message>
-        <source>File name contains at least one invalid character</source>
-        <translation type="vanished">Назив садржи бар један недозвољен карактер</translation>
-    </message>
-    <message>
-        <source>Ignored because of the &quot;choose what to sync&quot; blacklist</source>
-        <translation type="vanished">Игнорисано јер се не налази на листи за синхронизацију</translation>
-    </message>
-    <message>
-        <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
-        <translation type="vanished">Није могуће отпремити овај фајл јер је на серверу само за читање. Враћам</translation>
-    </message>
-    <message>
-        <source>Not allowed to remove, restoring</source>
-        <translation type="vanished">Није могуће уклањање. Враћам</translation>
-    </message>
-    <message>
-        <source>Local files and share folder removed.</source>
-        <translation type="vanished">Локални фајлови и дељена фасцикла су уклоњени.</translation>
-    </message>
-    <message>
-        <source>Move not allowed, item restored</source>
-        <translation type="vanished">Премештање није дозвољено. Ставка је враћена</translation>
-    </message>
-    <message>
-        <source>Move not allowed because %1 is read-only</source>
-        <translation type="vanished">Премештање није дозвољено јер %1 је само за читање</translation>
-    </message>
-    <message>
-        <source>the destination</source>
-        <translation type="vanished">одредиште</translation>
-    </message>
-    <message>
-        <source>the source</source>
-        <translation type="vanished">извор</translation>
     </message>
     <message>
         <source>%1 (skipped due to earlier error, trying again in %2)</source>
@@ -3700,6 +3487,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Syncing %1 of %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

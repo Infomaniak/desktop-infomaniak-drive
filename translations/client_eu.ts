@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>Ezin da  &apos;%1&apos;  &apos;%2&apos;-ra mugitu</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Errore ezezaguna: sare erantzuna ezabatua izan da</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -201,14 +201,6 @@
         <translation>Desmarkatutako karpetak zure bertako fitxategi sistematik &lt;b&gt;ezabatuko&lt;/b&gt; dira eta ez dira gehiago ordenagailu honekin sinkronizatuko</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Sinkronizatu dena</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Ez sinkronizatu ezer</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Aplikatu eskuzko aldaketak</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>Ezeztatu</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">&lt;user&gt; bezala &lt;server&gt;-n konektatuta</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Ez da konturik konfiguratu.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Gehitu berria</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Ezabatu</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Kontua</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -287,14 +267,6 @@
     <message>
         <source>Connected to %1.</source>
         <translation>%1ra konektatuta.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">%1 zerbitzaria ez dago orain eskuragarri</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">%1 zerbitzaria mantenu moduan dago.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -534,6 +506,26 @@ This action will abort any currently running synchronization.</source>
         <source>The list of unsynced items has been copied to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -712,10 +704,14 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
-    <name>OCC::DiscoveryMainThread</name>
+    <name>OCC::DebugReporter</name>
     <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Erabiltzaileak bertan behera utzita</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Ezeztatu</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -766,11 +762,6 @@ This action will abort any currently running synchronization.</source>
         <source>%1 has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>%1 ezabatua izan da.</translation>
-    </message>
-    <message>
-        <source>%1 has been downloaded.</source>
-        <comment>%1 names a file.</comment>
-        <translation type="vanished">%1 deskargatu da.</translation>
     </message>
     <message>
         <source>%1 has been updated.</source>
@@ -1043,17 +1034,9 @@ If this was an accident and you decide to keep your files, they will be re-synce
         <translation>Deskargatu %1/s</translation>
     </message>
     <message>
-        <source>u2193 %1/s</source>
-        <translation type="vanished">u2193 %1/s</translation>
-    </message>
-    <message>
         <source>upload %1/s</source>
         <extracomment>Example text: &quot;upload 24Kb/s&quot; (%1 is replaced by 24Kb (translated))</extracomment>
         <translation>igo %1/s</translation>
-    </message>
-    <message>
-        <source>u2191 %1/s</source>
-        <translation type="vanished">u2191 %1/s</translation>
     </message>
     <message>
         <source>%1 %2 (%3 of %4)</source>
@@ -1252,25 +1235,6 @@ If this was an accident and you decide to keep your files, they will be re-synce
     </message>
 </context>
 <context>
-    <name>OCC::GETFileJob</name>
-    <message>
-        <source>No E-Tag received from server, check Proxy/Gateway</source>
-        <translation type="vanished">Ez da E-Tagik jaso zerbitzaritik, egiaztatu Proxy/Gateway</translation>
-    </message>
-    <message>
-        <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation type="vanished">Jarraitzeko E-Tag ezberdina jaso dugu. Hurrengoan saiatuko gara berriz.</translation>
-    </message>
-    <message>
-        <source>Server returned wrong content-range</source>
-        <translation type="vanished">Zerbitzariak eduki-hein desegokia itzuli du</translation>
-    </message>
-    <message>
-        <source>Connection Timeout</source>
-        <translation type="vanished">Konexioa denboraz kanpo</translation>
-    </message>
-</context>
-<context>
     <name>OCC::GETFileZsyncJob</name>
     <message>
         <source>Unable to parse zsync.</source>
@@ -1456,14 +1420,6 @@ Note that this selects only what pool upgrades are taken from, and that there ar
         <translation>Ezabatu</translation>
     </message>
     <message>
-        <source>Files or folders matching a pattern will not be synchronized.
-
-Items where deletion is allowed will be deleted if they prevent a directory from being removed. This is useful for meta data.</source>
-        <translation type="vanished">Eredu bat jarraitzen duten fitxategiak ez dira sinkronizatuko.
-
-Ezabatzeko baimena duten itemak ezabatuko dira hauek karpeta bat ezabatzea uzten ez badute. Hau meta datuentzat interesgarria da.</translation>
-    </message>
-    <message>
         <source>Could not open file</source>
         <translation>Ezin izan da fitxategia ireki</translation>
     </message>
@@ -1592,38 +1548,6 @@ Items where deletion is allowed will be deleted if they prevent a directory from
     <message>
         <source>Log Output</source>
         <translation>Egunkari Irteera</translation>
-    </message>
-    <message>
-        <source>&amp;Search:</source>
-        <translation type="vanished">&amp;Bilaketa:</translation>
-    </message>
-    <message>
-        <source>&amp;Find</source>
-        <translation type="vanished">&amp;Aurkitu:</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="vanished">Garbitu</translation>
-    </message>
-    <message>
-        <source>Clear the log display.</source>
-        <translation type="vanished">Garbitu egunkari bistaratzea.</translation>
-    </message>
-    <message>
-        <source>S&amp;ave</source>
-        <translation type="vanished">&amp;Gorde</translation>
-    </message>
-    <message>
-        <source>Save the log file to a file on disk for debugging.</source>
-        <translation type="vanished">Gorde egunkari fitxategia fitxategi batean arazteko.</translation>
-    </message>
-    <message>
-        <source>Save log file</source>
-        <translation type="vanished">Gorde egunkari fitxategia</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Errorea</translation>
     </message>
     <message>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
@@ -1845,10 +1769,6 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OCUpdater</name>
     <message>
-        <source>Downloading version %1. Please wait...</source>
-        <translation type="vanished">%1 Bertsioa deskargatzen. Mesedez itxoin...</translation>
-    </message>
-    <message>
         <source>Could not check for new updates.</source>
         <translation>Ezin da eguneraketarik bilatu.</translation>
     </message>
@@ -1896,10 +1816,6 @@ for additional privileges during the process.</source>
 </context>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">%1ra konektatu</translation>
-    </message>
     <message>
         <source>Setup local folder options</source>
         <translation>Konfiguratu bertako karpeten aukerak</translation>
@@ -2689,29 +2605,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
 </context>
 <context>
-    <name>OCC::SettingsDialogMac</name>
-    <message>
-        <source>%1</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation type="vanished">Jarduera</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="vanished">Orokorra</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">Sarea</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Kontua</translation>
-    </message>
-</context>
-<context>
     <name>OCC::ShareDialog</name>
     <message>
         <source>TextLabel</source>
@@ -2783,10 +2676,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>Jaitsi / Ikusi</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Deskargatu / Ikusi / Kargatu</translation>
     </message>
     <message>
         <source>Anyone with the link has access to the file/folder</source>
@@ -2981,20 +2870,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>%1 (%2)</source>
         <comment>sharee (shareWithAdditionalInfo)</comment>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethCredentials</name>
-    <message>
-        <source>Login Error</source>
-        <translation type="vanished">Errorea sartzean</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethWebView</name>
-    <message>
-        <source>Reauthentication required</source>
-        <translation type="vanished">Berautentikatzea beharrezkoa</translation>
     </message>
 </context>
 <context>
@@ -3266,60 +3141,8 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::SyncEngine</name>
     <message>
-        <source>Success.</source>
-        <translation type="vanished">Arrakasta.</translation>
-    </message>
-    <message>
-        <source>A HTTP transmission error happened.</source>
-        <translation type="vanished">HTTP transmisio errore bat gertatu da.</translation>
-    </message>
-    <message>
-        <source>An error occurred while opening a folder</source>
-        <translation type="vanished">Errore bat egon da karpeta bat irekitzearkoan</translation>
-    </message>
-    <message>
-        <source>CSync unspecified error.</source>
-        <translation type="vanished">CSyncen zehaztugabeko errorea.</translation>
-    </message>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Erabiltzaileak bertan behera utzita</translation>
-    </message>
-    <message>
-        <source>Symbolic links are not supported in syncing.</source>
-        <translation type="vanished">Esteka sinbolikoak ezin dira sinkronizatu.</translation>
-    </message>
-    <message>
-        <source>File is listed on the ignore list.</source>
-        <translation type="vanished">Fitxategia baztertutakoen zerrendan dago.</translation>
-    </message>
-    <message>
         <source>Cannot open the sync journal</source>
         <translation>Ezin da sinkronizazio egunerokoa ireki</translation>
-    </message>
-    <message>
-        <source>File name contains at least one invalid character</source>
-        <translation type="vanished">Fitxategi izenak behintzat baliogabeko karaktere bat du</translation>
-    </message>
-    <message>
-        <source>Not allowed to remove, restoring</source>
-        <translation type="vanished">Ezabatzeko baimenik gabe, berrezartzen</translation>
-    </message>
-    <message>
-        <source>Move not allowed, item restored</source>
-        <translation type="vanished">Mugitzea ez dago baimenduta, elementua berrezarri da</translation>
-    </message>
-    <message>
-        <source>Move not allowed because %1 is read-only</source>
-        <translation type="vanished">Mugitzea ez dago baimenduta %1 irakurtzeko bakarrik delako</translation>
-    </message>
-    <message>
-        <source>the destination</source>
-        <translation type="vanished">helburua</translation>
-    </message>
-    <message>
-        <source>the source</source>
-        <translation type="vanished">jatorria</translation>
     </message>
     <message>
         <source>%1 (skipped due to earlier error, trying again in %2)</source>
@@ -3651,6 +3474,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Syncing %1 of %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -41,6 +41,7 @@
 #include "version.h"
 #include "csync_exclude.h"
 #include "common/vfs.h"
+#include "libcommon/commonutility.h"
 
 #include "config.h"
 
@@ -78,27 +79,6 @@ namespace {
         "  --logflush           : flush the log file after every write.\n"
         "  --logdebug           : also output debug-level messages in the log.\n"
         "  --confdir <dirname>  : Use the given configuration folder.\n";
-
-    QString applicationTrPath()
-    {
-#if defined(Q_OS_MAC)
-        QString devTrPath = qApp->applicationDirPath() + QString::fromLatin1("/../../../../src/gui/");
-#else
-        QString devTrPath = qApp->applicationDirPath() + QString::fromLatin1("/../src/gui/");
-#endif
-        if (QDir(devTrPath).exists()) {
-            // might miss Qt, QtKeyChain, etc.
-            qCWarning(lcApplication) << "Running from build location! Translations may be incomplete!";
-            return devTrPath;
-        }
-#if defined(Q_OS_WIN)
-        return QApplication::applicationDirPath() + QLatin1String("/i18n/");
-#elif defined(Q_OS_MAC)
-        return QApplication::applicationDirPath() + QLatin1String("/../Resources/Translations"); // path defaults to app dir.
-#elif defined(Q_OS_UNIX)
-        return QApplication::applicationDirPath() + QString::fromLatin1("/../.." SHAREDIR "/" APPLICATION_EXECUTABLE "/i18n/");
-#endif
-    }
 }
 
 // ----------------------------------------------------------------------------------
@@ -192,6 +172,7 @@ Application::Application(int &argc, char **argv)
     setOrganizationDomain(QLatin1String(APPLICATION_REV_DOMAIN));
     setApplicationName(_theme->appName());
     setWindowIcon(_theme->applicationIcon());
+    setApplicationVersion(_theme->version());
     setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 
     if (!ConfigFile().exists()) {
@@ -243,13 +224,14 @@ Application::Application(int &argc, char **argv)
     if (isRunning())
         return;
 
+    setupLogging();
+
 #if defined(WITH_CRASHREPORTER)
     if (ConfigFile().crashReporter())
         _crashHandler.reset(new CrashReporter::Handler(QDir::tempPath(), true, CRASHREPORTER_EXECUTABLE));
 #endif
 
-    setupLogging();
-    setupTranslations();
+    CommonUtility::setupTranslations(this, Theme::instance()->enforcedLocale());
 
     if (!configVersionMigration()) {
         return;
@@ -658,80 +640,6 @@ void Application::setHelp()
     _helpOnly = true;
 }
 
-QString substLang(const QString &lang)
-{
-    // Map the more appropriate script codes
-    // to country codes as used by Qt and
-    // transifex translation conventions.
-
-    // Simplified Chinese
-    if (lang == QLatin1String("zh_Hans"))
-        return QLatin1String("zh_CN");
-    // Traditional Chinese
-    if (lang == QLatin1String("zh_Hant"))
-        return QLatin1String("zh_TW");
-    return lang;
-}
-
-void Application::setupTranslations()
-{
-    QStringList uiLanguages;
-// uiLanguages crashes on Windows with 4.8.0 release builds
-#if (QT_VERSION >= 0x040801) || (QT_VERSION >= 0x040800 && !defined(Q_OS_WIN))
-    uiLanguages = QLocale::system().uiLanguages();
-#else
-    // older versions need to fall back to the systems locale
-    uiLanguages << QLocale::system().name();
-#endif
-
-    QString enforcedLocale = Theme::instance()->enforcedLocale();
-    if (!enforcedLocale.isEmpty())
-        uiLanguages.prepend(enforcedLocale);
-
-    QTranslator *translator = new QTranslator(this);
-    QTranslator *qtTranslator = new QTranslator(this);
-    QTranslator *qtkeychainTranslator = new QTranslator(this);
-
-    foreach (QString lang, uiLanguages) {
-        lang.replace(QLatin1Char('-'), QLatin1Char('_')); // work around QTBUG-25973
-        lang = substLang(lang);
-        const QString trPath = applicationTrPath();
-        const QString trFile = QLatin1String("client_") + lang;
-        if (translator->load(trFile, trPath) || lang.startsWith(QLatin1String("en"))) {
-            // Permissive approach: Qt and keychain translations
-            // may be missing, but Qt translations must be there in order
-            // for us to accept the language. Otherwise, we try with the next.
-            // "en" is an exception as it is the default language and may not
-            // have a translation file provided.
-            qCInfo(lcApplication) << "Using" << lang << "translation";
-            setProperty("ui_lang", lang);
-            const QString qtTrPath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-            const QString qtTrFile = QLatin1String("qt_") + lang;
-            const QString qtBaseTrFile = QLatin1String("qtbase_") + lang;
-            if (!qtTranslator->load(qtTrFile, qtTrPath)) {
-                if (!qtTranslator->load(qtTrFile, trPath)) {
-                    if (!qtTranslator->load(qtBaseTrFile, qtTrPath)) {
-                        qtTranslator->load(qtBaseTrFile, trPath);
-                    }
-                }
-            }
-            const QString qtkeychainTrFile = QLatin1String("qtkeychain_") + lang;
-            if (!qtkeychainTranslator->load(qtkeychainTrFile, qtTrPath)) {
-                qtkeychainTranslator->load(qtkeychainTrFile, trPath);
-            }
-            if (!translator->isEmpty())
-                installTranslator(translator);
-            if (!qtTranslator->isEmpty())
-                installTranslator(qtTranslator);
-            if (!qtkeychainTranslator->isEmpty())
-                installTranslator(qtkeychainTranslator);
-            break;
-        }
-        if (property("ui_lang").isNull())
-            setProperty("ui_lang", "C");
-    }
-}
-
 bool Application::giveHelp()
 {
     return _helpOnly;
@@ -798,7 +706,7 @@ bool Application::event(QEvent *event)
         QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
         qCDebug(lcApplication) << "QFileOpenEvent" << openEvent->file();
         // virtual file, open it after the Folder were created (if the app is not terminated)
-        QString fn = openEvent->file();
+        QString fn = openEvent->file().normalized(QString::NormalizationForm_C);
         QTimer::singleShot(0, this, [this, fn] { openVirtualFile(fn); });
     }
 #endif

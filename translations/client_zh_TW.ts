@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -197,14 +201,6 @@
         <translation>未標示的資料夾將會從這台電腦被 &lt;b&gt;刪除&lt;/b&gt; 而且不會再被同步到這台電腦 </translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">全部同步</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">全部不同步</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>套用手動改變</translation>
     </message>
@@ -217,24 +213,12 @@
         <translation>取消</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">以 &lt;user&gt; 的身分連接 &lt;server&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>沒有設置帳號。</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">新增</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>移除</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">帳號</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -281,20 +265,8 @@
         <translation>%1 正在使用</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 如 &lt;i&gt;%2&lt;i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>已連線到 %1</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">伺服器 ％1 暫時無法使用。</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">伺服器 %1 現正處於維護模式</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -534,6 +506,26 @@ This action will abort any currently running synchronization.</source>
         <source>Copied to clipboard</source>
         <translation>複製至剪貼簿中</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -564,26 +556,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>&lt;br/&gt;Account %1 does not have activities enabled.</source>
         <translation>&lt;br/&gt; 帳號 %1 尚未啟用紀錄行為功能</translation>
-    </message>
-    <message numerus="yes">
-        <source>You received %n new notification(s) from %2.</source>
-        <translation type="vanished">
-            <numerusform>您收到 %n 新的通知從 %2</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>You received %n new notification(s) from %1 and %2.</source>
-        <translation type="vanished">
-            <numerusform>您收到 %n 新的通知從 %1 跟 %2</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>You received new notifications from %1, %2 and other accounts.</source>
-        <translation type="vanished">您收到 %n 新的通知從 %1, %2 跟其他帳戶</translation>
-    </message>
-    <message>
-        <source>%1 Notifications - Action Required</source>
-        <translation type="vanished">%1 通知 - 需要動作</translation>
     </message>
     <message numerus="yes">
         <source>You received %n new request(s) from %1.</source>
@@ -730,10 +702,14 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
-    <name>OCC::DiscoveryMainThread</name>
+    <name>OCC::DebugReporter</name>
     <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">使用者中斷</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">取消</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -786,11 +762,6 @@ This action will abort any currently running synchronization.</source>
         <translation>%1 已被移除。</translation>
     </message>
     <message>
-        <source>%1 has been downloaded.</source>
-        <comment>%1 names a file.</comment>
-        <translation type="vanished">%1 已被下載。</translation>
-    </message>
-    <message>
         <source>%1 has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>%1 已被更新。</translation>
@@ -808,12 +779,6 @@ This action will abort any currently running synchronization.</source>
         <source>%1 and %n other file(s) have been removed.</source>
         <translation>
             <numerusform>%1 跟 %n 其他檔案已經被刪除</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%1 and %n other file(s) have been downloaded.</source>
-        <translation type="vanished">
-            <numerusform>%1 跟 %n 其他檔案已經被下載</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -1083,17 +1048,9 @@ If this was an accident and you decide to keep your files, they will be re-synce
         <translation>下載 %1/s</translation>
     </message>
     <message>
-        <source>u2193 %1/s</source>
-        <translation type="vanished">u2193 %1/s</translation>
-    </message>
-    <message>
         <source>upload %1/s</source>
         <extracomment>Example text: &quot;upload 24Kb/s&quot; (%1 is replaced by 24Kb (translated))</extracomment>
         <translation>上傳 %1/s</translation>
-    </message>
-    <message>
-        <source>u2191 %1/s</source>
-        <translation type="vanished">u2191 %1/s</translation>
     </message>
     <message>
         <source>%1 %2 (%3 of %4)</source>
@@ -1265,25 +1222,6 @@ If this was an accident and you decide to keep your files, they will be re-synce
     <message>
         <source>&lt;b&gt;Warning:&lt;/b&gt;</source>
         <translation>&lt;b&gt;警告:&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::GETFileJob</name>
-    <message>
-        <source>No E-Tag received from server, check Proxy/Gateway</source>
-        <translation type="vanished">沒有收到來自伺服器的 E-Tag，請檢查代理伺服器或網路閘道</translation>
-    </message>
-    <message>
-        <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation type="vanished">在復原時收到了不同的 E-Tag，將在下一次重新嘗試取得</translation>
-    </message>
-    <message>
-        <source>Server returned wrong content-range</source>
-        <translation type="vanished">伺服器回應錯誤的內容長度</translation>
-    </message>
-    <message>
-        <source>Connection Timeout</source>
-        <translation type="vanished">連線逾時</translation>
     </message>
 </context>
 <context>
@@ -1484,14 +1422,6 @@ Note that this selects only what pool upgrades are taken from, and that there ar
         <translation>移除</translation>
     </message>
     <message>
-        <source>Files or folders matching a pattern will not be synchronized.
-
-Items where deletion is allowed will be deleted if they prevent a directory from being removed. This is useful for meta data.</source>
-        <translation type="vanished">檔案或是資料夾符合模式的話將不會被同步。
-
-當資料夾被移除時，會根據清單裡的允許刪除選項來避免那些檔案會被移除。而這對元資料是有用的。</translation>
-    </message>
-    <message>
         <source>Could not open file</source>
         <translation>無法開啟檔案</translation>
     </message>
@@ -1608,42 +1538,6 @@ Items where deletion is allowed will be deleted if they prevent a directory from
     <message>
         <source>Log Output</source>
         <translation>記錄輸出</translation>
-    </message>
-    <message>
-        <source>&amp;Search:</source>
-        <translation type="vanished">&amp;搜尋:</translation>
-    </message>
-    <message>
-        <source>&amp;Find</source>
-        <translation type="vanished">尋找 (&amp;F):</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="vanished">清除</translation>
-    </message>
-    <message>
-        <source>Clear the log display.</source>
-        <translation type="vanished">清除所顯示的記錄</translation>
-    </message>
-    <message>
-        <source>S&amp;ave</source>
-        <translation type="vanished">儲存 (&amp;A)</translation>
-    </message>
-    <message>
-        <source>Save the log file to a file on disk for debugging.</source>
-        <translation type="vanished">將記錄檔儲存到硬碟用於除錯</translation>
-    </message>
-    <message>
-        <source>Save log file</source>
-        <translation type="vanished">儲存記錄檔</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">錯誤</translation>
-    </message>
-    <message>
-        <source>Could not write to log file %1</source>
-        <translation type="vanished">無法寫入記錄檔 %1</translation>
     </message>
     <message>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
@@ -1875,24 +1769,12 @@ for additional privileges during the process.</source>
 要求給予權限在安裝的過程中。</translation>
     </message>
     <message>
-        <source>Downloading version %1. Please wait...</source>
-        <translation type="vanished">正在下載版本 %1，請稍候...</translation>
-    </message>
-    <message>
         <source>Could not download update. Please click &lt;a href=&apos;%1&apos;&gt;here&lt;/a&gt; to download the update manually.</source>
         <translation>無法下載更新檔，請點選連結 &lt;a href=&apos;%1&apos;&gt;按這裡&lt;/a&gt; 手動下載更新檔。</translation>
     </message>
     <message>
         <source>Could not check for new updates.</source>
         <translation>無法檢查是否有新更新檔。</translation>
-    </message>
-    <message>
-        <source>%1 version %2 available. Restart application to start the update.</source>
-        <translation type="vanished">%1 的版本 %2 已經可以安裝，請重新啟動應用程式開始安裝更新。</translation>
-    </message>
-    <message>
-        <source>New %1 version %2 available. Please use the system&apos;s update tool to install it.</source>
-        <translation type="vanished">新 %1 版本 %2 已經可以安裝了， 請使用系統的安裝工具來安裝。</translation>
     </message>
     <message>
         <source>Checking update server...</source>
@@ -1925,10 +1807,6 @@ for additional privileges during the process.</source>
 </context>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">連線到 %1</translation>
-    </message>
     <message>
         <source>Setup local folder options</source>
         <translation>設定本地資料夾選項</translation>
@@ -2438,14 +2316,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::PropagateLocalRemove</name>
     <message>
-        <source>Error removing &apos;%1&apos;: %2;</source>
-        <translation type="vanished">移除時發生錯誤 &apos;%1&apos;: %2;</translation>
-    </message>
-    <message>
-        <source>Could not remove folder &apos;%1&apos;</source>
-        <translation type="vanished">無法移除資料夾 &apos;%1&apos;</translation>
-    </message>
-    <message>
         <source>Could not remove %1 because of a local file name clash</source>
         <translation>無法刪除 %1 ，因為本地端的檔案名稱已毀損!</translation>
     </message>
@@ -2726,29 +2596,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
 </context>
 <context>
-    <name>OCC::SettingsDialogMac</name>
-    <message>
-        <source>%1</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation type="vanished">活動</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="vanished">一般</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">網路</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">帳號</translation>
-    </message>
-</context>
-<context>
     <name>OCC::ShareDialog</name>
     <message>
         <source>TextLabel</source>
@@ -2826,10 +2673,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>下載 / 檢視</translation>
     </message>
     <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">下載 / 檢視 / 上傳</translation>
-    </message>
-    <message>
         <source>P&amp;assword protect</source>
         <translation>&amp;密碼保護</translation>
     </message>
@@ -2848,10 +2691,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Cancel</source>
         <translation>取消</translation>
-    </message>
-    <message>
-        <source>Public sh&amp;aring requires a password</source>
-        <translation type="vanished">公開&amp;共享需要密碼</translation>
     </message>
     <message>
         <source>Please Set Password</source>
@@ -3022,32 +2861,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>%1 (%2)</source>
         <comment>sharee (shareWithAdditionalInfo)</comment>
         <translation>%1 (%2)</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethCredentials</name>
-    <message>
-        <source>Login Error</source>
-        <translation type="vanished">登入錯誤</translation>
-    </message>
-    <message>
-        <source>You must sign in as user %1</source>
-        <translation type="vanished">您必須以 %1 使用者登入</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethWebView</name>
-    <message>
-        <source>%1 - Authenticate</source>
-        <translation type="vanished">%1 - 驗證</translation>
-    </message>
-    <message>
-        <source>Reauthentication required</source>
-        <translation type="vanished">要求重新驗證</translation>
-    </message>
-    <message>
-        <source>Your session has expired. You need to re-login to continue to use the client.</source>
-        <translation type="vanished">您的認証已經過期了，您必須重新登入才能繼續使用。</translation>
     </message>
 </context>
 <context>
@@ -3321,129 +3134,13 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::SyncEngine</name>
     <message>
-        <source>Success.</source>
-        <translation type="vanished">成功。</translation>
-    </message>
-    <message>
-        <source>A network connection timeout happened.</source>
-        <translation type="vanished">網路連線逾時。</translation>
-    </message>
-    <message>
-        <source>A HTTP transmission error happened.</source>
-        <translation type="vanished">HTTP 傳輸錯誤。</translation>
-    </message>
-    <message>
-        <source>The mounted folder is temporarily not available on the server</source>
-        <translation type="vanished">掛載的資料夾暫時無法在伺服器上使用</translation>
-    </message>
-    <message>
-        <source>An error occurred while opening a folder</source>
-        <translation type="vanished">開啟資料夾時發生錯誤。</translation>
-    </message>
-    <message>
-        <source>Error while reading folder.</source>
-        <translation type="vanished">讀取資料夾時發生錯誤。</translation>
-    </message>
-    <message>
         <source>Only %1 are available, need at least %2 to start</source>
         <comment>Placeholders are postfixed with file sizes using Utility::octetsToString()</comment>
         <translation>目前僅有 %1 可以使用，至少需要 %2 才能開始</translation>
     </message>
     <message>
-        <source>Not allowed because you don&apos;t have permission to add parent folder</source>
-        <translation type="vanished">拒絕此操作，您沒有新增母資料夾的權限。</translation>
-    </message>
-    <message>
-        <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
-        <translation type="vanished">拒絕此操作，您沒有新增檔案在此資料夾的權限。</translation>
-    </message>
-    <message>
-        <source>CSync unspecified error.</source>
-        <translation type="vanished">CSync 未知的錯誤。</translation>
-    </message>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">使用者中斷</translation>
-    </message>
-    <message>
-        <source>The service is temporarily unavailable</source>
-        <translation type="vanished">這個服務暫時無法使用。</translation>
-    </message>
-    <message>
-        <source>Access is forbidden</source>
-        <translation type="vanished">存取被拒</translation>
-    </message>
-    <message>
-        <source>An internal error number %1 occurred.</source>
-        <translation type="vanished">發生內部錯誤，錯誤代碼 %1。</translation>
-    </message>
-    <message>
-        <source>Symbolic links are not supported in syncing.</source>
-        <translation type="vanished">同步不支援捷徑連結</translation>
-    </message>
-    <message>
-        <source>File is listed on the ignore list.</source>
-        <translation type="vanished">檔案被列在忽略清單。</translation>
-    </message>
-    <message>
-        <source>Filename is too long.</source>
-        <translation type="vanished">檔案名稱太長了。</translation>
-    </message>
-    <message>
-        <source>Stat failed.</source>
-        <translation type="vanished">狀態失敗。</translation>
-    </message>
-    <message>
-        <source>Filename encoding is not valid</source>
-        <translation type="vanished">檔案名稱編碼是無效的</translation>
-    </message>
-    <message>
-        <source>Invalid characters, please rename &quot;%1&quot;</source>
-        <translation type="vanished">無效的字元，請您重新命名 &quot;%1&quot;</translation>
-    </message>
-    <message>
         <source>Cannot open the sync journal</source>
         <translation>同步處理日誌無法開啟</translation>
-    </message>
-    <message>
-        <source>File name contains at least one invalid character</source>
-        <translation type="vanished">檔案名稱含有不合法的字元</translation>
-    </message>
-    <message>
-        <source>Ignored because of the &quot;choose what to sync&quot; blacklist</source>
-        <translation type="vanished">已忽略。根據 &quot;選擇要同步的項目&quot;的黑名單</translation>
-    </message>
-    <message>
-        <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
-        <translation type="vanished">拒絕此操作，您沒有在此新增子資料夾的權限。</translation>
-    </message>
-    <message>
-        <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
-        <translation type="vanished">拒絕上傳此檔案，此檔案在伺服器是唯讀檔，復原中</translation>
-    </message>
-    <message>
-        <source>Not allowed to remove, restoring</source>
-        <translation type="vanished">不允許刪除，復原中</translation>
-    </message>
-    <message>
-        <source>Local files and share folder removed.</source>
-        <translation type="vanished">本地端檔案和共享資料夾已被刪除。</translation>
-    </message>
-    <message>
-        <source>Move not allowed, item restored</source>
-        <translation type="vanished">不允許移動，物件復原中</translation>
-    </message>
-    <message>
-        <source>Move not allowed because %1 is read-only</source>
-        <translation type="vanished">不允許移動，因為 %1 是唯讀的</translation>
-    </message>
-    <message>
-        <source>the destination</source>
-        <translation type="vanished">目標</translation>
-    </message>
-    <message>
-        <source>the source</source>
-        <translation type="vanished">來源</translation>
     </message>
     <message>
         <source>%1 (skipped due to earlier error, trying again in %2)</source>
@@ -3770,6 +3467,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Syncing %1 of %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -197,14 +201,6 @@
         <translation>As pastas não selecionadas serão &lt;b&gt;removidas&lt;/b&gt; do seu sistema de ficheiros local e já não serão sincronizadas para este computador</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Sincronizar todos</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Sincronizar nenhum</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Aplicar alterações manuais</translation>
     </message>
@@ -217,24 +213,12 @@
         <translation>Cancelar</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Ligado ao &lt;server&gt; como &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Nenhuma conta configurada.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Adicionar nova</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Remover</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Conta</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -281,20 +265,8 @@
         <translation>%1 em utilização</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 como &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Ligado a %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">O servidor %1 está temporariamente indisponível.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">O Servidor %1 encontra-se em manutenção</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -534,6 +506,26 @@ This action will abort any currently running synchronization.</source>
         <source>Copied to clipboard</source>
         <translation>Copiado para a área de transferência</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -712,6 +704,17 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancelar</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
@@ -847,16 +850,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>Please go in the settings to select it if you wish to download it.</source>
         <translation>Por favor, vá às configurações para a selecionar se a desejar transferir.</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">Todos os ficheiros na pasta sincronizada &apos;%1&apos; foram apagados do servidor.
-Estas deleções irão ser sincronizadas para a sua pasta local de sincronização, fazendo com que os ficheiros fiquem indisponíveis, a não ser que tenha permissões para restaurar os mesmos .
-Se decidir manter os ficheiros, eles serão sincronizados novamento para o servidor se tiver permissões para tal.
-Se decidir apagar os ficheiros, eles ficaram indisponíveis para si, a não ser que seja o seu proprietário.</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1829,10 +1822,6 @@ poderá pedir por privilégios adicionais durante o processo.</translation>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Ligar a %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Configurar as opções de pasta local</translation>
     </message>
@@ -2564,10 +2553,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Loading ...</source>
         <translation>A carregar...</translation>
-    </message>
-    <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Desmarcar pastas remotas que não deseja sincronizar.</translation>
     </message>
     <message>
         <source>Name</source>
@@ -3496,6 +3481,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Checking for changes in local &apos;%1&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

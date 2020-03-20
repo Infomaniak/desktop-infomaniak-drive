@@ -33,6 +33,7 @@
 #include <winbase.h>
 #include <fcntl.h>
 #include <io.h>
+#include <wchar.h>
 #endif
 
 namespace OCC {
@@ -383,17 +384,20 @@ bool FileSystem::moveToTrash(const QString &fileName, QString *errorString)
         *errorString = QCoreApplication::translate("FileSystem", "File doesn't exist!");
         return false;
     }
-    WCHAR from[MAX_PATH];
-    memset( from, 0, sizeof( from ));
-    int l = fileinfo.absoluteFilePath().toWCharArray( from );
-    Q_ASSERT(0 <= l && l < MAX_PATH);
-    from[l] = '\0';
+
+    QString path = fileinfo.absoluteFilePath();
+    wchar_t *pFrom = new wchar_t[(path.size() + 2) * sizeof(wchar_t)];
+    memset(pFrom, 0, (path.size() + 2) * sizeof(wchar_t));
+    int l = path.toWCharArray(pFrom);
+    pFrom[l] = '\0';
+
     SHFILEOPSTRUCT fileop;
-    memset( &fileop, 0, sizeof( fileop ) );
+    memset(&fileop, 0, sizeof(fileop));
     fileop.wFunc = FO_DELETE;
-    fileop.pFrom = from;
+    fileop.pFrom = pFrom;
     fileop.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
-    int rv = SHFileOperation( &fileop );
+    int rv = SHFileOperation(&fileop);
+    delete[] pFrom;
     if(0 != rv) {
         *errorString = QCoreApplication::translate("FileSystem", "Delete canceled because move to trash failed!");
         return false;

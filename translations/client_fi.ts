@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -197,14 +201,6 @@
         <translation>Ilman valintaa olevat kansiot &lt;b&gt;poistetaan&lt;/b&gt; paikallisesta tiedostojärjestelmästä, eikä niitä synkronoida enää jatkossa tämän tietokoneen kanssa</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Synkronoi kaikki</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Älä synkronoi mitään</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Toteuta manuaalimuutokset</translation>
     </message>
@@ -217,24 +213,12 @@
         <translation>Peruuta</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Yhdistetty palvelimeen &lt;server&gt; käyttäen tunnusta &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Tiliä ei ole määritelty.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Lisää uusi</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Poista</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Tili</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -281,20 +265,8 @@
         <translation>%1 käytössä</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 käyttäjänä &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Yhteys muodostettu kohteeseen %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Palvelin %1 ei ole juuri nyt saatavilla.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Palvelin %1 on juuri nyt huoltotilassa.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -534,6 +506,26 @@ This action will abort any currently running synchronization.</source>
         <source>The list of unsynced items has been copied to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -712,10 +704,14 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
-    <name>OCC::DiscoveryMainThread</name>
+    <name>OCC::DebugReporter</name>
     <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Keskeytetty käyttäjän toimesta</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Peruuta</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -768,11 +764,6 @@ This action will abort any currently running synchronization.</source>
         <translation>%1 on poistettu.</translation>
     </message>
     <message>
-        <source>%1 has been downloaded.</source>
-        <comment>%1 names a file.</comment>
-        <translation type="vanished">%1 on ladattu.</translation>
-    </message>
-    <message>
         <source>%1 has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>%1 on päivitetty.</translation>
@@ -817,14 +808,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>Keep files</source>
         <translation>Säilytä tiedostot</translation>
-    </message>
-    <message>
-        <source>Backup detected</source>
-        <translation type="vanished">Varmuuskopio poistettu</translation>
-    </message>
-    <message>
-        <source>Normal Synchronisation</source>
-        <translation type="vanished">Normaali synkronointi</translation>
     </message>
     <message numerus="yes">
         <source>%1 and %n other file(s) have been removed.</source>
@@ -1254,13 +1237,6 @@ If this was an accident and you decide to keep your files, they will be re-synce
     </message>
 </context>
 <context>
-    <name>OCC::GETFileJob</name>
-    <message>
-        <source>Connection Timeout</source>
-        <translation type="vanished">Yhteys aikakatkaistiin</translation>
-    </message>
-</context>
-<context>
     <name>OCC::GETFileZsyncJob</name>
     <message>
         <source>Unable to parse zsync.</source>
@@ -1458,14 +1434,6 @@ Note that this selects only what pool upgrades are taken from, and that there ar
         <translation>Poista</translation>
     </message>
     <message>
-        <source>Files or folders matching a pattern will not be synchronized.
-
-Items where deletion is allowed will be deleted if they prevent a directory from being removed. This is useful for meta data.</source>
-        <translation type="vanished">Kaavaa vastaavat tiedostot ja kansiot jätetään synkronoimatta.
-
-Kohteet, joiden poisto on sallittu, poistetaan, jos ne estävät kansion poistamisen. Tämä on hyödyllistä metatietojen osalta.</translation>
-    </message>
-    <message>
         <source>Could not open file</source>
         <translation>Tiedoston avaaminen ei onnistunut</translation>
     </message>
@@ -1582,46 +1550,6 @@ Items where deletion is allowed will be deleted if they prevent a directory from
     <message>
         <source>Log Output</source>
         <translation>Loki</translation>
-    </message>
-    <message>
-        <source>&amp;Search:</source>
-        <translation type="vanished">&amp;Etsi:</translation>
-    </message>
-    <message>
-        <source>&amp;Find</source>
-        <translation type="vanished">&amp;Etsi</translation>
-    </message>
-    <message>
-        <source>&amp;Capture debug messages</source>
-        <translation type="vanished">&amp;Kaappaa vianjäljitysviestit</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="vanished">Tyhjennä</translation>
-    </message>
-    <message>
-        <source>Clear the log display.</source>
-        <translation type="vanished">Tyhjennä lokinäyttö.</translation>
-    </message>
-    <message>
-        <source>S&amp;ave</source>
-        <translation type="vanished">&amp;Tallenna</translation>
-    </message>
-    <message>
-        <source>Save the log file to a file on disk for debugging.</source>
-        <translation type="vanished">Tallenna loki tiedostoon virheenetsintää varten.</translation>
-    </message>
-    <message>
-        <source>Save log file</source>
-        <translation type="vanished">Tallenna lokitiedosto</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Virhe</translation>
-    </message>
-    <message>
-        <source>Could not write to log file %1</source>
-        <translation type="vanished">Lokitiedostoon %1 kirjoittaminen epäonnistui</translation>
     </message>
     <message>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
@@ -1852,24 +1780,12 @@ for additional privileges during the process.</source>
         <translation>Uusi %1-päivitys on valmiina asennettavaksi. Päivitysohjelma saattaa pyytää lisäoikeuksia päivityksen aikana.</translation>
     </message>
     <message>
-        <source>Downloading version %1. Please wait...</source>
-        <translation type="vanished">Ladataan versiota %1. Odota hetki...</translation>
-    </message>
-    <message>
         <source>Could not download update. Please click &lt;a href=&apos;%1&apos;&gt;here&lt;/a&gt; to download the update manually.</source>
         <translation>Päivityksen lataaminen epäonnistui. Napsauta &lt;a href=&apos;%1&apos;&gt;tästä&lt;/a&gt; ladataksesi päivityksen manuaalisesti.</translation>
     </message>
     <message>
         <source>Could not check for new updates.</source>
         <translation>Päivitysten tarkistus epäonnistui.</translation>
-    </message>
-    <message>
-        <source>%1 version %2 available. Restart application to start the update.</source>
-        <translation type="vanished">%1-versio %2 saatavilla. Käynnistä sovellus uudelleen aloittaaksesi päivityksen.</translation>
-    </message>
-    <message>
-        <source>New %1 version %2 available. Please use the system&apos;s update tool to install it.</source>
-        <translation type="vanished">Uusi %1-versio %2 on saatavilla. Käytä järjestelmän päivitystyökalua asentaaksesi sen.</translation>
     </message>
     <message>
         <source>Checking update server...</source>
@@ -1902,10 +1818,6 @@ for additional privileges during the process.</source>
 </context>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Muodosta yhteys - %1</translation>
-    </message>
     <message>
         <source>Setup local folder options</source>
         <translation>Aseta paikallisen kansion valinnat</translation>
@@ -2066,10 +1978,6 @@ Osoitteen käyttäminen ei ole suositeltavaa.</translation>
     <message>
         <source>Invalid URL</source>
         <translation>Virheellinen verkko-osoite</translation>
-    </message>
-    <message>
-        <source>The server reported the following error:</source>
-        <translation type="vanished">Palvelin ilmoitti seuraavan virheen:</translation>
     </message>
     <message>
         <source>Local sync folder %1 already exists, setting it up for sync.&lt;br/&gt;&lt;br/&gt;</source>
@@ -2419,14 +2327,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::PropagateLocalRemove</name>
     <message>
-        <source>Error removing &apos;%1&apos;: %2;</source>
-        <translation type="vanished">Virhe poistaessa &apos;%1&apos;: %2;</translation>
-    </message>
-    <message>
-        <source>Could not remove folder &apos;%1&apos;</source>
-        <translation type="vanished">Ei voitu poistaa kansiota &apos;%1&apos;</translation>
-    </message>
-    <message>
         <source>Could not remove %1 because of a local file name clash</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2707,29 +2607,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
 </context>
 <context>
-    <name>OCC::SettingsDialogMac</name>
-    <message>
-        <source>%1</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation type="vanished">Toimet</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="vanished">Yleiset</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">Verkko</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Tili</translation>
-    </message>
-</context>
-<context>
     <name>OCC::ShareDialog</name>
     <message>
         <source>TextLabel</source>
@@ -2795,14 +2672,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>Aseta &amp;salasana</translation>
     </message>
     <message>
-        <source>Enter a name to create a new public link...</source>
-        <translation type="vanished">Anna nimi luodaksesi uuden julkisen linkin...</translation>
-    </message>
-    <message>
-        <source>&amp;Create new</source>
-        <translation type="vanished">&amp;Luo uusi</translation>
-    </message>
-    <message>
         <source>Set &amp;expiration date</source>
         <translation>Aseta &amp;vanhenemispäivä</translation>
     </message>
@@ -2817,10 +2686,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>Lataa / Näytä</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Lataa / Näytä / Lähetä</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>
@@ -2869,10 +2734,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Delete link share</source>
         <translation>Poista linkkijako</translation>
-    </message>
-    <message>
-        <source>Public sh&amp;aring requires a password</source>
-        <translation type="vanished">&amp;Julkinen jakaminen vaatii salasanan</translation>
     </message>
     <message>
         <source>Please Set Password</source>
@@ -3011,32 +2872,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>%1 (%2)</source>
         <comment>sharee (shareWithAdditionalInfo)</comment>
         <translation>%1 (%2)</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethCredentials</name>
-    <message>
-        <source>Login Error</source>
-        <translation type="vanished">Kirjautumisvirhe</translation>
-    </message>
-    <message>
-        <source>You must sign in as user %1</source>
-        <translation type="vanished">Sinun tulee kirjautua käyttäjänä %1</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethWebView</name>
-    <message>
-        <source>%1 - Authenticate</source>
-        <translation type="vanished">%1 - Tunnistaudu</translation>
-    </message>
-    <message>
-        <source>Reauthentication required</source>
-        <translation type="vanished">Tunnistaudu uudelleen</translation>
-    </message>
-    <message>
-        <source>Your session has expired. You need to re-login to continue to use the client.</source>
-        <translation type="vanished">Istunto on vanhentunut. Kirjaudu uudelleen jatkaaksesi sovelluksen käyttämistä.</translation>
     </message>
 </context>
 <context>
@@ -3310,129 +3145,17 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::SyncEngine</name>
     <message>
-        <source>Success.</source>
-        <translation type="vanished">Onnistui.</translation>
-    </message>
-    <message>
-        <source>A network connection timeout happened.</source>
-        <translation type="vanished">Tapahtui verkon aikakatkaisu.</translation>
-    </message>
-    <message>
-        <source>A HTTP transmission error happened.</source>
-        <translation type="vanished">Tapahtui HTTP-välitysvirhe.</translation>
-    </message>
-    <message>
-        <source>The mounted folder is temporarily not available on the server</source>
-        <translation type="vanished">Liitetty kansio on väliaikaisesti pois käytöstä tällä palvelimella</translation>
-    </message>
-    <message>
-        <source>An error occurred while opening a folder</source>
-        <translation type="vanished">Kansiota avatessa tapahtui virhe</translation>
-    </message>
-    <message>
-        <source>Error while reading folder.</source>
-        <translation type="vanished">Kansiota lukiessa tapahtui virhe</translation>
-    </message>
-    <message>
-        <source>File/Folder is ignored because it&apos;s hidden.</source>
-        <translation type="vanished">Tiedosto/kansi ohitetaan, koska se on piilotettu.</translation>
-    </message>
-    <message>
         <source>Only %1 are available, need at least %2 to start</source>
         <comment>Placeholders are postfixed with file sizes using Utility::octetsToString()</comment>
         <translation>Vain %1 on käytettävissä, käynnistymiseen tarvitaan %2</translation>
-    </message>
-    <message>
-        <source>Not allowed because you don&apos;t have permission to add parent folder</source>
-        <translation type="vanished">Ei sallittu, koska käyttöoikeutesi eivät riitä ylätason kansion lisäämiseen</translation>
-    </message>
-    <message>
-        <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
-        <translation type="vanished">Ei sallittu, koska käyttöoikeutesi eivät riitä tiedostojen lisäämiseen kyseiseen kansioon</translation>
     </message>
     <message>
         <source>There is insufficient space available on the server for some uploads.</source>
         <translation>Palvelimella ei ole riittävästi tallennustilaa joidenkin lähetysten osalta.</translation>
     </message>
     <message>
-        <source>CSync unspecified error.</source>
-        <translation type="vanished">CSync - määrittämätön virhe.</translation>
-    </message>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Keskeytetty käyttäjän toimesta</translation>
-    </message>
-    <message>
-        <source>The service is temporarily unavailable</source>
-        <translation type="vanished">Palvelu ei ole juuri nyt käytettävissä</translation>
-    </message>
-    <message>
-        <source>Access is forbidden</source>
-        <translation type="vanished">Pääsy estetty</translation>
-    </message>
-    <message>
-        <source>An internal error number %1 occurred.</source>
-        <translation type="vanished">Sisäinen virhe, numero %1.</translation>
-    </message>
-    <message>
-        <source>Symbolic links are not supported in syncing.</source>
-        <translation type="vanished">Symboliset linkit eivät ole tuettuja synkronoinnissa.</translation>
-    </message>
-    <message>
-        <source>File is listed on the ignore list.</source>
-        <translation type="vanished">Tiedosto on ohituslistalla.</translation>
-    </message>
-    <message>
-        <source>Filename is too long.</source>
-        <translation type="vanished">Tiedoston nimi on liian pitkä.</translation>
-    </message>
-    <message>
         <source>Unresolved conflict.</source>
         <translation>Selvittämätön ristiriita.</translation>
-    </message>
-    <message>
-        <source>Stat failed.</source>
-        <translation type="vanished">Stat epäonnistui.</translation>
-    </message>
-    <message>
-        <source>Filename encoding is not valid</source>
-        <translation type="vanished">Tiedostonimen merkistökoodaus ei ole kelvollista</translation>
-    </message>
-    <message>
-        <source>Invalid characters, please rename &quot;%1&quot;</source>
-        <translation type="vanished">Virheellisiä merkkejä, anna uusi nimi kohteelle &quot;%1&quot;</translation>
-    </message>
-    <message>
-        <source>File name contains at least one invalid character</source>
-        <translation type="vanished">Tiedoston nimi sisältää ainakin yhden virheellisen merkin</translation>
-    </message>
-    <message>
-        <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
-        <translation type="vanished">Ei sallittu, koska oikeutesi eivät riitä alikansioiden lisäämiseen kyseiseen kansioon</translation>
-    </message>
-    <message>
-        <source>Not allowed to remove, restoring</source>
-        <translation type="vanished">Poistaminen ei ole sallittua, palautetaan</translation>
-    </message>
-    <message>
-        <source>Local files and share folder removed.</source>
-        <translation type="vanished">Paikalliset tiedostot ja jakokansio poistettu.</translation>
-    </message>
-    <message>
-        <source>Move not allowed, item restored</source>
-        <translation type="vanished">Siirtäminen ei ole sallittua, kohde palautettu</translation>
-    </message>
-    <message>
-        <source>Move not allowed because %1 is read-only</source>
-        <translation type="vanished">Siirto ei ole sallittu, koska %1 on &quot;vain luku&quot;-tilassa</translation>
-    </message>
-    <message>
-        <source>the destination</source>
-        <translation type="vanished">kohde</translation>
-    </message>
-    <message>
-        <source>the source</source>
-        <translation type="vanished">lähde</translation>
     </message>
     <message>
         <source>%1 (skipped due to earlier error, trying again in %2)</source>
@@ -3755,6 +3478,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Checking for changes in local &apos;%1&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

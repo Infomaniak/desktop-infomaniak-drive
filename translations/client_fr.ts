@@ -5,55 +5,59 @@
     <name>CrashReporter</name>
     <message>
         <source>Tomahawk Crash Reporter</source>
-        <translation type="unfinished"></translation>
+        <translation>Tomahawk Crash Reporter</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Abort</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <source>Send this report</source>
-        <translation type="unfinished"></translation>
+        <translation>Envoyer ce rapport</translation>
     </message>
     <message>
         <source>Don&apos;t send</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne pas envoyer</translation>
     </message>
     <message>
         <source>You can disable sending crash reports in the configuration dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous pouvez désactiver l&apos;envoi des rapports de crash dans la boîte de dialogue de configuration.</translation>
     </message>
     <message>
         <source>We cannot gather useful debug information on your system.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nous ne pouvons pas rassembler d&apos;informations de debug utiles sur votre système.</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <source>Ready to send debug information (&lt;a href=&quot;%1&quot;&gt;view backtrace&lt;/a&gt;).</source>
-        <translation type="unfinished"></translation>
+        <translation>Prêt à envoyer les informations de debug (&lt;a href=&quot;%1&quot;&gt;voir la trace&lt;/a&gt;).</translation>
     </message>
     <message>
         <source>Gathering debug information...</source>
-        <translation type="unfinished"></translation>
+        <translation>Assemblage des informations de debug...</translation>
     </message>
     <message>
         <source>Uploaded %L1 of %L2 KB.</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 of %L2 Ko téléversés.</translation>
     </message>
     <message>
         <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
-        <translation type="unfinished"></translation>
+        <translation>Envoyé! &lt;b&gt;Merci beaucoup&lt;/b&gt;. Veuillez vous référer au crash &lt;b&gt;%1&lt;/b&gt; dans les rapports de bugs.</translation>
     </message>
     <message>
         <source>Failed to send crash info.</source>
-        <translation type="unfinished"></translation>
+        <translation>Echec de l&apos;envoi des informations de crash.</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Désolé!&lt;/span&gt; %1 a rencontré un problème. Merci de nous en informer! %1 a créé un rapport d&apos;erreur afin de nous aider à améliorer la stabilité du produit. Vous pouvez maintenant envoyer ce rapport directement aux développeurs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>Impossible de déplacer &apos;%1&apos; vers &apos;%2&apos;</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Le déplacement dans la corbeille n&apos;est pas implémenté sur cette plateforme</translation>
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
@@ -198,15 +198,7 @@
     </message>
     <message>
         <source>Unchecked folders will be &lt;b&gt;removed&lt;/b&gt; from your local file system and will not be synchronized to this computer anymore</source>
-        <translation>Les dossiers non sélectionnés seront &lt;b&gt;supprimés&lt;/b&gt; de votre disque local et ne seront plus synchronisés avec cet ordinateur.</translation>
-    </message>
-    <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Tout synchroniser</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Ne rien synchroniser</translation>
+        <translation>Les dossiers non sélectionnés seront &lt;b&gt;supprimés&lt;/b&gt; de votre disque local et ne seront plus synchronisés avec cet ordinateur</translation>
     </message>
     <message>
         <source>Apply manual changes</source>
@@ -221,24 +213,12 @@
         <translation>Annuler</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Connecté au KDrive &lt;server&gt; avec le compte &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Aucun compte configuré.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Ajouter un nouveau compte</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Supprimer</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Compte</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -305,20 +285,8 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <translation>%1 utilisés</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 avec le compte &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Connecté au KDrive %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Le serveur %1 est temporairement indisponible.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Le serveur %1 est en cours de maintenance.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -330,7 +298,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>Connecting to %1...</source>
-        <translation>Connexion à %1</translation>
+        <translation>Connexion à %1...</translation>
     </message>
     <message>
         <source>No connection to %1 at %2.</source>
@@ -414,7 +382,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>No %1 connection configured.</source>
-        <translation>Aucune connexion à %1 configurée</translation>
+        <translation>Aucune connexion à %1 configurée.</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Connected with KDrive &amp;lt;server&amp;gt; as &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
@@ -542,6 +510,26 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <source>Copied to clipboard</source>
         <translation>Copié dans le presse-papier</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation>Si vous rencontrez des erreurs de synchronisation, vous pouvez transmettre des informations de débogage à notre support.</translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation>Transmettre les informations de débogage</translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation>Merci de confirmer la transmission des informations de débogage à notre support.</translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation>Transmission terminée!</translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation>Echec de la transmission!</translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -563,7 +551,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>Copy the activity list to the clipboard.</source>
-        <translation>Copier la liste d&apos;activités dans le presse-papier</translation>
+        <translation>Copier la liste d&apos;activités dans le presse-papier.</translation>
     </message>
     <message>
         <source>Action Required: Notifications</source>
@@ -608,7 +596,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>Certificate &amp; Key (pkcs12) :</source>
-        <translation>Certificat et clé (pkcs12)</translation>
+        <translation>Certificat et clé (pkcs12) :</translation>
     </message>
     <message>
         <source>Browse...</source>
@@ -643,7 +631,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>Some settings were configured in newer versions of this client and use features that are not available in this version.&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;The current configuration file was already backed up to &lt;i&gt;%2&lt;/i&gt;.</source>
-        <translation>Certains paramètres ont été configurés dans des versions plus récentes de ce logiciel client et utilisent des fonctionnalités non disponibles dans cette version.&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Le fichier de configuration actuel a été d&apos;ores et déjà sauvegardé en tant que &lt;i&gt;%2&lt;/i&gt;. </translation>
+        <translation>Certains paramètres ont été configurés dans des versions plus récentes de ce logiciel client et utilisent des fonctionnalités non disponibles dans cette version.&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Le fichier de configuration actuel a été d&apos;ores et déjà sauvegardé en tant que &lt;i&gt;%2&lt;/i&gt;.</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -717,6 +705,17 @@ Cette action stoppera toute synchronisation en cours.</translation>
     <message>
         <source>The provided credentials are not correct</source>
         <translation>Les informations d&apos;identification fournies ne sont pas correctes</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation>Envoi des informations de débogage</translation>
     </message>
 </context>
 <context>
@@ -862,7 +861,6 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <source>A folder from an external storage has been added.
 </source>
         <translation>Un nouveau dossier localisé sur un stockage externe a été ajouté.
-
 </translation>
     </message>
     <message>
@@ -888,16 +886,6 @@ This means that the synchronization client might not upload local changes immedi
 Cela veut dire que le client de synchronisation ne peut pas téléverser les changements locaux dans l&apos;immédiat et qu&apos;à la place il recherchera les changements locaux et les téléversera occasionnellement (toutes les deux heures par défaut).
 
 %1</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">Tous les fichiers contenus dans le dossier synchronisé &apos;%1&apos; ont été supprimés du serveur.
-Ces suppressions seront synchronisées sur vos dossiers locaux synchronisés, rendant ces fichiers inaccessibles, à moins que vous n&apos;ayez le droit de les restaurer.
-Si vous décidez de conserver ces fichiers, ils seront synchronisés à nouveau avec le serveur si vous en avez le droit.
-Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf si vous en êtes le/la propriétaire.</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -942,11 +930,11 @@ Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf 
     </message>
     <message>
         <source> (backup)</source>
-        <translation>(sauvegarde)</translation>
+        <translation> (sauvegarde)</translation>
     </message>
     <message>
         <source> (backup %1)</source>
-        <translation>(sauvegarde %1)</translation>
+        <translation> (sauvegarde %1)</translation>
     </message>
     <message>
         <source>Undefined State.</source>
@@ -962,7 +950,7 @@ Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf 
     </message>
     <message>
         <source>Sync is running.</source>
-        <translation>Synchronisation en cours</translation>
+        <translation>Synchronisation en cours.</translation>
     </message>
     <message>
         <source>Sync was successful, unresolved conflicts.</source>
@@ -970,7 +958,7 @@ Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf 
     </message>
     <message>
         <source>Last Sync was successful.</source>
-        <translation>Synchronisation terminée avec succès</translation>
+        <translation>Synchronisation terminée avec succès.</translation>
     </message>
     <message>
         <source>Setup Error.</source>
@@ -1139,13 +1127,13 @@ Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf 
     <message numerus="yes">
         <source>Waiting for %n other folder(s)...</source>
         <translation>
-            <numerusform>En attente de %n autre(s) dossier(s)</numerusform>
-            <numerusform>En attente de %n autre(s) dossier(s)</numerusform>
+            <numerusform>En attente de %n autre(s) dossier(s)...</numerusform>
+            <numerusform>En attente de %n autre(s) dossier(s)...</numerusform>
         </translation>
     </message>
     <message>
         <source>Preparing to sync...</source>
-        <translation>Préparation à la synchronisation</translation>
+        <translation>Préparation à la synchronisation...</translation>
     </message>
     <message>
         <source>↓ %1/s</source>
@@ -1208,7 +1196,7 @@ Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf 
     </message>
     <message>
         <source>Folder was successfully created on %1.</source>
-        <translation>Le dossier a été créé sur %1</translation>
+        <translation>Le dossier a été créé sur %1.</translation>
     </message>
     <message>
         <source>Authentication failed accessing %1</source>
@@ -1315,7 +1303,7 @@ Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf 
     </message>
     <message>
         <source>Ask for confirmation before synchronizing folders larger than</source>
-        <translation>Demander confirmation avant de synchroniser les dossiers de taille supérieure à </translation>
+        <translation>Demander confirmation avant de synchroniser les dossiers de taille supérieure à</translation>
     </message>
     <message>
         <source>MB</source>
@@ -1324,7 +1312,7 @@ Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf 
     </message>
     <message>
         <source>Ask for confirmation before synchronizing external storages</source>
-        <translation>Demander confirmation avant de synchroniser des stockages externes </translation>
+        <translation>Demander confirmation avant de synchroniser des stockages externes</translation>
     </message>
     <message>
         <source>&amp;Launch on System Startup</source>
@@ -1352,7 +1340,7 @@ Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf 
     </message>
     <message>
         <source>Edit &amp;Ignored Files</source>
-        <translation>Modifier les fichiers exclus</translation>
+        <translation>Modifier les Fichiers &amp;Exclus</translation>
     </message>
     <message>
         <source>Show sync folders in &amp;Explorer&apos;s Navigation Pane</source>
@@ -1693,7 +1681,7 @@ Veuillez noter qu’utiliser les options de journalisation en ligne de commande 
     </message>
     <message>
         <source>:</source>
-        <translation> :</translation>
+        <translation>:</translation>
     </message>
     <message>
         <source>Proxy server requires authentication</source>
@@ -1852,10 +1840,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Connexion à %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Configurez les options de dossier local</translation>
     </message>
@@ -2010,7 +1994,7 @@ Il est déconseillé de l&apos;utiliser.</translation>
     </message>
     <message>
         <source>There was an invalid response to an authenticated webdav request</source>
-        <translation>Une réponse non valide a été reçue suite à une requête WebDav authentifiée.</translation>
+        <translation>Une réponse non valide a été reçue suite à une requête WebDav authentifiée</translation>
     </message>
     <message>
         <source>Access forbidden by server. To verify that you have proper access, &lt;a href=&quot;%1&quot;&gt;click here&lt;/a&gt; to access the service with your browser.</source>
@@ -2026,7 +2010,7 @@ Il est déconseillé de l&apos;utiliser.</translation>
     </message>
     <message>
         <source>Creating local sync folder %1...</source>
-        <translation>Création du dossier local de synchronisation %1... </translation>
+        <translation>Création du dossier local de synchronisation %1...</translation>
     </message>
     <message>
         <source>ok</source>
@@ -2238,7 +2222,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Ignored because of the &quot;choose what to sync&quot; blacklist</source>
-        <translation>Ignoré en raison de la liste noire &quot;Sélectionner le contenu à synchroniser&quot;.</translation>
+        <translation>Ignoré en raison de la liste noire &quot;Sélectionner le contenu à synchroniser&quot;</translation>
     </message>
     <message>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
@@ -2300,7 +2284,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     <name>OCC::PropagateDownloadFile</name>
     <message>
         <source>File %1 can not be downloaded because of a local file name clash!</source>
-        <translation>Le fichier %1 ne peut pas être téléchargé en raison d&apos;un conflit sur le nom de fichier local. </translation>
+        <translation>Le fichier %1 ne peut pas être téléchargé en raison d&apos;un conflit sur le nom de fichier local!</translation>
     </message>
     <message>
         <source>The download would reduce free local disk space below the limit</source>
@@ -2432,7 +2416,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     <name>OCC::PropagateUploadFileCommon</name>
     <message>
         <source>File %1 cannot be uploaded because another file with the same name, differing only in case, exists</source>
-        <translation>Impossible d&apos;envoyer le fichier %1 car un autre fichier de même nom existe, différant seulement par la casse.</translation>
+        <translation>Impossible d&apos;envoyer le fichier %1 car un autre fichier de même nom existe, différant seulement par la casse</translation>
     </message>
     <message>
         <source>File Removed</source>
@@ -2440,7 +2424,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Local file changed during syncing. It will be resumed.</source>
-        <translation>Fichier local modifié pendant la synchronisation. Elle va reprendre. </translation>
+        <translation>Fichier local modifié pendant la synchronisation. Elle va reprendre.</translation>
     </message>
     <message>
         <source>Local file changed during sync.</source>
@@ -2506,7 +2490,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>The server did not acknowledge the last chunk. (No e-tag was present)</source>
-        <translation>Le serveur n&apos;a pas confirmé la réception du dernier morceau. (Aucun e-tag n&apos;était présent).</translation>
+        <translation>Le serveur n&apos;a pas confirmé la réception du dernier morceau. (Aucun e-tag n&apos;était présent)</translation>
     </message>
 </context>
 <context>
@@ -2553,7 +2537,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Copy the activity list to the clipboard.</source>
-        <translation>Copier la liste d&apos;activités dans le presse-papier</translation>
+        <translation>Copier la liste d&apos;activités dans le presse-papier.</translation>
     </message>
 </context>
 <context>
@@ -2595,10 +2579,6 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     <message>
         <source>Loading ...</source>
         <translation>Chargement…</translation>
-    </message>
-    <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Désélectionnez les sous-dossiers distants que vous ne souhaitez pas synchroniser.</translation>
     </message>
     <message>
         <source>Name</source>
@@ -2734,7 +2714,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Set &amp;password </source>
-        <translation>Enregistrer le mot de &amp;passe</translation>
+        <translation>Enregistrer le mot de &amp;passe </translation>
     </message>
     <message>
         <source>Set &amp;expiration date</source>
@@ -2751,10 +2731,6 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     <message>
         <source>Download / View</source>
         <translation>Télécharger / Voir</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Télécharger / Voir / Téléverser</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>
@@ -2953,7 +2929,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Share...</source>
-        <translation>partager</translation>
+        <translation>Partager...</translation>
     </message>
     <message>
         <source>Copy private link to clipboard</source>
@@ -3308,10 +3284,6 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
 <context>
     <name>OCC::WebFlowCredentials</name>
     <message>
-        <source>You have been logged out of %1 as user %2. Please login again.</source>
-        <translation type="vanished">Vous avez été déconnecté de %1 en tant qu&apos;utilisateur %2. Veuillez vous reconnecter.</translation>
-    </message>
-    <message>
         <source>Please login with the user: %1</source>
         <translation>Veuillez vous connecter avec l’utilisateur : %1</translation>
     </message>
@@ -3362,7 +3334,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>There are no sync folders configured.</source>
-        <translation>Aucun dossier à synchroniser n&apos;est configuré</translation>
+        <translation>Aucun dossier à synchroniser n&apos;est configuré.</translation>
     </message>
     <message>
         <source>Open in browser</source>
@@ -3382,7 +3354,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Managed Folders:</source>
-        <translation>Dossiers configurés</translation>
+        <translation>Dossiers configurés:</translation>
     </message>
     <message>
         <source>Open folder &apos;%1&apos;</source>
@@ -3406,7 +3378,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Help</source>
-        <translation>Aide...</translation>
+        <translation>Aide</translation>
     </message>
     <message>
         <source>Quit %1</source>
@@ -3462,7 +3434,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Unpause all folders</source>
-        <translation>Relancer tous les dossiers </translation>
+        <translation>Relancer tous les dossiers</translation>
     </message>
     <message>
         <source>Pause all folders</source>
@@ -3482,7 +3454,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Pause synchronization</source>
-        <translation>Mettre en pause la synchronisation </translation>
+        <translation>Mettre en pause la synchronisation</translation>
     </message>
     <message>
         <source>Log out of all accounts</source>
@@ -3540,6 +3512,10 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>Le serveur sur le compte %1 exécute une version non prise en charge %2. L’utilisation de ce client avec des versions du serveur non prises en charge n’a pas été testée et peut être dangereuse. Vous poursuivez à vos propres risques.</translation>
     </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation>Voir les erreurs de synchronisation</translation>
+    </message>
 </context>
 <context>
     <name>OwncloudAdvancedSetupPage</name>
@@ -3565,7 +3541,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Ask for confirmation before synchroni&amp;zing folders larger than</source>
-        <translation>Demander confirmation avant de synchroniser les dossiers de taille supérieure à </translation>
+        <translation>Demander confirmation avant de &amp;synchroniser les dossiers de taille supérieure à</translation>
     </message>
     <message>
         <source>MB</source>
@@ -3574,7 +3550,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Ask for confirmation before synchronizing e&amp;xternal storages</source>
-        <translation>Demander confirmation avant de synchroniser des stockages externes </translation>
+        <translation>Demander confirmation avant de synchroniser des stockages e&amp;xternes</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -3655,7 +3631,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Ser&amp;ver Address</source>
-        <translation>Adresse du serveur</translation>
+        <translation>Adresse du ser&amp;veur</translation>
     </message>
     <message>
         <source>https://...</source>
@@ -3678,7 +3654,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Your entire account is synced to the local folder </source>
-        <translation>Votre compte est intégralement synchronisé avec le dossier local</translation>
+        <translation>Votre compte est intégralement synchronisé avec le dossier local </translation>
     </message>
     <message>
         <source>PushButton</source>
@@ -3852,7 +3828,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>Server version downloaded, copied changed local file into conflict file</source>
-        <translation>La version du serveur est téléchargée, les changements locaux ont été copiés dans un fichier conflit.</translation>
+        <translation>La version du serveur est téléchargée, les changements locaux ont été copiés dans un fichier conflit</translation>
     </message>
     <message>
         <source>Deleted</source>
@@ -3970,7 +3946,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>There was an error when launching the browser to go to URL %1. Maybe no default browser is configured?</source>
-        <translation>Une erreur est survenue au lancement du navigateur pour visiter l&apos;adresse %1. Il est possible qu&apos;aucun navigateur par défaut ne soit configuré.</translation>
+        <translation>Une erreur est survenue au lancement du navigateur pour visiter l&apos;adresse %1. Il est possible qu&apos;aucun navigateur par défaut ne soit configuré?</translation>
     </message>
     <message>
         <source>Could not open email client</source>

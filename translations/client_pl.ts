@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>Nie można przenieść &apos;%1&apos; do &apos;%2&apos;</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Przenoszenie do Kosza nie jest dostępne na tej platformie</translation>
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
@@ -201,14 +201,6 @@
         <translation>Niezaznaczone katalogi zostaną &lt;b&gt;usunięte&lt;/b&gt; z lokalnego systemu plików i nie będą już więcej synchronizowane na tym komputerze.</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Synchronizuj wszystko</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Nie synchronizuj niczego</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Zastosuj ręczne zmiany</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>Anuluj</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Połączony z &lt;server&gt; jako &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Brak skonfigurowanych kont.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Dodaj nowe</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Usuń</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Konto</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -285,20 +265,8 @@
         <translation>%1 w użyciu</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 jako &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Podłączony do %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Serwer %1 jest tymczasowo niedostępny.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Serwer %1 jest obecnie w trybie konserwacji.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -538,6 +506,26 @@ This action will abort any currently running synchronization.</source>
         <source>Copied to clipboard</source>
         <translation>Skopiuj do schowka</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -718,6 +706,17 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Anuluj</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
@@ -867,16 +866,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>The file %1 was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Plik %1 został utworzony ale poprzednio został wykluczony z synchronizacji. Nie będzie zsynchronizowany.</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">Wszystkie pliki z folderu &apos;%1&apos; zostały usunięte z serwera.
-W momencie synchronizacji zostaną usunięte z lokalnego katalogu, co spowoduje ich niedostępność, chyba, że posiadasz prawo do przywracania.
-Jeśli zdecydujesz się zatrzymać pliki i posiadasz odpowiednie uprawnienia, zostaną one ponownie przesłane na serwer.
-Jeśli zdecydujesz je usunąć, nie będą więcej dostępne. </translation>
     </message>
     <message>
         <source>Remove All Files?</source>
@@ -1841,10 +1830,6 @@ o dodatkowe uprawnienia podczas procesu aktualizacji.</translation>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Podłącz do %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Ustawienia opcji lokalnych katalogów</translation>
     </message>
@@ -2578,10 +2563,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>Wczytuję ...</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Odznacz foldery zdalne, których nie chcesz synchronizować.</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Nazwa</translation>
     </message>
@@ -2720,10 +2701,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>Pobierz / Podgląd</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Pobieranie / Podgląd / Wysyłanie</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>
@@ -3512,6 +3489,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

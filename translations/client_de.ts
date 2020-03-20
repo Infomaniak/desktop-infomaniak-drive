@@ -55,6 +55,10 @@
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSystem</name>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>Konnte &apos;%1&apos; nicht nach &apos;%2&apos; verschieben</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Das Verschieben in den Papierkorb wird auf dieser Plattform nicht unterstützt</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -201,14 +201,6 @@
         <translation>Nicht markierte Ordner werden von Ihrem lokalen Dateisystem &lt;b&gt;entfernt&lt;/b&gt; und werden auch nicht mehr auf diesem Rechner synchronisiert</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Alles synchronisieren</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Nichts davon synchronisieren</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Manuelle Änderungen übernehmen</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Verbunden mit &lt;server&gt; als &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Kein Konto konfiguriert.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Neues Konto hinzufügen</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Entfernen</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Benutzerkonto</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -317,20 +297,8 @@ Diese Aktion wird gerade laufende Synchronisationen abbrechen.</translation>
         <translation>%1 wird verwendet</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 als &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Verbunden mit %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Server %1 ist derzeit nicht verfügbar.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Server %1 befindet sich im Wartungsmodus.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -542,6 +510,26 @@ Diese Aktion wird gerade laufende Synchronisationen abbrechen.</translation>
         <source>Copied to clipboard</source>
         <translation>In die Zwischenablage kopiert</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -720,6 +708,17 @@ Diese Aktion wird gerade laufende Synchronisationen abbrechen.</translation>
     </message>
 </context>
 <context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Abbrechen</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
@@ -887,16 +886,6 @@ This means that the synchronization client might not upload local changes immedi
 Dies bedeutet, dass der Synchronisationsclient lokale Änderungen möglicherweise nicht sofort hochlädt und stattdessen nur nach lokalen Änderungen sucht und sie gelegentlich hochlädt (standardmäßig alle zwei Stunden).
 
 %1</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">Alle Dateien im Synchronisationsordner &apos;%1&apos; wurden auf dem Server gelöscht.
-Diese Löschung wird in Ihren lokalen Synchronisationsordner übernommen. Dadurch sind die Dateien nicht mehr verfügbar, falls Sie keine Möglichkeit zur Wiederherstellung haben.
-Wenn Sie sich dazu entscheiden, diese Dateien zu behalten, werden diese wieder zum Server synchronisiert. Dies geschieht jedoch nur, wenn Sie die Rechte dazu haben.
-Wenn Sie sich zum Löschen der Dateien entscheiden, sind diese nicht mehr verfügbar, außer Sie sind der Eigentümer.</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1849,10 +1838,6 @@ for additional privileges during the process.</source>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Verbinden mit %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Einstellungen der Optionen für lokale Verzeichnisse </translation>
     </message>
@@ -2592,10 +2577,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>Laden…</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Entfernte Ordner abwählen, die nicht synchronisiert werden sollen.</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Name</translation>
     </message>
@@ -2750,10 +2731,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     <message>
         <source>Download / View</source>
         <translation>Herunterladen/Ansehen</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Herunterladen / Ansehen / Hochladen</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>
@@ -3529,6 +3506,10 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     <message>
         <source>Up to date</source>
         <translation>Aktuell</translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

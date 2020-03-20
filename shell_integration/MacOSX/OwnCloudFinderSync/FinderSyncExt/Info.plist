@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>SocketApiPrefix</key>
-	<string>$(OC_SOCKETAPI_TEAM_IDENTIFIER_PREFIX)$(OC_APPLICATION_REV_DOMAIN)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -11,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>$(OC_APPLICATION_REV_DOMAIN).$(PRODUCT_NAME:rfc1034identifier)</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -41,5 +39,7 @@
 	<string>Copyright © 2019 Infomaniak Network SA. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SocketApiPrefix</key>
+	<string>$(OC_SOCKETAPI_TEAM_IDENTIFIER_PREFIX)$(OC_APPLICATION_REV_DOMAIN)</string>
 </dict>
 </plist>

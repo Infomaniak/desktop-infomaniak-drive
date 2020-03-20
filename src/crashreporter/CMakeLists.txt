@@ -41,13 +41,14 @@ if(NOT BUILD_LIBRARIES_ONLY)
 
     find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
-    target_include_directories(${CRASHREPORTER_EXECUTABLE} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+    target_include_directories(${CRASHREPORTER_EXECUTABLE} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/libcommon ${CMAKE_CURRENT_BINARY_DIR})
     set_target_properties(${CRASHREPORTER_EXECUTABLE} PROPERTIES AUTOMOC ON)
     set_target_properties(${CRASHREPORTER_EXECUTABLE} PROPERTIES AUTORCC ON)
     set_target_properties(${CRASHREPORTER_EXECUTABLE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY  ${BIN_OUTPUT_DIRECTORY} )
     target_link_libraries(${CRASHREPORTER_EXECUTABLE}
         crashreporter-gui
         Qt5::Core Qt5::Widgets
+        ${commonlib_NAME}
     )
 
     if(BUILD_OWNCLOUD_OSX_BUNDLE)
