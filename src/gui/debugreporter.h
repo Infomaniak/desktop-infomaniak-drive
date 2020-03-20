@@ -31,7 +31,7 @@ private:
     QMap<QByteArray, QByteArray> m_formFileNames;
 
 signals:
-    void done(bool retCode);
+    void sent(bool retCode);
 
 public slots:
     void send();

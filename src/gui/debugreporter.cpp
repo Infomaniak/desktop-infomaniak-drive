@@ -99,7 +99,7 @@ void DebugReporter::onDone()
         QString debugId = response.split("\n").at(0).split("=").at(1);
         qCDebug(lcDebugReporter) << "Debug report sent:" << debugId;
 
-        emit done(true);
+        emit sent(true);
 
         reset();
     }
