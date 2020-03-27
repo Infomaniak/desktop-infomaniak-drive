@@ -1,0 +1,163 @@
+QInputDialog QLabel
+{
+    qproperty-wordWrap:1;
+}
+
+/*************************/
+/* KDC--SynthesisPopover */
+/*************************/
+
+KDC--SynthesisPopover
+{
+    background: transparent;
+    min-width: 400px;
+    max-width: 400px;
+    min-height: 560px;
+    max-height: 560px;
+    qproperty-background_main_color: #35393D;
+}
+
+KDC--SynthesisPopover QToolButton
+{
+    background-color: transparent;
+    qproperty-iconSize: 18px;
+}
+
+KDC--SynthesisPopover QComboBox
+{
+    background-color: transparent;
+    color: white;
+    font: 18px bold;
+    font-family: "Suisse Int'l";
+    padding: 0px 20px 0px 0px;
+}
+
+KDC--SynthesisPopover QProgressBar
+{
+    background-color: #FFFFFF;
+    min-height: 5px;
+    max-height: 5px;
+    border: 0px;
+    border-radius: 2px;
+    padding: 0px;
+}
+
+KDC--SynthesisPopover QProgressBar::chunk
+{
+    background-color: #66BC5C;
+    border: 0px;
+    border-radius: 2px;
+}
+
+KDC--SynthesisPopover QLabel
+{
+    color: #B8B8B8;
+    font: 13px;
+    font-weight: medium;
+    font-family: "Suisse Int'l";
+}
+
+KDC--SynthesisPopover QTabWidget
+{
+    background-color: #1B1B1D;
+}
+
+KDC--SynthesisPopover QPushButton
+{
+    background-color: #1B1B1D;
+    color: #B8B8B8;
+    min-height: 30px;
+    max-height: 30px;
+    font: 14px;
+    font-weight: semibold;
+    font-family: "Suisse Int'l";
+    border: 0px;
+    border-radius: 15px;
+    padding-left: 13px;
+    padding-right: 13px;
+}
+
+KDC--SynthesisPopover QPushButton:checked
+{
+    background-color: #6D6D6D;
+    color: #FFFFFF;
+    min-height: 30px;
+    max-height: 30px;
+    border: 0px;
+    border-radius: 15px;
+}
+
+KDC--SynthesisPopover QListView
+{
+    background-color: #1B1B1D;
+    border: 0px;
+}
+
+KDC--SynthesisPopover QScrollBar
+{
+    background-color: #1B1B1D;
+    border: 0px;
+    width: 3px;
+    margin: 0px 0px 0px 0px;
+}
+
+KDC--SynthesisPopover QScrollBar::handle
+{
+    background-color: #666666;
+    min-height: 20px;
+}
+
+KDC--SynthesisPopover QScrollBar::add-line
+{
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+KDC--SynthesisPopover QScrollBar::sub-line
+{
+    height: 0px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+KDC--SynthesisPopover QListView::item
+{
+    background-color: #1B1B1D;
+    color: #1B1B1D;
+    border: 0px;
+    min-width: 300px;
+    max-width: 300px;
+    min-height: 50px;
+    max-height: 50px;
+}
+
+KDC--SynthesisPopover QListView::item:selected
+{
+    background-color: #35393D;
+    color: #35393D;
+    border: 0px;
+    min-width: 300px;
+    max-width: 300px;
+    min-height: 50px;
+    max-height: 50px;
+}
+
+/****************************/
+/* KDC--HalfRoundRectWidget */
+/****************************/
+
+KDC--HalfRoundRectWidget
+{
+    qproperty-bottom_corners_color: #1B1B1D;
+}
+
+/****************************/
+/* KDC--RectWidget */
+/****************************/
+
+KDC--RectWidget
+{
+    qproperty-background_color: #1B1B1D;
+}
+

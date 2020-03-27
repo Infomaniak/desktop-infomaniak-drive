@@ -118,6 +118,11 @@ set(client_SRCS
     wizard/webviewpage.cpp
     wizard/webview.cpp
     debugreporter.cpp
+    synthesispopover.cpp
+    halfroundrectwidget.cpp
+    rectwidget.cpp
+    synthesisitemdelegate.cpp
+    synchronizeditem.cpp
 )
 
 set(updater_SRCS

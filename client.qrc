@@ -22,5 +22,83 @@
         <file>resources/account.png</file>
         <file>resources/delete.png</file>
         <file>resources/bell.png</file>
+        <file>resources/SuisseIntl-Bold.otf</file>
+        <file>resources/SuisseIntl-Medium.otf</file>
+        <file>resources/SuisseIntl-SemiBold.otf</file>
+        <file>resources/icons/actions/add.svg</file>
+        <file>resources/icons/actions/arrow-left.svg</file>
+        <file>resources/icons/actions/check.svg</file>
+        <file>resources/icons/actions/chevron-down.svg</file>
+        <file>resources/icons/actions/chevron-left.svg</file>
+        <file>resources/icons/actions/chevron-right.svg</file>
+        <file>resources/icons/actions/close.svg</file>
+        <file>resources/icons/actions/delete.svg</file>
+        <file>resources/icons/actions/drive.svg</file>
+        <file>resources/icons/actions/edit.svg</file>
+        <file>resources/icons/actions/error-sync.svg</file>
+        <file>resources/icons/actions/favorite.svg</file>
+        <file>resources/icons/actions/folder-add.svg</file>
+        <file>resources/icons/actions/folder-select.svg</file>
+        <file>resources/icons/actions/folder.svg</file>
+        <file>resources/icons/actions/help.svg</file>
+        <file>resources/icons/actions/information.svg</file>
+        <file>resources/icons/actions/link.svg</file>
+        <file>resources/icons/actions/logout.svg</file>
+        <file>resources/icons/actions/menu.svg</file>
+        <file>resources/icons/actions/notification-off.svg</file>
+        <file>resources/icons/actions/notifications.svg</file>
+        <file>resources/icons/actions/parameters.svg</file>
+        <file>resources/icons/actions/pause.svg</file>
+        <file>resources/icons/actions/share.svg</file>
+        <file>resources/icons/actions/sync-circle.svg</file>
+        <file>resources/icons/actions/sync.svg</file>
+        <file>resources/icons/actions/view.svg</file>
+        <file>resources/icons/actions/warning.svg</file>
+        <file>resources/icons/actions/webview.svg</file>
+        <file>resources/icons/document types/file-application.svg</file>
+        <file>resources/icons/document types/file-audio.svg</file>
+        <file>resources/icons/document types/file-code.svg</file>
+        <file>resources/icons/document types/file-default.svg</file>
+        <file>resources/icons/document types/file-image.svg</file>
+        <file>resources/icons/document types/file-pdf.svg</file>
+        <file>resources/icons/document types/file-presentation.svg</file>
+        <file>resources/icons/document types/file-sheets.svg</file>
+        <file>resources/icons/document types/file-text.svg</file>
+        <file>resources/icons/document types/file-video.svg</file>
+        <file>resources/icons/document types/file-zip.svg</file>
+        <file>resources/icons/document types/folder-common-documents.svg</file>
+        <file>resources/icons/document types/folder-disable.svg</file>
+        <file>resources/icons/document types/folder.svg</file>
+        <file>resources/icons/statuts/error-sync.svg</file>
+        <file>resources/icons/statuts/pause.svg</file>
+        <file>resources/icons/statuts/success.svg</file>
+        <file>resources/icons/statuts/sync-slow.svg</file>
+        <file>resources/icons/statuts/sync.svg</file>
+        <file>resources/icons/statuts/warning.svg</file>
+        <file>resources/icons/theme/black/state-download.svg</file>
+        <file>resources/icons/theme/black/state-error.svg</file>
+        <file>resources/icons/theme/black/state-information.svg</file>
+        <file>resources/icons/theme/black/state-offline.svg</file>
+        <file>resources/icons/theme/black/state-ok.svg</file>
+        <file>resources/icons/theme/black/state-pause.svg</file>
+        <file>resources/icons/theme/black/state-sync.svg</file>
+        <file>resources/icons/theme/black/state-warning.svg</file>
+        <file>resources/icons/theme/colored/state-download.svg</file>
+        <file>resources/icons/theme/colored/state-error.svg</file>
+        <file>resources/icons/theme/colored/state-information.svg</file>
+        <file>resources/icons/theme/colored/state-offline.svg</file>
+        <file>resources/icons/theme/colored/state-ok.svg</file>
+        <file>resources/icons/theme/colored/state-pause.svg</file>
+        <file>resources/icons/theme/colored/state-sync.svg</file>
+        <file>resources/icons/theme/colored/state-warning.svg</file>
+        <file>resources/icons/theme/white/state-download.svg</file>
+        <file>resources/icons/theme/white/state-error.svg</file>
+        <file>resources/icons/theme/white/state-offline.svg</file>
+        <file>resources/icons/theme/white/state-ok.svg</file>
+        <file>resources/icons/theme/white/state-pause.svg</file>
+        <file>resources/icons/theme/white/state-sync.svg</file>
+        <file>resources/icons/theme/white/state-warning.svg</file>
+        <file>resources/logos/kdrive.svg</file>
+        <file>resources/stylesheet.qss</file>
     </qresource>
 </RCC>

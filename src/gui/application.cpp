@@ -57,6 +57,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <QFontDatabase>;
 
 class QSocket;
 
@@ -80,6 +81,13 @@ namespace {
         "  --logdebug           : also output debug-level messages in the log.\n"
         "  --confdir <dirname>  : Use the given configuration folder.\n";
 }
+
+static const QLatin1String styleSheetFile(":/client/resources/stylesheet.qss");
+static const QList<QLatin1String> fontFiles =
+        QList<QLatin1String>()
+        << QLatin1String(":/client/resources/SuisseIntl-Bold.otf")
+        << QLatin1String(":/client/resources/SuisseIntl-Medium.otf")
+        << QLatin1String(":/client/resources/SuisseIntl-SemiBold.otf");
 
 // ----------------------------------------------------------------------------------
 
@@ -302,8 +310,24 @@ Application::Application(int &argc, char **argv)
     FolderMan::instance()->setupFolders();
     _proxy.setupQtProxyFromConfig(); // folders have to be defined first, than we set up the Qt proxy.
 
-    // Enable word wrapping of QInputDialog (#4197)
-    setStyleSheet("QInputDialog QLabel { qproperty-wordWrap:1; }");
+    // Load fonts
+    QFontDatabase database;
+    for (QLatin1String fontFile : fontFiles) {
+        if (database.addApplicationFont(fontFile) < 0) {
+            qCInfo(lcApplication) << "Error adding font file!";
+        }
+    }
+
+    // Load style sheet
+    QFile ssFile(styleSheetFile);
+    if (ssFile.exists()) {
+        ssFile.open(QFile::ReadOnly);
+        QString StyleSheet = QLatin1String(ssFile.readAll());
+        setStyleSheet(StyleSheet);
+    }
+    else {
+        qCInfo(lcApplication) << "Style sheet file not found!" << extraPluginPath;
+    }
 
     connect(AccountManager::instance(), &AccountManager::accountAdded,
         this, &Application::slotAccountStateAdded);

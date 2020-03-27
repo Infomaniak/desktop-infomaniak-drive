@@ -3,8 +3,9 @@
 
 // Note:  This file must compile without QtGui
 #include <QDir>
-#include <QTranslator>
 #include <QLibraryInfo>
+#include <QTranslator>
+
 
 namespace OCC {
 
@@ -102,6 +103,11 @@ void CommonUtility::setupTranslations(QCoreApplication *app, const QString &enfo
         if (app->property("ui_lang").isNull())
             app->setProperty("ui_lang", "C");
     }
+}
+
+bool CommonUtility::colorThresholdCheck(int red, int green, int blue)
+{
+    return 1.0 - (0.299 * red + 0.587 * green + 0.114 * blue) / 255.0 > 0.5;
 }
 
 } // namespace OCC

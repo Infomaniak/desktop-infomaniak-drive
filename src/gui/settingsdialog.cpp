@@ -28,6 +28,7 @@
 #include "accountmanager.h"
 #include "protocolwidget.h"
 #include "owncloudsetupwizard.h"
+#include "commonutility.h"
 
 #include <QLabel>
 #include <QStandardItemModel>
@@ -398,7 +399,7 @@ QIcon SettingsDialog::createColorAwareIcon(const QIcon &icon)
     for (QSize size : icon.availableSizes()) {
         QImage img(icon.pixmap(size).toImage());
         // account for different sensitivity of the human eye to certain colors
-        if (Utility::colorThresholdCheck(bg.red(), bg.green(), bg.blue())) {
+        if (CommonUtility::colorThresholdCheck(bg.red(), bg.green(), bg.blue())) {
             img.invertPixels(QImage::InvertRgb);
         }
         newIcon.addPixmap(QPixmap::fromImage(img));

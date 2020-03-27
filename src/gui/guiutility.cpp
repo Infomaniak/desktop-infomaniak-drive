@@ -14,14 +14,16 @@
 
 #include "guiutility.h"
 
-#include <QClipboard>
 #include <QApplication>
+#include <QClipboard>
 #include <QDesktopServices>
+#include <QGraphicsColorizeEffect>
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include <QUrlQuery>
 
 #include "common/asserts.h"
+#include "libcommon/commonutility.h"
 
 using namespace OCC;
 
@@ -94,4 +96,18 @@ QString Utility::vfsPinActionText()
 QString Utility::vfsFreeSpaceActionText()
 {
     return QCoreApplication::translate("utility", "Free up local space");
+}
+
+void Utility::applyThemeColor(QWidget *widget)
+{
+    QColor bg(qApp->palette().base().color());
+    QColor color = CommonUtility::colorThresholdCheck(bg.red(), bg.green(), bg.blue()) > 0.5
+            ? QColor("#B8B8B8")
+            : Qt::black;
+
+    QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect;
+    effect->setColor(color);
+    effect->setStrength(1);
+
+    widget->setGraphicsEffect(effect);
 }
