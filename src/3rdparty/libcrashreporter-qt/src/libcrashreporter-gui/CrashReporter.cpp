@@ -274,7 +274,7 @@ CrashReporter::onDone()
     QString const response = QString::fromUtf8( data );
     qDebug() << "RESPONSE:" << response;
 
-    if ( ( m_reply->error() != QNetworkReply::NoError ) || !response.startsWith( "CrashID=" ) )
+    if ( ( m_reply->error() != QNetworkReply::NoError ) || !response.startsWith("CrashID=", Qt::CaseInsensitive) )
     {
         onFail( m_reply->error(), m_reply->errorString() );
     }

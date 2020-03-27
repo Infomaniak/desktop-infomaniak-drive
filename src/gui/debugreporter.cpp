@@ -90,7 +90,7 @@ void DebugReporter::onDone()
     QByteArray data = m_reply->readAll();
     QString const response = QString::fromUtf8(data);
 
-    if ((m_reply->error() != QNetworkReply::NoError) || !response.startsWith("DebugID="))
+    if ((m_reply->error() != QNetworkReply::NoError) || !response.startsWith("DebugID=", Qt::CaseInsensitive))
     {
         qCDebug(lcDebugReporter) << "Debug report error:" << m_reply->error() << " response:" << response;
         onFail(m_reply->error(), m_reply->errorString());
