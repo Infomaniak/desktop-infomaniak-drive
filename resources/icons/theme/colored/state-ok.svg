@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>icons/theme/colored/state-ok</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C12.418278,16 16,12.418278 16,8 C15.9948568,3.58385413 12.4161459,0.00514317487 8,0 Z" id="path-1"></path>
+    </defs>
+    <g id="icons/theme/colored/state-ok" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/icon-16px">
+            <g id="Icons/1---interface-essential/navigation-menu-vertical">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="icon" fill="#3EBF4D" xlink:href="#path-1"></use>
+                <polygon id="k" fill="#FFFFFF" mask="url(#mask-2)" points="4 12.7072 7.1616 12.7072 7.1616 10.64 8.31569515 9.5271859 9.9584 12.7072 13.4544 12.7072 10.371311 7.55855154 13.272 4.80313304 9.472 4.80313304 7.1616 7.41753304 7.1616 0 4 0"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>
