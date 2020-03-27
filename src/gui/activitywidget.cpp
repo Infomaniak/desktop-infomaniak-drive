@@ -624,6 +624,7 @@ void ActivitySettings::slotSendDebugData()
     int num = 0;
     foreach (AccountStatePtr account, accountList) {
         num++;
+        _debugReporter->setReportData(QString("Drive id %1").arg(num).toUtf8(), account->account()->driveId().toUtf8());
         _debugReporter->setReportData(QString("Drive %1").arg(num).toUtf8(), account->account()->driveName().toUtf8());
         _debugReporter->setReportData(QString("User id %1").arg(num).toUtf8(), account->account()->davUser().toUtf8());
         _debugReporter->setReportData(QString("User name %1").arg(num).toUtf8(), account->account()->davDisplayName().toUtf8());
