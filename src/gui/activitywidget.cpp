@@ -648,13 +648,15 @@ void ActivitySettings::slotSendDebugData()
         qCDebug(lcActivity) << "Empty log dir: " << temporaryFolderLogDirPath;
     }
 
-    connect(_debugReporter, &DebugReporter::done, this, &ActivitySettings::slotDebugReporterDone);
+    connect(_debugReporter, &DebugReporter::sent, this, &ActivitySettings::slotDebugReporterDone);
     _debugReporter->send();
 }
 
-void ActivitySettings::slotDebugReporterDone(bool retCode)
+void ActivitySettings::slotDebugReporterDone(bool retCode, const QString &debugId)
 {
-    QMessageBox::information(this, Theme::instance()->appNameGUI(), retCode ? tr("Transmission done!") : tr("Transmission failed!"));
+    QMessageBox::information(this, Theme::instance()->appNameGUI(), retCode
+                             ? tr("Transmission done!\nPlease refer to identifier <b>%1</b> in bug reports.").arg(debugId)
+                             : tr("Transmission failed!"));
 }
 
 void ActivitySettings::slotShowIssuesTab(const QString &folderAlias)
