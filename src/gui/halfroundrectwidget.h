@@ -10,7 +10,7 @@ class HalfRoundRectWidget : public QWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY(QColor bottom_corners_color READ bottomCornersColor WRITE setBottomCornersColor DESIGNABLE true SCRIPTABLE true)
+    Q_PROPERTY(QColor bottom_corners_color READ bottomCornersColor WRITE setBottomCornersColor)
 
 public:
     explicit HalfRoundRectWidget(QWidget *parent = nullptr);

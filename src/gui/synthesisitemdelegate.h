@@ -22,7 +22,7 @@ public:
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private:
-    QIcon getIconFromExt(const QString &ext) const;
+    QIcon getIconFromFileName(const QString &fileName) const;
 };
 
 }

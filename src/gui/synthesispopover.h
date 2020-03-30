@@ -5,7 +5,9 @@
 #include <QColor>
 #include <QEvent>
 #include <QFocusEvent>
+#include <QPushButton>
 #include <QStandardItemModel>
+#include <QToolButton>
 
 namespace KDC {
 
@@ -13,7 +15,7 @@ class SynthesisPopover : public QDialog
 {
     Q_OBJECT
 
-    Q_PROPERTY(QColor background_main_color READ backgroundMainColor WRITE setBackgroundMainColor DESIGNABLE true SCRIPTABLE true)
+    Q_PROPERTY(QColor background_main_color READ backgroundMainColor WRITE setBackgroundMainColor)
 
 public:
     explicit SynthesisPopover(QWidget *parent = nullptr);
@@ -30,6 +32,7 @@ private:
     void paintEvent(QPaintEvent *event) override;
     void showEvent(QShowEvent *event) override;
     bool event(QEvent *event) override;
+    void init();
     void populateSynchronizedList(QStandardItemModel *model);
 };
 

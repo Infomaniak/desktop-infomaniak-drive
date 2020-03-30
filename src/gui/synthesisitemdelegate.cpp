@@ -1,9 +1,14 @@
 #include "synthesisitemdelegate.h"
 #include "synchronizeditem.h"
 
+#include <iostream>
+#include <cstdlib>
+
 #include <QApplication>
 #include <QFileInfo>
 #include <QColor>
+#include <QMimeDatabase>
+#include <QMimeType>
 #include <QPainterPath>
 
 namespace KDC {
@@ -42,8 +47,7 @@ void SynthesisItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
         // Draw icon
         QFileInfo fileInfo(item.name());
-        QString fileExt = fileInfo.completeSuffix();
-        QIcon fileIcon = getIconFromExt(fileExt);
+        QIcon fileIcon = getIconFromFileName(fileInfo.fileName());
         QRectF fileIconRect = QRectF(
                     option.rect.left() + widgetMarginX + iconPositionX,
                     option.rect.top() + (option.rect.height() - iconHeight) / 2.0,
@@ -71,9 +75,60 @@ QSize SynthesisItemDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     return QSize(option.rect.width(), widgetHeight);
 }
 
-QIcon SynthesisItemDelegate::getIconFromExt(const QString &ext) const
+QIcon SynthesisItemDelegate::getIconFromFileName(const QString &fileName) const
 {
-    return QIcon(":/client/resources/folder-sync");
+    QMimeDatabase db;
+    QMimeType mime = db.mimeTypeForFile(fileName, QMimeDatabase::MatchExtension);
+    if (mime.name().startsWith("image/")) {
+        return QIcon(":/client/resources/icons/document types/file-image");
+    }
+    else if (mime.name().startsWith("audio/")) {
+        return QIcon(":/client/resources/icons/document types/file-audio");
+    }
+    else if (mime.name().startsWith("video/")) {
+        return QIcon(":/client/resources/icons/document types/file-video");
+    }
+    else if (mime.inherits("application/pdf")) {
+        return QIcon(":/client/resources/icons/document types/file-pdf");
+    }
+    else if (mime.name().startsWith("application/vnd.ms-powerpoint")
+             || mime.name().startsWith("application/vnd.openxmlformats-officedocument.presentationml")
+             || mime.inherits("application/vnd.oasis.opendocument.presentation")) {
+        return QIcon(":/client/resources/icons/document types/file-presentation");
+    }
+    else if (mime.name().startsWith("application/vnd.ms-excel")
+             || mime.name().startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")
+             || mime.inherits("application/vnd.oasis.opendocument.spreadsheet")) {
+        return QIcon(":/client/resources/icons/document types/file-sheets");
+    }
+    else if (mime.inherits("application/zip")
+             || mime.inherits("application/gzip")
+             || mime.inherits("application/tar")
+             || mime.inherits("application/rar")
+             || mime.inherits("application/x-bzip2")) {
+        return QIcon(":/client/resources/icons/document types/file-zip");
+    }
+    else if (mime.inherits("text/x-csrc")
+             || mime.inherits("text/x-c++src")
+             || mime.inherits("text/x-java")
+             || mime.inherits("text/x-objcsrc")
+             || mime.inherits("text/x-python")
+             || mime.inherits("text/asp")
+             || mime.inherits("text/html")
+             || mime.inherits("text/javascript")
+             || mime.inherits("application/x-php")
+             || mime.inherits("application/x-perl")) {
+        return QIcon(":/client/resources/icons/document types/file-code");
+    }
+    else if (mime.inherits("text/plain")
+             || mime.inherits("text/xml")) {
+       return QIcon(":/client/resources/icons/document types/file-text");
+    }
+    else if (mime.inherits("application/x-msdos-program")) {
+        return QIcon(":/client/resources/icons/document types/file-application");
+    }
+
+    return QIcon(":/client/resources/icons/document types/file-default");
 }
 
 }

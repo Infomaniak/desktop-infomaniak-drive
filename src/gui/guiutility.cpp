@@ -18,8 +18,12 @@
 #include <QClipboard>
 #include <QDesktopServices>
 #include <QGraphicsColorizeEffect>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
 #include <QLoggingCategory>
 #include <QMessageBox>
+#include <QPainter>
+#include <QPixmap>
 #include <QUrlQuery>
 
 #include "common/asserts.h"
@@ -98,16 +102,21 @@ QString Utility::vfsFreeSpaceActionText()
     return QCoreApplication::translate("utility", "Free up local space");
 }
 
-void Utility::applyThemeColor(QWidget *widget)
+QPixmap Utility::getPixmapWithColor(const QString &path, const QColor &color)
 {
-    QColor bg(qApp->palette().base().color());
-    QColor color = CommonUtility::colorThresholdCheck(bg.red(), bg.green(), bg.blue()) > 0.5
-            ? QColor("#B8B8B8")
-            : Qt::black;
-
     QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect;
     effect->setColor(color);
     effect->setStrength(1);
 
-    widget->setGraphicsEffect(effect);
+    QPixmap pixmap(path);
+    QGraphicsPixmapItem *item = new QGraphicsPixmapItem(pixmap);
+    item->setGraphicsEffect(effect);
+
+    QGraphicsScene scene;
+    scene.addItem(item);
+
+    QPainter painter(&pixmap);
+    scene.render(&painter, QRectF(), pixmap.rect());
+
+    return pixmap;
 }

@@ -123,6 +123,8 @@ set(client_SRCS
     rectwidget.cpp
     synthesisitemdelegate.cpp
     synchronizeditem.cpp
+    custompushbutton.cpp
+    customtoolbutton.cpp
 )
 
 set(updater_SRCS

@@ -15,6 +15,8 @@
 #ifndef GUIUTILITY_H
 #define GUIUTILITY_H
 
+#include <QColor>
+#include <QPixmap>
 #include <QString>
 #include <QUrl>
 #include <QWidget>
@@ -49,7 +51,7 @@ namespace Utility {
     /** Translated text for "free up local space" (and unpinning the item) */
     QString vfsFreeSpaceActionText();
 
-    void applyThemeColor(QWidget *widget);
+    QPixmap getPixmapWithColor(const QString &path, const QColor &color);
 
 } // namespace Utility
 } // namespace OCC

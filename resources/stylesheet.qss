@@ -57,42 +57,6 @@ KDC--SynthesisPopover QLabel
     font-family: "Suisse Int'l";
 }
 
-KDC--SynthesisPopover QTabWidget
-{
-    background-color: #1B1B1D;
-}
-
-KDC--SynthesisPopover QPushButton
-{
-    background-color: #1B1B1D;
-    color: #B8B8B8;
-    min-height: 30px;
-    max-height: 30px;
-    font: 14px;
-    font-weight: semibold;
-    font-family: "Suisse Int'l";
-    border: 0px;
-    border-radius: 15px;
-    padding-left: 13px;
-    padding-right: 13px;
-}
-
-KDC--SynthesisPopover QPushButton:checked
-{
-    background-color: #6D6D6D;
-    color: #FFFFFF;
-    min-height: 30px;
-    max-height: 30px;
-    border: 0px;
-    border-radius: 15px;
-}
-
-KDC--SynthesisPopover QListView
-{
-    background-color: #1B1B1D;
-    border: 0px;
-}
-
 KDC--SynthesisPopover QScrollBar
 {
     background-color: #1B1B1D;
@@ -121,6 +85,12 @@ KDC--SynthesisPopover QScrollBar::sub-line
     subcontrol-origin: margin;
 }
 
+KDC--SynthesisPopover QListView
+{
+    background-color: #1B1B1D;
+    border: 0px;
+}
+
 KDC--SynthesisPopover QListView::item
 {
     background-color: #1B1B1D;
@@ -141,6 +111,55 @@ KDC--SynthesisPopover QListView::item:selected
     max-width: 300px;
     min-height: 50px;
     max-height: 50px;
+}
+
+/*************************/
+/* KDC--CustomToolButton */
+/*************************/
+
+KDC--CustomToolButton
+{
+    background-color: transparent;
+    qproperty-iconSize: 18px;
+    qproperty-icon_color: #B8B8B8;
+}
+
+/*************************/
+/* KDC--CustomPushButton */
+/*************************/
+
+KDC--CustomPushButton
+{
+    background-color: #1B1B1D;
+    color: #B8B8B8;
+    min-height: 30px;
+    max-height: 30px;
+    font: 14px;
+    font-weight: semibold;
+    font-family: "Suisse Int'l";
+    border: 0px;
+    border-radius: 15px;
+    padding-left: 13px;
+    padding-right: 13px;
+    /* !!! qproperty syntax cannot be used in pseudo-states !!! */
+    qproperty-iconSize: 10px;
+    qproperty-icon_color: #B8B8B8;
+    qproperty-icon_color_checked: #FFFFFF;
+}
+
+KDC--CustomPushButton:checked
+{
+    background-color: #6D6D6D;
+    color: #FFFFFF;
+    min-height: 30px;
+    max-height: 30px;
+    font: 14px;
+    font-weight: semibold;
+    font-family: "Suisse Int'l";
+    border: 0px;
+    border-radius: 15px;
+    padding-left: 13px;
+    padding-right: 13px;
 }
 
 /****************************/

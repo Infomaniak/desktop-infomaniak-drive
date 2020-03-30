@@ -10,7 +10,7 @@ class RectWidget : public QWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor DESIGNABLE true SCRIPTABLE true)
+    Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
 
 public:
     explicit RectWidget(QWidget *parent = nullptr);
