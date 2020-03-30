@@ -51,7 +51,7 @@ CrashReporter::CrashReporter( const QUrl& url, const QStringList& args )
     m_ui->setupUi( this );
     m_ui->progressBar->setRange( 0, 100 );
     m_ui->progressBar->setValue( 0 );
-    m_ui->progressLabel->setPalette( Qt::gray );
+    //m_ui->progressLabel->setPalette( Qt::gray );
 
     #ifdef Q_OS_MAC
     QFont f = m_ui->bottomLabel->font();
