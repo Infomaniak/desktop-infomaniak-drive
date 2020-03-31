@@ -17,12 +17,10 @@ void RectWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
-    QRect widgetRect = rect();
-
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setPen(Qt::NoPen); // No border
-    painter.fillRect(widgetRect, backgroundColor());
+    painter.setPen(Qt::NoPen);
+    painter.fillRect(rect(), backgroundColor());
 }
 
 }

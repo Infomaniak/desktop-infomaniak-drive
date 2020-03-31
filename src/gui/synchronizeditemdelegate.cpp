@@ -1,5 +1,6 @@
-#include "synthesisitemdelegate.h"
+#include "synchronizeditemdelegate.h"
 #include "synchronizeditem.h"
+#include "synchronizeditemwidget.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -7,29 +8,29 @@
 #include <QApplication>
 #include <QFileInfo>
 #include <QColor>
-#include <QMimeDatabase>
-#include <QMimeType>
 
 namespace KDC {
 
-SynthesisItemDelegate::SynthesisItemDelegate(QObject *parent)
+SynchronizedItemDelegate::SynchronizedItemDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {
 }
 
-void SynthesisItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void SynchronizedItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QVariant data = index.data();
     if (data.canConvert<SynchronizedItem>()) {
         SynchronizedItem item = qvariant_cast<SynchronizedItem>(data);
         bool isSelected = option.state & QStyle::State_Selected;
 
+        SynchronizedItemWidget widget(item, isSelected);
+        widget.resize(option.rect.size());
+
+        // Paint widget
         painter->save();
 
-
-
-
-
+        painter->translate(option.rect.topLeft());
+        widget.render(painter);
 
         painter->restore();
     }

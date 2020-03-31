@@ -99,7 +99,8 @@
         <file>resources/icons/theme/white/state-sync.svg</file>
         <file>resources/icons/theme/white/state-warning.svg</file>
         <file>resources/logos/kdrive.svg</file>
-        <file>resources/stylesheet.qss</file>
         <file>resources/logos/kdrive-without-text.svg</file>
+        <file>resources/stylesheetblack.qss</file>
+        <file>resources/stylesheetwhite.qss</file>
     </qresource>
 </RCC>

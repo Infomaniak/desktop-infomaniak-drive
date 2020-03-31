@@ -1,0 +1,195 @@
+QInputDialog QLabel
+{
+    qproperty-wordWrap:1;
+}
+
+/*************************/
+/* KDC--SynthesisPopover */
+/*************************/
+
+KDC--SynthesisPopover
+{
+    background: transparent;
+    min-width: 400px;
+    max-width: 400px;
+    min-height: 560px;
+    max-height: 560px;
+    qproperty-background_main_color: #FFFFFF;
+}
+
+KDC--SynthesisPopover QToolButton
+{
+    background-color: transparent;
+    qproperty-iconSize: 18px;
+}
+
+KDC--SynthesisPopover QComboBox
+{
+    background-color: transparent;
+    color: #333333;
+    font: 18px bold;
+    font-family: "Suisse Int'l";
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+KDC--SynthesisPopover QProgressBar
+{
+    background-color: #E0E0E0;
+    min-height: 5px;
+    max-height: 5px;
+    border: 0px;
+    border-radius: 2px;
+    padding: 0px;
+}
+
+KDC--SynthesisPopover QProgressBar::chunk
+{
+    background-color: #66BC5C;
+    border: 0px;
+    border-radius: 2px;
+}
+
+KDC--SynthesisPopover QLabel
+{
+    color: #666666;
+    font: 13px;
+    font-weight: medium;
+    font-family: "Suisse Int'l";
+}
+
+KDC--SynthesisPopover QScrollBar
+{
+    background-color: #F9F9F9;
+    border: 0px;
+    width: 3px;
+    margin: 0px 0px 0px 0px;
+}
+
+KDC--SynthesisPopover QScrollBar::handle
+{
+    background-color: #666666;
+    min-height: 20px;
+}
+
+KDC--SynthesisPopover QScrollBar::add-line
+{
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+KDC--SynthesisPopover QScrollBar::sub-line
+{
+    height: 0px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+KDC--SynthesisPopover QListView
+{
+    background-color: #F9F9F9;
+    border: 0px;
+}
+
+KDC--SynthesisPopover QListView::item
+{
+    min-width: 300px;
+    max-width: 300px;
+    min-height: 60px;
+    max-height: 60px;
+}
+
+/*************************/
+/* KDC--CustomToolButton */
+/*************************/
+
+KDC--CustomToolButton
+{
+    background-color: transparent;
+    qproperty-iconSize: 18px;
+    qproperty-icon_color: #666666;
+}
+
+/*************************/
+/* KDC--CustomPushButton */
+/*************************/
+
+KDC--CustomPushButton
+{
+    background-color: #F9F9F9;
+    color: #666666;
+    min-height: 30px;
+    max-height: 30px;
+    font: 14px;
+    font-weight: semibold;
+    font-family: "Suisse Int'l";
+    border: 0px;
+    border-radius: 15px;
+    padding-left: 13px;
+    padding-right: 13px;
+    /* !!! qproperty syntax cannot be used in pseudo-states !!! */
+    qproperty-iconSize: 10px;
+    qproperty-icon_color: #666666;
+    qproperty-icon_color_checked: #FFFFFF;
+}
+
+KDC--CustomPushButton:checked
+{
+    background-color: #3F97F7;
+    color: #FFFFFF;
+    min-height: 30px;
+    max-height: 30px;
+    font: 14px;
+    font-weight: semibold;
+    font-family: "Suisse Int'l";
+    border: 0px;
+    border-radius: 15px;
+    padding-left: 13px;
+    padding-right: 13px;
+}
+
+/****************************/
+/* KDC--HalfRoundRectWidget */
+/****************************/
+
+KDC--HalfRoundRectWidget
+{
+    qproperty-bottom_corners_color: #F9F9F9;
+}
+
+/*********************/
+/* KDC--BottomWidget */
+/*********************/
+
+KDC--BottomWidget
+{
+    min-height: 5px;
+    max-height: 5px;
+    qproperty-background_color: #F9F9F9;
+}
+
+/*******************/
+/* KDC--RectWidget */
+/*******************/
+
+KDC--RectWidget
+{
+    qproperty-background_color: #F9F9F9;
+}
+
+/*******************************/
+/* KDC--SynchronizedItemWidget */
+/*******************************/
+
+KDC--SynchronizedItemWidget
+{
+    font: 13px;
+    font-weight: medium;
+    font-family: "Suisse Int'l";
+    qproperty-background_color: #F9F9F9;
+    qproperty-background_color_selection: #FFFFFF;
+    qproperty-file_name_color: #444444;
+    qproperty-file_date_color: #666666;
+}
+

@@ -82,7 +82,8 @@ namespace {
         "  --confdir <dirname>  : Use the given configuration folder.\n";
 }
 
-static const QLatin1String styleSheetFile(":/client/resources/stylesheet.qss");
+static const QLatin1String styleSheetWhiteFile(":/client/resources/stylesheetwhite.qss");
+static const QLatin1String styleSheetBlackFile(":/client/resources/stylesheetblack.qss");
 static const QList<QLatin1String> fontFiles =
         QList<QLatin1String>()
         << QLatin1String(":/client/resources/SuisseIntl-Bold.otf")
@@ -319,7 +320,8 @@ Application::Application(int &argc, char **argv)
     }
 
     // Load style sheet
-    QFile ssFile(styleSheetFile);
+    //QFile ssFile(styleSheetBlackFile);
+    QFile ssFile(styleSheetWhiteFile);
     if (ssFile.exists()) {
         ssFile.open(QFile::ReadOnly);
         QString StyleSheet = QLatin1String(ssFile.readAll());

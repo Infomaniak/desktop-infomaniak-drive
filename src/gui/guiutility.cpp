@@ -20,6 +20,7 @@
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
+#include <QIcon>
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include <QPainter>
@@ -116,6 +117,7 @@ QPixmap Utility::getPixmapWithColor(const QString &path, const QColor &color)
     scene.addItem(item);
 
     QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing, true);
     scene.render(&painter, QRectF(), pixmap.rect());
 
     return pixmap;

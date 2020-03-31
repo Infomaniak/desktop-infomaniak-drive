@@ -1,9 +1,10 @@
 #include "synthesispopover.h"
 #include "halfroundrectwidget.h"
 #include "rectwidget.h"
+#include "bottomwidget.h"
 #include "custompushbutton.h"
 #include "customtoolbutton.h"
-#include "synthesisitemdelegate.h"
+#include "synchronizeditemdelegate.h"
 #include "synchronizeditem.h"
 #include "guiutility.h"
 #include "theme.h"
@@ -17,6 +18,7 @@
 #include <QBoxLayout>
 #include <QBrush>
 #include <QComboBox>
+#include <QDateTime>
 #include <QGraphicsPixmapItem>
 #include <QImage>
 #include <QLabel>
@@ -36,12 +38,14 @@ static const int triangleHeight = 10;
 static const int triangleWidth  = 20;
 static const int trianglePosition = 100; // Position from side
 static const int cornerRadius = 5;
-static const int verticalMargin = 10;
-static const int largeVerticalMargin = 15;
-static const int horizontalMargin = 10;
-static const int largeHorizontalMargin = 20;
-static const int horizontalSpacing = 15;
+static const int vMargin = 10;
+static const int largeVMargin = 15;
+static const int hMargin = 10;
+static const int largeHMargin = 20;
+static const int hSpacing = 15;
 static const int logoSize = 32;
+static const int driveIconSize = 20;
+static const int statusIconSize = 24;
 
 SynthesisPopover::SynthesisPopover(QWidget *parent)
     : QDialog(parent)
@@ -109,7 +113,7 @@ void SynthesisPopover::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setBrush(backgroundMainColor());
-    painter.setPen(Qt::NoPen); // No border
+    painter.setPen(Qt::NoPen);
     painter.drawPath(painterPath);
 }
 
@@ -141,7 +145,7 @@ void SynthesisPopover::init()
 
     // Tool bar
     QHBoxLayout *hboxToolBar = new QHBoxLayout(this);
-    hboxToolBar->setContentsMargins(verticalMargin, horizontalMargin, verticalMargin, 0);
+    hboxToolBar->setContentsMargins(vMargin, hMargin, vMargin, 0);
     hboxToolBar->setSpacing(0);
     mainVBox->addLayout(hboxToolBar);
 
@@ -162,13 +166,17 @@ void SynthesisPopover::init()
     webviewButton->setIconPath(":/client/resources/icons/actions/webview");
     hboxToolBar->addWidget(webviewButton);
 
-    CustomToolButton *settingsButton = new CustomToolButton(this);
-    settingsButton->setIconPath(":/client/resources/icons/actions/parameters");
-    hboxToolBar->addWidget(settingsButton);
+    CustomToolButton *menuButton = new CustomToolButton(this);
+    menuButton->setIconPath(":/client/resources/icons/actions/menu");
+    hboxToolBar->addWidget(menuButton);
 
     // Drive selection
     QHBoxLayout *hboxDrive = new QHBoxLayout(this);
-    hboxDrive->setContentsMargins(largeVerticalMargin, horizontalMargin, largeVerticalMargin, 0);
+    hboxDrive->setContentsMargins(largeVMargin, hMargin, largeVMargin, 0);
+
+    QLabel *driveIconLabel = new QLabel(this);
+    driveIconLabel->setPixmap(QIcon(":/client/resources/icons/actions/drive").pixmap(QSize(driveIconSize, driveIconSize)));
+    hboxDrive->addWidget(driveIconLabel);
 
     QComboBox *driveComboBox = new QComboBox(this);
     driveComboBox->addItem("FSociety");
@@ -178,8 +186,8 @@ void SynthesisPopover::init()
 
     // Progress bar
     QHBoxLayout *hboxProgressBar = new QHBoxLayout(this);
-    hboxProgressBar->setContentsMargins(largeVerticalMargin, horizontalMargin, largeVerticalMargin, 0);
-    hboxProgressBar->setSpacing(horizontalSpacing);
+    hboxProgressBar->setContentsMargins(largeVMargin, hMargin, largeVMargin, 0);
+    hboxProgressBar->setSpacing(hSpacing);
 
     QProgressBar *progressBar = new QProgressBar(this);
     progressBar->setMinimum(0);
@@ -194,23 +202,24 @@ void SynthesisPopover::init()
 
     // Status bar
     HalfRoundRectWidget *statusBarWidget = new HalfRoundRectWidget(this);
-    statusBarWidget->getLayout()->setContentsMargins(verticalMargin, largeHorizontalMargin, verticalMargin, largeHorizontalMargin);
+    statusBarWidget->getLayout()->setContentsMargins(vMargin, largeHMargin, vMargin, largeHMargin);
 
-    QToolButton *statusButton = new QToolButton(statusBarWidget);
-    statusButton->setIcon(OCC::Theme::instance()->syncStateIcon(OCC::SyncResult::SyncRunning));
-    statusBarWidget->getLayout()->addWidget(statusButton);
+    QLabel *statusIconLabel = new QLabel(this);
+    statusIconLabel->setPixmap(OCC::Theme::instance()->syncStateIcon(OCC::SyncResult::SyncRunning).pixmap(QSize(statusIconSize, statusIconSize)));
+    statusBarWidget->getLayout()->addWidget(statusIconLabel);
 
-    QLabel *statusLabel = new QLabel("Synchronisation en cours (15 sur 200)\n25 minutes restantes...", statusBarWidget);
+    QLabel *statusLabel = new QLabel("Synchronisation en cours (15 sur 200)\n25 minutes restantes...", this);
     statusBarWidget->getLayout()->addWidget(statusLabel);
+    statusBarWidget->getLayout()->addStretch();
 
-    CustomToolButton *pauseButton = new CustomToolButton(statusBarWidget);
+    CustomToolButton *pauseButton = new CustomToolButton(this);
     pauseButton->setIconPath(":/client/resources/icons/actions/pause");
     statusBarWidget->getLayout()->addWidget(pauseButton);
     mainVBox->addWidget(statusBarWidget);
 
     // Buttons bar
     RectWidget *buttonsBarWidget = new RectWidget(this);
-    buttonsBarWidget->getLayout()->setContentsMargins(largeVerticalMargin, largeHorizontalMargin, largeVerticalMargin, largeHorizontalMargin);
+    buttonsBarWidget->getLayout()->setContentsMargins(largeVMargin, largeHMargin, largeVMargin, largeHMargin);
 
     CustomPushButton *synchronizedButton = new CustomPushButton(tr("Synchronisés"), buttonsBarWidget);
     synchronizedButton->setIconPath(":/client/resources/icons/actions/sync");
@@ -239,34 +248,38 @@ void SynthesisPopover::init()
     synchronizedListView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     synchronizedListView->setSpacing(0);
     synchronizedListView->setModel(synchronizedModel);
-    synchronizedListView->setItemDelegate(new SynthesisItemDelegate(stackedWidget));
+    synchronizedListView->setItemDelegate(new SynchronizedItemDelegate(stackedWidget));
     synchronizedListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    synchronizedListView->setCurrentIndex(synchronizedModel->index(0, 0));
 
     stackedWidget->addWidget(synchronizedListView);
 
     mainVBox->addWidget(stackedWidget);
     mainVBox->setStretchFactor(stackedWidget, 1);
-    mainVBox->addSpacing(cornerRadius);
+
+    // Bottom
+    BottomWidget *bottomWidget = new BottomWidget(this);
+    mainVBox->addWidget(bottomWidget);
 
     setLayout(mainVBox);
 }
 
 void SynthesisPopover::populateSynchronizedList(QStandardItemModel *model)
 {
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 10; i++) {
         QStandardItem *item1 = new QStandardItem("Picture.jpg");
-        SynchronizedItem itemData1 = SynchronizedItem(item1->text(), QDate());
+        SynchronizedItem itemData1 = SynchronizedItem(item1->text(), QDateTime::currentDateTime());
         item1->setData(QVariant::fromValue(itemData1), Qt::DisplayRole);
         model->insertRow(0, item1);
     }
 
     QStandardItem *item2 = new QStandardItem("Music.mp3");
-    SynchronizedItem itemData2 = SynchronizedItem(item2->text(), QDate());
+    SynchronizedItem itemData2 = SynchronizedItem(item2->text(), QDateTime::currentDateTime());
     item2->setData(QVariant::fromValue(itemData2), Qt::DisplayRole);
     model->insertRow(0, item2);
 
     QStandardItem *item3 = new QStandardItem("Rapport des ventes - mai 2019.pdf");
-    SynchronizedItem itemData3 = SynchronizedItem(item3->text(), QDate());
+    SynchronizedItem itemData3 = SynchronizedItem(item3->text(), QDateTime::currentDateTime());
     item3->setData(QVariant::fromValue(itemData3), Qt::DisplayRole);
     model->insertRow(0, item3);
 }

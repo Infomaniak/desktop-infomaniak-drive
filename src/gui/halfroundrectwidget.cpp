@@ -21,24 +21,22 @@ void HalfRoundRectWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
-    QRect widgetRect = rect();
-
     // Half round rectangle
-    QPointF rectangleLeftBottom(0, widgetRect.height());
-    QPointF rectangleRightBottom(widgetRect.width(), widgetRect.height());
+    QPointF rectangleLeftBottom(0, rect().height());
+    QPointF rectangleRightBottom(rect().width(), rect().height());
 
     QPainterPath painterPath1(rectangleLeftBottom);
-    painterPath1.arcTo(QRect(0, widgetRect.height() - cornerRadius, cornerRadius, cornerRadius), 180, 90);
+    painterPath1.arcTo(QRect(0, rect().height() - cornerRadius, cornerRadius, cornerRadius), 180, 90);
     painterPath1.moveTo(rectangleLeftBottom);
 
     QPainterPath painterPath2(rectangleRightBottom);
-    painterPath2.arcTo(QRect(widgetRect.width() - cornerRadius, widgetRect.height() - cornerRadius, cornerRadius, cornerRadius), 270, 90);
+    painterPath2.arcTo(QRect(rect().width() - cornerRadius, rect().height() - cornerRadius, cornerRadius, cornerRadius), 270, 90);
     painterPath2.moveTo(rectangleRightBottom);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setBrush(bottomCornersColor());
-    painter.setPen(Qt::NoPen); // No border
+    painter.setPen(Qt::NoPen);
     painter.drawPath(painterPath1);
     painter.drawPath(painterPath2);
 }

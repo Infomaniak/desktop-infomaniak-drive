@@ -2,9 +2,9 @@
 
 namespace KDC {
 
-SynchronizedItem::SynchronizedItem(const QString &name, const QDate &date)
+SynchronizedItem::SynchronizedItem(const QString &name, const QDateTime &dateTime)
     : _name(name)
-    , _date(date)
+    , _dateTime(dateTime)
 {
 }
 

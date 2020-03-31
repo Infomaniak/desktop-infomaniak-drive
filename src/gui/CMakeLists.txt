@@ -121,8 +121,10 @@ set(client_SRCS
     synthesispopover.cpp
     halfroundrectwidget.cpp
     rectwidget.cpp
-    synthesisitemdelegate.cpp
+    bottomwidget.cpp
     synchronizeditem.cpp
+    synchronizeditemdelegate.cpp
+    synchronizeditemwidget.cpp
     custompushbutton.cpp
     customtoolbutton.cpp
 )

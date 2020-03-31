@@ -6,11 +6,11 @@
 
 namespace KDC {
 
-class SynthesisItemDelegate : public QStyledItemDelegate
+class SynchronizedItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    SynthesisItemDelegate(QObject *parent = nullptr);
+    SynchronizedItemDelegate(QObject *parent = nullptr);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };

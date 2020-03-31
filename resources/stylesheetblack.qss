@@ -26,10 +26,11 @@ KDC--SynthesisPopover QToolButton
 KDC--SynthesisPopover QComboBox
 {
     background-color: transparent;
-    color: white;
+    color: #FFFFFF;
     font: 18px bold;
     font-family: "Suisse Int'l";
-    padding: 0px 20px 0px 0px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 KDC--SynthesisPopover QProgressBar
@@ -51,7 +52,7 @@ KDC--SynthesisPopover QProgressBar::chunk
 
 KDC--SynthesisPopover QLabel
 {
-    color: #B8B8B8;
+    color: #C0C0C0;
     font: 13px;
     font-weight: medium;
     font-family: "Suisse Int'l";
@@ -93,24 +94,10 @@ KDC--SynthesisPopover QListView
 
 KDC--SynthesisPopover QListView::item
 {
-    background-color: #1B1B1D;
-    color: #1B1B1D;
-    border: 0px;
     min-width: 300px;
     max-width: 300px;
-    min-height: 50px;
-    max-height: 50px;
-}
-
-KDC--SynthesisPopover QListView::item:selected
-{
-    background-color: #35393D;
-    color: #35393D;
-    border: 0px;
-    min-width: 300px;
-    max-width: 300px;
-    min-height: 50px;
-    max-height: 50px;
+    min-height: 60px;
+    max-height: 60px;
 }
 
 /*************************/
@@ -171,12 +158,38 @@ KDC--HalfRoundRectWidget
     qproperty-bottom_corners_color: #1B1B1D;
 }
 
-/****************************/
+/*********************/
+/* KDC--BottomWidget */
+/*********************/
+
+KDC--BottomWidget
+{
+    min-height: 5px;
+    max-height: 5px;
+    qproperty-background_color: #1B1B1D;
+}
+
+/*******************/
 /* KDC--RectWidget */
-/****************************/
+/*******************/
 
 KDC--RectWidget
 {
     qproperty-background_color: #1B1B1D;
+}
+
+/*******************************/
+/* KDC--SynchronizedItemWidget */
+/*******************************/
+
+KDC--SynchronizedItemWidget
+{
+    font: 13px;
+    font-weight: medium;
+    font-family: "Suisse Int'l";
+    qproperty-background_color: #1B1B1D;
+    qproperty-background_color_selection: #35393D;
+    qproperty-file_name_color: #FFFFFF;
+    qproperty-file_date_color: #C0C0C0;
 }
 

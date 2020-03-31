@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QDate>
+#include <QDateTime>
 #include <QIcon>
 #include <QString>
 
@@ -12,14 +12,14 @@ public:
     SynchronizedItem() = default;
     ~SynchronizedItem() = default;
     SynchronizedItem(const SynchronizedItem &item) = default;
-    SynchronizedItem(const QString &name, const QDate &date);
+    SynchronizedItem(const QString &name, const QDateTime &dateTime);
 
     inline QString name() const { return _name; };
-    inline QDate date() const { return _date; };
+    inline QDateTime dateTime() const { return _dateTime; };
 
 private:
     QString _name;
-    QDate _date;
+    QDateTime _dateTime;
 };
 
 }
