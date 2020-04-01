@@ -26,6 +26,8 @@ set( THEME_INCLUDE          "infomaniaktheme.h" )
 # set( THEME_INCLUDE          "${OEM_THEME_DIR}/mytheme.h" )
 set( APPLICATION_LICENSE    "${OEM_THEME_DIR}/license.txt" )
 
-option( WITH_CRASHREPORTER "Build crashreporter" OFF )
-#set( CRASHREPORTER_SUBMIT_URL "https://crash-reports.owncloud.com/submit" CACHE STRING "URL for crash reporter" )
-#set( CRASHREPORTER_ICON ":/owncloud-icon.png" )
+option( WITH_CRASHREPORTER "Build crashreporter" ON )
+set( CRASHREPORTER_SUBMIT_URL "https://www.infomaniak.com/report/drive/crash" CACHE STRING "URL for crash reporter" )
+set( CRASHREPORTER_ICON ":/infomaniak.png" )
+
+set( DEBUGREPORTER_SUBMIT_URL "https://www.infomaniak.com/report/drive/logs" CACHE STRING "URL for debug reporter" )

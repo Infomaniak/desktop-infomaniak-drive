@@ -31,4 +31,6 @@
 #cmakedefine SHAREDIR "@SHAREDIR@"
 #cmakedefine PLUGINDIR "@PLUGINDIR@"
 
+#cmakedefine DEBUGREPORTER_SUBMIT_URL "@DEBUGREPORTER_SUBMIT_URL@"
+
 #endif

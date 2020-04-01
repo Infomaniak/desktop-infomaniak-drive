@@ -48,11 +48,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Failed to send crash info.</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>Nelze přesunout &quot;%1&quot; do &quot;%2&quot;</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Přesunutí do koše zde není implementováno</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -201,14 +201,6 @@
         <translation>Neoznačené adresáře budou &lt;b&gt;odstraněny&lt;/b&gt; z místního souborového systému a nebudou již synchronizovány na tento počítač</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Synchronizovat vše</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Nic nesynchronizovat</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Použít manuální úpravy</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>Zrušit</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Připojen k &lt;server&gt; jako &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Žádný účet nenastaven.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Přidat nový</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Odebrat</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Účet</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -289,20 +269,8 @@
         <translation>%1 používaný</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 jako &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Připojeno k %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Server %1 je dočasně nedostupný.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">server %1 je v režimu údržby.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -538,6 +506,27 @@ This action will abort any currently running synchronization.</source>
         <source>Copied to clipboard</source>
         <translation>Zkopírováno do schránky</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!
+Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -718,6 +707,17 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Zrušit</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
@@ -863,15 +863,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>Please go in the settings to select it if you wish to download it.</source>
         <translation>Pokud to chcete stáhnout, běžte do nastavení a vyberte to.</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">Všechny soubory v synchronizované složce &apos;%1&apos; byly na serveru smazány.
-Tyto soubory budou smazány i ve vaší místní synchronizované složce a nebudou tedy dostupné, pokud nemáte právo obnovovat. Rozhodnete-li se soubory ponechat, budou opět synchronizovány se serverem, pokud k tomu máte práva.
-Rozhodnete-li se soubory smazat, budou vám nedostupné, nejste-li jejich vlastníkem.</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1841,10 +1832,6 @@ můžete být požádáni o dodatečná oprávnění.</translation>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Připojit k %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Možnosti nastavení místního adresáře</translation>
     </message>
@@ -2578,10 +2565,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>Načítám ...</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Zrušte výběr vzdálených složek, které nechcete synchronizovat.</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Název</translation>
     </message>
@@ -2720,10 +2703,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>Stáhnout / zobrazit</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Stáhnout / zobrazit / nahrát</translation>
     </message>
     <message>
         <source>Anyone with the link has access to the file/folder</source>
@@ -3512,6 +3491,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>No sync folders configured</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

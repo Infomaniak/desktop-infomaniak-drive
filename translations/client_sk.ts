@@ -48,11 +48,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Failed to send crash info.</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -197,14 +201,6 @@
         <translation>Neoznačené priečinky budú &lt;b&gt;odstránené&lt;/b&gt; z lokálneho systému a nebudú už synchronizované na tento počítač</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Synchronizovať všetky</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Synchronizovať žiadny</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Aplikovať manuálne zmeny</translation>
     </message>
@@ -217,24 +213,12 @@
         <translation>Zrušiť</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Spojené z &lt;server&gt; ako &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Žiadny účet nie je nastavený.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Pridať nový účet</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Odobrať</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Účet</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -277,16 +261,8 @@
         <translation>%1 sa používa</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 ako &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Pripojené k %1</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Server %1 je dočasne nedostupný.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -530,6 +506,27 @@ This action will abort any currently running synchronization.</source>
         <source>The list of unsynced items has been copied to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!
+Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -710,10 +707,14 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
-    <name>OCC::DiscoveryMainThread</name>
+    <name>OCC::DebugReporter</name>
     <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Zrušené používateľom</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Zrušiť</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -766,11 +767,6 @@ This action will abort any currently running synchronization.</source>
         <translation>%1 bol zmazaný.</translation>
     </message>
     <message>
-        <source>%1 has been downloaded.</source>
-        <comment>%1 names a file.</comment>
-        <translation type="vanished">%1 bol stiahnutý.</translation>
-    </message>
-    <message>
         <source>%1 has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>%1 bol aktualizovaný.</translation>
@@ -807,18 +803,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>Keep files</source>
         <translation>Ponechať súbory</translation>
-    </message>
-    <message>
-        <source>Backup detected</source>
-        <translation type="vanished">Záloha je dostupná</translation>
-    </message>
-    <message>
-        <source>Normal Synchronisation</source>
-        <translation type="vanished">Bežná synchronizácia</translation>
-    </message>
-    <message>
-        <source>Keep Local Files as Conflict</source>
-        <translation type="vanished">Ponechať lokálne súbory ako konfliktné</translation>
     </message>
     <message numerus="yes">
         <source>%1 and %n other file(s) have been removed.</source>
@@ -1065,17 +1049,9 @@ If this was an accident and you decide to keep your files, they will be re-synce
         <translation>stiahnuť %1/s</translation>
     </message>
     <message>
-        <source>u2193 %1/s</source>
-        <translation type="vanished">u2193 %1/s</translation>
-    </message>
-    <message>
         <source>upload %1/s</source>
         <extracomment>Example text: &quot;upload 24Kb/s&quot; (%1 is replaced by 24Kb (translated))</extracomment>
         <translation>nahrať %1/s</translation>
-    </message>
-    <message>
-        <source>u2191 %1/s</source>
-        <translation type="vanished">u2191 %1/s</translation>
     </message>
     <message>
         <source>%1 %2 (%3 of %4)</source>
@@ -1267,25 +1243,6 @@ If this was an accident and you decide to keep your files, they will be re-synce
     <message>
         <source>&lt;b&gt;Warning:&lt;/b&gt;</source>
         <translation>&lt;b&gt;Upozornenie:&lt;/b&gt; </translation>
-    </message>
-</context>
-<context>
-    <name>OCC::GETFileJob</name>
-    <message>
-        <source>No E-Tag received from server, check Proxy/Gateway</source>
-        <translation type="vanished">Zo servera nebol prijatý E-Tag, skontrolujte proxy/bránu</translation>
-    </message>
-    <message>
-        <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation type="vanished">Prijali sme iný E-Tag pre pokračovanie. Skúsim to neskôr znovu.</translation>
-    </message>
-    <message>
-        <source>Server returned wrong content-range</source>
-        <translation type="vanished">Server vrátil nesprávnu hodnotu Content-range</translation>
-    </message>
-    <message>
-        <source>Connection Timeout</source>
-        <translation type="vanished">Spojenie vypršalo</translation>
     </message>
 </context>
 <context>
@@ -1604,42 +1561,6 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <translation>Systémový záznam výstupu</translation>
     </message>
     <message>
-        <source>&amp;Search:</source>
-        <translation type="vanished">&amp;Hľadať:</translation>
-    </message>
-    <message>
-        <source>&amp;Find</source>
-        <translation type="vanished">&amp;Nájsť</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="vanished">Vyčistiť</translation>
-    </message>
-    <message>
-        <source>Clear the log display.</source>
-        <translation type="vanished">Vyčistiť zobrazenie záznamu (logu).</translation>
-    </message>
-    <message>
-        <source>S&amp;ave</source>
-        <translation type="vanished">&amp;Uložiť</translation>
-    </message>
-    <message>
-        <source>Save the log file to a file on disk for debugging.</source>
-        <translation type="vanished">Uložiť log súbor do súboru na disk pre proces debugovania.</translation>
-    </message>
-    <message>
-        <source>Save log file</source>
-        <translation type="vanished">Uložiť súbor so záznamami (log)</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Chyba</translation>
-    </message>
-    <message>
-        <source>Could not write to log file %1</source>
-        <translation type="vanished">Nemožno zapísať do záznamového súboru - logu %1</translation>
-    </message>
-    <message>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
 Since log files can get large, the client will start a new one for each sync run and compress older ones. It is also recommended to enable deleting log files after a couple of hours to avoid consuming too much disk space.
 If enabled, logs will be written to %1</source>
@@ -1869,10 +1790,6 @@ for additional privileges during the process.</source>
 môžu byť vyžadované dodatočné oprávnenia.</translation>
     </message>
     <message>
-        <source>Downloading version %1. Please wait...</source>
-        <translation type="vanished">Sťahujem verziu %1. Čakajte prosím...</translation>
-    </message>
-    <message>
         <source>Could not download update. Please click &lt;a href=&apos;%1&apos;&gt;here&lt;/a&gt; to download the update manually.</source>
         <translation>Nemôžem stiahnuť aktualizáciu. Kliknite, prosím, na &lt;a href=&apos;%1&apos;&gt;tento odkaz&lt;/a&gt; pre ručné stiahnutie aktualizácie.</translation>
     </message>
@@ -1911,10 +1828,6 @@ môžu byť vyžadované dodatočné oprávnenia.</translation>
 </context>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Pripojiť sa k %1</translation>
-    </message>
     <message>
         <source>Setup local folder options</source>
         <translation>Nastaviť možnosti lokálneho priečinka</translation>
@@ -2424,10 +2337,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::PropagateLocalRemove</name>
     <message>
-        <source>Error removing &apos;%1&apos;: %2;</source>
-        <translation type="vanished">Chyba pri odstraňovaní &apos;%1&apos;: %2;</translation>
-    </message>
-    <message>
         <source>Could not remove %1 because of a local file name clash</source>
         <translation>Nemožno odstrániť %1 z dôvodu kolízie názvu súboru s lokálnym súborom</translation>
     </message>
@@ -2708,29 +2617,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
 </context>
 <context>
-    <name>OCC::SettingsDialogMac</name>
-    <message>
-        <source>%1</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation type="vanished">Aktivita</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="vanished">Všeobecné</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">Sieť</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Účet</translation>
-    </message>
-</context>
-<context>
     <name>OCC::ShareDialog</name>
     <message>
         <source>TextLabel</source>
@@ -2822,10 +2708,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Cancel</source>
         <translation>Zrušiť</translation>
-    </message>
-    <message>
-        <source>Public sh&amp;aring requires a password</source>
-        <translation type="vanished">Verejné z&amp;dieľanie vyžaduje heslo</translation>
     </message>
     <message>
         <source>Please Set Password</source>
@@ -3000,32 +2882,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>%1 (%2)</source>
         <comment>sharee (shareWithAdditionalInfo)</comment>
         <translation>%1 (%2)</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethCredentials</name>
-    <message>
-        <source>Login Error</source>
-        <translation type="vanished">Chybné prihlásenie</translation>
-    </message>
-    <message>
-        <source>You must sign in as user %1</source>
-        <translation type="vanished">Musíte sa prihlásiť ako používateľ %1</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethWebView</name>
-    <message>
-        <source>%1 - Authenticate</source>
-        <translation type="vanished">%1 - overenie</translation>
-    </message>
-    <message>
-        <source>Reauthentication required</source>
-        <translation type="vanished">Vyžaduje sa opätovné overenie</translation>
-    </message>
-    <message>
-        <source>Your session has expired. You need to re-login to continue to use the client.</source>
-        <translation type="vanished">Platnosť relácie uplynula. Musíte sa znovu prihlásiť, ak chcete pokračovať v používaní klienta.</translation>
     </message>
 </context>
 <context>
@@ -3299,112 +3155,12 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::SyncEngine</name>
     <message>
-        <source>Success.</source>
-        <translation type="vanished">Úspech.</translation>
-    </message>
-    <message>
-        <source>A network connection timeout happened.</source>
-        <translation type="vanished">Skončil časový limit sieťového spojenia.</translation>
-    </message>
-    <message>
-        <source>A HTTP transmission error happened.</source>
-        <translation type="vanished">Chyba HTTP prenosu.</translation>
-    </message>
-    <message>
-        <source>An error occurred while opening a folder</source>
-        <translation type="vanished">Nastala chyba počas otvárania priečinka</translation>
-    </message>
-    <message>
-        <source>Error while reading folder.</source>
-        <translation type="vanished">Chyba pri čítaní adresára</translation>
-    </message>
-    <message>
-        <source>CSync unspecified error.</source>
-        <translation type="vanished">CSync nešpecifikovaná chyba.</translation>
-    </message>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Zrušené používateľom</translation>
-    </message>
-    <message>
-        <source>The service is temporarily unavailable</source>
-        <translation type="vanished">Služba je dočasne nedostupná</translation>
-    </message>
-    <message>
-        <source>Access is forbidden</source>
-        <translation type="vanished">Prístup odmietnutý</translation>
-    </message>
-    <message>
-        <source>An internal error number %1 occurred.</source>
-        <translation type="vanished">Vyskytla sa interná chyba číslo %1.</translation>
-    </message>
-    <message>
-        <source>Symbolic links are not supported in syncing.</source>
-        <translation type="vanished">Symbolické odkazy nie sú podporované pri synchronizácii.</translation>
-    </message>
-    <message>
-        <source>File is listed on the ignore list.</source>
-        <translation type="vanished">Súbor je zapísaný na zozname ignorovaných.</translation>
-    </message>
-    <message>
-        <source>Filename is too long.</source>
-        <translation type="vanished">Meno súboru je veľmi dlhé.</translation>
-    </message>
-    <message>
-        <source>Filename encoding is not valid</source>
-        <translation type="vanished">Kódovanie znakov názvu súboru je neplatné</translation>
-    </message>
-    <message>
-        <source>Invalid characters, please rename &quot;%1&quot;</source>
-        <translation type="vanished">Neplatné znaky, premenujte prosím &quot;%1&quot;</translation>
-    </message>
-    <message>
         <source>Unable to read from the sync journal.</source>
         <translation>Nemožno čítať zo synchronizačného žurnálu</translation>
     </message>
     <message>
         <source>Cannot open the sync journal</source>
         <translation>Nemožno otvoriť sync žurnál</translation>
-    </message>
-    <message>
-        <source>File name contains at least one invalid character</source>
-        <translation type="vanished">Názov súboru obsahuje nevhodný znak</translation>
-    </message>
-    <message>
-        <source>Ignored because of the &quot;choose what to sync&quot; blacklist</source>
-        <translation type="vanished">Ignorované podľa nastavenia &quot;vybrať čo synchronizovať&quot;</translation>
-    </message>
-    <message>
-        <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
-        <translation type="vanished">Nie je dovolené, lebo nemáte oprávnenie pridávať podpriečinky do tohto priečinka</translation>
-    </message>
-    <message>
-        <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
-        <translation type="vanished">Nie je dovolené tento súbor nahrať, pretože je na serveri iba na čítanie. Obnovuje sa.</translation>
-    </message>
-    <message>
-        <source>Not allowed to remove, restoring</source>
-        <translation type="vanished">Nie je dovolené odstrániť. Obnovuje sa.</translation>
-    </message>
-    <message>
-        <source>Local files and share folder removed.</source>
-        <translation type="vanished">Lokálne súbory a zdieľaný priečinok boli odstránené.</translation>
-    </message>
-    <message>
-        <source>Move not allowed, item restored</source>
-        <translation type="vanished">Presunutie nie je dovolené. Položka obnovená.</translation>
-    </message>
-    <message>
-        <source>Move not allowed because %1 is read-only</source>
-        <translation type="vanished">Presunutie nie je dovolené, pretože %1 je na serveri iba na čítanie</translation>
-    </message>
-    <message>
-        <source>the destination</source>
-        <translation type="vanished">cieľ</translation>
-    </message>
-    <message>
-        <source>the source</source>
-        <translation type="vanished">zdroj</translation>
     </message>
     <message>
         <source>%1 (skipped due to earlier error, trying again in %2)</source>
@@ -3732,6 +3488,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Syncing %1 of %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

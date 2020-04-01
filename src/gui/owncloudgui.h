@@ -92,6 +92,7 @@ public slots:
     void slotOpenPath(const QString &path);
     void slotAccountStateChanged();
     void slotTrayMessageIfServerUnsupported(Account *account);
+    void slotShowErrors();
 
     /**
      * Open a share dialog for a file or folder.
@@ -142,6 +143,7 @@ private:
 
     QAction *_actionNewAccountWizard;
     QAction *_actionSettings;
+    QAction *_actionShowErrors;
     QAction *_actionStatus;
     QAction *_actionEstimate;
     QAction *_actionRecent;

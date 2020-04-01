@@ -48,11 +48,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Failed to send crash info.</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>Imposible mover &apos;%1&apos; a &apos;%2&apos;</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Mover hacia la papelera no está implementado en esta plataforma</translation>
     </message>
     <message>
         <source>Error removing &apos;%1&apos;: %2</source>
@@ -201,14 +201,6 @@
         <translation>Deseleccionar Carpetas que serán &lt;b&gt;eliminadas&lt;/b&gt; de su sistema de archivos local y no será sincronizado más en este equipo</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Sincronizar todos</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Sincronizar ninguno</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Aplicar cambios manuales</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>Cancelar</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Conectado con &lt;server&gt; como &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>No hay cuenta configurada.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Agregar nuevo</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Borrar</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Cuenta</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -285,20 +265,8 @@
         <translation>%1 en uso</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 de &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Conectado a %1</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">El servidor %1 esta temporalmente sin conexión</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Servidor %1 actualmente en modo mantenimiento.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -538,6 +506,27 @@ This action will abort any currently running synchronization.</source>
         <source>The list of unsynced items has been copied to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!
+Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -716,10 +705,14 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
-    <name>OCC::DiscoveryMainThread</name>
+    <name>OCC::DebugReporter</name>
     <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Interrumpido por el usuario</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancelar</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -772,11 +765,6 @@ This action will abort any currently running synchronization.</source>
         <translation>%1  ha sido eliminado.</translation>
     </message>
     <message>
-        <source>%1 has been downloaded.</source>
-        <comment>%1 names a file.</comment>
-        <translation type="vanished">%1 ha sido descargado.</translation>
-    </message>
-    <message>
         <source>%1 has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>%1 ha sido actualizado</translation>
@@ -796,14 +784,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>Keep files</source>
         <translation>Conservar archivos</translation>
-    </message>
-    <message>
-        <source>Normal Synchronisation</source>
-        <translation type="vanished">Sincronizacón Normal.</translation>
-    </message>
-    <message>
-        <source>Keep Local Files as Conflict</source>
-        <translation type="vanished">Mantener Archivos Locales como Conflicto</translation>
     </message>
     <message numerus="yes">
         <source>%1 and %n other file(s) have been removed.</source>
@@ -1057,17 +1037,9 @@ If this was an accident and you decide to keep your files, they will be re-synce
         <translation>descargado %1/s</translation>
     </message>
     <message>
-        <source>u2193 %1/s</source>
-        <translation type="vanished">u2193 %1/s</translation>
-    </message>
-    <message>
         <source>upload %1/s</source>
         <extracomment>Example text: &quot;upload 24Kb/s&quot; (%1 is replaced by 24Kb (translated))</extracomment>
         <translation>Cargado %1/s</translation>
-    </message>
-    <message>
-        <source>u2191 %1/s</source>
-        <translation type="vanished">u2191 %1/s</translation>
     </message>
     <message>
         <source>%1 %2 (%3 of %4)</source>
@@ -1579,34 +1551,6 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <translation>Contenido del log</translation>
     </message>
     <message>
-        <source>&amp;Find</source>
-        <translation type="vanished">&amp;Encontrar</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="vanished">Borrar</translation>
-    </message>
-    <message>
-        <source>Clear the log display.</source>
-        <translation type="vanished">Limpiar la pantalla de registros.</translation>
-    </message>
-    <message>
-        <source>S&amp;ave</source>
-        <translation type="vanished">G&amp;uardar</translation>
-    </message>
-    <message>
-        <source>Save the log file to a file on disk for debugging.</source>
-        <translation type="vanished">Guardar el log en un archivo en disco para depuración.</translation>
-    </message>
-    <message>
-        <source>Save log file</source>
-        <translation type="vanished">Guardar archivo de log</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Error</translation>
-    </message>
-    <message>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
 Since log files can get large, the client will start a new one for each sync run and compress older ones. It is also recommended to enable deleting log files after a couple of hours to avoid consuming too much disk space.
 If enabled, logs will be written to %1</source>
@@ -1873,10 +1817,6 @@ for additional privileges during the process.</source>
 </context>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Conectar a %1</translation>
-    </message>
     <message>
         <source>Setup local folder options</source>
         <translation>Configurar opciones de directorio local</translation>
@@ -2665,29 +2605,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
 </context>
 <context>
-    <name>OCC::SettingsDialogMac</name>
-    <message>
-        <source>%1</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation type="vanished">Actividad</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="vanished">General</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">Red</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Cuenta</translation>
-    </message>
-</context>
-<context>
     <name>OCC::ShareDialog</name>
     <message>
         <source>TextLabel</source>
@@ -2953,13 +2870,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>%1 (%2)</source>
         <comment>sharee (shareWithAdditionalInfo)</comment>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethWebView</name>
-    <message>
-        <source>%1 - Authenticate</source>
-        <translation type="vanished">%1 - Autenticarse</translation>
     </message>
 </context>
 <context>
@@ -3230,30 +3140,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 </context>
 <context>
     <name>OCC::SyncEngine</name>
-    <message>
-        <source>Success.</source>
-        <translation type="vanished">Éxito.</translation>
-    </message>
-    <message>
-        <source>A HTTP transmission error happened.</source>
-        <translation type="vanished">Ha ocurrido un error de transmisión HTTP.</translation>
-    </message>
-    <message>
-        <source>CSync unspecified error.</source>
-        <translation type="vanished">Error no especificado de CSync</translation>
-    </message>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Interrumpido por el usuario</translation>
-    </message>
-    <message>
-        <source>Symbolic links are not supported in syncing.</source>
-        <translation type="vanished">Los vínculos simbólicos no está soportados al sincronizar.</translation>
-    </message>
-    <message>
-        <source>File is listed on the ignore list.</source>
-        <translation type="vanished">El archivo está en la lista de ignorados.</translation>
-    </message>
     <message>
         <source>%1 (skipped due to earlier error, trying again in %2)</source>
         <translation type="unfinished"></translation>
@@ -3588,6 +3474,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Syncing %1 (%2 left)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

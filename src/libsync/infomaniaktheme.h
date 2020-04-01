@@ -36,6 +36,7 @@ public:
     QString overrideServerUrl() const override;
     QString about() const override;
     QString updateCheckUrl() const override;
+    QString debugReporterUrl() const override;
     bool userGroupSharing() const override;
     bool deltaSynchronizationAvailable() const override;
 };

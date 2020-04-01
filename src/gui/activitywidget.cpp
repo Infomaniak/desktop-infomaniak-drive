@@ -228,6 +228,11 @@ void ActivityWidget::checkActivityTabVisibility()
     emit hideActivityTab(!hasAccountsWithActivity && !hasNotifications);
 }
 
+int ActivityWidget::getErrorCount()
+{
+    return _ui->_activityList->model() ? _ui->_activityList->model()->rowCount() : 0;
+}
+
 void ActivityWidget::slotOpenFile(QModelIndex indx)
 {
     qCDebug(lcActivity) << indx.isValid() << indx.data(ActivityItemDelegate::PathRole).toString() << QFile::exists(indx.data(ActivityItemDelegate::PathRole).toString());
@@ -504,13 +509,29 @@ void ActivityWidget::slotCheckToCleanWidgets()
 
 ActivitySettings::ActivitySettings(QWidget *parent)
     : QWidget(parent)
+    , _issueItemCount(0)
 {
-    QHBoxLayout *hbox = new QHBoxLayout(this);
-    setLayout(hbox);
+    QVBoxLayout *vbox = new QVBoxLayout(this);
+    setLayout(vbox);
+
+    Theme *theme = Theme::instance();
+    if (theme && !theme->debugReporterUrl().isEmpty()) {
+        QLabel *labelSendDebugData = new QLabel(this);
+        labelSendDebugData->setText(tr("If you experience synchronization errors, you can transmit debugging information to our support."));
+        vbox->addWidget(labelSendDebugData);
+
+        QPushButton *sendDebugData = new QPushButton(this);
+        sendDebugData->setText(tr("Transmit debugging information"));
+        sendDebugData->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        connect(sendDebugData, &QPushButton::clicked, this, &ActivitySettings::slotSendDebugData);
+        vbox->addWidget(sendDebugData);
+
+        vbox->addSpacing(20);
+    }
 
     // create a tab widget for the three activity views
     _tab = new QTabWidget(this);
-    hbox->addWidget(_tab);
+    vbox->addWidget(_tab);
     _activityWidget = new ActivityWidget(this);
     _activityTabId = _tab->addTab(_activityWidget, Theme::instance()->applicationIcon(), tr("Server Activity"));
     connect(_activityWidget, &ActivityWidget::copyToClipboard, this, &ActivitySettings::slotCopyToClipboard);
@@ -568,6 +589,7 @@ void ActivitySettings::setActivityTabHidden(bool hidden)
 
 void ActivitySettings::slotShowIssueItemCount(int cnt)
 {
+    _issueItemCount = cnt;
     QString cntText = tr("Not Synced");
     if (cnt) {
         //: %1 is the number of not synced files.
@@ -581,6 +603,60 @@ void ActivitySettings::slotShowActivityTab()
     if (_activityTabId != -1) {
         _tab->setCurrentIndex(_activityTabId);
     }
+}
+
+void ActivitySettings::slotSendDebugData()
+{
+    if (Theme::instance()->debugReporterUrl().isEmpty()) {
+        return;
+    }
+
+    if (QMessageBox::question(this, Theme::instance()->appNameGUI(),
+                              tr("Please confirm the transmission of debugging information to our support."),
+                              QMessageBox::Yes | QMessageBox::No) == QMessageBox::No) {
+        return;
+    }
+
+    _debugReporter = new DebugReporter(QUrl(Theme::instance()->debugReporterUrl()), this);
+
+    // Write accounts
+    auto accountList = AccountManager::instance()->accounts();
+    int num = 0;
+    foreach (AccountStatePtr account, accountList) {
+        num++;
+        _debugReporter->setReportData(QString("Drive id %1").arg(num).toUtf8(), account->account()->driveId().toUtf8());
+        _debugReporter->setReportData(QString("Drive %1").arg(num).toUtf8(), account->account()->driveName().toUtf8());
+        _debugReporter->setReportData(QString("User id %1").arg(num).toUtf8(), account->account()->davUser().toUtf8());
+        _debugReporter->setReportData(QString("User name %1").arg(num).toUtf8(), account->account()->davDisplayName().toUtf8());
+    }
+
+    // Write logs
+    QString temporaryFolderLogDirPath = Logger::instance()->temporaryFolderLogDirPath();
+    QDir dir(temporaryFolderLogDirPath);
+    if (dir.exists()) {
+        QStringList files = dir.entryList(QStringList("*owncloud.log.*.gz"), QDir::Files, QDir::Name);
+        num = 0;
+        foreach (const QString &file, files) {
+            num++;
+            _debugReporter->setReportData(QString("Log file %1").arg(num).toUtf8(),
+                contents(temporaryFolderLogDirPath + "/" + file),
+                "application/octet-stream",
+                QFileInfo(file).fileName().toUtf8());
+        }
+    }
+    else {
+        qCDebug(lcActivity) << "Empty log dir: " << temporaryFolderLogDirPath;
+    }
+
+    connect(_debugReporter, &DebugReporter::sent, this, &ActivitySettings::slotDebugReporterDone);
+    _debugReporter->send();
+}
+
+void ActivitySettings::slotDebugReporterDone(bool retCode, const QString &debugId)
+{
+    QMessageBox::information(this, Theme::instance()->appNameGUI(), retCode
+                             ? tr("Transmission done!\nPlease refer to identifier <b>%1</b> in bug reports.").arg(debugId)
+                             : tr("Transmission failed!"));
 }
 
 void ActivitySettings::slotShowIssuesTab(const QString &folderAlias)
@@ -665,7 +741,19 @@ bool ActivitySettings::event(QEvent *e)
     return QWidget::event(e);
 }
 
+QByteArray ActivitySettings::contents(const QString &path)
+{
+    QFile f(path);
+    f.open(QFile::ReadOnly);
+    return f.readAll();
+}
+
 ActivitySettings::~ActivitySettings()
 {
+}
+
+int ActivitySettings::getErrorCount()
+{
+    return _issueItemCount;
 }
 }

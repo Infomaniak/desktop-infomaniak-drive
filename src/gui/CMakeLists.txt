@@ -117,6 +117,7 @@ set(client_SRCS
     wizard/owncloudwizardresultpage.cpp
     wizard/webviewpage.cpp
     wizard/webview.cpp
+    debugreporter.cpp
 )
 
 set(updater_SRCS
@@ -276,6 +277,7 @@ set_target_properties( ${APPLICATION_EXECUTABLE} PROPERTIES
 )
 
 target_link_libraries( ${APPLICATION_EXECUTABLE} Qt5::Widgets Qt5::Network Qt5::Xml)
+target_link_libraries( ${APPLICATION_EXECUTABLE} ${commonlib_NAME} )
 target_link_libraries( ${APPLICATION_EXECUTABLE} ${synclib_NAME} )
 target_link_libraries( ${APPLICATION_EXECUTABLE} updater )
 target_link_libraries( ${APPLICATION_EXECUTABLE} ${OS_SPECIFIC_LINK_LIBRARIES} )

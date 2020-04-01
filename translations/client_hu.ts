@@ -48,11 +48,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Failed to send crash info.</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>&apos;%1&apos; nem mozgatható ide: &apos;%2&apos;</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">A kukába mozgatás ezen a platformon nem lehetséges</translation>
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
@@ -201,14 +201,6 @@
         <translation>A jelöletlen könyvtárak &lt;b&gt;törlésre kerülnek&lt;/b&gt; a helyi fájlrendszeredről és a továbbiakban nem lesz szinkronizálva ezzel a számítógéppel</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Mindent szinkronizál</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Semmit sem szinkronizál</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Kézi módosítások alkalmazása</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>Mégsem</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Csatlakoztatva &lt;user&gt; felhasználóval ehhez: &lt;server&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Nincs beállított fiók.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Új hozzáadása</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Eltávolítás</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Fiók</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -285,20 +265,8 @@
         <translation>%1 használatban</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1, mint &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Csatlakozva: %1.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">%1 szerver jelenleg nem elérhető.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">A(z) %1 szerver jelenleg karbantartási módban van.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -538,6 +506,27 @@ This action will abort any currently running synchronization.</source>
         <source>Copied to clipboard</source>
         <translation>Másolva a vágólapra</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!
+Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -568,26 +557,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>&lt;br/&gt;Account %1 does not have activities enabled.</source>
         <translation>&lt;br /&gt; %1 fióknak nincsenek engedélyezve az aktivitások.</translation>
-    </message>
-    <message numerus="yes">
-        <source>You received %n new notification(s) from %2.</source>
-        <translation type="vanished">
-            <numerusform>%n új értesítést kapott innen: %2.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>You received %n new notification(s) from %1 and %2.</source>
-        <translation type="vanished">
-            <numerusform>%n új értesítést kapott innen: %1 és %2.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>You received new notifications from %1, %2 and other accounts.</source>
-        <translation type="vanished">Új értesítést kapott innen: %1, %2 és további fiókoktól.</translation>
-    </message>
-    <message>
-        <source>%1 Notifications - Action Required</source>
-        <translation type="vanished">%1 értesítések - Beavatkozás szükséges</translation>
     </message>
     <message numerus="yes">
         <source>You received %n new request(s) from %1.</source>
@@ -734,6 +703,17 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
@@ -862,13 +842,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>Please go in the settings to select it if you wish to download it.</source>
         <translation>A beállítások megadásához válassza ki, ha szeretné letölteni.</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">A kiszolgáló egy &quot;% 1&quot; mappában levő összes fájlt törölték.Ezek a törlések szinkronizálódnak a helyi szinkronizálási mappájukhoz, így az ilyen fájlok nem érhetők el, hacsak nem jogosult a visszaállításra. Ha úgy dönt, hogy megtartja a fájlokat, akkor újra szinkronizálódik a szerverrel, ha jogosult erre.Ha úgy dönt, hogy törli a fájlokat, akkor nem lesznek elérhetők, hacsak nem vagy egy tulajdonos.</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1837,10 +1810,6 @@ további jogosultságokat a folyamat során.</translation>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Csatlakozás: %1</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Helyi mappa beállítások megadása</translation>
     </message>
@@ -2004,10 +1973,6 @@ Nem ajánlott használni.</translation>
     <message>
         <source>Invalid URL</source>
         <translation>Érvénytelen URL</translation>
-    </message>
-    <message>
-        <source>The server reported the following error:</source>
-        <translation type="vanished">A kiszolgáló a következő hibát jelentette:</translation>
     </message>
     <message>
         <source>Local sync folder %1 already exists, setting it up for sync.&lt;br/&gt;&lt;br/&gt;</source>
@@ -2578,10 +2543,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>Betöltés ...</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Távolítsa el a távoli mappákat, amelyeket nem kíván szinkronizálni.</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Név</translation>
     </message>
@@ -2634,29 +2595,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Add new</source>
         <translation type="unfinished">Új hozzáadása</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::SettingsDialogMac</name>
-    <message>
-        <source>%1</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation type="vanished">Aktivitás</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="vanished">Általános</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">Hálózat</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Fiók</translation>
     </message>
 </context>
 <context>
@@ -2747,10 +2685,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>Letöltés / Megjelenítés</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">Letöltés / Megjelenítés / Feltöltés</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>
@@ -3534,6 +3468,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Syncing %1 of %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

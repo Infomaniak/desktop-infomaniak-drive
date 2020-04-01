@@ -48,11 +48,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Failed to send crash info.</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -197,14 +201,6 @@
         <translation>Märkimata kataloogid &lt;b&gt;eemaldatakse&lt;/b&gt; kohalikust failisüsteemist ning neid ei sünkroniseerita enam sellesse arvutisse</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Sünkrooni kõik</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Ära sünkrooni midagi</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Rakenda käsitsi tehtud muudatused</translation>
     </message>
@@ -217,24 +213,12 @@
         <translation>Loobu</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">Ühendatud &lt;server&gt; kasutajana &lt;user&gt;</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Ühtegi kontot pole seadistatud</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Lisa uus</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Eemalda</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Konto</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -265,16 +249,8 @@
         <translation>%1 kasutusel</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 as &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>Ühendatud %1</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">Server %1 pole ajutiselt saadaval.</translation>
     </message>
     <message>
         <source>Log in</source>
@@ -530,6 +506,27 @@ This action will abort any currently running synchronization.</source>
         <source>The list of unsynced items has been copied to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!
+Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -708,10 +705,14 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
-    <name>OCC::DiscoveryMainThread</name>
+    <name>OCC::DebugReporter</name>
     <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Kasutaja poolt tühistatud</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Loobu</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -760,11 +761,6 @@ This action will abort any currently running synchronization.</source>
         <translation>%1 on eemaldatud.</translation>
     </message>
     <message>
-        <source>%1 has been downloaded.</source>
-        <comment>%1 names a file.</comment>
-        <translation type="vanished">%1 on alla laaditud.</translation>
-    </message>
-    <message>
         <source>%1 has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>%1 on uuendatud.</translation>
@@ -801,14 +797,6 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>Keep files</source>
         <translation>Säilita failid</translation>
-    </message>
-    <message>
-        <source>Backup detected</source>
-        <translation type="vanished">Leiti varukoopia</translation>
-    </message>
-    <message>
-        <source>Normal Synchronisation</source>
-        <translation type="vanished">Tavaline sünkroonimine</translation>
     </message>
     <message>
         <source>%1 should be a folder but is not.</source>
@@ -1062,17 +1050,9 @@ If this was an accident and you decide to keep your files, they will be re-synce
         <translation>allalaadimine %1/s</translation>
     </message>
     <message>
-        <source>u2193 %1/s</source>
-        <translation type="vanished">u2193 %1/s</translation>
-    </message>
-    <message>
         <source>upload %1/s</source>
         <extracomment>Example text: &quot;upload 24Kb/s&quot; (%1 is replaced by 24Kb (translated))</extracomment>
         <translation>üleslaadimine %1/s</translation>
-    </message>
-    <message>
-        <source>u2191 %1/s</source>
-        <translation type="vanished">u2191 %1/s</translation>
     </message>
     <message>
         <source>%1 %2 (%3 of %4)</source>
@@ -1253,25 +1233,6 @@ If this was an accident and you decide to keep your files, they will be re-synce
     <message>
         <source>&lt;b&gt;Warning:&lt;/b&gt;</source>
         <translation>&lt;b&gt;Hoiatus:&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::GETFileJob</name>
-    <message>
-        <source>No E-Tag received from server, check Proxy/Gateway</source>
-        <translation type="vanished">Ühtegi E-Silti ei saabunud serverist, kontrolli puhverserverit/lüüsi.</translation>
-    </message>
-    <message>
-        <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation type="vanished">Saime jätkamiseks erineva E-Sildi. Proovin järgmine kord uuesti.</translation>
-    </message>
-    <message>
-        <source>Server returned wrong content-range</source>
-        <translation type="vanished">Server tagastas vale vahemiku</translation>
-    </message>
-    <message>
-        <source>Connection Timeout</source>
-        <translation type="vanished">Ühenduse aegumine</translation>
     </message>
 </context>
 <context>
@@ -1590,42 +1551,6 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <translation>Logi väljund</translation>
     </message>
     <message>
-        <source>&amp;Search:</source>
-        <translation type="vanished">&amp;Otsi;</translation>
-    </message>
-    <message>
-        <source>&amp;Find</source>
-        <translation type="vanished">Leia:</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="vanished">Tühjenda</translation>
-    </message>
-    <message>
-        <source>Clear the log display.</source>
-        <translation type="vanished">Tühjenda näidatav logi.</translation>
-    </message>
-    <message>
-        <source>S&amp;ave</source>
-        <translation type="vanished">S&amp;alvesta</translation>
-    </message>
-    <message>
-        <source>Save the log file to a file on disk for debugging.</source>
-        <translation type="vanished">Salvesta logi fail kettale täpsemaks uurimiseks.</translation>
-    </message>
-    <message>
-        <source>Save log file</source>
-        <translation type="vanished">Salvesta logifail</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Viga</translation>
-    </message>
-    <message>
-        <source>Could not write to log file %1</source>
-        <translation type="vanished">Logifaili %1 kirjutamine ebaõnnestus</translation>
-    </message>
-    <message>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
 Since log files can get large, the client will start a new one for each sync run and compress older ones. It is also recommended to enable deleting log files after a couple of hours to avoid consuming too much disk space.
 If enabled, logs will be written to %1</source>
@@ -1849,10 +1774,6 @@ Note that using any logging command line options will override the settings.</so
         <translation>Uus %1 uuendus on valmis</translation>
     </message>
     <message>
-        <source>Downloading version %1. Please wait...</source>
-        <translation type="vanished">Laadin alla versiooni %1. Palun oota...</translation>
-    </message>
-    <message>
         <source>Could not download update. Please click &lt;a href=&apos;%1&apos;&gt;here&lt;/a&gt; to download the update manually.</source>
         <translation>Ei suutnud uuendust alla laadida. Palun klõpsa käsitsi uuenduse alla laadimiseks &lt;a href=&apos;%1&apos;&gt;siia&lt;/a&gt; %2</translation>
     </message>
@@ -1896,10 +1817,6 @@ for additional privileges during the process.</source>
 </context>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">Ühendu %1</translation>
-    </message>
     <message>
         <source>Setup local folder options</source>
         <translation>Seadista kohaliku kataloogi valikud</translation>
@@ -2409,14 +2326,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::PropagateLocalRemove</name>
     <message>
-        <source>Error removing &apos;%1&apos;: %2;</source>
-        <translation type="vanished">Viga eemaldamisel &apos;%1&apos;: %2; </translation>
-    </message>
-    <message>
-        <source>Could not remove folder &apos;%1&apos;</source>
-        <translation type="vanished">Kausta &apos;%1&apos; eemaldamine ebaõnnestus</translation>
-    </message>
-    <message>
         <source>Could not remove %1 because of a local file name clash</source>
         <translation>Ei saa eemaldada %1 kuna on konflikt kohaliku faili nimega</translation>
     </message>
@@ -2697,29 +2606,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
 </context>
 <context>
-    <name>OCC::SettingsDialogMac</name>
-    <message>
-        <source>%1</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation type="vanished">Toimingud</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="vanished">Üldine</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">Võrk</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Konto</translation>
-    </message>
-</context>
-<context>
     <name>OCC::ShareDialog</name>
     <message>
         <source>TextLabel</source>
@@ -2785,10 +2671,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>Määra &amp;parool</translation>
     </message>
     <message>
-        <source>&amp;Create new</source>
-        <translation type="vanished">&amp;Loo uus</translation>
-    </message>
-    <message>
         <source>Set &amp;expiration date</source>
         <translation>Määra &amp;aegumise kuupäev</translation>
     </message>
@@ -2815,10 +2697,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Public link</source>
         <translation>Avalik link</translation>
-    </message>
-    <message>
-        <source>Public sh&amp;aring requires a password</source>
-        <translation type="vanished">Avalik j&amp;agamine nõuab parooli</translation>
     </message>
     <message>
         <source>Please Set Password</source>
@@ -2993,32 +2871,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <source>%1 (%2)</source>
         <comment>sharee (shareWithAdditionalInfo)</comment>
         <translation>%1 (%2)</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethCredentials</name>
-    <message>
-        <source>Login Error</source>
-        <translation type="vanished">Sisselogimise viga</translation>
-    </message>
-    <message>
-        <source>You must sign in as user %1</source>
-        <translation type="vanished">Pead sisse logima kui kasutaja %1</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ShibbolethWebView</name>
-    <message>
-        <source>%1 - Authenticate</source>
-        <translation type="vanished">%1 - autentimine</translation>
-    </message>
-    <message>
-        <source>Reauthentication required</source>
-        <translation type="vanished">Vajalik on uuesti autentimine</translation>
-    </message>
-    <message>
-        <source>Your session has expired. You need to re-login to continue to use the client.</source>
-        <translation type="vanished">Sinu sessioon on aegunud. Sa pead kliendi kasutamiseks uuesti sisse logima.</translation>
     </message>
 </context>
 <context>
@@ -3292,88 +3144,8 @@ This is a new, experimental mode. If you decide to use it, please report any iss
 <context>
     <name>OCC::SyncEngine</name>
     <message>
-        <source>Success.</source>
-        <translation type="vanished">Korras.</translation>
-    </message>
-    <message>
-        <source>A network connection timeout happened.</source>
-        <translation type="vanished">Toimus võrgukatkestus.</translation>
-    </message>
-    <message>
-        <source>A HTTP transmission error happened.</source>
-        <translation type="vanished">HTTP ülekande viga.</translation>
-    </message>
-    <message>
-        <source>CSync unspecified error.</source>
-        <translation type="vanished">CSync tuvastamatu viga.</translation>
-    </message>
-    <message>
-        <source>Aborted by the user</source>
-        <translation type="vanished">Kasutaja poolt tühistatud</translation>
-    </message>
-    <message>
-        <source>The service is temporarily unavailable</source>
-        <translation type="vanished">Teenus pole ajutiselt saadaval</translation>
-    </message>
-    <message>
-        <source>Access is forbidden</source>
-        <translation type="vanished">Ligipääs on keelatud</translation>
-    </message>
-    <message>
-        <source>Symbolic links are not supported in syncing.</source>
-        <translation type="vanished">Sümboolsed lingid ei ole sünkroniseerimisel toetatud.</translation>
-    </message>
-    <message>
-        <source>File is listed on the ignore list.</source>
-        <translation type="vanished">Fail on märgitud ignoreeritavate nimistus.</translation>
-    </message>
-    <message>
-        <source>Filename is too long.</source>
-        <translation type="vanished">Faili nimi on liiga pikk.</translation>
-    </message>
-    <message>
-        <source>Filename encoding is not valid</source>
-        <translation type="vanished">Failinime kodeering pole kehtiv</translation>
-    </message>
-    <message>
         <source>Cannot open the sync journal</source>
         <translation>Ei suuda avada sünkroniseeringu zurnaali</translation>
-    </message>
-    <message>
-        <source>File name contains at least one invalid character</source>
-        <translation type="vanished">Faili nimesonvähemalt üks keelatud märk</translation>
-    </message>
-    <message>
-        <source>Ignored because of the &quot;choose what to sync&quot; blacklist</source>
-        <translation type="vanished">&quot;Vali, mida sünkroniseerida&quot; musta nimekirja tõttu vahele jäetud</translation>
-    </message>
-    <message>
-        <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
-        <translation type="vanished">Pole lubatud üles laadida, kuna tegemist on ainult-loetava serveriga, taastan</translation>
-    </message>
-    <message>
-        <source>Not allowed to remove, restoring</source>
-        <translation type="vanished">Eemaldamine pole lubatud, taastan</translation>
-    </message>
-    <message>
-        <source>Local files and share folder removed.</source>
-        <translation type="vanished">Kohalikud failid ja jagatud kaustad eemaldatud.</translation>
-    </message>
-    <message>
-        <source>Move not allowed, item restored</source>
-        <translation type="vanished">Liigutamine pole lubatud, üksus taastatud</translation>
-    </message>
-    <message>
-        <source>Move not allowed because %1 is read-only</source>
-        <translation type="vanished">Liigutamien pole võimalik kuna %1 on ainult lugemiseks</translation>
-    </message>
-    <message>
-        <source>the destination</source>
-        <translation type="vanished">sihtkoht</translation>
-    </message>
-    <message>
-        <source>the source</source>
-        <translation type="vanished">allikas</translation>
     </message>
     <message>
         <source>%1 (skipped due to earlier error, trying again in %2)</source>
@@ -3705,6 +3477,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>Syncing %1 of %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

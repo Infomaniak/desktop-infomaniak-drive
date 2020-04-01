@@ -640,7 +640,7 @@ void AccountSettings::showConnectionLabel(const QString &message, QStringList er
         ui->connectLabel->setStyleSheet(QString());
     } else {
         errors.prepend(message);
-        QString msg = errors.join(QLatin1String("\n"));
+        msg = errors.join(QLatin1String("\n"));
         qCDebug(lcAccountSettings) << msg;
         ui->connectLabel->setToolTip(QString());
         ui->connectLabel->setStyleSheet(errStyle);

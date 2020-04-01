@@ -48,11 +48,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Failed to send crash info.</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -65,10 +69,6 @@
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
         <translation>%1, %2 ye taşınamadı.</translation>
-    </message>
-    <message>
-        <source>Moving to the trash is not implemented on this platform</source>
-        <translation type="vanished">Çöp kutusuna taşıma işlemi platformda sağlanmıyor.</translation>
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
@@ -201,14 +201,6 @@
         <translation>Seçilmemiş klasörler yerel dosya sisteminizden &lt;b&gt;kaldırılacak&lt;/b&gt; ve bir daha bu bilgisayarla eşitlenmeyecektir</translation>
     </message>
     <message>
-        <source>Synchronize all</source>
-        <translation type="vanished">Tümünü eşitle</translation>
-    </message>
-    <message>
-        <source>Synchronize none</source>
-        <translation type="vanished">Hiçbirini eşitleme</translation>
-    </message>
-    <message>
         <source>Apply manual changes</source>
         <translation>Değişiklikleri manuel uygula</translation>
     </message>
@@ -221,24 +213,12 @@
         <translation>İptal</translation>
     </message>
     <message>
-        <source>Connected with &lt;server&gt; as &lt;user&gt;</source>
-        <translation type="vanished">&lt;server&gt; ile &lt;user&gt; olarak bağlantı kuruldu</translation>
-    </message>
-    <message>
         <source>No account configured.</source>
         <translation>Hiçbir hesap yapılandırılmamış.</translation>
     </message>
     <message>
-        <source>Add new</source>
-        <translation type="vanished">Yeni ekle</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Kaldır</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Hesap</translation>
     </message>
     <message>
         <source>Choose what to sync</source>
@@ -285,20 +265,8 @@
         <translation>%1 kullanımda</translation>
     </message>
     <message>
-        <source>%1 as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation type="vanished">%1 &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
         <source>Connected to %1.</source>
         <translation>%1 ile bağlı.</translation>
-    </message>
-    <message>
-        <source>Server %1 is temporarily unavailable.</source>
-        <translation type="vanished">%1 sunucusu geçici olarak ulaşılamaz durumda.</translation>
-    </message>
-    <message>
-        <source>Server %1 is currently in maintenance mode.</source>
-        <translation type="vanished">Sunucu %1 bakım modunda.</translation>
     </message>
     <message>
         <source>Signed out from %1.</source>
@@ -538,6 +506,27 @@ This action will abort any currently running synchronization.</source>
         <source>Copied to clipboard</source>
         <translation>Panoya kopyalandı</translation>
     </message>
+    <message>
+        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmit debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!
+Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OCC::ActivityWidget</name>
@@ -714,6 +703,17 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
+    <name>OCC::DebugReporter</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">İptal</translation>
+    </message>
+    <message>
+        <source>Sending of debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
@@ -863,16 +863,6 @@ This means that the synchronization client might not upload local changes immedi
 Bu yüzden senkronizasyon yerel değişiklikler anlık olarak karşı tarafa yükleyemeyecek ve sadece yereldeki değişimler taranacak ve belli periyotlarda karşı tarafa yükleyecek (varsayılan ayar 2 saatte bir).
 
 %1</translation>
-    </message>
-    <message>
-        <source>All files in the sync folder &apos;%1&apos; folder were deleted on the server.
-These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore.
-If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
-If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation type="vanished">Senkronizasyon klasörlerinden &apos;%1&apos; klasörü, sunucudan silindi.
-Bu silinmeler yereldeki klasörlerinize de senkronizasyonla yansıyacak, geri yükleme hakkınız olmadığı sürece dosyalar kullanım dışıdır.
-Dosyalar silinmesin istiyorsanız, yetkiniz olduğu sürece sunucu ile tekrar senkronize olacaklardır.
-Silmeye karar verdiyseniz, sahibi olana kadar dosyalar kullanım dışıdır.</translation>
     </message>
     <message>
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
@@ -1828,10 +1818,6 @@ for additional privileges during the process.</source>
 <context>
     <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Connect to %1</source>
-        <translation type="vanished">%1 bağlantısını yap</translation>
-    </message>
-    <message>
         <source>Setup local folder options</source>
         <translation>Yerel klasör seçeneklerini ayarla</translation>
     </message>
@@ -2565,10 +2551,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
         <translation>Yükleniyor...</translation>
     </message>
     <message>
-        <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="vanished">Senkronize etmek istemediğiniz uzak klasörlerin seçimini kaldırın</translation>
-    </message>
-    <message>
         <source>Name</source>
         <translation>Ad</translation>
     </message>
@@ -2707,10 +2689,6 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     <message>
         <source>Download / View</source>
         <translation>İndir / Görüntüle</translation>
-    </message>
-    <message>
-        <source>Download / View / Upload</source>
-        <translation type="vanished">İndir / Görüntüle / Karşı tarafa yükle</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>
@@ -3499,6 +3477,10 @@ This is a new, experimental mode. If you decide to use it, please report any iss
     </message>
     <message>
         <source>No sync folders configured</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See synchronization errors</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

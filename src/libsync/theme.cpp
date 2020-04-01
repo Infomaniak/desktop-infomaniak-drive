@@ -359,6 +359,11 @@ QString Theme::updateCheckUrl() const
     return QLatin1String("https://updates.owncloud.com/client/");
 }
 
+QString Theme::debugReporterUrl() const
+{
+    return QString();
+}
+
 bool Theme::deltaSynchronizationAvailable() const
 {
     return true;
@@ -647,6 +652,11 @@ bool Theme::showVirtualFilesOption() const
 bool Theme::noUnauthedRequests() const
 {
     return false;
+}
+
+QIcon Theme::stateErrorIcon() const
+{
+    return themeIcon(QLatin1String("state-error"));
 }
 
 } // end namespace client

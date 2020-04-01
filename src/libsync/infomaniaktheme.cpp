@@ -131,6 +131,11 @@ QString InfomaniakTheme::updateCheckUrl() const
     return APPLICATION_UPDATE_URL;
 }
 
+QString InfomaniakTheme::debugReporterUrl() const
+{
+    return DEBUGREPORTER_SUBMIT_URL;
+}
+
 bool InfomaniakTheme::userGroupSharing() const
 {
     return false;
