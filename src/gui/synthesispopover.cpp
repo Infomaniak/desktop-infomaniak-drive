@@ -38,13 +38,18 @@ static const int triangleHeight = 10;
 static const int triangleWidth  = 20;
 static const int trianglePosition = 100; // Position from side
 static const int cornerRadius = 5;
-static const int vMargin = 10;
-static const int largeVMargin = 15;
-static const int hMargin = 10;
-static const int largeHMargin = 20;
+static const int toolBarHMargin = 10;
+static const int toolBarVMargin = 10;
+static const int driveBarHMargin = 15;
+static const int driveBarVMargin = 10;
+static const int progressBarHMargin = 15;
+static const int progressBarVMargin = 10;
+static const int statusBarHMargin = 15;
+static const int statusBarVMargin = 20;
+static const int buttonsBarHMargin = 30;
+static const int buttonsBarVMargin = 15;
 static const int hSpacing = 15;
-static const int logoSize = 32;
-static const int driveIconSize = 20;
+static const int logoIconSize = 30;
 static const int statusIconSize = 24;
 
 SynthesisPopover::SynthesisPopover(QWidget *parent)
@@ -145,12 +150,12 @@ void SynthesisPopover::init()
 
     // Tool bar
     QHBoxLayout *hboxToolBar = new QHBoxLayout(this);
-    hboxToolBar->setContentsMargins(vMargin, hMargin, vMargin, 0);
+    hboxToolBar->setContentsMargins(toolBarHMargin, toolBarVMargin, toolBarHMargin, 0);
     hboxToolBar->setSpacing(0);
     mainVBox->addLayout(hboxToolBar);
 
     QLabel *iconLabel = new QLabel(this);
-    iconLabel->setPixmap(QIcon(":/client/resources/logos/kdrive-without-text").pixmap(QSize(logoSize, logoSize)));
+    iconLabel->setPixmap(QIcon(":/client/resources/logos/kdrive-without-text.svg").pixmap(logoIconSize, logoIconSize));
     hboxToolBar->addWidget(iconLabel);
 
     QWidget *spacerWidget = new QWidget(this);
@@ -159,23 +164,23 @@ void SynthesisPopover::init()
     hboxToolBar->addWidget(spacerWidget);
 
     CustomToolButton *folderButton = new CustomToolButton(this);
-    folderButton->setIconPath(":/client/resources/icons/actions/folder");
+    folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
     hboxToolBar->addWidget(folderButton);
 
     CustomToolButton *webviewButton = new CustomToolButton(this);
-    webviewButton->setIconPath(":/client/resources/icons/actions/webview");
+    webviewButton->setIconPath(":/client/resources/icons/actions/webview.svg");
     hboxToolBar->addWidget(webviewButton);
 
     CustomToolButton *menuButton = new CustomToolButton(this);
-    menuButton->setIconPath(":/client/resources/icons/actions/menu");
+    menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
     hboxToolBar->addWidget(menuButton);
 
     // Drive selection
     QHBoxLayout *hboxDrive = new QHBoxLayout(this);
-    hboxDrive->setContentsMargins(largeVMargin, hMargin, largeVMargin, 0);
+    hboxDrive->setContentsMargins(driveBarHMargin, driveBarVMargin, driveBarHMargin, 0);
 
     QLabel *driveIconLabel = new QLabel(this);
-    driveIconLabel->setPixmap(QIcon(":/client/resources/icons/actions/drive").pixmap(QSize(driveIconSize, driveIconSize)));
+    driveIconLabel->setPixmap(QIcon(":/client/resources/icons/actions/drive.svg").pixmap(18, 18));
     hboxDrive->addWidget(driveIconLabel);
 
     QComboBox *driveComboBox = new QComboBox(this);
@@ -186,7 +191,7 @@ void SynthesisPopover::init()
 
     // Progress bar
     QHBoxLayout *hboxProgressBar = new QHBoxLayout(this);
-    hboxProgressBar->setContentsMargins(largeVMargin, hMargin, largeVMargin, 0);
+    hboxProgressBar->setContentsMargins(progressBarHMargin, progressBarVMargin, progressBarHMargin, 0);
     hboxProgressBar->setSpacing(hSpacing);
 
     QProgressBar *progressBar = new QProgressBar(this);
@@ -202,7 +207,7 @@ void SynthesisPopover::init()
 
     // Status bar
     HalfRoundRectWidget *statusBarWidget = new HalfRoundRectWidget(this);
-    statusBarWidget->getLayout()->setContentsMargins(vMargin, largeHMargin, vMargin, largeHMargin);
+    statusBarWidget->getLayout()->setContentsMargins(statusBarHMargin, statusBarVMargin, statusBarHMargin, statusBarVMargin);
 
     QLabel *statusIconLabel = new QLabel(this);
     statusIconLabel->setPixmap(OCC::Theme::instance()->syncStateIcon(OCC::SyncResult::SyncRunning).pixmap(QSize(statusIconSize, statusIconSize)));
@@ -213,27 +218,25 @@ void SynthesisPopover::init()
     statusBarWidget->getLayout()->addStretch();
 
     CustomToolButton *pauseButton = new CustomToolButton(this);
-    pauseButton->setIconPath(":/client/resources/icons/actions/pause");
+    pauseButton->setIconPath(":/client/resources/icons/actions/pause.svg");
     statusBarWidget->getLayout()->addWidget(pauseButton);
     mainVBox->addWidget(statusBarWidget);
 
     // Buttons bar
     RectWidget *buttonsBarWidget = new RectWidget(this);
-    buttonsBarWidget->getLayout()->setContentsMargins(largeVMargin, largeHMargin, largeVMargin, largeHMargin);
+    buttonsBarWidget->getLayout()->setContentsMargins(buttonsBarHMargin, buttonsBarVMargin, buttonsBarHMargin, buttonsBarVMargin);
 
     CustomPushButton *synchronizedButton = new CustomPushButton(tr("Synchronisés"), buttonsBarWidget);
-    synchronizedButton->setIconPath(":/client/resources/icons/actions/sync");
+    synchronizedButton->setIconPath(":/client/resources/icons/actions/sync.svg");
     synchronizedButton->setChecked(true);
     buttonsBarWidget->getLayout()->addWidget(synchronizedButton);
 
     CustomPushButton *favoritesButton = new CustomPushButton(tr("Favoris"), buttonsBarWidget);
-    favoritesButton->setIconPath(":/client/resources/icons/actions/favorite");
-    favoritesButton->setChecked(false);
+    favoritesButton->setIconPath(":/client/resources/icons/actions/favorite.svg");
     buttonsBarWidget->getLayout()->addWidget(favoritesButton);
 
     CustomPushButton *activityButton = new CustomPushButton(tr("Activité"), buttonsBarWidget);
-    activityButton->setIconPath(":/client/resources/icons/actions/notifications");
-    activityButton->setChecked(false);
+    activityButton->setIconPath(":/client/resources/icons/actions/notifications.svg");
     buttonsBarWidget->getLayout()->addWidget(activityButton);
 
     mainVBox->addWidget(buttonsBarWidget);

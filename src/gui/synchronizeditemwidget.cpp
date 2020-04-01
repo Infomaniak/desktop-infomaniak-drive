@@ -22,7 +22,7 @@ static const int boxHMargin= 12;
 static const int boxVMargin = 5;
 static const int iconWidth = 25;
 static const int iconHeight = 25;
-static const QString dateFormat = "d MMM - HH:mm";
+static const QString dateFormat = "d MMM. - HH:mm";
 
 SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, bool isSelected, QWidget *parent)
     : QWidget(parent)
@@ -63,11 +63,11 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, boo
     hboxNameAndButtons->addStretch();
 
     CustomToolButton *folderButton = new CustomToolButton(this);
-    folderButton->setIconPath(":/client/resources/icons/actions/folder");
+    folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
     hboxNameAndButtons->addWidget(folderButton);
 
     CustomToolButton *menuButton = new CustomToolButton(this);
-    menuButton->setIconPath(":/client/resources/icons/actions/menu");
+    menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
     hboxNameAndButtons->addWidget(menuButton);
 
     vbox->addLayout(hboxNameAndButtons);
@@ -102,8 +102,7 @@ void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
         QPainterPath painterPath2;
         painterPath2.addRoundedRect(rect().marginsRemoved(QMargins(hMargin, vMargin, hMargin, vMargin)),
                                     cornerRadius, cornerRadius);
-        //QPen pen(QColor("#F0F0F0"), 2);
-        //painter.setPen(pen);
+
         painter.setBrush(backgroundColorSelection());
         painter.drawPath(painterPath2);
     }
@@ -114,33 +113,33 @@ QIcon SynchronizedItemWidget::getIconFromFileName(const QString &fileName) const
     QMimeDatabase db;
     QMimeType mime = db.mimeTypeForFile(fileName, QMimeDatabase::MatchExtension);
     if (mime.name().startsWith("image/")) {
-        return QIcon(":/client/resources/icons/document types/file-image");
+        return QIcon(":/client/resources/icons/document types/file-image.svg");
     }
     else if (mime.name().startsWith("audio/")) {
-        return QIcon(":/client/resources/icons/document types/file-audio");
+        return QIcon(":/client/resources/icons/document types/file-audio.svg");
     }
     else if (mime.name().startsWith("video/")) {
-        return QIcon(":/client/resources/icons/document types/file-video");
+        return QIcon(":/client/resources/icons/document types/file-video.svg");
     }
     else if (mime.inherits("application/pdf")) {
-        return QIcon(":/client/resources/icons/document types/file-pdf");
+        return QIcon(":/client/resources/icons/document types/file-pdf.svg");
     }
     else if (mime.name().startsWith("application/vnd.ms-powerpoint")
              || mime.name().startsWith("application/vnd.openxmlformats-officedocument.presentationml")
              || mime.inherits("application/vnd.oasis.opendocument.presentation")) {
-        return QIcon(":/client/resources/icons/document types/file-presentation");
+        return QIcon(":/client/resources/icons/document types/file-presentation.svg");
     }
     else if (mime.name().startsWith("application/vnd.ms-excel")
              || mime.name().startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")
              || mime.inherits("application/vnd.oasis.opendocument.spreadsheet")) {
-        return QIcon(":/client/resources/icons/document types/file-sheets");
+        return QIcon(":/client/resources/icons/document types/file-sheets.svg");
     }
     else if (mime.inherits("application/zip")
              || mime.inherits("application/gzip")
              || mime.inherits("application/tar")
              || mime.inherits("application/rar")
              || mime.inherits("application/x-bzip2")) {
-        return QIcon(":/client/resources/icons/document types/file-zip");
+        return QIcon(":/client/resources/icons/document types/file-zip.svg");
     }
     else if (mime.inherits("text/x-csrc")
              || mime.inherits("text/x-c++src")
@@ -152,17 +151,17 @@ QIcon SynchronizedItemWidget::getIconFromFileName(const QString &fileName) const
              || mime.inherits("text/javascript")
              || mime.inherits("application/x-php")
              || mime.inherits("application/x-perl")) {
-        return QIcon(":/client/resources/icons/document types/file-code");
+        return QIcon(":/client/resources/icons/document types/file-code.svg");
     }
     else if (mime.inherits("text/plain")
              || mime.inherits("text/xml")) {
-       return QIcon(":/client/resources/icons/document types/file-text");
+       return QIcon(":/client/resources/icons/document types/file-text.svg");
     }
     else if (mime.inherits("application/x-msdos-program")) {
-        return QIcon(":/client/resources/icons/document types/file-application");
+        return QIcon(":/client/resources/icons/document types/file-application.svg");
     }
 
-    return QIcon(":/client/resources/icons/document types/file-default");
+    return QIcon(":/client/resources/icons/document types/file-default.svg");
 }
 
 void SynchronizedItemWidget::onFileNameColorChanged()

@@ -102,5 +102,6 @@
         <file>resources/logos/kdrive-without-text.svg</file>
         <file>resources/stylesheetblack.qss</file>
         <file>resources/stylesheetwhite.qss</file>
+        <file>resources/SuisseIntl-Regular.otf</file>
     </qresource>
 </RCC>

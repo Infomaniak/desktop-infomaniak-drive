@@ -17,14 +17,16 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QDesktopServices>
+#include <QFile>
 #include <QGraphicsColorizeEffect>
-#include <QGraphicsPixmapItem>
+#include <QGraphicsSvgItem>
 #include <QGraphicsScene>
 #include <QIcon>
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include <QPainter>
 #include <QPixmap>
+#include <QScreen>
 #include <QUrlQuery>
 
 #include "common/asserts.h"
@@ -105,20 +107,25 @@ QString Utility::vfsFreeSpaceActionText()
 
 QPixmap Utility::getPixmapWithColor(const QString &path, const QColor &color)
 {
-    QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect;
-    effect->setColor(color);
-    effect->setStrength(1);
+    QGraphicsSvgItem *item = new QGraphicsSvgItem(path);
 
-    QPixmap pixmap(path);
-    QGraphicsPixmapItem *item = new QGraphicsPixmapItem(pixmap);
-    item->setGraphicsEffect(effect);
+    if (color.isValid()) {
+        QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect;
+        effect->setColor(color);
+        effect->setStrength(1);
+        item->setGraphicsEffect(effect);
+    }
 
     QGraphicsScene scene;
     scene.addItem(item);
 
+    qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+    QPixmap pixmap(QSize(scene.width() * ratio, scene.height() * ratio));
+    pixmap.fill(Qt::transparent);
+
     QPainter painter(&pixmap);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    scene.render(&painter, QRectF(), pixmap.rect());
+    scene.render(&painter);
 
     return pixmap;
 }

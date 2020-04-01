@@ -51,7 +51,7 @@ namespace Utility {
     /** Translated text for "free up local space" (and unpinning the item) */
     QString vfsFreeSpaceActionText();
 
-    QPixmap getPixmapWithColor(const QString &path, const QColor &color);
+    QPixmap getPixmapWithColor(const QString &path, const QColor &color = QColor());
 
 } // namespace Utility
 } // namespace OCC

@@ -27,8 +27,9 @@ KDC--SynthesisPopover QComboBox
 {
     background-color: transparent;
     color: #333333;
-    font: 18px bold;
     font-family: "Suisse Int'l";
+    font-weight: bold;
+    font: 18px;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -53,14 +54,14 @@ KDC--SynthesisPopover QProgressBar::chunk
 KDC--SynthesisPopover QLabel
 {
     color: #666666;
-    font: 13px;
-    font-weight: medium;
     font-family: "Suisse Int'l";
+    font-weight: medium;
+    font: 13px;
 }
 
 KDC--SynthesisPopover QScrollBar
 {
-    background-color: #F9F9F9;
+    background-color: #EDEDED;
     border: 0px;
     width: 3px;
     margin: 0px 0px 0px 0px;
@@ -88,7 +89,7 @@ KDC--SynthesisPopover QScrollBar::sub-line
 
 KDC--SynthesisPopover QListView
 {
-    background-color: #F9F9F9;
+    background-color: #EDEDED;
     border: 0px;
 }
 
@@ -117,13 +118,13 @@ KDC--CustomToolButton
 
 KDC--CustomPushButton
 {
-    background-color: #F9F9F9;
+    background-color: #EDEDED;
     color: #666666;
     min-height: 30px;
     max-height: 30px;
-    font: 14px;
-    font-weight: semibold;
     font-family: "Suisse Int'l";
+    font-weight: semibold;
+    font: 14px;
     border: 0px;
     border-radius: 15px;
     padding-left: 13px;
@@ -140,9 +141,9 @@ KDC--CustomPushButton:checked
     color: #FFFFFF;
     min-height: 30px;
     max-height: 30px;
-    font: 14px;
-    font-weight: semibold;
     font-family: "Suisse Int'l";
+    font-weight: semibold;
+    font: 14px;
     border: 0px;
     border-radius: 15px;
     padding-left: 13px;
@@ -155,7 +156,7 @@ KDC--CustomPushButton:checked
 
 KDC--HalfRoundRectWidget
 {
-    qproperty-bottom_corners_color: #F9F9F9;
+    qproperty-bottom_corners_color: #EDEDED;
 }
 
 /*********************/
@@ -166,7 +167,7 @@ KDC--BottomWidget
 {
     min-height: 5px;
     max-height: 5px;
-    qproperty-background_color: #F9F9F9;
+    qproperty-background_color: #EDEDED;
 }
 
 /*******************/
@@ -175,7 +176,7 @@ KDC--BottomWidget
 
 KDC--RectWidget
 {
-    qproperty-background_color: #F9F9F9;
+    qproperty-background_color: #EDEDED;
 }
 
 /*******************************/
@@ -184,10 +185,10 @@ KDC--RectWidget
 
 KDC--SynchronizedItemWidget
 {
-    font: 13px;
-    font-weight: medium;
     font-family: "Suisse Int'l";
-    qproperty-background_color: #F9F9F9;
+    font-weight: medium;
+    font: 13px;
+    qproperty-background_color: #EDEDED;
     qproperty-background_color_selection: #FFFFFF;
     qproperty-file_name_color: #444444;
     qproperty-file_date_color: #666666;

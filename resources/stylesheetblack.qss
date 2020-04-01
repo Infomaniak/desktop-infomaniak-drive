@@ -27,8 +27,9 @@ KDC--SynthesisPopover QComboBox
 {
     background-color: transparent;
     color: #FFFFFF;
-    font: 18px bold;
     font-family: "Suisse Int'l";
+    font-weight: bold;
+    font: 18px;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -53,9 +54,9 @@ KDC--SynthesisPopover QProgressBar::chunk
 KDC--SynthesisPopover QLabel
 {
     color: #C0C0C0;
-    font: 13px;
-    font-weight: medium;
     font-family: "Suisse Int'l";
+    font-weight: medium;
+    font: 13px;
 }
 
 KDC--SynthesisPopover QScrollBar
@@ -121,9 +122,9 @@ KDC--CustomPushButton
     color: #B8B8B8;
     min-height: 30px;
     max-height: 30px;
-    font: 14px;
-    font-weight: semibold;
     font-family: "Suisse Int'l";
+    font-weight: semibold;
+    font: 14px;
     border: 0px;
     border-radius: 15px;
     padding-left: 13px;
@@ -140,9 +141,9 @@ KDC--CustomPushButton:checked
     color: #FFFFFF;
     min-height: 30px;
     max-height: 30px;
-    font: 14px;
-    font-weight: semibold;
     font-family: "Suisse Int'l";
+    font-weight: semibold;
+    font: 14px;
     border: 0px;
     border-radius: 15px;
     padding-left: 13px;
@@ -184,9 +185,9 @@ KDC--RectWidget
 
 KDC--SynchronizedItemWidget
 {
-    font: 13px;
-    font-weight: medium;
     font-family: "Suisse Int'l";
+    font-weight: medium;
+    font: 13px;
     qproperty-background_color: #1B1B1D;
     qproperty-background_color_selection: #35393D;
     qproperty-file_name_color: #FFFFFF;
