@@ -118,15 +118,19 @@ set(client_SRCS
     wizard/webviewpage.cpp
     wizard/webview.cpp
     debugreporter.cpp
-    synthesispopover.cpp
-    halfroundrectwidget.cpp
-    rectwidget.cpp
+
+    # KDrive V2
     bottomwidget.cpp
-    synchronizeditem.cpp
-    synchronizeditemdelegate.cpp
-    synchronizeditemwidget.cpp
+    buttonsbarwidget.cpp
     custompushbutton.cpp
     customtoolbutton.cpp
+    driveselectionwidget.cpp
+    halfroundrectwidget.cpp
+    progressbarwidget.cpp
+    statusbarwidget.cpp
+    synchronizeditem.cpp
+    synchronizeditemwidget.cpp
+    synthesispopover.cpp
 )
 
 set(updater_SRCS

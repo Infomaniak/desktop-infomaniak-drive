@@ -36,6 +36,8 @@
 #include <QDialog>
 #include <QHBoxLayout>
 
+#define KDRIVE_V2
+
 #if defined(Q_OS_X11)
 #include <QX11Info>
 #endif
@@ -145,12 +147,14 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
             slotOpenSettingsDialog();
 #endif
 
+#ifdef KDRIVE_V2
             QRect sysTrayRect = _tray->geometry();
             QPoint sysTrayPosition = QPoint((sysTrayRect.bottomLeft() + sysTrayRect.bottomRight()) / 2);
             QScopedPointer<KDC::SynthesisPopover> synthesisPopover;
             synthesisPopover.reset(new KDC::SynthesisPopover());
             synthesisPopover->setSysTrayIconPosition(sysTrayPosition);
             synthesisPopover->exec();
+#endif
         }
     }
     // FIXME: Also make sure that any auto updater dialogue https://github.com/owncloud/client/issues/5613
@@ -513,7 +517,9 @@ void ownCloudGui::setupContextMenu()
 
     // this must be called only once after creating the context menu, or
     // it will trigger a bug in Ubuntu's SNI bridge patch (11.10, 12.04).
-    //_tray->setContextMenu(_contextMenu.data());
+#ifndef KDRIVE_V2
+    _tray->setContextMenu(_contextMenu.data());
+#endif
 
     // The tray menu is surprisingly problematic. Being able to switch to
     // a minimal version of it is a useful workaround and testing tool.

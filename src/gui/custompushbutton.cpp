@@ -6,8 +6,8 @@ namespace KDC {
 CustomPushButton::CustomPushButton(QWidget *parent)
     : QPushButton(parent)
     , _iconPath(QString())
-    , _iconColor(Qt::black)
-    , _iconColorChecked(Qt::black)
+    , _iconColor(QColor())
+    , _iconColorChecked(QColor())
 {
     setFlat(true);
     setCheckable(true);
@@ -36,7 +36,7 @@ void CustomPushButton::onIconColorCheckedChanged()
 void CustomPushButton::onToggle(bool checked)
 {
     if (!_iconPath.isEmpty()) {
-        setIcon(OCC::Utility::getPixmapWithColor(_iconPath, checked ? _iconColorChecked : _iconColor));
+        setIcon(OCC::Utility::getIconWithColor(_iconPath, checked ? _iconColorChecked : _iconColor));
     }
 }
 

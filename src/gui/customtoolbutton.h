@@ -1,6 +1,8 @@
 #pragma once
 
+#include <QColor>
 #include <QToolButton>
+#include <QString>
 
 namespace KDC {
 

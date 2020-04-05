@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QDateTime>
-#include <QIcon>
 #include <QString>
 
 namespace KDC {
@@ -9,9 +8,6 @@ namespace KDC {
 class SynchronizedItem
 {
 public:
-    SynchronizedItem() = default;
-    ~SynchronizedItem() = default;
-    SynchronizedItem(const SynchronizedItem &item) = default;
     SynchronizedItem(const QString &name, const QDateTime &dateTime);
 
     inline QString name() const { return _name; };
@@ -24,4 +20,3 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KDC::SynchronizedItem)

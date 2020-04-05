@@ -6,6 +6,7 @@ namespace KDC {
 
 BottomWidget::BottomWidget(QWidget *parent)
     : QWidget(parent)
+    , _backgroundColor(QColor())
 {
 }
 

@@ -1,7 +1,9 @@
 #pragma once
 
+#include <QColor>
 #include <QEvent>
 #include <QPushButton>
+#include <QString>
 
 namespace KDC {
 

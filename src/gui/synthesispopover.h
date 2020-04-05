@@ -1,13 +1,15 @@
 #pragma once
 
-#include <QDialog>
-#include <QPoint>
+#include "driveselectionwidget.h"
+#include "progressbarwidget.h"
+#include "statusbarwidget.h"
+
 #include <QColor>
+#include <QDialog>
 #include <QEvent>
-#include <QFocusEvent>
-#include <QPushButton>
-#include <QStandardItemModel>
-#include <QToolButton>
+#include <QListWidget>
+#include <QPoint>
+#include <QStackedWidget>
 
 namespace KDC {
 
@@ -21,19 +23,42 @@ public:
     explicit SynthesisPopover(QWidget *parent = nullptr);
 
     inline QColor backgroundMainColor() const { return _backgroundMainColor; }
-    inline void setBackgroundMainColor(const QColor& value) { _backgroundMainColor = value; }
+    inline void setBackgroundMainColor(const QColor &value) { _backgroundMainColor = value; }
 
     void setSysTrayIconPosition(const QPoint &sysTrayIconPosition);
+    void setTransferTotalSize(long size);
+    void setTransferSize(long size);
+    void setStatus(OCC::SyncResult::Status status, int fileNum, int fileCount, const QTime &time);
 
 private:
+    enum stackedWidget {
+        SynchronizedItems = 0,
+        Favorites,
+        Activity
+    };
+
     QPoint _sysTrayIconPosition;
     QColor _backgroundMainColor;
+    DriveSelectionWidget *_driveSelectionWidget;
+    ProgressBarWidget *_progressBarWidget;
+    StatusBarWidget *_statusBarWidget;
+    QStackedWidget *_stackedWidget;
+    QListWidget *_synchronizedListWidget;
 
     void paintEvent(QPaintEvent *event) override;
-    void showEvent(QShowEvent *event) override;
     bool event(QEvent *event) override;
     void init();
-    void populateSynchronizedList(QStandardItemModel *model);
+    void load();
+    void loadDriveList();
+    void loadSynchronizedList();
+
+private slots:
+    void onFolderButtonClicked();
+    void onWebviewButtonClicked();
+    void onMenuButtonClicked();
+    void onDriveSelected(int id);
+    void onButtonBarToggled(int position);
+    void onCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 };
 
 }

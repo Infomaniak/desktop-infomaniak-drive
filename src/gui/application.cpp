@@ -86,9 +86,14 @@ static const QLatin1String styleSheetWhiteFile(":/client/resources/stylesheetwhi
 static const QLatin1String styleSheetBlackFile(":/client/resources/stylesheetblack.qss");
 static const QList<QLatin1String> fontFiles =
         QList<QLatin1String>()
-        << QLatin1String(":/client/resources/SuisseIntl-Bold.otf")
-        << QLatin1String(":/client/resources/SuisseIntl-Medium.otf")
-        << QLatin1String(":/client/resources/SuisseIntl-SemiBold.otf");
+        << QLatin1String(":/client/resources/fonts/SuisseIntl-Thin.otf")
+        << QLatin1String(":/client/resources/fonts/SuisseIntl-UltraLight.otf")
+        << QLatin1String(":/client/resources/fonts/SuisseIntl-Light.otf")
+        << QLatin1String(":/client/resources/fonts/SuisseIntl-Regular.otf")
+        << QLatin1String(":/client/resources/fonts/SuisseIntl-Medium.otf")
+        << QLatin1String(":/client/resources/fonts/SuisseIntl-SemiBold.otf")
+        << QLatin1String(":/client/resources/fonts/SuisseIntl-Bold.otf")
+        << QLatin1String(":/client/resources/fonts/SuisseIntl-Black.otf");
 
 // ----------------------------------------------------------------------------------
 
@@ -312,9 +317,8 @@ Application::Application(int &argc, char **argv)
     _proxy.setupQtProxyFromConfig(); // folders have to be defined first, than we set up the Qt proxy.
 
     // Load fonts
-    QFontDatabase database;
     for (QLatin1String fontFile : fontFiles) {
-        if (database.addApplicationFont(fontFile) < 0) {
+        if (QFontDatabase::addApplicationFont(fontFile) < 0) {
             qCInfo(lcApplication) << "Error adding font file!";
         }
     }

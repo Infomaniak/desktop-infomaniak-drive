@@ -105,7 +105,7 @@ QString Utility::vfsFreeSpaceActionText()
     return QCoreApplication::translate("utility", "Free up local space");
 }
 
-QPixmap Utility::getPixmapWithColor(const QString &path, const QColor &color)
+QIcon Utility::getIconWithColor(const QString &path, const QColor &color)
 {
     QGraphicsSvgItem *item = new QGraphicsSvgItem(path);
 
@@ -127,5 +127,7 @@ QPixmap Utility::getPixmapWithColor(const QString &path, const QColor &color)
     painter.setRenderHint(QPainter::Antialiasing, true);
     scene.render(&painter);
 
-    return pixmap;
+    QIcon icon;
+    icon.addPixmap(pixmap);
+    return icon;
 }

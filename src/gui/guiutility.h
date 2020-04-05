@@ -16,7 +16,7 @@
 #define GUIUTILITY_H
 
 #include <QColor>
-#include <QPixmap>
+#include <QIcon>
 #include <QString>
 #include <QUrl>
 #include <QWidget>
@@ -51,7 +51,7 @@ namespace Utility {
     /** Translated text for "free up local space" (and unpinning the item) */
     QString vfsFreeSpaceActionText();
 
-    QPixmap getPixmapWithColor(const QString &path, const QColor &color = QColor());
+    QIcon getIconWithColor(const QString &path, const QColor &color = QColor());
 
 } // namespace Utility
 } // namespace OCC

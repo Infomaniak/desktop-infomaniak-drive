@@ -23,42 +23,6 @@ KDC--SynthesisPopover QToolButton
     qproperty-iconSize: 18px;
 }
 
-KDC--SynthesisPopover QComboBox
-{
-    background-color: transparent;
-    color: #333333;
-    font-family: "Suisse Int'l";
-    font-weight: bold;
-    font: 18px;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-KDC--SynthesisPopover QProgressBar
-{
-    background-color: #E0E0E0;
-    min-height: 5px;
-    max-height: 5px;
-    border: 0px;
-    border-radius: 2px;
-    padding: 0px;
-}
-
-KDC--SynthesisPopover QProgressBar::chunk
-{
-    background-color: #66BC5C;
-    border: 0px;
-    border-radius: 2px;
-}
-
-KDC--SynthesisPopover QLabel
-{
-    color: #666666;
-    font-family: "Suisse Int'l";
-    font-weight: medium;
-    font: 13px;
-}
-
 KDC--SynthesisPopover QScrollBar
 {
     background-color: #EDEDED;
@@ -87,13 +51,13 @@ KDC--SynthesisPopover QScrollBar::sub-line
     subcontrol-origin: margin;
 }
 
-KDC--SynthesisPopover QListView
+KDC--SynthesisPopover QListWidget
 {
     background-color: #EDEDED;
     border: 0px;
 }
 
-KDC--SynthesisPopover QListView::item
+KDC--SynthesisPopover QListWidget::item
 {
     min-width: 300px;
     max-width: 300px;
@@ -112,6 +76,86 @@ KDC--CustomToolButton
     qproperty-icon_color: #666666;
 }
 
+/*****************************/
+/* KDC--DriveSelectionWidget */
+/*****************************/
+
+KDC--DriveSelectionWidget
+{
+    background-color: transparent;
+    min-height: 30px;
+    max-height: 30px;
+    border: 0px;
+    border-radius: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
+    qproperty-drive_icon_size: 20px;
+    qproperty-down_icon_size: 12px;
+}
+
+KDC--DriveSelectionWidget:hover
+{
+    background-color: #F3F3F3;
+}
+
+KDC--DriveSelectionWidget QLabel#driveTextLabel
+{
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/**************************/
+/* KDC--ProgressBarWidget */
+/**************************/
+
+KDC--ProgressBarWidget QProgressBar
+{
+    background-color: #E0E0E0;
+    min-height: 5px;
+    max-height: 5px;
+    border: 0px;
+    border-radius: 2px;
+    padding: 0px;
+}
+
+KDC--ProgressBarWidget QProgressBar::chunk
+{
+    background-color: #66BC5C;
+    border: 0px;
+    border-radius: 2px;
+}
+
+KDC--ProgressBarWidget QLabel#progressLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: medium;
+    font-size: 13px;
+}
+
+/****************************/
+/* KDC--HalfRoundRectWidget */
+/****************************/
+
+KDC--HalfRoundRectWidget
+{
+    qproperty-bottom_corners_color: #EDEDED;
+}
+
+/************************/
+/* KDC--StatusBarWidget */
+/************************/
+
+KDC--StatusBarWidget QLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: medium;
+    font-size: 13px;
+}
+
 /*************************/
 /* KDC--CustomPushButton */
 /*************************/
@@ -124,13 +168,13 @@ KDC--CustomPushButton
     max-height: 30px;
     font-family: "Suisse Int'l";
     font-weight: semibold;
-    font: 14px;
+    font-size: 14px;
     border: 0px;
     border-radius: 15px;
     padding-left: 13px;
     padding-right: 13px;
-    /* !!! qproperty syntax cannot be used in pseudo-states !!! */
     qproperty-iconSize: 10px;
+    /* !!! qproperty syntax cannot be used in pseudo-states !!! */
     qproperty-icon_color: #666666;
     qproperty-icon_color_checked: #FFFFFF;
 }
@@ -139,24 +183,43 @@ KDC--CustomPushButton:checked
 {
     background-color: #3F97F7;
     color: #FFFFFF;
-    min-height: 30px;
-    max-height: 30px;
-    font-family: "Suisse Int'l";
-    font-weight: semibold;
-    font: 14px;
-    border: 0px;
-    border-radius: 15px;
-    padding-left: 13px;
-    padding-right: 13px;
 }
 
-/****************************/
-/* KDC--HalfRoundRectWidget */
-/****************************/
+/*************************/
+/* KDC--ButtonsBarWidget */
+/*************************/
 
-KDC--HalfRoundRectWidget
+KDC--ButtonsBarWidget
 {
-    qproperty-bottom_corners_color: #EDEDED;
+    qproperty-background_color: #EDEDED;
+}
+
+/*******************************/
+/* KDC--SynchronizedItemWidget */
+/*******************************/
+
+KDC--SynchronizedItemWidget
+{
+    qproperty-file_icon_size: 25px;
+    /* !!! qproperty syntax cannot be used in pseudo-states !!! */
+    qproperty-background_color: #EDEDED;
+    qproperty-background_color_selection: #FFFFFF;
+}
+
+KDC--SynchronizedItemWidget QLabel#fileNameLabel
+{
+    color: #444444;
+    font-family: "Suisse Int'l";
+    font-weight: medium;
+    font-size: 13px;
+}
+
+KDC--SynchronizedItemWidget QLabel#fileDateLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: normal;
+    font-size: 13px;
 }
 
 /*********************/
@@ -169,28 +232,3 @@ KDC--BottomWidget
     max-height: 5px;
     qproperty-background_color: #EDEDED;
 }
-
-/*******************/
-/* KDC--RectWidget */
-/*******************/
-
-KDC--RectWidget
-{
-    qproperty-background_color: #EDEDED;
-}
-
-/*******************************/
-/* KDC--SynchronizedItemWidget */
-/*******************************/
-
-KDC--SynchronizedItemWidget
-{
-    font-family: "Suisse Int'l";
-    font-weight: medium;
-    font: 13px;
-    qproperty-background_color: #EDEDED;
-    qproperty-background_color_selection: #FFFFFF;
-    qproperty-file_name_color: #444444;
-    qproperty-file_date_color: #666666;
-}
-

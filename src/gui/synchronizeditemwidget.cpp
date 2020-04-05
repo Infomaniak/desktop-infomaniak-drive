@@ -9,9 +9,6 @@
 #include <QMimeType>
 #include <QPainter>
 #include <QPainterPath>
-#include <QPixmap>
-#include <QPoint>
-#include <QStyleOption>
 
 namespace KDC {
 
@@ -20,33 +17,27 @@ static const int hMargin= 15;
 static const int vMargin = 0;
 static const int boxHMargin= 12;
 static const int boxVMargin = 5;
-static const int iconWidth = 25;
-static const int iconHeight = 25;
+static const int boxSpacing = 12;
 static const QString dateFormat = "d MMM. - HH:mm";
 
-SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, bool isSelected, QWidget *parent)
+SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWidget *parent)
     : QWidget(parent)
     , _item(item)
-    , _isSelected(isSelected)
-    , _fileName(QString())
-    , _fileDate(QString())
-    , _fileNameLabel(nullptr)
-    , _fileDateLabel(nullptr)
-    , _fileNameColor(Qt::black)
-    , _fileDateColor(Qt::black)
+    , _isSelected(false)
+    , _fileIconSize(QSize())
+    , _backgroundColor(QColor())
+    , _backgroundColorSelection(QColor())
+    , _fileIconLabel(nullptr)
 {
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
 
     QHBoxLayout *hbox = new QHBoxLayout(this);
     hbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
-    hbox->setSpacing(12);
+    hbox->setSpacing(boxSpacing);
     setLayout(hbox);
 
-    QLabel *fileIconLabel = new QLabel(this);
-    QFileInfo fileInfo(_item.name());
-    QIcon fileIcon = getIconFromFileName(fileInfo.fileName());
-    fileIconLabel->setPixmap(fileIcon.pixmap(QSize(iconWidth, iconHeight)));
-    hbox->addWidget(fileIconLabel);
+    _fileIconLabel = new QLabel(this);
+    hbox->addWidget(_fileIconLabel);
 
     QVBoxLayout *vbox = new QVBoxLayout(this);
     vbox->setContentsMargins(0, 0, 0, 0);
@@ -56,9 +47,11 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, boo
     hboxNameAndButtons->setContentsMargins(0, 0, 0, 0);
     hboxNameAndButtons->setSpacing(0);
 
-    _fileNameLabel = new QLabel(this);
-    _fileName = fileInfo.fileName();
-    hboxNameAndButtons->addWidget(_fileNameLabel);
+    QLabel *fileNameLabel = new QLabel(this);
+    fileNameLabel->setObjectName("fileNameLabel");
+    QFileInfo fileInfo(_item.name());
+    fileNameLabel->setText(fileInfo.fileName());
+    hboxNameAndButtons->addWidget(fileNameLabel);
 
     hboxNameAndButtons->addStretch();
 
@@ -72,15 +65,17 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, boo
 
     vbox->addLayout(hboxNameAndButtons);
 
-    _fileDateLabel = new QLabel(this);
-    _fileDate = _item.dateTime().toString(dateFormat);
-    vbox->addWidget(_fileDateLabel);
+    QLabel *fileDateLabel = new QLabel(this);
+    fileDateLabel->setObjectName("fileDateLabel");
+    fileDateLabel->setText(_item.dateTime().toString(dateFormat));
+    vbox->addWidget(fileDateLabel);
     vbox->addStretch();
 
     hbox->addLayout(vbox);
 
-    connect(this, &SynchronizedItemWidget::fileNameColorChanged, this, &SynchronizedItemWidget::onFileNameColorChanged);
-    connect(this, &SynchronizedItemWidget::fileDateColorChanged, this, &SynchronizedItemWidget::onFileDateColorChanged);
+    connect(this, &SynchronizedItemWidget::fileIconSizeChanged, this, &SynchronizedItemWidget::onFileIconSizeChanged);
+    connect(folderButton, &CustomToolButton::clicked, this, &SynchronizedItemWidget::onFolderButtonClicked);
+    connect(menuButton, &CustomToolButton::clicked, this, &SynchronizedItemWidget::onMenuButtonClicked);
 }
 
 void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
@@ -164,18 +159,23 @@ QIcon SynchronizedItemWidget::getIconFromFileName(const QString &fileName) const
     return QIcon(":/client/resources/icons/document types/file-default.svg");
 }
 
-void SynchronizedItemWidget::onFileNameColorChanged()
+void SynchronizedItemWidget::onFileIconSizeChanged()
 {
-    if (_fileNameLabel) {
-        _fileNameLabel->setText(QString("<font color=\"%1\">%2</font>").arg(_fileNameColor.name()).arg(_fileName));
+    if (_fileIconLabel) {
+        QFileInfo fileInfo(_item.name());
+        QIcon fileIcon = getIconFromFileName(fileInfo.fileName());
+        _fileIconLabel->setPixmap(fileIcon.pixmap(_fileIconSize));
     }
 }
 
-void SynchronizedItemWidget::onFileDateColorChanged()
+void SynchronizedItemWidget::onFolderButtonClicked()
 {
-    if (_fileDateLabel) {
-        _fileDateLabel->setText(QString("<font color=\"%1\">%2</font>").arg(_fileDateColor.name()).arg(_fileDate));
-    }
+
+}
+
+void SynchronizedItemWidget::onMenuButtonClicked()
+{
+
 }
 
 }

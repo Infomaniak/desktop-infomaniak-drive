@@ -1,36 +1,21 @@
 #include "synthesispopover.h"
-#include "halfroundrectwidget.h"
-#include "rectwidget.h"
+#include "buttonsbarwidget.h"
 #include "bottomwidget.h"
 #include "custompushbutton.h"
 #include "customtoolbutton.h"
-#include "synchronizeditemdelegate.h"
 #include "synchronizeditem.h"
-#include "guiutility.h"
-#include "theme.h"
-#include "syncresult.h"
+#include "synchronizeditemwidget.h"
 
-#include <iostream>
-#include <cstdlib>
-
-#include <QAction>
-#include <QApplication>
 #include <QBoxLayout>
-#include <QBrush>
-#include <QComboBox>
 #include <QDateTime>
-#include <QGraphicsPixmapItem>
-#include <QImage>
+#include <QGuiApplication>
 #include <QLabel>
-#include <QListView>
+#include <QListWidget>
+#include <QListWidgetItem>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPolygon>
-#include <QProgressBar>
 #include <QScreen>
-#include <QStackedWidget>
-#include <QStandardItem>
-#include <QToolBar>
 
 namespace KDC {
 
@@ -40,27 +25,26 @@ static const int trianglePosition = 100; // Position from side
 static const int cornerRadius = 5;
 static const int toolBarHMargin = 10;
 static const int toolBarVMargin = 10;
-static const int driveBarHMargin = 15;
+static const int driveBarHMargin = 10;
 static const int driveBarVMargin = 10;
-static const int progressBarHMargin = 15;
-static const int progressBarVMargin = 10;
-static const int statusBarHMargin = 15;
-static const int statusBarVMargin = 20;
-static const int buttonsBarHMargin = 30;
-static const int buttonsBarVMargin = 15;
-static const int hSpacing = 15;
+static const int driveBarSpacing = 15;
 static const int logoIconSize = 30;
-static const int statusIconSize = 24;
 
 SynthesisPopover::SynthesisPopover(QWidget *parent)
     : QDialog(parent)
     , _sysTrayIconPosition(QPoint(0, 0))
-    , _backgroundMainColor(Qt::white)
+    , _backgroundMainColor(QColor())
+    , _driveSelectionWidget(nullptr)
+    , _progressBarWidget(nullptr)
+    , _statusBarWidget(nullptr)
+    , _stackedWidget(nullptr)
+    , _synchronizedListWidget(nullptr)
 {
     setModal(true);
-    setWindowFlags(Qt::FramelessWindowHint);
+    setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
 
     init();
+    load();
 }
 
 void SynthesisPopover::setSysTrayIconPosition(const QPoint &sysTrayIconPosition)
@@ -68,11 +52,30 @@ void SynthesisPopover::setSysTrayIconPosition(const QPoint &sysTrayIconPosition)
     _sysTrayIconPosition = sysTrayIconPosition;
 }
 
+void SynthesisPopover::setTransferTotalSize(long size)
+{
+    if (_progressBarWidget) {
+        _progressBarWidget->setTransferTotalSize(size);
+    }
+}
+
+void SynthesisPopover::setTransferSize(long size)
+{
+    if (_progressBarWidget) {
+        _progressBarWidget->setTransferSize(size);
+    }
+}
+
+void SynthesisPopover::setStatus(OCC::SyncResult::Status status, int fileNum, int fileCount, const QTime &time)
+{
+    if (_statusBarWidget) {
+        _statusBarWidget->setStatus(status, fileNum, fileCount, time);
+    }
+}
+
 void SynthesisPopover::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-
-    std::cout << "SynthesisPopover::paintEvent" << std::endl;
 
     QRect widgetRect = rect();
     QSize screenSize = QGuiApplication::screenAt(_sysTrayIconPosition)->size();
@@ -122,17 +125,8 @@ void SynthesisPopover::paintEvent(QPaintEvent *event)
     painter.drawPath(painterPath);
 }
 
-void SynthesisPopover::showEvent(QShowEvent *event)
-{
-    Q_UNUSED(event);
-
-    //QEvent e(QEvent::WindowActivate);
-    //QApplication::postEvent(this, &e);
-}
-
 bool SynthesisPopover::event(QEvent *event)
 {
-    std::cout << "Event: " << event->type() << std::endl;
     if (event->type() == QEvent::WindowDeactivate) {
         done(0);
         event->ignore();
@@ -150,7 +144,7 @@ void SynthesisPopover::init()
 
     // Tool bar
     QHBoxLayout *hboxToolBar = new QHBoxLayout(this);
-    hboxToolBar->setContentsMargins(toolBarHMargin, toolBarVMargin, toolBarHMargin, 0);
+    hboxToolBar->setContentsMargins(toolBarHMargin, toolBarVMargin, toolBarHMargin, toolBarVMargin);
     hboxToolBar->setSpacing(0);
     mainVBox->addLayout(hboxToolBar);
 
@@ -160,7 +154,6 @@ void SynthesisPopover::init()
 
     QWidget *spacerWidget = new QWidget(this);
     spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    spacerWidget->setVisible(true);
     hboxToolBar->addWidget(spacerWidget);
 
     CustomToolButton *folderButton = new CustomToolButton(this);
@@ -176,115 +169,156 @@ void SynthesisPopover::init()
     hboxToolBar->addWidget(menuButton);
 
     // Drive selection
-    QHBoxLayout *hboxDrive = new QHBoxLayout(this);
-    hboxDrive->setContentsMargins(driveBarHMargin, driveBarVMargin, driveBarHMargin, 0);
+    QHBoxLayout *hboxDriveBar = new QHBoxLayout(this);
+    hboxDriveBar->setContentsMargins(driveBarHMargin, driveBarVMargin, driveBarHMargin, driveBarVMargin);
+    hboxDriveBar->setSpacing(driveBarSpacing);
 
-    QLabel *driveIconLabel = new QLabel(this);
-    driveIconLabel->setPixmap(QIcon(":/client/resources/icons/actions/drive.svg").pixmap(18, 18));
-    hboxDrive->addWidget(driveIconLabel);
+    _driveSelectionWidget = new DriveSelectionWidget(this);
+    hboxDriveBar->addWidget(_driveSelectionWidget);
 
-    QComboBox *driveComboBox = new QComboBox(this);
-    driveComboBox->addItem("FSociety");
-    hboxDrive->addWidget(driveComboBox);
-    hboxDrive->addStretch();
-    mainVBox->addLayout(hboxDrive);
+    hboxDriveBar->addStretch();
+    mainVBox->addLayout(hboxDriveBar);
 
     // Progress bar
-    QHBoxLayout *hboxProgressBar = new QHBoxLayout(this);
-    hboxProgressBar->setContentsMargins(progressBarHMargin, progressBarVMargin, progressBarHMargin, 0);
-    hboxProgressBar->setSpacing(hSpacing);
-
-    QProgressBar *progressBar = new QProgressBar(this);
-    progressBar->setMinimum(0);
-    progressBar->setMaximum(100);
-    progressBar->setValue(30);
-    progressBar->setFormat(QString());
-    hboxProgressBar->addWidget(progressBar);
-
-    QLabel *progressLabel = new QLabel("60 Go / 1 To", this);
-    hboxProgressBar->addWidget(progressLabel);
-    mainVBox->addLayout(hboxProgressBar);
+    _progressBarWidget = new ProgressBarWidget(this);
+    mainVBox->addWidget(_progressBarWidget);
 
     // Status bar
-    HalfRoundRectWidget *statusBarWidget = new HalfRoundRectWidget(this);
-    statusBarWidget->getLayout()->setContentsMargins(statusBarHMargin, statusBarVMargin, statusBarHMargin, statusBarVMargin);
-
-    QLabel *statusIconLabel = new QLabel(this);
-    statusIconLabel->setPixmap(OCC::Theme::instance()->syncStateIcon(OCC::SyncResult::SyncRunning).pixmap(QSize(statusIconSize, statusIconSize)));
-    statusBarWidget->getLayout()->addWidget(statusIconLabel);
-
-    QLabel *statusLabel = new QLabel("Synchronisation en cours (15 sur 200)\n25 minutes restantes...", this);
-    statusBarWidget->getLayout()->addWidget(statusLabel);
-    statusBarWidget->getLayout()->addStretch();
-
-    CustomToolButton *pauseButton = new CustomToolButton(this);
-    pauseButton->setIconPath(":/client/resources/icons/actions/pause.svg");
-    statusBarWidget->getLayout()->addWidget(pauseButton);
-    mainVBox->addWidget(statusBarWidget);
+    _statusBarWidget = new StatusBarWidget(this);
+    mainVBox->addWidget(_statusBarWidget);
 
     // Buttons bar
-    RectWidget *buttonsBarWidget = new RectWidget(this);
-    buttonsBarWidget->getLayout()->setContentsMargins(buttonsBarHMargin, buttonsBarVMargin, buttonsBarHMargin, buttonsBarVMargin);
+    ButtonsBarWidget *buttonsBarWidget = new ButtonsBarWidget(this);
 
     CustomPushButton *synchronizedButton = new CustomPushButton(tr("Synchronisés"), buttonsBarWidget);
     synchronizedButton->setIconPath(":/client/resources/icons/actions/sync.svg");
-    synchronizedButton->setChecked(true);
-    buttonsBarWidget->getLayout()->addWidget(synchronizedButton);
+    buttonsBarWidget->insertButton(stackedWidget::SynchronizedItems, synchronizedButton);
 
     CustomPushButton *favoritesButton = new CustomPushButton(tr("Favoris"), buttonsBarWidget);
     favoritesButton->setIconPath(":/client/resources/icons/actions/favorite.svg");
-    buttonsBarWidget->getLayout()->addWidget(favoritesButton);
+    buttonsBarWidget->insertButton(stackedWidget::Favorites, favoritesButton);
 
     CustomPushButton *activityButton = new CustomPushButton(tr("Activité"), buttonsBarWidget);
     activityButton->setIconPath(":/client/resources/icons/actions/notifications.svg");
-    buttonsBarWidget->getLayout()->addWidget(activityButton);
+    buttonsBarWidget->insertButton(stackedWidget::Activity, activityButton);
 
     mainVBox->addWidget(buttonsBarWidget);
 
     // Stacked widget
-    QStackedWidget *stackedWidget = new QStackedWidget(this);
+    _stackedWidget = new QStackedWidget(this);
 
-    QStandardItemModel *synchronizedModel = new QStandardItemModel(stackedWidget);
-    populateSynchronizedList(synchronizedModel);
+    _synchronizedListWidget = new QListWidget(this);
+    _synchronizedListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    _synchronizedListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    _synchronizedListWidget->setSpacing(0);
 
-    QListView *synchronizedListView = new QListView(stackedWidget);
-    synchronizedListView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    synchronizedListView->setSpacing(0);
-    synchronizedListView->setModel(synchronizedModel);
-    synchronizedListView->setItemDelegate(new SynchronizedItemDelegate(stackedWidget));
-    synchronizedListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    synchronizedListView->setCurrentIndex(synchronizedModel->index(0, 0));
+    _stackedWidget->insertWidget(stackedWidget::SynchronizedItems, _synchronizedListWidget);
 
-    stackedWidget->addWidget(synchronizedListView);
+    QWidget *favoritesWidget = new QWidget(this);
+    _stackedWidget->insertWidget(stackedWidget::Favorites, favoritesWidget);
 
-    mainVBox->addWidget(stackedWidget);
-    mainVBox->setStretchFactor(stackedWidget, 1);
+    QWidget *activityWidget = new QWidget(this);
+    _stackedWidget->insertWidget(stackedWidget::Activity, activityWidget);
+
+    mainVBox->addWidget(_stackedWidget);
+    mainVBox->setStretchFactor(_stackedWidget, 1);
 
     // Bottom
     BottomWidget *bottomWidget = new BottomWidget(this);
     mainVBox->addWidget(bottomWidget);
 
     setLayout(mainVBox);
+
+    connect(folderButton, &CustomToolButton::clicked, this, &SynthesisPopover::onFolderButtonClicked);
+    connect(webviewButton, &CustomToolButton::clicked, this, &SynthesisPopover::onWebviewButtonClicked);
+    connect(menuButton, &CustomToolButton::clicked, this, &SynthesisPopover::onMenuButtonClicked);
+    connect(_driveSelectionWidget, &DriveSelectionWidget::driveSelected, this, &SynthesisPopover::onDriveSelected);
+    connect(buttonsBarWidget, &ButtonsBarWidget::buttonToggled, this, &SynthesisPopover::onButtonBarToggled);
+    connect(_synchronizedListWidget, &QListWidget::currentItemChanged, this, &SynthesisPopover::onCurrentItemChanged);
 }
 
-void SynthesisPopover::populateSynchronizedList(QStandardItemModel *model)
+void SynthesisPopover::load()
 {
+    loadDriveList();
+    setTransferTotalSize(1000000);
+    setTransferSize(60000);
+    setStatus(OCC::SyncResult::SyncRunning, 15, 200, QTime(0, 25));
+    loadSynchronizedList();
+}
+
+void SynthesisPopover::loadDriveList()
+{
+    _driveSelectionWidget->addDrive(111111, "FSociety", QColor("#666666"));
+    _driveSelectionWidget->addDrive(222222, "Perso", QColor("#FF0000"));
+    _driveSelectionWidget->selectDrive(111111);
+}
+
+void SynthesisPopover::loadSynchronizedList()
+{
+    QListWidgetItem *item;
+    SynchronizedItemWidget *widget;
+
+    item = new QListWidgetItem(_synchronizedListWidget);
+    SynchronizedItem itemData3 = SynchronizedItem("Rapport des ventes - mai 2019.pdf", QDateTime::currentDateTime());
+    _synchronizedListWidget->insertItem(0, item);
+    widget = new SynchronizedItemWidget(itemData3, _synchronizedListWidget);
+    _synchronizedListWidget->setItemWidget(item, widget);
+
+    item = new QListWidgetItem(_synchronizedListWidget);
+    SynchronizedItem itemData2 = SynchronizedItem("Music.mp3", QDateTime::currentDateTime());
+    _synchronizedListWidget->insertItem(0, item);
+    widget = new SynchronizedItemWidget(itemData2, _synchronizedListWidget);
+    _synchronizedListWidget->setItemWidget(item, widget);
+
     for (int i = 0; i < 10; i++) {
-        QStandardItem *item1 = new QStandardItem("Picture.jpg");
-        SynchronizedItem itemData1 = SynchronizedItem(item1->text(), QDateTime::currentDateTime());
-        item1->setData(QVariant::fromValue(itemData1), Qt::DisplayRole);
-        model->insertRow(0, item1);
+        item = new QListWidgetItem(_synchronizedListWidget);
+        _synchronizedListWidget->insertItem(0, item);
+        SynchronizedItem itemData1 = SynchronizedItem("Picture.jpg", QDateTime::currentDateTime());
+        widget = new SynchronizedItemWidget(itemData1, _synchronizedListWidget);
+        _synchronizedListWidget->setItemWidget(item, widget);
     }
 
-    QStandardItem *item2 = new QStandardItem("Music.mp3");
-    SynchronizedItem itemData2 = SynchronizedItem(item2->text(), QDateTime::currentDateTime());
-    item2->setData(QVariant::fromValue(itemData2), Qt::DisplayRole);
-    model->insertRow(0, item2);
+    _synchronizedListWidget->setCurrentRow(0);
+}
 
-    QStandardItem *item3 = new QStandardItem("Rapport des ventes - mai 2019.pdf");
-    SynchronizedItem itemData3 = SynchronizedItem(item3->text(), QDateTime::currentDateTime());
-    item3->setData(QVariant::fromValue(itemData3), Qt::DisplayRole);
-    model->insertRow(0, item3);
+void SynthesisPopover::onFolderButtonClicked()
+{
+
+}
+
+void SynthesisPopover::onWebviewButtonClicked()
+{
+
+}
+
+void SynthesisPopover::onMenuButtonClicked()
+{
+
+}
+
+void SynthesisPopover::onDriveSelected(int id)
+{
+    Q_UNUSED(id)
+}
+
+void SynthesisPopover::onButtonBarToggled(int position)
+{
+    _stackedWidget->setCurrentIndex(position);
+}
+
+void SynthesisPopover::onCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+    if (previous) {
+        SynchronizedItemWidget *previousWidget =
+                dynamic_cast<SynchronizedItemWidget *>(_synchronizedListWidget->itemWidget(previous));
+        previousWidget->setSelected(false);
+    }
+
+    if (current) {
+        SynchronizedItemWidget *currentWidget =
+                dynamic_cast<SynchronizedItemWidget *>(_synchronizedListWidget->itemWidget(current));
+        currentWidget->setSelected(true);
+    }
 }
 
 }

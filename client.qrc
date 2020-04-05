@@ -22,9 +22,6 @@
         <file>resources/account.png</file>
         <file>resources/delete.png</file>
         <file>resources/bell.png</file>
-        <file>resources/SuisseIntl-Bold.otf</file>
-        <file>resources/SuisseIntl-Medium.otf</file>
-        <file>resources/SuisseIntl-SemiBold.otf</file>
         <file>resources/icons/actions/add.svg</file>
         <file>resources/icons/actions/arrow-left.svg</file>
         <file>resources/icons/actions/check.svg</file>
@@ -102,6 +99,23 @@
         <file>resources/logos/kdrive-without-text.svg</file>
         <file>resources/stylesheetblack.qss</file>
         <file>resources/stylesheetwhite.qss</file>
-        <file>resources/SuisseIntl-Regular.otf</file>
+        <file>resources/fonts/SuisseIntl-Black.otf</file>
+        <file>resources/fonts/SuisseIntl-BlackItalic.otf</file>
+        <file>resources/fonts/SuisseIntl-Bold.otf</file>
+        <file>resources/fonts/SuisseIntl-BoldItalic.otf</file>
+        <file>resources/fonts/SuisseIntl-Book.otf</file>
+        <file>resources/fonts/SuisseIntl-BookItalic.otf</file>
+        <file>resources/fonts/SuisseIntl-Light.otf</file>
+        <file>resources/fonts/SuisseIntl-LightItalic.otf</file>
+        <file>resources/fonts/SuisseIntl-Medium.otf</file>
+        <file>resources/fonts/SuisseIntl-MediumItalic.otf</file>
+        <file>resources/fonts/SuisseIntl-Regular.otf</file>
+        <file>resources/fonts/SuisseIntl-RegularItalic.otf</file>
+        <file>resources/fonts/SuisseIntl-SemiBold.otf</file>
+        <file>resources/fonts/SuisseIntl-SemiBoldItalic.otf</file>
+        <file>resources/fonts/SuisseIntl-Thin.otf</file>
+        <file>resources/fonts/SuisseIntl-ThinItalic.otf</file>
+        <file>resources/fonts/SuisseIntl-UltraLight.otf</file>
+        <file>resources/fonts/SuisseIntl-UltraLightItalic.otf</file>
     </qresource>
 </RCC>

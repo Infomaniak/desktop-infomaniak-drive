@@ -12,16 +12,32 @@ static const int cornerRadius = 40;
 
 HalfRoundRectWidget::HalfRoundRectWidget(QWidget *parent)
     : QWidget(parent)
+    , _bottomCornersColor(QColor())
+    , _hboxLayout(nullptr)
 {
     _hboxLayout = new QHBoxLayout(this);
     setLayout(_hboxLayout);
+}
+
+void HalfRoundRectWidget::setContentsMargins(int left, int top, int right, int bottom)
+{
+    _hboxLayout->setContentsMargins(left, top, right, bottom);
+}
+
+void HalfRoundRectWidget::addWidget(QWidget *widget, int stretch, Qt::Alignment alignment)
+{
+    _hboxLayout->addWidget(widget, stretch, alignment);
+}
+
+void HalfRoundRectWidget::addStretch(int stretch)
+{
+    _hboxLayout->addStretch(stretch);
 }
 
 void HalfRoundRectWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
-    // Half round rectangle
     QPointF rectangleLeftBottom(0, rect().height());
     QPointF rectangleRightBottom(rect().width(), rect().height());
 
