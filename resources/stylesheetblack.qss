@@ -9,12 +9,12 @@ QInputDialog QLabel
 
 KDC--SynthesisPopover
 {
-    background-color: transparent;
     min-width: 400px;
     max-width: 400px;
     min-height: 560px;
     max-height: 560px;
     qproperty-background_main_color: #35393D;
+    qproperty-border_color: #B8B8B8;
 }
 
 KDC--SynthesisPopover QScrollBar

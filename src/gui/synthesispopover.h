@@ -18,12 +18,16 @@ class SynthesisPopover : public QDialog
     Q_OBJECT
 
     Q_PROPERTY(QColor background_main_color READ backgroundMainColor WRITE setBackgroundMainColor)
+    Q_PROPERTY(QColor border_color READ borderColor WRITE setBorderColor)
 
 public:
     explicit SynthesisPopover(QWidget *parent = nullptr);
 
     inline QColor backgroundMainColor() const { return _backgroundMainColor; }
     inline void setBackgroundMainColor(const QColor &value) { _backgroundMainColor = value; }
+
+    inline QColor borderColor() const { return _borderColor; }
+    inline void setBorderColor(const QColor &value) { _borderColor = value; }
 
     void setSysTrayIconRect(const QRect &sysTrayIconRect);
     void setTransferTotalSize(long size);
@@ -39,6 +43,7 @@ private:
 
     QRect _sysTrayIconRect;
     QColor _backgroundMainColor;
+    QColor _borderColor;
     DriveSelectionWidget *_driveSelectionWidget;
     ProgressBarWidget *_progressBarWidget;
     StatusBarWidget *_statusBarWidget;
