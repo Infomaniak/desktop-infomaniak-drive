@@ -19,7 +19,7 @@ KDC--SynthesisPopover
 
 KDC--SynthesisPopover QScrollBar
 {
-    background-color: #1B1B1D;
+    background-color: #1A1A1C;
     border: 0px;
     width: 3px;
     margin: 0px 0px 0px 0px;
@@ -47,7 +47,7 @@ KDC--SynthesisPopover QScrollBar::sub-line
 
 KDC--SynthesisPopover QListWidget
 {
-    background-color: #1B1B1D;
+    background-color: #1A1A1C;
     border: 0px;
 }
 
@@ -90,7 +90,7 @@ KDC--DriveSelectionWidget
 
 KDC--DriveSelectionWidget:hover
 {
-    background-color: #B8B8B8;
+    background-color: #1A1A1C;
 }
 
 KDC--DriveSelectionWidget QLabel#driveTextLabel
@@ -136,7 +136,7 @@ KDC--ProgressBarWidget QLabel#progressLabel
 
 KDC--HalfRoundRectWidget
 {
-    qproperty-bottom_corners_color: #1B1B1D;
+    qproperty-bottom_corners_color: #1A1A1C;
 }
 
 /************************/
@@ -157,7 +157,7 @@ KDC--StatusBarWidget QLabel
 
 KDC--CustomPushButton
 {
-    background-color: #1B1B1D;
+    background-color: #1A1A1C;
     color: #B8B8B8;
     min-height: 30px;
     max-height: 30px;
@@ -186,7 +186,7 @@ KDC--CustomPushButton:checked
 
 KDC--ButtonsBarWidget
 {
-    qproperty-background_color: #1B1B1D;
+    qproperty-background_color: #1A1A1C;
 }
 
 /*******************************/
@@ -197,7 +197,7 @@ KDC--SynchronizedItemWidget
 {
     qproperty-file_icon_size: 25px;
     /* !!! qproperty syntax cannot be used in pseudo-states !!! */
-    qproperty-background_color: #1B1B1D;
+    qproperty-background_color: #1A1A1C;
     qproperty-background_color_selection: #35393D;
 }
 
@@ -225,5 +225,5 @@ KDC--BottomWidget
 {
     min-height: 5px;
     max-height: 5px;
-    qproperty-background_color: #1B1B1D;
+    qproperty-background_color: #1A1A1C;
 }
