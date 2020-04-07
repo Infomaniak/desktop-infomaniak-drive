@@ -25,6 +25,12 @@
 
 namespace OCC {
 namespace Utility {
+    enum systrayPosition {
+        Top = 0,
+        Bottom,
+        Left,
+        Right
+    };
 
     /** Open an url in the browser.
      *
@@ -52,6 +58,8 @@ namespace Utility {
     QString vfsFreeSpaceActionText();
 
     QIcon getIconWithColor(const QString &path, const QColor &color = QColor());
+
+    systrayPosition getSystrayPosition(QScreen *screen);
 
 } // namespace Utility
 } // namespace OCC

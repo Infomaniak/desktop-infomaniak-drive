@@ -5,6 +5,7 @@
 #include "customtoolbutton.h"
 #include "synchronizeditem.h"
 #include "synchronizeditemwidget.h"
+#include "guiutility.h"
 
 #include <QBoxLayout>
 #include <QDateTime>
@@ -25,6 +26,7 @@ static const int trianglePosition = 100; // Position from side
 static const int cornerRadius = 5;
 static const int toolBarHMargin = 10;
 static const int toolBarVMargin = 10;
+static const int toolBarSpacing = 5;
 static const int driveBarHMargin = 10;
 static const int driveBarVMargin = 10;
 static const int driveBarSpacing = 15;
@@ -32,7 +34,7 @@ static const int logoIconSize = 30;
 
 SynthesisPopover::SynthesisPopover(QWidget *parent)
     : QDialog(parent)
-    , _sysTrayIconPosition(QPoint(0, 0))
+    , _sysTrayIconRect(QRect())
     , _backgroundMainColor(QColor())
     , _driveSelectionWidget(nullptr)
     , _progressBarWidget(nullptr)
@@ -40,16 +42,21 @@ SynthesisPopover::SynthesisPopover(QWidget *parent)
     , _stackedWidget(nullptr)
     , _synchronizedListWidget(nullptr)
 {
+    setVisible(false);
     setModal(true);
-    setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
+    setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+
+    // Linux workaround - qss background property is not taken into account
+    setAttribute(Qt::WA_TranslucentBackground);
 
     init();
     load();
+    setVisible(true);
 }
 
-void SynthesisPopover::setSysTrayIconPosition(const QPoint &sysTrayIconPosition)
+void SynthesisPopover::setSysTrayIconRect(const QRect &sysTrayIconRect)
 {
-    _sysTrayIconPosition = sysTrayIconPosition;
+    _sysTrayIconRect = sysTrayIconRect;
 }
 
 void SynthesisPopover::setTransferTotalSize(long size)
@@ -77,44 +84,119 @@ void SynthesisPopover::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
-    QRect widgetRect = rect();
-    QSize screenSize = QGuiApplication::screenAt(_sysTrayIconPosition)->size();
-    bool trianglePositionLeft = _sysTrayIconPosition.x() + widgetRect.width() - trianglePosition < screenSize.width();
-    bool trianglePositionTop = _sysTrayIconPosition.y() < screenSize.height() - _sysTrayIconPosition.y();
+    QScreen *screen = QGuiApplication::screenAt(_sysTrayIconRect.center());
+    if (!screen) {
+        return;
+    }
 
-    // Position of the dialog (left/top corner)
-    QPoint popoverPosition(
-        trianglePositionLeft
-        ? _sysTrayIconPosition.x() - trianglePosition
-        : _sysTrayIconPosition.x() - widgetRect.width() + trianglePosition,
-        trianglePositionTop
-        ? _sysTrayIconPosition.y()
-        : _sysTrayIconPosition.y() - widgetRect.height());
-    move(popoverPosition);
+    OCC::Utility::systrayPosition position = OCC::Utility::getSystrayPosition(screen);
 
-    // Triangle
-    QPointF triangleLeftPoint(
-        trianglePositionLeft
-        ? trianglePosition - triangleWidth / 2.0
-        : widgetRect.width() - trianglePosition - triangleWidth / 2.0,
-        triangleHeight);
-    QPointF triangleRightPoint(
-        trianglePositionLeft
-        ? trianglePosition + triangleWidth / 2.0
-        : widgetRect.width() - trianglePosition + triangleWidth / 2.0,
-        triangleHeight);
-    QPointF triangleTopPoint(
-        trianglePositionLeft
-        ? trianglePosition
-        : widgetRect.width() - trianglePosition,
-        0);
+    // Dialog position (left/top corner) && triangle polygon
+    QRect screenRect = screen->availableGeometry();
+    QPoint popoverPosition;
+    QPointF trianglePoint1;
+    QPointF trianglePoint2;
+    QPointF trianglePoint3;
     QPolygonF triangle;
-    triangle << triangleLeftPoint << triangleTopPoint << triangleRightPoint;
+    if (position == OCC::Utility::systrayPosition::Top
+            || position == OCC::Utility::systrayPosition::Bottom) {
+        if (_sysTrayIconRect == QRect()) {
+            // Unknown Systray position - Linux workaround
+            _sysTrayIconRect.setX(screenRect.x() + screenRect.width() - trianglePosition - 50);
+            _sysTrayIconRect.setY(
+                        position == OCC::Utility::systrayPosition::Top
+                        ? screenRect.y()
+                        : screenRect.y() + screenRect.height());
+            _sysTrayIconRect.setWidth(0);
+            _sysTrayIconRect.setHeight(0);
+        }
+
+        // Triangle position (left/right)
+        bool trianglePositionLeft =
+                (_sysTrayIconRect.center().x() + rect().width() - trianglePosition
+                < screenRect.x() + screenRect.width());
+
+        // Dialog position
+        popoverPosition = QPoint(
+            trianglePositionLeft
+            ? _sysTrayIconRect.center().x() - trianglePosition
+            : _sysTrayIconRect.center().x() - rect().width() + trianglePosition,
+            position == OCC::Utility::systrayPosition::Top
+            ? _sysTrayIconRect.bottom()
+            : _sysTrayIconRect.top() - rect().height());
+
+        // Triangle
+        trianglePoint1 = QPoint(
+            trianglePositionLeft
+            ? trianglePosition - triangleWidth / 2.0
+            : rect().width() - trianglePosition - triangleWidth / 2.0,
+            triangleHeight);
+        trianglePoint2 = QPoint(
+            trianglePositionLeft
+            ? trianglePosition
+            : rect().width() - trianglePosition,
+            position == OCC::Utility::systrayPosition::Top
+            ? 0
+            : rect().height());
+        trianglePoint3 = QPoint(
+            trianglePositionLeft
+            ? trianglePosition + triangleWidth / 2.0
+            : rect().width() - trianglePosition + triangleWidth / 2.0,
+            triangleHeight);
+    }
+    else {
+        if (_sysTrayIconRect == QRect()) {
+            // Unknown Systray position - Linux workaround
+            _sysTrayIconRect.setX(
+                        position == OCC::Utility::systrayPosition::Left
+                        ? screenRect.x()
+                        : screenRect.x() + screenRect.width());
+            _sysTrayIconRect.setY(screenRect.y() + screenRect.height() - trianglePosition - 50);
+            _sysTrayIconRect.setWidth(0);
+            _sysTrayIconRect.setHeight(0);
+        }
+
+        // Triangle position (top/bottom)
+        bool trianglePositionTop =
+                (_sysTrayIconRect.center().y() + rect().height() - trianglePosition
+                < screenRect.y() + screenRect.height());
+
+        // Dialog position
+        popoverPosition = QPoint(
+            position == OCC::Utility::systrayPosition::Left
+            ? _sysTrayIconRect.right()
+            : _sysTrayIconRect.left() - rect().width(),
+            trianglePositionTop
+            ? _sysTrayIconRect.center().y() - trianglePosition
+            : _sysTrayIconRect.center().y() - rect().height() + trianglePosition);
+
+        // Triangle
+        trianglePoint1 = QPoint(
+            triangleHeight,
+            trianglePositionTop
+            ? trianglePosition - triangleWidth / 2.0
+            : rect().height() - trianglePosition - triangleWidth / 2.0);
+        trianglePoint2 = QPoint(
+            position == OCC::Utility::systrayPosition::Left
+            ? 0
+            : rect().width(),
+            trianglePositionTop
+            ? trianglePosition
+            : rect().height() - trianglePosition);
+        trianglePoint3 = QPoint(
+            triangleHeight,
+            trianglePositionTop
+            ? trianglePosition + triangleWidth / 2.0
+            : rect().height() - trianglePosition + triangleWidth / 2.0);
+    }
+
+    move(popoverPosition);
+    triangle << trianglePoint1 << trianglePoint2 << trianglePoint3;
 
     // Round rectangle
     QPainterPath painterPath;
     painterPath.addRoundedRect(
-                QRectF(0, triangleHeight, widgetRect.width(), widgetRect.height() - triangleHeight),
+                QRectF(0, triangleHeight, rect().width(), rect().height() - triangleHeight),
                 cornerRadius, cornerRadius);
     painterPath.addPolygon(triangle);
 
@@ -145,7 +227,7 @@ void SynthesisPopover::init()
     // Tool bar
     QHBoxLayout *hboxToolBar = new QHBoxLayout(this);
     hboxToolBar->setContentsMargins(toolBarHMargin, toolBarVMargin, toolBarHMargin, toolBarVMargin);
-    hboxToolBar->setSpacing(0);
+    hboxToolBar->setSpacing(toolBarSpacing);
     mainVBox->addLayout(hboxToolBar);
 
     QLabel *iconLabel = new QLabel(this);

@@ -8,7 +8,7 @@
 #include <QDialog>
 #include <QEvent>
 #include <QListWidget>
-#include <QPoint>
+#include <QRect>
 #include <QStackedWidget>
 
 namespace KDC {
@@ -25,7 +25,7 @@ public:
     inline QColor backgroundMainColor() const { return _backgroundMainColor; }
     inline void setBackgroundMainColor(const QColor &value) { _backgroundMainColor = value; }
 
-    void setSysTrayIconPosition(const QPoint &sysTrayIconPosition);
+    void setSysTrayIconRect(const QRect &sysTrayIconRect);
     void setTransferTotalSize(long size);
     void setTransferSize(long size);
     void setStatus(OCC::SyncResult::Status status, int fileNum, int fileCount, const QTime &time);
@@ -37,7 +37,7 @@ private:
         Activity
     };
 
-    QPoint _sysTrayIconPosition;
+    QRect _sysTrayIconRect;
     QColor _backgroundMainColor;
     DriveSelectionWidget *_driveSelectionWidget;
     ProgressBarWidget *_progressBarWidget;

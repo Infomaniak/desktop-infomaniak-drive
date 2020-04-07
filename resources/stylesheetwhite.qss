@@ -9,18 +9,12 @@ QInputDialog QLabel
 
 KDC--SynthesisPopover
 {
-    background: transparent;
+    background-color: transparent;
     min-width: 400px;
     max-width: 400px;
     min-height: 560px;
     max-height: 560px;
     qproperty-background_main_color: #FFFFFF;
-}
-
-KDC--SynthesisPopover QToolButton
-{
-    background-color: transparent;
-    qproperty-iconSize: 18px;
 }
 
 KDC--SynthesisPopover QScrollBar
@@ -72,6 +66,7 @@ KDC--SynthesisPopover QListWidget::item
 KDC--CustomToolButton
 {
     background-color: transparent;
+    border: none;
     qproperty-iconSize: 18px;
     qproperty-icon_color: #666666;
 }

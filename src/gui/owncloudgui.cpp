@@ -67,10 +67,12 @@ ownCloudGui::ownCloudGui(Application *parent)
     connect(_tray.data(), &QSystemTrayIcon::activated,
         this, &ownCloudGui::slotTrayClicked);
 
+#ifndef KDRIVE_V2
     setupActions();
     setupContextMenu();
-
+#endif
     _tray->show();
+
 
 #ifdef WITH_LIBCLOUDPROVIDERS
     auto exporter = new LibCloudProviders(this);
@@ -79,6 +81,7 @@ ownCloudGui::ownCloudGui(Application *parent)
 #endif
 
     ProgressDispatcher *pd = ProgressDispatcher::instance();
+#ifndef KDRIVE_V2
     connect(pd, &ProgressDispatcher::progressInfo, this,
         &ownCloudGui::slotUpdateProgress);
 
@@ -90,6 +93,7 @@ ownCloudGui::ownCloudGui(Application *parent)
         this, &ownCloudGui::updateContextMenuNeeded);
     connect(AccountManager::instance(), &AccountManager::accountRemoved,
         this, &ownCloudGui::updateContextMenuNeeded);
+#endif
 
     connect(Logger::instance(), &Logger::guiLog,
         this, &ownCloudGui::slotShowTrayMessage);
@@ -136,6 +140,13 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
                 raiseDialog(shareDialog);
             }
         } else {
+#ifdef KDRIVE_V2
+            QRect sysTrayRect = _tray->geometry();
+            QScopedPointer<KDC::SynthesisPopover> synthesisPopover;
+            synthesisPopover.reset(new KDC::SynthesisPopover());
+            synthesisPopover->setSysTrayIconRect(sysTrayRect);
+            synthesisPopover->exec();
+#else
 #ifdef Q_OS_MAC
             // on macOS, a left click always opens menu.
             // However if the settings dialog is already visible but hidden
@@ -146,14 +157,6 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
 #else
             slotOpenSettingsDialog();
 #endif
-
-#ifdef KDRIVE_V2
-            QRect sysTrayRect = _tray->geometry();
-            QPoint sysTrayPosition = QPoint((sysTrayRect.bottomLeft() + sysTrayRect.bottomRight()) / 2);
-            QScopedPointer<KDC::SynthesisPopover> synthesisPopover;
-            synthesisPopover.reset(new KDC::SynthesisPopover());
-            synthesisPopover->setSysTrayIconPosition(sysTrayPosition);
-            synthesisPopover->exec();
 #endif
         }
     }
@@ -228,11 +231,14 @@ void ownCloudGui::slotComputeOverallSyncStatus()
     bool allDisconnected = true;
     QVector<AccountStatePtr> problemAccounts;
     auto setStatusText = [&](const QString &text) {
+#ifndef KDRIVE_V2
         // Don't overwrite the status if we're currently syncing
         if (FolderMan::instance()->isAnySyncRunning())
             return;
         _actionStatus->setText(text);
+#endif
     };
+
 
     foreach (auto a, AccountManager::instance()->accounts()) {
         if (!a->isSignedOut()) {
@@ -318,7 +324,9 @@ void ownCloudGui::slotComputeOverallSyncStatus()
     QIcon statusIcon = Theme::instance()->syncStateIcon(iconStatus, true, contextMenuVisible(), app->getAlert());
     _tray->setIcon(statusIcon);
 
+#ifndef KDRIVE_V2
     _actionShowErrors->setEnabled(_settingsDialog ? _settingsDialog->getErrorCount() > 0 : false);
+#endif
 
     // create the tray blob message, check if we have an defined state
     if (map.count() > 0) {
@@ -441,6 +449,10 @@ void ownCloudGui::slotContextMenuAboutToHide()
 
 bool ownCloudGui::contextMenuVisible() const
 {
+#ifdef KDRIVE_V2
+    return false;
+#endif
+
     // On some platforms isVisible doesn't work and always returns false,
     // elsewhere aboutToHide is unreliable.
     if (_workaroundManualVisibility)
@@ -517,9 +529,7 @@ void ownCloudGui::setupContextMenu()
 
     // this must be called only once after creating the context menu, or
     // it will trigger a bug in Ubuntu's SNI bridge patch (11.10, 12.04).
-#ifndef KDRIVE_V2
     _tray->setContextMenu(_contextMenu.data());
-#endif
 
     // The tray menu is surprisingly problematic. Being able to switch to
     // a minimal version of it is a useful workaround and testing tool.
@@ -565,7 +575,7 @@ void ownCloudGui::setupContextMenu()
         xdgCurrentDesktop.contains("KDE")
         || desktopSession.contains("plasma")
         || desktopSession.contains("kde");
-    QObject *platformMenu = reinterpret_cast<QObject *>(_tray->contextMenu()->platformMenu());
+    QObject *platformMenu = reinterpret_cast<QObject *>(_contextMenu->platformMenu());
     if (isKde && platformMenu && platformMenu->metaObject()->className() == QLatin1String("QDBusPlatformMenu")) {
         _workaroundManualVisibility = true;
         _workaroundNoAboutToShowUpdate = true;
@@ -583,7 +593,7 @@ void ownCloudGui::setupContextMenu()
                           << "showhide:" << _workaroundShowAndHideTray
                           << "manualvisibility:" << _workaroundManualVisibility;
 
-
+#ifndef KDRIVE_V2
     connect(&_delayedTrayUpdateTimer, &QTimer::timeout, this, &ownCloudGui::updateContextMenu);
     _delayedTrayUpdateTimer.setInterval(2 * 1000);
     _delayedTrayUpdateTimer.setSingleShot(true);
@@ -594,6 +604,7 @@ void ownCloudGui::setupContextMenu()
 
     // Populate the context menu now.
     updateContextMenu();
+#endif
 }
 
 void ownCloudGui::updateContextMenu()

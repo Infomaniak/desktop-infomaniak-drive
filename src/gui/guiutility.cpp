@@ -131,3 +131,25 @@ QIcon Utility::getIconWithColor(const QString &path, const QColor &color)
     icon.addPixmap(pixmap);
     return icon;
 }
+
+Utility::systrayPosition Utility::getSystrayPosition(QScreen *screen)
+{
+    QRect displayRect = screen->geometry();
+    QRect desktopRect = screen->availableGeometry();
+    if (desktopRect.height() < displayRect.height()) {
+        if (desktopRect.y() > displayRect.y()) {
+            return systrayPosition::Top;
+        }
+        else {
+            return systrayPosition::Bottom;
+        }
+    }
+    else {
+        if (desktopRect.x() > displayRect.x()) {
+            return systrayPosition::Left;
+        }
+        else {
+            return systrayPosition::Right;
+        }
+    }
+}
