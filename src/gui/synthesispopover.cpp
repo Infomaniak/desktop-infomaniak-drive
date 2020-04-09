@@ -7,12 +7,14 @@
 #include "synchronizeditemwidget.h"
 #include "guiutility.h"
 
+#include <QAction>
 #include <QBoxLayout>
 #include <QDateTime>
 #include <QGuiApplication>
 #include <QLabel>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QMenu>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPolygon>
@@ -248,13 +250,13 @@ void SynthesisPopover::paintEvent(QPaintEvent *event)
 
         // Triangle
         trianglePoint1 = QPoint(
-            triangleHeight,
+            rect().width() - triangleHeight,
             trianglePositionTop ? trianglePosition - triangleWidth / 2.0 : rect().height() - trianglePosition - triangleWidth / 2.0);
         trianglePoint2 = QPoint(
             rect().width(),
             trianglePositionTop ? trianglePosition : rect().height() - trianglePosition);
         trianglePoint3 = QPoint(
-            triangleHeight,
+            rect().width() - triangleHeight,
             trianglePositionTop ? trianglePosition + triangleWidth / 2.0 : rect().height() - trianglePosition + triangleWidth / 2.0);
 
         // Border
@@ -330,6 +332,18 @@ void SynthesisPopover::init()
     menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
     hboxToolBar->addWidget(menuButton);
 
+    /*QMenu *menu = new QMenu(this);
+    QAction *parametersAction = new QAction(tr("Parameters"), this);
+    menu->addAction(parametersAction);
+    QAction *notificationsAction = new QAction(tr("Disable Notifications"), this);
+    menu->addAction(notificationsAction);
+    QAction *helpAction = new QAction(tr("Need help"), this);
+    menu->addAction(helpAction);
+    menu->addSeparator();
+    QAction *exitAction = new QAction(tr("Quit application"), this);
+    menu->addAction(exitAction);
+    menuButton->setMenu(menu);*/
+
     // Drive selection
     QHBoxLayout *hboxDriveBar = new QHBoxLayout(this);
     hboxDriveBar->setContentsMargins(driveBarHMargin, driveBarVMargin, driveBarHMargin, driveBarVMargin);
@@ -393,7 +407,6 @@ void SynthesisPopover::init()
 
     connect(folderButton, &CustomToolButton::clicked, this, &SynthesisPopover::onFolderButtonClicked);
     connect(webviewButton, &CustomToolButton::clicked, this, &SynthesisPopover::onWebviewButtonClicked);
-    connect(menuButton, &CustomToolButton::clicked, this, &SynthesisPopover::onMenuButtonClicked);
     connect(_driveSelectionWidget, &DriveSelectionWidget::driveSelected, this, &SynthesisPopover::onDriveSelected);
     connect(buttonsBarWidget, &ButtonsBarWidget::buttonToggled, this, &SynthesisPopover::onButtonBarToggled);
     connect(_synchronizedListWidget, &QListWidget::currentItemChanged, this, &SynthesisPopover::onCurrentItemChanged);
@@ -449,11 +462,6 @@ void SynthesisPopover::onFolderButtonClicked()
 }
 
 void SynthesisPopover::onWebviewButtonClicked()
-{
-
-}
-
-void SynthesisPopover::onMenuButtonClicked()
 {
 
 }

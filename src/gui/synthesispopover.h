@@ -60,7 +60,6 @@ private:
 private slots:
     void onFolderButtonClicked();
     void onWebviewButtonClicked();
-    void onMenuButtonClicked();
     void onDriveSelected(int id);
     void onButtonBarToggled(int position);
     void onCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
