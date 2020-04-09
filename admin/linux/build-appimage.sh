@@ -50,7 +50,7 @@ fi
 cmake -DCMAKE_PREFIX_PATH=$QT_BASE_DIR \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DNO_SHIBBOLETH=1 \
-    -DUNIT_TESTING=0 \
+    -DBUILD_TESTING=0 \
     -DQTKEYCHAIN_LIBRARY=/app/usr/lib/x86_64-linux-gnu/libqt5keychain.so \
     -DQTKEYCHAIN_INCLUDE_DIR=/app/usr/include/qt5keychain/ \
     -DMIRALL_VERSION_SUFFIX=$SUFFIX \

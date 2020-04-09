@@ -18,6 +18,7 @@ DriveSelectionWidget::DriveSelectionWidget(QWidget *parent)
     : QPushButton(parent)
     , _driveIconSize(QSize())
     , _downIconSize(QSize())
+    , _downIconColor(QColor())
     , _currentDriveId(0)
     , _driveIconLabel(nullptr)
     , _driveTextLabel(nullptr)
@@ -43,6 +44,7 @@ DriveSelectionWidget::DriveSelectionWidget(QWidget *parent)
 
     connect(this, &DriveSelectionWidget::driveIconSizeChanged, this, &DriveSelectionWidget::onDriveIconSizeChanged);
     connect(this, &DriveSelectionWidget::downIconSizeChanged, this, &DriveSelectionWidget::onDownIconSizeChanged);
+    connect(this, &DriveSelectionWidget::downIconColorChanged, this, &DriveSelectionWidget::onDownIconColorChanged);
 }
 
 QSize DriveSelectionWidget::sizeHint() const
@@ -79,11 +81,12 @@ void DriveSelectionWidget::onDriveIconSizeChanged()
 
 void DriveSelectionWidget::onDownIconSizeChanged()
 {
-    if (_downIconLabel) {
-        QColor driveTextLabelColor = _driveIconLabel->palette().color(QPalette::WindowText);
-        _downIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-down.svg", driveTextLabelColor).
-                                  pixmap(_downIconSize));
-    }
+    setDownIcon();
+}
+
+void DriveSelectionWidget::onDownIconColorChanged()
+{
+    setDownIcon();
 }
 
 void DriveSelectionWidget::setDriveIcon(const QColor &color)
@@ -91,6 +94,14 @@ void DriveSelectionWidget::setDriveIcon(const QColor &color)
     if (_driveIconLabel) {
         _driveIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/drive.svg", color).
                                    pixmap(_driveIconSize));
+    }
+}
+
+void DriveSelectionWidget::setDownIcon()
+{
+    if (_downIconLabel && _downIconSize != QSize() && _downIconColor != QColor()) {
+        _downIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-down.svg", _downIconColor).
+                                  pixmap(_downIconSize));
     }
 }
 

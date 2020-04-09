@@ -18,6 +18,7 @@ class DriveSelectionWidget : public QPushButton
 
     Q_PROPERTY(QSize drive_icon_size READ driveIconSize WRITE setDriveIconSize)
     Q_PROPERTY(QSize down_icon_size READ downIconSize WRITE setDownIconSize)
+    Q_PROPERTY(QColor down_icon_color READ downIconColor WRITE setDownIconColor)
 
 public:
     explicit DriveSelectionWidget(QWidget *parent = nullptr);
@@ -38,14 +39,22 @@ public:
         emit downIconSizeChanged();
     }
 
+    inline QColor downIconColor() const { return _downIconColor; }
+    inline void setDownIconColor(QColor color) {
+        _downIconColor = color;
+        emit downIconColorChanged();
+    }
+
 signals:
     void driveIconSizeChanged();
     void downIconSizeChanged();
+    void downIconColorChanged();
     void driveSelected(int id);
 
 private:
     QSize _driveIconSize;
     QSize _downIconSize;
+    QColor _downIconColor;
     std::unordered_map<int, std::pair<QString, QColor>> _driveMap;
     int _currentDriveId;
     QLabel *_driveIconLabel;
@@ -53,10 +62,12 @@ private:
     QLabel *_downIconLabel;
 
     void setDriveIcon(const QColor &color);
+    void setDownIcon();
 
 private slots:
     void onDriveIconSizeChanged();
     void onDownIconSizeChanged();
+    void onDownIconColorChanged();
 };
 
 }

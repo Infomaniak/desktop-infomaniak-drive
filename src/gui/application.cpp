@@ -57,7 +57,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QDesktopServices>
-#include <QFontDatabase>;
+#include <QFontDatabase>
 
 class QSocket;
 

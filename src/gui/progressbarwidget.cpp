@@ -33,7 +33,7 @@ ProgressBarWidget::ProgressBarWidget(QWidget *parent)
 
 void ProgressBarWidget::setTransferSize(unsigned long size)
 {
-    if (size >= 0 && size <= _totalSize) {
+    if (size <= _totalSize) {
         int pct = (_totalSize > 0 ? size * 100.0 / _totalSize : 100);
         _progressBar->setValue(pct);
         _progressLabel->setText(sizeToString(size) + " / " + sizeToString(_totalSize));

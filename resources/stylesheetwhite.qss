@@ -86,11 +86,12 @@ KDC--DriveSelectionWidget
     padding-right: 5px;
     qproperty-drive_icon_size: 20px;
     qproperty-down_icon_size: 12px;
+    qproperty-down_icon_color: #333333;
 }
 
 KDC--DriveSelectionWidget:hover
 {
-    background-color: #F3F3F3;
+    background-color: #EDEDED;
 }
 
 KDC--DriveSelectionWidget QLabel#driveTextLabel

@@ -86,6 +86,7 @@ KDC--DriveSelectionWidget
     padding-right: 5px;
     qproperty-drive_icon_size: 20px;
     qproperty-down_icon_size: 12px;
+    qproperty-down_icon_color: #FFFFFF;
 }
 
 KDC--DriveSelectionWidget:hover
