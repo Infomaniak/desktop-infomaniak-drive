@@ -126,6 +126,7 @@ set(client_SRCS
     customtoolbutton.cpp
     driveselectionwidget.cpp
     halfroundrectwidget.cpp
+    menuwidget.cpp
     progressbarwidget.cpp
     statusbarwidget.cpp
     synchronizeditem.cpp

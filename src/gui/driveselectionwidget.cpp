@@ -8,7 +8,7 @@
 
 namespace KDC {
 
-static const int hMargin= 0;
+static const int hMargin = 0;
 static const int vMargin = 0;
 static const int boxHMargin= 10;
 static const int boxVMargin = 5;

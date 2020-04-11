@@ -1,5 +1,6 @@
 #pragma once
 
+#include "customtoolbutton.h"
 #include "driveselectionwidget.h"
 #include "progressbarwidget.h"
 #include "statusbarwidget.h"
@@ -18,16 +19,12 @@ class SynthesisPopover : public QDialog
     Q_OBJECT
 
     Q_PROPERTY(QColor background_main_color READ backgroundMainColor WRITE setBackgroundMainColor)
-    Q_PROPERTY(QColor border_color READ borderColor WRITE setBorderColor)
 
 public:
     explicit SynthesisPopover(QWidget *parent = nullptr);
 
     inline QColor backgroundMainColor() const { return _backgroundMainColor; }
     inline void setBackgroundMainColor(const QColor &value) { _backgroundMainColor = value; }
-
-    inline QColor borderColor() const { return _borderColor; }
-    inline void setBorderColor(const QColor &value) { _borderColor = value; }
 
     void setSysTrayIconRect(const QRect &sysTrayIconRect);
     void setTransferTotalSize(long size);
@@ -43,7 +40,9 @@ private:
 
     QRect _sysTrayIconRect;
     QColor _backgroundMainColor;
-    QColor _borderColor;
+    CustomToolButton *_folderButton;
+    CustomToolButton *_webviewButton;
+    CustomToolButton *_menuButton;
     DriveSelectionWidget *_driveSelectionWidget;
     ProgressBarWidget *_progressBarWidget;
     StatusBarWidget *_statusBarWidget;
@@ -60,6 +59,11 @@ private:
 private slots:
     void onFolderButtonClicked();
     void onWebviewButtonClicked();
+    void onMenuButtonClicked();
+    void onParametersActionTriggered(bool checked = false);
+    void onNotificationsActionTriggered(bool checked = false);
+    void onHelpActionTriggered(bool checked = false);
+    void onExitActionTriggered(bool checked = false);
     void onDriveSelected(int id);
     void onButtonBarToggled(int position);
     void onCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);

@@ -9,12 +9,11 @@ QInputDialog QLabel
 
 KDC--SynthesisPopover
 {
-    min-width: 400px;
-    max-width: 400px;
-    min-height: 560px;
-    max-height: 560px;
+    min-width: 420px;
+    max-width: 420px;
+    min-height: 570px;
+    max-height: 570px;
     qproperty-background_main_color: #FFFFFF;
-    qproperty-border_color: #666666;
 }
 
 KDC--SynthesisPopover QScrollBar
@@ -53,10 +52,53 @@ KDC--SynthesisPopover QListWidget
 
 KDC--SynthesisPopover QListWidget::item
 {
-    min-width: 300px;
-    max-width: 300px;
     min-height: 60px;
     max-height: 60px;
+}
+
+/*******************/
+/* KDC--MenuWidget */
+/*******************/
+
+KDC--MenuWidget
+{
+    background-color: transparent;
+    border: 0px;
+    border-radius: 5px;
+    margin: 0px;
+    qproperty-background_color: #FFFFFF;
+    qproperty-icon_color: #666666;
+}
+
+KDC--MenuWidget::icon
+{
+    margin: 15px;
+    qproperty-iconSize: 16px;
+}
+
+KDC--MenuWidget::item
+{
+    background: transparent;
+    border: 0px;
+    border-radius: 5px;
+    margin: 0px;
+    padding: 10px 20px 10px 20px;
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: normal;
+    font-size: 14px;
+}
+
+KDC--MenuWidget::item:selected
+{
+    background-color: #F5F5F5;
+}
+
+KDC--MenuWidget::separator
+{
+    height: 1px;
+    background: #E0E0E0;
+    margin: 0px;
 }
 
 /*************************/

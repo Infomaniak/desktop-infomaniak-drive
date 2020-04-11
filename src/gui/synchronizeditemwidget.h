@@ -1,6 +1,7 @@
 #pragma once
 
 #include "synchronizeditem.h"
+#include "customtoolbutton.h"
 
 #include <QColor>
 #include <QIcon>
@@ -35,7 +36,7 @@ public:
     inline void setBackgroundColorSelection(const QColor &value) { _backgroundColorSelection = value; }
 
     bool isSelected() const { return _isSelected; };
-    void setSelected(bool isSelected) { _isSelected = isSelected; };
+    void setSelected(bool isSelected);
 
 signals:
     void fileIconSizeChanged();
@@ -47,6 +48,8 @@ private:
     QColor _backgroundColor;
     QColor _backgroundColorSelection;
     QLabel *_fileIconLabel;
+    CustomToolButton *_folderButton;
+    CustomToolButton *_menuButton;
 
     void paintEvent(QPaintEvent* event) override;
 

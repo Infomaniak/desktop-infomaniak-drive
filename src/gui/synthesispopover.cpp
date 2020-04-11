@@ -1,8 +1,8 @@
 #include "synthesispopover.h"
+#include "menuwidget.h"
 #include "buttonsbarwidget.h"
 #include "bottomwidget.h"
 #include "custompushbutton.h"
-#include "customtoolbutton.h"
 #include "synchronizeditem.h"
 #include "synchronizeditemwidget.h"
 #include "guiutility.h"
@@ -10,6 +10,7 @@
 #include <QAction>
 #include <QBoxLayout>
 #include <QDateTime>
+#include <QGraphicsDropShadowEffect>
 #include <QGuiApplication>
 #include <QLabel>
 #include <QListWidget>
@@ -17,7 +18,6 @@
 #include <QMenu>
 #include <QPainter>
 #include <QPainterPath>
-#include <QPolygon>
 #include <QScreen>
 
 namespace KDC {
@@ -26,10 +26,10 @@ static const int triangleHeight = 10;
 static const int triangleWidth  = 20;
 static const int trianglePosition = 100; // Position from side
 static const int cornerRadius = 5;
-static const int borderWidth = 1;
+static const int shadowBlurRadius = 40;
 static const int toolBarHMargin = 10;
 static const int toolBarVMargin = 10;
-static const int toolBarSpacing = 5;
+static const int toolBarSpacing = 10;
 static const int driveBarHMargin = 10;
 static const int driveBarVMargin = 10;
 static const int driveBarSpacing = 15;
@@ -39,19 +39,20 @@ SynthesisPopover::SynthesisPopover(QWidget *parent)
     : QDialog(parent)
     , _sysTrayIconRect(QRect())
     , _backgroundMainColor(QColor())
+    , _folderButton(nullptr)
+    , _webviewButton(nullptr)
+    , _menuButton(nullptr)
     , _driveSelectionWidget(nullptr)
     , _progressBarWidget(nullptr)
     , _statusBarWidget(nullptr)
     , _stackedWidget(nullptr)
     , _synchronizedListWidget(nullptr)
 {
-    setVisible(false);
     setModal(true);
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
-
-    // Linux workaround - qss background-color property is not taken into account
     setAttribute(Qt::WA_TranslucentBackground);
 
+    setVisible(false);
     init();
     load();
     setVisible(true);
@@ -94,180 +95,180 @@ void SynthesisPopover::paintEvent(QPaintEvent *event)
 
     OCC::Utility::systrayPosition position = OCC::Utility::getSystrayPosition(screen);
 
-    // Dialog position (left/top corner) && triangle polygon
-    QRect screenRect = screen->availableGeometry();
+    // Calculate dialog position (left/top corner) && border path
     QPoint popoverPosition;
-    QPointF trianglePoint1;
-    QPointF trianglePoint2;
-    QPointF trianglePoint3;
     QPainterPath painterPath;
-    if (position == OCC::Utility::systrayPosition::Top) {
-        if (_sysTrayIconRect == QRect()) {
-            // Unknown Systray position - Linux workaround
-            _sysTrayIconRect.setX(screenRect.x() + screenRect.width() - trianglePosition - 50);
-            _sysTrayIconRect.setY(screenRect.y());
-            _sysTrayIconRect.setWidth(0);
-            _sysTrayIconRect.setHeight(0);
-        }
-
-        // Triangle position (left/right)
-        bool trianglePositionLeft =
-                (_sysTrayIconRect.center().x() + rect().width() - trianglePosition
-                < screenRect.x() + screenRect.width());
+    QRect screenRect = screen->availableGeometry();
+    QRect intRect = rect().marginsRemoved(QMargins(triangleHeight, triangleHeight, triangleHeight - 1, triangleHeight - 1));
+    if (_sysTrayIconRect == QRect()) {
+        // Unknown Systray icon position
 
         // Dialog position
-        popoverPosition = QPoint(
-            trianglePositionLeft
-            ? _sysTrayIconRect.center().x() - trianglePosition
-            : _sysTrayIconRect.center().x() - rect().width() + trianglePosition,
-            _sysTrayIconRect.bottom());
-
-        // Triangle points
-        trianglePoint1 = QPoint(
-            trianglePositionLeft ? trianglePosition - triangleWidth / 2.0 : rect().width() - trianglePosition - triangleWidth / 2.0,
-            triangleHeight);
-        trianglePoint2 = QPoint(
-            trianglePositionLeft ? trianglePosition : rect().width() - trianglePosition,
-            0);
-        trianglePoint3 = QPoint(
-            trianglePositionLeft ? trianglePosition + triangleWidth / 2.0 : rect().width() - trianglePosition + triangleWidth / 2.0,
-            triangleHeight);
+        if (position == OCC::Utility::systrayPosition::Top) {
+            popoverPosition = QPoint(
+                screenRect.x() + screenRect.width() - rect().width() - triangleHeight,
+                screenRect.y() + triangleHeight);
+        }
+        else if (position == OCC::Utility::systrayPosition::Bottom) {
+            popoverPosition = QPoint(
+                screenRect.x() + screenRect.width() - rect().width() - triangleHeight,
+                screenRect.y() + screenRect.height() - rect().height() - triangleHeight);
+        }
+        else if (position == OCC::Utility::systrayPosition::Left) {
+            popoverPosition = QPoint(
+                screenRect.x() + triangleHeight,
+                screenRect.y() + screenRect.height() - rect().height() - triangleHeight);
+        }
+        else if (position == OCC::Utility::systrayPosition::Right) {
+            popoverPosition = QPoint(
+                screenRect.x() + screenRect.width() - rect().width() - triangleHeight,
+                screenRect.y() + screenRect.height() - rect().height() - triangleHeight);
+        }
 
         // Border
-        painterPath.moveTo(trianglePoint3);
-        painterPath.lineTo(trianglePoint2);
-        painterPath.lineTo(trianglePoint1);
-        painterPath.arcTo(QRect(0, triangleHeight, 2 * cornerRadius, 2 * cornerRadius), 90, 90);
-        painterPath.arcTo(QRect(0, rect().height() - 2 * cornerRadius, 2 * cornerRadius, 2 * cornerRadius), 180, 90);
-        painterPath.arcTo(QRect(rect().width() - 2 * cornerRadius, rect().height() - 2 * cornerRadius, 2 * cornerRadius, 2 * cornerRadius), 270, 90);
-        painterPath.arcTo(QRect(rect().width() - 2 * cornerRadius, triangleHeight, 2 * cornerRadius, 2 * cornerRadius), 0, 90);
-        painterPath.closeSubpath();
+        painterPath.addRoundedRect(intRect, cornerRadius, cornerRadius);
     }
-    else if (position == OCC::Utility::systrayPosition::Bottom) {
-        if (_sysTrayIconRect == QRect()) {
-            // Unknown Systray position - Linux workaround
-            _sysTrayIconRect.setX(screenRect.x() + screenRect.width() - trianglePosition - 50);
-            _sysTrayIconRect.setY(screenRect.y() + screenRect.height());
-            _sysTrayIconRect.setWidth(0);
-            _sysTrayIconRect.setHeight(0);
+    else {
+        int cornerDiameter = 2 * cornerRadius;
+        QPointF trianglePoint1;
+        QPointF trianglePoint2;
+        QPointF trianglePoint3;
+        if (position == OCC::Utility::systrayPosition::Top) {
+            // Triangle position (left/right)
+            bool trianglePositionLeft =
+                    (_sysTrayIconRect.center().x() + rect().width() - trianglePosition
+                    < screenRect.x() + screenRect.width());
+
+            // Dialog position
+            popoverPosition = QPoint(
+                trianglePositionLeft
+                ? _sysTrayIconRect.center().x() - trianglePosition
+                : _sysTrayIconRect.center().x() - rect().width() + trianglePosition,
+                _sysTrayIconRect.bottom());
+
+            // Triangle points
+            trianglePoint1 = QPoint(
+                trianglePositionLeft ? trianglePosition - triangleWidth / 2.0 : rect().width() - trianglePosition - triangleWidth / 2.0,
+                triangleHeight);
+            trianglePoint2 = QPoint(
+                trianglePositionLeft ? trianglePosition : rect().width()  - trianglePosition,
+                0);
+            trianglePoint3 = QPoint(
+                trianglePositionLeft ? trianglePosition + triangleWidth / 2.0 : rect().width() - trianglePosition + triangleWidth / 2.0,
+                triangleHeight);
+
+            // Border
+            painterPath.moveTo(trianglePoint3);
+            painterPath.lineTo(trianglePoint2);
+            painterPath.lineTo(trianglePoint1);
+            painterPath.arcTo(QRect(intRect.topLeft(), QSize(cornerDiameter, cornerDiameter)), 90, 90);
+            painterPath.arcTo(QRect(intRect.bottomLeft() - QPoint(0, cornerDiameter), QSize(cornerDiameter, cornerDiameter)), 180, 90);
+            painterPath.arcTo(QRect(intRect.bottomRight() - QPoint(cornerDiameter, cornerDiameter), QSize(cornerDiameter, cornerDiameter)), 270, 90);
+            painterPath.arcTo(QRect(intRect.topRight() - QPoint(cornerDiameter, 0), QSize(cornerDiameter, cornerDiameter)), 0, 90);
+            painterPath.closeSubpath();
         }
+        else if (position == OCC::Utility::systrayPosition::Bottom) {
+            // Triangle position (left/right)
+            bool trianglePositionLeft =
+                    (_sysTrayIconRect.center().x() + rect().width() - trianglePosition
+                    < screenRect.x() + screenRect.width());
 
-        // Triangle position (left/right)
-        bool trianglePositionLeft =
-                (_sysTrayIconRect.center().x() + rect().width() - trianglePosition
-                < screenRect.x() + screenRect.width());
+            // Dialog position
+            popoverPosition = QPoint(
+                trianglePositionLeft
+                ? _sysTrayIconRect.center().x() - trianglePosition
+                : _sysTrayIconRect.center().x() - rect().width() + trianglePosition,
+                _sysTrayIconRect.top() - rect().height());
 
-        // Dialog position
-        popoverPosition = QPoint(
-            trianglePositionLeft
-            ? _sysTrayIconRect.center().x() - trianglePosition
-            : _sysTrayIconRect.center().x() - rect().width() + trianglePosition,
-            _sysTrayIconRect.top() - rect().height());
+            // Triangle points
+            trianglePoint1 = QPoint(
+                trianglePositionLeft ? trianglePosition - triangleWidth / 2.0 : rect().width() - trianglePosition - triangleWidth / 2.0,
+                rect().height() - triangleHeight);
+            trianglePoint2 = QPoint(
+                trianglePositionLeft ? trianglePosition : rect().width() - trianglePosition,
+                rect().height());
+            trianglePoint3 = QPoint(
+                trianglePositionLeft ? trianglePosition + triangleWidth / 2.0 : rect().width() - trianglePosition + triangleWidth / 2.0,
+                rect().height() - triangleHeight);
 
-        // Triangle points
-        trianglePoint1 = QPoint(
-            trianglePositionLeft ? trianglePosition - triangleWidth / 2.0 : rect().width() - trianglePosition - triangleWidth / 2.0,
-            rect().height() - triangleHeight);
-        trianglePoint2 = QPoint(
-            trianglePositionLeft ? trianglePosition : rect().width() - trianglePosition,
-            rect().height());
-        trianglePoint3 = QPoint(
-            trianglePositionLeft ? trianglePosition + triangleWidth / 2.0 : rect().width() - trianglePosition + triangleWidth / 2.0,
-            rect().height() - triangleHeight);
-
-        // Border
-        painterPath.moveTo(trianglePoint1);
-        painterPath.lineTo(trianglePoint2);
-        painterPath.lineTo(trianglePoint3);
-        painterPath.arcTo(QRect(rect().width() - 2 * cornerRadius, rect().height() - triangleHeight - 2 * cornerRadius, 2 * cornerRadius, 2 * cornerRadius), 270, 90);
-        painterPath.arcTo(QRect(rect().width() - 2 * cornerRadius, 0, 2 * cornerRadius, 2 * cornerRadius), 0, 90);
-        painterPath.arcTo(QRect(0, 0, 2 * cornerRadius, 2 * cornerRadius), 90, 90);
-        painterPath.arcTo(QRect(0, rect().height() - triangleHeight - 2 * cornerRadius, 2 * cornerRadius, 2 * cornerRadius), 180, 90);
-        painterPath.closeSubpath();
-    }
-    else if (position == OCC::Utility::systrayPosition::Left) {
-        if (_sysTrayIconRect == QRect()) {
-            // Unknown Systray position - Linux workaround
-            _sysTrayIconRect.setX(screenRect.x());
-            _sysTrayIconRect.setY(screenRect.y() + screenRect.height() - trianglePosition - 50);
-            _sysTrayIconRect.setWidth(0);
-            _sysTrayIconRect.setHeight(0);
+            // Border
+            painterPath.moveTo(trianglePoint1);
+            painterPath.lineTo(trianglePoint2);
+            painterPath.lineTo(trianglePoint3);
+            painterPath.arcTo(QRect(intRect.bottomRight() - QPoint(cornerDiameter, cornerDiameter), QSize(cornerDiameter, cornerDiameter)), 270, 90);
+            painterPath.arcTo(QRect(intRect.topRight() - QPoint(cornerDiameter, 0), QSize(cornerDiameter, cornerDiameter)), 0, 90);
+            painterPath.arcTo(QRect(intRect.topLeft(), QSize(cornerDiameter, cornerDiameter)), 90, 90);
+            painterPath.arcTo(QRect(intRect.bottomLeft() - QPoint(0, cornerDiameter), QSize(cornerDiameter, cornerDiameter)), 180, 90);
+            painterPath.closeSubpath();
         }
+        else if (position == OCC::Utility::systrayPosition::Left) {
+            // Triangle position (top/bottom)
+            bool trianglePositionTop =
+                    (_sysTrayIconRect.center().y() + rect().height() - trianglePosition
+                    < screenRect.y() + screenRect.height());
 
-        // Triangle position (top/bottom)
-        bool trianglePositionTop =
-                (_sysTrayIconRect.center().y() + rect().height() - trianglePosition
-                < screenRect.y() + screenRect.height());
+            // Dialog position
+            popoverPosition = QPoint(
+                _sysTrayIconRect.right(),
+                trianglePositionTop
+                ? _sysTrayIconRect.center().y() - trianglePosition
+                : _sysTrayIconRect.center().y() - rect().height() + trianglePosition);
 
-        // Dialog position
-        popoverPosition = QPoint(
-            _sysTrayIconRect.right(),
-            trianglePositionTop
-            ? _sysTrayIconRect.center().y() - trianglePosition
-            : _sysTrayIconRect.center().y() - rect().height() + trianglePosition);
+            // Triangle points
+            trianglePoint1 = QPoint(
+                triangleHeight,
+                trianglePositionTop ? trianglePosition - triangleWidth / 2.0 : rect().height() - trianglePosition - triangleWidth / 2.0);
+            trianglePoint2 = QPoint(
+                0,
+                trianglePositionTop ? trianglePosition : rect().height() - trianglePosition);
+            trianglePoint3 = QPoint(
+                triangleHeight,
+                trianglePositionTop ? trianglePosition + triangleWidth / 2.0 : rect().height() - trianglePosition + triangleWidth / 2.0);
 
-        // Triangle points
-        trianglePoint1 = QPoint(
-            triangleHeight,
-            trianglePositionTop ? trianglePosition - triangleWidth / 2.0 : rect().height() - trianglePosition - triangleWidth / 2.0);
-        trianglePoint2 = QPoint(
-            0,
-            trianglePositionTop ? trianglePosition : rect().height() - trianglePosition);
-        trianglePoint3 = QPoint(
-            triangleHeight,
-            trianglePositionTop ? trianglePosition + triangleWidth / 2.0 : rect().height() - trianglePosition + triangleWidth / 2.0);
-
-        // Border
-        painterPath.moveTo(trianglePoint1);
-        painterPath.lineTo(trianglePoint2);
-        painterPath.lineTo(trianglePoint3);
-        painterPath.arcTo(QRect(triangleHeight, rect().height() - 2 * cornerRadius, 2 * cornerRadius, 2 * cornerRadius), 180, 90);
-        painterPath.arcTo(QRect(rect().width() - 2 * cornerRadius, rect().height() - 2 * cornerRadius, 2 * cornerRadius, 2 * cornerRadius), 270, 90);
-        painterPath.arcTo(QRect(rect().width() - 2 * cornerRadius, 0, 2 * cornerRadius, 2 * cornerRadius), 0, 90);
-        painterPath.arcTo(QRect(triangleHeight, 0, 2 * cornerRadius, 2 * cornerRadius), 90, 90);
-        painterPath.closeSubpath();
-    }
-    else if (position == OCC::Utility::systrayPosition::Right) {
-        if (_sysTrayIconRect == QRect()) {
-            // Unknown Systray position - Linux workaround
-            _sysTrayIconRect.setX(screenRect.x() + screenRect.width());
-            _sysTrayIconRect.setY(screenRect.y() + screenRect.height() - trianglePosition - 50);
-            _sysTrayIconRect.setWidth(0);
-            _sysTrayIconRect.setHeight(0);
+            // Border
+            painterPath.moveTo(trianglePoint1);
+            painterPath.lineTo(trianglePoint2);
+            painterPath.lineTo(trianglePoint3);
+            painterPath.arcTo(QRect(intRect.bottomLeft() - QPoint(0, cornerDiameter), QSize(cornerDiameter, cornerDiameter)), 180, 90);
+            painterPath.arcTo(QRect(intRect.bottomRight() - QPoint(cornerDiameter, cornerDiameter), QSize(cornerDiameter, cornerDiameter)), 270, 90);
+            painterPath.arcTo(QRect(intRect.topRight() - QPoint(cornerDiameter, 0), QSize(cornerDiameter, cornerDiameter)), 0, 90);
+            painterPath.arcTo(QRect(intRect.topLeft(), QSize(cornerDiameter, cornerDiameter)), 90, 90);
+            painterPath.closeSubpath();
         }
+        else if (position == OCC::Utility::systrayPosition::Right) {
+            // Triangle position (top/bottom)
+            bool trianglePositionTop =
+                    (_sysTrayIconRect.center().y() + rect().height() - trianglePosition
+                    < screenRect.y() + screenRect.height());
 
-        // Triangle position (top/bottom)
-        bool trianglePositionTop =
-                (_sysTrayIconRect.center().y() + rect().height() - trianglePosition
-                < screenRect.y() + screenRect.height());
+            // Dialog position
+            popoverPosition = QPoint(
+                _sysTrayIconRect.left() - rect().width(),
+                trianglePositionTop
+                ? _sysTrayIconRect.center().y() - trianglePosition
+                : _sysTrayIconRect.center().y() - rect().height() + trianglePosition);
 
-        // Dialog position
-        popoverPosition = QPoint(
-            _sysTrayIconRect.left() - rect().width(),
-            trianglePositionTop
-            ? _sysTrayIconRect.center().y() - trianglePosition
-            : _sysTrayIconRect.center().y() - rect().height() + trianglePosition);
+            // Triangle
+            trianglePoint1 = QPoint(
+                rect().width() - triangleHeight,
+                trianglePositionTop ? trianglePosition - triangleWidth / 2.0 : rect().height() - trianglePosition - triangleWidth / 2.0);
+            trianglePoint2 = QPoint(
+                rect().width(),
+                trianglePositionTop ? trianglePosition : rect().height() - trianglePosition);
+            trianglePoint3 = QPoint(
+                rect().width() - triangleHeight,
+                trianglePositionTop ? trianglePosition + triangleWidth / 2.0 : rect().height() - trianglePosition + triangleWidth / 2.0);
 
-        // Triangle
-        trianglePoint1 = QPoint(
-            rect().width() - triangleHeight,
-            trianglePositionTop ? trianglePosition - triangleWidth / 2.0 : rect().height() - trianglePosition - triangleWidth / 2.0);
-        trianglePoint2 = QPoint(
-            rect().width(),
-            trianglePositionTop ? trianglePosition : rect().height() - trianglePosition);
-        trianglePoint3 = QPoint(
-            rect().width() - triangleHeight,
-            trianglePositionTop ? trianglePosition + triangleWidth / 2.0 : rect().height() - trianglePosition + triangleWidth / 2.0);
-
-        // Border
-        painterPath.moveTo(trianglePoint3);
-        painterPath.lineTo(trianglePoint2);
-        painterPath.lineTo(trianglePoint1);
-        painterPath.arcTo(QRect(rect().width() - triangleHeight - 2 * cornerRadius, 0, 2 * cornerRadius, 2 * cornerRadius), 0, 90);
-        painterPath.arcTo(QRect(0, 0, 2 * cornerRadius, 2 * cornerRadius), 90, 90);
-        painterPath.arcTo(QRect(0, rect().height() - 2 * cornerRadius, 2 * cornerRadius, 2 * cornerRadius), 180, 90);
-        painterPath.arcTo(QRect(rect().width() - triangleHeight - 2 * cornerRadius, rect().height() - 2 * cornerRadius, 2 * cornerRadius, 2 * cornerRadius), 270, 90);
-        painterPath.closeSubpath();
+            // Border
+            painterPath.moveTo(trianglePoint3);
+            painterPath.lineTo(trianglePoint2);
+            painterPath.lineTo(trianglePoint1);
+            painterPath.arcTo(QRect(intRect.topRight() - QPoint(cornerDiameter, 0), QSize(cornerDiameter, cornerDiameter)), 0, 90);
+            painterPath.arcTo(QRect(intRect.topLeft(), QSize(cornerDiameter, cornerDiameter)), 90, 90);
+            painterPath.arcTo(QRect(intRect.bottomLeft() - QPoint(0, cornerDiameter), QSize(cornerDiameter, cornerDiameter)), 180, 90);
+            painterPath.arcTo(QRect(intRect.bottomRight() - QPoint(cornerDiameter, cornerDiameter), QSize(cornerDiameter, cornerDiameter)), 270, 90);
+            painterPath.closeSubpath();
+        }
     }
 
     move(popoverPosition);
@@ -275,7 +276,7 @@ void SynthesisPopover::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setBrush(backgroundMainColor());
-    painter.setPen(QPen(borderColor(), borderWidth, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin));
+    painter.setPen(Qt::NoPen);
     painter.drawPath(painterPath);
 }
 
@@ -291,19 +292,8 @@ bool SynthesisPopover::event(QEvent *event)
 
 void SynthesisPopover::init()
 {
-    QScreen *screen = QGuiApplication::screenAt(_sysTrayIconRect.center());
-    if (!screen) {
-        return;
-    }
-
-    OCC::Utility::systrayPosition position = OCC::Utility::getSystrayPosition(screen);
-
     QVBoxLayout *mainVBox = new QVBoxLayout(this);
-    mainVBox->setContentsMargins(
-                borderWidth + (position == OCC::Utility::systrayPosition::Left ? triangleHeight : 0),
-                borderWidth + (position == OCC::Utility::systrayPosition::Top ? triangleHeight : 0),
-                borderWidth + (position == OCC::Utility::systrayPosition::Right ? triangleHeight : 0),
-                borderWidth + (position == OCC::Utility::systrayPosition::Bottom ? triangleHeight : 0));
+    mainVBox->setContentsMargins(triangleHeight, triangleHeight, triangleHeight, triangleHeight);
     mainVBox->setSpacing(0);
 
     // Tool bar
@@ -320,29 +310,17 @@ void SynthesisPopover::init()
     spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     hboxToolBar->addWidget(spacerWidget);
 
-    CustomToolButton *folderButton = new CustomToolButton(this);
-    folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
-    hboxToolBar->addWidget(folderButton);
+    _folderButton = new CustomToolButton(this);
+    _folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
+    hboxToolBar->addWidget(_folderButton);
 
-    CustomToolButton *webviewButton = new CustomToolButton(this);
-    webviewButton->setIconPath(":/client/resources/icons/actions/webview.svg");
-    hboxToolBar->addWidget(webviewButton);
+    _webviewButton = new CustomToolButton(this);
+    _webviewButton->setIconPath(":/client/resources/icons/actions/webview.svg");
+    hboxToolBar->addWidget(_webviewButton);
 
-    CustomToolButton *menuButton = new CustomToolButton(this);
-    menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
-    hboxToolBar->addWidget(menuButton);
-
-    /*QMenu *menu = new QMenu(this);
-    QAction *parametersAction = new QAction(tr("Parameters"), this);
-    menu->addAction(parametersAction);
-    QAction *notificationsAction = new QAction(tr("Disable Notifications"), this);
-    menu->addAction(notificationsAction);
-    QAction *helpAction = new QAction(tr("Need help"), this);
-    menu->addAction(helpAction);
-    menu->addSeparator();
-    QAction *exitAction = new QAction(tr("Quit application"), this);
-    menu->addAction(exitAction);
-    menuButton->setMenu(menu);*/
+    _menuButton = new CustomToolButton(this);
+    _menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
+    hboxToolBar->addWidget(_menuButton);
 
     // Drive selection
     QHBoxLayout *hboxDriveBar = new QHBoxLayout(this);
@@ -405,8 +383,15 @@ void SynthesisPopover::init()
 
     setLayout(mainVBox);
 
-    connect(folderButton, &CustomToolButton::clicked, this, &SynthesisPopover::onFolderButtonClicked);
-    connect(webviewButton, &CustomToolButton::clicked, this, &SynthesisPopover::onWebviewButtonClicked);
+    // Shadow
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
+    effect->setBlurRadius(shadowBlurRadius);
+    effect->setOffset(0);
+    setGraphicsEffect(effect);
+
+    connect(_folderButton, &CustomToolButton::clicked, this, &SynthesisPopover::onFolderButtonClicked);
+    connect(_webviewButton, &CustomToolButton::clicked, this, &SynthesisPopover::onWebviewButtonClicked);
+    connect(_menuButton, &CustomToolButton::clicked, this, &SynthesisPopover::onMenuButtonClicked);
     connect(_driveSelectionWidget, &DriveSelectionWidget::driveSelected, this, &SynthesisPopover::onDriveSelected);
     connect(buttonsBarWidget, &ButtonsBarWidget::buttonToggled, this, &SynthesisPopover::onButtonBarToggled);
     connect(_synchronizedListWidget, &QListWidget::currentItemChanged, this, &SynthesisPopover::onCurrentItemChanged);
@@ -464,6 +449,56 @@ void SynthesisPopover::onFolderButtonClicked()
 void SynthesisPopover::onWebviewButtonClicked()
 {
 
+}
+
+void SynthesisPopover::onMenuButtonClicked()
+{
+    if (_menuButton) {
+        MenuWidget *menu = new MenuWidget(this);
+
+        QAction *parametersAction = new QAction(tr("Parameters"), this);
+        parametersAction->setProperty(MenuWidget::iconPathProperty.c_str(), ":/client/resources/icons/actions/parameters.svg");
+        connect(parametersAction, &QAction::triggered, this, &SynthesisPopover::onParametersActionTriggered);
+        menu->addAction(parametersAction);
+
+        QAction *notificationsAction = new QAction(tr("Disable Notifications"), this);
+        notificationsAction->setProperty(MenuWidget::iconPathProperty.c_str(), ":/client/resources/icons/actions/notification-off.svg");
+        connect(notificationsAction, &QAction::triggered, this, &SynthesisPopover::onNotificationsActionTriggered);
+        menu->addAction(notificationsAction);
+
+        QAction *helpAction = new QAction(tr("Need help"), this);
+        helpAction->setProperty(MenuWidget::iconPathProperty.c_str(), ":/client/resources/icons/actions/help.svg");
+        connect(helpAction, &QAction::triggered, this, &SynthesisPopover::onHelpActionTriggered);
+        menu->addAction(helpAction);
+        menu->addSeparator();
+
+        QAction *exitAction = new QAction(tr("Quit application"), this);
+        exitAction->setProperty(MenuWidget::iconPathProperty.c_str(), ":/client/resources/icons/actions/error-sync.svg");
+        connect(exitAction, &QAction::triggered, this, &SynthesisPopover::onExitActionTriggered);
+        menu->addAction(exitAction);
+
+        menu->exec(geometry().topLeft() + _menuButton->geometry().bottomLeft() + QPoint(-20, 10));
+    }
+}
+
+void SynthesisPopover::onParametersActionTriggered(bool checked)
+{
+    Q_UNUSED(checked)
+}
+
+void SynthesisPopover::onNotificationsActionTriggered(bool checked)
+{
+    Q_UNUSED(checked)
+}
+
+void SynthesisPopover::onHelpActionTriggered(bool checked)
+{
+    Q_UNUSED(checked)
+}
+
+void SynthesisPopover::onExitActionTriggered(bool checked)
+{
+    Q_UNUSED(checked)
 }
 
 void SynthesisPopover::onDriveSelected(int id)

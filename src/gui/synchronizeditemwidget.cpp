@@ -1,5 +1,4 @@
 #include "synchronizeditemwidget.h"
-#include "customtoolbutton.h"
 
 #include <QBoxLayout>
 #include <QFileInfo>
@@ -18,6 +17,8 @@ static const int vMargin = 0;
 static const int boxHMargin= 12;
 static const int boxVMargin = 5;
 static const int boxSpacing = 12;
+static const int toolBarHSpacing = 10;
+static const int buttonsVSpacing = 5;
 static const QString dateFormat = "d MMM. - HH:mm";
 
 SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWidget *parent)
@@ -39,43 +40,59 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     _fileIconLabel = new QLabel(this);
     hbox->addWidget(_fileIconLabel);
 
-    QVBoxLayout *vbox = new QVBoxLayout(this);
-    vbox->setContentsMargins(0, 0, 0, 0);
-    vbox->setSpacing(0);
-
-    QHBoxLayout *hboxNameAndButtons = new QHBoxLayout(this);
-    hboxNameAndButtons->setContentsMargins(0, 0, 0, 0);
-    hboxNameAndButtons->setSpacing(0);
+    QVBoxLayout *vboxText = new QVBoxLayout(this);
+    vboxText->setContentsMargins(0, 0, 0, 0);
+    vboxText->setSpacing(0);
 
     QLabel *fileNameLabel = new QLabel(this);
     fileNameLabel->setObjectName("fileNameLabel");
     QFileInfo fileInfo(_item.name());
     fileNameLabel->setText(fileInfo.fileName());
-    hboxNameAndButtons->addWidget(fileNameLabel);
-
-    hboxNameAndButtons->addStretch();
-
-    CustomToolButton *folderButton = new CustomToolButton(this);
-    folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
-    hboxNameAndButtons->addWidget(folderButton);
-
-    CustomToolButton *menuButton = new CustomToolButton(this);
-    menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
-    hboxNameAndButtons->addWidget(menuButton);
-
-    vbox->addLayout(hboxNameAndButtons);
+    vboxText->addStretch();
+    vboxText->addWidget(fileNameLabel);
 
     QLabel *fileDateLabel = new QLabel(this);
     fileDateLabel->setObjectName("fileDateLabel");
     fileDateLabel->setText(_item.dateTime().toString(dateFormat));
-    vbox->addWidget(fileDateLabel);
-    vbox->addStretch();
+    vboxText->addWidget(fileDateLabel);
+    vboxText->addStretch();
 
-    hbox->addLayout(vbox);
+    hbox->addLayout(vboxText);
+    hbox->addStretch();
+
+    QVBoxLayout *vboxButtons = new QVBoxLayout(this);
+    vboxButtons->setContentsMargins(0, 0, 0, 0);
+    vboxButtons->addSpacing(buttonsVSpacing);
+
+    QHBoxLayout *hboxButtons = new QHBoxLayout(this);
+    hboxButtons->setContentsMargins(0, 0, 0, 0);
+    hboxButtons->setSpacing(toolBarHSpacing);
+
+    _folderButton = new CustomToolButton(this);
+    _folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
+    _folderButton->setVisible(false);
+    hboxButtons->addWidget(_folderButton);
+
+    _menuButton = new CustomToolButton(this);
+    _menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
+    _menuButton->setVisible(false);
+    hboxButtons->addWidget(_menuButton);
+
+    vboxButtons->addLayout(hboxButtons);
+    vboxButtons->addStretch();
+
+    hbox->addLayout(vboxButtons);
 
     connect(this, &SynchronizedItemWidget::fileIconSizeChanged, this, &SynchronizedItemWidget::onFileIconSizeChanged);
-    connect(folderButton, &CustomToolButton::clicked, this, &SynchronizedItemWidget::onFolderButtonClicked);
-    connect(menuButton, &CustomToolButton::clicked, this, &SynchronizedItemWidget::onMenuButtonClicked);
+    connect(_folderButton, &CustomToolButton::clicked, this, &SynchronizedItemWidget::onFolderButtonClicked);
+    connect(_menuButton, &CustomToolButton::clicked, this, &SynchronizedItemWidget::onMenuButtonClicked);
+}
+
+void SynchronizedItemWidget::setSelected(bool isSelected)
+{
+    _isSelected = isSelected;
+    _folderButton->setVisible(_isSelected);
+    _menuButton->setVisible(_isSelected);
 }
 
 void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
