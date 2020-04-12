@@ -78,7 +78,7 @@ KDC--MenuWidget::icon
 
 KDC--MenuWidget::item
 {
-    background: transparent;
+    background-color: transparent;
     border: 0px;
     border-radius: 5px;
     margin: 0px;

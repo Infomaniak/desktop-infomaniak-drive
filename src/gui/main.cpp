@@ -56,8 +56,16 @@ int main(int argc, char **argv)
 // We do not define it on linux so the behaviour is kept the same
 // as other Qt apps in the desktop environment. (which may or may
 // not set this envoronment variable)
-    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+    if (!qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")) {
+        qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+    }
 #endif // !Q_OS_WIN
+
+if (!qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")
+        && !qEnvironmentVariableIsSet("QT_SCALE_FACTOR")
+        && !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+}
 
 #ifdef Q_OS_MAC
     Mac::CocoaInitializer cocoaInit; // RIIA

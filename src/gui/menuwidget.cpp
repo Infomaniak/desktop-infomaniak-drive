@@ -11,14 +11,14 @@ const std::string MenuWidget::iconPathProperty = "iconPath";
 
 static const int contentMargin = 10;
 static const int cornerRadius = 5;
-static const int shadowBlurRadius = 40;
+static const int shadowBlurRadius = 20;
 
 MenuWidget::MenuWidget(QWidget *parent)
     : QMenu(parent)
     , _backgroundColor(QColor())
     , _iconColor(QColor())
 {
-    setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
+    setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
     setContentsMargins(contentMargin, contentMargin, contentMargin, contentMargin);

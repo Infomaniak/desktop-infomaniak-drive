@@ -153,3 +153,30 @@ Utility::systrayPosition Utility::getSystrayPosition(QScreen *screen)
         }
     }
 }
+
+bool Utility::isPointInSystray(QScreen *screen, const QPoint &point)
+{
+    QRect displayRect = screen->geometry();
+    QRect desktopRect = screen->availableGeometry();
+    if (desktopRect.height() < displayRect.height()) {
+        if (desktopRect.y() > displayRect.y()) {
+            // Systray position = Top
+            return point.y() < desktopRect.y();
+        }
+        else {
+            // Systray position = Bottom
+            return point.y() > desktopRect.y() + desktopRect.height();
+        }
+    }
+    else {
+        if (desktopRect.x() > displayRect.x()) {
+            // Systray position = Left
+            return point.x() < desktopRect.x();
+        }
+        else {
+            // Systray position = Right
+            return point.x() > desktopRect.x() + desktopRect.width();
+        }
+    }
+
+}

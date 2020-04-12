@@ -18,6 +18,7 @@
 #include <QMenu>
 #include <QPainter>
 #include <QPainterPath>
+#include <QPicture>
 #include <QScreen>
 
 namespace KDC {
@@ -26,7 +27,7 @@ static const int triangleHeight = 10;
 static const int triangleWidth  = 20;
 static const int trianglePosition = 100; // Position from side
 static const int cornerRadius = 5;
-static const int shadowBlurRadius = 40;
+static const int shadowBlurRadius = 20;
 static const int toolBarHMargin = 10;
 static const int toolBarVMargin = 10;
 static const int toolBarSpacing = 10;
@@ -49,7 +50,7 @@ SynthesisPopover::SynthesisPopover(QWidget *parent)
     , _synchronizedListWidget(nullptr)
 {
     setModal(true);
-    setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
+    setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
     setVisible(false);
@@ -100,8 +101,9 @@ void SynthesisPopover::paintEvent(QPaintEvent *event)
     QPainterPath painterPath;
     QRect screenRect = screen->availableGeometry();
     QRect intRect = rect().marginsRemoved(QMargins(triangleHeight, triangleHeight, triangleHeight - 1, triangleHeight - 1));
-    if (_sysTrayIconRect == QRect()) {
-        // Unknown Systray icon position
+    if (_sysTrayIconRect == QRect()
+            || !OCC::Utility::isPointInSystray(screen, _sysTrayIconRect.center())) {
+        // Unknown Systray icon position (Linux) or icon not in Systray (Windows group)
 
         // Dialog position
         if (position == OCC::Utility::systrayPosition::Top) {
@@ -303,7 +305,8 @@ void SynthesisPopover::init()
     mainVBox->addLayout(hboxToolBar);
 
     QLabel *iconLabel = new QLabel(this);
-    iconLabel->setPixmap(QIcon(":/client/resources/logos/kdrive-without-text.svg").pixmap(logoIconSize, logoIconSize));
+    iconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive-without-text.svg")
+                         .pixmap(logoIconSize, logoIconSize));
     hboxToolBar->addWidget(iconLabel);
 
     QWidget *spacerWidget = new QWidget(this);

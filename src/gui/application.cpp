@@ -82,18 +82,19 @@ namespace {
         "  --confdir <dirname>  : Use the given configuration folder.\n";
 }
 
-static const QLatin1String styleSheetWhiteFile(":/client/resources/stylesheetwhite.qss");
-static const QLatin1String styleSheetBlackFile(":/client/resources/stylesheetblack.qss");
-static const QList<QLatin1String> fontFiles =
-        QList<QLatin1String>()
-        << QLatin1String(":/client/resources/fonts/SuisseIntl-Thin.otf")
-        << QLatin1String(":/client/resources/fonts/SuisseIntl-UltraLight.otf")
-        << QLatin1String(":/client/resources/fonts/SuisseIntl-Light.otf")
-        << QLatin1String(":/client/resources/fonts/SuisseIntl-Regular.otf")
-        << QLatin1String(":/client/resources/fonts/SuisseIntl-Medium.otf")
-        << QLatin1String(":/client/resources/fonts/SuisseIntl-SemiBold.otf")
-        << QLatin1String(":/client/resources/fonts/SuisseIntl-Bold.otf")
-        << QLatin1String(":/client/resources/fonts/SuisseIntl-Black.otf");
+static const QString styleSheetWhiteFile(":/client/resources/stylesheetwhite.qss");
+static const QString styleSheetBlackFile(":/client/resources/stylesheetblack.qss");
+static const QList<QString> fontFiles =
+        QList<QString>()
+        << QString(":/client/resources/fonts/SuisseIntl-Thin.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-UltraLight.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-Light.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-Regular.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-Medium.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-SemiBold.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-Bold.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-Black.otf");
+//static const QString defaultFontFamily("Suisse Int'l");
 
 // ----------------------------------------------------------------------------------
 
@@ -317,11 +318,16 @@ Application::Application(int &argc, char **argv)
     _proxy.setupQtProxyFromConfig(); // folders have to be defined first, than we set up the Qt proxy.
 
     // Load fonts
-    for (QLatin1String fontFile : fontFiles) {
+    for (QString fontFile : fontFiles) {
         if (QFontDatabase::addApplicationFont(fontFile) < 0) {
             qCInfo(lcApplication) << "Error adding font file!";
         }
     }
+
+    // Set default font
+    /*QFont font(defaultFontFamily);
+    font.setStyleStrategy(QFont::PreferAntialias);
+    QApplication::setFont(font);*/
 
     // Load style sheet
     //QFile ssFile(styleSheetBlackFile);

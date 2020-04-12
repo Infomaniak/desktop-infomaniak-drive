@@ -17,6 +17,7 @@
 
 #include <QColor>
 #include <QIcon>
+#include <QPoint>
 #include <QString>
 #include <QUrl>
 #include <QWidget>
@@ -60,6 +61,7 @@ namespace Utility {
     QIcon getIconWithColor(const QString &path, const QColor &color = QColor());
 
     systrayPosition getSystrayPosition(QScreen *screen);
+    bool isPointInSystray(QScreen *screen, const QPoint &point);
 
 } // namespace Utility
 } // namespace OCC

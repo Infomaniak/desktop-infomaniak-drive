@@ -19,7 +19,7 @@ static const int boxVMargin = 5;
 static const int boxSpacing = 12;
 static const int toolBarHSpacing = 10;
 static const int buttonsVSpacing = 5;
-static const QString dateFormat = "d MMM. - HH:mm";
+static const QString dateFormat = "d MMM - HH:mm";
 
 SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWidget *parent)
     : QWidget(parent)
