@@ -294,12 +294,12 @@ bool SynthesisPopover::event(QEvent *event)
 
 void SynthesisPopover::init()
 {
-    QVBoxLayout *mainVBox = new QVBoxLayout(this);
+    QVBoxLayout *mainVBox = new QVBoxLayout();
     mainVBox->setContentsMargins(triangleHeight, triangleHeight, triangleHeight, triangleHeight);
     mainVBox->setSpacing(0);
 
     // Tool bar
-    QHBoxLayout *hboxToolBar = new QHBoxLayout(this);
+    QHBoxLayout *hboxToolBar = new QHBoxLayout();
     hboxToolBar->setContentsMargins(toolBarHMargin, toolBarVMargin, toolBarHMargin, toolBarVMargin);
     hboxToolBar->setSpacing(toolBarSpacing);
     mainVBox->addLayout(hboxToolBar);
@@ -326,7 +326,7 @@ void SynthesisPopover::init()
     hboxToolBar->addWidget(_menuButton);
 
     // Drive selection
-    QHBoxLayout *hboxDriveBar = new QHBoxLayout(this);
+    QHBoxLayout *hboxDriveBar = new QHBoxLayout();
     hboxDriveBar->setContentsMargins(driveBarHMargin, driveBarVMargin, driveBarHMargin, driveBarVMargin);
     hboxDriveBar->setSpacing(driveBarSpacing);
 

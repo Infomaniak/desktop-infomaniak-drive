@@ -4,6 +4,7 @@
 #include <QColor>
 #include <QMenu>
 #include <QPaintEvent>
+#include <QSize>
 #include <QString>
 
 namespace KDC {

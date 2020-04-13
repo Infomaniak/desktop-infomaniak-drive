@@ -23,6 +23,11 @@ MenuWidget::MenuWidget(QWidget *parent)
 
     setContentsMargins(contentMargin, contentMargin, contentMargin, contentMargin);
 
+#ifdef Q_OS_WIN
+    // Avoid a Qt bug => "UpdateLayeredWindowIndirect failed..." error and no hover
+    setStyleSheet("margin: 10px");
+#endif
+
     // Shadow
     QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(this);
     effect->setBlurRadius(shadowBlurRadius);
@@ -52,7 +57,9 @@ void MenuWidget::onIconColorChanged()
 {
     for (QAction *action : actions()) {
         QString iconPath = action->property(iconPathProperty.c_str()).toString();
-        action->setIcon(OCC::Utility::getIconWithColor(iconPath, _iconColor));
+        if (!iconPath.isEmpty()) {
+            action->setIcon(OCC::Utility::getIconWithColor(iconPath, _iconColor));
+        }
     }
 }
 

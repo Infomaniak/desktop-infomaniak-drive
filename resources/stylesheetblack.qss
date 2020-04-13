@@ -72,7 +72,8 @@ KDC--MenuWidget
 
 KDC--MenuWidget::icon
 {
-    margin: 15px;
+    margin: 0px;
+    padding: 10px 15px 10px 15px;
     qproperty-iconSize: 16px;
 }
 
@@ -82,7 +83,7 @@ KDC--MenuWidget::item
     border: 0px;
     border-radius: 5px;
     margin: 0px;
-    padding: 10px 20px 10px 20px;
+    padding: 10px 30px 10px 20px;
     color: #B8B8B8;
     font-family: "Suisse Int'l";
     font-weight: normal;

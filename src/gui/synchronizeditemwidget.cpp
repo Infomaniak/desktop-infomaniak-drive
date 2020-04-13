@@ -32,7 +32,7 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
 {
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
 
-    QHBoxLayout *hbox = new QHBoxLayout(this);
+    QHBoxLayout *hbox = new QHBoxLayout();
     hbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
     hbox->setSpacing(boxSpacing);
     setLayout(hbox);
@@ -40,7 +40,7 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     _fileIconLabel = new QLabel(this);
     hbox->addWidget(_fileIconLabel);
 
-    QVBoxLayout *vboxText = new QVBoxLayout(this);
+    QVBoxLayout *vboxText = new QVBoxLayout();
     vboxText->setContentsMargins(0, 0, 0, 0);
     vboxText->setSpacing(0);
 
@@ -60,11 +60,11 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     hbox->addLayout(vboxText);
     hbox->addStretch();
 
-    QVBoxLayout *vboxButtons = new QVBoxLayout(this);
+    QVBoxLayout *vboxButtons = new QVBoxLayout();
     vboxButtons->setContentsMargins(0, 0, 0, 0);
     vboxButtons->addSpacing(buttonsVSpacing);
 
-    QHBoxLayout *hboxButtons = new QHBoxLayout(this);
+    QHBoxLayout *hboxButtons = new QHBoxLayout();
     hboxButtons->setContentsMargins(0, 0, 0, 0);
     hboxButtons->setSpacing(toolBarHSpacing);
 
