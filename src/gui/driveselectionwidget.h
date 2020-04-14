@@ -1,6 +1,8 @@
 #pragma once
 
-#include <unordered_map>
+#include "theme.h"
+
+#include <map>
 
 #include <QFont>
 #include <QColor>
@@ -19,12 +21,13 @@ class DriveSelectionWidget : public QPushButton
     Q_PROPERTY(QSize drive_icon_size READ driveIconSize WRITE setDriveIconSize)
     Q_PROPERTY(QSize down_icon_size READ downIconSize WRITE setDownIconSize)
     Q_PROPERTY(QColor down_icon_color READ downIconColor WRITE setDownIconColor)
+    Q_PROPERTY(QSize menu_right_icon_size READ menuRightIconSize WRITE setMenuRightIconSize)
 
 public:
     explicit DriveSelectionWidget(QWidget *parent = nullptr);
     QSize sizeHint() const override;
 
-    void addDrive(int id, const QString &name, const QColor &color);
+    void addDrive(int id, const QString &name, const QColor &color, OCC::SyncResult::Status status);
     void selectDrive(int id);
 
     inline QSize driveIconSize() const { return _driveIconSize; }
@@ -45,6 +48,9 @@ public:
         emit downIconColorChanged();
     }
 
+    inline QSize menuRightIconSize() const { return _menuRightIconSize; }
+    inline void setMenuRightIconSize(QSize size) { _menuRightIconSize = size; }
+
 signals:
     void driveIconSizeChanged();
     void downIconSizeChanged();
@@ -55,7 +61,8 @@ private:
     QSize _driveIconSize;
     QSize _downIconSize;
     QColor _downIconColor;
-    std::unordered_map<int, std::pair<QString, QColor>> _driveMap;
+    QSize _menuRightIconSize;
+    std::map<int, std::tuple<QString, QColor, OCC::SyncResult::Status>> _driveMap;
     int _currentDriveId;
     QLabel *_driveIconLabel;
     QLabel *_driveTextLabel;
@@ -68,6 +75,9 @@ private slots:
     void onDriveIconSizeChanged();
     void onDownIconSizeChanged();
     void onDownIconColorChanged();
+    void onClick(bool checked);
+    void onSelectDriveActionTriggered(bool checked = false);
+    void onAddDriveActionTriggered(bool checked = false);
 };
 
 }

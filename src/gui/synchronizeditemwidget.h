@@ -59,6 +59,11 @@ private slots:
     void onFileIconSizeChanged();
     void onFolderButtonClicked();
     void onMenuButtonClicked();
+    void onOpenActionTriggered(bool checked = false);
+    void onFavoritesActionTriggered(bool checked = false);
+    void onRightAndSharingActionTriggered(bool checked = false);
+    void onCopyLinkActionTriggered(bool checked = false);
+    void onDisplayOnDriveActionTriggered(bool checked = false);
 };
 
 }

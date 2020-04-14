@@ -97,8 +97,6 @@
         <file>resources/icons/theme/white/state-warning.svg</file>
         <file>resources/logos/kdrive.svg</file>
         <file>resources/logos/kdrive-without-text.svg</file>
-        <file>resources/stylesheetblack.qss</file>
-        <file>resources/stylesheetwhite.qss</file>
         <file>resources/fonts/SuisseIntl-Black.otf</file>
         <file>resources/fonts/SuisseIntl-BlackItalic.otf</file>
         <file>resources/fonts/SuisseIntl-Bold.otf</file>
@@ -117,5 +115,7 @@
         <file>resources/fonts/SuisseIntl-ThinItalic.otf</file>
         <file>resources/fonts/SuisseIntl-UltraLight.otf</file>
         <file>resources/fonts/SuisseIntl-UltraLightItalic.otf</file>
+        <file>resources/styles/stylesheetblack.qss</file>
+        <file>resources/styles/stylesheetwhite.qss</file>
     </qresource>
 </RCC>

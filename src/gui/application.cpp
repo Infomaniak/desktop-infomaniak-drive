@@ -82,8 +82,8 @@ namespace {
         "  --confdir <dirname>  : Use the given configuration folder.\n";
 }
 
-static const QString styleSheetWhiteFile(":/client/resources/stylesheetwhite.qss");
-static const QString styleSheetBlackFile(":/client/resources/stylesheetblack.qss");
+static const QString styleSheetWhiteFile(":/client/resources/styles/stylesheetwhite.qss");
+static const QString styleSheetBlackFile(":/client/resources/styles/stylesheetblack.qss");
 static const QList<QString> fontFiles =
         QList<QString>()
         << QString(":/client/resources/fonts/SuisseIntl-Thin.otf")

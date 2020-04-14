@@ -7,16 +7,17 @@
 
 namespace KDC {
 
-const std::string MenuWidget::iconPathProperty = "iconPath";
+const std::string MenuWidget::actionTypeProperty = "actionType";
 
 static const int contentMargin = 10;
 static const int cornerRadius = 5;
 static const int shadowBlurRadius = 20;
+static const int offsetX = -30;
+static const int offsetY = 10;
 
 MenuWidget::MenuWidget(QWidget *parent)
     : QMenu(parent)
     , _backgroundColor(QColor())
-    , _iconColor(QColor())
 {
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -25,7 +26,7 @@ MenuWidget::MenuWidget(QWidget *parent)
 
 #ifdef Q_OS_WIN
     // Avoid a Qt bug => "UpdateLayeredWindowIndirect failed..." error and no hover
-    setStyleSheet("margin: 10px");
+    setStyleSheet(QString("margin: %1px").arg(contentMargin));
 #endif
 
     // Shadow
@@ -33,8 +34,22 @@ MenuWidget::MenuWidget(QWidget *parent)
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
     setGraphicsEffect(effect);
+}
 
-    connect(this, &MenuWidget::iconColorChanged, this, &MenuWidget::onIconColorChanged);
+MenuWidget::MenuWidget(const QString &title, QWidget *parent)
+    : MenuWidget(parent)
+{
+    setTitle(title);
+}
+
+QAction *MenuWidget::exec(const QPoint &pos, bool offsetAuto)
+{
+    if (offsetAuto) {
+        return QMenu::exec(pos + QPoint(offsetX, offsetY));
+    }
+    else {
+        return QMenu::exec(pos);
+    }
 }
 
 void MenuWidget::paintEvent(QPaintEvent *event)
@@ -51,16 +66,6 @@ void MenuWidget::paintEvent(QPaintEvent *event)
     painter.drawPath(painterPath);
 
     QMenu::paintEvent(event);
-}
-
-void MenuWidget::onIconColorChanged()
-{
-    for (QAction *action : actions()) {
-        QString iconPath = action->property(iconPathProperty.c_str()).toString();
-        if (!iconPath.isEmpty()) {
-            action->setIcon(OCC::Utility::getIconWithColor(iconPath, _iconColor));
-        }
-    }
 }
 
 }

@@ -21,6 +21,15 @@ class SynthesisPopover : public QDialog
     Q_PROPERTY(QColor background_main_color READ backgroundMainColor WRITE setBackgroundMainColor)
 
 public:
+    enum notificationActions {
+        Never = 0,
+        OneHour,
+        UntilTomorrow,
+        TreeDays,
+        OneWeek,
+        Always
+    };
+
     explicit SynthesisPopover(QWidget *parent = nullptr);
 
     inline QColor backgroundMainColor() const { return _backgroundMainColor; }
@@ -48,6 +57,7 @@ private:
     StatusBarWidget *_statusBarWidget;
     QStackedWidget *_stackedWidget;
     QListWidget *_synchronizedListWidget;
+    notificationActions _notificationAction;
 
     void paintEvent(QPaintEvent *event) override;
     bool event(QEvent *event) override;
@@ -61,7 +71,7 @@ private slots:
     void onWebviewButtonClicked();
     void onMenuButtonClicked();
     void onParametersActionTriggered(bool checked = false);
-    void onNotificationsActionTriggered(bool checked = false);
+    void onNotificationActionTriggered(bool checked = false);
     void onHelpActionTriggered(bool checked = false);
     void onExitActionTriggered(bool checked = false);
     void onDriveSelected(int id);
@@ -71,3 +81,4 @@ private slots:
 
 }
 
+Q_DECLARE_METATYPE(KDC::SynthesisPopover::notificationActions)

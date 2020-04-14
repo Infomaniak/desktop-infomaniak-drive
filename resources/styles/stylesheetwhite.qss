@@ -13,12 +13,12 @@ KDC--SynthesisPopover
     max-width: 420px;
     min-height: 570px;
     max-height: 570px;
-    qproperty-background_main_color: #35393D;
+    qproperty-background_main_color: #FFFFFF;
 }
 
 KDC--SynthesisPopover QScrollBar
 {
-    background-color: #1A1A1C;
+    background-color: #EDEDED;
     border: 0px;
     width: 3px;
     margin: 0px 0px 0px 0px;
@@ -46,7 +46,7 @@ KDC--SynthesisPopover QScrollBar::sub-line
 
 KDC--SynthesisPopover QListWidget
 {
-    background-color: #1A1A1C;
+    background-color: #EDEDED;
     border: 0px;
 }
 
@@ -66,40 +66,43 @@ KDC--MenuWidget
     border: 0px;
     border-radius: 5px;
     margin: 0px;
-    qproperty-background_color: #1A1A1C;
-    qproperty-icon_color: #B8B8B8;
-}
-
-KDC--MenuWidget::icon
-{
-    margin: 0px;
-    padding: 10px 15px 10px 15px;
-    qproperty-iconSize: 16px;
-}
-
-KDC--MenuWidget::item
-{
-    background: transparent;
-    border: 0px;
-    border-radius: 5px;
-    margin: 0px;
-    padding: 10px 30px 10px 20px;
-    color: #B8B8B8;
-    font-family: "Suisse Int'l";
-    font-weight: normal;
-    font-size: 14px;
-}
-
-KDC--MenuWidget::item:selected
-{
-    background-color: #35393D;
+    qproperty-background_color: #FFFFFF;
 }
 
 KDC--MenuWidget::separator
 {
     height: 1px;
-    background: #444444;
+    background: #E0E0E0;
     margin: 0px;
+}
+
+/***********************/
+/* KDC--MenuItemWidget */
+/***********************/
+
+KDC--MenuItemWidget
+{
+    background-color: transparent;
+    border: 0px;
+    border-radius: 5px;
+    margin: 0px;
+    qproperty-default_icon_color: #9F9F9F;
+    qproperty-check_icon_color: #333333;
+    qproperty-default_icon_size: 16px;
+    qproperty-submenu_icon_size: 10px;
+}
+
+KDC--MenuItemWidget:hover
+{
+    background-color: #F5F5F5;
+}
+
+KDC--MenuItemWidget QLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: normal;
+    font-size: 14px;
 }
 
 /*************************/
@@ -111,7 +114,7 @@ KDC--CustomToolButton
     background-color: transparent;
     border: none;
     qproperty-iconSize: 18px;
-    qproperty-icon_color: #B8B8B8;
+    qproperty-icon_color: #666666;
 }
 
 /*****************************/
@@ -129,17 +132,18 @@ KDC--DriveSelectionWidget
     padding-right: 5px;
     qproperty-drive_icon_size: 20px;
     qproperty-down_icon_size: 12px;
-    qproperty-down_icon_color: #FFFFFF;
+    qproperty-down_icon_color: #333333;
+    qproperty-menu_right_icon_size: 18px;
 }
 
 KDC--DriveSelectionWidget:hover
 {
-    background-color: #1A1A1C;
+    background-color: #EDEDED;
 }
 
 KDC--DriveSelectionWidget QLabel#driveTextLabel
 {
-    color: #FFFFFF;
+    color: #333333;
     font-family: "Suisse Int'l";
     font-weight: bold;
     font-size: 18px;
@@ -151,7 +155,7 @@ KDC--DriveSelectionWidget QLabel#driveTextLabel
 
 KDC--ProgressBarWidget QProgressBar
 {
-    background-color: #FFFFFF;
+    background-color: #E0E0E0;
     min-height: 5px;
     max-height: 5px;
     border: 0px;
@@ -168,7 +172,7 @@ KDC--ProgressBarWidget QProgressBar::chunk
 
 KDC--ProgressBarWidget QLabel#progressLabel
 {
-    color: #C0C0C0;
+    color: #666666;
     font-family: "Suisse Int'l";
     font-weight: medium;
     font-size: 13px;
@@ -180,7 +184,7 @@ KDC--ProgressBarWidget QLabel#progressLabel
 
 KDC--HalfRoundRectWidget
 {
-    qproperty-bottom_corners_color: #1A1A1C;
+    qproperty-bottom_corners_color: #EDEDED;
 }
 
 /************************/
@@ -189,7 +193,7 @@ KDC--HalfRoundRectWidget
 
 KDC--StatusBarWidget QLabel
 {
-    color: #C0C0C0;
+    color: #666666;
     font-family: "Suisse Int'l";
     font-weight: medium;
     font-size: 13px;
@@ -201,8 +205,8 @@ KDC--StatusBarWidget QLabel
 
 KDC--CustomPushButton
 {
-    background-color: #1A1A1C;
-    color: #B8B8B8;
+    background-color: #EDEDED;
+    color: #666666;
     min-height: 30px;
     max-height: 30px;
     font-family: "Suisse Int'l";
@@ -214,13 +218,13 @@ KDC--CustomPushButton
     padding-right: 13px;
     qproperty-iconSize: 10px;
     /* !!! qproperty syntax cannot be used in pseudo-states !!! */
-    qproperty-icon_color: #B8B8B8;
+    qproperty-icon_color: #666666;
     qproperty-icon_color_checked: #FFFFFF;
 }
 
 KDC--CustomPushButton:checked
 {
-    background-color: #6D6D6D;
+    background-color: #3F97F7;
     color: #FFFFFF;
 }
 
@@ -230,7 +234,7 @@ KDC--CustomPushButton:checked
 
 KDC--ButtonsBarWidget
 {
-    qproperty-background_color: #1A1A1C;
+    qproperty-background_color: #EDEDED;
 }
 
 /*******************************/
@@ -241,13 +245,13 @@ KDC--SynchronizedItemWidget
 {
     qproperty-file_icon_size: 25px;
     /* !!! qproperty syntax cannot be used in pseudo-states !!! */
-    qproperty-background_color: #1A1A1C;
-    qproperty-background_color_selection: #35393D;
+    qproperty-background_color: #EDEDED;
+    qproperty-background_color_selection: #FFFFFF;
 }
 
 KDC--SynchronizedItemWidget QLabel#fileNameLabel
 {
-    color: #FFFFFF;
+    color: #444444;
     font-family: "Suisse Int'l";
     font-weight: medium;
     font-size: 13px;
@@ -255,7 +259,7 @@ KDC--SynchronizedItemWidget QLabel#fileNameLabel
 
 KDC--SynchronizedItemWidget QLabel#fileDateLabel
 {
-    color: #C0C0C0;
+    color: #666666;
     font-family: "Suisse Int'l";
     font-weight: normal;
     font-size: 13px;
@@ -269,5 +273,5 @@ KDC--BottomWidget
 {
     min-height: 5px;
     max-height: 5px;
-    qproperty-background_color: #1A1A1C;
+    qproperty-background_color: #EDEDED;
 }

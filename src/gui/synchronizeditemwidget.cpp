@@ -1,4 +1,6 @@
 #include "synchronizeditemwidget.h"
+#include "menuitemwidget.h"
+#include "menuwidget.h"
 
 #include <QBoxLayout>
 #include <QFileInfo>
@@ -8,6 +10,7 @@
 #include <QMimeType>
 #include <QPainter>
 #include <QPainterPath>
+#include <QWidgetAction>
 
 namespace KDC {
 
@@ -192,7 +195,74 @@ void SynchronizedItemWidget::onFolderButtonClicked()
 
 void SynchronizedItemWidget::onMenuButtonClicked()
 {
+    if (_menuButton) {
+        MenuWidget *menu = new MenuWidget(this);
 
+        QWidgetAction *openAction = new QWidgetAction(this);
+        MenuItemWidget *openMenuItemWidget = new MenuItemWidget(tr("Open"));
+        openMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/view.svg");
+        openAction->setDefaultWidget(openMenuItemWidget);
+        connect(openAction, &QWidgetAction::triggered, this, &SynchronizedItemWidget::onOpenActionTriggered);
+        menu->addAction(openAction);
+
+        QWidgetAction *favoritesAction = new QWidgetAction(this);
+        MenuItemWidget *favoritesMenuItemWidget = new MenuItemWidget(tr("Add to favorites"));
+        favoritesMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/favorite.svg");
+        favoritesAction->setDefaultWidget(favoritesMenuItemWidget);
+        connect(favoritesAction, &QWidgetAction::triggered, this, &SynchronizedItemWidget::onFavoritesActionTriggered);
+        menu->addAction(favoritesAction);
+
+        QWidgetAction *rightsAndSharingAction = new QWidgetAction(this);
+        MenuItemWidget *rightsAndSharingMenuItemWidget = new MenuItemWidget(tr("Rights and sharing"));
+        rightsAndSharingMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/share.svg");
+        rightsAndSharingAction->setDefaultWidget(rightsAndSharingMenuItemWidget);
+        connect(rightsAndSharingAction, &QWidgetAction::triggered, this, &SynchronizedItemWidget::onRightAndSharingActionTriggered);
+        menu->addAction(rightsAndSharingAction);
+
+        QWidgetAction *copyLinkAction = new QWidgetAction(this);
+        MenuItemWidget *copyLinkMenuItemWidget = new MenuItemWidget(tr("Copy sharing link"));
+        copyLinkMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/link.svg");
+        copyLinkAction->setDefaultWidget(copyLinkMenuItemWidget);
+        connect(copyLinkAction, &QWidgetAction::triggered, this, &SynchronizedItemWidget::onCopyLinkActionTriggered);
+        menu->addAction(copyLinkAction);
+
+        menu->addSeparator();
+
+        QWidgetAction *displayOnDriveAction = new QWidgetAction(this);
+        MenuItemWidget *displayOnDrivekMenuItemWidget = new MenuItemWidget(tr("Display on drive.infomaniak.com"));
+        displayOnDrivekMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/webview.svg");
+        displayOnDriveAction->setDefaultWidget(displayOnDrivekMenuItemWidget);
+        connect(displayOnDriveAction, &QWidgetAction::triggered, this, &SynchronizedItemWidget::onDisplayOnDriveActionTriggered);
+        menu->addAction(displayOnDriveAction);
+
+        menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()), true);
+    }
+
+}
+
+void SynchronizedItemWidget::onOpenActionTriggered(bool checked)
+{
+    Q_UNUSED(checked)
+}
+
+void SynchronizedItemWidget::onFavoritesActionTriggered(bool checked)
+{
+    Q_UNUSED(checked)
+}
+
+void SynchronizedItemWidget::onRightAndSharingActionTriggered(bool checked)
+{
+    Q_UNUSED(checked)
+}
+
+void SynchronizedItemWidget::onCopyLinkActionTriggered(bool checked)
+{
+    Q_UNUSED(checked)
+}
+
+void SynchronizedItemWidget::onDisplayOnDriveActionTriggered(bool checked)
+{
+    Q_UNUSED(checked)
 }
 
 }

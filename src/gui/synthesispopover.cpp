@@ -1,4 +1,5 @@
 #include "synthesispopover.h"
+#include "menuitemwidget.h"
 #include "menuwidget.h"
 #include "buttonsbarwidget.h"
 #include "bottomwidget.h"
@@ -20,6 +21,8 @@
 #include <QPainterPath>
 #include <QPicture>
 #include <QScreen>
+#include <QVector>
+#include <QWidgetAction>
 
 namespace KDC {
 
@@ -48,9 +51,10 @@ SynthesisPopover::SynthesisPopover(QWidget *parent)
     , _statusBarWidget(nullptr)
     , _stackedWidget(nullptr)
     , _synchronizedListWidget(nullptr)
+    , _notificationAction(notificationActions::Never)
 {
     setModal(true);
-    setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
+    setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
     setVisible(false);
@@ -411,8 +415,9 @@ void SynthesisPopover::load()
 
 void SynthesisPopover::loadDriveList()
 {
-    _driveSelectionWidget->addDrive(111111, "FSociety", QColor("#666666"));
-    _driveSelectionWidget->addDrive(222222, "Perso", QColor("#FF0000"));
+    _driveSelectionWidget->addDrive(111111, "FSociety", QColor("#4FB1C7"), OCC::SyncResult::SyncRunning);
+    _driveSelectionWidget->addDrive(222222, "Evil Corp", QColor("#6040B1"), OCC::SyncResult::Success);
+    _driveSelectionWidget->addDrive(333333, "Elliot Alderson Drive", QColor("#419488"), OCC::SyncResult::Error);
     _driveSelectionWidget->selectDrive(111111);
 }
 
@@ -459,37 +464,72 @@ void SynthesisPopover::onMenuButtonClicked()
     if (_menuButton) {
         MenuWidget *menu = new MenuWidget(this);
 
-        QAction *parametersAction = new QAction(tr("Parameters"), this);
-        parametersAction->setProperty(MenuWidget::iconPathProperty.c_str(), ":/client/resources/icons/actions/parameters.svg");
-        connect(parametersAction, &QAction::triggered, this, &SynthesisPopover::onParametersActionTriggered);
+        // Parameters
+        QWidgetAction *parametersAction = new QWidgetAction(this);
+        MenuItemWidget *parametersMenuItemWidget = new MenuItemWidget(tr("Parameters"));
+        parametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
+        parametersAction->setDefaultWidget(parametersMenuItemWidget);
+        connect(parametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onParametersActionTriggered);
         menu->addAction(parametersAction);
 
-        QAction *notificationsAction = new QAction(tr("Disable Notifications"), this);
-        notificationsAction->setProperty(MenuWidget::iconPathProperty.c_str(), ":/client/resources/icons/actions/notification-off.svg");
-        connect(notificationsAction, &QAction::triggered, this, &SynthesisPopover::onNotificationsActionTriggered);
+        // Disable Notifications
+        QWidgetAction *notificationsAction = new QWidgetAction(this);
+        MenuItemWidget *notificationsMenuItemWidget = new MenuItemWidget(tr("Disable Notifications"));
+        notificationsMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/notification-off.svg");
+        notificationsMenuItemWidget->setHasSubmenu(true);
+        notificationsAction->setDefaultWidget(notificationsMenuItemWidget);
         menu->addAction(notificationsAction);
 
-        QAction *helpAction = new QAction(tr("Need help"), this);
-        helpAction->setProperty(MenuWidget::iconPathProperty.c_str(), ":/client/resources/icons/actions/help.svg");
-        connect(helpAction, &QAction::triggered, this, &SynthesisPopover::onHelpActionTriggered);
-        menu->addAction(helpAction);
-        menu->addSeparator();
+        // Disable Notifications submenu
+        static const QVector<QString> notificationActionsText =
+            QVector<QString>()
+            << QString(tr("Never"))
+            << QString(tr("During 1 hour"))
+            << QString(tr("Until tomorrow"))
+            << QString(tr("During 3 days"))
+            << QString(tr("During 1 week"))
+            << QString(tr("Always"));
 
-        QAction *exitAction = new QAction(tr("Quit application"), this);
-        exitAction->setProperty(MenuWidget::iconPathProperty.c_str(), ":/client/resources/icons/actions/error-sync.svg");
-        connect(exitAction, &QAction::triggered, this, &SynthesisPopover::onExitActionTriggered);
+        MenuWidget *submenu = new MenuWidget(this);
+
+        QActionGroup *notificationActionGroup = new QActionGroup(this);
+        notificationActionGroup->setExclusive(true);
+
+        QWidgetAction *notificationAction;
+        for (int i = 0; i < notificationActionsText.size(); i++) {
+            notificationAction = new QWidgetAction(this);
+            notificationAction->setProperty(MenuWidget::actionTypeProperty.c_str(), i);
+            MenuItemWidget *notificationMenuItemWidget = new MenuItemWidget(notificationActionsText[i]);
+            notificationMenuItemWidget->setChecked(i == _notificationAction);
+            notificationAction->setDefaultWidget(notificationMenuItemWidget);
+            connect(notificationAction, &QWidgetAction::triggered, this, &SynthesisPopover::onNotificationActionTriggered);
+            notificationActionGroup->addAction(notificationAction);
+        }
+
+        submenu->addActions(notificationActionGroup->actions());
+        notificationsAction->setMenu(submenu);
+
+        // Help        
+        QWidgetAction *helpAction = new QWidgetAction(this);
+        MenuItemWidget *helpMenuItemWidget = new MenuItemWidget(tr("Need help"));
+        helpMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/help.svg");
+        helpAction->setDefaultWidget(helpMenuItemWidget);
+        connect(helpAction, &QWidgetAction::triggered, this, &SynthesisPopover::onHelpActionTriggered);
+        menu->addAction(helpAction);
+
+        // Quit
+        QWidgetAction *exitAction = new QWidgetAction(this);
+        MenuItemWidget *exitMenuItemWidget = new MenuItemWidget(tr("Quit application"));
+        exitMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/error-sync.svg");
+        exitAction->setDefaultWidget(exitMenuItemWidget);
+        connect(exitAction, &QWidgetAction::triggered, this, &SynthesisPopover::onExitActionTriggered);
         menu->addAction(exitAction);
 
-        menu->exec(geometry().topLeft() + _menuButton->geometry().bottomLeft() + QPoint(-20, 10));
+        menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()), true);
     }
 }
 
 void SynthesisPopover::onParametersActionTriggered(bool checked)
-{
-    Q_UNUSED(checked)
-}
-
-void SynthesisPopover::onNotificationsActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
 }
@@ -502,6 +542,13 @@ void SynthesisPopover::onHelpActionTriggered(bool checked)
 void SynthesisPopover::onExitActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
+}
+
+void SynthesisPopover::onNotificationActionTriggered(bool checked)
+{
+    Q_UNUSED(checked)
+
+    _notificationAction = qvariant_cast<notificationActions>(sender()->property(MenuWidget::actionTypeProperty.c_str()));
 }
 
 void SynthesisPopover::onDriveSelected(int id)
