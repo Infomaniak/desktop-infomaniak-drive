@@ -94,7 +94,7 @@ KDC--MenuItemWidget
 
 KDC--MenuItemWidget:hover
 {
-    background-color: #35393D;
+    background-color: #434A4F;
 }
 
 KDC--MenuItemWidget QLabel
