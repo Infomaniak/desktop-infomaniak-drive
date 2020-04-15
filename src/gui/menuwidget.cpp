@@ -24,11 +24,6 @@ MenuWidget::MenuWidget(QWidget *parent)
 
     setContentsMargins(contentMargin, contentMargin, contentMargin, contentMargin);
 
-#ifdef Q_OS_WIN
-    // Avoid a Qt bug => "UpdateLayeredWindowIndirect failed..." error and no hover
-    setStyleSheet(QString("margin: %1px").arg(contentMargin));
-#endif
-
     // Shadow
     QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(this);
     effect->setBlurRadius(shadowBlurRadius);
