@@ -101,7 +101,7 @@ KDC--MenuItemWidget QLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: normal;
+    font-weight: 400; /* normal */
     font-size: 14px;
 }
 
@@ -145,7 +145,7 @@ KDC--DriveSelectionWidget QLabel#driveTextLabel
 {
     color: #333333;
     font-family: "Suisse Int'l";
-    font-weight: bold;
+    font-weight: 700; /* bold */
     font-size: 18px;
 }
 
@@ -174,7 +174,7 @@ KDC--ProgressBarWidget QLabel#progressLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: medium;
+    font-weight: 500; /* medium */
     font-size: 13px;
 }
 
@@ -195,7 +195,7 @@ KDC--StatusBarWidget QLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: medium;
+    font-weight: 500; /* medium */
     font-size: 13px;
 }
 
@@ -210,7 +210,7 @@ KDC--CustomPushButton
     min-height: 30px;
     max-height: 30px;
     font-family: "Suisse Int'l";
-    font-weight: semibold;
+    font-weight: 600; /* semibold */
     font-size: 14px;
     border: 0px;
     border-radius: 15px;
@@ -253,7 +253,7 @@ KDC--SynchronizedItemWidget QLabel#fileNameLabel
 {
     color: #444444;
     font-family: "Suisse Int'l";
-    font-weight: medium;
+    font-weight: 500; /* medium */
     font-size: 13px;
 }
 
@@ -261,7 +261,7 @@ KDC--SynchronizedItemWidget QLabel#fileDateLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: normal;
+    font-weight: 400; /* normal */
     font-size: 13px;
 }
 

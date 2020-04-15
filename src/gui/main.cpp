@@ -45,6 +45,9 @@ void warnSystray()
 
 int main(int argc, char **argv)
 {
+    //qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0");
+    //qputenv("QT_SCALE_FACTOR", "1.2");
+
     Q_INIT_RESOURCE(client);
 
 #ifdef Q_OS_WIN
