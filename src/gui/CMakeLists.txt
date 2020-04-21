@@ -118,12 +118,14 @@ set(client_SRCS
     wizard/webviewpage.cpp
     wizard/webview.cpp
     debugreporter.cpp
+    getorcreatepubliclinkshare.cpp
 
     # KDrive V2
     bottomwidget.cpp
     buttonsbarwidget.cpp
     custompushbutton.cpp
     customtoolbutton.cpp
+    customtooltip.cpp
     driveselectionwidget.cpp
     halfroundrectwidget.cpp
     menuitemwidget.cpp

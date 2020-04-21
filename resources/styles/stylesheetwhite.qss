@@ -9,11 +9,30 @@ QInputDialog QLabel
 
 KDC--SynthesisPopover
 {
-    min-width: 420px;
-    max-width: 420px;
-    min-height: 570px;
-    max-height: 570px;
+    min-width: 440px;
+    max-width: 440px;
+    min-height: 575px;
+    max-height: 575px;
     qproperty-background_main_color: #FFFFFF;
+}
+
+KDC--SynthesisPopover QLabel
+{
+    color: #000000;
+}
+
+KDC--SynthesisPopover QToolTip
+{
+    background-color: transparent;
+    color: #666666;
+    border-style: solid;
+    border-width: 2px;
+    border-color: red;
+    border-radius: 5px;
+    margin: 10px;
+    font-family: "Suisse Int'l";
+    font-weight: normal;
+    font-size: 13px;
 }
 
 KDC--SynthesisPopover QScrollBar
@@ -101,7 +120,7 @@ KDC--MenuItemWidget QLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: 400; /* normal */
+    font-weight: normal;
     font-size: 14px;
 }
 
@@ -145,7 +164,7 @@ KDC--DriveSelectionWidget QLabel#driveTextLabel
 {
     color: #333333;
     font-family: "Suisse Int'l";
-    font-weight: 700; /* bold */
+    font-weight: bold;
     font-size: 18px;
 }
 
@@ -174,7 +193,7 @@ KDC--ProgressBarWidget QLabel#progressLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: 500; /* medium */
+    font-weight: medium;
     font-size: 13px;
 }
 
@@ -191,11 +210,17 @@ KDC--HalfRoundRectWidget
 /* KDC--StatusBarWidget */
 /************************/
 
+KDC--StatusBarWidget
+{
+    min-height: 60px;
+    max-height: 60px;
+}
+
 KDC--StatusBarWidget QLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: 500; /* medium */
+    font-weight: medium;
     font-size: 13px;
 }
 
@@ -210,7 +235,7 @@ KDC--CustomPushButton
     min-height: 30px;
     max-height: 30px;
     font-family: "Suisse Int'l";
-    font-weight: 600; /* semibold */
+    font-weight: semibold;
     font-size: 14px;
     border: 0px;
     border-radius: 15px;
@@ -243,7 +268,7 @@ KDC--ButtonsBarWidget
 
 KDC--SynchronizedItemWidget
 {
-    qproperty-file_icon_size: 25px;
+    qproperty-file_icon_size: 34px;
     /* !!! qproperty syntax cannot be used in pseudo-states !!! */
     qproperty-background_color: #EDEDED;
     qproperty-background_color_selection: #FFFFFF;
@@ -253,7 +278,7 @@ KDC--SynchronizedItemWidget QLabel#fileNameLabel
 {
     color: #444444;
     font-family: "Suisse Int'l";
-    font-weight: 500; /* medium */
+    font-weight: medium;
     font-size: 13px;
 }
 
@@ -261,7 +286,7 @@ KDC--SynchronizedItemWidget QLabel#fileDateLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: 400; /* normal */
+    font-weight: normal;
     font-size: 13px;
 }
 

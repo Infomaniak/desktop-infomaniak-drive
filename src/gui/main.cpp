@@ -64,11 +64,11 @@ int main(int argc, char **argv)
     }
 #endif // !Q_OS_WIN
 
-if (!qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")
-        && !qEnvironmentVariableIsSet("QT_SCALE_FACTOR")
-        && !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-}
+    if (!qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")
+            && !qEnvironmentVariableIsSet("QT_SCALE_FACTOR")
+            && !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
+        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    }
 
 #ifdef Q_OS_MAC
     Mac::CocoaInitializer cocoaInit; // RIIA

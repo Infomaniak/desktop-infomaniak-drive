@@ -15,6 +15,8 @@
 #ifndef OWNCLOUDGUI_H
 #define OWNCLOUDGUI_H
 
+#define KDRIVE_V2
+
 #include "systray.h"
 #include "connectionvalidator.h"
 #include "progressdispatcher.h"
@@ -59,7 +61,7 @@ public:
     void setupOverlayIcons();
 
     /// Whether the tray menu is visible
-    bool contextMenuVisible() const;
+    bool popoverVisible() const;
 
     void hideAndShowTray();
 
@@ -67,17 +69,22 @@ signals:
     void setupProxy();
 
 public slots:
-    void setupContextMenu();
-    void updateContextMenu();
-    void updateContextMenuNeeded();
-    void slotContextMenuAboutToShow();
-    void slotContextMenuAboutToHide();
+    void setupPopover();
+    void updatePopover();
+    void updatePopoverNeeded();
+#ifndef KDRIVE_V2
+    void slotPopoverAboutToShow();
+    void slotPopoverAboutToHide();
+#endif
     void slotComputeOverallSyncStatus();
     void slotShowTrayMessage(const QString &title, const QString &msg);
     void slotShowOptionalTrayMessage(const QString &title, const QString &msg);
     void slotFolderOpenAction(const QString &alias);
+#ifndef KDRIVE_V2
     void slotRebuildRecentMenus();
+#endif
     void slotUpdateProgress(const QString &folder, const ProgressInfo &progress);
+    void slotItemCompleted(const QString &folder, const SyncFileItemPtr &item);
     void slotShowGuiMessage(const QString &title, const QString &message);
     void slotFoldersChanged();
     void slotShowSettings();
@@ -86,7 +93,7 @@ public slots:
     void slotSyncStateChange(Folder *);
     void slotTrayClicked(QSystemTrayIcon::ActivationReason reason);
     void slotToggleLogBrowser();
-    void slotOpenOwnCloud();
+    void slotOpenWebview();
     void slotOpenSettingsDialog();
     void slotHelp();
     void slotAbout();
@@ -103,32 +110,41 @@ public slots:
      * to the folder).
      */
     void slotShowShareDialog(const QString &sharePath, const QString &localPath, ShareDialogStartPage startPage);
+    void slotShowShareDialogPublicLinks(const QString &sharePath, const QString &localPath);
 
     void slotRemoveDestroyedShareDialogs();
 
 private slots:
+#ifndef KDRIVE_V2
     void slotLogin();
     void slotLogout();
+#endif
     void slotUnpauseAllFolders();
     void slotPauseAllFolders();
     void slotNewAccountWizard();
 
 private:
     void setPauseOnAllFoldersHelper(bool pause);
+#ifndef KDRIVE_V2
     void setupActions();
     void addAccountContextMenu(AccountStatePtr accountState, QMenu *menu, bool separateMenu);
+#endif
 
     QPointer<Systray> _tray;
     QPointer<SettingsDialog> _settingsDialog;
     QPointer<LogBrowser> _logBrowser;
+#ifdef KDRIVE_V2
+    QScopedPointer<KDC::SynthesisPopover> _synthesisPopover;
+#else
     // tray's menu
     QScopedPointer<QMenu> _contextMenu;
+#endif
 
     // Manually tracking whether the context menu is visible via aboutToShow
     // and aboutToHide. Unfortunately aboutToHide isn't reliable everywhere
     // so this only gets used with _workaroundManualVisibility (when the tray's
     // isVisible() is unreliable)
-    bool _contextMenuVisibleManual = false;
+    bool _popoverVisibleManual = false;
 
     QMenu *_recentActionsMenu;
     QVector<QMenu *> _accountMenus;

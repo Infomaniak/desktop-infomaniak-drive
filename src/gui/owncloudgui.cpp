@@ -36,8 +36,6 @@
 #include <QDialog>
 #include <QHBoxLayout>
 
-#define KDRIVE_V2
-
 #if defined(Q_OS_X11)
 #include <QX11Info>
 #endif
@@ -64,15 +62,16 @@ ownCloudGui::ownCloudGui(Application *parent)
     // for the beginning, set the offline icon until the account was verified
     _tray->setIcon(Theme::instance()->folderOfflineIcon(/*systray?*/ true, /*currently visible?*/ false));
 
-    connect(_tray.data(), &QSystemTrayIcon::activated,
-        this, &ownCloudGui::slotTrayClicked);
+    connect(_tray.data(), &QSystemTrayIcon::activated, this, &ownCloudGui::slotTrayClicked);
 
-#ifndef KDRIVE_V2
-    setupActions();
-    setupContextMenu();
-#endif
+#ifdef KDRIVE_V2
     _tray->show();
-
+    setupPopover();
+#else
+    setupActions();
+    setupPopover();
+    _tray->show();
+#endif
 
 #ifdef WITH_LIBCLOUDPROVIDERS
     auto exporter = new LibCloudProviders(this);
@@ -81,26 +80,20 @@ ownCloudGui::ownCloudGui(Application *parent)
 #endif
 
     ProgressDispatcher *pd = ProgressDispatcher::instance();
-#ifndef KDRIVE_V2
-    connect(pd, &ProgressDispatcher::progressInfo, this,
-        &ownCloudGui::slotUpdateProgress);
+
+    connect(pd, &ProgressDispatcher::progressInfo, this, &ownCloudGui::slotUpdateProgress);
+    connect(pd, &ProgressDispatcher::itemCompleted, this, &ownCloudGui::slotItemCompleted);
 
     FolderMan *folderMan = FolderMan::instance();
     connect(folderMan, &FolderMan::folderSyncStateChange,
         this, &ownCloudGui::slotSyncStateChange);
 
-    connect(AccountManager::instance(), &AccountManager::accountAdded,
-        this, &ownCloudGui::updateContextMenuNeeded);
-    connect(AccountManager::instance(), &AccountManager::accountRemoved,
-        this, &ownCloudGui::updateContextMenuNeeded);
-#endif
+    connect(AccountManager::instance(), &AccountManager::accountAdded, this, &ownCloudGui::updatePopoverNeeded);
+    connect(AccountManager::instance(), &AccountManager::accountRemoved, this, &ownCloudGui::updatePopoverNeeded);
 
-    connect(Logger::instance(), &Logger::guiLog,
-        this, &ownCloudGui::slotShowTrayMessage);
-    connect(Logger::instance(), &Logger::optionalGuiLog,
-        this, &ownCloudGui::slotShowOptionalTrayMessage);
-    connect(Logger::instance(), &Logger::guiMessage,
-        this, &ownCloudGui::slotShowGuiMessage);
+    connect(Logger::instance(), &Logger::guiLog, this, &ownCloudGui::slotShowTrayMessage);
+    connect(Logger::instance(), &Logger::optionalGuiLog, this, &ownCloudGui::slotShowOptionalTrayMessage);
+    connect(Logger::instance(), &Logger::guiMessage, this, &ownCloudGui::slotShowGuiMessage);
 }
 
 // This should rather be in application.... or rather in ConfigFile?
@@ -141,11 +134,9 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
             }
         } else {
 #ifdef KDRIVE_V2
-            QRect sysTrayRect = _tray->geometry();
-            QScopedPointer<KDC::SynthesisPopover> synthesisPopover;
-            synthesisPopover.reset(new KDC::SynthesisPopover());
-            synthesisPopover->setSysTrayIconRect(sysTrayRect);
-            synthesisPopover->exec();
+            if (_synthesisPopover) {
+                _synthesisPopover->show();
+            }
 #else
 #ifdef Q_OS_MAC
             // on macOS, a left click always opens menu.
@@ -167,7 +158,7 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
 void ownCloudGui::slotSyncStateChange(Folder *folder)
 {
     slotComputeOverallSyncStatus();
-    updateContextMenuNeeded();
+    updatePopoverNeeded();
 
     if (!folder) {
         return; // Valid, just a general GUI redraw was needed.
@@ -192,7 +183,7 @@ void ownCloudGui::slotSyncStateChange(Folder *folder)
 void ownCloudGui::slotFoldersChanged()
 {
     slotComputeOverallSyncStatus();
-    updateContextMenuNeeded();
+    updatePopoverNeeded();
 }
 
 void ownCloudGui::slotOpenPath(const QString &path)
@@ -202,7 +193,7 @@ void ownCloudGui::slotOpenPath(const QString &path)
 
 void ownCloudGui::slotAccountStateChanged()
 {
-    updateContextMenuNeeded();
+    updatePopoverNeeded();
     slotComputeOverallSyncStatus();
 }
 
@@ -230,15 +221,14 @@ void ownCloudGui::slotComputeOverallSyncStatus()
     bool allPaused = true;
     bool allDisconnected = true;
     QVector<AccountStatePtr> problemAccounts;
-    auto setStatusText = [&](const QString &text) {
 #ifndef KDRIVE_V2
+    auto setStatusText = [&](const QString &text) {
         // Don't overwrite the status if we're currently syncing
         if (FolderMan::instance()->isAnySyncRunning())
             return;
         _actionStatus->setText(text);
-#endif
     };
-
+#endif
 
     foreach (auto a, AccountManager::instance()->accounts()) {
         if (!a->isSignedOut()) {
@@ -257,12 +247,14 @@ void ownCloudGui::slotComputeOverallSyncStatus()
     }
 
     if (!problemAccounts.empty()) {
-        _tray->setIcon(Theme::instance()->folderOfflineIcon(true, contextMenuVisible()));
+        _tray->setIcon(Theme::instance()->folderOfflineIcon(true, popoverVisible()));
+#ifndef KDRIVE_V2
         if (allDisconnected) {
             setStatusText(tr("Disconnected"));
         } else {
             setStatusText(tr("Disconnected from some accounts"));
         }
+#endif
 #ifdef Q_OS_WIN
         // Windows has a 128-char tray tooltip length limit.
         QStringList accountNames;
@@ -287,14 +279,18 @@ void ownCloudGui::slotComputeOverallSyncStatus()
     }
 
     if (allSignedOut) {
-        _tray->setIcon(Theme::instance()->folderOfflineIcon(true, contextMenuVisible()));
+        _tray->setIcon(Theme::instance()->folderOfflineIcon(true, popoverVisible()));
         _tray->setToolTip(tr("Please sign in"));
+#ifndef KDRIVE_V2
         setStatusText(tr("Signed out"));
+#endif
         return;
     } else if (allPaused) {
-        _tray->setIcon(Theme::instance()->syncStateIcon(SyncResult::Paused, true, contextMenuVisible()));
+        _tray->setIcon(Theme::instance()->syncStateIcon(SyncResult::Paused, true, popoverVisible()));
         _tray->setToolTip(tr("Account synchronization is disabled"));
+#ifndef KDRIVE_V2
         setStatusText(tr("Synchronization is paused"));
+#endif
         return;
     }
 
@@ -321,7 +317,7 @@ void ownCloudGui::slotComputeOverallSyncStatus()
 
     // Set sytray icon
     Application *app = static_cast<Application *>(qApp);
-    QIcon statusIcon = Theme::instance()->syncStateIcon(iconStatus, true, contextMenuVisible(), app->getAlert());
+    QIcon statusIcon = Theme::instance()->syncStateIcon(iconStatus, true, popoverVisible(), app->getAlert());
     _tray->setIcon(statusIcon);
 
 #ifndef KDRIVE_V2
@@ -346,6 +342,7 @@ void ownCloudGui::slotComputeOverallSyncStatus()
 #endif
         _tray->setToolTip(trayMessage);
 
+#ifndef KDRIVE_V2
         if (overallStatus == SyncResult::Success || overallStatus == SyncResult::Problem) {
             if (hasUnresolvedConflicts) {
                 setStatusText(tr("Unresolved conflicts"));
@@ -357,12 +354,16 @@ void ownCloudGui::slotComputeOverallSyncStatus()
         } else {
             setStatusText(tr("Error during synchronization"));
         }
+#endif
     } else {
         _tray->setToolTip(tr("There are no sync folders configured."));
+#ifndef KDRIVE_V2
         setStatusText(tr("No sync folders configured"));
+#endif
     }
 }
 
+#ifndef KDRIVE_V2
 void ownCloudGui::addAccountContextMenu(AccountStatePtr accountState, QMenu *menu, bool separateMenu)
 {
     // Only show the name in the action if it's not part of an
@@ -373,7 +374,7 @@ void ownCloudGui::addAccountContextMenu(AccountStatePtr accountState, QMenu *men
     }
     auto actionOpenoC = menu->addAction(browserOpen);
     actionOpenoC->setProperty(propertyAccountC, QVariant::fromValue(accountState->account()));
-    QObject::connect(actionOpenoC, &QAction::triggered, this, &ownCloudGui::slotOpenOwnCloud);
+    QObject::connect(actionOpenoC, &QAction::triggered, this, &ownCloudGui::slotOpenWebview);
 
     FolderMan *folderMan = FolderMan::instance();
     bool firstFolder = true;
@@ -426,38 +427,43 @@ void ownCloudGui::addAccountContextMenu(AccountStatePtr accountState, QMenu *men
         }
     }
 }
+#endif
 
-void ownCloudGui::slotContextMenuAboutToShow()
+#ifndef KDRIVE_V2
+void ownCloudGui::slotPopoverAboutToShow()
 {
-    _contextMenuVisibleManual = true;
+    _popoverVisibleManual = true;
 
     // Update icon in sys tray, as it might change depending on the context menu state
     slotComputeOverallSyncStatus();
 
     if (!_workaroundNoAboutToShowUpdate) {
-        updateContextMenu();
+        updatePopover();
     }
 }
 
-void ownCloudGui::slotContextMenuAboutToHide()
+void ownCloudGui::slotPopoverAboutToHide()
 {
-    _contextMenuVisibleManual = false;
+    _popoverVisibleManual = false;
 
     // Update icon in sys tray, as it might change depending on the context menu state
     slotComputeOverallSyncStatus();
 }
-
-bool ownCloudGui::contextMenuVisible() const
-{
-#ifdef KDRIVE_V2
-    return false;
 #endif
 
+bool ownCloudGui::popoverVisible() const
+{
     // On some platforms isVisible doesn't work and always returns false,
     // elsewhere aboutToHide is unreliable.
-    if (_workaroundManualVisibility)
-        return _contextMenuVisibleManual;
-    return _contextMenu->isVisible();
+    if (_workaroundManualVisibility) {
+        return _popoverVisibleManual;
+    }
+
+#ifdef KDRIVE_V2
+    return _synthesisPopover && _synthesisPopover->isVisible();
+#else
+    return _contextMenu && _contextMenu->isVisible();
+#endif
 }
 
 void ownCloudGui::hideAndShowTray()
@@ -466,11 +472,13 @@ void ownCloudGui::hideAndShowTray()
     _tray->show();
 }
 
+#ifndef KDRIVE_V2
 static bool minimalTrayMenu()
 {
     static QByteArray var = qgetenv("OWNCLOUD_MINIMAL_TRAY_MENU");
     return !var.isEmpty();
 }
+#endif
 
 static bool updateWhileVisible()
 {
@@ -516,8 +524,22 @@ static QByteArray envForceWorkaroundManualVisibility()
     return var;
 }
 
-void ownCloudGui::setupContextMenu()
+void ownCloudGui::setupPopover()
 {
+#ifdef KDRIVE_V2
+    if (_synthesisPopover) {
+        return;
+    }
+
+    _synthesisPopover.reset(new KDC::SynthesisPopover(_app->debugMode(), _tray->geometry()));
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openParametersDialog, this, &ownCloudGui::slotShowSettings);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openShareDialogPublicLinks, this, &ownCloudGui::slotShowShareDialogPublicLinks);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openHelp, this, &ownCloudGui::slotHelp);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::exit, _app, &Application::quit);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crash, _app, &Application::slotCrash);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crashEnforce, _app, &Application::slotCrashEnforce);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crashFatal, _app, &Application::slotCrashFatal);
+#else
     if (_contextMenu) {
         return;
     }
@@ -541,6 +563,7 @@ void ownCloudGui::setupContextMenu()
         _contextMenu->addAction(_actionQuit);
         return;
     }
+#endif
 
     auto applyEnvVariable = [](bool *sw, const QByteArray &value) {
         if (value == "1")
@@ -575,7 +598,7 @@ void ownCloudGui::setupContextMenu()
         xdgCurrentDesktop.contains("KDE")
         || desktopSession.contains("plasma")
         || desktopSession.contains("kde");
-    QObject *platformMenu = reinterpret_cast<QObject *>(_contextMenu->platformMenu());
+    QObject *platformMenu = reinterpret_cast<QObject *>(_popover->platformMenu());
     if (isKde && platformMenu && platformMenu->metaObject()->className() == QLatin1String("QDBusPlatformMenu")) {
         _workaroundManualVisibility = true;
         _workaroundNoAboutToShowUpdate = true;
@@ -593,28 +616,31 @@ void ownCloudGui::setupContextMenu()
                           << "showhide:" << _workaroundShowAndHideTray
                           << "manualvisibility:" << _workaroundManualVisibility;
 
-#ifndef KDRIVE_V2
-    connect(&_delayedTrayUpdateTimer, &QTimer::timeout, this, &ownCloudGui::updateContextMenu);
+
+    connect(&_delayedTrayUpdateTimer, &QTimer::timeout, this, &ownCloudGui::updatePopover);
     _delayedTrayUpdateTimer.setInterval(2 * 1000);
     _delayedTrayUpdateTimer.setSingleShot(true);
 
-    connect(_contextMenu.data(), SIGNAL(aboutToShow()), SLOT(slotContextMenuAboutToShow()));
+#ifndef KDRIVE_V2
+    connect(_contextMenu.data(), SIGNAL(aboutToShow()), SLOT(slotPopoverAboutToShow()));
     // unfortunately aboutToHide is unreliable, it seems to work on OSX though
-    connect(_contextMenu.data(), SIGNAL(aboutToHide()), SLOT(slotContextMenuAboutToHide()));
+    connect(_contextMenu.data(), SIGNAL(aboutToHide()), SLOT(slotPopoverAboutToHide()));
+#endif
 
     // Populate the context menu now.
-    updateContextMenu();
-#endif
+    updatePopover();
 }
 
-void ownCloudGui::updateContextMenu()
+void ownCloudGui::updatePopover()
 {
+#ifndef KDRIVE_V2
     if (minimalTrayMenu()) {
         return;
     }
+#endif
 
     // If it's visible, we can't update live, and it won't be updated lazily: reschedule
-    if (contextMenuVisible() && !updateWhileVisible() && _workaroundNoAboutToShowUpdate) {
+    if (popoverVisible() && !updateWhileVisible() && _workaroundNoAboutToShowUpdate) {
         if (!_delayedTrayUpdateTimer.isActive()) {
             _delayedTrayUpdateTimer.start();
         }
@@ -622,10 +648,10 @@ void ownCloudGui::updateContextMenu()
     }
 
     if (_workaroundShowAndHideTray) {
-        // To make tray menu updates work with these bugs (see setupContextMenu)
+        // To make tray menu updates work with these bugs (see setupPopover)
         // we need to hide and show the tray icon. We don't want to do that
         // while it's visible!
-        if (contextMenuVisible()) {
+        if (popoverVisible()) {
             if (!_delayedTrayUpdateTimer.isActive()) {
                 _delayedTrayUpdateTimer.start();
             }
@@ -634,6 +660,11 @@ void ownCloudGui::updateContextMenu()
         _tray->hide();
     }
 
+#ifdef KDRIVE_V2
+    if (_synthesisPopover) {
+        emit _synthesisPopover->refreshAccountList();
+    }
+#else
     _contextMenu->clear();
     slotRebuildRecentMenus();
 
@@ -642,7 +673,6 @@ void ownCloudGui::updateContextMenu()
         menu->deleteLater();
     }
     _accountMenus.clear();
-
 
     auto accountList = AccountManager::instance()->accounts();
 
@@ -707,7 +737,6 @@ void ownCloudGui::updateContextMenu()
         _contextMenu->addAction(_actionCrash);
         _contextMenu->addAction(_actionCrashEnforce);
         _contextMenu->addAction(_actionCrashFatal);
-
     }
 
     _contextMenu->addSeparator();
@@ -754,19 +783,20 @@ void ownCloudGui::updateContextMenu()
     }
 
     _contextMenu->addAction(_actionQuit);
+#endif
 
     if (_workaroundShowAndHideTray) {
         _tray->show();
     }
 }
 
-void ownCloudGui::updateContextMenuNeeded()
+void ownCloudGui::updatePopoverNeeded()
 {
     // if it's visible and we can update live: update now
-    if (contextMenuVisible() && updateWhileVisible()) {
+    if (popoverVisible() && updateWhileVisible()) {
         // Note: don't update while visible on OSX
         // https://bugreports.qt.io/browse/QTBUG-54845
-        updateContextMenu();
+        updatePopover();
         return;
     }
 
@@ -783,10 +813,12 @@ void ownCloudGui::updateContextMenuNeeded()
 
 void ownCloudGui::slotShowTrayMessage(const QString &title, const QString &msg)
 {
-    if (_tray)
+    if (_tray) {
         _tray->showMessage(title, msg);
-    else
+    }
+    else {
         qCWarning(lcApplication) << "Tray not ready: " << msg;
+    }
 }
 
 void ownCloudGui::slotShowOptionalTrayMessage(const QString &title, const QString &msg)
@@ -796,7 +828,6 @@ void ownCloudGui::slotShowOptionalTrayMessage(const QString &title, const QStrin
         slotShowTrayMessage(title, msg);
     }
 }
-
 
 /*
  * open the folder with the given Alias
@@ -821,6 +852,7 @@ void ownCloudGui::slotFolderOpenAction(const QString &alias)
     }
 }
 
+#ifndef KDRIVE_V2
 void ownCloudGui::setupActions()
 {
     _actionShowErrors = new QAction(Theme::instance()->stateErrorIcon(), tr("See synchronization errors"), this);
@@ -885,12 +917,15 @@ static bool shouldShowInRecentsMenu(const SyncFileItem &item)
         && item._instruction != CSYNC_INSTRUCTION_EVAL
         && item._instruction != CSYNC_INSTRUCTION_NONE;
 }
-
+#endif
 
 void ownCloudGui::slotUpdateProgress(const QString &folder, const ProgressInfo &progress)
 {
+#ifdef KDRIVE_V2
     Q_UNUSED(folder);
 
+    emit _synthesisPopover->updateProgress(folder, progress);
+#else
     if (progress.status() == ProgressInfo::Discovery) {
         if (!progress._currentDiscoveredRemoteFolder.isEmpty()) {
             _actionStatus->setText(tr("Checking for changes in remote '%1'")
@@ -964,12 +999,19 @@ void ownCloudGui::slotUpdateProgress(const QString &folder, const ProgressInfo &
 
         // Update the "Recent" menu if the context menu is being shown,
         // otherwise it'll be updated later, when the context menu is opened.
-        if (updateWhileVisible() && contextMenuVisible()) {
+        if (updateWhileVisible() && popoverVisible()) {
             slotRebuildRecentMenus();
         }
     }
+#endif
 }
 
+void ownCloudGui::slotItemCompleted(const QString &folder, const SyncFileItemPtr &item)
+{
+    emit _synthesisPopover->itemCompleted(folder, item);
+}
+
+#ifndef KDRIVE_V2
 void ownCloudGui::slotLogin()
 {
     if (auto account = qvariant_cast<AccountStatePtr>(sender()->property(propertyAccountC))) {
@@ -995,6 +1037,7 @@ void ownCloudGui::slotLogout()
         ai->signOutByUi();
     }
 }
+#endif
 
 void ownCloudGui::slotUnpauseAllFolders()
 {
@@ -1086,7 +1129,7 @@ void ownCloudGui::slotToggleLogBrowser()
     }
 }
 
-void ownCloudGui::slotOpenOwnCloud()
+void ownCloudGui::slotOpenWebview()
 {
     if (auto account = qvariant_cast<AccountPtr>(sender()->property(propertyAccountC))) {
         QDesktopServices::openUrl(account->url());
@@ -1182,6 +1225,11 @@ void ownCloudGui::slotShowShareDialog(const QString &sharePath, const QString &l
     raiseDialog(w);
 }
 
+void ownCloudGui::slotShowShareDialogPublicLinks(const QString &sharePath, const QString &localPath)
+{
+    slotShowShareDialog(sharePath, localPath, ShareDialogStartPage::PublicLinks);
+}
+
 void ownCloudGui::slotRemoveDestroyedShareDialogs()
 {
     QMutableMapIterator<QString, QPointer<ShareDialog>> it(_shareDialogs);
@@ -1217,6 +1265,5 @@ void ownCloudGui::slotAbout()
     msgBox->setIconPixmap(iconPixmap);
     msgBox->show();
 }
-
 
 } // end namespace

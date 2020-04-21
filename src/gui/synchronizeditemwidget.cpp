@@ -2,6 +2,7 @@
 #include "menuitemwidget.h"
 #include "menuwidget.h"
 
+#include <QApplication>
 #include <QBoxLayout>
 #include <QFileInfo>
 #include <QIcon>
@@ -10,6 +11,8 @@
 #include <QMimeType>
 #include <QPainter>
 #include <QPainterPath>
+#include <QScreen>
+#include <QGraphicsSvgItem>
 #include <QWidgetAction>
 
 namespace KDC {
@@ -22,6 +25,7 @@ static const int boxVMargin = 5;
 static const int boxSpacing = 12;
 static const int toolBarHSpacing = 10;
 static const int buttonsVSpacing = 5;
+static const int statusIconWidth = 10;
 static const QString dateFormat = "d MMM - HH:mm";
 
 SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWidget *parent)
@@ -49,7 +53,7 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
 
     QLabel *fileNameLabel = new QLabel(this);
     fileNameLabel->setObjectName("fileNameLabel");
-    QFileInfo fileInfo(_item.name());
+    QFileInfo fileInfo(_item.filePath());
     fileNameLabel->setText(fileInfo.fileName());
     vboxText->addStretch();
     vboxText->addWidget(fileNameLabel);
@@ -73,6 +77,7 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
 
     _folderButton = new CustomToolButton(this);
     _folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
+    _folderButton->setToolTip(tr("Open local folder"));
     _folderButton->setVisible(false);
     hboxButtons->addWidget(_folderButton);
 
@@ -123,38 +128,38 @@ void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
     }
 }
 
-QIcon SynchronizedItemWidget::getIconFromFileName(const QString &fileName) const
+QString SynchronizedItemWidget::getFileIconPathFromFileName(const QString &fileName) const
 {
     QMimeDatabase db;
     QMimeType mime = db.mimeTypeForFile(fileName, QMimeDatabase::MatchExtension);
     if (mime.name().startsWith("image/")) {
-        return QIcon(":/client/resources/icons/document types/file-image.svg");
+        return QString(":/client/resources/icons/document types/file-image.svg");
     }
     else if (mime.name().startsWith("audio/")) {
-        return QIcon(":/client/resources/icons/document types/file-audio.svg");
+        return QString(":/client/resources/icons/document types/file-audio.svg");
     }
     else if (mime.name().startsWith("video/")) {
-        return QIcon(":/client/resources/icons/document types/file-video.svg");
+        return QString(":/client/resources/icons/document types/file-video.svg");
     }
     else if (mime.inherits("application/pdf")) {
-        return QIcon(":/client/resources/icons/document types/file-pdf.svg");
+        return QString(":/client/resources/icons/document types/file-pdf.svg");
     }
     else if (mime.name().startsWith("application/vnd.ms-powerpoint")
              || mime.name().startsWith("application/vnd.openxmlformats-officedocument.presentationml")
              || mime.inherits("application/vnd.oasis.opendocument.presentation")) {
-        return QIcon(":/client/resources/icons/document types/file-presentation.svg");
+        return QString(":/client/resources/icons/document types/file-presentation.svg");
     }
     else if (mime.name().startsWith("application/vnd.ms-excel")
              || mime.name().startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")
              || mime.inherits("application/vnd.oasis.opendocument.spreadsheet")) {
-        return QIcon(":/client/resources/icons/document types/file-sheets.svg");
+        return QString(":/client/resources/icons/document types/file-sheets.svg");
     }
     else if (mime.inherits("application/zip")
              || mime.inherits("application/gzip")
              || mime.inherits("application/tar")
              || mime.inherits("application/rar")
              || mime.inherits("application/x-bzip2")) {
-        return QIcon(":/client/resources/icons/document types/file-zip.svg");
+        return QString(":/client/resources/icons/document types/file-zip.svg");
     }
     else if (mime.inherits("text/x-csrc")
              || mime.inherits("text/x-c++src")
@@ -166,31 +171,91 @@ QIcon SynchronizedItemWidget::getIconFromFileName(const QString &fileName) const
              || mime.inherits("text/javascript")
              || mime.inherits("application/x-php")
              || mime.inherits("application/x-perl")) {
-        return QIcon(":/client/resources/icons/document types/file-code.svg");
+        return QString(":/client/resources/icons/document types/file-code.svg");
     }
     else if (mime.inherits("text/plain")
              || mime.inherits("text/xml")) {
-       return QIcon(":/client/resources/icons/document types/file-text.svg");
+       return QString(":/client/resources/icons/document types/file-text.svg");
     }
     else if (mime.inherits("application/x-msdos-program")) {
-        return QIcon(":/client/resources/icons/document types/file-application.svg");
+        return QString(":/client/resources/icons/document types/file-application.svg");
     }
 
-    return QIcon(":/client/resources/icons/document types/file-default.svg");
+    return QString(":/client/resources/icons/document types/file-default.svg");
+}
+
+QString SynchronizedItemWidget::getStatusIconPathFromStatus(OCC::SyncFileItem::Status status) const
+{
+    QString path;
+    switch (status) {
+    case OCC::SyncFileItem::NoStatus:
+        path = QString();
+        break;
+    case OCC::SyncFileItem::FatalError:
+    case OCC::SyncFileItem::NormalError:
+    case OCC::SyncFileItem::SoftError:
+    case OCC::SyncFileItem::DetailError:
+    case OCC::SyncFileItem::BlacklistedError:
+        path = QString(":/client/resources/icons/statuts/error-sync.svg");
+        break;
+    case OCC::SyncFileItem::Success:
+        path = QString(":/client/resources/icons/statuts/success.svg");
+        break;
+    case OCC::SyncFileItem::Conflict:
+    case OCC::SyncFileItem::FileIgnored:
+    case OCC::SyncFileItem::Restoration:
+        path = QString(":/client/resources/icons/statuts/warning.svg");
+        break;
+    }
+
+    return path;
+}
+
+QIcon SynchronizedItemWidget::getIconWithStatus(const QString &filePath, OCC::SyncFileItem::Status status)
+{
+    QIcon iconWithStatus;
+
+    qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+
+    QPixmap filePixmap(getFileIconPathFromFileName(filePath));
+    QRectF fileRect(QRectF(QPointF((statusIconWidth / 2) * ratio, (statusIconWidth / 2) * ratio),
+                           QSizeF((_fileIconSize.width() - statusIconWidth) * ratio,
+                                  (_fileIconSize.height() - statusIconWidth) * ratio)));
+
+    QPixmap pixmap(QSize(_fileIconSize.width() * ratio, _fileIconSize.height() * ratio));
+    pixmap.fill(Qt::transparent);
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.drawPixmap(fileRect, filePixmap, QRectF());
+
+    // Add status icon
+    QString statusIconPath = getStatusIconPathFromStatus(status);
+    if (!statusIconPath.isEmpty()) {
+        QPixmap statusPixmap(statusIconPath);
+        QRectF statusRect(QRectF(QPointF((_fileIconSize.width() - statusIconWidth) * ratio,
+                                         (_fileIconSize.height() - statusIconWidth) * ratio),
+                                 QSizeF(statusIconWidth * ratio, statusIconWidth * ratio)));
+        painter.drawPixmap(statusRect, statusPixmap, QRectF());
+    }
+
+    iconWithStatus.addPixmap(pixmap);
+
+    return iconWithStatus;
 }
 
 void SynchronizedItemWidget::onFileIconSizeChanged()
 {
     if (_fileIconLabel) {
-        QFileInfo fileInfo(_item.name());
-        QIcon fileIcon = getIconFromFileName(fileInfo.fileName());
-        _fileIconLabel->setPixmap(fileIcon.pixmap(_fileIconSize));
+        QFileInfo fileInfo(_item.filePath());
+        QIcon fileIconWithStatus = getIconWithStatus(fileInfo.fileName(), _item.status());
+        _fileIconLabel->setPixmap(fileIconWithStatus.pixmap(_fileIconSize));
     }
 }
 
 void SynchronizedItemWidget::onFolderButtonClicked()
 {
-
+    emit openFolder();
 }
 
 void SynchronizedItemWidget::onMenuButtonClicked()
@@ -206,6 +271,7 @@ void SynchronizedItemWidget::onMenuButtonClicked()
         menu->addAction(openAction);
 
         QWidgetAction *favoritesAction = new QWidgetAction(this);
+        favoritesAction->setEnabled(false);
         MenuItemWidget *favoritesMenuItemWidget = new MenuItemWidget(tr("Add to favorites"));
         favoritesMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/favorite.svg");
         favoritesAction->setDefaultWidget(favoritesMenuItemWidget);
@@ -243,26 +309,36 @@ void SynchronizedItemWidget::onMenuButtonClicked()
 void SynchronizedItemWidget::onOpenActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
+
+    emit open();
 }
 
 void SynchronizedItemWidget::onFavoritesActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
+
+    emit addToFavourites();
 }
 
 void SynchronizedItemWidget::onRightAndSharingActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
+
+    emit manageRightAndSharing();
 }
 
 void SynchronizedItemWidget::onCopyLinkActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
+
+    emit copyLink();
 }
 
 void SynchronizedItemWidget::onDisplayOnDriveActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
+
+    emit displayOnWebview();
 }
 
 }

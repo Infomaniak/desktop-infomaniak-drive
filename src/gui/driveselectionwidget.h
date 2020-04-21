@@ -27,8 +27,9 @@ public:
     explicit DriveSelectionWidget(QWidget *parent = nullptr);
     QSize sizeHint() const override;
 
-    void addDrive(int id, const QString &name, const QColor &color, OCC::SyncResult::Status status);
-    void selectDrive(int id);
+    void clear();
+    void addOrUpdateDrive(QString id, const QString &name, const QColor &color, OCC::SyncResult::Status status);
+    void selectDrive(QString id);
 
     inline QSize driveIconSize() const { return _driveIconSize; }
     inline void setDriveIconSize(QSize size) {
@@ -55,15 +56,22 @@ signals:
     void driveIconSizeChanged();
     void downIconSizeChanged();
     void downIconColorChanged();
-    void driveSelected(int id);
+    void driveSelected(QString id);
+    void addOrUpdateDrive();
 
 private:
+    struct DriveInfo {
+        QString _name;
+        QColor _color;
+        OCC::SyncResult::Status _status;
+    };
+
     QSize _driveIconSize;
     QSize _downIconSize;
     QColor _downIconColor;
     QSize _menuRightIconSize;
-    std::map<int, std::tuple<QString, QColor, OCC::SyncResult::Status>> _driveMap;
-    int _currentDriveId;
+    std::map<QString, DriveInfo> _driveMap;
+    QString _currentDriveId;
     QLabel *_driveIconLabel;
     QLabel *_driveTextLabel;
     QLabel *_downIconLabel;

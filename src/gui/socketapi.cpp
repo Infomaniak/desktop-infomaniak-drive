@@ -32,9 +32,7 @@
 #include "capabilities.h"
 #include "common/asserts.h"
 #include "guiutility.h"
-#ifndef OWNCLOUD_TEST
-#include "sharemanager.h"
-#endif
+#include "getorcreatepubliclinkshare.h"
 
 #include <array>
 #include <QBitArray>
@@ -89,7 +87,6 @@ static QString buildMessage(const QString &verb, const QString &path, const QStr
 namespace OCC {
 
 Q_LOGGING_CATEGORY(lcSocketApi, "gui.socketapi", QtInfoMsg)
-Q_LOGGING_CATEGORY(lcPublicLink, "gui.socketapi.publiclink", QtInfoMsg)
 
 class BloomFilter
 {
@@ -487,122 +484,6 @@ void SocketApi::command_SHARE_MENU_TITLE(const QString &, SocketListener *listen
     listener->sendMessage(QLatin1String("SHARE_MENU_TITLE:") + tr("Share with %1", "parameter is ownCloud").arg(Theme::instance()->appNameGUI()));
 }
 
-// don't pull the share manager into socketapi unittests
-#ifndef OWNCLOUD_TEST
-
-class GetOrCreatePublicLinkShare : public QObject
-{
-    Q_OBJECT
-public:
-    GetOrCreatePublicLinkShare(const AccountPtr &account,
-        const QString &serverPath, QObject *parent)
-        : QObject(parent)
-        , _account(account)
-        , _shareManager(account)
-        , _serverPath(serverPath)
-    {
-        connect(&_shareManager, &ShareManager::sharesFetched,
-            this, &GetOrCreatePublicLinkShare::sharesFetched);
-        connect(&_shareManager, &ShareManager::linkShareCreated,
-            this, &GetOrCreatePublicLinkShare::linkShareCreated);
-        connect(&_shareManager, &ShareManager::linkShareCreationForbidden,
-            this, &GetOrCreatePublicLinkShare::linkShareCreationForbidden);
-        connect(&_shareManager, &ShareManager::serverError,
-            this, &GetOrCreatePublicLinkShare::serverError);
-    }
-
-    void run()
-    {
-        qCDebug(lcPublicLink) << "Fetching shares";
-        _shareManager.fetchShares(_serverPath);
-    }
-
-private slots:
-    void sharesFetched(const QList<QSharedPointer<Share>> &shares)
-    {
-        auto shareName = SocketApi::tr("Context menu share");
-
-        // If shares will expire, create a new one every day.
-        QDate expireDate;
-        if (_account->capabilities().sharePublicLinkDefaultExpire()) {
-            shareName = SocketApi::tr("Context menu share %1").arg(QDate::currentDate().toString(Qt::ISODate));
-            expireDate = QDate::currentDate().addDays(
-                    _account->capabilities().sharePublicLinkDefaultExpireDateDays());
-        }
-
-        // If there already is a context menu share, reuse it
-        for (const auto &share : shares) {
-            const auto linkShare = qSharedPointerDynamicCast<LinkShare>(share);
-            if (!linkShare)
-                continue;
-
-            if (linkShare->getName() == shareName) {
-                qCDebug(lcPublicLink) << "Found existing share, reusing";
-                return success(linkShare->getLink().toString());
-            }
-        }
-
-        // otherwise create a new one
-        qCDebug(lcPublicLink) << "Creating new share";
-        QString noPassword;
-        _shareManager.createLinkShare(_serverPath, shareName, noPassword, expireDate);
-    }
-
-    void linkShareCreated(const QSharedPointer<LinkShare> &share)
-    {
-        qCDebug(lcPublicLink) << "New share created";
-        success(share->getLink().toString());
-    }
-
-    void linkShareCreationForbidden(const QString &message)
-    {
-        qCInfo(lcPublicLink) << "Could not create link share:" << message;
-        emit error(message);
-        deleteLater();
-    }
-
-    void serverError(int code, const QString &message)
-    {
-        qCWarning(lcPublicLink) << "Share fetch/create error" << code << message;
-        emit error(message);
-        deleteLater();
-    }
-
-signals:
-    void done(const QString &link);
-    void error(const QString &message);
-
-private:
-    void success(const QString &link)
-    {
-        emit done(link);
-        deleteLater();
-    }
-
-    AccountPtr _account;
-    ShareManager _shareManager;
-    QString _serverPath;
-};
-
-#else
-
-class GetOrCreatePublicLinkShare : public QObject
-{
-    Q_OBJECT
-public:
-    GetOrCreatePublicLinkShare(const AccountPtr &, const QString &, QObject *)
-    {
-    }
-
-    void run()
-    {
-    }
-signals:
-    void done(const QString &link);
-    void error(int code, const QString &message);
-};
-
-#endif
 
 void SocketApi::command_COPY_PUBLIC_LINK(const QString &localFile, SocketListener *)
 {

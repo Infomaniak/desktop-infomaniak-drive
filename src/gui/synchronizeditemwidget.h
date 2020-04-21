@@ -38,8 +38,16 @@ public:
     bool isSelected() const { return _isSelected; };
     void setSelected(bool isSelected);
 
+    inline const SynchronizedItem *item() const { return &_item; };
+
 signals:
     void fileIconSizeChanged();
+    void openFolder();
+    void open();
+    void addToFavourites();
+    void manageRightAndSharing();
+    void copyLink();
+    void displayOnWebview();
 
 private:
     SynchronizedItem _item;
@@ -53,7 +61,9 @@ private:
 
     void paintEvent(QPaintEvent* event) override;
 
-    QIcon getIconFromFileName(const QString &fileName) const;
+    QString getFileIconPathFromFileName(const QString &fileName) const;
+    QString getStatusIconPathFromStatus(OCC::SyncFileItem::Status status) const;
+    QIcon getIconWithStatus(const QString &fileName, OCC::SyncFileItem::Status status);
 
 private slots:
     void onFileIconSizeChanged();

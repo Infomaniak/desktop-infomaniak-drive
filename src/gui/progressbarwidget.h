@@ -14,15 +14,13 @@ class ProgressBarWidget : public QWidget
 public:
     explicit ProgressBarWidget(QWidget *parent = nullptr);
 
-    inline void setTransferTotalSize(unsigned long size) { _totalSize = size; }; // Ko
-    void setTransferSize(unsigned long size); // Ko
+    void setUsedSize(qint64 totalSize, qint64 size);
+    void reset();
 
 private:
-    unsigned long _totalSize; // Ko
+    qint64 _totalSize; // Ko
     QProgressBar *_progressBar;
     QLabel *_progressLabel;
-
-    QString sizeToString(unsigned long size);
 };
 
 }

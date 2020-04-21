@@ -117,5 +117,6 @@
         <file>resources/fonts/SuisseIntl-UltraLightItalic.otf</file>
         <file>resources/styles/stylesheetblack.qss</file>
         <file>resources/styles/stylesheetwhite.qss</file>
+        <file>resources/icons/actions/start.svg</file>
     </qresource>
 </RCC>

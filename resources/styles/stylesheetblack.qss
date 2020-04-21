@@ -16,6 +16,11 @@ KDC--SynthesisPopover
     qproperty-background_main_color: #35393D;
 }
 
+KDC--SynthesisPopover QLabel
+{
+    color: #FFFFFF;
+}
+
 KDC--SynthesisPopover QScrollBar
 {
     background-color: #1A1A1C;
@@ -101,7 +106,7 @@ KDC--MenuItemWidget QLabel
 {
     color: #B8B8B8;
     font-family: "Suisse Int'l";
-    font-weight: 400; /* normal */
+    font-weight: normal;
     font-size: 14px;
 }
 
@@ -145,7 +150,7 @@ KDC--DriveSelectionWidget QLabel#driveTextLabel
 {
     color: #FFFFFF;
     font-family: "Suisse Int'l";
-    font-weight: 700; /* bold */
+    font-weight: bold;
     font-size: 18px;
 }
 
@@ -174,7 +179,7 @@ KDC--ProgressBarWidget QLabel#progressLabel
 {
     color: #C0C0C0;
     font-family: "Suisse Int'l";
-    font-weight: 500; /* medium */
+    font-weight: medium;
     font-size: 13px;
 }
 
@@ -191,11 +196,17 @@ KDC--HalfRoundRectWidget
 /* KDC--StatusBarWidget */
 /************************/
 
+KDC--StatusBarWidget
+{
+    min-height: 60px;
+    max-height: 60px;
+}
+
 KDC--StatusBarWidget QLabel
 {
     color: #C0C0C0;
     font-family: "Suisse Int'l";
-    font-weight: 500; /* medium */
+    font-weight: medium;
     font-size: 13px;
 }
 
@@ -210,7 +221,7 @@ KDC--CustomPushButton
     min-height: 30px;
     max-height: 30px;
     font-family: "Suisse Int'l";
-    font-weight: 600; /* semibold */
+    font-weight: semibold;
     font-size: 14px;
     border: 0px;
     border-radius: 15px;
@@ -243,7 +254,7 @@ KDC--ButtonsBarWidget
 
 KDC--SynchronizedItemWidget
 {
-    qproperty-file_icon_size: 25px;
+    qproperty-file_icon_size: 34px;
     /* !!! qproperty syntax cannot be used in pseudo-states !!! */
     qproperty-background_color: #1A1A1C;
     qproperty-background_color_selection: #35393D;
@@ -253,7 +264,7 @@ KDC--SynchronizedItemWidget QLabel#fileNameLabel
 {
     color: #FFFFFF;
     font-family: "Suisse Int'l";
-    font-weight: 500; /* medium */
+    font-weight: medium;
     font-size: 13px;
 }
 
@@ -261,7 +272,7 @@ KDC--SynchronizedItemWidget QLabel#fileDateLabel
 {
     color: #C0C0C0;
     font-family: "Suisse Int'l";
-    font-weight: 400; /* normal */
+    font-weight: normal;
     font-size: 13px;
 }
 

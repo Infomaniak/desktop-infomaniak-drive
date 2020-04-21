@@ -16,6 +16,8 @@ static const int vMargin = 0;
 static const int boxHMargin= 10;
 static const int boxVMargin = 5;
 static const int boxSpacing = 10;
+static const char noDrive[] = "No drive";
+static const char driveIdProperty[] = "driveId";
 
 DriveSelectionWidget::DriveSelectionWidget(QWidget *parent)
     : QPushButton(parent)
@@ -23,7 +25,7 @@ DriveSelectionWidget::DriveSelectionWidget(QWidget *parent)
     , _downIconSize(QSize())
     , _downIconColor(QColor())
     , _menuRightIconSize(QSize())
-    , _currentDriveId(0)
+    , _currentDriveId(QString())
     , _driveIconLabel(nullptr)
     , _driveTextLabel(nullptr)
     , _downIconLabel(nullptr)
@@ -62,25 +64,38 @@ QSize DriveSelectionWidget::sizeHint() const
                  QPushButton::sizeHint().height());
 }
 
-void DriveSelectionWidget::addDrive(int id, const QString &name, const QColor &color, OCC::SyncResult::Status status)
+void DriveSelectionWidget::clear()
 {
-    _driveMap[id] = std::make_tuple(name, color, status);
+    _currentDriveId.clear();
+    _driveMap.clear();
+    _driveTextLabel->setText(tr(noDrive));
 }
 
-void DriveSelectionWidget::selectDrive(int id)
+void DriveSelectionWidget::addOrUpdateDrive(QString id, const QString &name, const QColor &color, OCC::SyncResult::Status status)
+{
+    DriveInfo driveInfo;
+    driveInfo._name = name;
+    driveInfo._color = color;
+    driveInfo._status = status;
+    _driveMap[id] = driveInfo;
+}
+
+void DriveSelectionWidget::selectDrive(QString id)
 {
     if (_driveMap.find(id) != _driveMap.end()) {
-        _currentDriveId = id;
-        _driveTextLabel->setText(std::get<0>(_driveMap[id]));
-        setDriveIcon(std::get<1>(_driveMap[id]));
-        emit driveSelected(id);
+        _driveTextLabel->setText(_driveMap[id]._name);
+        setDriveIcon(_driveMap[id]._color);
+        if (_currentDriveId != id) {
+            _currentDriveId = id;
+            emit driveSelected(id);
+        }
     }
 }
 
 void DriveSelectionWidget::onDriveIconSizeChanged()
 {
     if (_driveMap.find(_currentDriveId) != _driveMap.end()) {
-        setDriveIcon(std::get<1>(_driveMap[_currentDriveId]));
+        setDriveIcon(_driveMap[_currentDriveId]._color);
     }
 }
 
@@ -100,12 +115,13 @@ void DriveSelectionWidget::onClick(bool checked)
 
     MenuWidget *menu = new MenuWidget(this);
 
-    for (auto drive : _driveMap) {
-        if (drive.first != _currentDriveId) {
+    for (auto driveMapElt : _driveMap) {
+        if (driveMapElt.first != _currentDriveId) {
             QWidgetAction *selectDriveAction = new QWidgetAction(this);
-            MenuItemWidget *driveMenuItemWidget = new MenuItemWidget(std::get<0>(drive.second));
-            driveMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg", std::get<1>(drive.second));
-            driveMenuItemWidget->setRightIcon(OCC::Theme::instance()->syncStateIcon(std::get<2>(drive.second)), _menuRightIconSize);
+            selectDriveAction->setProperty(driveIdProperty, driveMapElt.first);
+            MenuItemWidget *driveMenuItemWidget = new MenuItemWidget(driveMapElt.second._name);
+            driveMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg", driveMapElt.second._color);
+            driveMenuItemWidget->setRightIcon(OCC::Theme::instance()->syncStateIcon(driveMapElt.second._status), _menuRightIconSize);
             selectDriveAction->setDefaultWidget(driveMenuItemWidget);
             connect(selectDriveAction, &QWidgetAction::triggered, this, &DriveSelectionWidget::onSelectDriveActionTriggered);
             menu->addAction(selectDriveAction);
@@ -125,11 +141,16 @@ void DriveSelectionWidget::onClick(bool checked)
 void DriveSelectionWidget::onSelectDriveActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
+
+    QString driveId = qvariant_cast<QString>(sender()->property(driveIdProperty));
+    selectDrive(driveId);
 }
 
 void DriveSelectionWidget::onAddDriveActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
+
+    emit addOrUpdateDrive();
 }
 
 void DriveSelectionWidget::setDriveIcon(const QColor &color)

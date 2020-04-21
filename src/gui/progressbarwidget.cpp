@@ -1,4 +1,5 @@
 #include "progressbarwidget.h"
+#include "common/utility.h"
 
 #include <QHBoxLayout>
 
@@ -31,29 +32,29 @@ ProgressBarWidget::ProgressBarWidget(QWidget *parent)
     hboxProgressBar->addWidget(_progressLabel);
 }
 
-void ProgressBarWidget::setTransferSize(unsigned long size)
+void ProgressBarWidget::setUsedSize(qint64 totalSize, qint64 size)
 {
-    if (size <= _totalSize) {
-        int pct = (_totalSize > 0 ? size * 100.0 / _totalSize : 100);
+    _totalSize = totalSize;
+    if (_totalSize > 0) {
+        int pct = size <= _totalSize ? qRound(double(size) / double(_totalSize) * 100.0) : 100;
         _progressBar->setValue(pct);
-        _progressLabel->setText(sizeToString(size) + " / " + sizeToString(_totalSize));
+        _progressLabel->setText(OCC::Utility::octetsToString(size) + " / " + OCC::Utility::octetsToString(_totalSize));
+    }
+    else {
+        // -1 => not computed; -2 => unknown; -3 => unlimited
+        if (_totalSize == 0 || _totalSize == -1) {
+            _progressBar->setValue(0);
+            _progressLabel->setText(tr("No storage usage information available"));
+        } else {
+            _progressBar->setValue(0);
+            _progressLabel->setText(tr("%1 in use").arg(OCC::Utility::octetsToString(size)));
+        }
     }
 }
 
-QString ProgressBarWidget::sizeToString(unsigned long size)
+void ProgressBarWidget::reset()
 {
-    QString sizeStr;
-    if (size < 1000) {
-        sizeStr = QString("%1 Ko").arg(size);
-    }
-    else if (size < 1000000) {
-        sizeStr = QString("%1 Mo").arg(int(size / 1000));
-    }
-    else {
-        sizeStr = QString("%1 To").arg(int(size / 1000000));
-    }
-
-    return sizeStr;
+    setUsedSize(0, 0);
 }
 
 }
