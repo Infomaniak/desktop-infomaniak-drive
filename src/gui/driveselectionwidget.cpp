@@ -18,6 +18,7 @@ static const int boxVMargin = 5;
 static const int boxSpacing = 10;
 static const char noDrive[] = "No drive";
 static const char driveIdProperty[] = "driveId";
+static const int driveNameMaxSize = 30;
 
 DriveSelectionWidget::DriveSelectionWidget(QWidget *parent)
     : QPushButton(parent)
@@ -83,7 +84,11 @@ void DriveSelectionWidget::addOrUpdateDrive(QString id, const QString &name, con
 void DriveSelectionWidget::selectDrive(QString id)
 {
     if (_driveMap.find(id) != _driveMap.end()) {
-        _driveTextLabel->setText(_driveMap[id]._name);
+        QString driveName = _driveMap[id]._name;
+        if (driveName.size() > driveNameMaxSize) {
+            driveName = driveName.left(driveNameMaxSize)  + "...";
+        }
+        _driveTextLabel->setText(driveName);
         setDriveIcon(_driveMap[id]._color);
         if (_currentDriveId != id) {
             _currentDriveId = id;
@@ -150,7 +155,7 @@ void DriveSelectionWidget::onAddDriveActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    emit addOrUpdateDrive();
+    emit addDrive();
 }
 
 void DriveSelectionWidget::setDriveIcon(const QColor &color)

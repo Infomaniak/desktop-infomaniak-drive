@@ -17,6 +17,8 @@ class SynchronizedItemWidget : public QWidget
     Q_OBJECT
 
     Q_PROPERTY(QSize file_icon_size READ fileIconSize WRITE setFileIconSize)
+    Q_PROPERTY(QSize direction_icon_size READ directionIconSize WRITE setDirectionIconSize)
+    Q_PROPERTY(QColor direction_icon_color READ directionIconColor WRITE setDirectionIconColor)
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
     Q_PROPERTY(QColor background_color_selection READ backgroundColorSelection WRITE setBackgroundColorSelection)
 
@@ -27,6 +29,18 @@ public:
     inline void setFileIconSize(const QSize &size) {
         _fileIconSize = size;
         emit fileIconSizeChanged();
+    }
+
+    inline QSize directionIconSize() const { return _directionIconSize; }
+    inline void setDirectionIconSize(const QSize &size) {
+        _directionIconSize = size;
+        emit directionIconSizeChanged();
+    }
+
+    inline QColor directionIconColor() const { return _directionIconColor; }
+    inline void setDirectionIconColor(const QColor &color) {
+        _directionIconColor = color;
+        emit directionIconColorChanged();
     }
 
     inline QColor backgroundColor() const { return _backgroundColor; }
@@ -42,6 +56,8 @@ public:
 
 signals:
     void fileIconSizeChanged();
+    void directionIconSizeChanged();
+    void directionIconColorChanged();
     void openFolder();
     void open();
     void addToFavourites();
@@ -53,9 +69,12 @@ private:
     SynchronizedItem _item;
     bool _isSelected;
     QSize _fileIconSize;
+    QSize _directionIconSize;
+    QColor _directionIconColor;
     QColor _backgroundColor;
     QColor _backgroundColorSelection;
     QLabel *_fileIconLabel;
+    QLabel *_fileDirectionLabel;
     CustomToolButton *_folderButton;
     CustomToolButton *_menuButton;
 
@@ -64,9 +83,12 @@ private:
     QString getFileIconPathFromFileName(const QString &fileName) const;
     QString getStatusIconPathFromStatus(OCC::SyncFileItem::Status status) const;
     QIcon getIconWithStatus(const QString &fileName, OCC::SyncFileItem::Status status);
+    void setDirectionIcon();
 
 private slots:
     void onFileIconSizeChanged();
+    void onDirectionIconSizeChanged();
+    void onDirectionIconColorChanged();
     void onFolderButtonClicked();
     void onMenuButtonClicked();
     void onOpenActionTriggered(bool checked = false);

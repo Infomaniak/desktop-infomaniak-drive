@@ -135,7 +135,7 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
         } else {
 #ifdef KDRIVE_V2
             if (_synthesisPopover) {
-                _synthesisPopover->show();
+                raiseDialog(_synthesisPopover.get());
             }
 #else
 #ifdef Q_OS_MAC
@@ -536,6 +536,7 @@ void ownCloudGui::setupPopover()
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openShareDialogPublicLinks, this, &ownCloudGui::slotShowShareDialogPublicLinks);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openHelp, this, &ownCloudGui::slotHelp);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::exit, _app, &Application::quit);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::addDrive, this, &ownCloudGui::slotNewAccountWizard);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crash, _app, &Application::slotCrash);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crashEnforce, _app, &Application::slotCrashEnforce);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crashFatal, _app, &Application::slotCrashFatal);

@@ -42,6 +42,8 @@ private:
     QColor _iconColor;
     QColor _iconColorChecked;
 
+    bool event(QEvent *event);
+
 private slots:
     void onIconColorChanged();
     void onIconColorCheckedChanged();

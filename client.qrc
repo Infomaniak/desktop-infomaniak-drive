@@ -118,5 +118,7 @@
         <file>resources/styles/stylesheetblack.qss</file>
         <file>resources/styles/stylesheetwhite.qss</file>
         <file>resources/icons/actions/start.svg</file>
+        <file>resources/icons/actions/download.svg</file>
+        <file>resources/icons/actions/upload.svg</file>
     </qresource>
 </RCC>

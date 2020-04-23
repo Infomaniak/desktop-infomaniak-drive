@@ -22,7 +22,7 @@ ButtonsBarWidget::ButtonsBarWidget(QWidget *parent)
 void ButtonsBarWidget::insertButton(int position, CustomPushButton *button)
 {
     _hboxLayout->insertWidget(position, button);
-    connect(button, &CustomPushButton::toggled, this, &ButtonsBarWidget::onButtonToggled);
+    connect(button, &CustomPushButton::toggled, this, &ButtonsBarWidget::onToggle);
     buttonsList.insert(position, button);
     if (buttonsList.size() == 1) {
         button->setChecked(true);
@@ -39,16 +39,16 @@ void ButtonsBarWidget::paintEvent(QPaintEvent *event)
     painter.fillRect(rect(), backgroundColor());
 }
 
-void ButtonsBarWidget::onButtonToggled(bool checked)
+void ButtonsBarWidget::onToggle(bool checked)
 {
     if (checked) {
         int position = 0;
         for (auto btn : buttonsList) {
-            if (btn != sender()) {
-                btn->setChecked(false);
+            if (btn == sender()) {
+                emit buttonToggled(position);
             }
             else {
-                emit buttonToggled(position);
+                btn->setChecked(false);
             }
             position++;
         }

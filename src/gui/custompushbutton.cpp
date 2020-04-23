@@ -23,6 +23,19 @@ CustomPushButton::CustomPushButton(const QString &text, QWidget *parent)
     setText(text);
 }
 
+bool CustomPushButton::event(QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress
+            || event->type() == QEvent::MouseButtonDblClick
+            || event->type() == QEvent::KeyPress) {
+        if (isChecked()) {
+            event->ignore();
+            return true;
+        }
+    }
+    return QPushButton::event(event);
+}
+
 void CustomPushButton::onIconColorChanged()
 {
     onToggle(isChecked());

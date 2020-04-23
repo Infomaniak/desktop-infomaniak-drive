@@ -21,20 +21,6 @@ KDC--SynthesisPopover QLabel
     color: #000000;
 }
 
-KDC--SynthesisPopover QToolTip
-{
-    background-color: transparent;
-    color: #666666;
-    border-style: solid;
-    border-width: 2px;
-    border-color: red;
-    border-radius: 5px;
-    margin: 10px;
-    font-family: "Suisse Int'l";
-    font-weight: normal;
-    font-size: 13px;
-}
-
 KDC--SynthesisPopover QScrollBar
 {
     background-color: #EDEDED;
@@ -63,6 +49,12 @@ KDC--SynthesisPopover QScrollBar::sub-line
     subcontrol-origin: margin;
 }
 
+KDC--SynthesisPopover QStackedWidget
+{
+    background-color: #EDEDED;
+    border: 0px;
+}
+
 KDC--SynthesisPopover QListWidget
 {
     background-color: #EDEDED;
@@ -73,6 +65,26 @@ KDC--SynthesisPopover QListWidget::item
 {
     min-height: 60px;
     max-height: 60px;
+}
+
+/**********************/
+/* KDC--CustomToolTip */
+/**********************/
+
+KDC--CustomToolTip
+{
+    background-color: transparent;
+    border: 0px;
+    border-radius: 5px;
+    margin: 0px;
+}
+
+KDC--CustomToolTip QLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: normal;
+    font-size: 14px;
 }
 
 /*******************/
@@ -134,6 +146,7 @@ KDC--CustomToolButton
     border: none;
     qproperty-iconSize: 18px;
     qproperty-icon_color: #666666;
+    qproperty-icon_color_hover: #333333;
 }
 
 /*****************************/
@@ -216,7 +229,7 @@ KDC--StatusBarWidget
     max-height: 60px;
 }
 
-KDC--StatusBarWidget QLabel
+KDC--StatusBarWidget#statusLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
@@ -269,6 +282,8 @@ KDC--ButtonsBarWidget
 KDC--SynchronizedItemWidget
 {
     qproperty-file_icon_size: 34px;
+    qproperty-direction_icon_size: 10px;
+    qproperty-direction_icon_color: #666666;
     /* !!! qproperty syntax cannot be used in pseudo-states !!! */
     qproperty-background_color: #EDEDED;
     qproperty-background_color_selection: #FFFFFF;

@@ -20,15 +20,17 @@ public:
 
     void setStatus(OCC::SyncResult::Status status, qint64 currentFile = 0, qint64 totalFiles = 0,
                    qint64 estimatedRemainingTime = 0);
+    void setSeveralDrives(bool severalDrives);
     void reset();
 
 signals:
-    void pauseSync();
-    void resumeSync();
-    void runSync();
+    void pauseSync(bool all);
+    void resumeSync(bool all);
+    void runSync(bool all);
 
 private:
     OCC::SyncResult::Status _status;
+    bool _severalDrives;
     QLabel *_statusIconLabel;
     QLabel *_statusLabel;
     CustomToolButton *_pauseButton;
@@ -39,6 +41,12 @@ private slots:
     void onPauseClicked();
     void onResumeClicked();
     void onSyncClicked();
+    void onPauseSync();
+    void onPauseAllSync();
+    void onResumeSync();
+    void onResumeAllSync();
+    void onRunSync();
+    void onRunAllSync();
 };
 
 }

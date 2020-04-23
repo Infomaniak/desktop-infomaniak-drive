@@ -1,20 +1,18 @@
 #pragma once
 
-#include <QWidget>
+#include <QDialog>
 
 namespace KDC {
 
-class CustomToolTip : public QWidget
+class CustomToolTip : public QDialog
 {
     Q_OBJECT
 
 public:
-    CustomToolTip(const QString &text, QWidget *parent = nullptr);
+    CustomToolTip(const QString &text, const QPoint &position, int toolTipDuration, QWidget *parent = nullptr);
 
 private:
-    QString _text;
-
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) override;
 };
 
 }

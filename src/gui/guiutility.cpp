@@ -180,3 +180,43 @@ bool Utility::isPointInSystray(QScreen *screen, const QPoint &point)
     }
 
 }
+
+QIcon Utility::getIconMenuWithColor(const QString &path, const QColor &color)
+{
+    QGraphicsSvgItem *item = new QGraphicsSvgItem(path);
+    QGraphicsSvgItem *itemMenu = new QGraphicsSvgItem(":/client/resources/icons/actions/chevron-down.svg");
+
+    if (color.isValid()) {
+        QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect;
+        effect->setColor(color);
+        effect->setStrength(1);
+        item->setGraphicsEffect(effect);
+
+        QGraphicsColorizeEffect *effectMenu = new QGraphicsColorizeEffect;
+        effectMenu->setColor(color);
+        effectMenu->setStrength(1);
+        itemMenu->setGraphicsEffect(effectMenu);
+    }
+
+    QGraphicsScene scene;
+    scene.addItem(item);
+    item->setPos(QPointF(0, 0));
+    int iconWidth = scene.width();
+    scene.setSceneRect(QRectF(0, 0, iconWidth * 2, iconWidth));
+
+    scene.addItem(itemMenu);
+    itemMenu->setPos(QPointF(5.0 / 4.0 * iconWidth, 1.0 / 4.0 * iconWidth));
+    itemMenu->setScale(0.5);
+
+    qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+    QPixmap pixmap(QSize(scene.width() * ratio, scene.height() * ratio));
+    pixmap.fill(Qt::transparent);
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    scene.render(&painter);
+
+    QIcon icon;
+    icon.addPixmap(pixmap);
+    return icon;
+}

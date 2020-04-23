@@ -50,6 +50,7 @@ signals:
     void openShareDialogPublicLinks(const QString &sharePath, const QString &localPath);
     void openHelp();
     void exit();
+    void addDrive();
     void crash();
     void crashEnforce();
     void crashFatal();
@@ -108,15 +109,15 @@ private:
     bool event(QEvent *event) override;
     void initUI();
     OCC::SyncResult::Status computeAccountStatus(const std::map<QString, FolderInfo> &folderMap);
-    void computeAccountProgress(const std::map<QString, FolderInfo> &folderMap,
-                               qint64 &currentFile, qint64 &totalFiles,
-                               qint64 &processedSize, qint64 &totalSize,
-                               qint64 &estimatedRemainingTime);
-    void pauseSync(bool pause);
+    void pauseSync(bool all, bool pause);
     QString folderPath(const QString &folderId, const QString &filePath);
     QUrl folderUrl(const QString &folderId, const QString &filePath);
     void openUrl(const QString &folderId, const QString &filePath = QString());
     const SynchronizedItem *currentSynchronizedItem();
+    const FolderInfo *getActiveFolder(std::map<QString, FolderInfo> folderMap);
+    void refreshStatusBar(const FolderInfo *folderInfo);
+    void refreshStatusBar(std::map<QString, AccountStatus>::iterator accountStatusIt);
+    void refreshStatusBar(QString accountId);
 
 private slots:
     void onRefreshAccountList();
@@ -135,9 +136,10 @@ private slots:
     void onCrashEnforce(bool checked = false);
     void onCrashFatal(bool checked = false);
     void onAccountSelected(QString id);
-    void onPauseSync();
-    void onResumeSync();
-    void onRunSync();
+    void onAddDrive();
+    void onPauseSync(bool all);
+    void onResumeSync(bool all);
+    void onRunSync(bool all);
     void onButtonBarToggled(int position);
     void onCurrentSynchronizedWidgetItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void onOpenFolderItem();
@@ -146,6 +148,7 @@ private slots:
     void onManageRightAndSharingItem();
     void onCopyLinkItem();
     void onOpenWebviewItem();
+    void onCopyUrlToClipboard(const QString &url);
 };
 
 }

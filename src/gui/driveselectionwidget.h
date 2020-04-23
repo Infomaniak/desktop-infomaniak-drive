@@ -57,7 +57,7 @@ signals:
     void downIconSizeChanged();
     void downIconColorChanged();
     void driveSelected(QString id);
-    void addOrUpdateDrive();
+    void addDrive();
 
 private:
     struct DriveInfo {

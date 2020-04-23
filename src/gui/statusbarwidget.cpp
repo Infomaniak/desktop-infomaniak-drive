@@ -1,6 +1,10 @@
 #include "statusbarwidget.h"
+#include "menuitemwidget.h"
+#include "menuwidget.h"
 #include "guiutility.h"
 #include "common/utility.h"
+
+#include <QWidgetAction>
 
 namespace KDC {
 
@@ -24,6 +28,7 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
     addWidget(_statusIconLabel);
 
     _statusLabel = new QLabel(this);
+    _statusLabel->setObjectName("statusLabel");
     addWidget(_statusLabel);
     addStretch();
 
@@ -62,13 +67,13 @@ void StatusBarWidget::setStatus(OCC::SyncResult::Status status, qint64 currentFi
             case OCC::SyncResult::Undefined:
                 // this can happen if no sync connections are configured.
                 _statusLabel->setText(tr("No drive configured."));
-                _pauseButton->setVisible(false);
+                _pauseButton->setVisible(true);
                 _resumeButton->setVisible(false);
                 _syncButton->setVisible(false);
                 break;
             case OCC::SyncResult::NotYetStarted:
                 _statusLabel->setText(tr("Waiting..."));
-                _pauseButton->setVisible(false);
+                _pauseButton->setVisible(true);
                 _resumeButton->setVisible(false);
                 _syncButton->setVisible(false);
                 break;
@@ -85,13 +90,13 @@ void StatusBarWidget::setStatus(OCC::SyncResult::Status status, qint64 currentFi
                 _statusLabel->setText(tr("Synchronization paused."));
                 _pauseButton->setVisible(false);
                 _resumeButton->setVisible(true);
-                _syncButton->setVisible(true);
+                _syncButton->setVisible(false);
                 break;
             case OCC::SyncResult::SyncPrepare:
                 _statusLabel->setText(tr("Preparing to sync..."));
                 _pauseButton->setVisible(true);
                 _resumeButton->setVisible(false);
-                _syncButton->setVisible(true);
+                _syncButton->setVisible(false);
                 break;
             case OCC::SyncResult::Success:
                 _statusLabel->setText(tr("You are up to date!"));
@@ -101,7 +106,7 @@ void StatusBarWidget::setStatus(OCC::SyncResult::Status status, qint64 currentFi
                 break;
             case OCC::SyncResult::Problem:
                 _statusLabel->setText(tr("Some files haven't been synchronized."));
-                _pauseButton->setVisible(false);
+                _pauseButton->setVisible(true);
                 _resumeButton->setVisible(false);
                 _syncButton->setVisible(true);
                 break;
@@ -117,6 +122,14 @@ void StatusBarWidget::setStatus(OCC::SyncResult::Status status, qint64 currentFi
     }
 }
 
+void StatusBarWidget::setSeveralDrives(bool severalDrives)
+{
+    _severalDrives = severalDrives;
+    _pauseButton->setWithMenu(_severalDrives);
+    _resumeButton->setWithMenu(_severalDrives);
+    _syncButton->setWithMenu(_severalDrives);
+}
+
 void StatusBarWidget::reset()
 {
     setStatus(OCC::SyncResult::Undefined);
@@ -124,21 +137,149 @@ void StatusBarWidget::reset()
 
 void StatusBarWidget::onPauseClicked()
 {
-    _pauseButton->setVisible(false);
-    _resumeButton->setVisible(true);
-    emit pauseSync();
+    bool resetButtons = false;
+
+    if (_severalDrives) {
+        MenuWidget *menu = new MenuWidget(this);
+
+        // Pause
+        QWidgetAction *pauseAction = new QWidgetAction(this);
+        MenuItemWidget *pauseMenuItemWidget = new MenuItemWidget(tr("Pause synchronization"));
+        pauseMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/pause.svg");
+        pauseAction->setDefaultWidget(pauseMenuItemWidget);
+        connect(pauseAction, &QWidgetAction::triggered, this, &StatusBarWidget::onPauseSync);
+        menu->addAction(pauseAction);
+
+        // Pause all
+        QWidgetAction *pauseAllAction = new QWidgetAction(this);
+        MenuItemWidget *pauseAllMenuItemWidget = new MenuItemWidget(tr("Pause synchronization for all kDrives"));
+        pauseAllMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/pause.svg");
+        pauseAllAction->setDefaultWidget(pauseAllMenuItemWidget);
+        connect(pauseAllAction, &QWidgetAction::triggered, this, &StatusBarWidget::onPauseAllSync);
+        menu->addAction(pauseAllAction);
+
+        if (menu->exec(QWidget::mapToGlobal(_pauseButton->geometry().center()), true)) {
+            resetButtons = true;
+        }
+    }
+    else {
+        emit pauseSync(false);
+        resetButtons = true;
+    }
+
+    if (resetButtons) {
+        _pauseButton->setVisible(false);
+        _resumeButton->setVisible(false);
+        _syncButton->setVisible(false);
+    }
 }
 
 void StatusBarWidget::onResumeClicked()
 {
-    _resumeButton->setVisible(false);
-    _pauseButton->setVisible(true);
-    emit resumeSync();
+    bool resetButtons = false;
+
+    if (_severalDrives) {
+        MenuWidget *menu = new MenuWidget(this);
+
+        // Resume
+        QWidgetAction *resumeAction = new QWidgetAction(this);
+        MenuItemWidget *resumeMenuItemWidget = new MenuItemWidget(tr("Resume synchronization"));
+        resumeMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/resume.svg");
+        resumeAction->setDefaultWidget(resumeMenuItemWidget);
+        connect(resumeAction, &QWidgetAction::triggered, this, &StatusBarWidget::onResumeSync);
+        menu->addAction(resumeAction);
+
+        // Resume all
+        QWidgetAction *resumeAllAction = new QWidgetAction(this);
+        MenuItemWidget *resumeAllMenuItemWidget = new MenuItemWidget(tr("Resume synchronization for all kDrives"));
+        resumeAllMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/resume.svg");
+        resumeAllAction->setDefaultWidget(resumeAllMenuItemWidget);
+        connect(resumeAllAction, &QWidgetAction::triggered, this, &StatusBarWidget::onResumeAllSync);
+        menu->addAction(resumeAllAction);
+
+        if (menu->exec(QWidget::mapToGlobal(_resumeButton->geometry().center()), true)) {
+            resetButtons = true;
+        }
+    }
+    else {
+        emit resumeSync(false);
+        resetButtons = true;
+    }
+
+    if (resetButtons) {
+        _pauseButton->setVisible(false);
+        _resumeButton->setVisible(false);
+        _syncButton->setVisible(false);
+    }
 }
 
 void StatusBarWidget::onSyncClicked()
 {
-    emit runSync();
+    bool resetButtons = false;
+
+    if (_severalDrives) {
+        MenuWidget *menu = new MenuWidget(this);
+
+        // Force sync
+        QWidgetAction *runAction = new QWidgetAction(this);
+        MenuItemWidget *runMenuItemWidget = new MenuItemWidget(tr("Force synchronization"));
+        runMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/sync-circle.svg");
+        runAction->setDefaultWidget(runMenuItemWidget);
+        connect(runAction, &QWidgetAction::triggered, this, &StatusBarWidget::onRunSync);
+        menu->addAction(runAction);
+
+        // Force sync all
+        QWidgetAction *runAllAction = new QWidgetAction(this);
+        MenuItemWidget *runAllMenuItemWidget = new MenuItemWidget(tr("Force synchronization for all kDrives"));
+        runAllMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/sync-circle.svg");
+        runAllAction->setDefaultWidget(runAllMenuItemWidget);
+        connect(runAllAction, &QWidgetAction::triggered, this, &StatusBarWidget::onRunAllSync);
+        menu->addAction(runAllAction);
+
+        if (menu->exec(QWidget::mapToGlobal(_syncButton->geometry().center()), true)) {
+            resetButtons = true;
+        }
+    }
+    else {
+        emit runSync(false);
+        resetButtons = true;
+    }
+
+    if (resetButtons) {
+        _pauseButton->setVisible(false);
+        _resumeButton->setVisible(false);
+        _syncButton->setVisible(false);
+    }
+}
+
+void StatusBarWidget::onPauseSync()
+{
+    emit pauseSync(false);
+}
+
+void StatusBarWidget::onPauseAllSync()
+{
+    emit pauseSync(true);
+}
+
+void StatusBarWidget::onResumeSync()
+{
+    emit resumeSync(false);
+}
+
+void StatusBarWidget::onResumeAllSync()
+{
+    emit resumeSync(true);
+}
+
+void StatusBarWidget::onRunSync()
+{
+    emit runSync(false);
+}
+
+void StatusBarWidget::onRunAllSync()
+{
+    emit runSync(true);
 }
 
 }

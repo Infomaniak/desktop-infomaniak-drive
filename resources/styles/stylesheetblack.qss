@@ -49,6 +49,12 @@ KDC--SynthesisPopover QScrollBar::sub-line
     subcontrol-origin: margin;
 }
 
+KDC--SynthesisPopover QStackedWidget
+{
+    background-color: #1A1A1C;
+    border: 0px;
+}
+
 KDC--SynthesisPopover QListWidget
 {
     background-color: #1A1A1C;
@@ -59,6 +65,26 @@ KDC--SynthesisPopover QListWidget::item
 {
     min-height: 60px;
     max-height: 60px;
+}
+
+/**********************/
+/* KDC--CustomToolTip */
+/**********************/
+
+KDC--CustomToolTip
+{
+    background-color: transparent;
+    border: 0px;
+    border-radius: 5px;
+    margin: 0px;
+}
+
+KDC--CustomToolTip QLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: normal;
+    font-size: 14px;
 }
 
 /*******************/
@@ -120,6 +146,7 @@ KDC--CustomToolButton
     border: none;
     qproperty-iconSize: 18px;
     qproperty-icon_color: #B8B8B8;
+    qproperty-icon_color_hover: #FFFFFF;
 }
 
 /*****************************/
@@ -160,7 +187,7 @@ KDC--DriveSelectionWidget QLabel#driveTextLabel
 
 KDC--ProgressBarWidget QProgressBar
 {
-    background-color: #FFFFFF;
+    background-color: #B8B8B8;
     min-height: 5px;
     max-height: 5px;
     border: 0px;
@@ -202,7 +229,7 @@ KDC--StatusBarWidget
     max-height: 60px;
 }
 
-KDC--StatusBarWidget QLabel
+KDC--StatusBarWidget#statusLabel
 {
     color: #C0C0C0;
     font-family: "Suisse Int'l";
@@ -255,6 +282,8 @@ KDC--ButtonsBarWidget
 KDC--SynchronizedItemWidget
 {
     qproperty-file_icon_size: 34px;
+    qproperty-direction_icon_size: 10px;
+    qproperty-direction_icon_color: #C0C0C0;
     /* !!! qproperty syntax cannot be used in pseudo-states !!! */
     qproperty-background_color: #1A1A1C;
     qproperty-background_color_selection: #35393D;

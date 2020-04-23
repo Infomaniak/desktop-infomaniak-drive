@@ -1,9 +1,11 @@
 #include "synchronizeditemwidget.h"
 #include "menuitemwidget.h"
 #include "menuwidget.h"
+#include "guiutility.h"
 
 #include <QApplication>
 #include <QBoxLayout>
+#include <QFile>
 #include <QFileInfo>
 #include <QIcon>
 #include <QLabel>
@@ -25,14 +27,17 @@ static const int boxVMargin = 5;
 static const int boxSpacing = 12;
 static const int toolBarHSpacing = 10;
 static const int buttonsVSpacing = 5;
+static const int textSpacing = 10;
 static const int statusIconWidth = 10;
 static const QString dateFormat = "d MMM - HH:mm";
+static const int fileNameMaxSize = 30;
 
 SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWidget *parent)
     : QWidget(parent)
     , _item(item)
     , _isSelected(false)
     , _fileIconSize(QSize())
+    , _directionIconSize(QSize())
     , _backgroundColor(QColor())
     , _backgroundColorSelection(QColor())
     , _fileIconLabel(nullptr)
@@ -54,14 +59,28 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     QLabel *fileNameLabel = new QLabel(this);
     fileNameLabel->setObjectName("fileNameLabel");
     QFileInfo fileInfo(_item.filePath());
-    fileNameLabel->setText(fileInfo.fileName());
+    QString fileName = fileInfo.fileName();
+    if (fileName.size() > fileNameMaxSize) {
+        fileName = fileName.left(fileNameMaxSize) + "...";
+    }
+    fileNameLabel->setText(fileName);
     vboxText->addStretch();
     vboxText->addWidget(fileNameLabel);
+
+    QHBoxLayout *hboxText = new QHBoxLayout();
+    hboxText->setContentsMargins(0, 0, 0, 0);
+    hboxText->setSpacing(textSpacing);
 
     QLabel *fileDateLabel = new QLabel(this);
     fileDateLabel->setObjectName("fileDateLabel");
     fileDateLabel->setText(_item.dateTime().toString(dateFormat));
-    vboxText->addWidget(fileDateLabel);
+    hboxText->addWidget(fileDateLabel);
+
+    _fileDirectionLabel = new QLabel(this);
+    hboxText->addWidget(_fileDirectionLabel);
+    hboxText->addStretch();
+
+    vboxText->addLayout(hboxText);
     vboxText->addStretch();
 
     hbox->addLayout(vboxText);
@@ -77,12 +96,13 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
 
     _folderButton = new CustomToolButton(this);
     _folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
-    _folderButton->setToolTip(tr("Open local folder"));
+    _folderButton->setToolTip(tr("Show in folder"));
     _folderButton->setVisible(false);
     hboxButtons->addWidget(_folderButton);
 
     _menuButton = new CustomToolButton(this);
     _menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
+    _menuButton->setToolTip(tr("More actions"));
     _menuButton->setVisible(false);
     hboxButtons->addWidget(_menuButton);
 
@@ -92,6 +112,8 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     hbox->addLayout(vboxButtons);
 
     connect(this, &SynchronizedItemWidget::fileIconSizeChanged, this, &SynchronizedItemWidget::onFileIconSizeChanged);
+    connect(this, &SynchronizedItemWidget::directionIconSizeChanged, this, &SynchronizedItemWidget::onDirectionIconSizeChanged);
+    connect(this, &SynchronizedItemWidget::directionIconColorChanged, this, &SynchronizedItemWidget::onDirectionIconColorChanged);
     connect(_folderButton, &CustomToolButton::clicked, this, &SynchronizedItemWidget::onFolderButtonClicked);
     connect(_menuButton, &CustomToolButton::clicked, this, &SynchronizedItemWidget::onMenuButtonClicked);
 }
@@ -99,8 +121,9 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
 void SynchronizedItemWidget::setSelected(bool isSelected)
 {
     _isSelected = isSelected;
-    _folderButton->setVisible(_isSelected);
-    _menuButton->setVisible(_isSelected);
+    bool fileExists = QFile(_item.fullFilePath()).exists();
+    _folderButton->setVisible(_isSelected && fileExists);
+    _menuButton->setVisible(_isSelected && fileExists);
 }
 
 void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
@@ -244,6 +267,24 @@ QIcon SynchronizedItemWidget::getIconWithStatus(const QString &filePath, OCC::Sy
     return iconWithStatus;
 }
 
+void SynchronizedItemWidget::setDirectionIcon()
+{
+    if (_fileDirectionLabel && _directionIconSize != QSize() && _directionIconColor != QColor()) {
+        switch (_item.direction()) {
+        case OCC::SyncFileItem::Direction::None:
+            break;
+        case OCC::SyncFileItem::Direction::Up:
+            _fileDirectionLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/upload.svg", _directionIconColor)
+                                          .pixmap(_directionIconSize));
+            break;
+        case OCC::SyncFileItem::Direction::Down:
+            _fileDirectionLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/download.svg", _directionIconColor)
+                                          .pixmap(_directionIconSize));
+            break;
+        }
+    }
+}
+
 void SynchronizedItemWidget::onFileIconSizeChanged()
 {
     if (_fileIconLabel) {
@@ -251,6 +292,16 @@ void SynchronizedItemWidget::onFileIconSizeChanged()
         QIcon fileIconWithStatus = getIconWithStatus(fileInfo.fileName(), _item.status());
         _fileIconLabel->setPixmap(fileIconWithStatus.pixmap(_fileIconSize));
     }
+}
+
+void SynchronizedItemWidget::onDirectionIconSizeChanged()
+{
+    setDirectionIcon();
+}
+
+void SynchronizedItemWidget::onDirectionIconColorChanged()
+{
+    setDirectionIcon();
 }
 
 void SynchronizedItemWidget::onFolderButtonClicked()

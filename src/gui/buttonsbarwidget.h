@@ -35,7 +35,7 @@ private:
     void paintEvent(QPaintEvent *event) override;
 
 private slots:
-    void onButtonToggled(bool checked);
+    void onToggle(bool checked);
 };
 
 }

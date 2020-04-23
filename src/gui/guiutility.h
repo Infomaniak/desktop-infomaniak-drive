@@ -59,6 +59,7 @@ namespace Utility {
     QString vfsFreeSpaceActionText();
 
     QIcon getIconWithColor(const QString &path, const QColor &color = QColor());
+    QIcon getIconMenuWithColor(const QString &path, const QColor &color = QColor());
 
     systrayPosition getSystrayPosition(QScreen *screen);
     bool isPointInSystray(QScreen *screen, const QPoint &point);
