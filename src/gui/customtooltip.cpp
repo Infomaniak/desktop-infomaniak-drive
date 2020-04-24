@@ -4,20 +4,24 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPainter>
+#include <QScreen>
 #include <QStyleOption>
 #include <QTimer>
 
 namespace KDC {
 
+static const int triangleHeight = 6;
+static const int triangleWidth  = 10;
 static const int contentMargin = 10;
 static const int cornerRadius = 5;
-static const int shadowBlurRadius = 20;
+static const int shadowBlurRadius = 10;
 static const int boxMargin = 10;
-static const int offsetX = -30;
+static const int offsetX = 0;
 static const int offsetY = 10;
 
 CustomToolTip::CustomToolTip(const QString &text, const QPoint &position, int toolTipDuration, QWidget *parent)
     : QDialog(parent)
+    , _cursorPosition(position)
 {
     setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -28,10 +32,10 @@ CustomToolTip::CustomToolTip(const QString &text, const QPoint &position, int to
     layout->setContentsMargins(boxMargin, boxMargin, boxMargin, boxMargin);
     layout->setSpacing(0);
 
-    QLabel *textLabel = new QLabel(this);
-    textLabel->setObjectName("textLabel");
-    textLabel->setText(text);
-    layout->addWidget(textLabel);
+    QLabel *tooltipLabel = new QLabel(this);
+    tooltipLabel->setObjectName("tooltipLabel");
+    tooltipLabel->setText(text);
+    layout->addWidget(tooltipLabel);
 
     setLayout(layout);
 
@@ -41,7 +45,6 @@ CustomToolTip::CustomToolTip(const QString &text, const QPoint &position, int to
     effect->setOffset(0);
     setGraphicsEffect(effect);
 
-    move(position + QPoint(offsetX, offsetY));
     if (toolTipDuration) {
         QTimer::singleShot(toolTipDuration, this, &CustomToolTip::close);
     }
@@ -51,14 +54,33 @@ void CustomToolTip::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
 
-    QRect intRect = rect().marginsRemoved(QMargins(contentMargin, contentMargin, contentMargin - 1, contentMargin - 1));
+    // Calculate position
+    QPoint tooltipPosition = QPoint(_cursorPosition.x() - rect().width() / 2.0 + offsetX,
+                                    _cursorPosition.y() + offsetY);
 
+    // Triangle points
+    QPointF trianglePoint1 = QPoint((rect().width() - triangleWidth) / 2.0, triangleHeight);
+    QPointF trianglePoint2 = QPoint(rect().width() / 2.0, 1);
+    QPointF trianglePoint3 = QPoint((rect().width() + triangleWidth) / 2.0, triangleHeight);
+
+    // Border
+    int cornerDiameter = 2 * cornerRadius;
+    QRect intRect = rect().marginsRemoved(QMargins(triangleHeight, triangleHeight, triangleHeight - 1, triangleHeight - 1));
     QPainterPath painterPath;
-    painterPath.addRoundedRect(intRect, cornerRadius, cornerRadius);
+    painterPath.moveTo(trianglePoint3);
+    painterPath.lineTo(trianglePoint2);
+    painterPath.lineTo(trianglePoint1);
+    painterPath.arcTo(QRect(intRect.topLeft(), QSize(cornerDiameter, cornerDiameter)), 90, 90);
+    painterPath.arcTo(QRect(intRect.bottomLeft() - QPoint(0, cornerDiameter), QSize(cornerDiameter, cornerDiameter)), 180, 90);
+    painterPath.arcTo(QRect(intRect.bottomRight() - QPoint(cornerDiameter, cornerDiameter), QSize(cornerDiameter, cornerDiameter)), 270, 90);
+    painterPath.arcTo(QRect(intRect.topRight() - QPoint(cornerDiameter, 0), QSize(cornerDiameter, cornerDiameter)), 0, 90);
+    painterPath.closeSubpath();
+
+    move(tooltipPosition);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setBrush(QColor("#FFFFFF"));
+    painter.setBrush(QColor(backgroundColor()));
     painter.setPen(Qt::NoPen);
     painter.drawPath(painterPath);
 }

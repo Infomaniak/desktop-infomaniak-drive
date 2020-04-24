@@ -244,6 +244,9 @@ public:
     void setAppPassword(QString appPassword);
     void deleteAppPassword();
 
+    inline QColor getDriveColor() const { return _driveColor; };
+    inline void setDriveColor(const QColor &driveColor) { _driveColor = driveColor; };
+
 public slots:
     /// Used when forgetting credentials
     void clearQNAMCache();
@@ -286,6 +289,7 @@ private:
     QString _davUser;
     QString _displayName;
     QString _driveName;
+    QColor _driveColor;
 #ifndef TOKEN_AUTH_ONLY
     QImage _avatarImg;
 #endif

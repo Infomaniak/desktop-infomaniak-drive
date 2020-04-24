@@ -77,6 +77,7 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     hboxText->addWidget(fileDateLabel);
 
     _fileDirectionLabel = new QLabel(this);
+    _fileDirectionLabel->setVisible(false);
     hboxText->addWidget(_fileDirectionLabel);
     hboxText->addStretch();
 
@@ -149,6 +150,20 @@ void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
         painter.setBrush(backgroundColorSelection());
         painter.drawPath(painterPath2);
     }
+}
+
+bool SynchronizedItemWidget::event(QEvent *event)
+{
+    if (event->type() == QEvent::Enter) {
+        _fileDirectionLabel->setVisible(true);
+    }
+    else if (event->type() == QEvent::Leave
+             || event->type() == QEvent::MouseButtonPress
+             || event->type() == QEvent::MouseButtonDblClick) {
+        _fileDirectionLabel->setVisible(false);
+    }
+    return QWidget::event(event);
+
 }
 
 QString SynchronizedItemWidget::getFileIconPathFromFileName(const QString &fileName) const
@@ -322,7 +337,6 @@ void SynchronizedItemWidget::onMenuButtonClicked()
         menu->addAction(openAction);
 
         QWidgetAction *favoritesAction = new QWidgetAction(this);
-        favoritesAction->setEnabled(false);
         MenuItemWidget *favoritesMenuItemWidget = new MenuItemWidget(tr("Add to favorites"));
         favoritesMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/favorite.svg");
         favoritesAction->setDefaultWidget(favoritesMenuItemWidget);

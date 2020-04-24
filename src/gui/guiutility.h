@@ -15,6 +15,7 @@
 #ifndef GUIUTILITY_H
 #define GUIUTILITY_H
 
+#include <QApplication>
 #include <QColor>
 #include <QIcon>
 #include <QPoint>
@@ -63,6 +64,8 @@ namespace Utility {
 
     systrayPosition getSystrayPosition(QScreen *screen);
     bool isPointInSystray(QScreen *screen, const QPoint &point);
+
+    void setStyle(QApplication *app);
 
 } // namespace Utility
 } // namespace OCC

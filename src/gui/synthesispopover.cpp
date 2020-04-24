@@ -12,6 +12,7 @@
 #include "networkjobs.h"
 #include "socketapi.h"
 #include "getorcreatepubliclinkshare.h"
+#include "configfile.h"
 
 #include <iostream>
 
@@ -50,8 +51,28 @@ static const int driveBarHMargin = 10;
 static const int driveBarVMargin = 10;
 static const int driveBarSpacing = 15;
 static const int logoIconSize = 30;
+static const int defaultLogoIconSize = 50;
+static const QColor defaultSynchronizedLogoIconColor = QColor("#9E9E9E");
 static const int maxSynchronizedItems = 1000;
 static const char accountIdProperty[] = "accountId";
+
+const std::map<SynthesisPopover::notificationsDisabled, QString> SynthesisPopover::_notificationsDisabledMap = {
+    { notificationsDisabled::Never, QString(tr("Never")) },
+    { notificationsDisabled::OneHour, QString(tr("During 1 hour")) },
+    { notificationsDisabled::UntilTomorrow, QString(tr("Until tomorrow 8:00AM")) },
+    { notificationsDisabled::TreeDays, QString(tr("During 3 days")) },
+    { notificationsDisabled::OneWeek, QString(tr("During 1 week")) },
+    { notificationsDisabled::Always, QString(tr("Always")) }
+};
+
+const std::map<SynthesisPopover::notificationsDisabled, QString> SynthesisPopover::_notificationsDisabledForPeriodMap = {
+    { notificationsDisabled::Never, QString(tr("Never")) },
+    { notificationsDisabled::OneHour, QString(tr("For 1 more hour")) },
+    { notificationsDisabled::UntilTomorrow, QString(tr("Until tomorrow 8:00AM")) },
+    { notificationsDisabled::TreeDays, QString(tr("For 3 more days")) },
+    { notificationsDisabled::OneWeek, QString(tr("For 1 more week")) },
+    { notificationsDisabled::Always, QString(tr("Always")) }
+};
 
 Q_LOGGING_CATEGORY(lcSynthesisPopover, "synthesispopover", QtInfoMsg)
 
@@ -68,16 +89,37 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QRect sysrayIconRect, QWidget
     , _progressBarWidget(nullptr)
     , _statusBarWidget(nullptr)
     , _stackedWidget(nullptr)
-    , _notificationAction(notificationActions::Never)
+    , _defaultSynchronizedPage(nullptr)
+    , _notificationsDisabled(notificationsDisabled::Never)
+    , _notificationsDisabledUntilDateTime(QDateTime())
 {
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
+
+    OCC::ConfigFile cfg;
+    _notificationsDisabled = cfg.optionalDesktopNotifications()
+            ? notificationsDisabled::Never
+            : notificationsDisabled::Always;
 
     initUI();
 
     connect(this, &SynthesisPopover::refreshAccountList, this, &SynthesisPopover::onRefreshAccountList);
     connect(this, &SynthesisPopover::updateProgress, this, &SynthesisPopover::onUpdateProgress);
     connect(this, &SynthesisPopover::itemCompleted, this, &SynthesisPopover::onItemCompleted);
+}
+
+void SynthesisPopover::changeEvent(QEvent *event)
+{
+    QDialog::changeEvent(event);
+
+    switch (event->type()) {
+    case QEvent::PaletteChange:
+    case QEvent::ThemeChange:
+        OCC::Utility::setStyle(qApp);
+        break;
+    default:
+        break;
+    }
 }
 
 void SynthesisPopover::paintEvent(QPaintEvent *event)
@@ -362,16 +404,17 @@ void SynthesisPopover::initUI()
     // Stacked widget
     _stackedWidget = new QStackedWidget(this);
 
-    QLabel *noDriveLabel = new QLabel(tr("No synchronized files."), this);
-    noDriveLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    _stackedWidget->insertWidget(stackedWidget::Synchronized, noDriveLabel);
+    setSynchronizedDefaultPage(&_defaultSynchronizedPage, this);
+    _stackedWidget->insertWidget(stackedWidget::Synchronized, _defaultSynchronizedPage);
 
     QLabel *notImplementedLabel = new QLabel(tr("Not implemented!"), this);
     notImplementedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    notImplementedLabel->setObjectName("defaultTitleLabel");
     _stackedWidget->insertWidget(stackedWidget::Favorites, notImplementedLabel);
 
     QLabel *notImplementedLabel2 = new QLabel(tr("Not implemented!"), this);
     notImplementedLabel2->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    notImplementedLabel2->setObjectName("defaultTitleLabel");
     _stackedWidget->insertWidget(stackedWidget::Activity, notImplementedLabel2);
 
     mainVBox->addWidget(_stackedWidget);
@@ -391,7 +434,7 @@ void SynthesisPopover::initUI()
 
     connect(_folderButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenFolderMenu);
     connect(_webviewButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenWebview);
-    connect(_menuButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenMenu);
+    connect(_menuButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenMiscellaneousMenu);
     connect(_driveSelectionWidget, &DriveSelectionWidget::driveSelected, this, &SynthesisPopover::onAccountSelected);
     connect(_driveSelectionWidget, &DriveSelectionWidget::addDrive, this, &SynthesisPopover::onAddDrive);
     connect(_statusBarWidget, &StatusBarWidget::pauseSync, this, &SynthesisPopover::onPauseSync);
@@ -489,7 +532,7 @@ void SynthesisPopover::pauseSync(bool all, bool pause)
 
 QUrl SynthesisPopover::folderUrl(const QString &folderId, const QString &filePath)
 {
-    QUrl url;
+    QUrl url = QUrl();
     QString fullFilePath = folderPath(folderId, filePath);
     if (!fullFilePath.isEmpty()) {
 #ifndef Q_OS_WIN
@@ -533,7 +576,10 @@ void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
         QUrl url = folderUrl(folderId, filePath);
         if (!url.isEmpty()) {
             if (!QDesktopServices::openUrl(url)) {
-                qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << url;
+                qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << url.toString();
+                QMessageBox msgBox;
+                msgBox.setText(tr("Unable to open folder path %1.").arg(url.toString()));
+                msgBox.exec();
             }
         }
     }
@@ -567,23 +613,19 @@ const SynthesisPopover::FolderInfo *SynthesisPopover::getActiveFolder(std::map<Q
 
 void SynthesisPopover::refreshStatusBar(const FolderInfo *folderInfo)
 {
-    std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
-              << " - SetStatus folder: " << folderInfo->_path.toStdString()
-              << "status: " << folderInfo->_status << std::endl;
-
-    _statusBarWidget->setStatus(folderInfo->_status, folderInfo->_currentFile,
-                                folderInfo->_totalFiles, folderInfo->_estimatedRemainingTime);
+    if (folderInfo) {
+        _statusBarWidget->setStatus(folderInfo->_status, folderInfo->_currentFile,
+                                    folderInfo->_totalFiles, folderInfo->_estimatedRemainingTime);
+    }
+    else {
+        _statusBarWidget->reset();
+    }
 }
 
 void SynthesisPopover::refreshStatusBar(std::map<QString, AccountStatus>::iterator accountStatusIt)
 {
     const FolderInfo *folderInfo = getActiveFolder(accountStatusIt->second._folderMap);
-    if (folderInfo) {
-        refreshStatusBar(folderInfo);
-    }
-    else {
-        _statusBarWidget->reset();
-    }
+    refreshStatusBar(folderInfo);
 }
 
 void SynthesisPopover::refreshStatusBar(QString accountId)
@@ -591,6 +633,91 @@ void SynthesisPopover::refreshStatusBar(QString accountId)
     auto accountStatusIt = _accountStatusMap.find(accountId);
     if (accountStatusIt != _accountStatusMap.end()) {
         refreshStatusBar(accountStatusIt);
+    }
+}
+
+void SynthesisPopover::setSynchronizedDefaultPage(QWidget **widget, QWidget *parent)
+{
+    static QLabel *defaultTextLabel = nullptr;
+
+    if (!*widget) {
+        *widget = new QWidget(parent);
+
+        QVBoxLayout *vboxLayout = new QVBoxLayout();
+        vboxLayout->setSpacing(20);
+        vboxLayout->addStretch();
+
+        QLabel *iconLabel = new QLabel(parent);
+        iconLabel->setAlignment(Qt::AlignHCenter);
+        iconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/document types/file-default.svg")
+                             .pixmap(defaultLogoIconSize, defaultLogoIconSize));
+        vboxLayout->addWidget(iconLabel);
+
+        QLabel *defaultTitleLabel = new QLabel(tr("No recently synchronized files"), parent);
+        defaultTitleLabel->setObjectName("defaultTitleLabel");
+        defaultTitleLabel->setAlignment(Qt::AlignHCenter);
+        vboxLayout->addWidget(defaultTitleLabel);
+
+        defaultTextLabel = new QLabel(parent);
+        defaultTextLabel->setObjectName("defaultTextLabel");
+        defaultTextLabel->setAlignment(Qt::AlignHCenter);
+        defaultTextLabel->setWordWrap(true);
+
+        vboxLayout->addWidget(defaultTextLabel);
+
+        vboxLayout->addStretch();
+        (*widget)->setLayout(vboxLayout);
+
+        connect(defaultTextLabel, &QLabel::linkActivated, this, [](const QString &link) {
+            QUrl url = QUrl(link);
+            if (url.isValid()) {
+                if (!QDesktopServices::openUrl(QUrl(link))) {
+                    qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << link;
+                    QMessageBox msgBox;
+                    msgBox.setText(tr("Unable to open link %1.").arg(link));
+                    msgBox.exec();
+                }
+            }
+            else {
+                qCWarning(lcSynthesisPopover) << "Invalid link " << link;
+                QMessageBox msgBox;
+                msgBox.setText(tr("Invalid link %1.").arg(link));
+                msgBox.exec();
+            }
+        });
+    }
+
+    // Set text
+    Q_ASSERT(defaultTextLabel);
+    OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
+    if (accountPtr) {
+        QUrl accountUrl = accountPtr->url();
+
+        // Get 1st folder...
+        OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
+        QString folderId = QString();
+        for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
+            OCC::AccountPtr folderAccountPtr = folderIt.value()->accountState()->account();
+            if (folderAccountPtr->id() == accountPtr->id()) {
+                folderId = folderIt.key();
+                break;
+            }
+        }
+        if (folderId.isEmpty()) {
+            // No folder
+            defaultTextLabel->setText(tr("No folder configured for this kDrive!"));
+        }
+        else {
+            QUrl defaultFolderUrl = folderUrl(folderId, QString());
+            const QString linkStyle = QString("color:#0098FF; text-decoration:none;");
+            defaultTextLabel->setText(tr("You can synchronize files <a style=\"%1\" href=\"%2\">from your computer</a>"
+                                         " or on <a style=\"%1\" href=\"%3\">drive.infomaniak.com</a>.")
+                                      .arg(linkStyle).arg(defaultFolderUrl.toString()).arg(accountUrl.toString()));
+        }
+    }
+    else {
+        // No account
+        defaultTextLabel->setText(tr("No kDrive configured!"));
     }
 }
 
@@ -609,6 +736,7 @@ void SynthesisPopover::onRefreshAccountList()
     else {
         bool currentAccountStillExists = !_currentAccountId.isEmpty()
                 && OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
+        int currentFolderMapSize = 0;
 
         for (OCC::AccountStatePtr accountStatePtr : OCC::AccountManager::instance()->accounts()) {
             QString accountId = accountStatePtr->account()->id();
@@ -625,8 +753,8 @@ void SynthesisPopover::onRefreshAccountList()
 
             OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
             for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
-                OCC::AccountPtr folderAccount = folderIt.value()->accountState()->account();
-                if (folderAccount->id() == accountId) {
+                OCC::AccountPtr folderAccountPtr = folderIt.value()->accountState()->account();
+                if (folderAccountPtr->id() == accountId) {
                     auto folderInfoIt = accountStatusIt->second._folderMap.find(folderIt.key());
                     if (folderInfoIt == accountStatusIt->second._folderMap.end()) {
                         // New folder
@@ -659,6 +787,10 @@ void SynthesisPopover::onRefreshAccountList()
             if (_currentAccountId.isEmpty() || !currentAccountStillExists) {
                 _currentAccountId = accountId;
             }
+
+            if (_currentAccountId == accountId) {
+                currentFolderMapSize = accountStatusIt->second._folderMap.size();
+            }
         }
 
         // Manage removed accounts
@@ -668,13 +800,16 @@ void SynthesisPopover::onRefreshAccountList()
             }
         }
 
-        _driveSelectionWidget->selectDrive(_currentAccountId);
+        // Update widgets
+        _folderButton->setWithMenu(currentFolderMapSize > 1);
         _statusBarWidget->setSeveralDrives(_accountStatusMap.size() > 1);
+        _driveSelectionWidget->selectDrive(_currentAccountId);
         refreshStatusBar(_currentAccountId);
     }
 
     _folderButton->setEnabled(!_currentAccountId.isEmpty());
     _webviewButton->setEnabled(!_currentAccountId.isEmpty());
+    setSynchronizedDefaultPage(&_defaultSynchronizedPage, this);
 }
 
 void SynthesisPopover::onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress)
@@ -685,8 +820,8 @@ void SynthesisPopover::onUpdateProgress(const QString &folderId, const OCC::Prog
                   << " - UpdateProgress folder: " << folder->path().toStdString() << std::endl;
 
         OCC::AccountPtr account = folder->accountState()->account();
-        if (account) {
-            const auto accountStatusIt = _accountStatusMap.find(account->id());
+        if (account && account->id() == _currentAccountId) {
+            const auto accountStatusIt = _accountStatusMap.find(_currentAccountId);
             if (accountStatusIt != _accountStatusMap.end()) {
                 const auto folderInfoIt = accountStatusIt->second._folderMap.find(folderId);
                 if (folderInfoIt != accountStatusIt->second._folderMap.end()) {
@@ -840,12 +975,15 @@ void SynthesisPopover::onOpenWebview(bool checked)
     OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
     if (accountPtr) {
         if (!QDesktopServices::openUrl(accountPtr->url())) {
-            qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << accountPtr->url();
+            qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << accountPtr->url().toString();
+            QMessageBox msgBox;
+            msgBox.setText(tr("Unable to access web site %1.").arg(accountPtr->url().toString()));
+            msgBox.exec();
         }
     }
 }
 
-void SynthesisPopover::onOpenMenu(bool checked)
+void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
 {
     Q_UNUSED(checked)
 
@@ -862,33 +1000,35 @@ void SynthesisPopover::onOpenMenu(bool checked)
 
         // Disable Notifications
         QWidgetAction *notificationsAction = new QWidgetAction(this);
-        MenuItemWidget *notificationsMenuItemWidget = new MenuItemWidget(tr("Disable Notifications"));
+        bool notificationAlreadyDisabledForPeriod = _notificationsDisabled != notificationsDisabled::Never
+                && _notificationsDisabled != notificationsDisabled::Always;
+        MenuItemWidget *notificationsMenuItemWidget = new MenuItemWidget(
+                    notificationAlreadyDisabledForPeriod
+                    ? tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString())
+                    : tr("Disable Notifications"));
         notificationsMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/notification-off.svg");
         notificationsMenuItemWidget->setHasSubmenu(true);
         notificationsAction->setDefaultWidget(notificationsMenuItemWidget);
         menu->addAction(notificationsAction);
 
         // Disable Notifications submenu
-        static const QVector<QString> notificationActionsText =
-            QVector<QString>()
-            << QString(tr("Never"))
-            << QString(tr("During 1 hour"))
-            << QString(tr("Until tomorrow"))
-            << QString(tr("During 3 days"))
-            << QString(tr("During 1 week"))
-            << QString(tr("Always"));
-
         MenuWidget *submenu = new MenuWidget(this);
 
         QActionGroup *notificationActionGroup = new QActionGroup(this);
         notificationActionGroup->setExclusive(true);
 
+        const std::map<notificationsDisabled, QString> &notificationMap =
+                _notificationsDisabled == notificationsDisabled::Never
+                || _notificationsDisabled == notificationsDisabled::Always
+                ? _notificationsDisabledMap
+                : _notificationsDisabledForPeriodMap;
+
         QWidgetAction *notificationAction;
-        for (int i = 0; i < notificationActionsText.size(); i++) {
+        for (auto notificationActionsItem : notificationMap) {
             notificationAction = new QWidgetAction(this);
-            notificationAction->setProperty(MenuWidget::actionTypeProperty.c_str(), i);
-            MenuItemWidget *notificationMenuItemWidget = new MenuItemWidget(notificationActionsText[i]);
-            notificationMenuItemWidget->setChecked(i == _notificationAction);
+            notificationAction->setProperty(MenuWidget::actionTypeProperty.c_str(), notificationActionsItem.first);
+            MenuItemWidget *notificationMenuItemWidget = new MenuItemWidget(notificationActionsItem.second);
+            notificationMenuItemWidget->setChecked(notificationActionsItem.first == _notificationsDisabled);
             notificationAction->setDefaultWidget(notificationMenuItemWidget);
             connect(notificationAction, &QWidgetAction::triggered, this, &SynthesisPopover::onNotificationActionTriggered);
             notificationActionGroup->addAction(notificationAction);
@@ -986,7 +1126,49 @@ void SynthesisPopover::onNotificationActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    _notificationAction = qvariant_cast<notificationActions>(sender()->property(MenuWidget::actionTypeProperty.c_str()));
+    QString message;
+    bool notificationAlreadyDisabledForPeriod = _notificationsDisabled != notificationsDisabled::Never
+            && _notificationsDisabled != notificationsDisabled::Always;
+
+    _notificationsDisabled = qvariant_cast<notificationsDisabled>(sender()->property(MenuWidget::actionTypeProperty.c_str()));
+    switch (_notificationsDisabled) {
+    case notificationsDisabled::Never:
+        _notificationsDisabledUntilDateTime = QDateTime();
+        message = QString(tr("Notifications enabled!"));
+        break;
+    case notificationsDisabled::OneHour:
+        _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
+                ? _notificationsDisabledUntilDateTime.addSecs(60 * 60)
+                : QDateTime::currentDateTime().addSecs(60 * 60);
+        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
+        break;
+    case notificationsDisabled::UntilTomorrow:
+        _notificationsDisabledUntilDateTime = QDateTime(QDateTime::currentDateTime().addDays(1).date(), QTime(8, 0));
+        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
+        break;
+    case notificationsDisabled::TreeDays:
+        _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
+                ? _notificationsDisabledUntilDateTime.addDays(3)
+                : QDateTime::currentDateTime().addDays(3);
+        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
+        break;
+    case notificationsDisabled::OneWeek:
+        _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
+                ? _notificationsDisabledUntilDateTime.addDays(7)
+                : QDateTime::currentDateTime().addDays(7);
+        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
+        break;
+    case notificationsDisabled::Always:
+        _notificationsDisabledUntilDateTime = QDateTime();
+        message = QString(tr("Notifications disabled!"));
+        break;
+    }
+
+    emit disableNotifications(_notificationsDisabled, _notificationsDisabledUntilDateTime);
+
+    QMessageBox msgBox;
+    msgBox.setText(message);
+    msgBox.exec();
 }
 
 void SynthesisPopover::onAccountSelected(QString id)
@@ -996,7 +1178,6 @@ void SynthesisPopover::onAccountSelected(QString id)
         _currentAccountId = id;
 
         _progressBarWidget->setUsedSize(accountStatusIt->second._totalSize, accountStatusIt->second._used);
-        _folderButton->setWithMenu(accountStatusIt->second._folderMap.size() > 1);
         refreshStatusBar(accountStatusIt);
         _stackedWidget->setCurrentIndex(accountStatusIt->second._synchronizedListStackPosition);
     }
@@ -1114,7 +1295,9 @@ void SynthesisPopover::onOpenItem()
 
 void SynthesisPopover::onAddToFavouriteItem()
 {
-
+    QMessageBox msgBox;
+    msgBox.setText("Not implemented!");
+    msgBox.exec();
 }
 
 void SynthesisPopover::onManageRightAndSharingItem()

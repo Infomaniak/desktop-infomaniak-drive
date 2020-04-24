@@ -79,6 +79,7 @@ private:
     CustomToolButton *_menuButton;
 
     void paintEvent(QPaintEvent* event) override;
+    bool event(QEvent *event) override;
 
     QString getFileIconPathFromFileName(const QString &fileName) const;
     QString getStatusIconPathFromStatus(OCC::SyncFileItem::Status status) const;

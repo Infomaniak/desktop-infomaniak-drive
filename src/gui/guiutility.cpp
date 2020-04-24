@@ -30,9 +30,13 @@
 #include <QUrlQuery>
 
 #include "common/asserts.h"
+#include "common/utility.h"
 #include "libcommon/commonutility.h"
 
 using namespace OCC;
+
+static const QString styleSheetWhiteFile(":/client/resources/styles/stylesheetwhite.qss");
+static const QString styleSheetBlackFile(":/client/resources/styles/stylesheetblack.qss");
 
 Q_LOGGING_CATEGORY(lcUtility, "gui.utility", QtInfoMsg)
 
@@ -220,3 +224,18 @@ QIcon Utility::getIconMenuWithColor(const QString &path, const QColor &color)
     icon.addPixmap(pixmap);
     return icon;
 }
+
+void Utility::setStyle(QApplication *app)
+{
+    // Load style sheet
+    QFile ssFile(hasDarkSystray() ? styleSheetBlackFile : styleSheetWhiteFile);
+    if (ssFile.exists()) {
+        ssFile.open(QFile::ReadOnly);
+        QString StyleSheet = QLatin1String(ssFile.readAll());
+        app->setStyleSheet(StyleSheet);
+    }
+    else {
+        qCWarning(lcUtility) << "Style sheet file not found!";
+    }
+}
+

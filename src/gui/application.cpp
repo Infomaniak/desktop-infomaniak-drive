@@ -15,6 +15,7 @@
  */
 
 #include "application.h"
+#include "guiutility.h"
 
 #include <iostream>
 #include <random>
@@ -82,8 +83,6 @@ namespace {
         "  --confdir <dirname>  : Use the given configuration folder.\n";
 }
 
-static const QString styleSheetWhiteFile(":/client/resources/styles/stylesheetwhite.qss");
-static const QString styleSheetBlackFile(":/client/resources/styles/stylesheetblack.qss");
 static const QList<QString> fontFiles =
         QList<QString>()
         << QString(":/client/resources/fonts/SuisseIntl-Thin.otf")
@@ -329,17 +328,8 @@ Application::Application(int &argc, char **argv)
     font.setStyleStrategy(QFont::PreferAntialias);
     QApplication::setFont(font);*/
 
-    // Load style sheet
-    //QFile ssFile(styleSheetBlackFile);
-    QFile ssFile(styleSheetWhiteFile);
-    if (ssFile.exists()) {
-        ssFile.open(QFile::ReadOnly);
-        QString StyleSheet = QLatin1String(ssFile.readAll());
-        setStyleSheet(StyleSheet);
-    }
-    else {
-        qCInfo(lcApplication) << "Style sheet file not found!" << extraPluginPath;
-    }
+    // Set style
+    Utility::setStyle(qApp);
 
     connect(AccountManager::instance(), &AccountManager::accountAdded,
         this, &Application::slotAccountStateAdded);

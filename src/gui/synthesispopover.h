@@ -12,6 +12,7 @@
 #include "progressdispatcher.h"
 
 #include <QColor>
+#include <QDateTime>
 #include <QDialog>
 #include <QEvent>
 #include <QList>
@@ -28,7 +29,7 @@ class SynthesisPopover : public QDialog
     Q_PROPERTY(QColor background_main_color READ backgroundMainColor WRITE setBackgroundMainColor)
 
 public:
-    enum notificationActions {
+    enum notificationsDisabled {
         Never = 0,
         OneHour,
         UntilTomorrow,
@@ -36,6 +37,9 @@ public:
         OneWeek,
         Always
     };
+
+    static const std::map<notificationsDisabled, QString> _notificationsDisabledMap;
+    static const std::map<notificationsDisabled, QString> _notificationsDisabledForPeriodMap;
 
     explicit SynthesisPopover(bool debugMode, QRect sysrayIconRect, QWidget *parent = nullptr);
 
@@ -51,6 +55,7 @@ signals:
     void openHelp();
     void exit();
     void addDrive();
+    void disableNotifications(notificationsDisabled type, QDateTime dateTime);
     void crash();
     void crashEnforce();
     void crashFatal();
@@ -102,9 +107,12 @@ private:
     ProgressBarWidget *_progressBarWidget;
     StatusBarWidget *_statusBarWidget;
     QStackedWidget *_stackedWidget;
-    notificationActions _notificationAction;
+    QWidget *_defaultSynchronizedPage;
+    notificationsDisabled _notificationsDisabled;
+    QDateTime _notificationsDisabledUntilDateTime;
     std::map<QString, AccountStatus> _accountStatusMap;
 
+    void changeEvent(QEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
     bool event(QEvent *event) override;
     void initUI();
@@ -118,6 +126,7 @@ private:
     void refreshStatusBar(const FolderInfo *folderInfo);
     void refreshStatusBar(std::map<QString, AccountStatus>::iterator accountStatusIt);
     void refreshStatusBar(QString accountId);
+    void setSynchronizedDefaultPage(QWidget **widget, QWidget *parent);
 
 private slots:
     void onRefreshAccountList();
@@ -127,7 +136,7 @@ private slots:
     void onOpenFolderMenu(bool checked);
     void onOpenFolder(bool checked);
     void onOpenWebview(bool checked);
-    void onOpenMenu(bool checked);
+    void onOpenMiscellaneousMenu(bool checked);
     void onOpenParameters(bool checked = false);
     void onNotificationActionTriggered(bool checked = false);
     void onDisplayHelp(bool checked = false);
@@ -153,4 +162,4 @@ private slots:
 
 }
 
-Q_DECLARE_METATYPE(KDC::SynthesisPopover::notificationActions)
+Q_DECLARE_METATYPE(KDC::SynthesisPopover::notificationsDisabled)

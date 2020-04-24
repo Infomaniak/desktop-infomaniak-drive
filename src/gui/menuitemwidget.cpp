@@ -36,10 +36,10 @@ MenuItemWidget::MenuItemWidget(const QString &text, QWidget *parent)
     _leftIconLabel = new QLabel(this);
     layout->addWidget(_leftIconLabel);
 
-    QLabel *textLabel = new QLabel(this);
-    textLabel->setObjectName("textLabel");
-    textLabel->setText(text);
-    layout->addWidget(textLabel);
+    QLabel *menuItemLabel = new QLabel(this);
+    menuItemLabel->setObjectName("menuItemLabel");
+    menuItemLabel->setText(text);
+    layout->addWidget(menuItemLabel);
 
     layout->addStretch();
 
@@ -150,6 +150,8 @@ void MenuItemWidget::onDefaultIconSizeChanged()
     if (_rightIconSize == QSize()) {
         _rightIconSize = _defaultIconSize;
     }
+
+    _leftIconLabel->setFixedSize(_leftIconSize);
 
     setIcons();
 }

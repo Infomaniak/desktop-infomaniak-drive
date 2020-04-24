@@ -11,7 +11,7 @@ const std::string MenuWidget::actionTypeProperty = "actionType";
 
 static const int contentMargin = 10;
 static const int cornerRadius = 5;
-static const int shadowBlurRadius = 20;
+static const int shadowBlurRadius = 10;
 static const int offsetX = -30;
 static const int offsetY = 10;
 

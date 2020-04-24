@@ -54,6 +54,7 @@ ownCloudGui::ownCloudGui(Application *parent)
     , _settingsDialog(new SettingsDialog(this))
     , _logBrowser(nullptr)
     , _recentActionsMenu(nullptr)
+    , _notificationEnableDate(QDateTime())
     , _app(parent)
 {
     _tray = new Systray();
@@ -537,6 +538,7 @@ void ownCloudGui::setupPopover()
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openHelp, this, &ownCloudGui::slotHelp);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::exit, _app, &Application::quit);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::addDrive, this, &ownCloudGui::slotNewAccountWizard);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::disableNotifications, this, &ownCloudGui::slotDisableNotifications);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crash, _app, &Application::slotCrash);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crashEnforce, _app, &Application::slotCrashEnforce);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crashFatal, _app, &Application::slotCrashFatal);
@@ -826,7 +828,10 @@ void ownCloudGui::slotShowOptionalTrayMessage(const QString &title, const QStrin
 {
     ConfigFile cfg;
     if (cfg.optionalDesktopNotifications()) {
-        slotShowTrayMessage(title, msg);
+        if (_notificationEnableDate == QDateTime()
+                || _notificationEnableDate > QDateTime::currentDateTime()) {
+            slotShowTrayMessage(title, msg);
+        }
     }
 }
 
@@ -1053,6 +1058,24 @@ void ownCloudGui::slotPauseAllFolders()
 void ownCloudGui::slotNewAccountWizard()
 {
     OwncloudSetupWizard::runWizard(qApp, SLOT(slotownCloudWizardDone(int)));
+}
+
+void ownCloudGui::slotDisableNotifications(KDC::SynthesisPopover::notificationsDisabled type,
+                                           QDateTime value)
+{
+    ConfigFile cfg;
+    if (type == KDC::SynthesisPopover::notificationsDisabled::Never) {
+        _notificationEnableDate = QDateTime();
+        cfg.setOptionalDesktopNotifications(true);
+    }
+    else if (type == KDC::SynthesisPopover::notificationsDisabled::Always) {
+        _notificationEnableDate = QDateTime();
+        cfg.setOptionalDesktopNotifications(false);
+    }
+    else {
+        _notificationEnableDate = value;
+        cfg.setOptionalDesktopNotifications(false);
+    }
 }
 
 void ownCloudGui::setPauseOnAllFoldersHelper(bool pause)

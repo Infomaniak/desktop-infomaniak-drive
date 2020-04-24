@@ -43,8 +43,11 @@ namespace OCC {
 Q_LOGGING_CATEGORY(lcAccount, "sync.account", QtInfoMsg)
 const char app_password[] = "_app-password";
 
+static const QColor defaultDriveColor = QColor("#666666");
+
 Account::Account(QObject *parent)
     : QObject(parent)
+    , _driveColor(defaultDriveColor)
     , _capabilities(QVariantMap())
     , _davPath(Theme::instance()->webDavPath())
 {

@@ -14,6 +14,7 @@ class CustomToolButton : public QToolButton
 {
     Q_OBJECT
 
+    Q_PROPERTY(QSize base_icon_size READ baseIconSize WRITE setBaseIconSize)
     Q_PROPERTY(QColor icon_color READ iconColor WRITE setIconColor)
     Q_PROPERTY(QColor icon_color_hover READ iconColorHover WRITE setIconColorHover)
 
@@ -25,6 +26,12 @@ public:
 
     inline QString iconPath() const { return _iconPath; };
     inline void setIconPath(const QString &path) { _iconPath = path; }
+
+    inline QSize baseIconSize() const { return _baseIconSize; }
+    inline void setBaseIconSize(const QSize& size) {
+        _baseIconSize = size;
+        emit baseIconSizeChanged();
+    }
 
     inline QColor iconColor() const { return _iconColor; }
     inline void setIconColor(const QColor& color) {
@@ -39,12 +46,12 @@ public:
     inline void setToolTipDuration(int msec) { _toolTipDuration = msec; }
 
 signals:
+    void baseIconSizeChanged();
     void iconColorChanged();
 
 private:
     bool _withMenu;
-    QSize _defaultIconSize;
-    bool _setIconSize;
+    QSize _baseIconSize;
     QString _iconPath;
     QColor _iconColor;
     QColor _iconColorHover;
@@ -52,12 +59,13 @@ private:
     int _toolTipDuration;
     CustomToolTip *_customToolTip;
 
-    void paintEvent(QPaintEvent *event) override;
     bool event(QEvent *event) override;
-    void applyIconColor(const QColor &color);
+    void applyIconSizeAndColor(const QColor &color);
 
 private slots:
+    void onBaseIconSizeChanged();
     void onIconColorChanged();
+
 };
 
 }
