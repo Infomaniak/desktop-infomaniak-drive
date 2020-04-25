@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "getorcreatepubliclinkshare.h"
 #include "configfile.h"
 
+#define CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
 #include <iostream>
 #endif
@@ -628,7 +629,7 @@ const SynthesisPopover::FolderInfo *SynthesisPopover::getActiveFolder(std::map<Q
 void SynthesisPopover::refreshStatusBar(const FolderInfo *folderInfo)
 {
     if (folderInfo) {
-        _statusBarWidget->setStatus(folderInfo->_status, folderInfo->_currentFile,
+        _statusBarWidget->setStatus(folderInfo->_syncPaused, folderInfo->_status, folderInfo->_currentFile,
                                     folderInfo->_totalFiles, folderInfo->_estimatedRemainingTime);
     }
     else {
@@ -719,7 +720,7 @@ void SynthesisPopover::setSynchronizedDefaultPage(QWidget **widget, QWidget *par
         }
         if (folderId.isEmpty()) {
             // No folder
-            defaultTextLabel->setText(tr("No folder configured for this kDrive!"));
+            defaultTextLabel->setText(tr("No synchronized folder for this Drive!"));
         }
         else {
             QUrl defaultFolderUrl = folderUrl(folderId, QString());
@@ -817,6 +818,7 @@ void SynthesisPopover::onRefreshAccountList()
         }
 
         // Update widgets
+        _folderButton->setVisible(currentFolderMapSize > 0);
         _folderButton->setWithMenu(currentFolderMapSize > 1);
         _statusBarWidget->setSeveralDrives(_accountStatusMap.size() > 1);
         _driveSelectionWidget->selectDrive(_currentAccountId);
@@ -1200,10 +1202,11 @@ void SynthesisPopover::onAccountSelected(QString id)
         _currentAccountId = id;
 
         int currentFolderMapSize = accountStatusIt->second._folderMap.size();
+        _folderButton->setVisible(currentFolderMapSize > 0);
         _folderButton->setWithMenu(currentFolderMapSize > 1);
         _progressBarWidget->setUsedSize(accountStatusIt->second._totalSize, accountStatusIt->second._used);
         refreshStatusBar(accountStatusIt);
-        _stackedWidget->setCurrentIndex(accountStatusIt->second._synchronizedListStackPosition);
+        setSynchronizedDefaultPage(&_defaultSynchronizedPage, this);
     }
 }
 
@@ -1320,7 +1323,7 @@ void SynthesisPopover::onOpenItem()
 void SynthesisPopover::onAddToFavouriteItem()
 {
     QMessageBox msgBox;
-    msgBox.setText("Not implemented!");
+    msgBox.setText(tr("Not implemented!"));
     msgBox.exec();
 }
 
@@ -1333,6 +1336,9 @@ void SynthesisPopover::onManageRightAndSharingItem()
         OCC::FolderMan::instance()->folderForPath(fullFilePath, &folderRelativePath);
         if (folderRelativePath == "/") {
             qCDebug(lcSynthesisPopover) << "Cannot share root directory!";
+            QMessageBox msgBox;
+            msgBox.setText(tr("You cannot share the root directory of your Drive!"));
+            msgBox.exec();
         }
         else {
             emit openShareDialogPublicLinks(folderRelativePath, fullFilePath);
@@ -1376,7 +1382,7 @@ void SynthesisPopover::onCopyUrlToClipboard(const QString &url)
 {
     QApplication::clipboard()->setText(url);
     QMessageBox msgBox;
-    msgBox.setText("The shared link has been copied to the clipboard.");
+    msgBox.setText(tr("The shared link has been copied to the clipboard."));
     msgBox.exec();
 }
 

@@ -60,8 +60,10 @@ public:
     static QSize settingsDialogSize() { return QSize(800, 500); }
     void setupOverlayIcons();
 
+#ifndef KDRIVE_V2
     /// Whether the tray menu is visible
     bool popoverVisible() const;
+#endif
 
     void hideAndShowTray();
 
@@ -141,11 +143,13 @@ private:
     QScopedPointer<QMenu> _contextMenu;
 #endif
 
+#ifndef KDRIVE_V2
     // Manually tracking whether the context menu is visible via aboutToShow
     // and aboutToHide. Unfortunately aboutToHide isn't reliable everywhere
     // so this only gets used with _workaroundManualVisibility (when the tray's
     // isVisible() is unreliable)
     bool _popoverVisibleManual = false;
+#endif
 
     QMenu *_recentActionsMenu;
     QVector<QMenu *> _accountMenus;

@@ -248,8 +248,10 @@ void ownCloudGui::slotComputeOverallSyncStatus()
     }
 
     if (!problemAccounts.empty()) {
+#ifdef KDRIVE_V2
+        _tray->setIcon(Theme::instance()->folderOfflineIcon(true, true));
+#else
         _tray->setIcon(Theme::instance()->folderOfflineIcon(true, popoverVisible()));
-#ifndef KDRIVE_V2
         if (allDisconnected) {
             setStatusText(tr("Disconnected"));
         } else {
@@ -280,14 +282,22 @@ void ownCloudGui::slotComputeOverallSyncStatus()
     }
 
     if (allSignedOut) {
+#ifdef KDRIVE_V2
+        _tray->setIcon(Theme::instance()->folderOfflineIcon(true, true));
+#else
         _tray->setIcon(Theme::instance()->folderOfflineIcon(true, popoverVisible()));
+#endif
         _tray->setToolTip(tr("Please sign in"));
 #ifndef KDRIVE_V2
         setStatusText(tr("Signed out"));
 #endif
         return;
     } else if (allPaused) {
+#ifdef KDRIVE_V2
+        _tray->setIcon(Theme::instance()->syncStateIcon(SyncResult::Paused, true, true));
+#else
         _tray->setIcon(Theme::instance()->syncStateIcon(SyncResult::Paused, true, popoverVisible()));
+#endif
         _tray->setToolTip(tr("Account synchronization is disabled"));
 #ifndef KDRIVE_V2
         setStatusText(tr("Synchronization is paused"));
@@ -318,7 +328,11 @@ void ownCloudGui::slotComputeOverallSyncStatus()
 
     // Set sytray icon
     Application *app = static_cast<Application *>(qApp);
+#ifdef KDRIVE_V2
+    QIcon statusIcon = Theme::instance()->syncStateIcon(iconStatus, true, true, app->getAlert());
+#else
     QIcon statusIcon = Theme::instance()->syncStateIcon(iconStatus, true, popoverVisible(), app->getAlert());
+#endif
     _tray->setIcon(statusIcon);
 
 #ifndef KDRIVE_V2
@@ -452,6 +466,7 @@ void ownCloudGui::slotPopoverAboutToHide()
 }
 #endif
 
+#ifndef KDRIVE_V2
 bool ownCloudGui::popoverVisible() const
 {
     // On some platforms isVisible doesn't work and always returns false,
@@ -460,12 +475,9 @@ bool ownCloudGui::popoverVisible() const
         return _popoverVisibleManual;
     }
 
-#ifdef KDRIVE_V2
-    return _synthesisPopover && _synthesisPopover->isVisible();
-#else
     return _contextMenu && _contextMenu->isVisible();
-#endif
 }
+#endif
 
 void ownCloudGui::hideAndShowTray()
 {
@@ -481,6 +493,7 @@ static bool minimalTrayMenu()
 }
 #endif
 
+#ifndef KDRIVE_V2
 static bool updateWhileVisible()
 {
     static QByteArray var = qgetenv("OWNCLOUD_TRAY_UPDATE_WHILE_VISIBLE");
@@ -494,6 +507,7 @@ static bool updateWhileVisible()
         return false;
     }
 }
+#endif
 
 static QByteArray envForceQDBusTrayWorkaround()
 {
@@ -591,6 +605,7 @@ void ownCloudGui::setupPopover()
 #endif
 
 #ifdef Q_OS_LINUX
+#ifndef KDRIVE_V2
     // For KDE sessions if the platform plugin is missing,
     // neither aboutToShow() updates nor the isVisible() call
     // work. At least aboutToHide is reliable.
@@ -606,6 +621,7 @@ void ownCloudGui::setupPopover()
         _workaroundManualVisibility = true;
         _workaroundNoAboutToShowUpdate = true;
     }
+#endif
 #endif
 
     applyEnvVariable(&_workaroundNoAboutToShowUpdate, envForceWorkaroundNoAboutToShowUpdate());
@@ -643,23 +659,36 @@ void ownCloudGui::updatePopover()
 #endif
 
     // If it's visible, we can't update live, and it won't be updated lazily: reschedule
+#ifdef KDRIVE_V2
+    if (_workaroundNoAboutToShowUpdate) {
+        if (!_delayedTrayUpdateTimer.isActive()) {
+            _delayedTrayUpdateTimer.start();
+        }
+        return;
+    }
+#else
     if (popoverVisible() && !updateWhileVisible() && _workaroundNoAboutToShowUpdate) {
         if (!_delayedTrayUpdateTimer.isActive()) {
             _delayedTrayUpdateTimer.start();
         }
         return;
     }
+#endif
 
     if (_workaroundShowAndHideTray) {
         // To make tray menu updates work with these bugs (see setupPopover)
         // we need to hide and show the tray icon. We don't want to do that
         // while it's visible!
+#ifndef KDRIVE_V2
         if (popoverVisible()) {
+#endif
             if (!_delayedTrayUpdateTimer.isActive()) {
                 _delayedTrayUpdateTimer.start();
             }
+#ifndef KDRIVE_V2
             return;
         }
+#endif
         _tray->hide();
     }
 
@@ -796,6 +825,10 @@ void ownCloudGui::updatePopover()
 void ownCloudGui::updatePopoverNeeded()
 {
     // if it's visible and we can update live: update now
+#ifdef KDRIVE_V2
+    updatePopover();
+    return;
+#else
     if (popoverVisible() && updateWhileVisible()) {
         // Note: don't update while visible on OSX
         // https://bugreports.qt.io/browse/QTBUG-54845
@@ -812,6 +845,7 @@ void ownCloudGui::updatePopoverNeeded()
         }
         return;
     }
+#endif
 }
 
 void ownCloudGui::slotShowTrayMessage(const QString &title, const QString &msg)
