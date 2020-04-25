@@ -601,7 +601,7 @@ void ownCloudGui::setupPopover()
         xdgCurrentDesktop.contains("KDE")
         || desktopSession.contains("plasma")
         || desktopSession.contains("kde");
-    QObject *platformMenu = reinterpret_cast<QObject *>(_popover->platformMenu());
+    QObject *platformMenu = reinterpret_cast<QObject *>(_tray->contextMenu()->platformMenu());
     if (isKde && platformMenu && platformMenu->metaObject()->className() == QLatin1String("QDBusPlatformMenu")) {
         _workaroundManualVisibility = true;
         _workaroundNoAboutToShowUpdate = true;
@@ -1060,15 +1060,15 @@ void ownCloudGui::slotNewAccountWizard()
     OwncloudSetupWizard::runWizard(qApp, SLOT(slotownCloudWizardDone(int)));
 }
 
-void ownCloudGui::slotDisableNotifications(KDC::SynthesisPopover::notificationsDisabled type,
+void ownCloudGui::slotDisableNotifications(KDC::SynthesisPopover::NotificationsDisabled type,
                                            QDateTime value)
 {
     ConfigFile cfg;
-    if (type == KDC::SynthesisPopover::notificationsDisabled::Never) {
+    if (type == KDC::SynthesisPopover::NotificationsDisabled::Never) {
         _notificationEnableDate = QDateTime();
         cfg.setOptionalDesktopNotifications(true);
     }
-    else if (type == KDC::SynthesisPopover::notificationsDisabled::Always) {
+    else if (type == KDC::SynthesisPopover::NotificationsDisabled::Always) {
         _notificationEnableDate = QDateTime();
         cfg.setOptionalDesktopNotifications(false);
     }

@@ -1,3 +1,22 @@
+/*
+Infomaniak Drive
+Copyright (C) 2020 christophe.larchier@infomaniak.com
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 #include "synthesispopover.h"
 #include "menuitemwidget.h"
 #include "menuwidget.h"
@@ -9,14 +28,14 @@
 #include "common/utility.h"
 #include "guiutility.h"
 #include "openfilemanager.h"
-#include "networkjobs.h"
-#include "socketapi.h"
 #include "getorcreatepubliclinkshare.h"
 #include "configfile.h"
 
+#ifdef CONSOLE_DEBUG
 #include <iostream>
+#endif
 
-#include <QAction>
+#include <QActionGroup>
 #include <QApplication>
 #include <QBoxLayout>
 #include <QClipboard>
@@ -24,17 +43,13 @@
 #include <QDesktopServices>
 #include <QDir>
 #include <QGraphicsDropShadowEffect>
-#include <QGuiApplication>
 #include <QLabel>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <QMenu>
 #include <QMessageBox>
 #include <QPainter>
 #include <QPainterPath>
-#include <QPicture>
 #include <QScreen>
-#include <QVector>
 #include <QWidgetAction>
 
 namespace KDC {
@@ -52,26 +67,25 @@ static const int driveBarVMargin = 10;
 static const int driveBarSpacing = 15;
 static const int logoIconSize = 30;
 static const int defaultLogoIconSize = 50;
-static const QColor defaultSynchronizedLogoIconColor = QColor("#9E9E9E");
 static const int maxSynchronizedItems = 1000;
 static const char accountIdProperty[] = "accountId";
 
-const std::map<SynthesisPopover::notificationsDisabled, QString> SynthesisPopover::_notificationsDisabledMap = {
-    { notificationsDisabled::Never, QString(tr("Never")) },
-    { notificationsDisabled::OneHour, QString(tr("During 1 hour")) },
-    { notificationsDisabled::UntilTomorrow, QString(tr("Until tomorrow 8:00AM")) },
-    { notificationsDisabled::TreeDays, QString(tr("During 3 days")) },
-    { notificationsDisabled::OneWeek, QString(tr("During 1 week")) },
-    { notificationsDisabled::Always, QString(tr("Always")) }
+const std::map<SynthesisPopover::NotificationsDisabled, QString> SynthesisPopover::_notificationsDisabledMap = {
+    { NotificationsDisabled::Never, QString(tr("Never")) },
+    { NotificationsDisabled::OneHour, QString(tr("During 1 hour")) },
+    { NotificationsDisabled::UntilTomorrow, QString(tr("Until tomorrow 8:00AM")) },
+    { NotificationsDisabled::TreeDays, QString(tr("During 3 days")) },
+    { NotificationsDisabled::OneWeek, QString(tr("During 1 week")) },
+    { NotificationsDisabled::Always, QString(tr("Always")) }
 };
 
-const std::map<SynthesisPopover::notificationsDisabled, QString> SynthesisPopover::_notificationsDisabledForPeriodMap = {
-    { notificationsDisabled::Never, QString(tr("Never")) },
-    { notificationsDisabled::OneHour, QString(tr("For 1 more hour")) },
-    { notificationsDisabled::UntilTomorrow, QString(tr("Until tomorrow 8:00AM")) },
-    { notificationsDisabled::TreeDays, QString(tr("For 3 more days")) },
-    { notificationsDisabled::OneWeek, QString(tr("For 1 more week")) },
-    { notificationsDisabled::Always, QString(tr("Always")) }
+const std::map<SynthesisPopover::NotificationsDisabled, QString> SynthesisPopover::_notificationsDisabledForPeriodMap = {
+    { NotificationsDisabled::Never, QString(tr("Never")) },
+    { NotificationsDisabled::OneHour, QString(tr("For 1 more hour")) },
+    { NotificationsDisabled::UntilTomorrow, QString(tr("Until tomorrow 8:00AM")) },
+    { NotificationsDisabled::TreeDays, QString(tr("For 3 more days")) },
+    { NotificationsDisabled::OneWeek, QString(tr("For 1 more week")) },
+    { NotificationsDisabled::Always, QString(tr("Always")) }
 };
 
 Q_LOGGING_CATEGORY(lcSynthesisPopover, "synthesispopover", QtInfoMsg)
@@ -90,7 +104,7 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QRect sysrayIconRect, QWidget
     , _statusBarWidget(nullptr)
     , _stackedWidget(nullptr)
     , _defaultSynchronizedPage(nullptr)
-    , _notificationsDisabled(notificationsDisabled::Never)
+    , _notificationsDisabled(NotificationsDisabled::Never)
     , _notificationsDisabledUntilDateTime(QDateTime())
 {
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
@@ -98,8 +112,8 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QRect sysrayIconRect, QWidget
 
     OCC::ConfigFile cfg;
     _notificationsDisabled = cfg.optionalDesktopNotifications()
-            ? notificationsDisabled::Never
-            : notificationsDisabled::Always;
+            ? NotificationsDisabled::Never
+            : NotificationsDisabled::Always;
 
     initUI();
 
@@ -389,15 +403,15 @@ void SynthesisPopover::initUI()
 
     CustomPushButton *synchronizedButton = new CustomPushButton(tr("Synchronized"), buttonsBarWidget);
     synchronizedButton->setIconPath(":/client/resources/icons/actions/sync.svg");
-    buttonsBarWidget->insertButton(stackedWidget::Synchronized, synchronizedButton);
+    buttonsBarWidget->insertButton(StackedWidget::Synchronized, synchronizedButton);
 
     CustomPushButton *favoritesButton = new CustomPushButton(tr("Favorites"), buttonsBarWidget);
     favoritesButton->setIconPath(":/client/resources/icons/actions/favorite.svg");
-    buttonsBarWidget->insertButton(stackedWidget::Favorites, favoritesButton);
+    buttonsBarWidget->insertButton(StackedWidget::Favorites, favoritesButton);
 
     CustomPushButton *activityButton = new CustomPushButton(tr("Activity"), buttonsBarWidget);
     activityButton->setIconPath(":/client/resources/icons/actions/notifications.svg");
-    buttonsBarWidget->insertButton(stackedWidget::Activity, activityButton);
+    buttonsBarWidget->insertButton(StackedWidget::Activity, activityButton);
 
     mainVBox->addWidget(buttonsBarWidget);
 
@@ -405,17 +419,17 @@ void SynthesisPopover::initUI()
     _stackedWidget = new QStackedWidget(this);
 
     setSynchronizedDefaultPage(&_defaultSynchronizedPage, this);
-    _stackedWidget->insertWidget(stackedWidget::Synchronized, _defaultSynchronizedPage);
+    _stackedWidget->insertWidget(StackedWidget::Synchronized, _defaultSynchronizedPage);
 
     QLabel *notImplementedLabel = new QLabel(tr("Not implemented!"), this);
     notImplementedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     notImplementedLabel->setObjectName("defaultTitleLabel");
-    _stackedWidget->insertWidget(stackedWidget::Favorites, notImplementedLabel);
+    _stackedWidget->insertWidget(StackedWidget::Favorites, notImplementedLabel);
 
     QLabel *notImplementedLabel2 = new QLabel(tr("Not implemented!"), this);
     notImplementedLabel2->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     notImplementedLabel2->setObjectName("defaultTitleLabel");
-    _stackedWidget->insertWidget(stackedWidget::Activity, notImplementedLabel2);
+    _stackedWidget->insertWidget(StackedWidget::Activity, notImplementedLabel2);
 
     mainVBox->addWidget(_stackedWidget);
     mainVBox->setStretchFactor(_stackedWidget, 1);
@@ -723,8 +737,10 @@ void SynthesisPopover::setSynchronizedDefaultPage(QWidget **widget, QWidget *par
 
 void SynthesisPopover::onRefreshAccountList()
 {
+#ifdef CONSOLE_DEBUG
     std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
               << " - RefreshAccountList" << std::endl;
+#endif
 
     if (OCC::AccountManager::instance()->accounts().isEmpty()) {
         _currentAccountId.clear();
@@ -816,8 +832,10 @@ void SynthesisPopover::onUpdateProgress(const QString &folderId, const OCC::Prog
 {
     OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderId);
     if (folder) {
+#ifdef CONSOLE_DEBUG
         std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
                   << " - UpdateProgress folder: " << folder->path().toStdString() << std::endl;
+#endif
 
         OCC::AccountPtr account = folder->accountState()->account();
         if (account && account->id() == _currentAccountId) {
@@ -850,8 +868,10 @@ void SynthesisPopover::onUpdateQuota(qint64 total, qint64 used)
 {
     QString accountId = qvariant_cast<QString>(sender()->property(accountIdProperty));
 
+#ifdef CONSOLE_DEBUG
     std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
               << " - UpdateQuota account: " << accountId.toStdString() << std::endl;
+#endif
 
     const auto accountStatusIt = _accountStatusMap.find(accountId);
     if (accountStatusIt != _accountStatusMap.end()) {
@@ -866,8 +886,10 @@ void SynthesisPopover::onUpdateQuota(qint64 total, qint64 used)
 
 void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &syncFileItemPtr)
 {
+#ifdef CONSOLE_DEBUG
     std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
               << " - ItemCompleted" << std::endl;
+#endif
 
     if (syncFileItemPtr.data()->_status == OCC::SyncFileItem::FileIgnored) {
         return;
@@ -1000,8 +1022,8 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
 
         // Disable Notifications
         QWidgetAction *notificationsAction = new QWidgetAction(this);
-        bool notificationAlreadyDisabledForPeriod = _notificationsDisabled != notificationsDisabled::Never
-                && _notificationsDisabled != notificationsDisabled::Always;
+        bool notificationAlreadyDisabledForPeriod = _notificationsDisabled != NotificationsDisabled::Never
+                && _notificationsDisabled != NotificationsDisabled::Always;
         MenuItemWidget *notificationsMenuItemWidget = new MenuItemWidget(
                     notificationAlreadyDisabledForPeriod
                     ? tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString())
@@ -1017,9 +1039,9 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
         QActionGroup *notificationActionGroup = new QActionGroup(this);
         notificationActionGroup->setExclusive(true);
 
-        const std::map<notificationsDisabled, QString> &notificationMap =
-                _notificationsDisabled == notificationsDisabled::Never
-                || _notificationsDisabled == notificationsDisabled::Always
+        const std::map<NotificationsDisabled, QString> &notificationMap =
+                _notificationsDisabled == NotificationsDisabled::Never
+                || _notificationsDisabled == NotificationsDisabled::Always
                 ? _notificationsDisabledMap
                 : _notificationsDisabledForPeriodMap;
 
@@ -1127,38 +1149,38 @@ void SynthesisPopover::onNotificationActionTriggered(bool checked)
     Q_UNUSED(checked)
 
     QString message;
-    bool notificationAlreadyDisabledForPeriod = _notificationsDisabled != notificationsDisabled::Never
-            && _notificationsDisabled != notificationsDisabled::Always;
+    bool notificationAlreadyDisabledForPeriod = _notificationsDisabled != NotificationsDisabled::Never
+            && _notificationsDisabled != NotificationsDisabled::Always;
 
-    _notificationsDisabled = qvariant_cast<notificationsDisabled>(sender()->property(MenuWidget::actionTypeProperty.c_str()));
+    _notificationsDisabled = qvariant_cast<NotificationsDisabled>(sender()->property(MenuWidget::actionTypeProperty.c_str()));
     switch (_notificationsDisabled) {
-    case notificationsDisabled::Never:
+    case NotificationsDisabled::Never:
         _notificationsDisabledUntilDateTime = QDateTime();
         message = QString(tr("Notifications enabled!"));
         break;
-    case notificationsDisabled::OneHour:
+    case NotificationsDisabled::OneHour:
         _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
                 ? _notificationsDisabledUntilDateTime.addSecs(60 * 60)
                 : QDateTime::currentDateTime().addSecs(60 * 60);
         message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
-    case notificationsDisabled::UntilTomorrow:
+    case NotificationsDisabled::UntilTomorrow:
         _notificationsDisabledUntilDateTime = QDateTime(QDateTime::currentDateTime().addDays(1).date(), QTime(8, 0));
         message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
-    case notificationsDisabled::TreeDays:
+    case NotificationsDisabled::TreeDays:
         _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
                 ? _notificationsDisabledUntilDateTime.addDays(3)
                 : QDateTime::currentDateTime().addDays(3);
         message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
-    case notificationsDisabled::OneWeek:
+    case NotificationsDisabled::OneWeek:
         _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
                 ? _notificationsDisabledUntilDateTime.addDays(7)
                 : QDateTime::currentDateTime().addDays(7);
         message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
-    case notificationsDisabled::Always:
+    case NotificationsDisabled::Always:
         _notificationsDisabledUntilDateTime = QDateTime();
         message = QString(tr("Notifications disabled!"));
         break;
@@ -1177,6 +1199,8 @@ void SynthesisPopover::onAccountSelected(QString id)
     if (accountStatusIt != _accountStatusMap.end()) {
         _currentAccountId = id;
 
+        int currentFolderMapSize = accountStatusIt->second._folderMap.size();
+        _folderButton->setWithMenu(currentFolderMapSize > 1);
         _progressBarWidget->setUsedSize(accountStatusIt->second._totalSize, accountStatusIt->second._used);
         refreshStatusBar(accountStatusIt);
         _stackedWidget->setCurrentIndex(accountStatusIt->second._synchronizedListStackPosition);
@@ -1227,28 +1251,28 @@ void SynthesisPopover::onButtonBarToggled(int position)
     const auto accountStatusIt = _accountStatusMap.find(_currentAccountId);
     if (accountStatusIt != _accountStatusMap.end()) {
         switch (position) {
-        case stackedWidget::Synchronized:
+        case StackedWidget::Synchronized:
             if (accountStatusIt->second._synchronizedListStackPosition) {
                 _stackedWidget->setCurrentIndex(accountStatusIt->second._synchronizedListStackPosition);
             }
             else {
-                _stackedWidget->setCurrentIndex(stackedWidget::Synchronized);
+                _stackedWidget->setCurrentIndex(StackedWidget::Synchronized);
             }
             break;
-        case stackedWidget::Favorites:
+        case StackedWidget::Favorites:
             if (accountStatusIt->second._favoritesListStackPosition) {
                 _stackedWidget->setCurrentIndex(accountStatusIt->second._favoritesListStackPosition);
             }
             else {
-                _stackedWidget->setCurrentIndex(stackedWidget::Favorites);
+                _stackedWidget->setCurrentIndex(StackedWidget::Favorites);
             }
             break;
-        case stackedWidget::Activity:
+        case StackedWidget::Activity:
             if (accountStatusIt->second._activityListStackPosition) {
                 _stackedWidget->setCurrentIndex(accountStatusIt->second._activityListStackPosition);
             }
             else {
-                _stackedWidget->setCurrentIndex(stackedWidget::Activity);
+                _stackedWidget->setCurrentIndex(StackedWidget::Activity);
             }
             break;
         }
@@ -1376,9 +1400,9 @@ SynthesisPopover::AccountStatus::AccountStatus(OCC::AccountState *accountState)
     , _folderMap(std::map<QString, FolderInfo>())
     , _synchronizedListWidget(nullptr)
     , _currentSynchronizedWidgetItem(nullptr)
-    , _synchronizedListStackPosition(stackedWidget::Synchronized)
-    , _favoritesListStackPosition(stackedWidget::Favorites)
-    , _activityListStackPosition(stackedWidget::Activity)
+    , _synchronizedListStackPosition(StackedWidget::Synchronized)
+    , _favoritesListStackPosition(StackedWidget::Favorites)
+    , _activityListStackPosition(StackedWidget::Activity)
 {
     if (accountState) {
         _quotaInfoPtr = std::unique_ptr<OCC::QuotaInfo>(new OCC::QuotaInfo(accountState));

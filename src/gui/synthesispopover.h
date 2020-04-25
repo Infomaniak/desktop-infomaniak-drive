@@ -1,3 +1,22 @@
+/*
+Infomaniak Drive
+Copyright (C) 2020 christophe.larchier@infomaniak.com
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 #pragma once
 
 #include "customtoolbutton.h"
@@ -15,7 +34,6 @@
 #include <QDateTime>
 #include <QDialog>
 #include <QEvent>
-#include <QList>
 #include <QListWidget>
 #include <QRect>
 #include <QStackedWidget>
@@ -29,7 +47,7 @@ class SynthesisPopover : public QDialog
     Q_PROPERTY(QColor background_main_color READ backgroundMainColor WRITE setBackgroundMainColor)
 
 public:
-    enum notificationsDisabled {
+    enum NotificationsDisabled {
         Never = 0,
         OneHour,
         UntilTomorrow,
@@ -38,8 +56,8 @@ public:
         Always
     };
 
-    static const std::map<notificationsDisabled, QString> _notificationsDisabledMap;
-    static const std::map<notificationsDisabled, QString> _notificationsDisabledForPeriodMap;
+    static const std::map<NotificationsDisabled, QString> _notificationsDisabledMap;
+    static const std::map<NotificationsDisabled, QString> _notificationsDisabledForPeriodMap;
 
     explicit SynthesisPopover(bool debugMode, QRect sysrayIconRect, QWidget *parent = nullptr);
 
@@ -55,13 +73,13 @@ signals:
     void openHelp();
     void exit();
     void addDrive();
-    void disableNotifications(notificationsDisabled type, QDateTime dateTime);
+    void disableNotifications(NotificationsDisabled type, QDateTime dateTime);
     void crash();
     void crashEnforce();
     void crashFatal();
 
 private:
-    enum stackedWidget {
+    enum StackedWidget {
         Synchronized = 0,
         Favorites,
         Activity
@@ -108,7 +126,7 @@ private:
     StatusBarWidget *_statusBarWidget;
     QStackedWidget *_stackedWidget;
     QWidget *_defaultSynchronizedPage;
-    notificationsDisabled _notificationsDisabled;
+    NotificationsDisabled _notificationsDisabled;
     QDateTime _notificationsDisabledUntilDateTime;
     std::map<QString, AccountStatus> _accountStatusMap;
 
@@ -162,4 +180,4 @@ private slots:
 
 }
 
-Q_DECLARE_METATYPE(KDC::SynthesisPopover::notificationsDisabled)
+Q_DECLARE_METATYPE(KDC::SynthesisPopover::NotificationsDisabled)

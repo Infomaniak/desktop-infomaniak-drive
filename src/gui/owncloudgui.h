@@ -122,7 +122,7 @@ private slots:
     void slotUnpauseAllFolders();
     void slotPauseAllFolders();
     void slotNewAccountWizard();
-    void slotDisableNotifications(KDC::SynthesisPopover::notificationsDisabled type, QDateTime value);
+    void slotDisableNotifications(KDC::SynthesisPopover::NotificationsDisabled type, QDateTime value);
 
 private:
     void setPauseOnAllFoldersHelper(bool pause);
