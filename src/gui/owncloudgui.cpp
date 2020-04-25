@@ -659,14 +659,7 @@ void ownCloudGui::updatePopover()
 #endif
 
     // If it's visible, we can't update live, and it won't be updated lazily: reschedule
-#ifdef KDRIVE_V2
-    if (_workaroundNoAboutToShowUpdate) {
-        if (!_delayedTrayUpdateTimer.isActive()) {
-            _delayedTrayUpdateTimer.start();
-        }
-        return;
-    }
-#else
+#ifndef KDRIVE_V2
     if (popoverVisible() && !updateWhileVisible() && _workaroundNoAboutToShowUpdate) {
         if (!_delayedTrayUpdateTimer.isActive()) {
             _delayedTrayUpdateTimer.start();
