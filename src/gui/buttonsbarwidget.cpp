@@ -48,6 +48,19 @@ void ButtonsBarWidget::insertButton(int position, CustomPushButton *button)
     }
 }
 
+void ButtonsBarWidget::selectButton(int position)
+{
+    int i = 0;
+    for (auto btn : buttonsList) {
+        if (i == position) {
+            btn->setChecked(true);
+            emit buttonToggled(position);
+            break;
+        }
+        i++;
+    }
+}
+
 void ButtonsBarWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);

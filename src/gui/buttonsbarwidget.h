@@ -42,6 +42,7 @@ public:
     inline void setBackgroundColor(const QColor& value) { _backgroundColor = value; }
 
     void insertButton(int position, CustomPushButton *button);
+    void selectButton(int position);
 
 signals:
     void buttonToggled(int position);

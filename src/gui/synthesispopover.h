@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "driveselectionwidget.h"
 #include "progressbarwidget.h"
 #include "statusbarwidget.h"
+#include "buttonsbarwidget.h"
 #include "synchronizeditemwidget.h"
 #include "accountmanager.h"
 #include "accountstate.h"
@@ -105,6 +106,7 @@ private:
         qint64 _used;
         OCC::SyncResult::Status _status;
         std::map<QString, FolderInfo> _folderMap;
+        StackedWidget _stackedWidgetPosition;
         QListWidget *_synchronizedListWidget;
         QListWidgetItem *_currentSynchronizedWidgetItem;
         int _synchronizedListStackPosition;
@@ -124,6 +126,7 @@ private:
     DriveSelectionWidget *_driveSelectionWidget;
     ProgressBarWidget *_progressBarWidget;
     StatusBarWidget *_statusBarWidget;
+    ButtonsBarWidget *_buttonsBarWidget;
     QStackedWidget *_stackedWidget;
     QWidget *_defaultSynchronizedPage;
     NotificationsDisabled _notificationsDisabled;
@@ -140,7 +143,7 @@ private:
     QUrl folderUrl(const QString &folderId, const QString &filePath);
     void openUrl(const QString &folderId, const QString &filePath = QString());
     const SynchronizedItem *currentSynchronizedItem();
-    const FolderInfo *getActiveFolder(std::map<QString, FolderInfo> folderMap);
+    const FolderInfo *getActiveFolder(const std::map<QString, FolderInfo> &folderMap);
     void refreshStatusBar(const FolderInfo *folderInfo);
     void refreshStatusBar(std::map<QString, AccountStatus>::iterator accountStatusIt);
     void refreshStatusBar(QString accountId);

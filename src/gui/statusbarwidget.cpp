@@ -227,7 +227,7 @@ void StatusBarWidget::onResumeClicked()
         // Resume
         QWidgetAction *resumeAction = new QWidgetAction(this);
         MenuItemWidget *resumeMenuItemWidget = new MenuItemWidget(tr("Resume synchronization"));
-        resumeMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/resume.svg");
+        resumeMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/start.svg");
         resumeAction->setDefaultWidget(resumeMenuItemWidget);
         connect(resumeAction, &QWidgetAction::triggered, this, &StatusBarWidget::onResumeSync);
         menu->addAction(resumeAction);
@@ -235,7 +235,7 @@ void StatusBarWidget::onResumeClicked()
         // Resume all
         QWidgetAction *resumeAllAction = new QWidgetAction(this);
         MenuItemWidget *resumeAllMenuItemWidget = new MenuItemWidget(tr("Resume synchronization for all kDrives"));
-        resumeAllMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/resume.svg");
+        resumeAllMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/start.svg");
         resumeAllAction->setDefaultWidget(resumeAllMenuItemWidget);
         connect(resumeAllAction, &QWidgetAction::triggered, this, &StatusBarWidget::onResumeAllSync);
         menu->addAction(resumeAllAction);

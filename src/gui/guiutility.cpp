@@ -38,7 +38,7 @@ using namespace OCC;
 static const QString styleSheetWhiteFile(":/client/resources/styles/stylesheetwhite.qss");
 static const QString styleSheetBlackFile(":/client/resources/styles/stylesheetblack.qss");
 
-Q_LOGGING_CATEGORY(lcUtility, "gui.utility", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcGuiUtility, "gui.utility", QtInfoMsg)
 
 bool Utility::openBrowser(const QUrl &url, QWidget *errorWidgetParent)
 {
@@ -52,7 +52,7 @@ bool Utility::openBrowser(const QUrl &url, QWidget *errorWidgetParent)
                     "URL %1. Maybe no default browser is configured?")
                     .arg(url.toString()));
         }
-        qCWarning(lcUtility) << "QDesktopServices::openUrl failed for" << url;
+        qCWarning(lcGuiUtility) << "QDesktopServices::openUrl failed for" << url;
         return false;
     }
     return true;
@@ -76,7 +76,7 @@ bool Utility::openEmailComposer(const QString &subject, const QString &body, QWi
                     "create a new message. Maybe no default email client is "
                     "configured?"));
         }
-        qCWarning(lcUtility) << "QDesktopServices::openUrl failed for" << url;
+        qCWarning(lcGuiUtility) << "QDesktopServices::openUrl failed for" << url;
         return false;
     }
     return true;
@@ -128,7 +128,7 @@ QIcon Utility::getIconWithColor(const QString &path, const QColor &color)
     pixmap.fill(Qt::transparent);
 
     QPainter painter(&pixmap);
-    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
     scene.render(&painter);
 
     QIcon icon;
@@ -217,7 +217,7 @@ QIcon Utility::getIconMenuWithColor(const QString &path, const QColor &color)
     pixmap.fill(Qt::transparent);
 
     QPainter painter(&pixmap);
-    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform, true);
     scene.render(&painter);
 
     QIcon icon;
@@ -235,7 +235,7 @@ void Utility::setStyle(QApplication *app)
         app->setStyleSheet(StyleSheet);
     }
     else {
-        qCWarning(lcUtility) << "Style sheet file not found!";
+        qCWarning(lcGuiUtility) << "Style sheet file not found!";
     }
 }
 

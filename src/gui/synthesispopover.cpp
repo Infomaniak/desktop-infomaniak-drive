@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "synthesispopover.h"
 #include "menuitemwidget.h"
 #include "menuwidget.h"
-#include "buttonsbarwidget.h"
 #include "bottomwidget.h"
 #include "custompushbutton.h"
 #include "synchronizeditem.h"
@@ -103,6 +102,7 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QRect sysrayIconRect, QWidget
     , _driveSelectionWidget(nullptr)
     , _progressBarWidget(nullptr)
     , _statusBarWidget(nullptr)
+    , _buttonsBarWidget(nullptr)
     , _stackedWidget(nullptr)
     , _defaultSynchronizedPage(nullptr)
     , _notificationsDisabled(NotificationsDisabled::Never)
@@ -400,21 +400,21 @@ void SynthesisPopover::initUI()
     mainVBox->addWidget(_statusBarWidget);
 
     // Buttons bar
-    ButtonsBarWidget *buttonsBarWidget = new ButtonsBarWidget(this);
+    _buttonsBarWidget = new ButtonsBarWidget(this);
 
-    CustomPushButton *synchronizedButton = new CustomPushButton(tr("Synchronized"), buttonsBarWidget);
+    CustomPushButton *synchronizedButton = new CustomPushButton(tr("Synchronized"), _buttonsBarWidget);
     synchronizedButton->setIconPath(":/client/resources/icons/actions/sync.svg");
-    buttonsBarWidget->insertButton(StackedWidget::Synchronized, synchronizedButton);
+    _buttonsBarWidget->insertButton(StackedWidget::Synchronized, synchronizedButton);
 
-    CustomPushButton *favoritesButton = new CustomPushButton(tr("Favorites"), buttonsBarWidget);
+    CustomPushButton *favoritesButton = new CustomPushButton(tr("Favorites"), _buttonsBarWidget);
     favoritesButton->setIconPath(":/client/resources/icons/actions/favorite.svg");
-    buttonsBarWidget->insertButton(StackedWidget::Favorites, favoritesButton);
+    _buttonsBarWidget->insertButton(StackedWidget::Favorites, favoritesButton);
 
-    CustomPushButton *activityButton = new CustomPushButton(tr("Activity"), buttonsBarWidget);
+    CustomPushButton *activityButton = new CustomPushButton(tr("Activity"), _buttonsBarWidget);
     activityButton->setIconPath(":/client/resources/icons/actions/notifications.svg");
-    buttonsBarWidget->insertButton(StackedWidget::Activity, activityButton);
+    _buttonsBarWidget->insertButton(StackedWidget::Activity, activityButton);
 
-    mainVBox->addWidget(buttonsBarWidget);
+    mainVBox->addWidget(_buttonsBarWidget);
 
     // Stacked widget
     _stackedWidget = new QStackedWidget(this);
@@ -455,14 +455,14 @@ void SynthesisPopover::initUI()
     connect(_statusBarWidget, &StatusBarWidget::pauseSync, this, &SynthesisPopover::onPauseSync);
     connect(_statusBarWidget, &StatusBarWidget::resumeSync, this, &SynthesisPopover::onResumeSync);
     connect(_statusBarWidget, &StatusBarWidget::runSync, this, &SynthesisPopover::onRunSync);
-    connect(buttonsBarWidget, &ButtonsBarWidget::buttonToggled, this, &SynthesisPopover::onButtonBarToggled);
+    connect(_buttonsBarWidget, &ButtonsBarWidget::buttonToggled, this, &SynthesisPopover::onButtonBarToggled);
 }
 
 OCC::SyncResult::Status SynthesisPopover::computeAccountStatus(const std::map<QString, SynthesisPopover::FolderInfo> &folderMap)
 {
     OCC::SyncResult::Status status = OCC::SyncResult::Undefined;
 
-    int cnt = folderMap.size();
+    std::size_t cnt = folderMap.size();
 
     if (cnt == 1) {
         FolderInfo folderInfo = folderMap.begin()->second;
@@ -518,7 +518,7 @@ OCC::SyncResult::Status SynthesisPopover::computeAccountStatus(const std::map<QS
         }
         if (errorsSeen > 0) {
             status = OCC::SyncResult::Error;
-        } else if (abortOrPausedSeen > 0 && abortOrPausedSeen == cnt) {
+        } else if (abortOrPausedSeen > 0 && abortOrPausedSeen == int(cnt)) {
             // only if all folders are paused
             status = OCC::SyncResult::Paused;
         } else if (runSeen > 0) {
@@ -614,9 +614,9 @@ const SynchronizedItem *SynthesisPopover::currentSynchronizedItem()
     return nullptr;
 }
 
-const SynthesisPopover::FolderInfo *SynthesisPopover::getActiveFolder(std::map<QString, SynthesisPopover::FolderInfo> folderMap)
+const SynthesisPopover::FolderInfo *SynthesisPopover::getActiveFolder(const std::map<QString, SynthesisPopover::FolderInfo> &folderMap)
 {
-    FolderInfo *folderInfo = (folderMap.empty() ? nullptr : &folderMap.begin()->second);
+    const FolderInfo *folderInfo = (folderMap.empty() ? nullptr : &folderMap.begin()->second);
     for (auto folderInfoIt : folderMap) {
         if (folderInfoIt.second._status == OCC::SyncResult::Status::SyncRunning) {
             folderInfo = &folderInfoIt.second;
@@ -664,8 +664,8 @@ void SynthesisPopover::setSynchronizedDefaultPage(QWidget **widget, QWidget *par
 
         QLabel *iconLabel = new QLabel(parent);
         iconLabel->setAlignment(Qt::AlignHCenter);
-        iconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/document types/file-default.svg")
-                             .pixmap(defaultLogoIconSize, defaultLogoIconSize));
+        iconLabel->setPixmap(QIcon(":/client/resources/icons/document types/file-default.svg")
+                             .pixmap(QSize(defaultLogoIconSize, defaultLogoIconSize)));
         vboxLayout->addWidget(iconLabel);
 
         QLabel *defaultTitleLabel = new QLabel(tr("No recently synchronized files"), parent);
@@ -753,7 +753,7 @@ void SynthesisPopover::onRefreshAccountList()
     else {
         bool currentAccountStillExists = !_currentAccountId.isEmpty()
                 && OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
-        int currentFolderMapSize = 0;
+        std::size_t currentFolderMapSize = 0;
 
         for (OCC::AccountStatePtr accountStatePtr : OCC::AccountManager::instance()->accounts()) {
             QString accountId = accountStatePtr->account()->id();
@@ -785,11 +785,13 @@ void SynthesisPopover::onRefreshAccountList()
             }
 
             // Manage removed folders
-            for (auto folderInfoIt = accountStatusIt->second._folderMap.begin();
-                 folderInfoIt != accountStatusIt->second._folderMap.end();
-                 folderInfoIt++) {
+            auto folderInfoIt = accountStatusIt->second._folderMap.begin();
+            while (folderInfoIt != accountStatusIt->second._folderMap.end()) {
                 if (folderMap.find(folderInfoIt->first) == folderMap.end()) {
-                    accountStatusIt->second._folderMap.erase(folderInfoIt);
+                    folderInfoIt = accountStatusIt->second._folderMap.erase(folderInfoIt);
+                }
+                else {
+                    folderInfoIt++;
                 }
             }
 
@@ -1201,12 +1203,13 @@ void SynthesisPopover::onAccountSelected(QString id)
     if (accountStatusIt != _accountStatusMap.end()) {
         _currentAccountId = id;
 
-        int currentFolderMapSize = accountStatusIt->second._folderMap.size();
+        std::size_t currentFolderMapSize = accountStatusIt->second._folderMap.size();
         _folderButton->setVisible(currentFolderMapSize > 0);
         _folderButton->setWithMenu(currentFolderMapSize > 1);
         _progressBarWidget->setUsedSize(accountStatusIt->second._totalSize, accountStatusIt->second._used);
         refreshStatusBar(accountStatusIt);
         setSynchronizedDefaultPage(&_defaultSynchronizedPage, this);
+        _buttonsBarWidget->selectButton(int(accountStatusIt->second._stackedWidgetPosition));
     }
 }
 
@@ -1253,7 +1256,8 @@ void SynthesisPopover::onButtonBarToggled(int position)
 {
     const auto accountStatusIt = _accountStatusMap.find(_currentAccountId);
     if (accountStatusIt != _accountStatusMap.end()) {
-        switch (position) {
+        accountStatusIt->second._stackedWidgetPosition = StackedWidget(position);
+        switch (accountStatusIt->second._stackedWidgetPosition) {
         case StackedWidget::Synchronized:
             if (accountStatusIt->second._synchronizedListStackPosition) {
                 _stackedWidget->setCurrentIndex(accountStatusIt->second._synchronizedListStackPosition);
@@ -1404,6 +1408,7 @@ SynthesisPopover::AccountStatus::AccountStatus(OCC::AccountState *accountState)
     , _used(0)
     , _status(OCC::SyncResult::Status::Undefined)
     , _folderMap(std::map<QString, FolderInfo>())
+    , _stackedWidgetPosition(StackedWidget::Synchronized)
     , _synchronizedListWidget(nullptr)
     , _currentSynchronizedWidgetItem(nullptr)
     , _synchronizedListStackPosition(StackedWidget::Synchronized)
