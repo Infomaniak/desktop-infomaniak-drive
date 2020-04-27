@@ -307,7 +307,7 @@ void ownCloudGui::slotComputeOverallSyncStatus()
     QIcon statusIcon = Theme::instance()->syncStateIcon(iconStatus, true, contextMenuVisible(), app->getAlert());
     _tray->setIcon(statusIcon);
 
-    _actionShowErrors->setEnabled(_settingsDialog ? _settingsDialog->getErrorCount() > 0 : false);
+    _actionShowErrors->setVisible(_settingsDialog ? _settingsDialog->getErrorCount() > 0 : false);
 
     // create the tray blob message, check if we have an defined state
     if (map.count() > 0) {
@@ -800,7 +800,7 @@ void ownCloudGui::slotFolderOpenAction(const QString &alias)
 void ownCloudGui::setupActions()
 {
     _actionShowErrors = new QAction(Theme::instance()->stateErrorIcon(), tr("See synchronization errors"), this);
-    _actionShowErrors->setEnabled(false);
+    _actionShowErrors->setVisible(false);
     _actionStatus = new QAction(tr("Unknown status"), this);
     _actionStatus->setEnabled(false);
     _actionSettings = new QAction(tr("Settings..."), this);
