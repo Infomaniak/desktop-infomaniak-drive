@@ -30,6 +30,7 @@ static const int vMargin = 20;
 
 ButtonsBarWidget::ButtonsBarWidget(QWidget *parent)
     : QWidget(parent)
+    , _position(0)
     , _backgroundColor(QColor())
     , _hboxLayout(nullptr)
 {
@@ -77,6 +78,7 @@ void ButtonsBarWidget::onToggle(bool checked)
         int position = 0;
         for (auto btn : buttonsList) {
             if (btn == sender()) {
+                _position = position;
                 emit buttonToggled(position);
             }
             else {

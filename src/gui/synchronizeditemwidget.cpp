@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QPainter>
 #include <QPainterPath>
 #include <QScreen>
+#include <QGraphicsScene>
 #include <QGraphicsSvgItem>
 #include <QWidgetAction>
 
@@ -268,32 +269,29 @@ QString SynchronizedItemWidget::getStatusIconPathFromStatus(OCC::SyncFileItem::S
 
 QIcon SynchronizedItemWidget::getIconWithStatus(const QString &filePath, OCC::SyncFileItem::Status status)
 {
-    QIcon iconWithStatus;
+    QGraphicsSvgItem *fileItem = new QGraphicsSvgItem(getFileIconPathFromFileName(filePath));
+    QGraphicsSvgItem *statusItem = new QGraphicsSvgItem(getStatusIconPathFromStatus(status));
+
+    QGraphicsScene scene;
+    scene.setSceneRect(QRectF(QPointF(0, 0), _fileIconSize));
+
+    scene.addItem(fileItem);
+    fileItem->setPos(QPointF(statusIconWidth / 2, statusIconWidth / 2));
+
+    scene.addItem(statusItem);
+    statusItem->setPos(QPointF(_fileIconSize.width() - statusIconWidth, _fileIconSize.width() - statusIconWidth));
+    qreal statusItemScale = statusIconWidth / statusItem->boundingRect().width();
+    statusItem->setScale(statusItemScale);
 
     qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-
-    QPixmap filePixmap(getFileIconPathFromFileName(filePath));
-    QRectF fileRect(QRectF(QPointF((statusIconWidth / 2) * ratio, (statusIconWidth / 2) * ratio),
-                           QSizeF((_fileIconSize.width() - statusIconWidth) * ratio,
-                                  (_fileIconSize.height() - statusIconWidth) * ratio)));
-
-    QPixmap pixmap(QSize(_fileIconSize.width() * ratio, _fileIconSize.height() * ratio));
+    QPixmap pixmap(QSize(scene.width() * ratio, scene.height() * ratio));
     pixmap.fill(Qt::transparent);
 
     QPainter painter(&pixmap);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawPixmap(fileRect, filePixmap, QRectF());
+    scene.render(&painter);
 
-    // Add status icon
-    QString statusIconPath = getStatusIconPathFromStatus(status);
-    if (!statusIconPath.isEmpty()) {
-        QPixmap statusPixmap(statusIconPath);
-        QRectF statusRect(QRectF(QPointF((_fileIconSize.width() - statusIconWidth) * ratio,
-                                         (_fileIconSize.height() - statusIconWidth) * ratio),
-                                 QSizeF(statusIconWidth * ratio, statusIconWidth * ratio)));
-        painter.drawPixmap(statusRect, statusPixmap, QRectF());
-    }
-
+    QIcon iconWithStatus;
     iconWithStatus.addPixmap(pixmap);
 
     return iconWithStatus;

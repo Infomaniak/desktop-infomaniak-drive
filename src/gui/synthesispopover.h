@@ -60,10 +60,11 @@ public:
     static const std::map<NotificationsDisabled, QString> _notificationsDisabledMap;
     static const std::map<NotificationsDisabled, QString> _notificationsDisabledForPeriodMap;
 
-    explicit SynthesisPopover(bool debugMode, QRect sysrayIconRect, QWidget *parent = nullptr);
+    explicit SynthesisPopover(bool debugMode, QWidget *parent = nullptr);
 
     inline QColor backgroundMainColor() const { return _backgroundMainColor; }
     inline void setBackgroundMainColor(const QColor &value) { _backgroundMainColor = value; }
+    void setPosition(const QRect &sysTrayIconRect);
 
 signals:
     void refreshAccountList();

@@ -136,6 +136,7 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
         } else {
 #ifdef KDRIVE_V2
             if (_synthesisPopover) {
+                _synthesisPopover->setPosition(_tray->geometry());
                 raiseDialog(_synthesisPopover.get());
             }
 #else
@@ -546,7 +547,7 @@ void ownCloudGui::setupPopover()
         return;
     }
 
-    _synthesisPopover.reset(new KDC::SynthesisPopover(_app->debugMode(), _tray->geometry()));
+    _synthesisPopover.reset(new KDC::SynthesisPopover(_app->debugMode()));
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openParametersDialog, this, &ownCloudGui::slotShowSettings);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openShareDialogPublicLinks, this, &ownCloudGui::slotShowShareDialogPublicLinks);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openHelp, this, &ownCloudGui::slotHelp);

@@ -54,6 +54,8 @@ ProgressBarWidget::ProgressBarWidget(QWidget *parent)
 void ProgressBarWidget::setUsedSize(qint64 totalSize, qint64 size)
 {
     _totalSize = totalSize;
+    _progressBar->setVisible(true);
+    _progressLabel->setVisible(true);
     if (_totalSize > 0) {
         int pct = size <= _totalSize ? qRound(double(size) / double(_totalSize) * 100.0) : 100;
         _progressBar->setValue(pct);
@@ -63,7 +65,7 @@ void ProgressBarWidget::setUsedSize(qint64 totalSize, qint64 size)
         // -1 => not computed; -2 => unknown; -3 => unlimited
         if (_totalSize == 0 || _totalSize == -1) {
             _progressBar->setValue(0);
-            _progressLabel->setText(tr("No storage usage information available"));
+            _progressLabel->setText(QString());
         } else {
             _progressBar->setValue(0);
             _progressLabel->setText(tr("%1 in use").arg(OCC::Utility::octetsToString(size)));
@@ -73,7 +75,9 @@ void ProgressBarWidget::setUsedSize(qint64 totalSize, qint64 size)
 
 void ProgressBarWidget::reset()
 {
-    setUsedSize(0, 0);
+    _totalSize = 0;
+    _progressBar->setVisible(false);
+    _progressLabel->setVisible(false);
 }
 
 }

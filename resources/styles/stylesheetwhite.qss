@@ -66,15 +66,15 @@ KDC--SynthesisPopover QLabel#defaultTitleLabel
 {
     color: #444444;
     font-family: "Suisse Int'l";
-    font-weight: medium;
+    font-weight: 450; /* medium */
     font-size: 14px;
 }
 
 KDC--SynthesisPopover QLabel#defaultTextLabel
 {
-    color: #666666;
+    color: #444444;
     font-family: "Suisse Int'l";
-    font-weight: normal;
+    font-weight: 350; /* normal */
     font-size: 14px;
 }
 
@@ -95,7 +95,7 @@ KDC--CustomToolTip QLabel#tooltipLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: normal;
+    font-weight: 350; /* normal */
     font-size: 14px;
 }
 
@@ -144,7 +144,7 @@ KDC--MenuItemWidget QLabel#menuItemLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: normal;
+    font-weight: 350; /* normal */
     font-size: 14px;
 }
 
@@ -178,6 +178,7 @@ KDC--DriveSelectionWidget
     qproperty-down_icon_size: 12px;
     qproperty-down_icon_color: #333333;
     qproperty-menu_right_icon_size: 18px;
+    qproperty-add_icon_color: #9F9F9F;
 }
 
 KDC--DriveSelectionWidget:hover
@@ -189,7 +190,7 @@ KDC--DriveSelectionWidget QLabel#driveTextLabel
 {
     color: #333333;
     font-family: "Suisse Int'l";
-    font-weight: bold;
+    font-weight: 650; /* bold */
     font-size: 18px;
 }
 
@@ -218,7 +219,7 @@ KDC--ProgressBarWidget QLabel#progressLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: medium;
+    font-weight: 450; /* medium */
     font-size: 13px;
 }
 
@@ -245,7 +246,7 @@ KDC--StatusBarWidget QLabel#statusLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: medium;
+    font-weight: 450; /* medium */
     font-size: 13px;
 }
 
@@ -260,7 +261,7 @@ KDC--CustomPushButton
     min-height: 30px;
     max-height: 30px;
     font-family: "Suisse Int'l";
-    font-weight: semibold;
+    font-weight: 550; /* semibold */
     font-size: 14px;
     border: 0px;
     border-radius: 15px;
@@ -305,7 +306,7 @@ KDC--SynchronizedItemWidget QLabel#fileNameLabel
 {
     color: #444444;
     font-family: "Suisse Int'l";
-    font-weight: medium;
+    font-weight: 450; /* medium */
     font-size: 13px;
 }
 
@@ -313,7 +314,7 @@ KDC--SynchronizedItemWidget QLabel#fileDateLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
-    font-weight: normal;
+    font-weight: 350; /* normal */
     font-size: 13px;
 }
 

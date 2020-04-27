@@ -43,11 +43,13 @@ public:
 
     void insertButton(int position, CustomPushButton *button);
     void selectButton(int position);
+    inline int position() const { return _position; }
 
 signals:
     void buttonToggled(int position);
 
 private:
+    int _position;
     QColor _backgroundColor;
     QHBoxLayout *_hboxLayout;
     QList<CustomPushButton*> buttonsList;

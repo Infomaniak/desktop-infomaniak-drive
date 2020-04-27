@@ -30,7 +30,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "getorcreatepubliclinkshare.h"
 #include "configfile.h"
 
-#define CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
 #include <iostream>
 #endif
@@ -90,10 +89,10 @@ const std::map<SynthesisPopover::NotificationsDisabled, QString> SynthesisPopove
 
 Q_LOGGING_CATEGORY(lcSynthesisPopover, "synthesispopover", QtInfoMsg)
 
-SynthesisPopover::SynthesisPopover(bool debugMode, QRect sysrayIconRect, QWidget *parent)
+SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
     : QDialog(parent)
     , _debugMode(debugMode)
-    , _sysTrayIconRect(sysrayIconRect)
+    , _sysTrayIconRect(QRect())
     , _currentAccountId(QString())
     , _backgroundMainColor(QColor())
     , _folderButton(nullptr)
@@ -121,6 +120,11 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QRect sysrayIconRect, QWidget
     connect(this, &SynthesisPopover::refreshAccountList, this, &SynthesisPopover::onRefreshAccountList);
     connect(this, &SynthesisPopover::updateProgress, this, &SynthesisPopover::onUpdateProgress);
     connect(this, &SynthesisPopover::itemCompleted, this, &SynthesisPopover::onItemCompleted);
+}
+
+void SynthesisPopover::setPosition(const QRect &sysTrayIconRect)
+{
+    _sysTrayIconRect = sysTrayIconRect;
 }
 
 void SynthesisPopover::changeEvent(QEvent *event)
@@ -724,7 +728,7 @@ void SynthesisPopover::setSynchronizedDefaultPage(QWidget **widget, QWidget *par
         }
         else {
             QUrl defaultFolderUrl = folderUrl(folderId, QString());
-            const QString linkStyle = QString("color:#0098FF; text-decoration:none;");
+            const QString linkStyle = QString("color:#0098FF; font-weight: 450; text-decoration:none;");
             defaultTextLabel->setText(tr("You can synchronize files <a style=\"%1\" href=\"%2\">from your computer</a>"
                                          " or on <a style=\"%1\" href=\"%3\">drive.infomaniak.com</a>.")
                                       .arg(linkStyle).arg(defaultFolderUrl.toString()).arg(accountUrl.toString()));
@@ -746,6 +750,9 @@ void SynthesisPopover::onRefreshAccountList()
     if (OCC::AccountManager::instance()->accounts().isEmpty()) {
         _currentAccountId.clear();
         _accountStatusMap.clear();
+        _folderButton->setVisible(false);
+        _folderButton->setWithMenu(false);
+        _webviewButton->setVisible(false);
         _driveSelectionWidget->clear();
         _progressBarWidget->reset();
         _statusBarWidget->reset();
@@ -813,22 +820,25 @@ void SynthesisPopover::onRefreshAccountList()
         }
 
         // Manage removed accounts
-        for (auto accountStatusIt = _accountStatusMap.begin(); accountStatusIt != _accountStatusMap.end(); accountStatusIt++) {
+        auto accountStatusIt = _accountStatusMap.begin();
+        while (accountStatusIt != _accountStatusMap.end()) {
             if (!OCC::AccountManager::instance()->getAccountFromId(accountStatusIt->first)) {
-                _accountStatusMap.erase(accountStatusIt);
+                _driveSelectionWidget->removeDrive(accountStatusIt->first);
+                accountStatusIt = _accountStatusMap.erase(accountStatusIt);
+            }
+            else {
+                accountStatusIt++;
             }
         }
 
-        // Update widgets
         _folderButton->setVisible(currentFolderMapSize > 0);
         _folderButton->setWithMenu(currentFolderMapSize > 1);
+        _webviewButton->setVisible(currentFolderMapSize > 0);
         _statusBarWidget->setSeveralDrives(_accountStatusMap.size() > 1);
         _driveSelectionWidget->selectDrive(_currentAccountId);
         refreshStatusBar(_currentAccountId);
     }
 
-    _folderButton->setEnabled(!_currentAccountId.isEmpty());
-    _webviewButton->setEnabled(!_currentAccountId.isEmpty());
     setSynchronizedDefaultPage(&_defaultSynchronizedPage, this);
 }
 
@@ -912,8 +922,10 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                     accountStatusIt->second._synchronizedListWidget->setSpacing(0);
                     connect(accountStatusIt->second._synchronizedListWidget, &QListWidget::currentItemChanged,
                             this, &SynthesisPopover::onCurrentSynchronizedWidgetItemChanged);
-                    accountStatusIt->second._synchronizedListStackPosition = _stackedWidget->addWidget(accountStatusIt->second._synchronizedListWidget);
-                    if (_currentAccountId == accountStatusIt->first) {
+                    accountStatusIt->second._synchronizedListStackPosition =
+                            _stackedWidget->addWidget(accountStatusIt->second._synchronizedListWidget);
+                    if (_currentAccountId == accountStatusIt->first
+                            && _buttonsBarWidget->position() == StackedWidget::Synchronized) {
                         _stackedWidget->setCurrentIndex(accountStatusIt->second._synchronizedListStackPosition);
                     }
                 }
@@ -1257,32 +1269,36 @@ void SynthesisPopover::onButtonBarToggled(int position)
     const auto accountStatusIt = _accountStatusMap.find(_currentAccountId);
     if (accountStatusIt != _accountStatusMap.end()) {
         accountStatusIt->second._stackedWidgetPosition = StackedWidget(position);
-        switch (accountStatusIt->second._stackedWidgetPosition) {
-        case StackedWidget::Synchronized:
-            if (accountStatusIt->second._synchronizedListStackPosition) {
-                _stackedWidget->setCurrentIndex(accountStatusIt->second._synchronizedListStackPosition);
-            }
-            else {
-                _stackedWidget->setCurrentIndex(StackedWidget::Synchronized);
-            }
-            break;
-        case StackedWidget::Favorites:
-            if (accountStatusIt->second._favoritesListStackPosition) {
-                _stackedWidget->setCurrentIndex(accountStatusIt->second._favoritesListStackPosition);
-            }
-            else {
-                _stackedWidget->setCurrentIndex(StackedWidget::Favorites);
-            }
-            break;
-        case StackedWidget::Activity:
-            if (accountStatusIt->second._activityListStackPosition) {
-                _stackedWidget->setCurrentIndex(accountStatusIt->second._activityListStackPosition);
-            }
-            else {
-                _stackedWidget->setCurrentIndex(StackedWidget::Activity);
-            }
-            break;
+    }
+
+    switch (position) {
+    case StackedWidget::Synchronized:
+        if (accountStatusIt != _accountStatusMap.end()
+                && accountStatusIt->second._synchronizedListStackPosition) {
+            _stackedWidget->setCurrentIndex(accountStatusIt->second._synchronizedListStackPosition);
         }
+        else {
+            _stackedWidget->setCurrentIndex(StackedWidget::Synchronized);
+        }
+        break;
+    case StackedWidget::Favorites:
+        if (accountStatusIt != _accountStatusMap.end()
+                && accountStatusIt->second._favoritesListStackPosition) {
+            _stackedWidget->setCurrentIndex(accountStatusIt->second._favoritesListStackPosition);
+        }
+        else {
+            _stackedWidget->setCurrentIndex(StackedWidget::Favorites);
+        }
+        break;
+    case StackedWidget::Activity:
+        if (accountStatusIt != _accountStatusMap.end() &&
+                accountStatusIt->second._activityListStackPosition) {
+            _stackedWidget->setCurrentIndex(accountStatusIt->second._activityListStackPosition);
+        }
+        else {
+            _stackedWidget->setCurrentIndex(StackedWidget::Activity);
+        }
+        break;
     }
 }
 

@@ -34,7 +34,6 @@ static const int vMargin = 0;
 static const int boxHMargin= 10;
 static const int boxVMargin = 5;
 static const int boxSpacing = 10;
-static const char noDrive[] = "No drive";
 static const char driveIdProperty[] = "driveId";
 static const int driveNameMaxSize = 30;
 
@@ -63,6 +62,7 @@ DriveSelectionWidget::DriveSelectionWidget(QWidget *parent)
     _driveTextLabel = new QLabel(this);
     _driveTextLabel->setObjectName("driveTextLabel");
     hbox->addWidget(_driveTextLabel);
+    hbox->addStretch();
 
     _downIconLabel = new QLabel(this);
     hbox->addWidget(_downIconLabel);
@@ -71,6 +71,7 @@ DriveSelectionWidget::DriveSelectionWidget(QWidget *parent)
     connect(this, &DriveSelectionWidget::downIconSizeChanged, this, &DriveSelectionWidget::onDownIconSizeChanged);
     connect(this, &DriveSelectionWidget::downIconColorChanged, this, &DriveSelectionWidget::onDownIconColorChanged);
     connect(this, &DriveSelectionWidget::clicked, this, &DriveSelectionWidget::onClick);
+    connect(this, &DriveSelectionWidget::addIconColorChanged, this, &DriveSelectionWidget::onAddIconColorChanged);
 }
 
 QSize DriveSelectionWidget::sizeHint() const
@@ -87,7 +88,9 @@ void DriveSelectionWidget::clear()
 {
     _currentDriveId.clear();
     _driveMap.clear();
-    _driveTextLabel->setText(tr(noDrive));
+    setAddDriveIcon();
+    _driveTextLabel->setText(tr("Add a kDrive"));
+    _downIconLabel->setVisible(false);
 }
 
 void DriveSelectionWidget::addOrUpdateDrive(QString id, const QString &name, const QColor &color, OCC::SyncResult::Status status)
@@ -99,6 +102,23 @@ void DriveSelectionWidget::addOrUpdateDrive(QString id, const QString &name, con
     _driveMap[id] = driveInfo;
 }
 
+void DriveSelectionWidget::removeDrive(QString id)
+{
+    auto driveInfoIt = _driveMap.find(id);
+    if (driveInfoIt != _driveMap.end()) {
+        _driveMap.erase(driveInfoIt);
+
+        // Select 1st drive
+        driveInfoIt = _driveMap.begin();
+        if (driveInfoIt != _driveMap.end()) {
+            selectDrive(driveInfoIt->first);
+        }
+        else {
+            clear();
+        }
+    }
+}
+
 void DriveSelectionWidget::selectDrive(QString id)
 {
     if (_driveMap.find(id) != _driveMap.end()) {
@@ -107,6 +127,7 @@ void DriveSelectionWidget::selectDrive(QString id)
             driveName = driveName.left(driveNameMaxSize)  + "...";
         }
         _driveTextLabel->setText(driveName);
+        _downIconLabel->setVisible(true);
         setDriveIcon(_driveMap[id]._color);
         if (_currentDriveId != id) {
             _currentDriveId = id;
@@ -132,33 +153,43 @@ void DriveSelectionWidget::onDownIconColorChanged()
     setDownIcon();
 }
 
+void DriveSelectionWidget::onAddIconColorChanged()
+{
+
+}
+
 void DriveSelectionWidget::onClick(bool checked)
 {
     Q_UNUSED(checked)
 
-    MenuWidget *menu = new MenuWidget(this);
+    if (_driveMap.size() > 0) {
+        MenuWidget *menu = new MenuWidget(this);
 
-    for (auto driveMapElt : _driveMap) {
-        if (driveMapElt.first != _currentDriveId) {
-            QWidgetAction *selectDriveAction = new QWidgetAction(this);
-            selectDriveAction->setProperty(driveIdProperty, driveMapElt.first);
-            MenuItemWidget *driveMenuItemWidget = new MenuItemWidget(driveMapElt.second._name);
-            driveMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg", driveMapElt.second._color);
-            driveMenuItemWidget->setRightIcon(OCC::Theme::instance()->syncStateIcon(driveMapElt.second._status), _menuRightIconSize);
-            selectDriveAction->setDefaultWidget(driveMenuItemWidget);
-            connect(selectDriveAction, &QWidgetAction::triggered, this, &DriveSelectionWidget::onSelectDriveActionTriggered);
-            menu->addAction(selectDriveAction);
+        for (auto driveMapElt : _driveMap) {
+            if (driveMapElt.first != _currentDriveId) {
+                QWidgetAction *selectDriveAction = new QWidgetAction(this);
+                selectDriveAction->setProperty(driveIdProperty, driveMapElt.first);
+                MenuItemWidget *driveMenuItemWidget = new MenuItemWidget(driveMapElt.second._name);
+                driveMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg", driveMapElt.second._color);
+                driveMenuItemWidget->setRightIcon(OCC::Theme::instance()->syncStateIcon(driveMapElt.second._status), _menuRightIconSize);
+                selectDriveAction->setDefaultWidget(driveMenuItemWidget);
+                connect(selectDriveAction, &QWidgetAction::triggered, this, &DriveSelectionWidget::onSelectDriveActionTriggered);
+                menu->addAction(selectDriveAction);
+            }
         }
+
+        QWidgetAction *addDriveAction = new QWidgetAction(this);
+        MenuItemWidget *addDriveMenuItemWidget = new MenuItemWidget(tr("Add a kDrive"));
+        addDriveMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/add.svg");
+        addDriveAction->setDefaultWidget(addDriveMenuItemWidget);
+        connect(addDriveAction, &QWidgetAction::triggered, this, &DriveSelectionWidget::onAddDriveActionTriggered);
+        menu->addAction(addDriveAction);
+
+        menu->exec(QWidget::mapToGlobal(rect().bottomLeft()));
     }
-
-    QWidgetAction *addDriveAction = new QWidgetAction(this);
-    MenuItemWidget *addDriveMenuItemWidget = new MenuItemWidget(tr("Add a kDrive"));
-    addDriveMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/add.svg");
-    addDriveAction->setDefaultWidget(addDriveMenuItemWidget);
-    connect(addDriveAction, &QWidgetAction::triggered, this, &DriveSelectionWidget::onAddDriveActionTriggered);
-    menu->addAction(addDriveAction);
-
-    menu->exec(QWidget::mapToGlobal(rect().bottomLeft()));
+    else {
+        onAddDriveActionTriggered();
+    }
 }
 
 void DriveSelectionWidget::onSelectDriveActionTriggered(bool checked)
@@ -180,6 +211,14 @@ void DriveSelectionWidget::setDriveIcon(const QColor &color)
 {
     if (_driveIconLabel) {
         _driveIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/drive.svg", color).
+                                   pixmap(_driveIconSize));
+    }
+}
+
+void DriveSelectionWidget::setAddDriveIcon()
+{
+    if (_driveIconLabel && _driveIconSize != QSize() && _addIconColor != QColor()) {
+        _driveIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/add.svg", _addIconColor).
                                    pixmap(_driveIconSize));
     }
 }
