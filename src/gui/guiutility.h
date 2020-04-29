@@ -24,6 +24,8 @@
 #include <QWidget>
 
 #include "common/pinstate.h"
+#include "syncfileitem.h"
+#include "syncresult.h"
 
 namespace OCC {
 namespace Utility {
@@ -66,6 +68,13 @@ namespace Utility {
     bool isPointInSystray(QScreen *screen, const QPoint &point);
 
     void setStyle(QApplication *app);
+
+    QString getFileStatusIconPath(SyncFileItem::Status status);
+    QString getFolderStatusIconPath(bool paused, OCC::SyncResult::Status status, qint64 totalFiles);
+    QString getFolderStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status,
+                                    qint64 currentFile, qint64 totalFiles, qint64 estimatedRemainingTime);
+    QString getAccountStatusIconPath(bool paused, OCC::SyncResult::Status status);
+    QString getAccountStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status);
 
 } // namespace Utility
 } // namespace OCC

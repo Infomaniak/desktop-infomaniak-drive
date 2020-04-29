@@ -36,8 +36,8 @@ class StatusBarWidget : public HalfRoundRectWidget
 public:
     explicit StatusBarWidget(QWidget *parent = nullptr);
 
-    void setStatus(bool paused, OCC::SyncResult::Status status, qint64 currentFile = 0,
-                   qint64 totalFiles = 0, qint64 estimatedRemainingTime = 0);
+    void setStatus(bool paused, bool unresolvedConflicts, OCC::SyncResult::Status status,
+                   qint64 currentFile = 0, qint64 totalFiles = 0, qint64 estimatedRemainingTime = 0);
     void setSeveralDrives(bool severalDrives);
     void reset();
 

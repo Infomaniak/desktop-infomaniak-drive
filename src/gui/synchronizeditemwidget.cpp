@@ -240,37 +240,10 @@ QString SynchronizedItemWidget::getFileIconPathFromFileName(const QString &fileN
     return QString(":/client/resources/icons/document types/file-default.svg");
 }
 
-QString SynchronizedItemWidget::getStatusIconPathFromStatus(OCC::SyncFileItem::Status status) const
-{
-    QString path;
-    switch (status) {
-    case OCC::SyncFileItem::NoStatus:
-        path = QString();
-        break;
-    case OCC::SyncFileItem::FatalError:
-    case OCC::SyncFileItem::NormalError:
-    case OCC::SyncFileItem::SoftError:
-    case OCC::SyncFileItem::DetailError:
-    case OCC::SyncFileItem::BlacklistedError:
-        path = QString(":/client/resources/icons/statuts/error-sync.svg");
-        break;
-    case OCC::SyncFileItem::Success:
-        path = QString(":/client/resources/icons/statuts/success.svg");
-        break;
-    case OCC::SyncFileItem::Conflict:
-    case OCC::SyncFileItem::FileIgnored:
-    case OCC::SyncFileItem::Restoration:
-        path = QString(":/client/resources/icons/statuts/warning.svg");
-        break;
-    }
-
-    return path;
-}
-
 QIcon SynchronizedItemWidget::getIconWithStatus(const QString &filePath, OCC::SyncFileItem::Status status)
 {
     QGraphicsSvgItem *fileItem = new QGraphicsSvgItem(getFileIconPathFromFileName(filePath));
-    QGraphicsSvgItem *statusItem = new QGraphicsSvgItem(getStatusIconPathFromStatus(status));
+    QGraphicsSvgItem *statusItem = new QGraphicsSvgItem(OCC::Utility::getFileStatusIconPath(status));
 
     QGraphicsScene scene;
     scene.setSceneRect(QRectF(QPointF(0, 0), _fileIconSize));

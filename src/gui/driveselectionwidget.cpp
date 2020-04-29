@@ -93,13 +93,9 @@ void DriveSelectionWidget::clear()
     _downIconLabel->setVisible(false);
 }
 
-void DriveSelectionWidget::addOrUpdateDrive(QString id, const QString &name, const QColor &color, OCC::SyncResult::Status status)
+void DriveSelectionWidget::addOrUpdateDrive(QString id, const AccountInfo &accountInfo)
 {
-    DriveInfo driveInfo;
-    driveInfo._name = name;
-    driveInfo._color = color;
-    driveInfo._status = status;
-    _driveMap[id] = driveInfo;
+    _driveMap[id] = accountInfo;
 }
 
 void DriveSelectionWidget::removeDrive(QString id)
@@ -155,7 +151,7 @@ void DriveSelectionWidget::onDownIconColorChanged()
 
 void DriveSelectionWidget::onAddIconColorChanged()
 {
-
+    setAddDriveIcon();
 }
 
 void DriveSelectionWidget::onClick(bool checked)
@@ -171,7 +167,9 @@ void DriveSelectionWidget::onClick(bool checked)
                 selectDriveAction->setProperty(driveIdProperty, driveMapElt.first);
                 MenuItemWidget *driveMenuItemWidget = new MenuItemWidget(driveMapElt.second._name);
                 driveMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg", driveMapElt.second._color);
-                driveMenuItemWidget->setRightIcon(OCC::Theme::instance()->syncStateIcon(driveMapElt.second._status), _menuRightIconSize);
+                driveMenuItemWidget->setRightIcon(
+                            QIcon(OCC::Utility::getAccountStatusIconPath(driveMapElt.second._paused, driveMapElt.second._status)),
+                            _menuRightIconSize);
                 selectDriveAction->setDefaultWidget(driveMenuItemWidget);
                 connect(selectDriveAction, &QWidgetAction::triggered, this, &DriveSelectionWidget::onSelectDriveActionTriggered);
                 menu->addAction(selectDriveAction);

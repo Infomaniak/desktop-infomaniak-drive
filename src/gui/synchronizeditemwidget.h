@@ -101,8 +101,7 @@ private:
     bool event(QEvent *event) override;
 
     QString getFileIconPathFromFileName(const QString &fileName) const;
-    QString getStatusIconPathFromStatus(OCC::SyncFileItem::Status status) const;
-    QIcon getIconWithStatus(const QString &fileName, OCC::SyncFileItem::Status status);
+    QIcon getIconWithStatus(const QString &filePath, OCC::SyncFileItem::Status status);
     void setDirectionIcon();
 
 private slots:

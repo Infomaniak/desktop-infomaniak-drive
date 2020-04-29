@@ -121,15 +121,23 @@ set(client_SRCS
     getorcreatepubliclinkshare.cpp
 
     # KDrive V2
+    accountinfo.cpp
+    accountitem.cpp
+    accountitemwidget.cpp
+    adddrivewidget.cpp
     bottomwidget.cpp
     buttonsbarwidget.cpp
     custompushbutton.cpp
     customtoolbutton.cpp
     customtooltip.cpp
+    driveswidget.cpp
     driveselectionwidget.cpp
+    folderinfo.cpp
     halfroundrectwidget.cpp
+    mainmenubarwidget.cpp
     menuitemwidget.cpp
     menuwidget.cpp
+    parametersdialog.cpp
     progressbarwidget.cpp
     statusbarwidget.cpp
     synchronizeditem.cpp

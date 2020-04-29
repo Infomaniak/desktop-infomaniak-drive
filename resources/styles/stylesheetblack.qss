@@ -9,10 +9,10 @@ QInputDialog QLabel
 
 KDC--SynthesisPopover
 {
-    min-width: 420px;
-    max-width: 420px;
-    min-height: 570px;
-    max-height: 570px;
+    min-width: 440px;
+    max-width: 440px;
+    min-height: 575px;
+    max-height: 575px;
     qproperty-background_main_color: #35393D;
 }
 
@@ -76,6 +76,93 @@ KDC--SynthesisPopover QLabel#defaultTextLabel
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 14px;
+}
+
+/*************************/
+/* KDC--ParametersDialog */
+/*************************/
+
+KDC--ParametersDialog
+{
+    background-color: #35393D;
+    min-width: 585px;
+    max-width: 585px;
+    min-height: 480px;
+    max-height: 480px;
+    border-width: 0px;
+    corner-radius: 10px;
+}
+
+KDC--ParametersDialog QScrollBar
+{
+    background-color: #1A1A1C;
+    border: 0px;
+    width: 3px;
+    margin: 0px 0px 0px 0px;
+}
+
+KDC--ParametersDialog QScrollBar::handle
+{
+    background-color: #666666;
+    min-height: 20px;
+}
+
+KDC--ParametersDialog QScrollBar::add-line
+{
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+KDC--ParametersDialog QScrollBar::sub-line
+{
+    height: 0px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+KDC--ParametersDialog QStackedWidget
+{
+    background-color: #1A1A1C;
+    border: 0px;
+}
+
+KDC--ParametersDialog QLabel#defaultTitleLabel
+{
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 14px;
+}
+
+KDC--ParametersDialog QLabel#defaultTextLabel
+{
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+}
+
+/*********************/
+/* KDC--DrivesWidget */
+/*********************/
+
+KDC--DrivesWidget
+{
+    background-color: transparent;
+    border: 0px;
+}
+
+KDC--DrivesWidget QListWidget
+{
+    background-color: transparent;
+    border-width: 0px;
+}
+
+KDC--DrivesWidget QListWidget::item
+{
+    min-height: 90px;
+    max-height: 90px;
 }
 
 /**********************/
@@ -161,6 +248,11 @@ KDC--CustomToolButton
     qproperty-icon_color_hover: #FFFFFF;
 }
 
+KDC--CustomToolButton#helpButton
+{
+    qproperty-base_icon_size: 24px;
+}
+
 /*****************************/
 /* KDC--DriveSelectionWidget */
 /*****************************/
@@ -192,6 +284,36 @@ KDC--DriveSelectionWidget QLabel#driveTextLabel
     font-family: "Suisse Int'l";
     font-weight: 650; /* bold */
     font-size: 18px;
+}
+
+/***********************/
+/* KDC--AddDriveWidget */
+/***********************/
+
+KDC--AddDriveWidget
+{
+    background-color: transparent;
+    min-height: 44px;
+    max-height: 44px;
+    border: 0px;
+    border-radius: 22px;
+    padding-left: 5px;
+    padding-right: 5px;
+    qproperty-add_icon_size: 24px;
+    qproperty-add_icon_color: #0098FF;
+}
+
+KDC--AddDriveWidget:hover
+{
+    background-color: #35393D;
+}
+
+KDC--AddDriveWidget QLabel#addTextLabel
+{
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 14px;
 }
 
 /**************************/
@@ -248,6 +370,38 @@ KDC--StatusBarWidget QLabel#statusLabel
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 13px;
+}
+
+/************************/
+/* KDC--MainMenuBarWidget */
+/************************/
+
+KDC--MainMenuBarWidget
+{
+    min-height: 65px;
+    max-height: 65px;
+}
+
+KDC--MainMenuBarWidget QPushButton
+{
+    background-color: transparent;
+    margin: 0px 0px 0px 0px;
+    color: #B8B8B8;
+    font-family: "Suisse Int'l";
+    font-weight: 550; /* semibold */
+    font-size: 14px;
+    text-decoration: none;
+}
+
+KDC--MainMenuBarWidget QPushButton:checked
+{
+    background-color: transparent;
+    margin: 0px 0px 0px 0px;
+    color: #0098FF;
+    font-family: "Suisse Int'l";
+    font-weight: 550; /* semibold */
+    font-size: 14px;
+    text-decoration: underline;
 }
 
 /*************************/
@@ -313,6 +467,36 @@ KDC--SynchronizedItemWidget QLabel#fileNameLabel
 KDC--SynchronizedItemWidget QLabel#fileDateLabel
 {
     color: #C0C0C0;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 13px;
+}
+
+/**************************/
+/* KDC--AccountItemWidget */
+/**************************/
+
+KDC--AccountItemWidget
+{
+    qproperty-account_icon_size: 50px;
+    qproperty-account_icon_color: #F5F5F5;
+    qproperty-drive_icon_size: 24px;
+    qproperty-status_icon_size: 15px;
+    qproperty-background_color: #1A1A1C;
+    qproperty-background_color_selection: #35393D;
+}
+
+KDC--AccountItemWidget QLabel#accountNameLabel
+{
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 14px;
+}
+
+KDC--AccountItemWidget QLabel#statusLabel
+{
+    color: #B8B8B8;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 13px;

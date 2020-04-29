@@ -19,35 +19,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
+#include "accountinfo.h"
+#include "syncresult.h"
+
 #include <QColor>
-#include <QHBoxLayout>
-#include <QPaintEvent>
-#include <QWidget>
+#include <QString>
 
 namespace KDC {
 
-class HalfRoundRectWidget : public QWidget
+class AccountItem
 {
-    Q_OBJECT
-
-    Q_PROPERTY(QColor bottom_corners_color READ bottomCornersColor WRITE setBottomCornersColor)
-
 public:
-    explicit HalfRoundRectWidget(QWidget *parent = nullptr);
+    AccountItem(const QString &accountId);
 
-    inline QColor bottomCornersColor() const { return _bottomCornersColor; }
-    inline void setBottomCornersColor(const QColor &value) { _bottomCornersColor = value; }
-
-    void setContentsMargins(int left, int top, int right, int bottom);
-    void setSpacing(int spacing);
-    void addWidget(QWidget *widget, int stretch = 0, Qt::Alignment alignment = Qt::Alignment());
-    void addStretch(int stretch = 0);
+    inline AccountInfo &accountInfo() { return _accountInfo; }
 
 private:
-    QColor _bottomCornersColor;
-    QHBoxLayout *_hboxLayout;
-
-    void paintEvent(QPaintEvent *event) override;
+    QString _accountId;
+    AccountInfo _accountInfo;
 };
 
 }
+

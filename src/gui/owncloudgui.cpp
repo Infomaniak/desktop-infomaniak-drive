@@ -51,8 +51,12 @@ const char propertyAccountC[] = "oc_account";
 ownCloudGui::ownCloudGui(Application *parent)
     : QObject(parent)
     , _tray(nullptr)
-    , _settingsDialog(new SettingsDialog(this))
     , _logBrowser(nullptr)
+#ifdef KDRIVE_V2
+    , _parametersDialog(new KDC::ParametersDialog())
+#else
+    , _settingsDialog(new SettingsDialog(this))
+#endif
     , _recentActionsMenu(nullptr)
     , _notificationEnableDate(QDateTime())
     , _app(parent)
@@ -86,11 +90,10 @@ ownCloudGui::ownCloudGui(Application *parent)
     connect(pd, &ProgressDispatcher::itemCompleted, this, &ownCloudGui::slotItemCompleted);
 
     FolderMan *folderMan = FolderMan::instance();
-    connect(folderMan, &FolderMan::folderSyncStateChange,
-        this, &ownCloudGui::slotSyncStateChange);
+    connect(folderMan, &FolderMan::folderSyncStateChange, this, &ownCloudGui::slotSyncStateChange);
 
-    connect(AccountManager::instance(), &AccountManager::accountAdded, this, &ownCloudGui::updatePopoverNeeded);
-    connect(AccountManager::instance(), &AccountManager::accountRemoved, this, &ownCloudGui::updatePopoverNeeded);
+    connect(AccountManager::instance(), &AccountManager::accountAdded, this, &ownCloudGui::onRefreshAccountList);
+    connect(AccountManager::instance(), &AccountManager::accountRemoved, this, &ownCloudGui::onRefreshAccountList);
 
     connect(Logger::instance(), &Logger::guiLog, this, &ownCloudGui::slotShowTrayMessage);
     connect(Logger::instance(), &Logger::optionalGuiLog, this, &ownCloudGui::slotShowOptionalTrayMessage);
@@ -98,15 +101,23 @@ ownCloudGui::ownCloudGui(Application *parent)
 }
 
 // This should rather be in application.... or rather in ConfigFile?
-void ownCloudGui::slotOpenSettingsDialog()
+void ownCloudGui::slotOpenParametersDialog()
 {
     // if account is set up, start the configuration wizard.
     if (!AccountManager::instance()->accounts().isEmpty()) {
+#ifdef KDRIVE_V2
+        if (_parametersDialog.isNull() || QApplication::activeWindow() != _parametersDialog) {
+            slotShowParametersDialog();
+        } else {
+            _parametersDialog->close();
+        }
+#else
         if (_settingsDialog.isNull() || QApplication::activeWindow() != _settingsDialog) {
             slotShowSettings();
         } else {
             _settingsDialog->close();
         }
+#endif
     } else {
         qCInfo(lcApplication) << "No configured folders yet, starting setup wizard";
         slotNewAccountWizard();
@@ -148,7 +159,7 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
                 raiseDialog(_settingsDialog.data());
             }
 #else
-            slotOpenSettingsDialog();
+            slotOpenParametersDialog();
 #endif
 #endif
         }
@@ -178,7 +189,9 @@ void ownCloudGui::slotSyncStateChange(Folder *folder)
     }
 
     if (result.status() == SyncResult::NotYetStarted) {
+#ifndef KDRIVE_V2
         _settingsDialog->slotRefreshActivity(folder->accountState());
+#endif
     }
 }
 
@@ -213,8 +226,10 @@ void ownCloudGui::slotTrayMessageIfServerUnsupported(Account *account)
 
 void ownCloudGui::slotShowErrors()
 {
-    slotShowSettings();
+    slotShowParametersDialog();
+#ifndef KDRIVE_V2
     _settingsDialog->showIssuesList("");
+#endif
 }
 
 void ownCloudGui::slotComputeOverallSyncStatus()
@@ -548,7 +563,7 @@ void ownCloudGui::setupPopover()
     }
 
     _synthesisPopover.reset(new KDC::SynthesisPopover(_app->debugMode()));
-    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openParametersDialog, this, &ownCloudGui::slotShowSettings);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openParametersDialog, this, &ownCloudGui::slotShowParametersDialog);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openShareDialogPublicLinks, this, &ownCloudGui::slotShowShareDialogPublicLinks);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openHelp, this, &ownCloudGui::slotHelp);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::exit, _app, &Application::quit);
@@ -842,6 +857,11 @@ void ownCloudGui::updatePopoverNeeded()
 #endif
 }
 
+void ownCloudGui::onRefreshAccountList()
+{
+    updatePopoverNeeded();
+}
+
 void ownCloudGui::slotShowTrayMessage(const QString &title, const QString &msg)
 {
     if (_tray) {
@@ -958,7 +978,9 @@ void ownCloudGui::slotUpdateProgress(const QString &folder, const ProgressInfo &
 #ifdef KDRIVE_V2
     Q_UNUSED(folder);
 
-    emit _synthesisPopover->updateProgress(folder, progress);
+    if (_synthesisPopover) {
+        emit _synthesisPopover->updateProgress(folder, progress);
+    }
 #else
     if (progress.status() == ProgressInfo::Discovery) {
         if (!progress._currentDiscoveredRemoteFolder.isEmpty()) {
@@ -1042,7 +1064,9 @@ void ownCloudGui::slotUpdateProgress(const QString &folder, const ProgressInfo &
 
 void ownCloudGui::slotItemCompleted(const QString &folder, const SyncFileItemPtr &item)
 {
-    emit _synthesisPopover->itemCompleted(folder, item);
+    if (_synthesisPopover) {
+         emit _synthesisPopover->itemCompleted(folder, item);
+    }
 }
 
 #ifndef KDRIVE_V2
@@ -1137,8 +1161,16 @@ void ownCloudGui::slotShowGuiMessage(const QString &title, const QString &messag
     msgBox->open();
 }
 
-void ownCloudGui::slotShowSettings()
+void ownCloudGui::slotShowParametersDialog()
 {
+#ifdef KDRIVE_V2
+    if (_parametersDialog.isNull()) {
+        _parametersDialog = new KDC::ParametersDialog();
+        _parametersDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+        _parametersDialog->show();
+    }
+    raiseDialog(_parametersDialog.data());
+#else
     if (_settingsDialog.isNull()) {
         _settingsDialog =
             new SettingsDialog(this);
@@ -1146,13 +1178,16 @@ void ownCloudGui::slotShowSettings()
         _settingsDialog->show();
     }
     raiseDialog(_settingsDialog.data());
+#endif
 }
 
+#ifndef KDRIVE_V2
 void ownCloudGui::slotShowSyncProtocol()
 {
     slotShowSettings();
     _settingsDialog->showActivityPage();
 }
+#endif
 
 void ownCloudGui::slotShutdown()
 {
@@ -1160,8 +1195,13 @@ void ownCloudGui::slotShutdown()
     // that saving the geometries happens ASAP during a OS shutdown
 
     // those do delete on close
+#ifdef KDRIVE_V2
+    if (!_parametersDialog.isNull())
+        _parametersDialog->close();
+#else
     if (!_settingsDialog.isNull())
         _settingsDialog->close();
+#endif
     if (!_logBrowser.isNull())
         _logBrowser->deleteLater();
 }
@@ -1297,7 +1337,11 @@ void ownCloudGui::slotAbout()
 {
     QString title = tr("About %1").arg(Theme::instance()->appNameGUI());
     QString about = Theme::instance()->about();
+#ifdef KDRIVE_V2
+    QMessageBox *msgBox = new QMessageBox(this->_parametersDialog);
+#else
     QMessageBox *msgBox = new QMessageBox(this->_settingsDialog);
+#endif
 #ifdef Q_OS_MAC
     // From Qt doc: "On macOS, the window title is ignored (as required by the macOS Guidelines)."
     msgBox->setText(title);

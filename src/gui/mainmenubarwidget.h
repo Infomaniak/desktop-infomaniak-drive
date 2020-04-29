@@ -19,35 +19,31 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include <QColor>
-#include <QHBoxLayout>
-#include <QPaintEvent>
+#include "halfroundrectwidget.h"
+#include "customtoolbutton.h"
+
 #include <QWidget>
 
 namespace KDC {
 
-class HalfRoundRectWidget : public QWidget
+class MainMenuBarWidget : public HalfRoundRectWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY(QColor bottom_corners_color READ bottomCornersColor WRITE setBottomCornersColor)
-
 public:
-    explicit HalfRoundRectWidget(QWidget *parent = nullptr);
+    explicit MainMenuBarWidget(QWidget *parent = nullptr);
 
-    inline QColor bottomCornersColor() const { return _bottomCornersColor; }
-    inline void setBottomCornersColor(const QColor &value) { _bottomCornersColor = value; }
-
-    void setContentsMargins(int left, int top, int right, int bottom);
-    void setSpacing(int spacing);
-    void addWidget(QWidget *widget, int stretch = 0, Qt::Alignment alignment = Qt::Alignment());
-    void addStretch(int stretch = 0);
+signals:
+    void drivesButtonClicked();
+    void preferencesButtonClicked();
 
 private:
-    QColor _bottomCornersColor;
-    QHBoxLayout *_hboxLayout;
 
-    void paintEvent(QPaintEvent *event) override;
+private slots:
+    void onDrivesButtonClicked(bool checked = false);
+    void onPreferencesButtonClicked(bool checked = false);
+    void onHelpButtonClicked(bool checked = false);
 };
 
 }
+

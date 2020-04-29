@@ -74,92 +74,55 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
     connect(_syncButton, &CustomToolButton::clicked, this, &StatusBarWidget::onSyncClicked);
 }
 
-void StatusBarWidget::setStatus(bool paused, OCC::SyncResult::Status status, qint64 currentFile,
-                                qint64 totalFiles, qint64 estimatedRemainingTime)
+void StatusBarWidget::setStatus(bool paused, bool unresolvedConflicts, OCC::SyncResult::Status status,
+                                qint64 currentFile, qint64 totalFiles, qint64 estimatedRemainingTime)
 {
-    if (paused || status == OCC::SyncResult::Paused
-            || status == OCC::SyncResult::SyncAbortRequested) {
-        _statusIconLabel->setPixmap(OCC::Theme::instance()->syncStateIcon(OCC::SyncResult::Paused)
-                                    .pixmap(QSize(statusIconSize, statusIconSize)));
-        _statusLabel->setText(tr("Synchronization paused."));
+    _statusIconLabel->setPixmap(QIcon(OCC::Utility::getFolderStatusIconPath(paused, status, totalFiles))
+                                .pixmap(QSize(statusIconSize, statusIconSize)));
+
+    _statusLabel->setText(OCC::Utility::getFolderStatusText(paused, unresolvedConflicts, status,
+                                                            currentFile, totalFiles, estimatedRemainingTime));
+
+    if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
+        // Pause
         _statusIconLabel->setVisible(true);
         _pauseButton->setVisible(false);
         _resumeButton->setVisible(true);
         _syncButton->setVisible(false);
     }
     else if (totalFiles > 0) {
-        _statusIconLabel->setPixmap(OCC::Theme::instance()->syncStateIcon(OCC::SyncResult::SyncRunning)
-                                    .pixmap(QSize(statusIconSize, statusIconSize)));
-        _statusLabel->setText(tr("Synchronization in progress (%1 on %2)\n%3 left...")
-                              .arg(currentFile).arg(totalFiles)
-                              .arg(OCC::Utility::durationToDescriptiveString1(estimatedRemainingTime)));
+        // Synchronization in progress
         _statusIconLabel->setVisible(true);
         _pauseButton->setVisible(true);
         _resumeButton->setVisible(false);
         _syncButton->setVisible(true);
     }
     else {
-        _statusIconLabel->setPixmap(OCC::Theme::instance()->syncStateIcon(status)
-                                    .pixmap(QSize(statusIconSize, statusIconSize)));
-
-        QString timeStr;
         switch (status) {
         case OCC::SyncResult::Undefined:
-            _statusLabel->setText(tr("No folder to synchronize."));
             _statusIconLabel->setVisible(true);
             _pauseButton->setVisible(false);
             _resumeButton->setVisible(false);
             _syncButton->setVisible(false);
             break;
         case OCC::SyncResult::NotYetStarted:
-            _statusLabel->setText(tr("Waiting for synchronization..."));
-            _statusIconLabel->setVisible(true);
-            _pauseButton->setVisible(true);
-            _resumeButton->setVisible(false);
-            _syncButton->setVisible(true);
-            break;
         case OCC::SyncResult::SyncPrepare:
-            _statusLabel->setText(tr("Preparing to synchronize..."));
-            _statusIconLabel->setVisible(true);
-            _pauseButton->setVisible(true);
-            _resumeButton->setVisible(false);
-            _syncButton->setVisible(true);
-            break;
         case OCC::SyncResult::Success:
-            _statusLabel->setText(tr("You are up to date!"));
             _statusIconLabel->setVisible(true);
             _pauseButton->setVisible(true);
             _resumeButton->setVisible(false);
             _syncButton->setVisible(true);
             break;
         case OCC::SyncResult::Problem:
-            _statusLabel->setText(tr("Some files haven't been synchronized."));
-            _statusIconLabel->setVisible(true);
-            _pauseButton->setVisible(false);
-            _resumeButton->setVisible(false);
-            _syncButton->setVisible(true);
-            break;
         case OCC::SyncResult::Error:
-            _statusLabel->setText(tr("Synchronization error."));
-            _statusIconLabel->setVisible(true);
-            _pauseButton->setVisible(false);
-            _resumeButton->setVisible(false);
-            _syncButton->setVisible(true);
-            break;
         case OCC::SyncResult::SetupError:
-            _statusLabel->setText(tr("Setup error."));
             _statusIconLabel->setVisible(true);
             _pauseButton->setVisible(false);
             _resumeButton->setVisible(false);
             _syncButton->setVisible(true);
             break;
         default:
-            // Should not happen
-            _statusLabel->setText("");
-            _statusIconLabel->setVisible(false);
-            _pauseButton->setVisible(false);
-            _resumeButton->setVisible(false);
-            _syncButton->setVisible(false);
+            break;
         }
     }
 }
@@ -174,7 +137,7 @@ void StatusBarWidget::setSeveralDrives(bool severalDrives)
 
 void StatusBarWidget::reset()
 {
-    setStatus(false, OCC::SyncResult::Undefined);
+    setStatus(false, false, OCC::SyncResult::Undefined);
 }
 
 void StatusBarWidget::onPauseClicked()

@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
+#include "accountinfo.h"
 #include "theme.h"
 
 #include <map>
@@ -48,7 +49,7 @@ public:
     QSize sizeHint() const override;
 
     void clear();
-    void addOrUpdateDrive(QString id, const QString &name, const QColor &color, OCC::SyncResult::Status status);
+    void addOrUpdateDrive(QString id, const AccountInfo &accountInfo);
     void removeDrive(QString id);
     void selectDrive(QString id);
 
@@ -88,18 +89,12 @@ signals:
     void addDrive();
 
 private:
-    struct DriveInfo {
-        QString _name;
-        QColor _color;
-        OCC::SyncResult::Status _status;
-    };
-
     QSize _driveIconSize;
     QSize _downIconSize;
     QColor _downIconColor;
     QSize _menuRightIconSize;
     QColor _addIconColor;
-    std::map<QString, DriveInfo> _driveMap;
+    std::map<QString, AccountInfo> _driveMap;
     QString _currentDriveId;
     QLabel *_driveIconLabel;
     QLabel *_driveTextLabel;

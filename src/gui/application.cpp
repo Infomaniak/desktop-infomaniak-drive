@@ -449,7 +449,7 @@ void Application::slotCheckConnection()
 
     if (list.isEmpty()) {
         // let gui open the setup wizard
-        _gui->slotOpenSettingsDialog();
+        _gui->slotOpenParametersDialog();
 
         _checkConnectionTimer.stop(); // don't popup the wizard on interval;
     }
@@ -496,7 +496,7 @@ void Application::slotownCloudWizardDone(int res)
             Utility::setLaunchOnStartup(_theme->appName(), _theme->appNameGUI(), true);
         }
 
-        _gui->slotShowSettings();
+        _gui->slotShowParametersDialog();
     }
 }
 
@@ -678,7 +678,7 @@ bool Application::versionOnly()
 
 void Application::showSettingsDialog()
 {
-    _gui->slotShowSettings();
+    _gui->slotShowParametersDialog();
 }
 
 void Application::setAlert(bool alert)

@@ -43,6 +43,11 @@ void HalfRoundRectWidget::setContentsMargins(int left, int top, int right, int b
     _hboxLayout->setContentsMargins(left, top, right, bottom);
 }
 
+void HalfRoundRectWidget::setSpacing(int spacing)
+{
+    _hboxLayout->setSpacing(spacing);
+}
+
 void HalfRoundRectWidget::addWidget(QWidget *widget, int stretch, Qt::Alignment alignment)
 {
     _hboxLayout->addWidget(widget, stretch, alignment);

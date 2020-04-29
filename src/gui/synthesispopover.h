@@ -25,11 +25,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "statusbarwidget.h"
 #include "buttonsbarwidget.h"
 #include "synchronizeditemwidget.h"
+#include "accountinfo.h"
 #include "accountmanager.h"
-#include "accountstate.h"
-#include "quotainfo.h"
 #include "folderman.h"
 #include "progressdispatcher.h"
+#include "quotainfo.h"
 
 #include <QColor>
 #include <QDateTime>
@@ -87,26 +87,10 @@ private:
         Activity
     };
 
-    struct FolderInfo {
-        QString _name;
-        QString _path;
-        qint64 _currentFile;
-        qint64 _totalFiles;
-        qint64 _completedSize;
-        qint64 _totalSize;
-        qint64 _estimatedRemainingTime;
-        bool _syncPaused;
-        OCC::SyncResult::Status _status;
-
-        FolderInfo(const QString &name = QString(), const QString &path = QString());
-    };
-
-    struct AccountStatus {
+    struct AccountInfoPopover : public AccountInfo {
         std::shared_ptr<OCC::QuotaInfo> _quotaInfoPtr;
         qint64 _totalSize;
         qint64 _used;
-        OCC::SyncResult::Status _status;
-        std::map<QString, FolderInfo> _folderMap;
         StackedWidget _stackedWidgetPosition;
         QListWidget *_synchronizedListWidget;
         QListWidgetItem *_currentSynchronizedWidgetItem;
@@ -114,7 +98,8 @@ private:
         int _favoritesListStackPosition;
         int _activityListStackPosition;
 
-        AccountStatus(OCC::AccountState *accountState = nullptr);
+        AccountInfoPopover();
+        AccountInfoPopover(OCC::AccountState *accountState);
     };
 
     bool _debugMode;
@@ -132,21 +117,20 @@ private:
     QWidget *_defaultSynchronizedPage;
     NotificationsDisabled _notificationsDisabled;
     QDateTime _notificationsDisabledUntilDateTime;
-    std::map<QString, AccountStatus> _accountStatusMap;
+    std::map<QString, AccountInfoPopover> _accountInfoMap;
 
     void changeEvent(QEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
     bool event(QEvent *event) override;
     void initUI();
-    OCC::SyncResult::Status computeAccountStatus(const std::map<QString, FolderInfo> &folderMap);
     void pauseSync(bool all, bool pause);
     QString folderPath(const QString &folderId, const QString &filePath);
     QUrl folderUrl(const QString &folderId, const QString &filePath);
     void openUrl(const QString &folderId, const QString &filePath = QString());
     const SynchronizedItem *currentSynchronizedItem();
-    const FolderInfo *getActiveFolder(const std::map<QString, FolderInfo> &folderMap);
+    const FolderInfo *getActiveFolder(const std::map<QString, FolderInfo *> &folderMap);
     void refreshStatusBar(const FolderInfo *folderInfo);
-    void refreshStatusBar(std::map<QString, AccountStatus>::iterator accountStatusIt);
+    void refreshStatusBar(std::map<QString, AccountInfoPopover>::iterator accountStatusIt);
     void refreshStatusBar(QString accountId);
     void setSynchronizedDefaultPage(QWidget **widget, QWidget *parent);
 

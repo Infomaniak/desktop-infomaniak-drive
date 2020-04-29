@@ -19,35 +19,47 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
+#include "mainmenubarwidget.h"
+#include "driveswidget.h"
+#include "accountinfo.h"
+
+#include <map>
+
 #include <QColor>
-#include <QHBoxLayout>
-#include <QPaintEvent>
-#include <QWidget>
+#include <QDialog>
+#include <QStackedWidget>
+#include <QString>
 
 namespace KDC {
 
-class HalfRoundRectWidget : public QWidget
+class ParametersDialog : public QDialog
 {
     Q_OBJECT
 
-    Q_PROPERTY(QColor bottom_corners_color READ bottomCornersColor WRITE setBottomCornersColor)
-
 public:
-    explicit HalfRoundRectWidget(QWidget *parent = nullptr);
+    explicit ParametersDialog(QWidget *parent = nullptr);
 
-    inline QColor bottomCornersColor() const { return _bottomCornersColor; }
-    inline void setBottomCornersColor(const QColor &value) { _bottomCornersColor = value; }
-
-    void setContentsMargins(int left, int top, int right, int bottom);
-    void setSpacing(int spacing);
-    void addWidget(QWidget *widget, int stretch = 0, Qt::Alignment alignment = Qt::Alignment());
-    void addStretch(int stretch = 0);
+signals:
 
 private:
-    QColor _bottomCornersColor;
-    QHBoxLayout *_hboxLayout;
+    enum StackedWidget {
+        Drives = 0,
+        Preferences
+    };
 
-    void paintEvent(QPaintEvent *event) override;
+    QColor _backgroundMainColor;
+    MainMenuBarWidget *_mainMenuBarWidget;
+    QStackedWidget *_stackedWidget;
+    DrivesWidget *_drivesWidget;
+    std::map<QString, AccountInfo> _accountInfoMap;
+
+    void initUI();
+
+private slots:
+    void onRefreshAccountList();
+    void onDrivesButtonClicked();
+    void onPreferencesButtonClicked();
 };
 
 }
+

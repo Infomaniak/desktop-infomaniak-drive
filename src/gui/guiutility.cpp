@@ -239,3 +239,125 @@ void Utility::setStyle(QApplication *app)
     }
 }
 
+QString Utility::getFileStatusIconPath(OCC::SyncFileItem::Status status)
+{
+    QString path;
+    switch (status) {
+    case OCC::SyncFileItem::NoStatus:
+        path = QString();
+        break;
+    case OCC::SyncFileItem::FatalError:
+    case OCC::SyncFileItem::NormalError:
+    case OCC::SyncFileItem::SoftError:
+    case OCC::SyncFileItem::DetailError:
+    case OCC::SyncFileItem::BlacklistedError:
+        path = QString(":/client/resources/icons/statuts/error-sync.svg");
+        break;
+    case OCC::SyncFileItem::Success:
+        path = QString(":/client/resources/icons/statuts/success.svg");
+        break;
+    case OCC::SyncFileItem::Conflict:
+    case OCC::SyncFileItem::FileIgnored:
+    case OCC::SyncFileItem::Restoration:
+        path = QString(":/client/resources/icons/statuts/warning.svg");
+        break;
+    }
+
+    return path;
+}
+
+QString Utility::getFolderStatusIconPath(bool paused, OCC::SyncResult::Status status, qint64 totalFiles)
+{
+    QString path;
+    if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
+        path = QString(":/client/resources/icons/statuts/pause.svg");
+    }
+    else if (totalFiles > 0) {
+        path = QString(":/client/resources/icons/statuts/sync.svg");
+    }
+    else {
+        switch (status) {
+        case OCC::SyncResult::Undefined:
+            path = QString(":/client/resources/icons/statuts/warning.svg");
+            break;
+        case OCC::SyncResult::NotYetStarted:
+        case OCC::SyncResult::SyncRunning:
+            path = QString(":/client/resources/icons/statuts/sync.svg");
+            break;
+        case OCC::SyncResult::SyncPrepare:
+        case OCC::SyncResult::Success:
+            path = QString(":/client/resources/icons/statuts/success.svg");
+            break;
+        case OCC::SyncResult::Problem:
+            path = QString(":/client/resources/icons/statuts/warning.svg");
+            break;
+        case OCC::SyncResult::Error:
+        case OCC::SyncResult::SetupError:
+            path = QString(":/client/resources/icons/statuts/error-sync.svg");
+            break;
+        default:
+            break;
+        }
+    }
+
+    return path;
+}
+
+
+QString Utility::getFolderStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status,
+                                         qint64 currentFile, qint64 totalFiles, qint64 estimatedRemainingTime)
+{
+    QString text;
+    if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
+        text = QCoreApplication::translate("utility", "Synchronization paused.");
+    }
+    else if (totalFiles > 0) {
+        text = QCoreApplication::translate("utility", "Synchronization in progress (%1 on %2)\n%3 left...")
+                .arg(currentFile).arg(totalFiles).arg(OCC::Utility::durationToDescriptiveString1(estimatedRemainingTime));
+    }
+    else {
+        switch (status) {
+        case OCC::SyncResult::Undefined:
+            text = QCoreApplication::translate("utility", "No folder to synchronize.");
+            break;
+        case OCC::SyncResult::NotYetStarted:
+            text = QCoreApplication::translate("utility", "Waiting for synchronization...");
+            break;
+        case OCC::SyncResult::SyncRunning:
+            text = QCoreApplication::translate("utility", "Synchronization in progress.");
+            break;
+        case OCC::SyncResult::SyncPrepare:
+            text = QCoreApplication::translate("utility", "Preparing to synchronize...");
+            break;
+        case OCC::SyncResult::Success:
+        case OCC::SyncResult::Problem:
+            if (unresolvedConflicts) {
+                text = QCoreApplication::translate("utility", "You are up to date, unresolved conflicts.");
+            }
+            else {
+                text = QCoreApplication::translate("utility", "You are up to date!");
+            }
+            break;
+        case OCC::SyncResult::Error:
+            text = QCoreApplication::translate("utility", "Synchronization error.");
+            break;
+        case OCC::SyncResult::SetupError:
+            text = QCoreApplication::translate("utility", "Setup error.");
+            break;
+        default:
+            break;
+        }
+    }
+
+    return text;
+}
+
+QString Utility::getAccountStatusIconPath(bool paused, SyncResult::Status status)
+{
+    return getFolderStatusIconPath(paused, status, 0);
+}
+
+QString Utility::getAccountStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status)
+{
+    return getFolderStatusText(paused, unresolvedConflicts, status, 0, 0, 0);
+}

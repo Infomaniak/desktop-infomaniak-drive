@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "getorcreatepubliclinkshare.h"
 #include "configfile.h"
 
+#define CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
 #include <iostream>
 #endif
@@ -45,6 +46,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QLabel>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QLoggingCategory>
 #include <QMessageBox>
 #include <QPainter>
 #include <QPainterPath>
@@ -364,10 +366,7 @@ void SynthesisPopover::initUI()
     iconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive-without-text.svg")
                          .pixmap(logoIconSize, logoIconSize));
     hboxToolBar->addWidget(iconLabel);
-
-    QWidget *spacerWidget = new QWidget(this);
-    spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    hboxToolBar->addWidget(spacerWidget);
+    hboxToolBar->addStretch();
 
     _folderButton = new CustomToolButton(this);
     _folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
@@ -462,78 +461,6 @@ void SynthesisPopover::initUI()
     connect(_buttonsBarWidget, &ButtonsBarWidget::buttonToggled, this, &SynthesisPopover::onButtonBarToggled);
 }
 
-OCC::SyncResult::Status SynthesisPopover::computeAccountStatus(const std::map<QString, SynthesisPopover::FolderInfo> &folderMap)
-{
-    OCC::SyncResult::Status status = OCC::SyncResult::Undefined;
-
-    std::size_t cnt = folderMap.size();
-
-    if (cnt == 1) {
-        FolderInfo folderInfo = folderMap.begin()->second;
-        if (folderInfo._syncPaused) {
-            status = OCC::SyncResult::Paused;
-        } else {
-            switch (folderInfo._status) {
-            case OCC::SyncResult::Undefined:
-                status = OCC::SyncResult::Error;
-                break;
-            case OCC::SyncResult::Problem: // don't show the problem
-                status = OCC::SyncResult::Success;
-                break;
-            default:
-                status = folderInfo._status;
-                break;
-            }
-        }
-    } else {
-        int errorsSeen = 0;
-        int goodSeen = 0;
-        int abortOrPausedSeen = 0;
-        int runSeen = 0;
-        int various = 0;
-
-        for (auto it = folderMap.begin(); it != folderMap.end(); it++) {
-            FolderInfo folderInfo = it->second;
-            if (folderInfo._syncPaused) {
-                abortOrPausedSeen++;
-            } else {
-                switch (folderInfo._status) {
-                case OCC::SyncResult::Undefined:
-                case OCC::SyncResult::NotYetStarted:
-                    various++;
-                    break;
-                case OCC::SyncResult::SyncPrepare:
-                case OCC::SyncResult::SyncRunning:
-                    runSeen++;
-                    break;
-                case OCC::SyncResult::Problem: // don't show the problem
-                case OCC::SyncResult::Success:
-                    goodSeen++;
-                    break;
-                case OCC::SyncResult::Error:
-                case OCC::SyncResult::SetupError:
-                    errorsSeen++;
-                    break;
-                case OCC::SyncResult::SyncAbortRequested:
-                case OCC::SyncResult::Paused:
-                    abortOrPausedSeen++;
-                }
-            }
-        }
-        if (errorsSeen > 0) {
-            status = OCC::SyncResult::Error;
-        } else if (abortOrPausedSeen > 0 && abortOrPausedSeen == int(cnt)) {
-            // only if all folders are paused
-            status = OCC::SyncResult::Paused;
-        } else if (runSeen > 0) {
-            status = OCC::SyncResult::SyncRunning;
-        } else if (goodSeen > 0) {
-            status = OCC::SyncResult::Success;
-        }
-    }
-    return status;
-}
-
 void SynthesisPopover::pauseSync(bool all, bool pause)
 {
     // (Un)pause all the folders of (all) the drive
@@ -574,11 +501,11 @@ QString SynthesisPopover::folderPath(const QString &folderId, const QString &fil
 {
     QString fullFilePath;
 
-    const auto accountStatusIt = _accountStatusMap.find(_currentAccountId);
-    if (accountStatusIt != _accountStatusMap.end()) {
-        const auto folderInfoIt = accountStatusIt->second._folderMap.find(folderId);
-        if (folderInfoIt != accountStatusIt->second._folderMap.end()) {
-            fullFilePath = folderInfoIt->second._path + filePath;
+    const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
+        if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
+            fullFilePath = folderInfoIt->second->_path + filePath;
             if (!QFile::exists(fullFilePath)) {
                 qCWarning(lcSynthesisPopover) << "Invalid path " << fullFilePath;
                 fullFilePath = QString();
@@ -606,52 +533,53 @@ void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
 
 const SynchronizedItem *SynthesisPopover::currentSynchronizedItem()
 {
-    const auto accountStatusIt = _accountStatusMap.find(_currentAccountId);
-    if (accountStatusIt != _accountStatusMap.end()) {
-        if (accountStatusIt->second._synchronizedListWidget && accountStatusIt->second._currentSynchronizedWidgetItem) {
+    const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        if (accountInfoIt->second._synchronizedListWidget && accountInfoIt->second._currentSynchronizedWidgetItem) {
             SynchronizedItemWidget *synchronizedItemWidget = dynamic_cast<SynchronizedItemWidget *>(
-                        accountStatusIt->second._synchronizedListWidget->itemWidget(
-                            accountStatusIt->second._currentSynchronizedWidgetItem));
+                        accountInfoIt->second._synchronizedListWidget->itemWidget(
+                            accountInfoIt->second._currentSynchronizedWidgetItem));
             return synchronizedItemWidget->item();
         }
     }
     return nullptr;
 }
 
-const SynthesisPopover::FolderInfo *SynthesisPopover::getActiveFolder(const std::map<QString, SynthesisPopover::FolderInfo> &folderMap)
+const FolderInfo *SynthesisPopover::getActiveFolder(const std::map<QString, FolderInfo *> &folderMap)
 {
-    const FolderInfo *folderInfo = (folderMap.empty() ? nullptr : &folderMap.begin()->second);
+    const FolderInfo *folderInfo = (folderMap.empty() ? nullptr : folderMap.begin()->second);
     for (auto folderInfoIt : folderMap) {
-        if (folderInfoIt.second._status == OCC::SyncResult::Status::SyncRunning) {
-            folderInfo = &folderInfoIt.second;
+        if (folderInfoIt.second->_status == OCC::SyncResult::Status::SyncRunning) {
+            folderInfo = folderInfoIt.second;
             break;
         }
     }
     return folderInfo;
 }
 
-void SynthesisPopover::refreshStatusBar(const FolderInfo *folderInfo)
+void SynthesisPopover::refreshStatusBar(const FolderInfo *folderInfoPopover)
 {
-    if (folderInfo) {
-        _statusBarWidget->setStatus(folderInfo->_syncPaused, folderInfo->_status, folderInfo->_currentFile,
-                                    folderInfo->_totalFiles, folderInfo->_estimatedRemainingTime);
+    if (folderInfoPopover) {
+        _statusBarWidget->setStatus(folderInfoPopover->_paused, folderInfoPopover->_unresolvedConflicts,
+                                    folderInfoPopover->_status, folderInfoPopover->_currentFile,
+                                    folderInfoPopover->_totalFiles, folderInfoPopover->_estimatedRemainingTime);
     }
     else {
         _statusBarWidget->reset();
     }
 }
 
-void SynthesisPopover::refreshStatusBar(std::map<QString, AccountStatus>::iterator accountStatusIt)
+void SynthesisPopover::refreshStatusBar(std::map<QString, AccountInfoPopover>::iterator accountInfoIt)
 {
-    const FolderInfo *folderInfo = getActiveFolder(accountStatusIt->second._folderMap);
-    refreshStatusBar(folderInfo);
+    const FolderInfo *folderInfoPopover = getActiveFolder(accountInfoIt->second._folderMap);
+    refreshStatusBar(folderInfoPopover);
 }
 
 void SynthesisPopover::refreshStatusBar(QString accountId)
 {
-    auto accountStatusIt = _accountStatusMap.find(accountId);
-    if (accountStatusIt != _accountStatusMap.end()) {
-        refreshStatusBar(accountStatusIt);
+    auto accountInfoIt = _accountInfoMap.find(accountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        refreshStatusBar(accountInfoIt);
     }
 }
 
@@ -744,12 +672,12 @@ void SynthesisPopover::onRefreshAccountList()
 {
 #ifdef CONSOLE_DEBUG
     std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
-              << " - RefreshAccountList" << std::endl;
+              << " - SynthesisPopover::onRefreshAccountList" << std::endl;
 #endif
 
     if (OCC::AccountManager::instance()->accounts().isEmpty()) {
         _currentAccountId.clear();
-        _accountStatusMap.clear();
+        _accountInfoMap.clear();
         _folderButton->setVisible(false);
         _folderButton->setWithMenu(false);
         _webviewButton->setVisible(false);
@@ -764,38 +692,44 @@ void SynthesisPopover::onRefreshAccountList()
 
         for (OCC::AccountStatePtr accountStatePtr : OCC::AccountManager::instance()->accounts()) {
             QString accountId = accountStatePtr->account()->id();
-            auto accountStatusIt = _accountStatusMap.find(accountId);
-            if (accountStatusIt == _accountStatusMap.end()) {
+            auto accountInfoIt = _accountInfoMap.find(accountId);
+            if (accountInfoIt == _accountInfoMap.end()) {
                 // New account
-                AccountStatus accountStatus(accountStatePtr.data());
-                connect(accountStatus._quotaInfoPtr.get(), &OCC::QuotaInfo::quotaUpdated,
+                AccountInfoPopover accountInfo(accountStatePtr.data());
+                connect(accountInfo._quotaInfoPtr.get(), &OCC::QuotaInfo::quotaUpdated,
                         this, &SynthesisPopover::onUpdateQuota);
 
-                _accountStatusMap[accountId] = accountStatus;
-                accountStatusIt = _accountStatusMap.find(accountId);
+                _accountInfoMap[accountId] = accountInfo;
+                accountInfoIt = _accountInfoMap.find(accountId);
             }
+
+            // Set or update account name & color
+            accountInfoIt->second._name = accountStatePtr->account()->driveName();
+            accountInfoIt->second._color = accountStatePtr->account()->getDriveColor();
 
             OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
             for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
                 OCC::AccountPtr folderAccountPtr = folderIt.value()->accountState()->account();
                 if (folderAccountPtr->id() == accountId) {
-                    auto folderInfoIt = accountStatusIt->second._folderMap.find(folderIt.key());
-                    if (folderInfoIt == accountStatusIt->second._folderMap.end()) {
+                    auto folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
+                    if (folderInfoIt == accountInfoIt->second._folderMap.end()) {
                         // New folder
-                        FolderInfo folderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path());
-                        accountStatusIt->second._folderMap[folderIt.key()] = folderInfo;
-                        folderInfoIt = accountStatusIt->second._folderMap.find(folderIt.key());
+                        accountInfoIt->second._folderMap[folderIt.key()] =
+                                new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path());
+                        folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
                     }
 
-                    folderInfoIt->second._status = folderIt.value()->syncResult().status();
+                    folderInfoIt->second->_paused = folderIt.value()->syncPaused();
+                    folderInfoIt->second->_unresolvedConflicts = folderIt.value()->syncResult().hasUnresolvedConflicts();
+                    folderInfoIt->second->_status = folderIt.value()->syncResult().status();
                 }
             }
 
             // Manage removed folders
-            auto folderInfoIt = accountStatusIt->second._folderMap.begin();
-            while (folderInfoIt != accountStatusIt->second._folderMap.end()) {
+            auto folderInfoIt = accountInfoIt->second._folderMap.begin();
+            while (folderInfoIt != accountInfoIt->second._folderMap.end()) {
                 if (folderMap.find(folderInfoIt->first) == folderMap.end()) {
-                    folderInfoIt = accountStatusIt->second._folderMap.erase(folderInfoIt);
+                    folderInfoIt = accountInfoIt->second._folderMap.erase(folderInfoIt);
                 }
                 else {
                     folderInfoIt++;
@@ -803,38 +737,35 @@ void SynthesisPopover::onRefreshAccountList()
             }
 
             // Compute account status
-            accountStatusIt->second._status = computeAccountStatus(accountStatusIt->second._folderMap);
+            accountInfoIt->second.updateStatus();
 
-            _driveSelectionWidget->addOrUpdateDrive(accountId,
-                                                    accountStatePtr->account()->driveName(),
-                                                    accountStatePtr->account()->getDriveColor(),
-                                                    accountStatusIt->second._status);
+            _driveSelectionWidget->addOrUpdateDrive(accountId, accountInfoIt->second);
 
             if (_currentAccountId.isEmpty() || !currentAccountStillExists) {
                 _currentAccountId = accountId;
             }
 
             if (_currentAccountId == accountId) {
-                currentFolderMapSize = accountStatusIt->second._folderMap.size();
+                currentFolderMapSize = accountInfoIt->second._folderMap.size();
             }
         }
 
         // Manage removed accounts
-        auto accountStatusIt = _accountStatusMap.begin();
-        while (accountStatusIt != _accountStatusMap.end()) {
-            if (!OCC::AccountManager::instance()->getAccountFromId(accountStatusIt->first)) {
-                _driveSelectionWidget->removeDrive(accountStatusIt->first);
-                accountStatusIt = _accountStatusMap.erase(accountStatusIt);
+        auto accountInfoIt = _accountInfoMap.begin();
+        while (accountInfoIt != _accountInfoMap.end()) {
+            if (!OCC::AccountManager::instance()->getAccountFromId(accountInfoIt->first)) {
+                _driveSelectionWidget->removeDrive(accountInfoIt->first);
+                accountInfoIt = _accountInfoMap.erase(accountInfoIt);
             }
             else {
-                accountStatusIt++;
+                accountInfoIt++;
             }
         }
 
         _folderButton->setVisible(currentFolderMapSize > 0);
         _folderButton->setWithMenu(currentFolderMapSize > 1);
         _webviewButton->setVisible(currentFolderMapSize > 0);
-        _statusBarWidget->setSeveralDrives(_accountStatusMap.size() > 1);
+        _statusBarWidget->setSeveralDrives(_accountInfoMap.size() > 1);
         _driveSelectionWidget->selectDrive(_currentAccountId);
         refreshStatusBar(_currentAccountId);
     }
@@ -848,30 +779,31 @@ void SynthesisPopover::onUpdateProgress(const QString &folderId, const OCC::Prog
     if (folder) {
 #ifdef CONSOLE_DEBUG
         std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
-                  << " - UpdateProgress folder: " << folder->path().toStdString() << std::endl;
+                  << " - SynthesisPopover::onUpdateProgress folder: " << folder->path().toStdString() << std::endl;
 #endif
 
         OCC::AccountPtr account = folder->accountState()->account();
         if (account && account->id() == _currentAccountId) {
-            const auto accountStatusIt = _accountStatusMap.find(_currentAccountId);
-            if (accountStatusIt != _accountStatusMap.end()) {
-                const auto folderInfoIt = accountStatusIt->second._folderMap.find(folderId);
-                if (folderInfoIt != accountStatusIt->second._folderMap.end()) {
-                    folderInfoIt->second._currentFile = progress.currentFile();
-                    folderInfoIt->second._totalFiles = qMax(progress.currentFile(), progress.totalFiles());
-                    folderInfoIt->second._completedSize = progress.completedSize();
-                    folderInfoIt->second._totalSize = qMax(progress.completedSize(), progress.totalSize());
-                    folderInfoIt->second._estimatedRemainingTime = progress.totalProgress().estimatedEta;
-                    folderInfoIt->second._syncPaused = folder->syncPaused();
-                    folderInfoIt->second._status = folder->syncResult().status();
+            const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
+            if (accountInfoIt != _accountInfoMap.end()) {
+                const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
+                if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
+                    FolderInfo *folderInfoPopover = folderInfoIt->second;
+                    folderInfoPopover->_currentFile = progress.currentFile();
+                    folderInfoPopover->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
+                    folderInfoPopover->_completedSize = progress.completedSize();
+                    folderInfoPopover->_totalSize = qMax(progress.completedSize(), progress.totalSize());
+                    folderInfoPopover->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
+                    folderInfoPopover->_paused = folder->syncPaused();
+                    folderInfoPopover->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
+                    folderInfoPopover->_status = folder->syncResult().status();
 
                     // Compute account status
-                    accountStatusIt->second._status = computeAccountStatus(_accountStatusMap[account->id()]._folderMap);
+                    accountInfoIt->second.updateStatus();
 
-                    _driveSelectionWidget->addOrUpdateDrive(account->id(), account->driveName(), account->getDriveColor(),
-                                                            accountStatusIt->second._status);
+                    _driveSelectionWidget->addOrUpdateDrive(account->id(), accountInfoIt->second);
 
-                    refreshStatusBar(&folderInfoIt->second);
+                    refreshStatusBar(folderInfoPopover);
                 }
             }
         }
@@ -884,13 +816,13 @@ void SynthesisPopover::onUpdateQuota(qint64 total, qint64 used)
 
 #ifdef CONSOLE_DEBUG
     std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
-              << " - UpdateQuota account: " << accountId.toStdString() << std::endl;
+              << " - SynthesisPopover::onUpdateQuota account: " << accountId.toStdString() << std::endl;
 #endif
 
-    const auto accountStatusIt = _accountStatusMap.find(accountId);
-    if (accountStatusIt != _accountStatusMap.end()) {
-        accountStatusIt->second._totalSize = total;
-        accountStatusIt->second._used = used;
+    const auto accountInfoIt = _accountInfoMap.find(accountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        accountInfoIt->second._totalSize = total;
+        accountInfoIt->second._used = used;
 
         if (accountId == _currentAccountId) {
             _progressBarWidget->setUsedSize(total, used);
@@ -902,7 +834,7 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
 {
 #ifdef CONSOLE_DEBUG
     std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
-              << " - ItemCompleted" << std::endl;
+              << " - SynthesisPopover::onItemCompleted" << std::endl;
 #endif
 
     if (syncFileItemPtr.data()->_status == OCC::SyncFileItem::FileIgnored) {
@@ -913,36 +845,36 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
     if (folder) {
         OCC::AccountPtr account = folder->accountState()->account();
         if (account) {
-            const auto accountStatusIt = _accountStatusMap.find(account->id());
-            if (accountStatusIt != _accountStatusMap.end()) {
-                if (!accountStatusIt->second._synchronizedListWidget) {
-                    accountStatusIt->second._synchronizedListWidget = new QListWidget(this);
-                    accountStatusIt->second._synchronizedListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-                    accountStatusIt->second._synchronizedListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-                    accountStatusIt->second._synchronizedListWidget->setSpacing(0);
-                    connect(accountStatusIt->second._synchronizedListWidget, &QListWidget::currentItemChanged,
+            const auto accountInfoIt = _accountInfoMap.find(account->id());
+            if (accountInfoIt != _accountInfoMap.end()) {
+                if (!accountInfoIt->second._synchronizedListWidget) {
+                    accountInfoIt->second._synchronizedListWidget = new QListWidget(this);
+                    accountInfoIt->second._synchronizedListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+                    accountInfoIt->second._synchronizedListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+                    accountInfoIt->second._synchronizedListWidget->setSpacing(0);
+                    connect(accountInfoIt->second._synchronizedListWidget, &QListWidget::currentItemChanged,
                             this, &SynthesisPopover::onCurrentSynchronizedWidgetItemChanged);
-                    accountStatusIt->second._synchronizedListStackPosition =
-                            _stackedWidget->addWidget(accountStatusIt->second._synchronizedListWidget);
-                    if (_currentAccountId == accountStatusIt->first
+                    accountInfoIt->second._synchronizedListStackPosition =
+                            _stackedWidget->addWidget(accountInfoIt->second._synchronizedListWidget);
+                    if (_currentAccountId == accountInfoIt->first
                             && _buttonsBarWidget->position() == StackedWidget::Synchronized) {
-                        _stackedWidget->setCurrentIndex(accountStatusIt->second._synchronizedListStackPosition);
+                        _stackedWidget->setCurrentIndex(accountInfoIt->second._synchronizedListStackPosition);
                     }
                 }
 
                 // Add item to synchronized list
                 QListWidgetItem *item = new QListWidgetItem();
-                SynchronizedItem synchronizedItem = SynchronizedItem(folderId,
-                                                                     syncFileItemPtr.data()->_file,
-                                                                     syncFileItemPtr.data()->_fileId,
-                                                                     syncFileItemPtr.data()->_status,
-                                                                     syncFileItemPtr.data()->_direction,
-                                                                     folderPath(folderId, syncFileItemPtr.data()->_file),
-                                                                     QDateTime::currentDateTime());
-                accountStatusIt->second._synchronizedListWidget->insertItem(0, item);
+                SynchronizedItem synchronizedItem(folderId,
+                                                  syncFileItemPtr.data()->_file,
+                                                  syncFileItemPtr.data()->_fileId,
+                                                  syncFileItemPtr.data()->_status,
+                                                  syncFileItemPtr.data()->_direction,
+                                                  folderPath(folderId, syncFileItemPtr.data()->_file),
+                                                  QDateTime::currentDateTime());
+                accountInfoIt->second._synchronizedListWidget->insertItem(0, item);
                 SynchronizedItemWidget *widget = new SynchronizedItemWidget(synchronizedItem,
-                                                                            accountStatusIt->second._synchronizedListWidget);
-                accountStatusIt->second._synchronizedListWidget->setItemWidget(item, widget);
+                                                                            accountInfoIt->second._synchronizedListWidget);
+                accountInfoIt->second._synchronizedListWidget->setItemWidget(item, widget);
                 connect(widget, &SynchronizedItemWidget::openFolder, this, &SynthesisPopover::onOpenFolderItem);
                 connect(widget, &SynchronizedItemWidget::open, this, &SynthesisPopover::onOpenItem);
                 connect(widget, &SynchronizedItemWidget::addToFavourites, this, &SynthesisPopover::onAddToFavouriteItem);
@@ -951,17 +883,17 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                 connect(widget, &SynchronizedItemWidget::displayOnWebview, this, &SynthesisPopover::onOpenWebviewItem);
 
                 // Scroll to current item
-                if (accountStatusIt->second._currentSynchronizedWidgetItem) {
-                    accountStatusIt->second._synchronizedListWidget->scrollToItem(
-                                accountStatusIt->second._currentSynchronizedWidgetItem);
+                if (accountInfoIt->second._currentSynchronizedWidgetItem) {
+                    accountInfoIt->second._synchronizedListWidget->scrollToItem(
+                                accountInfoIt->second._currentSynchronizedWidgetItem);
                 }
 
-                if (accountStatusIt->second._synchronizedListWidget->count() > maxSynchronizedItems) {
+                if (accountInfoIt->second._synchronizedListWidget->count() > maxSynchronizedItems) {
                     // Remove last row
-                    QListWidgetItem *lastWidgetItem = accountStatusIt->second._synchronizedListWidget->takeItem(
-                                accountStatusIt->second._synchronizedListWidget->count() - 1);
-                    if (lastWidgetItem == accountStatusIt->second._currentSynchronizedWidgetItem) {
-                        accountStatusIt->second._currentSynchronizedWidgetItem = nullptr;
+                    QListWidgetItem *lastWidgetItem = accountInfoIt->second._synchronizedListWidget->takeItem(
+                                accountInfoIt->second._synchronizedListWidget->count() - 1);
+                    if (lastWidgetItem == accountInfoIt->second._currentSynchronizedWidgetItem) {
+                        accountInfoIt->second._currentSynchronizedWidgetItem = nullptr;
                     }
                     delete lastWidgetItem;
                 }
@@ -974,20 +906,20 @@ void SynthesisPopover::onOpenFolderMenu(bool checked)
 {
     Q_UNUSED(checked)
 
-    auto accountStatusIt = _accountStatusMap.find(_currentAccountId);
-    if (accountStatusIt != _accountStatusMap.end()) {
-        if (accountStatusIt->second._folderMap.size() == 1) {
+    auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        if (accountInfoIt->second._folderMap.size() == 1) {
             // Open folder
-            auto folderInfoIt = accountStatusIt->second._folderMap.begin();
+            auto folderInfoIt = accountInfoIt->second._folderMap.begin();
             openUrl(folderInfoIt->first);
         }
-        else if (accountStatusIt->second._folderMap.size() > 1) {
+        else if (accountInfoIt->second._folderMap.size() > 1) {
             // Open menu
             MenuWidget *menu = new MenuWidget(this);
-            for (auto folderInfoIt : accountStatusIt->second._folderMap) {
+            for (auto folderInfoIt : accountInfoIt->second._folderMap) {
                 QWidgetAction *openFolderAction = new QWidgetAction(this);
                 openFolderAction->setProperty(MenuWidget::actionTypeProperty.c_str(), folderInfoIt.first);
-                MenuItemWidget *openFolderMenuItemWidget = new MenuItemWidget(folderInfoIt.second._name);
+                MenuItemWidget *openFolderMenuItemWidget = new MenuItemWidget(folderInfoIt.second->_name);
                 openFolderMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/folder.svg");
                 openFolderAction->setDefaultWidget(openFolderMenuItemWidget);
                 connect(openFolderAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenFolder);
@@ -1211,17 +1143,17 @@ void SynthesisPopover::onNotificationActionTriggered(bool checked)
 
 void SynthesisPopover::onAccountSelected(QString id)
 {
-    const auto accountStatusIt = _accountStatusMap.find(id);
-    if (accountStatusIt != _accountStatusMap.end()) {
+    const auto accountInfoIt = _accountInfoMap.find(id);
+    if (accountInfoIt != _accountInfoMap.end()) {
         _currentAccountId = id;
 
-        std::size_t currentFolderMapSize = accountStatusIt->second._folderMap.size();
+        std::size_t currentFolderMapSize = accountInfoIt->second._folderMap.size();
         _folderButton->setVisible(currentFolderMapSize > 0);
         _folderButton->setWithMenu(currentFolderMapSize > 1);
-        _progressBarWidget->setUsedSize(accountStatusIt->second._totalSize, accountStatusIt->second._used);
-        refreshStatusBar(accountStatusIt);
+        _progressBarWidget->setUsedSize(accountInfoIt->second._totalSize, accountInfoIt->second._used);
+        refreshStatusBar(accountInfoIt);
         setSynchronizedDefaultPage(&_defaultSynchronizedPage, this);
-        _buttonsBarWidget->selectButton(int(accountStatusIt->second._stackedWidgetPosition));
+        _buttonsBarWidget->selectButton(int(accountInfoIt->second._stackedWidgetPosition));
     }
 }
 
@@ -1266,34 +1198,34 @@ void SynthesisPopover::onRunSync(bool all)
 
 void SynthesisPopover::onButtonBarToggled(int position)
 {
-    const auto accountStatusIt = _accountStatusMap.find(_currentAccountId);
-    if (accountStatusIt != _accountStatusMap.end()) {
-        accountStatusIt->second._stackedWidgetPosition = StackedWidget(position);
+    const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        accountInfoIt->second._stackedWidgetPosition = StackedWidget(position);
     }
 
     switch (position) {
     case StackedWidget::Synchronized:
-        if (accountStatusIt != _accountStatusMap.end()
-                && accountStatusIt->second._synchronizedListStackPosition) {
-            _stackedWidget->setCurrentIndex(accountStatusIt->second._synchronizedListStackPosition);
+        if (accountInfoIt != _accountInfoMap.end()
+                && accountInfoIt->second._synchronizedListStackPosition) {
+            _stackedWidget->setCurrentIndex(accountInfoIt->second._synchronizedListStackPosition);
         }
         else {
             _stackedWidget->setCurrentIndex(StackedWidget::Synchronized);
         }
         break;
     case StackedWidget::Favorites:
-        if (accountStatusIt != _accountStatusMap.end()
-                && accountStatusIt->second._favoritesListStackPosition) {
-            _stackedWidget->setCurrentIndex(accountStatusIt->second._favoritesListStackPosition);
+        if (accountInfoIt != _accountInfoMap.end()
+                && accountInfoIt->second._favoritesListStackPosition) {
+            _stackedWidget->setCurrentIndex(accountInfoIt->second._favoritesListStackPosition);
         }
         else {
             _stackedWidget->setCurrentIndex(StackedWidget::Favorites);
         }
         break;
     case StackedWidget::Activity:
-        if (accountStatusIt != _accountStatusMap.end() &&
-                accountStatusIt->second._activityListStackPosition) {
-            _stackedWidget->setCurrentIndex(accountStatusIt->second._activityListStackPosition);
+        if (accountInfoIt != _accountInfoMap.end() &&
+                accountInfoIt->second._activityListStackPosition) {
+            _stackedWidget->setCurrentIndex(accountInfoIt->second._activityListStackPosition);
         }
         else {
             _stackedWidget->setCurrentIndex(StackedWidget::Activity);
@@ -1304,19 +1236,19 @@ void SynthesisPopover::onButtonBarToggled(int position)
 
 void SynthesisPopover::onCurrentSynchronizedWidgetItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
 {
-    const auto accountStatusIt = _accountStatusMap.find(_currentAccountId);
-    if (accountStatusIt != _accountStatusMap.end()) {
+    const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
         if (previous) {
             SynchronizedItemWidget *previousWidget =
-                    dynamic_cast<SynchronizedItemWidget *>(accountStatusIt->second._synchronizedListWidget->itemWidget(previous));
+                    dynamic_cast<SynchronizedItemWidget *>(accountInfoIt->second._synchronizedListWidget->itemWidget(previous));
             previousWidget->setSelected(false);
         }
 
         if (current) {
             SynchronizedItemWidget *currentWidget =
-                    dynamic_cast<SynchronizedItemWidget *>(accountStatusIt->second._synchronizedListWidget->itemWidget(current));
+                    dynamic_cast<SynchronizedItemWidget *>(accountInfoIt->second._synchronizedListWidget->itemWidget(current));
             currentWidget->setSelected(true);
-            accountStatusIt->second._currentSynchronizedWidgetItem = current;
+            accountInfoIt->second._currentSynchronizedWidgetItem = current;
         }
     }
 }
@@ -1406,30 +1338,22 @@ void SynthesisPopover::onCopyUrlToClipboard(const QString &url)
     msgBox.exec();
 }
 
-SynthesisPopover::FolderInfo::FolderInfo(const QString &name, const QString &path)
-    : _name(name)
-    , _path(path)
-    , _currentFile(0)
-    , _totalFiles(0)
-    , _completedSize(0)
+SynthesisPopover::AccountInfoPopover::AccountInfoPopover()
+    : AccountInfo()
+    , _quotaInfoPtr(nullptr)
     , _totalSize(0)
-    , _estimatedRemainingTime(0)
-    , _syncPaused(false)
-    , _status(OCC::SyncResult::Status::Undefined)
-{
-}
-
-SynthesisPopover::AccountStatus::AccountStatus(OCC::AccountState *accountState)
-    : _totalSize(0)
     , _used(0)
-    , _status(OCC::SyncResult::Status::Undefined)
-    , _folderMap(std::map<QString, FolderInfo>())
     , _stackedWidgetPosition(StackedWidget::Synchronized)
     , _synchronizedListWidget(nullptr)
     , _currentSynchronizedWidgetItem(nullptr)
     , _synchronizedListStackPosition(StackedWidget::Synchronized)
     , _favoritesListStackPosition(StackedWidget::Favorites)
     , _activityListStackPosition(StackedWidget::Activity)
+{
+}
+
+SynthesisPopover::AccountInfoPopover::AccountInfoPopover(OCC::AccountState *accountState)
+    : AccountInfoPopover()
 {
     if (accountState) {
         _quotaInfoPtr = std::unique_ptr<OCC::QuotaInfo>(new OCC::QuotaInfo(accountState));

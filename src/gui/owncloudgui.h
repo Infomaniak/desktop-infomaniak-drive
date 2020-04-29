@@ -21,6 +21,7 @@
 #include "connectionvalidator.h"
 #include "progressdispatcher.h"
 #include "synthesispopover.h"
+#include "parametersdialog.h"
 
 #include <QObject>
 #include <QPointer>
@@ -74,6 +75,7 @@ public slots:
     void setupPopover();
     void updatePopover();
     void updatePopoverNeeded();
+    void onRefreshAccountList();
 #ifndef KDRIVE_V2
     void slotPopoverAboutToShow();
     void slotPopoverAboutToHide();
@@ -89,14 +91,16 @@ public slots:
     void slotItemCompleted(const QString &folder, const SyncFileItemPtr &item);
     void slotShowGuiMessage(const QString &title, const QString &message);
     void slotFoldersChanged();
-    void slotShowSettings();
+    void slotShowParametersDialog();
+#ifndef KDRIVE_V2
     void slotShowSyncProtocol();
+#endif
     void slotShutdown();
     void slotSyncStateChange(Folder *);
     void slotTrayClicked(QSystemTrayIcon::ActivationReason reason);
     void slotToggleLogBrowser();
     void slotOpenWebview();
-    void slotOpenSettingsDialog();
+    void slotOpenParametersDialog();
     void slotHelp();
     void slotAbout();
     void slotOpenPath(const QString &path);
@@ -134,13 +138,14 @@ private:
 #endif
 
     QPointer<Systray> _tray;
-    QPointer<SettingsDialog> _settingsDialog;
     QPointer<LogBrowser> _logBrowser;
 #ifdef KDRIVE_V2
     QScopedPointer<KDC::SynthesisPopover> _synthesisPopover;
+    QPointer<KDC::ParametersDialog> _parametersDialog;
 #else
     // tray's menu
     QScopedPointer<QMenu> _contextMenu;
+    QPointer<SettingsDialog> _settingsDialog;
 #endif
 
 #ifndef KDRIVE_V2

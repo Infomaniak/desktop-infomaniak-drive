@@ -19,35 +19,44 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include <QColor>
-#include <QHBoxLayout>
-#include <QPaintEvent>
+#include "accountinfo.h"
+
+#include <map>
+
+#include <QListWidget>
+#include <QListWidgetItem>
 #include <QWidget>
 
 namespace KDC {
 
-class HalfRoundRectWidget : public QWidget
+class DrivesWidget : public QWidget
 {
     Q_OBJECT
-
-    Q_PROPERTY(QColor bottom_corners_color READ bottomCornersColor WRITE setBottomCornersColor)
-
 public:
-    explicit HalfRoundRectWidget(QWidget *parent = nullptr);
+    explicit DrivesWidget(QWidget *parent = nullptr);
 
-    inline QColor bottomCornersColor() const { return _bottomCornersColor; }
-    inline void setBottomCornersColor(const QColor &value) { _bottomCornersColor = value; }
+    void clear();
+    void addOrUpdateDrive(QString accountId, const AccountInfo &accountInfo);
+    void removeDrive(QString accountId);
 
-    void setContentsMargins(int left, int top, int right, int bottom);
-    void setSpacing(int spacing);
-    void addWidget(QWidget *widget, int stretch = 0, Qt::Alignment alignment = Qt::Alignment());
-    void addStretch(int stretch = 0);
+signals:
+    void addDrive();
 
 private:
-    QColor _bottomCornersColor;
-    QHBoxLayout *_hboxLayout;
+    struct AccountInfoDrivesWidget : public AccountInfo {
+        QListWidgetItem *_item;
 
-    void paintEvent(QPaintEvent *event) override;
+        AccountInfoDrivesWidget();
+        AccountInfoDrivesWidget(const AccountInfo &accountInfo);
+    };
+
+    QListWidget *_driveListWidget;
+    std::map<QString, AccountInfoDrivesWidget> _driveMap;
+
+private slots:
+    void onAddDrive();
+
 };
 
 }
+
