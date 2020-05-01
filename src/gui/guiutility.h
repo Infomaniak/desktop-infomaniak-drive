@@ -75,6 +75,11 @@ namespace Utility {
                                     qint64 currentFile, qint64 totalFiles, qint64 estimatedRemainingTime);
     QString getAccountStatusIconPath(bool paused, OCC::SyncResult::Status status);
     QString getAccountStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status);
+    bool getPauseActionAvailable(bool paused, OCC::SyncResult::Status status, qint64 totalFiles);
+    bool getResumeActionAvailable(bool paused, OCC::SyncResult::Status status, qint64 totalFiles);
+    bool getSyncActionAvailable(bool paused, OCC::SyncResult::Status status, qint64 totalFiles);
+    void pauseSync(const QString &accountid, bool pause);
+    void runSync(const QString &accountid);
 
 } // namespace Utility
 } // namespace OCC

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "halfroundrectwidget.h"
 #include "customtoolbutton.h"
 
+#include <QLabel>
 #include <QWidget>
 
 namespace KDC {
@@ -30,16 +31,28 @@ class MainMenuBarWidget : public HalfRoundRectWidget
 {
     Q_OBJECT
 
+    Q_PROPERTY(QColor logo_color READ logoColor WRITE setLogoColor)
+
 public:
     explicit MainMenuBarWidget(QWidget *parent = nullptr);
 
+    inline QColor logoColor() const { return _logoColor; }
+    inline void setLogoColor(const QColor& color) {
+        _logoColor = color;
+        emit logoColorChanged();
+    }
+
 signals:
+    void logoColorChanged();
     void drivesButtonClicked();
     void preferencesButtonClicked();
 
 private:
+    QColor _logoColor;
+    QLabel *_logoTextIconLabel;
 
 private slots:
+    void onLogoColorChanged();
     void onDrivesButtonClicked(bool checked = false);
     void onPreferencesButtonClicked(bool checked = false);
     void onHelpButtonClicked(bool checked = false);

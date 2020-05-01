@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "bottomwidget.h"
 #include "custompushbutton.h"
 #include "synchronizeditem.h"
+#include "accountmanager.h"
+#include "folderman.h"
 #include "account.h"
 #include "common/utility.h"
 #include "guiutility.h"
@@ -119,9 +121,16 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
 
     initUI();
 
-    connect(this, &SynthesisPopover::refreshAccountList, this, &SynthesisPopover::onRefreshAccountList);
-    connect(this, &SynthesisPopover::updateProgress, this, &SynthesisPopover::onUpdateProgress);
-    connect(this, &SynthesisPopover::itemCompleted, this, &SynthesisPopover::onItemCompleted);
+    connect(OCC::FolderMan::instance(), &OCC::FolderMan::folderSyncStateChange,
+            this, &SynthesisPopover::onRefreshAccountList);
+    connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountAdded,
+            this, &SynthesisPopover::onRefreshAccountList);
+    connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountRemoved,
+            this, &SynthesisPopover::onRefreshAccountList);
+    connect(OCC::ProgressDispatcher::instance(), &OCC::ProgressDispatcher::progressInfo,
+            this, &SynthesisPopover::onUpdateProgress);
+    connect(OCC::ProgressDispatcher::instance(), &OCC::ProgressDispatcher::itemCompleted,
+            this, &SynthesisPopover::onItemCompleted);
 }
 
 void SynthesisPopover::setPosition(const QRect &sysTrayIconRect)
@@ -461,21 +470,6 @@ void SynthesisPopover::initUI()
     connect(_buttonsBarWidget, &ButtonsBarWidget::buttonToggled, this, &SynthesisPopover::onButtonBarToggled);
 }
 
-void SynthesisPopover::pauseSync(bool all, bool pause)
-{
-    // (Un)pause all the folders of (all) the drive
-    OCC::FolderMan *folderMan = OCC::FolderMan::instance();
-    for (auto folder : folderMan->map()) {
-        OCC::AccountPtr folderAccount = folder->accountState()->account();
-        if (all || folderAccount->id() == _currentAccountId) {
-            folder->setSyncPaused(pause);
-            if (pause) {
-                folder->slotTerminateSync();
-            }
-        }
-    }
-}
-
 QUrl SynthesisPopover::folderUrl(const QString &folderId, const QString &filePath)
 {
     QUrl url = QUrl();
@@ -557,12 +551,12 @@ const FolderInfo *SynthesisPopover::getActiveFolder(const std::map<QString, Fold
     return folderInfo;
 }
 
-void SynthesisPopover::refreshStatusBar(const FolderInfo *folderInfoPopover)
+void SynthesisPopover::refreshStatusBar(const FolderInfo *folderInfo)
 {
-    if (folderInfoPopover) {
-        _statusBarWidget->setStatus(folderInfoPopover->_paused, folderInfoPopover->_unresolvedConflicts,
-                                    folderInfoPopover->_status, folderInfoPopover->_currentFile,
-                                    folderInfoPopover->_totalFiles, folderInfoPopover->_estimatedRemainingTime);
+    if (folderInfo) {
+        _statusBarWidget->setStatus(folderInfo->_paused, folderInfo->_unresolvedConflicts,
+                                    folderInfo->_status, folderInfo->_currentFile,
+                                    folderInfo->_totalFiles, folderInfo->_estimatedRemainingTime);
     }
     else {
         _statusBarWidget->reset();
@@ -571,8 +565,8 @@ void SynthesisPopover::refreshStatusBar(const FolderInfo *folderInfoPopover)
 
 void SynthesisPopover::refreshStatusBar(std::map<QString, AccountInfoPopover>::iterator accountInfoIt)
 {
-    const FolderInfo *folderInfoPopover = getActiveFolder(accountInfoIt->second._folderMap);
-    refreshStatusBar(folderInfoPopover);
+    const FolderInfo *folderInfo = getActiveFolder(accountInfoIt->second._folderMap);
+    refreshStatusBar(folderInfo);
 }
 
 void SynthesisPopover::refreshStatusBar(QString accountId)
@@ -706,6 +700,7 @@ void SynthesisPopover::onRefreshAccountList()
             // Set or update account name & color
             accountInfoIt->second._name = accountStatePtr->account()->driveName();
             accountInfoIt->second._color = accountStatePtr->account()->getDriveColor();
+            accountInfoIt->second._isSignedIn = !accountStatePtr->isSignedOut();
 
             OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
             for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
@@ -783,28 +778,30 @@ void SynthesisPopover::onUpdateProgress(const QString &folderId, const OCC::Prog
 #endif
 
         OCC::AccountPtr account = folder->accountState()->account();
-        if (account && account->id() == _currentAccountId) {
-            const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
+        if (account) {
+            const auto accountInfoIt = _accountInfoMap.find(account->id());
             if (accountInfoIt != _accountInfoMap.end()) {
                 const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
                 if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
-                    FolderInfo *folderInfoPopover = folderInfoIt->second;
-                    folderInfoPopover->_currentFile = progress.currentFile();
-                    folderInfoPopover->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
-                    folderInfoPopover->_completedSize = progress.completedSize();
-                    folderInfoPopover->_totalSize = qMax(progress.completedSize(), progress.totalSize());
-                    folderInfoPopover->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
-                    folderInfoPopover->_paused = folder->syncPaused();
-                    folderInfoPopover->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
-                    folderInfoPopover->_status = folder->syncResult().status();
+                    FolderInfo *folderInfo = folderInfoIt->second;
+                    folderInfo->_currentFile = progress.currentFile();
+                    folderInfo->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
+                    folderInfo->_completedSize = progress.completedSize();
+                    folderInfo->_totalSize = qMax(progress.completedSize(), progress.totalSize());
+                    folderInfo->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
+                    folderInfo->_paused = folder->syncPaused();
+                    folderInfo->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
+                    folderInfo->_status = folder->syncResult().status();
 
-                    // Compute account status
-                    accountInfoIt->second.updateStatus();
-
-                    _driveSelectionWidget->addOrUpdateDrive(account->id(), accountInfoIt->second);
-
-                    refreshStatusBar(folderInfoPopover);
+                    if (account->id() == _currentAccountId) {
+                        refreshStatusBar(folderInfo);
+                    }
                 }
+
+                // Compute account status
+                accountInfoIt->second.updateStatus();
+
+                _driveSelectionWidget->addOrUpdateDrive(account->id(), accountInfoIt->second);
             }
         }
     }
@@ -1164,36 +1161,17 @@ void SynthesisPopover::onAddDrive()
 
 void SynthesisPopover::onPauseSync(bool all)
 {
-    pauseSync(all, true);
+    OCC::Utility::pauseSync(all ? QString() : _currentAccountId, true);
 }
 
 void SynthesisPopover::onResumeSync(bool all)
 {
-    pauseSync(all, false);
+    OCC::Utility::pauseSync(all ? QString() : _currentAccountId, false);
 }
 
 void SynthesisPopover::onRunSync(bool all)
 {
-    // Terminate and reschedule any running sync
-    OCC::FolderMan *folderMan = OCC::FolderMan::instance();
-    for (auto folder : folderMan->map()) {
-        if (folder->isSyncRunning()) {
-            folder->slotTerminateSync();
-            folderMan->scheduleFolder(folder);
-        }
-    }
-
-    for (auto folder : folderMan->map()) {
-        OCC::AccountPtr account = folder->accountState()->account();
-        if (account) {
-            if (all || _currentAccountId == account->id()) {
-                folder->slotWipeErrorBlacklist();
-
-                // Insert the selected folder at the front of the queue
-                folderMan->scheduleFolderNext(folder);
-            }
-        }
-    }
+    OCC::Utility::runSync(all ? QString() : _currentAccountId);
 }
 
 void SynthesisPopover::onButtonBarToggled(int position)

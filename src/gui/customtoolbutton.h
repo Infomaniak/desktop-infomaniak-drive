@@ -79,12 +79,14 @@ private:
     CustomToolTip *_customToolTip;
 
     bool event(QEvent *event) override;
+    void enterEvent(QEvent *event) override;
+    void leaveEvent(QEvent *event) override;
     void applyIconSizeAndColor(const QColor &color);
 
 private slots:
     void onBaseIconSizeChanged();
     void onIconColorChanged();
-
+    void onClicked(bool checked = false);
 };
 
 }

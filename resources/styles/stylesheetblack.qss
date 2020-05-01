@@ -293,12 +293,10 @@ KDC--DriveSelectionWidget QLabel#driveTextLabel
 KDC--AddDriveWidget
 {
     background-color: transparent;
-    min-height: 44px;
-    max-height: 44px;
+    min-height: 40px;
+    max-height: 40px;
     border: 0px;
-    border-radius: 22px;
-    padding-left: 5px;
-    padding-right: 5px;
+    border-radius: 20px;
     qproperty-add_icon_size: 24px;
     qproperty-add_icon_color: #0098FF;
 }
@@ -380,6 +378,7 @@ KDC--MainMenuBarWidget
 {
     min-height: 65px;
     max-height: 65px;
+    qproperty-logo_color: #FFFFFF;
 }
 
 KDC--MainMenuBarWidget QPushButton

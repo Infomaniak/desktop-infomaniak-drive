@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customtoolbutton.h"
 #include "guiutility.h"
 
+#include <iostream>
+
 #include <QApplication>
 #include <QCursor>
 #include <QEvent>
@@ -42,6 +44,7 @@ CustomToolButton::CustomToolButton(QWidget *parent)
 {
     connect(this, &CustomToolButton::baseIconSizeChanged, this, &CustomToolButton::onBaseIconSizeChanged);
     connect(this, &CustomToolButton::iconColorChanged, this, &CustomToolButton::onIconColorChanged);
+    connect(this, &CustomToolButton::clicked, this, &CustomToolButton::onClicked);
 }
 
 void CustomToolButton::setWithMenu(bool withMenu)
@@ -57,8 +60,15 @@ void CustomToolButton::onIconColorChanged()
     }
 }
 
+void CustomToolButton::onClicked(bool checked)
+{
+    //QApplication::sendEvent(this, new QEvent(QEvent::Leave));
+}
+
 bool CustomToolButton::event(QEvent *event)
 {
+    std::cout << "event: " << event->type() << std::endl;
+
     if (event->type() == QEvent::ToolTip) {
         if (!_toolTipText.isEmpty()) {
             if (!_customToolTip) {
@@ -71,19 +81,26 @@ bool CustomToolButton::event(QEvent *event)
             }
         }
     }
-    else if (event->type() == QEvent::Enter) {
-        applyIconSizeAndColor(_iconColorHover);
-    }
-    else if (event->type() == QEvent::Leave
-             || event->type() == QEvent::MouseButtonPress
-             || event->type() == QEvent::MouseButtonDblClick) {
-        applyIconSizeAndColor(_iconColor);
-        if (_customToolTip) {
-            emit _customToolTip->close();
-            _customToolTip = nullptr;
-        }
-    }
+
     return QToolButton::event(event);
+}
+
+void CustomToolButton::enterEvent(QEvent *event)
+{
+    applyIconSizeAndColor(_iconColorHover);
+
+    QToolButton::enterEvent(event);
+}
+
+void CustomToolButton::leaveEvent(QEvent *event)
+{
+    applyIconSizeAndColor(_iconColor);
+    if (_customToolTip) {
+        emit _customToolTip->close();
+        _customToolTip = nullptr;
+    }
+
+    QToolButton::leaveEvent(event);
 }
 
 void CustomToolButton::applyIconSizeAndColor(const QColor &color)

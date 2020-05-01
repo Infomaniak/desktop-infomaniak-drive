@@ -1,4 +1,5 @@
 /*
+Infomaniak Drive
 Copyright (C) 2020 christophe.larchier@infomaniak.com
 
 This library is free software; you can redistribute it and/or
@@ -16,27 +17,14 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#pragma once
-
-#include "folderinfo.h"
-#include "accountstate.h"
-
-#include <QColor>
+#include "preferenceswidget.h"
 
 namespace KDC {
 
-struct AccountInfo {
-    QString _name;
-    QColor _color;
-    bool _isSignedIn;
-    bool _paused;
-    bool _unresolvedConflicts;
-    OCC::SyncResult::Status _status;
-    std::map<QString, FolderInfo *> _folderMap;
-
-    AccountInfo();
-    void updateStatus();
-};
+PreferencesWidget::PreferencesWidget(QWidget *parent)
+    : QWidget(parent)
+{
 
 }
 
+}

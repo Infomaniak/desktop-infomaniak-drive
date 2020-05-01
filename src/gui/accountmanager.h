@@ -83,6 +83,7 @@ public:
      */
     static void backwardMigrationSettingsKeys(QStringList *deleteKeys, QStringList *ignoreKeys);
 
+    AccountStatePtr getAccountStateFromId(const QString &id);
     AccountPtr getAccountFromId(const QString &id);
 
 private:

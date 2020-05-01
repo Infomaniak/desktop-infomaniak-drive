@@ -356,7 +356,6 @@ void SynchronizedItemWidget::onMenuButtonClicked()
 
         menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()), true);
     }
-
 }
 
 void SynchronizedItemWidget::onOpenActionTriggered(bool checked)

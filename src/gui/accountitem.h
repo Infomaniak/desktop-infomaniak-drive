@@ -33,6 +33,7 @@ public:
     AccountItem(const QString &accountId);
 
     inline AccountInfo &accountInfo() { return _accountInfo; }
+    QString getId() const { return _accountId; }
 
 private:
     QString _accountId;

@@ -158,6 +158,10 @@ void DriveSelectionWidget::onClick(bool checked)
 {
     Q_UNUSED(checked)
 
+    // Remove hover
+    QApplication::sendEvent(this, new QEvent(QEvent::Leave));
+    QApplication::sendEvent(this, new QEvent(QEvent::HoverLeave));
+
     if (_driveMap.size() > 0) {
         MenuWidget *menu = new MenuWidget(this);
 

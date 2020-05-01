@@ -76,6 +76,10 @@ public:
     inline void setBackgroundColorSelection(const QColor &value) { _backgroundColorSelection = value; }
 
 signals:
+    void runSync(const QString &accountId);
+    void pauseSync(const QString &accountId);
+    void resumeSync(const QString &accountId);
+    void remove(const QString &accountId);
     void accountIconSizeChanged();
     void accountIconColorChanged();
     void driveIconSizeChanged();
@@ -94,7 +98,8 @@ private:
     QLabel *_statusLabel;
     CustomToolButton *_menuButton;
 
-    void paintEvent(QPaintEvent* event) override;
+    void paintEvent(QPaintEvent *event) override;
+    bool event(QEvent *event) override;
 
     QIcon getIconWithStatus();
     void setAccountIcon();
@@ -105,6 +110,13 @@ private slots:
     void onDriveIconSizeChanged();
     void onStatusIconSizeChanged();
     void onMenuButtonClicked();
+    void onSeeSyncErrorsTriggered();
+    void onSyncTriggered();
+    void onPauseTriggered();
+    void onResumeTriggered();
+    void onParametersTriggered();
+    void onManageOfferTriggered();
+    void onRemoveTriggered();
 };
 
 }

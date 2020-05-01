@@ -41,6 +41,10 @@ public:
 
 signals:
     void addDrive();
+    void runSync(const QString &accountId);
+    void pauseSync(const QString &accountId);
+    void resumeSync(const QString &accountId);
+    void remove(const QString &accountId);
 
 private:
     struct AccountInfoDrivesWidget : public AccountInfo {
@@ -55,7 +59,10 @@ private:
 
 private slots:
     void onAddDrive();
-
+    void onRunSync(const QString &accountId);
+    void onPauseSync(const QString &accountId);
+    void onResumeSync(const QString &accountId);
+    void onRemove(const QString &accountId);
 };
 
 }

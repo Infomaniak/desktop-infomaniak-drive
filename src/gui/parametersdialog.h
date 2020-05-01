@@ -21,7 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "mainmenubarwidget.h"
 #include "driveswidget.h"
+#include "preferenceswidget.h"
 #include "accountinfo.h"
+#include "progressdispatcher.h"
 
 #include <map>
 
@@ -40,6 +42,7 @@ public:
     explicit ParametersDialog(QWidget *parent = nullptr);
 
 signals:
+    void addDrive();
 
 private:
     enum StackedWidget {
@@ -51,14 +54,21 @@ private:
     MainMenuBarWidget *_mainMenuBarWidget;
     QStackedWidget *_stackedWidget;
     DrivesWidget *_drivesWidget;
+    PreferencesWidget *_preferencesWidget;
     std::map<QString, AccountInfo> _accountInfoMap;
 
     void initUI();
 
 private slots:
     void onRefreshAccountList();
+    void onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
     void onDrivesButtonClicked();
     void onPreferencesButtonClicked();
+    void onAddDrive();
+    void onRunSync(const QString &accountId);
+    void onPauseSync(const QString &accountId);
+    void onResumeSync(const QString &accountId);
+    void onRemove(const QString &accountId);
 };
 
 }

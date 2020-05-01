@@ -118,12 +118,21 @@ void AccountManager::backwardMigrationSettingsKeys(QStringList *deleteKeys, QStr
     }
 }
 
-AccountPtr AccountManager::getAccountFromId(const QString &id)
+AccountStatePtr AccountManager::getAccountStateFromId(const QString &id)
 {
     foreach (AccountStatePtr accountStatePtr, accounts()) {
         if (accountStatePtr->account()->id() == id) {
-            return accountStatePtr->account();
+            return accountStatePtr;
         }
+    }
+    return QExplicitlySharedDataPointer<AccountState>();
+}
+
+AccountPtr AccountManager::getAccountFromId(const QString &id)
+{
+    AccountStatePtr accountStatePtr = getAccountStateFromId(id);
+    if (accountStatePtr.data()) {
+        return accountStatePtr->account();
     }
     return nullptr;
 }

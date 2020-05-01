@@ -120,5 +120,7 @@
         <file>resources/icons/actions/start.svg</file>
         <file>resources/icons/actions/download.svg</file>
         <file>resources/icons/actions/upload.svg</file>
+        <file>resources/icons/actions/login.svg</file>
+        <file>resources/logos/kdrive-text-only.svg</file>
     </qresource>
 </RCC>

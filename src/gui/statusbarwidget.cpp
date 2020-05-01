@@ -83,48 +83,10 @@ void StatusBarWidget::setStatus(bool paused, bool unresolvedConflicts, OCC::Sync
     _statusLabel->setText(OCC::Utility::getFolderStatusText(paused, unresolvedConflicts, status,
                                                             currentFile, totalFiles, estimatedRemainingTime));
 
-    if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
-        // Pause
-        _statusIconLabel->setVisible(true);
-        _pauseButton->setVisible(false);
-        _resumeButton->setVisible(true);
-        _syncButton->setVisible(false);
-    }
-    else if (totalFiles > 0) {
-        // Synchronization in progress
-        _statusIconLabel->setVisible(true);
-        _pauseButton->setVisible(true);
-        _resumeButton->setVisible(false);
-        _syncButton->setVisible(true);
-    }
-    else {
-        switch (status) {
-        case OCC::SyncResult::Undefined:
-            _statusIconLabel->setVisible(true);
-            _pauseButton->setVisible(false);
-            _resumeButton->setVisible(false);
-            _syncButton->setVisible(false);
-            break;
-        case OCC::SyncResult::NotYetStarted:
-        case OCC::SyncResult::SyncPrepare:
-        case OCC::SyncResult::Success:
-            _statusIconLabel->setVisible(true);
-            _pauseButton->setVisible(true);
-            _resumeButton->setVisible(false);
-            _syncButton->setVisible(true);
-            break;
-        case OCC::SyncResult::Problem:
-        case OCC::SyncResult::Error:
-        case OCC::SyncResult::SetupError:
-            _statusIconLabel->setVisible(true);
-            _pauseButton->setVisible(false);
-            _resumeButton->setVisible(false);
-            _syncButton->setVisible(true);
-            break;
-        default:
-            break;
-        }
-    }
+    _statusIconLabel->setVisible(true);
+    _pauseButton->setVisible(OCC::Utility::getPauseActionAvailable(paused, status, totalFiles));
+    _resumeButton->setVisible(OCC::Utility::getResumeActionAvailable(paused, status, totalFiles));
+    _syncButton->setVisible(OCC::Utility::getSyncActionAvailable(paused, status, totalFiles));
 }
 
 void StatusBarWidget::setSeveralDrives(bool severalDrives)

@@ -701,11 +701,7 @@ void ownCloudGui::updatePopover()
         _tray->hide();
     }
 
-#ifdef KDRIVE_V2
-    if (_synthesisPopover) {
-        emit _synthesisPopover->refreshAccountList();
-    }
-#else
+#ifndef KDRIVE_V2
     _contextMenu->clear();
     slotRebuildRecentMenus();
 
@@ -1166,6 +1162,7 @@ void ownCloudGui::slotShowParametersDialog()
 #ifdef KDRIVE_V2
     if (_parametersDialog.isNull()) {
         _parametersDialog = new KDC::ParametersDialog();
+        connect(_parametersDialog, &KDC::ParametersDialog::addDrive, this, &ownCloudGui::slotNewAccountWizard);
         _parametersDialog->setAttribute(Qt::WA_DeleteOnClose, true);
         _parametersDialog->show();
     }

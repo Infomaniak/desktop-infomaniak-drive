@@ -24,6 +24,7 @@ namespace KDC {
 AccountInfo::AccountInfo()
     : _name(QString())
     , _color(QColor())
+    , _isSignedIn(false)
     , _paused(false)
     , _unresolvedConflicts(false)
     , _status(OCC::SyncResult::Status::Undefined)
@@ -34,6 +35,7 @@ AccountInfo::AccountInfo()
 void AccountInfo::updateStatus()
 {
     _status = OCC::SyncResult::Undefined;
+    _paused = false;
     _unresolvedConflicts = false;
 
     std::size_t cnt = _folderMap.size();

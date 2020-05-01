@@ -138,6 +138,7 @@ set(client_SRCS
     menuitemwidget.cpp
     menuwidget.cpp
     parametersdialog.cpp
+    preferenceswidget.cpp
     progressbarwidget.cpp
     statusbarwidget.cpp
     synchronizeditem.cpp

@@ -76,6 +76,11 @@ void DrivesWidget::addOrUpdateDrive(QString accountId, const AccountInfo &accoun
         _driveListWidget->insertItem(0, accountInfoDrivesWidget._item);
         _driveListWidget->setItemWidget(accountInfoDrivesWidget._item, accountItemWidget);
         _driveMap[accountId] = accountInfoDrivesWidget;
+
+        connect(accountItemWidget, &AccountItemWidget::runSync, this, &DrivesWidget::onRunSync);
+        connect(accountItemWidget, &AccountItemWidget::pauseSync, this, &DrivesWidget::onPauseSync);
+        connect(accountItemWidget, &AccountItemWidget::resumeSync, this, &DrivesWidget::onResumeSync);
+        connect(accountItemWidget, &AccountItemWidget::remove, this, &DrivesWidget::onRemove);
     }
     else {
         // Update drive
@@ -102,6 +107,26 @@ void DrivesWidget::removeDrive(QString accountId)
 void DrivesWidget::onAddDrive()
 {
     emit addDrive();
+}
+
+void DrivesWidget::onRunSync(const QString &accountId)
+{
+    emit runSync(accountId);
+}
+
+void DrivesWidget::onPauseSync(const QString &accountId)
+{
+    emit pauseSync(accountId);
+}
+
+void DrivesWidget::onResumeSync(const QString &accountId)
+{
+    emit resumeSync(accountId);
+}
+
+void DrivesWidget::onRemove(const QString &accountId)
+{
+    emit remove(accountId);
 }
 
 DrivesWidget::AccountInfoDrivesWidget::AccountInfoDrivesWidget()

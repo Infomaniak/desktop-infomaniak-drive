@@ -26,8 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "buttonsbarwidget.h"
 #include "synchronizeditemwidget.h"
 #include "accountinfo.h"
-#include "accountmanager.h"
-#include "folderman.h"
 #include "progressdispatcher.h"
 #include "quotainfo.h"
 
@@ -67,7 +65,6 @@ public:
     void setPosition(const QRect &sysTrayIconRect);
 
 signals:
-    void refreshAccountList();
     void updateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
     void itemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &syncFileItemPtr);
     void openParametersDialog();
@@ -123,7 +120,6 @@ private:
     void paintEvent(QPaintEvent *event) override;
     bool event(QEvent *event) override;
     void initUI();
-    void pauseSync(bool all, bool pause);
     QString folderPath(const QString &folderId, const QString &filePath);
     QUrl folderUrl(const QString &folderId, const QString &filePath);
     void openUrl(const QString &folderId, const QString &filePath = QString());

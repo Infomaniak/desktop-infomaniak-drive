@@ -27,20 +27,28 @@ namespace KDC {
 
 static const int hMargin = 15;
 static const int vMargin = 15;
-static const int hSpacing = 30;
-static const int logoIconWidth = 100;
-static const int logoIconHeight = 38;
+static const int hLogoSpacing = 10;
+static const int hButtonsSpacing = 30;
+static const int logoIconSize = 39;
+static const QSize logoTextIconSize = QSize(60, 42);
 
 MainMenuBarWidget::MainMenuBarWidget(QWidget *parent)
     : HalfRoundRectWidget(parent)
+    , _logoColor(QColor())
+    , _logoTextIconLabel(nullptr)
 {
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
-    setSpacing(hSpacing);
+    setSpacing(0);
 
     QLabel *logoIconLabel = new QLabel(this);
-    logoIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive.svg")
-                             .pixmap(QSize(logoIconWidth, logoIconHeight)));
+    logoIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive-without-text.svg")
+                             .pixmap(QSize(logoIconSize, logoIconSize)));
     addWidget(logoIconLabel);
+    addSpacing(hLogoSpacing);
+
+    _logoTextIconLabel = new QLabel(this);
+    addWidget(_logoTextIconLabel);
+
     addStretch();
 
     QPushButton *drivesRadioButton = new QPushButton(tr("Drives"), this);
@@ -49,12 +57,14 @@ MainMenuBarWidget::MainMenuBarWidget(QWidget *parent)
     drivesRadioButton->setAutoExclusive(true);
     drivesRadioButton->setChecked(true);
     addWidget(drivesRadioButton);
+    addSpacing(hButtonsSpacing);
 
     QPushButton *preferencesRadioButton = new QPushButton(tr("Preferences"), this);
     preferencesRadioButton->setFlat(true);
     preferencesRadioButton->setCheckable(true);
     preferencesRadioButton->setAutoExclusive(true);
     addWidget(preferencesRadioButton);
+    addSpacing(hButtonsSpacing);
 
     CustomToolButton *helpButton = new CustomToolButton(this);
     helpButton->setObjectName("helpButton");
@@ -62,9 +72,17 @@ MainMenuBarWidget::MainMenuBarWidget(QWidget *parent)
     helpButton->setToolTip(tr("Help"));
     addWidget(helpButton);
 
+    connect(this, &MainMenuBarWidget::logoColorChanged, this, &MainMenuBarWidget::onLogoColorChanged);
     connect(drivesRadioButton, &QPushButton::clicked, this, &MainMenuBarWidget::onDrivesButtonClicked);
     connect(preferencesRadioButton, &QPushButton::clicked, this, &MainMenuBarWidget::onPreferencesButtonClicked);
     connect(helpButton, &CustomToolButton::clicked, this, &MainMenuBarWidget::onHelpButtonClicked);
+}
+
+void MainMenuBarWidget::onLogoColorChanged()
+{
+    _logoTextIconLabel->setPixmap(
+                OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive-text-only.svg", _logoColor)
+                .pixmap(logoTextIconSize));
 }
 
 void MainMenuBarWidget::onDrivesButtonClicked(bool checked)

@@ -32,6 +32,8 @@
 #include "common/asserts.h"
 #include "common/utility.h"
 #include "libcommon/commonutility.h"
+#include "accountmanager.h"
+#include "folderman.h"
 
 using namespace OCC;
 
@@ -360,4 +362,96 @@ QString Utility::getAccountStatusIconPath(bool paused, SyncResult::Status status
 QString Utility::getAccountStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status)
 {
     return getFolderStatusText(paused, unresolvedConflicts, status, 0, 0, 0);
+}
+
+bool Utility::getPauseActionAvailable(bool paused, SyncResult::Status status, qint64 totalFiles)
+{
+    if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
+        // Pause
+        return false;
+    }
+    else if (totalFiles > 0) {
+        // Synchronization in progress
+        return true;
+    }
+    else if (status == OCC::SyncResult::NotYetStarted
+             || status == OCC::SyncResult::SyncPrepare
+             || status == OCC::SyncResult::Success) {
+        return true;
+    }
+
+    return false;
+}
+
+bool Utility::getResumeActionAvailable(bool paused, SyncResult::Status status, qint64 totalFiles)
+{
+    Q_UNUSED(totalFiles)
+
+    if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
+        // Pause
+        return true;
+    }
+
+    return false;
+}
+
+bool Utility::getSyncActionAvailable(bool paused, SyncResult::Status status, qint64 totalFiles)
+{
+    if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
+        // Pause
+        return false;
+    }
+    else if (totalFiles > 0) {
+        // Synchronization in progress
+        return true;
+    }
+    else if (status == OCC::SyncResult::NotYetStarted
+             || status == OCC::SyncResult::SyncPrepare
+             || status == OCC::SyncResult::Success
+             || status == OCC::SyncResult::Problem
+             || status == OCC::SyncResult::Error
+             || status == OCC::SyncResult::SetupError) {
+        return true;
+    }
+
+    return false;
+}
+
+void Utility::pauseSync(const QString &accountid, bool pause)
+{
+    // (Un)pause all the folders of (all) the drive
+    OCC::FolderMan *folderMan = OCC::FolderMan::instance();
+    for (auto folder : folderMan->map()) {
+        OCC::AccountPtr folderAccount = folder->accountState()->account();
+        if (accountid == QString() || folderAccount->id() == accountid) {
+            folder->setSyncPaused(pause);
+            if (pause) {
+                folder->slotTerminateSync();
+            }
+        }
+    }
+}
+
+void Utility::runSync(const QString &accountid)
+{
+    // Terminate and reschedule any running sync
+    OCC::FolderMan *folderMan = OCC::FolderMan::instance();
+    for (auto folder : folderMan->map()) {
+        if (folder->isSyncRunning()) {
+            folder->slotTerminateSync();
+            folderMan->scheduleFolder(folder);
+        }
+    }
+
+    for (auto folder : folderMan->map()) {
+        OCC::AccountPtr account = folder->accountState()->account();
+        if (account) {
+            if (accountid == QString() || account->id() == accountid) {
+                folder->slotWipeErrorBlacklist();
+
+                // Insert the selected folder at the front of the queue
+                folderMan->scheduleFolderNext(folder);
+            }
+        }
+    }
 }

@@ -25,10 +25,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "parametersdialog.h"
 #include "accountmanager.h"
 #include "folderman.h"
+#include "progressdispatcher.h"
+#include "guiutility.h"
 
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
 #include <QLoggingCategory>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QVBoxLayout>
 
@@ -41,12 +44,19 @@ ParametersDialog::ParametersDialog(QWidget *parent)
     , _backgroundMainColor(QColor())
     , _mainMenuBarWidget(nullptr)
     , _stackedWidget(nullptr)
+    , _drivesWidget(nullptr)
+    , _preferencesWidget(nullptr)
 {
     initUI();
 
-    connect(OCC::FolderMan::instance(), &OCC::FolderMan::folderSyncStateChange, this, &ParametersDialog::onRefreshAccountList);
-    connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountAdded, this, &ParametersDialog::onRefreshAccountList);
-    connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountRemoved, this, &ParametersDialog::onRefreshAccountList);
+    connect(OCC::FolderMan::instance(), &OCC::FolderMan::folderSyncStateChange,
+            this, &ParametersDialog::onRefreshAccountList);
+    connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountAdded,
+            this, &ParametersDialog::onRefreshAccountList);
+    connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountRemoved,
+            this, &ParametersDialog::onRefreshAccountList);
+    connect(OCC::ProgressDispatcher::instance(), &OCC::ProgressDispatcher::progressInfo,
+            this, &ParametersDialog::onUpdateProgress);
 }
 
 void ParametersDialog::initUI()
@@ -65,10 +75,8 @@ void ParametersDialog::initUI()
     _drivesWidget = new DrivesWidget(this);
     _stackedWidget->insertWidget(StackedWidget::Drives, _drivesWidget);
 
-    QLabel *notImplementedLabel = new QLabel(tr("Not implemented!"), this);
-    notImplementedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    notImplementedLabel->setObjectName("defaultTitleLabel");
-    _stackedWidget->insertWidget(StackedWidget::Preferences, notImplementedLabel);
+    _preferencesWidget = new PreferencesWidget(this);
+    _stackedWidget->insertWidget(StackedWidget::Preferences, _preferencesWidget);
 
     mainVBox->addWidget(_stackedWidget);
     mainVBox->setStretchFactor(_stackedWidget, 1);
@@ -77,6 +85,11 @@ void ParametersDialog::initUI()
 
     connect(_mainMenuBarWidget, &MainMenuBarWidget::drivesButtonClicked, this, &ParametersDialog::onDrivesButtonClicked);
     connect(_mainMenuBarWidget, &MainMenuBarWidget::preferencesButtonClicked, this, &ParametersDialog::onPreferencesButtonClicked);
+    connect(_drivesWidget, &DrivesWidget::addDrive, this, &ParametersDialog::onAddDrive);
+    connect(_drivesWidget, &DrivesWidget::runSync, this, &ParametersDialog::onRunSync);
+    connect(_drivesWidget, &DrivesWidget::pauseSync, this, &ParametersDialog::onPauseSync);
+    connect(_drivesWidget, &DrivesWidget::resumeSync, this, &ParametersDialog::onResumeSync);
+    connect(_drivesWidget, &DrivesWidget::remove, this, &ParametersDialog::onRemove);
 }
 
 void ParametersDialog::onRefreshAccountList()
@@ -103,6 +116,7 @@ void ParametersDialog::onRefreshAccountList()
             // Set or update account name & color
             accountInfoIt->second._name = accountStatePtr->account()->driveName();
             accountInfoIt->second._color = accountStatePtr->account()->getDriveColor();
+            accountInfoIt->second._isSignedIn = !accountStatePtr->isSignedOut();
 
             OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
             for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
@@ -153,6 +167,41 @@ void ParametersDialog::onRefreshAccountList()
     }
 }
 
+void ParametersDialog::onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress)
+{
+    OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderId);
+    if (folder) {
+#ifdef CONSOLE_DEBUG
+        std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
+                  << " - ParametersDialog::onUpdateProgress folder: " << folder->path().toStdString() << std::endl;
+#endif
+
+        OCC::AccountPtr account = folder->accountState()->account();
+        if (account) {
+            const auto accountInfoIt = _accountInfoMap.find(account->id());
+            if (accountInfoIt != _accountInfoMap.end()) {
+                const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
+                if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
+                    FolderInfo *folderInfo = folderInfoIt->second;
+                    folderInfo->_currentFile = progress.currentFile();
+                    folderInfo->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
+                    folderInfo->_completedSize = progress.completedSize();
+                    folderInfo->_totalSize = qMax(progress.completedSize(), progress.totalSize());
+                    folderInfo->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
+                    folderInfo->_paused = folder->syncPaused();
+                    folderInfo->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
+                    folderInfo->_status = folder->syncResult().status();
+                }
+
+                // Compute account status
+                accountInfoIt->second.updateStatus();
+
+                _drivesWidget->addOrUpdateDrive(account->id(), accountInfoIt->second);
+            }
+        }
+    }
+}
+
 void ParametersDialog::onDrivesButtonClicked()
 {
     _stackedWidget->setCurrentIndex(StackedWidget::Drives);
@@ -161,6 +210,51 @@ void ParametersDialog::onDrivesButtonClicked()
 void ParametersDialog::onPreferencesButtonClicked()
 {
     _stackedWidget->setCurrentIndex(StackedWidget::Preferences);
+}
+
+void ParametersDialog::onAddDrive()
+{
+    emit addDrive();
+}
+
+void ParametersDialog::onRunSync(const QString &accountId)
+{
+    OCC::Utility::runSync(accountId);
+}
+
+void ParametersDialog::onPauseSync(const QString &accountId)
+{
+    OCC::Utility::pauseSync(accountId, true);
+}
+
+void ParametersDialog::onResumeSync(const QString &accountId)
+{
+    OCC::Utility::pauseSync(accountId, false);
+}
+
+void ParametersDialog::onRemove(const QString &accountId)
+{
+    OCC::AccountManager *accountManager = OCC::AccountManager::instance();
+    OCC::AccountStatePtr accountStatePtr = accountManager->getAccountStateFromId(accountId);
+    if (accountStatePtr.data()) {
+        QMessageBox messageBox(QMessageBox::Question,
+            tr("Confirm Account Removal"),
+            tr("<p>Do you really want to remove the connection to the account <i>%1</i>?</p>"
+               "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
+                .arg(accountStatePtr->account()->driveName()),
+            QMessageBox::NoButton,
+            this);
+        QPushButton *yesButton = messageBox.addButton(tr("Remove connection"), QMessageBox::YesRole);
+        messageBox.addButton(tr("Cancel"), QMessageBox::NoRole);
+
+        messageBox.exec();
+        if (messageBox.clickedButton() != yesButton) {
+            return;
+        }
+
+        accountManager->deleteAccount(accountStatePtr.data());
+        accountManager->save();
+    }
 }
 
 }
