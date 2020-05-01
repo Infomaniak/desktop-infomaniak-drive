@@ -318,6 +318,7 @@ QSslConfiguration Account::getOrCreateSslConfig()
     // if setting the client certificate fails, you will probably get an error similar to this:
     //  "An internal error number 1060 happened. SSL handshake failed, client certificate was requested: SSL error: sslv3 alert handshake failure"
     QSslConfiguration sslConfig = QSslConfiguration::defaultConfiguration();
+    sslConfig.setProtocol(QSsl::TlsV1_0OrLater);
 
     // Try hard to re-use session for different requests
     sslConfig.setSslOption(QSsl::SslOptionDisableSessionTickets, false);
