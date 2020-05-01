@@ -40,11 +40,29 @@ class CustomToolButton : public QToolButton
 public:
     explicit CustomToolButton(QWidget *parent = nullptr);
 
-    inline bool withMenu() const { return _withMenu; };
-    void setWithMenu(bool withMenu);
-
-    inline QString iconPath() const { return _iconPath; };
     inline void setIconPath(const QString &path) { _iconPath = path; }
+    void setWithMenu(bool withMenu);
+    inline void setToolTip(const QString &text) { _toolTipText = text; }
+    inline void setToolTipDuration(int msec) { _toolTipDuration = msec; }
+
+signals:
+    void baseIconSizeChanged();
+    void iconColorChanged();
+
+private:
+    bool _withMenu;
+    QSize _baseIconSize;
+    QString _iconPath;
+    QColor _iconColor;
+    QColor _iconColorHover;
+    QString _toolTipText;
+    int _toolTipDuration;
+    bool _hover;
+    CustomToolTip *_customToolTip;
+
+    bool event(QEvent *event) override;
+    void enterEvent(QEvent *event) override;
+    void leaveEvent(QEvent *event) override;
 
     inline QSize baseIconSize() const { return _baseIconSize; }
     inline void setBaseIconSize(const QSize& size) {
@@ -61,27 +79,8 @@ public:
     inline QColor iconColorHover() const { return _iconColorHover; }
     inline void setIconColorHover(const QColor& color) { _iconColorHover = color; }
 
-    inline void setToolTip(const QString &text) { _toolTipText = text; }
-    inline void setToolTipDuration(int msec) { _toolTipDuration = msec; }
-
-signals:
-    void baseIconSizeChanged();
-    void iconColorChanged();
-
-private:
-    bool _withMenu;
-    QSize _baseIconSize;
-    QString _iconPath;
-    QColor _iconColor;
-    QColor _iconColorHover;
-    QString _toolTipText;
-    int _toolTipDuration;
-    CustomToolTip *_customToolTip;
-
-    bool event(QEvent *event) override;
-    void enterEvent(QEvent *event) override;
-    void leaveEvent(QEvent *event) override;
-    void applyIconSizeAndColor(const QColor &color);
+    void applyIconSizeAndColor();
+    void setHover(bool hover);
 
 private slots:
     void onBaseIconSizeChanged();

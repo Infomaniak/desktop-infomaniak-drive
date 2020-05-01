@@ -37,8 +37,18 @@ public:
     explicit CustomPushButton(QWidget *parent = nullptr);
     explicit CustomPushButton(const QString &text, QWidget *parent = nullptr);
 
-    inline QString iconPath() const { return _iconPath; };
     inline void setIconPath(const QString &path) { _iconPath = path; }
+
+signals:
+    void iconColorChanged();
+    void iconColorCheckedChanged();
+
+private:
+    QString _iconPath;
+    QColor _iconColor;
+    QColor _iconColorChecked;
+
+    bool event(QEvent *event);
 
     inline QColor iconColor() const { return _iconColor; }
     inline void setIconColor(const QColor& color) {
@@ -51,17 +61,6 @@ public:
         _iconColorChecked = color;
         emit iconColorCheckedChanged();
     }
-
-signals:
-    void iconColorChanged();
-    void iconColorCheckedChanged();
-
-private:
-    QString _iconPath;
-    QColor _iconColor;
-    QColor _iconColorChecked;
-
-    bool event(QEvent *event);
 
 private slots:
     void onIconColorChanged();

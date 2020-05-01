@@ -38,9 +38,6 @@ class ButtonsBarWidget : public QWidget
 public:
     explicit ButtonsBarWidget(QWidget *parent = nullptr);
 
-    inline QColor backgroundColor() const { return _backgroundColor; }
-    inline void setBackgroundColor(const QColor& value) { _backgroundColor = value; }
-
     void insertButton(int position, CustomPushButton *button);
     void selectButton(int position);
     inline int position() const { return _position; }
@@ -55,6 +52,9 @@ private:
     QList<CustomPushButton*> buttonsList;
 
     void paintEvent(QPaintEvent *event) override;
+
+    inline QColor backgroundColor() const { return _backgroundColor; }
+    inline void setBackgroundColor(const QColor& value) { _backgroundColor = value; }
 
 private slots:
     void onToggle(bool checked);

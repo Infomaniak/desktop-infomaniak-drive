@@ -36,12 +36,6 @@ class MainMenuBarWidget : public HalfRoundRectWidget
 public:
     explicit MainMenuBarWidget(QWidget *parent = nullptr);
 
-    inline QColor logoColor() const { return _logoColor; }
-    inline void setLogoColor(const QColor& color) {
-        _logoColor = color;
-        emit logoColorChanged();
-    }
-
 signals:
     void logoColorChanged();
     void drivesButtonClicked();
@@ -50,6 +44,12 @@ signals:
 private:
     QColor _logoColor;
     QLabel *_logoTextIconLabel;
+
+    inline QColor logoColor() const { return _logoColor; }
+    inline void setLogoColor(const QColor& color) {
+        _logoColor = color;
+        emit logoColorChanged();
+    }
 
 private slots:
     void onLogoColorChanged();

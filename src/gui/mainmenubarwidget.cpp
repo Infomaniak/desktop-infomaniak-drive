@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 namespace KDC {
 
 static const int hMargin = 15;
-static const int vMargin = 15;
+static const int vMargin = 10;
 static const int hLogoSpacing = 10;
 static const int hButtonsSpacing = 30;
 static const int logoIconSize = 39;

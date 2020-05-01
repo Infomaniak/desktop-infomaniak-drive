@@ -26,11 +26,9 @@ namespace KDC {
 class PreferencesWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit PreferencesWidget(QWidget *parent = nullptr);
-
-signals:
-
 };
 
 }

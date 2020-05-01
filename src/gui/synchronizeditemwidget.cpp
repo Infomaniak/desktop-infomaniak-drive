@@ -143,6 +143,8 @@ void SynchronizedItemWidget::setSelected(bool isSelected)
     bool fileExists = QFile(_item.fullFilePath()).exists();
     _folderButton->setVisible(_isSelected && fileExists);
     _menuButton->setVisible(_isSelected && fileExists);
+    _fileDirectionLabel->setVisible(_isSelected);
+    repaint();
 }
 
 void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
@@ -170,18 +172,18 @@ void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
     }
 }
 
-bool SynchronizedItemWidget::event(QEvent *event)
+void SynchronizedItemWidget::enterEvent(QEvent *event)
 {
-    if (event->type() == QEvent::Enter) {
-        _fileDirectionLabel->setVisible(true);
-    }
-    else if (event->type() == QEvent::Leave
-             || event->type() == QEvent::MouseButtonPress
-             || event->type() == QEvent::MouseButtonDblClick) {
-        _fileDirectionLabel->setVisible(false);
-    }
-    return QWidget::event(event);
+    Q_UNUSED(event)
 
+    setSelected(true);
+}
+
+void SynchronizedItemWidget::leaveEvent(QEvent *event)
+{
+    Q_UNUSED(event)
+
+    setSelected(false);
 }
 
 QString SynchronizedItemWidget::getFileIconPathFromFileName(const QString &fileName) const
@@ -309,13 +311,13 @@ void SynchronizedItemWidget::onDirectionIconColorChanged()
 
 void SynchronizedItemWidget::onFolderButtonClicked()
 {
-    emit openFolder();
+    emit openFolder(_item);
 }
 
 void SynchronizedItemWidget::onMenuButtonClicked()
 {
     if (_menuButton) {
-        MenuWidget *menu = new MenuWidget(this);
+        MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
         QWidgetAction *openAction = new QWidgetAction(this);
         MenuItemWidget *openMenuItemWidget = new MenuItemWidget(tr("Open"));
@@ -354,7 +356,7 @@ void SynchronizedItemWidget::onMenuButtonClicked()
         connect(displayOnDriveAction, &QWidgetAction::triggered, this, &SynchronizedItemWidget::onDisplayOnDriveActionTriggered);
         menu->addAction(displayOnDriveAction);
 
-        menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()), true);
+        menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()));
     }
 }
 
@@ -362,35 +364,35 @@ void SynchronizedItemWidget::onOpenActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    emit open();
+    emit open(_item);
 }
 
 void SynchronizedItemWidget::onFavoritesActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    emit addToFavourites();
+    emit addToFavourites(_item);
 }
 
 void SynchronizedItemWidget::onRightAndSharingActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    emit manageRightAndSharing();
+    emit manageRightAndSharing(_item);
 }
 
 void SynchronizedItemWidget::onCopyLinkActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    emit copyLink();
+    emit copyLink(_item);
 }
 
 void SynchronizedItemWidget::onDisplayOnDriveActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    emit displayOnWebview();
+    emit displayOnWebview(_item);
 }
 
 }

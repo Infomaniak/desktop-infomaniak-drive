@@ -17,39 +17,44 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "preferenceswidget.h"
 #include "preferencesblocwidget.h"
 
-#include <QLabel>
-#include <QVBoxLayout>
+#include <QPainter>
 
 namespace KDC {
 
-static const int boxHMargin= 20;
-static const int boxVMargin = 20;
-static const int boxSpacing = 12;
+static const int cornerRadius = 10;
+static const int boxHMargin= 15;
+static const int boxVMargin = 18;
+static const int boxSpacing = 20;
 
-PreferencesWidget::PreferencesWidget(QWidget *parent)
+PreferencesBlocWidget::PreferencesBlocWidget(QWidget *parent)
     : QWidget(parent)
+    , _layout(nullptr)
 {
     setContentsMargins(0, 0, 0, 0);
 
-    QVBoxLayout *vbox = new QVBoxLayout();
-    vbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
-    vbox->setSpacing(boxSpacing);
-    setLayout(vbox);
+    _layout = new QVBoxLayout();
+    _layout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    _layout->setSpacing(boxSpacing);
+    setLayout(_layout);
+}
 
-    QLabel *generalLabel = new QLabel(tr("General"), this);
-    generalLabel->setObjectName("generalLabel");
-    vbox->addWidget(generalLabel);
+void PreferencesBlocWidget::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
 
-    PreferencesBlocWidget *generalBloc = new PreferencesBlocWidget(this);
-    vbox->addWidget(generalBloc);
+    // Draw background
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setPen(Qt::NoPen);
 
-    QLabel *folderConfirmationLabel = new QLabel(tr("Ask for confirmation before synchronizing files greater than"), this);
-    generalBloc->layout()->addWidget(folderConfirmationLabel);
+    // Draw round rectangle
+    QPainterPath painterPath;
+    painterPath.addRoundedRect(rect(), cornerRadius, cornerRadius);
 
-    vbox->addStretch();
+    painter.setBrush(backgroundColor());
+    painter.drawPath(painterPath);
 }
 
 }

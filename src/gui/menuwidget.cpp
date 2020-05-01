@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QAction>
 #include <QGraphicsDropShadowEffect>
 #include <QPainter>
+#include <QTimer>
 
 namespace KDC {
 
@@ -31,11 +32,12 @@ const std::string MenuWidget::actionTypeProperty = "actionType";
 static const int contentMargin = 10;
 static const int cornerRadius = 5;
 static const int shadowBlurRadius = 10;
-static const int offsetX = -30;
-static const int offsetY = 10;
+static const int menuOffsetX = -30;
+static const int menuOffsetY = 10;
 
-MenuWidget::MenuWidget(QWidget *parent)
+MenuWidget::MenuWidget(Type type, QWidget *parent)
     : QMenu(parent)
+    , _type(type)
     , _backgroundColor(QColor())
 {
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
@@ -48,22 +50,14 @@ MenuWidget::MenuWidget(QWidget *parent)
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
     setGraphicsEffect(effect);
+
+    connect(this, &MenuWidget::aboutToShow, this, &MenuWidget::onAboutToShow);
 }
 
-MenuWidget::MenuWidget(const QString &title, QWidget *parent)
-    : MenuWidget(parent)
+MenuWidget::MenuWidget(Type type, const QString &title, QWidget *parent)
+    : MenuWidget(type, parent)
 {
     setTitle(title);
-}
-
-QAction *MenuWidget::exec(const QPoint &pos, bool offsetAuto)
-{
-    if (offsetAuto) {
-        return QMenu::exec(pos + QPoint(offsetX, offsetY));
-    }
-    else {
-        return QMenu::exec(pos);
-    }
 }
 
 void MenuWidget::paintEvent(QPaintEvent *event)
@@ -80,6 +74,24 @@ void MenuWidget::paintEvent(QPaintEvent *event)
     painter.drawPath(painterPath);
 
     QMenu::paintEvent(event);
+}
+
+void MenuWidget::onAboutToShow()
+{
+    QPoint position;
+    switch (_type) {
+    case Menu:
+        position = QPoint(menuOffsetX, menuOffsetY);
+        break;
+    case Submenu:
+        position = QPoint(pos().x() < parentWidget()->pos().x() ? contentMargin - 1 : -contentMargin, 0);
+        break;
+    case List:
+        position = QPoint(0, 0);
+        break;
+    }
+
+    QTimer::singleShot(0, [this, position](){ move(pos() + position); });
 }
 
 }

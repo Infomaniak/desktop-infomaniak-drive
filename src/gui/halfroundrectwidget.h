@@ -35,9 +35,6 @@ class HalfRoundRectWidget : public QWidget
 public:
     explicit HalfRoundRectWidget(QWidget *parent = nullptr);
 
-    inline QColor bottomCornersColor() const { return _bottomCornersColor; }
-    inline void setBottomCornersColor(const QColor &value) { _bottomCornersColor = value; }
-
     void setContentsMargins(int left, int top, int right, int bottom);
     void setSpacing(int spacing);
     void addWidget(QWidget *widget, int stretch = 0, Qt::Alignment alignment = Qt::Alignment());
@@ -49,6 +46,9 @@ private:
     QHBoxLayout *_hboxLayout;
 
     void paintEvent(QPaintEvent *event) override;
+
+    inline QColor bottomCornersColor() const { return _bottomCornersColor; }
+    inline void setBottomCornersColor(const QColor &value) { _bottomCornersColor = value; }
 };
 
 }

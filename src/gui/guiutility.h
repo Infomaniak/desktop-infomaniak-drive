@@ -29,6 +29,9 @@
 
 namespace OCC {
 namespace Utility {
+    static const QString linkStyle = QString("color:#0098FF; font-weight: 450; text-decoration:none;");
+    static const QString learnMoreLink = QString("learnMoreLink");
+
     enum systrayPosition {
         Top = 0,
         Bottom,
@@ -70,7 +73,7 @@ namespace Utility {
     void setStyle(QApplication *app);
 
     QString getFileStatusIconPath(SyncFileItem::Status status);
-    QString getFolderStatusIconPath(bool paused, OCC::SyncResult::Status status, qint64 totalFiles);
+    QString getFolderStatusIconPath(bool paused, OCC::SyncResult::Status status);
     QString getFolderStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status,
                                     qint64 currentFile, qint64 totalFiles, qint64 estimatedRemainingTime);
     QString getAccountStatusIconPath(bool paused, OCC::SyncResult::Status status);

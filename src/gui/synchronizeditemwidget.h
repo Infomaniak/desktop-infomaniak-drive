@@ -44,6 +44,36 @@ class SynchronizedItemWidget : public QWidget
 public:
     explicit SynchronizedItemWidget(const SynchronizedItem &item, QWidget *parent = nullptr);
 
+    inline const SynchronizedItem *item() const { return &_item; };
+
+signals:
+    void fileIconSizeChanged();
+    void directionIconSizeChanged();
+    void directionIconColorChanged();
+    void openFolder(const SynchronizedItem &item);
+    void open(const SynchronizedItem &item);
+    void addToFavourites(const SynchronizedItem &item);
+    void manageRightAndSharing(const SynchronizedItem &item);
+    void copyLink(const SynchronizedItem &item);
+    void displayOnWebview(const SynchronizedItem &item);
+
+private:
+    SynchronizedItem _item;
+    bool _isSelected;
+    QSize _fileIconSize;
+    QSize _directionIconSize;
+    QColor _directionIconColor;
+    QColor _backgroundColor;
+    QColor _backgroundColorSelection;
+    QLabel *_fileIconLabel;
+    QLabel *_fileDirectionLabel;
+    CustomToolButton *_folderButton;
+    CustomToolButton *_menuButton;
+
+    void paintEvent(QPaintEvent* event) override;
+    void enterEvent(QEvent *event) override;
+    void leaveEvent(QEvent *event) override;
+
     inline QSize fileIconSize() const { return _fileIconSize; }
     inline void setFileIconSize(const QSize &size) {
         _fileIconSize = size;
@@ -68,41 +98,10 @@ public:
     inline QColor backgroundColorSelection() const { return _backgroundColorSelection; }
     inline void setBackgroundColorSelection(const QColor &value) { _backgroundColorSelection = value; }
 
-    bool isSelected() const { return _isSelected; };
-    void setSelected(bool isSelected);
-
-    inline const SynchronizedItem *item() const { return &_item; };
-
-signals:
-    void fileIconSizeChanged();
-    void directionIconSizeChanged();
-    void directionIconColorChanged();
-    void openFolder();
-    void open();
-    void addToFavourites();
-    void manageRightAndSharing();
-    void copyLink();
-    void displayOnWebview();
-
-private:
-    SynchronizedItem _item;
-    bool _isSelected;
-    QSize _fileIconSize;
-    QSize _directionIconSize;
-    QColor _directionIconColor;
-    QColor _backgroundColor;
-    QColor _backgroundColorSelection;
-    QLabel *_fileIconLabel;
-    QLabel *_fileDirectionLabel;
-    CustomToolButton *_folderButton;
-    CustomToolButton *_menuButton;
-
-    void paintEvent(QPaintEvent* event) override;
-    bool event(QEvent *event) override;
-
     QString getFileIconPathFromFileName(const QString &fileName) const;
     QIcon getIconWithStatus(const QString &filePath, OCC::SyncFileItem::Status status);
     void setDirectionIcon();
+    void setSelected(bool isSelected);
 
 private slots:
     void onFileIconSizeChanged();

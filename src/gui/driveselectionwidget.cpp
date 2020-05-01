@@ -163,7 +163,7 @@ void DriveSelectionWidget::onClick(bool checked)
     QApplication::sendEvent(this, new QEvent(QEvent::HoverLeave));
 
     if (_driveMap.size() > 0) {
-        MenuWidget *menu = new MenuWidget(this);
+        MenuWidget *menu = new MenuWidget(MenuWidget::List, this);
 
         for (auto driveMapElt : _driveMap) {
             if (driveMapElt.first != _currentDriveId) {

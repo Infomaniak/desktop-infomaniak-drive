@@ -46,34 +46,6 @@ public:
     void setRightIcon(const QString &path, const QColor &color = QColor(), const QSize &size = QSize());
     void setRightIcon(const QIcon &icon, const QSize &size = QSize());
 
-    inline QColor defaultIconColor() const { return _defaultIconColor; }
-    inline void setDefaultIconColor(QColor color)
-    {
-        _defaultIconColor = color;
-        emit defaultIconColorChanged();
-    }
-
-    inline QColor checkIconColor() const { return _checkIconColor; }
-    inline void setCheckIconColor(QColor color)
-    {
-        _checkIconColor = color;
-        emit checkIconColorChanged();
-    }
-
-    inline QSize defaultIconSize() const { return _defaultIconSize; }
-    inline void setDefaultIconSize(QSize size)
-    {
-        _defaultIconSize = size;
-        emit defaultIconSizeChanged();
-    }
-
-    inline QSize submenuIconSize() const { return _submenuIconSize; }
-    inline void setSubmenuIconSize(QSize size)
-    {
-        _submenuIconSize = size;
-        emit submenuIconSizeChanged();
-    }
-
     bool getChecked() const { return _checked; };
     void setChecked(bool value) { _checked = value; };
 
@@ -103,6 +75,34 @@ private:
     bool _hasSubmenu;
 
     void paintEvent(QPaintEvent *paintEvent);
+
+    inline QColor defaultIconColor() const { return _defaultIconColor; }
+    inline void setDefaultIconColor(QColor color)
+    {
+        _defaultIconColor = color;
+        emit defaultIconColorChanged();
+    }
+
+    inline QColor checkIconColor() const { return _checkIconColor; }
+    inline void setCheckIconColor(QColor color)
+    {
+        _checkIconColor = color;
+        emit checkIconColorChanged();
+    }
+
+    inline QSize defaultIconSize() const { return _defaultIconSize; }
+    inline void setDefaultIconSize(QSize size)
+    {
+        _defaultIconSize = size;
+        emit defaultIconSizeChanged();
+    }
+
+    inline QSize submenuIconSize() const { return _submenuIconSize; }
+    inline void setSubmenuIconSize(QSize size)
+    {
+        _submenuIconSize = size;
+        emit submenuIconSizeChanged();
+    }
 
     void setIcons();
 

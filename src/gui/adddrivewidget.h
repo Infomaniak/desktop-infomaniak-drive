@@ -37,6 +37,17 @@ public:
     explicit AddDriveWidget(QWidget *parent = nullptr);
     QSize sizeHint() const override;
 
+signals:
+    void addIconSizeChanged();
+    void addIconColorChanged();
+    void addDrive();
+
+private:
+    QSize _addIconSize;
+    QColor _addIconColor;
+    QLabel *_addIconLabel;
+    QLabel *_addTextLabel;
+
     inline QSize addIconSize() const { return _addIconSize; }
     inline void setAddIconSize(QSize size) {
         _addIconSize = size;
@@ -48,17 +59,6 @@ public:
         _addIconColor = color;
         emit addIconColorChanged();
     }
-
-signals:
-    void addIconSizeChanged();
-    void addIconColorChanged();
-    void addDrive();
-
-private:
-    QSize _addIconSize;
-    QColor _addIconColor;
-    QLabel *_addIconLabel;
-    QLabel *_addTextLabel;
 
     void setAddIcon();
 

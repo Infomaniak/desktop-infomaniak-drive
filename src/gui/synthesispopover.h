@@ -60,8 +60,6 @@ public:
 
     explicit SynthesisPopover(bool debugMode, QWidget *parent = nullptr);
 
-    inline QColor backgroundMainColor() const { return _backgroundMainColor; }
-    inline void setBackgroundMainColor(const QColor &value) { _backgroundMainColor = value; }
     void setPosition(const QRect &sysTrayIconRect);
 
 signals:
@@ -90,7 +88,6 @@ private:
         qint64 _used;
         StackedWidget _stackedWidgetPosition;
         QListWidget *_synchronizedListWidget;
-        QListWidgetItem *_currentSynchronizedWidgetItem;
         int _synchronizedListStackPosition;
         int _favoritesListStackPosition;
         int _activityListStackPosition;
@@ -119,11 +116,14 @@ private:
     void changeEvent(QEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
     bool event(QEvent *event) override;
+
+    inline QColor backgroundMainColor() const { return _backgroundMainColor; }
+    inline void setBackgroundMainColor(const QColor &value) { _backgroundMainColor = value; }
+
     void initUI();
     QString folderPath(const QString &folderId, const QString &filePath);
     QUrl folderUrl(const QString &folderId, const QString &filePath);
     void openUrl(const QString &folderId, const QString &filePath = QString());
-    const SynchronizedItem *currentSynchronizedItem();
     const FolderInfo *getActiveFolder(const std::map<QString, FolderInfo *> &folderMap);
     void refreshStatusBar(const FolderInfo *folderInfo);
     void refreshStatusBar(std::map<QString, AccountInfoPopover>::iterator accountStatusIt);
@@ -152,14 +152,14 @@ private slots:
     void onResumeSync(bool all);
     void onRunSync(bool all);
     void onButtonBarToggled(int position);
-    void onCurrentSynchronizedWidgetItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
-    void onOpenFolderItem();
-    void onOpenItem();
-    void onAddToFavouriteItem();
-    void onManageRightAndSharingItem();
-    void onCopyLinkItem();
-    void onOpenWebviewItem();
+    void onOpenFolderItem(const SynchronizedItem &item);
+    void onOpenItem(const SynchronizedItem &item);
+    void onAddToFavouriteItem(const SynchronizedItem &item);
+    void onManageRightAndSharingItem(const SynchronizedItem &item);
+    void onCopyLinkItem(const SynchronizedItem &item);
+    void onOpenWebviewItem(const SynchronizedItem &item);
     void onCopyUrlToClipboard(const QString &url);
+    void onLinkActivated(const QString &link);
 };
 
 }

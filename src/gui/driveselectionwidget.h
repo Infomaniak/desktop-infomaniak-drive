@@ -53,6 +53,26 @@ public:
     void removeDrive(QString id);
     void selectDrive(QString id);
 
+signals:
+    void driveIconSizeChanged();
+    void downIconSizeChanged();
+    void downIconColorChanged();
+    void addIconColorChanged();
+    void driveSelected(QString id);
+    void addDrive();
+
+private:
+    QSize _driveIconSize;
+    QSize _downIconSize;
+    QColor _downIconColor;
+    QSize _menuRightIconSize;
+    QColor _addIconColor;
+    std::map<QString, AccountInfo> _driveMap;
+    QString _currentDriveId;
+    QLabel *_driveIconLabel;
+    QLabel *_driveTextLabel;
+    QLabel *_downIconLabel;
+
     inline QSize driveIconSize() const { return _driveIconSize; }
     inline void setDriveIconSize(QSize size) {
         _driveIconSize = size;
@@ -79,26 +99,6 @@ public:
         _addIconColor = color;
         emit addIconColorChanged();
     }
-
-signals:
-    void driveIconSizeChanged();
-    void downIconSizeChanged();
-    void downIconColorChanged();
-    void addIconColorChanged();
-    void driveSelected(QString id);
-    void addDrive();
-
-private:
-    QSize _driveIconSize;
-    QSize _downIconSize;
-    QColor _downIconColor;
-    QSize _menuRightIconSize;
-    QColor _addIconColor;
-    std::map<QString, AccountInfo> _driveMap;
-    QString _currentDriveId;
-    QLabel *_driveIconLabel;
-    QLabel *_driveTextLabel;
-    QLabel *_downIconLabel;
 
     void setDriveIcon(const QColor &color);
     void setAddDriveIcon();

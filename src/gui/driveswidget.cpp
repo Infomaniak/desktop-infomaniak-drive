@@ -50,7 +50,7 @@ DrivesWidget::DrivesWidget(QWidget *parent)
 
     // Drive list
     _driveListWidget = new QListWidget(this);
-    _driveListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    _driveListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     _driveListWidget->setSpacing(0);
     mainVBox->addWidget(_driveListWidget);
     mainVBox->setStretchFactor(_driveListWidget, 1);

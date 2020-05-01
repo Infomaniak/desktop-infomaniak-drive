@@ -467,6 +467,7 @@ void SynthesisPopover::initUI()
     connect(_statusBarWidget, &StatusBarWidget::pauseSync, this, &SynthesisPopover::onPauseSync);
     connect(_statusBarWidget, &StatusBarWidget::resumeSync, this, &SynthesisPopover::onResumeSync);
     connect(_statusBarWidget, &StatusBarWidget::runSync, this, &SynthesisPopover::onRunSync);
+    connect(_statusBarWidget, &StatusBarWidget::linkActivated, this, &SynthesisPopover::onLinkActivated);
     connect(_buttonsBarWidget, &ButtonsBarWidget::buttonToggled, this, &SynthesisPopover::onButtonBarToggled);
 }
 
@@ -523,20 +524,6 @@ void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
             }
         }
     }
-}
-
-const SynchronizedItem *SynthesisPopover::currentSynchronizedItem()
-{
-    const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
-    if (accountInfoIt != _accountInfoMap.end()) {
-        if (accountInfoIt->second._synchronizedListWidget && accountInfoIt->second._currentSynchronizedWidgetItem) {
-            SynchronizedItemWidget *synchronizedItemWidget = dynamic_cast<SynchronizedItemWidget *>(
-                        accountInfoIt->second._synchronizedListWidget->itemWidget(
-                            accountInfoIt->second._currentSynchronizedWidgetItem));
-            return synchronizedItemWidget->item();
-        }
-    }
-    return nullptr;
 }
 
 const FolderInfo *SynthesisPopover::getActiveFolder(const std::map<QString, FolderInfo *> &folderMap)
@@ -609,23 +596,7 @@ void SynthesisPopover::setSynchronizedDefaultPage(QWidget **widget, QWidget *par
         vboxLayout->addStretch();
         (*widget)->setLayout(vboxLayout);
 
-        connect(defaultTextLabel, &QLabel::linkActivated, this, [](const QString &link) {
-            QUrl url = QUrl(link);
-            if (url.isValid()) {
-                if (!QDesktopServices::openUrl(QUrl(link))) {
-                    qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << link;
-                    QMessageBox msgBox;
-                    msgBox.setText(tr("Unable to open link %1.").arg(link));
-                    msgBox.exec();
-                }
-            }
-            else {
-                qCWarning(lcSynthesisPopover) << "Invalid link " << link;
-                QMessageBox msgBox;
-                msgBox.setText(tr("Invalid link %1.").arg(link));
-                msgBox.exec();
-            }
-        });
+        connect(defaultTextLabel, &QLabel::linkActivated, this, &SynthesisPopover::onLinkActivated);
     }
 
     // Set text
@@ -650,10 +621,11 @@ void SynthesisPopover::setSynchronizedDefaultPage(QWidget **widget, QWidget *par
         }
         else {
             QUrl defaultFolderUrl = folderUrl(folderId, QString());
-            const QString linkStyle = QString("color:#0098FF; font-weight: 450; text-decoration:none;");
             defaultTextLabel->setText(tr("You can synchronize files <a style=\"%1\" href=\"%2\">from your computer</a>"
                                          " or on <a style=\"%1\" href=\"%3\">drive.infomaniak.com</a>.")
-                                      .arg(linkStyle).arg(defaultFolderUrl.toString()).arg(accountUrl.toString()));
+                                      .arg(OCC::Utility::linkStyle)
+                                      .arg(defaultFolderUrl.toString())
+                                      .arg(accountUrl.toString()));
         }
     }
     else {
@@ -834,7 +806,13 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
               << " - SynthesisPopover::onItemCompleted" << std::endl;
 #endif
 
-    if (syncFileItemPtr.data()->_status == OCC::SyncFileItem::FileIgnored) {
+    if (syncFileItemPtr.data()->_status == OCC::SyncFileItem::NoStatus
+            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::FatalError
+            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::NormalError
+            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::SoftError
+            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::DetailError
+            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::BlacklistedError
+            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::FileIgnored) {
         return;
     }
 
@@ -849,8 +827,6 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                     accountInfoIt->second._synchronizedListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
                     accountInfoIt->second._synchronizedListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
                     accountInfoIt->second._synchronizedListWidget->setSpacing(0);
-                    connect(accountInfoIt->second._synchronizedListWidget, &QListWidget::currentItemChanged,
-                            this, &SynthesisPopover::onCurrentSynchronizedWidgetItemChanged);
                     accountInfoIt->second._synchronizedListStackPosition =
                             _stackedWidget->addWidget(accountInfoIt->second._synchronizedListWidget);
                     if (_currentAccountId == accountInfoIt->first
@@ -879,19 +855,10 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                 connect(widget, &SynchronizedItemWidget::copyLink, this, &SynthesisPopover::onCopyLinkItem);
                 connect(widget, &SynchronizedItemWidget::displayOnWebview, this, &SynthesisPopover::onOpenWebviewItem);
 
-                // Scroll to current item
-                if (accountInfoIt->second._currentSynchronizedWidgetItem) {
-                    accountInfoIt->second._synchronizedListWidget->scrollToItem(
-                                accountInfoIt->second._currentSynchronizedWidgetItem);
-                }
-
                 if (accountInfoIt->second._synchronizedListWidget->count() > maxSynchronizedItems) {
                     // Remove last row
                     QListWidgetItem *lastWidgetItem = accountInfoIt->second._synchronizedListWidget->takeItem(
                                 accountInfoIt->second._synchronizedListWidget->count() - 1);
-                    if (lastWidgetItem == accountInfoIt->second._currentSynchronizedWidgetItem) {
-                        accountInfoIt->second._currentSynchronizedWidgetItem = nullptr;
-                    }
                     delete lastWidgetItem;
                 }
             }
@@ -912,7 +879,7 @@ void SynthesisPopover::onOpenFolderMenu(bool checked)
         }
         else if (accountInfoIt->second._folderMap.size() > 1) {
             // Open menu
-            MenuWidget *menu = new MenuWidget(this);
+            MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
             for (auto folderInfoIt : accountInfoIt->second._folderMap) {
                 QWidgetAction *openFolderAction = new QWidgetAction(this);
                 openFolderAction->setProperty(MenuWidget::actionTypeProperty.c_str(), folderInfoIt.first);
@@ -922,7 +889,7 @@ void SynthesisPopover::onOpenFolderMenu(bool checked)
                 connect(openFolderAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenFolder);
                 menu->addAction(openFolderAction);
             }
-            menu->exec(QWidget::mapToGlobal(_folderButton->geometry().center()), true);
+            menu->exec(QWidget::mapToGlobal(_folderButton->geometry().center()));
         }
     }
 }
@@ -955,7 +922,7 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
     Q_UNUSED(checked)
 
     if (_menuButton) {
-        MenuWidget *menu = new MenuWidget(this);
+        MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
         // Parameters
         QWidgetAction *parametersAction = new QWidgetAction(this);
@@ -979,7 +946,7 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
         menu->addAction(notificationsAction);
 
         // Disable Notifications submenu
-        MenuWidget *submenu = new MenuWidget(this);
+        MenuWidget *submenu = new MenuWidget(MenuWidget::Submenu, menu);
 
         QActionGroup *notificationActionGroup = new QActionGroup(this);
         notificationActionGroup->setExclusive(true);
@@ -1043,7 +1010,7 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
             menu->addAction(crashFatalAction);
         }
 
-        menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()), true);
+        menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()));
     }
 }
 
@@ -1212,100 +1179,68 @@ void SynthesisPopover::onButtonBarToggled(int position)
     }
 }
 
-void SynthesisPopover::onCurrentSynchronizedWidgetItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+void SynthesisPopover::onOpenFolderItem(const SynchronizedItem &item)
 {
-    const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
-    if (accountInfoIt != _accountInfoMap.end()) {
-        if (previous) {
-            SynchronizedItemWidget *previousWidget =
-                    dynamic_cast<SynchronizedItemWidget *>(accountInfoIt->second._synchronizedListWidget->itemWidget(previous));
-            previousWidget->setSelected(false);
-        }
-
-        if (current) {
-            SynchronizedItemWidget *currentWidget =
-                    dynamic_cast<SynchronizedItemWidget *>(accountInfoIt->second._synchronizedListWidget->itemWidget(current));
-            currentWidget->setSelected(true);
-            accountInfoIt->second._currentSynchronizedWidgetItem = current;
-        }
+    QString fullFilePath = folderPath(item.folderId(), item.filePath());
+    if (!fullFilePath.isEmpty()) {
+        OCC::showInFileManager(fullFilePath);
     }
 }
 
-void SynthesisPopover::onOpenFolderItem()
+void SynthesisPopover::onOpenItem(const SynchronizedItem &item)
 {
-    const SynchronizedItem *synchronizedItem = currentSynchronizedItem();
-    if (synchronizedItem) {
-        QString fullFilePath = folderPath(synchronizedItem->folderId(), synchronizedItem->filePath());
-        if (!fullFilePath.isEmpty()) {
-            OCC::showInFileManager(fullFilePath);
-        }
-    }
+    openUrl(item.folderId(), item.filePath());
 }
 
-void SynthesisPopover::onOpenItem()
+void SynthesisPopover::onAddToFavouriteItem(const SynchronizedItem &item)
 {
-    const SynchronizedItem *synchronizedItem = currentSynchronizedItem();
-    if (synchronizedItem) {
-        openUrl(synchronizedItem->folderId(), synchronizedItem->filePath());
-    }
-}
+    Q_UNUSED(item)
 
-void SynthesisPopover::onAddToFavouriteItem()
-{
     QMessageBox msgBox;
     msgBox.setText(tr("Not implemented!"));
     msgBox.exec();
 }
 
-void SynthesisPopover::onManageRightAndSharingItem()
+void SynthesisPopover::onManageRightAndSharingItem(const SynchronizedItem &item)
 {
-    const SynchronizedItem *synchronizedItem = currentSynchronizedItem();
-    if (synchronizedItem) {
-        QString folderRelativePath;
-        QString fullFilePath = folderPath(synchronizedItem->folderId(), synchronizedItem->filePath());
-        OCC::FolderMan::instance()->folderForPath(fullFilePath, &folderRelativePath);
-        if (folderRelativePath == "/") {
-            qCDebug(lcSynthesisPopover) << "Cannot share root directory!";
-            QMessageBox msgBox;
-            msgBox.setText(tr("You cannot share the root directory of your Drive!"));
-            msgBox.exec();
-        }
-        else {
-            emit openShareDialogPublicLinks(folderRelativePath, fullFilePath);
-        }
+    QString folderRelativePath;
+    QString fullFilePath = folderPath(item.folderId(), item.filePath());
+    OCC::FolderMan::instance()->folderForPath(fullFilePath, &folderRelativePath);
+    if (folderRelativePath == "/") {
+        qCDebug(lcSynthesisPopover) << "Cannot share root directory!";
+        QMessageBox msgBox;
+        msgBox.setText(tr("You cannot share the root directory of your Drive!"));
+        msgBox.exec();
+    }
+    else {
+        emit openShareDialogPublicLinks(folderRelativePath, fullFilePath);
     }
 }
 
-void SynthesisPopover::onCopyLinkItem()
+void SynthesisPopover::onCopyLinkItem(const SynchronizedItem &item)
 {
-    const SynchronizedItem *synchronizedItem = currentSynchronizedItem();
-    if (synchronizedItem) {
-        QString folderRelativePath;
-        QString fullFilePath = folderPath(synchronizedItem->folderId(), synchronizedItem->filePath());
-        OCC::FolderMan::instance()->folderForPath(fullFilePath, &folderRelativePath);
+    QString folderRelativePath;
+    QString fullFilePath = folderPath(item.folderId(), item.filePath());
+    OCC::FolderMan::instance()->folderForPath(fullFilePath, &folderRelativePath);
 
-        OCC::Folder *folder = OCC::FolderMan::instance()->folder(synchronizedItem->folderId());
-        QString serverRelativePath = QDir(folder->remotePath()).filePath(folderRelativePath);
+    OCC::Folder *folder = OCC::FolderMan::instance()->folder(item.folderId());
+    QString serverRelativePath = QDir(folder->remotePath()).filePath(folderRelativePath);
 
-        OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
+    OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
 
-        auto job = new OCC::GetOrCreatePublicLinkShare(accountPtr, serverRelativePath, this);
-        connect(job, &OCC::GetOrCreatePublicLinkShare::done, this, &SynthesisPopover::onCopyUrlToClipboard);
-        connect(job, &OCC::GetOrCreatePublicLinkShare::error, this,
-                [=]() { emit openShareDialogPublicLinks(folderRelativePath, fullFilePath); });
+    auto job = new OCC::GetOrCreatePublicLinkShare(accountPtr, serverRelativePath, this);
+    connect(job, &OCC::GetOrCreatePublicLinkShare::done, this, &SynthesisPopover::onCopyUrlToClipboard);
+    connect(job, &OCC::GetOrCreatePublicLinkShare::error, this,
+            [=]() { emit openShareDialogPublicLinks(folderRelativePath, fullFilePath); });
 
-        job->run();
-    }
+    job->run();
 }
 
-void SynthesisPopover::onOpenWebviewItem()
+void SynthesisPopover::onOpenWebviewItem(const SynchronizedItem &item)
 {
-    const SynchronizedItem *synchronizedItem = currentSynchronizedItem();
-    if (synchronizedItem) {
-        OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
-        OCC::fetchPrivateLinkUrl(accountPtr, synchronizedItem->filePath(), synchronizedItem->fileId(), this,
-                                 [this](const QString &url) { OCC::Utility::openBrowser(url, this); });
-    }
+    OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
+    OCC::fetchPrivateLinkUrl(accountPtr, item.filePath(), item.fileId(), this,
+                             [this](const QString &url) { OCC::Utility::openBrowser(url, this); });
 }
 
 void SynthesisPopover::onCopyUrlToClipboard(const QString &url)
@@ -1316,6 +1251,32 @@ void SynthesisPopover::onCopyUrlToClipboard(const QString &url)
     msgBox.exec();
 }
 
+void SynthesisPopover::onLinkActivated(const QString &link)
+{
+    if (link == OCC::Utility::learnMoreLink) {
+        // TODO: add parameters
+        emit openParametersDialog();
+    }
+    else {
+        // URL link
+        QUrl url = QUrl(link);
+        if (url.isValid()) {
+            if (!QDesktopServices::openUrl(QUrl(link))) {
+                qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << link;
+                QMessageBox msgBox;
+                msgBox.setText(tr("Unable to open link %1.").arg(link));
+                msgBox.exec();
+            }
+        }
+        else {
+            qCWarning(lcSynthesisPopover) << "Invalid link " << link;
+            QMessageBox msgBox;
+            msgBox.setText(tr("Invalid link %1.").arg(link));
+            msgBox.exec();
+        }
+    }
+}
+
 SynthesisPopover::AccountInfoPopover::AccountInfoPopover()
     : AccountInfo()
     , _quotaInfoPtr(nullptr)
@@ -1323,7 +1284,6 @@ SynthesisPopover::AccountInfoPopover::AccountInfoPopover()
     , _used(0)
     , _stackedWidgetPosition(StackedWidget::Synchronized)
     , _synchronizedListWidget(nullptr)
-    , _currentSynchronizedWidgetItem(nullptr)
     , _synchronizedListStackPosition(StackedWidget::Synchronized)
     , _favoritesListStackPosition(StackedWidget::Favorites)
     , _activityListStackPosition(StackedWidget::Activity)

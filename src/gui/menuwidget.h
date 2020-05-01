@@ -35,20 +35,28 @@ class MenuWidget : public QMenu
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
 
 public:
+    enum Type {
+        Menu = 0,
+        Submenu,
+        List
+    };
+
     static const std::string actionTypeProperty;
 
-    MenuWidget(QWidget *parent = nullptr);
-    MenuWidget(const QString &title, QWidget *parent = nullptr);
+    MenuWidget(Type type, QWidget *parent = nullptr);
+    MenuWidget(Type type, const QString &title, QWidget *parent = nullptr);
+
+private:
+    Type _type;
+    QColor _backgroundColor;
+
+    void paintEvent(QPaintEvent *event) override;
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(const QColor &color) { _backgroundColor = color; }
 
-    QAction *exec(const QPoint &pos, bool offsetAuto = false);
-
-private:
-    QColor _backgroundColor;
-
-    void paintEvent(QPaintEvent *event) override;
+private slots:
+    void onAboutToShow();
 };
 
 }

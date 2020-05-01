@@ -156,7 +156,7 @@ KDC--DrivesWidget
 KDC--DrivesWidget QListWidget
 {
     background-color: transparent;
-    border-width: 0px;
+    border: 0px;
 }
 
 KDC--DrivesWidget QListWidget::item
@@ -510,4 +510,40 @@ KDC--BottomWidget
     min-height: 5px;
     max-height: 5px;
     qproperty-background_color: #F5F5F5;
+}
+
+/**************************/
+/* KDC--PreferencesWidget */
+/**************************/
+
+KDC--PreferencesWidget
+{
+    background-color: transparent;
+    border: 0px;
+}
+
+KDC--PreferencesWidget QLabel#generalLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 13px;
+}
+
+/******************************/
+/* KDC--PreferencesBlocWidget */
+/******************************/
+
+KDC--PreferencesBlocWidget
+{
+    background-color: transparent;
+    qproperty-background_color: #FFFFFF;
+}
+
+KDC--PreferencesBlocWidget QLabel
+{
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 13px;
 }

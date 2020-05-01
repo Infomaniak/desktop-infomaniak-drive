@@ -77,7 +77,7 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
 void StatusBarWidget::setStatus(bool paused, bool unresolvedConflicts, OCC::SyncResult::Status status,
                                 qint64 currentFile, qint64 totalFiles, qint64 estimatedRemainingTime)
 {
-    _statusIconLabel->setPixmap(QIcon(OCC::Utility::getFolderStatusIconPath(paused, status, totalFiles))
+    _statusIconLabel->setPixmap(QIcon(OCC::Utility::getFolderStatusIconPath(paused, status))
                                 .pixmap(QSize(statusIconSize, statusIconSize)));
 
     _statusLabel->setText(OCC::Utility::getFolderStatusText(paused, unresolvedConflicts, status,
@@ -87,6 +87,8 @@ void StatusBarWidget::setStatus(bool paused, bool unresolvedConflicts, OCC::Sync
     _pauseButton->setVisible(OCC::Utility::getPauseActionAvailable(paused, status, totalFiles));
     _resumeButton->setVisible(OCC::Utility::getResumeActionAvailable(paused, status, totalFiles));
     _syncButton->setVisible(OCC::Utility::getSyncActionAvailable(paused, status, totalFiles));
+
+    connect(_statusLabel, &QLabel::linkActivated, this, &StatusBarWidget::onLinkActivated);
 }
 
 void StatusBarWidget::setSeveralDrives(bool severalDrives)
@@ -102,12 +104,17 @@ void StatusBarWidget::reset()
     setStatus(false, false, OCC::SyncResult::Undefined);
 }
 
+void StatusBarWidget::onLinkActivated(const QString &link)
+{
+    emit linkActivated(link);
+}
+
 void StatusBarWidget::onPauseClicked()
 {
     bool resetButtons = false;
 
     if (_severalDrives) {
-        MenuWidget *menu = new MenuWidget(this);
+        MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
         // Pause
         QWidgetAction *pauseAction = new QWidgetAction(this);
@@ -125,7 +132,7 @@ void StatusBarWidget::onPauseClicked()
         connect(pauseAllAction, &QWidgetAction::triggered, this, &StatusBarWidget::onPauseAllSync);
         menu->addAction(pauseAllAction);
 
-        if (menu->exec(QWidget::mapToGlobal(_pauseButton->geometry().center()), true)) {
+        if (menu->exec(QWidget::mapToGlobal(_pauseButton->geometry().center()))) {
             resetButtons = true;
         }
     }
@@ -147,7 +154,7 @@ void StatusBarWidget::onResumeClicked()
     bool resetButtons = false;
 
     if (_severalDrives) {
-        MenuWidget *menu = new MenuWidget(this);
+        MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
         // Resume
         QWidgetAction *resumeAction = new QWidgetAction(this);
@@ -165,7 +172,7 @@ void StatusBarWidget::onResumeClicked()
         connect(resumeAllAction, &QWidgetAction::triggered, this, &StatusBarWidget::onResumeAllSync);
         menu->addAction(resumeAllAction);
 
-        if (menu->exec(QWidget::mapToGlobal(_resumeButton->geometry().center()), true)) {
+        if (menu->exec(QWidget::mapToGlobal(_resumeButton->geometry().center()))) {
             resetButtons = true;
         }
     }
@@ -187,7 +194,7 @@ void StatusBarWidget::onSyncClicked()
     bool resetButtons = false;
 
     if (_severalDrives) {
-        MenuWidget *menu = new MenuWidget(this);
+        MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
         // Force sync
         QWidgetAction *runAction = new QWidgetAction(this);
@@ -205,7 +212,7 @@ void StatusBarWidget::onSyncClicked()
         connect(runAllAction, &QWidgetAction::triggered, this, &StatusBarWidget::onRunAllSync);
         menu->addAction(runAllAction);
 
-        if (menu->exec(QWidget::mapToGlobal(_syncButton->geometry().center()), true)) {
+        if (menu->exec(QWidget::mapToGlobal(_syncButton->geometry().center()))) {
             resetButtons = true;
         }
     }

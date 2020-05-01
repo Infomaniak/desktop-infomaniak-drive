@@ -45,6 +45,7 @@ signals:
     void pauseSync(bool all);
     void resumeSync(bool all);
     void runSync(bool all);
+    void linkActivated(const QString &link);
 
 private:
     OCC::SyncResult::Status _status;
@@ -54,6 +55,8 @@ private:
     CustomToolButton *_pauseButton;
     CustomToolButton *_resumeButton;
     CustomToolButton *_syncButton;
+
+    void onLinkActivated(const QString &link);
 
 private slots:
     void onPauseClicked();

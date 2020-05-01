@@ -156,7 +156,7 @@ KDC--DrivesWidget
 KDC--DrivesWidget QListWidget
 {
     background-color: transparent;
-    border-width: 0px;
+    border: 0px;
 }
 
 KDC--DrivesWidget QListWidget::item

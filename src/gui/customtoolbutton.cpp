@@ -20,8 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customtoolbutton.h"
 #include "guiutility.h"
 
-#include <iostream>
-
 #include <QApplication>
 #include <QCursor>
 #include <QEvent>
@@ -40,6 +38,7 @@ CustomToolButton::CustomToolButton(QWidget *parent)
     , _iconColorHover(QColor())
     , _toolTipText(QString())
     , _toolTipDuration(defaultToolTipDuration)
+    , _hover(false)
     , _customToolTip(nullptr)
 {
     connect(this, &CustomToolButton::baseIconSizeChanged, this, &CustomToolButton::onBaseIconSizeChanged);
@@ -50,25 +49,30 @@ CustomToolButton::CustomToolButton(QWidget *parent)
 void CustomToolButton::setWithMenu(bool withMenu)
 {
     _withMenu = withMenu;
-    applyIconSizeAndColor(_iconColor);
+    applyIconSizeAndColor();
+}
+
+
+void CustomToolButton::onBaseIconSizeChanged()
+{
+    applyIconSizeAndColor();
 }
 
 void CustomToolButton::onIconColorChanged()
 {
-    if (!_iconPath.isEmpty()) {
-        applyIconSizeAndColor(_iconColor);
-    }
+    applyIconSizeAndColor();
 }
 
 void CustomToolButton::onClicked(bool checked)
 {
-    //QApplication::sendEvent(this, new QEvent(QEvent::Leave));
+    Q_UNUSED(checked)
+
+    // Remove hover
+    QApplication::sendEvent(this, new QEvent(QEvent::Leave));
 }
 
 bool CustomToolButton::event(QEvent *event)
 {
-    std::cout << "event: " << event->type() << std::endl;
-
     if (event->type() == QEvent::ToolTip) {
         if (!_toolTipText.isEmpty()) {
             if (!_customToolTip) {
@@ -87,14 +91,15 @@ bool CustomToolButton::event(QEvent *event)
 
 void CustomToolButton::enterEvent(QEvent *event)
 {
-    applyIconSizeAndColor(_iconColorHover);
+    setHover(true);
 
     QToolButton::enterEvent(event);
 }
 
 void CustomToolButton::leaveEvent(QEvent *event)
 {
-    applyIconSizeAndColor(_iconColor);
+    setHover(false);
+
     if (_customToolTip) {
         emit _customToolTip->close();
         _customToolTip = nullptr;
@@ -103,8 +108,10 @@ void CustomToolButton::leaveEvent(QEvent *event)
     QToolButton::leaveEvent(event);
 }
 
-void CustomToolButton::applyIconSizeAndColor(const QColor &color)
+void CustomToolButton::applyIconSizeAndColor()
 {
+    QColor color = _hover ? _iconColorHover : _iconColor;
+
     if (_baseIconSize != QSize()) {
         setIconSize(QSize(_withMenu ? 2 * _baseIconSize.width() : _baseIconSize.width(),
                           _baseIconSize.height()));
@@ -120,11 +127,10 @@ void CustomToolButton::applyIconSizeAndColor(const QColor &color)
     }
 }
 
-void CustomToolButton::onBaseIconSizeChanged()
+void CustomToolButton::setHover(bool hover)
 {
-    if (!_iconPath.isEmpty()) {
-        applyIconSizeAndColor(_iconColor);
-    }
+    _hover = hover;
+    applyIconSizeAndColor();
 }
 
 }

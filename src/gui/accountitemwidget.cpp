@@ -212,7 +212,7 @@ void AccountItemWidget::onStatusIconSizeChanged()
 void AccountItemWidget::onMenuButtonClicked()
 {
     if (_menuButton) {
-        MenuWidget *menu = new MenuWidget(this);
+        MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
         if (_item.accountInfo()._status == OCC::SyncResult::Problem) {
             QWidgetAction *seeSyncErrorsAction = new QWidgetAction(this);
@@ -273,7 +273,7 @@ void AccountItemWidget::onMenuButtonClicked()
         connect(signOutAction, &QWidgetAction::triggered, this, &AccountItemWidget::onRemoveTriggered);
         menu->addAction(signOutAction);
 
-        menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()), true);
+        menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()));
     }
 }
 

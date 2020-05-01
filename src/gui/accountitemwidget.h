@@ -45,6 +45,32 @@ public:
     explicit AccountItemWidget(const QString &accountId, QWidget *parent = nullptr);
     void updateItem(const AccountInfo &accountInfo);
 
+signals:
+    void runSync(const QString &accountId);
+    void pauseSync(const QString &accountId);
+    void resumeSync(const QString &accountId);
+    void remove(const QString &accountId);
+    void accountIconSizeChanged();
+    void accountIconColorChanged();
+    void driveIconSizeChanged();
+    void statusIconSizeChanged();
+
+private:
+    AccountItem _item;
+    QSize _accountIconSize;
+    QColor _accountIconColor;
+    QSize _driveIconSize;
+    QSize _statusIconSize;
+    QColor _backgroundColor;
+    QColor _backgroundColorSelection;
+    QLabel *_accountIconLabel;
+    QLabel *_accountNameLabel;
+    QLabel *_statusLabel;
+    CustomToolButton *_menuButton;
+
+    void paintEvent(QPaintEvent *event) override;
+    bool event(QEvent *event) override;
+
     inline QSize accountIconSize() const { return _accountIconSize; }
     inline void setAccountIconSize(const QSize &size) {
         _accountIconSize = size;
@@ -74,32 +100,6 @@ public:
 
     inline QColor backgroundColorSelection() const { return _backgroundColorSelection; }
     inline void setBackgroundColorSelection(const QColor &value) { _backgroundColorSelection = value; }
-
-signals:
-    void runSync(const QString &accountId);
-    void pauseSync(const QString &accountId);
-    void resumeSync(const QString &accountId);
-    void remove(const QString &accountId);
-    void accountIconSizeChanged();
-    void accountIconColorChanged();
-    void driveIconSizeChanged();
-    void statusIconSizeChanged();
-
-private:
-    AccountItem _item;
-    QSize _accountIconSize;
-    QColor _accountIconColor;
-    QSize _driveIconSize;
-    QSize _statusIconSize;
-    QColor _backgroundColor;
-    QColor _backgroundColorSelection;
-    QLabel *_accountIconLabel;
-    QLabel *_accountNameLabel;
-    QLabel *_statusLabel;
-    CustomToolButton *_menuButton;
-
-    void paintEvent(QPaintEvent *event) override;
-    bool event(QEvent *event) override;
 
     QIcon getIconWithStatus();
     void setAccountIcon();

@@ -19,28 +19,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include <QColor>
-#include <QPaintEvent>
+#include <QVBoxLayout>
 #include <QWidget>
 
 namespace KDC {
 
-class BottomWidget : public QWidget
+class PreferencesBlocWidget : public QWidget
 {
     Q_OBJECT
 
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
 
 public:
-    explicit BottomWidget(QWidget *parent = nullptr);
+    explicit PreferencesBlocWidget(QWidget *parent = nullptr);
+
+    inline QVBoxLayout *layout() const { return _layout; }
 
 private:
+    QVBoxLayout *_layout;
     QColor _backgroundColor;
 
-    void paintEvent(QPaintEvent *event) override;
+    void paintEvent(QPaintEvent* event) override;
 
     inline QColor backgroundColor() const { return _backgroundColor; }
-    inline void setBackgroundColor(const QColor& value) { _backgroundColor = value; }
+    inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
 };
 
 }
