@@ -40,6 +40,7 @@ signals:
     void logoColorChanged();
     void drivesButtonClicked();
     void preferencesButtonClicked();
+    void openHelp();
 
 private:
     QColor _logoColor;

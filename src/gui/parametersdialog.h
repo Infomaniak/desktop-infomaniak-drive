@@ -64,6 +64,7 @@ private slots:
     void onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
     void onDrivesButtonClicked();
     void onPreferencesButtonClicked();
+    void onOpenHelp();
     void onAddDrive();
     void onRunSync(const QString &accountId);
     void onPauseSync(const QString &accountId);

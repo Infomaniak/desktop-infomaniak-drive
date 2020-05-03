@@ -40,14 +40,14 @@ PreferencesBlocWidget::PreferencesBlocWidget(QWidget *parent)
     setLayout(_layout);
 }
 
-QHBoxLayout *PreferencesBlocWidget::addLayout()
+QBoxLayout *PreferencesBlocWidget::addLayout(QBoxLayout::Direction direction)
 {
-    QHBoxLayout *hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
-    hLayout->setSpacing(0);
-    _layout->addLayout(hLayout);
+    QBoxLayout *layout = new QBoxLayout(direction);
+    layout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    layout->setSpacing(0);
+    _layout->addLayout(layout);
 
-    return hLayout;
+    return layout;
 }
 
 ClickableWidget *PreferencesBlocWidget::addWidget()
@@ -70,7 +70,6 @@ void PreferencesBlocWidget::addSeparator()
     line->setObjectName("line");
     line->setFrameShape(QFrame::HLine);
     line->setFrameShadow(QFrame::Plain);
-    line->setLineWidth(1);
     _layout->addWidget(line);
 }
 

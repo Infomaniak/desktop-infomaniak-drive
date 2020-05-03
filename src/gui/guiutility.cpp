@@ -34,6 +34,7 @@
 #include "libcommon/commonutility.h"
 #include "accountmanager.h"
 #include "folderman.h"
+#include "configfile.h"
 
 using namespace OCC;
 
@@ -229,8 +230,17 @@ QIcon Utility::getIconMenuWithColor(const QString &path, const QColor &color)
 
 void Utility::setStyle(QApplication *app)
 {
+    bool darkTheme = false;
+    if (OCC::Utility::isMac()) {
+        darkTheme = hasDarkSystray();
+    }
+    else {
+        ConfigFile cfg;
+        darkTheme = cfg.darkTheme();
+    }
+
     // Load style sheet
-    QFile ssFile(hasDarkSystray() ? styleSheetBlackFile : styleSheetWhiteFile);
+    QFile ssFile(darkTheme ? styleSheetBlackFile : styleSheetWhiteFile);
     if (ssFile.exists()) {
         ssFile.open(QFile::ReadOnly);
         QString StyleSheet = QLatin1String(ssFile.readAll());

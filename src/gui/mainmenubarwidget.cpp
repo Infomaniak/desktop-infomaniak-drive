@@ -102,6 +102,8 @@ void MainMenuBarWidget::onPreferencesButtonClicked(bool checked)
 void MainMenuBarWidget::onHelpButtonClicked(bool checked)
 {
     Q_UNUSED(checked)
+
+    emit openHelp();
 }
 
 }

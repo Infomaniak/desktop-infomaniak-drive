@@ -67,7 +67,6 @@ signals:
     void itemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &syncFileItemPtr);
     void openParametersDialog();
     void openShareDialogPublicLinks(const QString &sharePath, const QString &localPath);
-    void openHelp();
     void exit();
     void addDrive();
     void disableNotifications(NotificationsDisabled type, QDateTime dateTime);

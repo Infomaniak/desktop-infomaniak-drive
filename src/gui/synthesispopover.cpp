@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "openfilemanager.h"
 #include "getorcreatepubliclinkshare.h"
 #include "configfile.h"
+#include "theme.h"
 
 #define CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
@@ -1109,7 +1110,7 @@ void SynthesisPopover::onDisplayHelp(bool checked)
 {
     Q_UNUSED(checked)
 
-    emit openHelp();
+    QDesktopServices::openUrl(QUrl(OCC::Theme::instance()->helpUrl()));
 }
 
 void SynthesisPopover::onExit(bool checked)

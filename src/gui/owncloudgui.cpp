@@ -565,7 +565,6 @@ void ownCloudGui::setupPopover()
     _synthesisPopover.reset(new KDC::SynthesisPopover(_app->debugMode()));
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openParametersDialog, this, &ownCloudGui::slotShowParametersDialog);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openShareDialogPublicLinks, this, &ownCloudGui::slotShowShareDialogPublicLinks);
-    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openHelp, this, &ownCloudGui::slotHelp);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::exit, _app, &Application::quit);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::addDrive, this, &ownCloudGui::slotNewAccountWizard);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::disableNotifications, this, &ownCloudGui::slotDisableNotifications);
@@ -1164,9 +1163,8 @@ void ownCloudGui::slotShowParametersDialog()
         _parametersDialog = new KDC::ParametersDialog();
         connect(_parametersDialog, &KDC::ParametersDialog::addDrive, this, &ownCloudGui::slotNewAccountWizard);
         _parametersDialog->setAttribute(Qt::WA_DeleteOnClose, true);
-        _parametersDialog->show();
     }
-    raiseDialog(_parametersDialog.data());
+    raiseDialog(_parametersDialog);
 #else
     if (_settingsDialog.isNull()) {
         _settingsDialog =

@@ -27,7 +27,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "folderman.h"
 #include "progressdispatcher.h"
 #include "guiutility.h"
+#include "theme.h"
 
+#include <QDesktopServices>
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
 #include <QLoggingCategory>
@@ -95,6 +97,7 @@ void ParametersDialog::initUI()
 
     connect(_mainMenuBarWidget, &MainMenuBarWidget::drivesButtonClicked, this, &ParametersDialog::onDrivesButtonClicked);
     connect(_mainMenuBarWidget, &MainMenuBarWidget::preferencesButtonClicked, this, &ParametersDialog::onPreferencesButtonClicked);
+    connect(_mainMenuBarWidget, &MainMenuBarWidget::openHelp, this, &ParametersDialog::onOpenHelp);
     connect(_drivesWidget, &DrivesWidget::addDrive, this, &ParametersDialog::onAddDrive);
     connect(_drivesWidget, &DrivesWidget::runSync, this, &ParametersDialog::onRunSync);
     connect(_drivesWidget, &DrivesWidget::pauseSync, this, &ParametersDialog::onPauseSync);
@@ -254,6 +257,11 @@ void ParametersDialog::onDrivesButtonClicked()
 void ParametersDialog::onPreferencesButtonClicked()
 {
     _stackedWidget->setCurrentIndex(StackedWidget::Preferences);
+}
+
+void ParametersDialog::onOpenHelp()
+{
+    QDesktopServices::openUrl(QUrl(OCC::Theme::instance()->helpUrl()));
 }
 
 void ParametersDialog::onAddDrive()

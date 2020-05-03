@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <QColor>
 #include <QLabel>
+#include <QLineEdit>
 #include <QWidget>
 
 namespace KDC {
@@ -42,6 +43,7 @@ private:
     QLabel *_filesToExcludeIconLabel;
     QLabel *_proxyServerIconLabel;
     QLabel *_bandwidthIconLabel;
+    QLineEdit *_folderConfirmationAmountLineEdit;
 
     inline QColor actionColor() const { return _actionColor; }
     inline void setActionColor(const QColor& color) {
@@ -52,6 +54,7 @@ private:
 private slots:
     void onActionColorChanged();
     void onFolderConfirmationCheckBoxStateChanged(int state);
+    void onFolderConfirmationAmountEditingFinished();
     void onDarkThemeCheckBoxStateChanged(int state);
     void onMonochromeCheckBoxStateChanged(int state);
     void onLaunchAtStartupCheckBoxStateChanged(int state);

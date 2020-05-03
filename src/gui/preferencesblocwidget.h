@@ -35,7 +35,7 @@ class PreferencesBlocWidget : public QWidget
 public:
     explicit PreferencesBlocWidget(QWidget *parent = nullptr);
 
-    QHBoxLayout *addLayout();
+    QBoxLayout *addLayout(QBoxLayout::Direction direction);
     ClickableWidget *addWidget();
     void addSeparator();
 

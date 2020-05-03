@@ -143,6 +143,12 @@ KDC--ParametersDialog QLabel#defaultTextLabel
     font-size: 14px;
 }
 
+KDC--ParametersDialog QScrollArea
+{
+    background-color: transparent;
+    border: 0px;
+}
+
 /*********************/
 /* KDC--DrivesWidget */
 /*********************/
@@ -370,9 +376,9 @@ KDC--StatusBarWidget QLabel#statusLabel
     font-size: 13px;
 }
 
-/************************/
+/**************************/
 /* KDC--MainMenuBarWidget */
-/************************/
+/**************************/
 
 KDC--MainMenuBarWidget
 {
@@ -518,7 +524,7 @@ KDC--BottomWidget
 
 KDC--PreferencesWidget
 {
-    background-color: transparent;
+    background-color: #F5F5F5;
     border: 0px;
     qproperty-action_color: #666666;
 }
@@ -557,9 +563,32 @@ KDC--PreferencesBlocWidget QLabel
     font-size: 13px;
 }
 
+KDC--PreferencesBlocWidget QLabel#folderConfirmationAmountLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 16px;
+}
+
+KDC--PreferencesBlocWidget QLineEdit
+{
+    background-color: transparent;
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 16px;
+    border: 1px solid #ECECEC;
+    border-radius: 3px;
+    padding-left: 10px;
+    padding-width: 10px;
+}
+
 KDC--PreferencesBlocWidget QFrame#line
 {
-    background-color: #F5F5F5;
+    min-height: 1px;
+    max-height: 1px;
+    background-color: #ECECEC;
     border: 0px;
 }
 
