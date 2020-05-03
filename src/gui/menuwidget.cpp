@@ -78,6 +78,8 @@ void MenuWidget::paintEvent(QPaintEvent *event)
 
 void MenuWidget::onAboutToShow()
 {
+    Q_CHECK_PTR(parentWidget());
+
     QPoint position;
     switch (_type) {
     case Menu:

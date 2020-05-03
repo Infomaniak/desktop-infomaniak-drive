@@ -520,9 +520,18 @@ KDC--PreferencesWidget
 {
     background-color: transparent;
     border: 0px;
+    qproperty-action_color: #666666;
 }
 
 KDC--PreferencesWidget QLabel#generalLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 13px;
+}
+
+KDC--PreferencesWidget QLabel#advancedLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
@@ -547,3 +556,10 @@ KDC--PreferencesBlocWidget QLabel
     font-weight: 450; /* medium */
     font-size: 13px;
 }
+
+KDC--PreferencesBlocWidget QFrame#line
+{
+    background-color: #F5F5F5;
+    border: 0px;
+}
+

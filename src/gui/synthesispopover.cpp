@@ -494,16 +494,22 @@ QUrl SynthesisPopover::folderUrl(const QString &folderId, const QString &filePat
 
 QString SynthesisPopover::folderPath(const QString &folderId, const QString &filePath)
 {
-    QString fullFilePath;
+    QString fullFilePath = QString();
 
     const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
     if (accountInfoIt != _accountInfoMap.end()) {
         const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
         if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
-            fullFilePath = folderInfoIt->second->_path + filePath;
-            if (!QFile::exists(fullFilePath)) {
-                qCWarning(lcSynthesisPopover) << "Invalid path " << fullFilePath;
-                fullFilePath = QString();
+            if (folderInfoIt->second) {
+                fullFilePath = folderInfoIt->second->_path + filePath;
+                if (!QFile::exists(fullFilePath)) {
+                    qCWarning(lcSynthesisPopover) << "Invalid path " << fullFilePath;
+                    fullFilePath = QString();
+                }
+            }
+            else {
+                qCDebug(lcSynthesisPopover) << "Null pointer!";
+                Q_ASSERT(false);
             }
         }
     }
@@ -528,12 +534,21 @@ void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
 
 const FolderInfo *SynthesisPopover::getActiveFolder(const std::map<QString, FolderInfo *> &folderMap)
 {
-    const FolderInfo *folderInfo = (folderMap.empty() ? nullptr : folderMap.begin()->second);
+    const FolderInfo *folderInfo = nullptr;
     for (auto folderInfoIt : folderMap) {
-        if (folderInfoIt.second->_status == OCC::SyncResult::Status::SyncRunning) {
-            folderInfo = folderInfoIt.second;
-            break;
+        if (folderInfoIt.second) {
+            if (folderInfoIt.second->_status == OCC::SyncResult::Status::SyncRunning) {
+                folderInfo = folderInfoIt.second;
+                break;
+            }
         }
+        else {
+            qCDebug(lcSynthesisPopover) << "Null pointer!";
+            Q_ASSERT(false);
+        }
+    }
+    if (!folderInfo) {
+        folderInfo = (folderMap.empty() ? nullptr : folderMap.begin()->second);
     }
     return folderInfo;
 }
@@ -552,8 +567,10 @@ void SynthesisPopover::refreshStatusBar(const FolderInfo *folderInfo)
 
 void SynthesisPopover::refreshStatusBar(std::map<QString, AccountInfoPopover>::iterator accountInfoIt)
 {
-    const FolderInfo *folderInfo = getActiveFolder(accountInfoIt->second._folderMap);
-    refreshStatusBar(folderInfo);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        const FolderInfo *folderInfo = getActiveFolder(accountInfoIt->second._folderMap);
+        refreshStatusBar(folderInfo);
+    }
 }
 
 void SynthesisPopover::refreshStatusBar(QString accountId)
@@ -600,37 +617,54 @@ void SynthesisPopover::setSynchronizedDefaultPage(QWidget **widget, QWidget *par
     }
 
     // Set text
-    Q_ASSERT(defaultTextLabel);
-    OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
-    if (accountPtr) {
-        QUrl accountUrl = accountPtr->url();
+    if (defaultTextLabel) {
+        OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
+        if (accountPtr) {
+            QUrl accountUrl = accountPtr->url();
 
-        // Get 1st folder...
-        OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
-        QString folderId = QString();
-        for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
-            OCC::AccountPtr folderAccountPtr = folderIt.value()->accountState()->account();
-            if (folderAccountPtr->id() == accountPtr->id()) {
-                folderId = folderIt.key();
-                break;
+            // Get 1st folder...
+            OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
+            QString folderId = QString();
+            for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
+                if (folderIt.value() && folderIt.value()->accountState()) {
+                    OCC::AccountPtr folderAccountPtr = folderIt.value()->accountState()->account();
+                    if (!folderAccountPtr.isNull()) {
+                        if (folderAccountPtr->id() == accountPtr->id()) {
+                            folderId = folderIt.key();
+                            break;
+                        }
+                    }
+                    else {
+                        qCDebug(lcSynthesisPopover) << "Null pointer!";
+                        Q_ASSERT(false);
+                    }
+                }
+                else {
+                    qCDebug(lcSynthesisPopover) << "Null pointer!";
+                    Q_ASSERT(false);
+                }
+            }
+            if (folderId.isEmpty()) {
+                // No folder
+                defaultTextLabel->setText(tr("No synchronized folder for this Drive!"));
+            }
+            else {
+                QUrl defaultFolderUrl = folderUrl(folderId, QString());
+                defaultTextLabel->setText(tr("You can synchronize files <a style=\"%1\" href=\"%2\">from your computer</a>"
+                                             " or on <a style=\"%1\" href=\"%3\">drive.infomaniak.com</a>.")
+                                          .arg(OCC::Utility::linkStyle)
+                                          .arg(defaultFolderUrl.toString())
+                                          .arg(accountUrl.toString()));
             }
         }
-        if (folderId.isEmpty()) {
-            // No folder
-            defaultTextLabel->setText(tr("No synchronized folder for this Drive!"));
-        }
         else {
-            QUrl defaultFolderUrl = folderUrl(folderId, QString());
-            defaultTextLabel->setText(tr("You can synchronize files <a style=\"%1\" href=\"%2\">from your computer</a>"
-                                         " or on <a style=\"%1\" href=\"%3\">drive.infomaniak.com</a>.")
-                                      .arg(OCC::Utility::linkStyle)
-                                      .arg(defaultFolderUrl.toString())
-                                      .arg(accountUrl.toString()));
+            // No account
+            defaultTextLabel->setText(tr("No kDrive configured!"));
         }
     }
     else {
-        // No account
-        defaultTextLabel->setText(tr("No kDrive configured!"));
+        qCDebug(lcSynthesisPopover) << "Null pointer!";
+        Q_ASSERT(false);
     }
 }
 
@@ -657,63 +691,81 @@ void SynthesisPopover::onRefreshAccountList()
         std::size_t currentFolderMapSize = 0;
 
         for (OCC::AccountStatePtr accountStatePtr : OCC::AccountManager::instance()->accounts()) {
-            QString accountId = accountStatePtr->account()->id();
-            auto accountInfoIt = _accountInfoMap.find(accountId);
-            if (accountInfoIt == _accountInfoMap.end()) {
-                // New account
-                AccountInfoPopover accountInfo(accountStatePtr.data());
-                connect(accountInfo._quotaInfoPtr.get(), &OCC::QuotaInfo::quotaUpdated,
-                        this, &SynthesisPopover::onUpdateQuota);
+            if (accountStatePtr && accountStatePtr->account()) {
+                QString accountId = accountStatePtr->account()->id();
+                auto accountInfoIt = _accountInfoMap.find(accountId);
+                if (accountInfoIt == _accountInfoMap.end()) {
+                    // New account
+                    AccountInfoPopover accountInfo(accountStatePtr.data());
+                    connect(accountInfo._quotaInfoPtr.get(), &OCC::QuotaInfo::quotaUpdated,
+                            this, &SynthesisPopover::onUpdateQuota);
 
-                _accountInfoMap[accountId] = accountInfo;
-                accountInfoIt = _accountInfoMap.find(accountId);
-            }
+                    _accountInfoMap[accountId] = accountInfo;
+                    accountInfoIt = _accountInfoMap.find(accountId);
+                }
 
-            // Set or update account name & color
-            accountInfoIt->second._name = accountStatePtr->account()->driveName();
-            accountInfoIt->second._color = accountStatePtr->account()->getDriveColor();
-            accountInfoIt->second._isSignedIn = !accountStatePtr->isSignedOut();
+                // Set or update account name & color
+                accountInfoIt->second._name = accountStatePtr->account()->driveName();
+                accountInfoIt->second._color = accountStatePtr->account()->getDriveColor();
+                accountInfoIt->second._isSignedIn = !accountStatePtr->isSignedOut();
 
-            OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
-            for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
-                OCC::AccountPtr folderAccountPtr = folderIt.value()->accountState()->account();
-                if (folderAccountPtr->id() == accountId) {
-                    auto folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
-                    if (folderInfoIt == accountInfoIt->second._folderMap.end()) {
-                        // New folder
-                        accountInfoIt->second._folderMap[folderIt.key()] =
-                                new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path());
-                        folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
+                OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
+                for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
+                    if (folderIt.value() && folderIt.value()->accountState()) {
+                        OCC::AccountPtr folderAccountPtr = folderIt.value()->accountState()->account();
+                        if (!folderAccountPtr.isNull()) {
+                            if (folderAccountPtr->id() == accountId) {
+                                auto folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
+                                if (folderInfoIt == accountInfoIt->second._folderMap.end()) {
+                                    // New folder
+                                    accountInfoIt->second._folderMap[folderIt.key()] =
+                                            new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path());
+                                    folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
+                                }
+
+                                folderInfoIt->second->_paused = folderIt.value()->syncPaused();
+                                folderInfoIt->second->_unresolvedConflicts = folderIt.value()->syncResult().hasUnresolvedConflicts();
+                                folderInfoIt->second->_status = folderIt.value()->syncResult().status();
+                            }
+                        }
+                        else {
+                            qCDebug(lcSynthesisPopover) << "Null pointer!";
+                            Q_ASSERT(false);
+                        }
                     }
+                    else {
+                        qCDebug(lcSynthesisPopover) << "Null pointer!";
+                        Q_ASSERT(false);
+                    }
+                }
 
-                    folderInfoIt->second->_paused = folderIt.value()->syncPaused();
-                    folderInfoIt->second->_unresolvedConflicts = folderIt.value()->syncResult().hasUnresolvedConflicts();
-                    folderInfoIt->second->_status = folderIt.value()->syncResult().status();
+                // Manage removed folders
+                auto folderInfoIt = accountInfoIt->second._folderMap.begin();
+                while (folderInfoIt != accountInfoIt->second._folderMap.end()) {
+                    if (folderMap.find(folderInfoIt->first) == folderMap.end()) {
+                        folderInfoIt = accountInfoIt->second._folderMap.erase(folderInfoIt);
+                    }
+                    else {
+                        folderInfoIt++;
+                    }
+                }
+
+                // Compute account status
+                accountInfoIt->second.updateStatus();
+
+                _driveSelectionWidget->addOrUpdateDrive(accountId, accountInfoIt->second);
+
+                if (_currentAccountId.isEmpty() || !currentAccountStillExists) {
+                    _currentAccountId = accountId;
+                }
+
+                if (_currentAccountId == accountId) {
+                    currentFolderMapSize = accountInfoIt->second._folderMap.size();
                 }
             }
-
-            // Manage removed folders
-            auto folderInfoIt = accountInfoIt->second._folderMap.begin();
-            while (folderInfoIt != accountInfoIt->second._folderMap.end()) {
-                if (folderMap.find(folderInfoIt->first) == folderMap.end()) {
-                    folderInfoIt = accountInfoIt->second._folderMap.erase(folderInfoIt);
-                }
-                else {
-                    folderInfoIt++;
-                }
-            }
-
-            // Compute account status
-            accountInfoIt->second.updateStatus();
-
-            _driveSelectionWidget->addOrUpdateDrive(accountId, accountInfoIt->second);
-
-            if (_currentAccountId.isEmpty() || !currentAccountStillExists) {
-                _currentAccountId = accountId;
-            }
-
-            if (_currentAccountId == accountId) {
-                currentFolderMapSize = accountInfoIt->second._folderMap.size();
+            else {
+                qCDebug(lcSynthesisPopover) << "Null pointer!";
+                Q_ASSERT(false);
             }
         }
 
@@ -749,32 +801,48 @@ void SynthesisPopover::onUpdateProgress(const QString &folderId, const OCC::Prog
                   << " - SynthesisPopover::onUpdateProgress folder: " << folder->path().toStdString() << std::endl;
 #endif
 
-        OCC::AccountPtr account = folder->accountState()->account();
-        if (account) {
-            const auto accountInfoIt = _accountInfoMap.find(account->id());
-            if (accountInfoIt != _accountInfoMap.end()) {
-                const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
-                if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
-                    FolderInfo *folderInfo = folderInfoIt->second;
-                    folderInfo->_currentFile = progress.currentFile();
-                    folderInfo->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
-                    folderInfo->_completedSize = progress.completedSize();
-                    folderInfo->_totalSize = qMax(progress.completedSize(), progress.totalSize());
-                    folderInfo->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
-                    folderInfo->_paused = folder->syncPaused();
-                    folderInfo->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
-                    folderInfo->_status = folder->syncResult().status();
+        if (folder->accountState()) {
+            OCC::AccountPtr account = folder->accountState()->account();
+            if (!account.isNull()) {
+                const auto accountInfoIt = _accountInfoMap.find(account->id());
+                if (accountInfoIt != _accountInfoMap.end()) {
+                    const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
+                    if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
+                        FolderInfo *folderInfo = folderInfoIt->second;
+                        if (folderInfo) {
+                            folderInfo->_currentFile = progress.currentFile();
+                            folderInfo->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
+                            folderInfo->_completedSize = progress.completedSize();
+                            folderInfo->_totalSize = qMax(progress.completedSize(), progress.totalSize());
+                            folderInfo->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
+                            folderInfo->_paused = folder->syncPaused();
+                            folderInfo->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
+                            folderInfo->_status = folder->syncResult().status();
+                        }
+                        else {
+                            qCDebug(lcSynthesisPopover) << "Null pointer!";
+                            Q_ASSERT(false);
+                        }
 
-                    if (account->id() == _currentAccountId) {
-                        refreshStatusBar(folderInfo);
+                        if (account->id() == _currentAccountId) {
+                            refreshStatusBar(folderInfo);
+                        }
                     }
+
+                    // Compute account status
+                    accountInfoIt->second.updateStatus();
+
+                    _driveSelectionWidget->addOrUpdateDrive(account->id(), accountInfoIt->second);
                 }
-
-                // Compute account status
-                accountInfoIt->second.updateStatus();
-
-                _driveSelectionWidget->addOrUpdateDrive(account->id(), accountInfoIt->second);
             }
+            else {
+                qCDebug(lcSynthesisPopover) << "Null pointer!";
+                Q_ASSERT(false);
+            }
+        }
+        else {
+            qCDebug(lcSynthesisPopover) << "Null pointer!";
+            Q_ASSERT(false);
         }
     }
 }
@@ -806,63 +874,79 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
               << " - SynthesisPopover::onItemCompleted" << std::endl;
 #endif
 
-    if (syncFileItemPtr.data()->_status == OCC::SyncFileItem::NoStatus
-            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::FatalError
-            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::NormalError
-            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::SoftError
-            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::DetailError
-            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::BlacklistedError
-            || syncFileItemPtr.data()->_status == OCC::SyncFileItem::FileIgnored) {
-        return;
-    }
+    if (!syncFileItemPtr.isNull()) {
+        if (syncFileItemPtr.data()->_status == OCC::SyncFileItem::NoStatus
+                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::FatalError
+                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::NormalError
+                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::SoftError
+                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::DetailError
+                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::BlacklistedError
+                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::FileIgnored) {
+            return;
+        }
 
-    OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderId);
-    if (folder) {
-        OCC::AccountPtr account = folder->accountState()->account();
-        if (account) {
-            const auto accountInfoIt = _accountInfoMap.find(account->id());
-            if (accountInfoIt != _accountInfoMap.end()) {
-                if (!accountInfoIt->second._synchronizedListWidget) {
-                    accountInfoIt->second._synchronizedListWidget = new QListWidget(this);
-                    accountInfoIt->second._synchronizedListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-                    accountInfoIt->second._synchronizedListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-                    accountInfoIt->second._synchronizedListWidget->setSpacing(0);
-                    accountInfoIt->second._synchronizedListStackPosition =
-                            _stackedWidget->addWidget(accountInfoIt->second._synchronizedListWidget);
-                    if (_currentAccountId == accountInfoIt->first
-                            && _buttonsBarWidget->position() == StackedWidget::Synchronized) {
-                        _stackedWidget->setCurrentIndex(accountInfoIt->second._synchronizedListStackPosition);
+        OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderId);
+        if (folder) {
+            if (folder->accountState()) {
+                OCC::AccountPtr account = folder->accountState()->account();
+                if (!account.isNull()) {
+                    const auto accountInfoIt = _accountInfoMap.find(account->id());
+                    if (accountInfoIt != _accountInfoMap.end()) {
+                        if (!accountInfoIt->second._synchronizedListWidget) {
+                            accountInfoIt->second._synchronizedListWidget = new QListWidget(this);
+                            accountInfoIt->second._synchronizedListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+                            accountInfoIt->second._synchronizedListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+                            accountInfoIt->second._synchronizedListWidget->setSpacing(0);
+                            accountInfoIt->second._synchronizedListStackPosition =
+                                    _stackedWidget->addWidget(accountInfoIt->second._synchronizedListWidget);
+                            if (_currentAccountId == accountInfoIt->first
+                                    && _buttonsBarWidget->position() == StackedWidget::Synchronized) {
+                                _stackedWidget->setCurrentIndex(accountInfoIt->second._synchronizedListStackPosition);
+                            }
+                        }
+
+                        // Add item to synchronized list
+                        QListWidgetItem *item = new QListWidgetItem();
+                        SynchronizedItem synchronizedItem(folderId,
+                                                          syncFileItemPtr.data()->_file,
+                                                          syncFileItemPtr.data()->_fileId,
+                                                          syncFileItemPtr.data()->_status,
+                                                          syncFileItemPtr.data()->_direction,
+                                                          folderPath(folderId, syncFileItemPtr.data()->_file),
+                                                          QDateTime::currentDateTime());
+                        accountInfoIt->second._synchronizedListWidget->insertItem(0, item);
+                        SynchronizedItemWidget *widget = new SynchronizedItemWidget(synchronizedItem,
+                                                                                    accountInfoIt->second._synchronizedListWidget);
+                        accountInfoIt->second._synchronizedListWidget->setItemWidget(item, widget);
+                        connect(widget, &SynchronizedItemWidget::openFolder, this, &SynthesisPopover::onOpenFolderItem);
+                        connect(widget, &SynchronizedItemWidget::open, this, &SynthesisPopover::onOpenItem);
+                        connect(widget, &SynchronizedItemWidget::addToFavourites, this, &SynthesisPopover::onAddToFavouriteItem);
+                        connect(widget, &SynchronizedItemWidget::manageRightAndSharing, this, &SynthesisPopover::onManageRightAndSharingItem);
+                        connect(widget, &SynchronizedItemWidget::copyLink, this, &SynthesisPopover::onCopyLinkItem);
+                        connect(widget, &SynchronizedItemWidget::displayOnWebview, this, &SynthesisPopover::onOpenWebviewItem);
+
+                        if (accountInfoIt->second._synchronizedListWidget->count() > maxSynchronizedItems) {
+                            // Remove last row
+                            QListWidgetItem *lastWidgetItem = accountInfoIt->second._synchronizedListWidget->takeItem(
+                                        accountInfoIt->second._synchronizedListWidget->count() - 1);
+                            delete lastWidgetItem;
+                        }
                     }
                 }
-
-                // Add item to synchronized list
-                QListWidgetItem *item = new QListWidgetItem();
-                SynchronizedItem synchronizedItem(folderId,
-                                                  syncFileItemPtr.data()->_file,
-                                                  syncFileItemPtr.data()->_fileId,
-                                                  syncFileItemPtr.data()->_status,
-                                                  syncFileItemPtr.data()->_direction,
-                                                  folderPath(folderId, syncFileItemPtr.data()->_file),
-                                                  QDateTime::currentDateTime());
-                accountInfoIt->second._synchronizedListWidget->insertItem(0, item);
-                SynchronizedItemWidget *widget = new SynchronizedItemWidget(synchronizedItem,
-                                                                            accountInfoIt->second._synchronizedListWidget);
-                accountInfoIt->second._synchronizedListWidget->setItemWidget(item, widget);
-                connect(widget, &SynchronizedItemWidget::openFolder, this, &SynthesisPopover::onOpenFolderItem);
-                connect(widget, &SynchronizedItemWidget::open, this, &SynthesisPopover::onOpenItem);
-                connect(widget, &SynchronizedItemWidget::addToFavourites, this, &SynthesisPopover::onAddToFavouriteItem);
-                connect(widget, &SynchronizedItemWidget::manageRightAndSharing, this, &SynthesisPopover::onManageRightAndSharingItem);
-                connect(widget, &SynchronizedItemWidget::copyLink, this, &SynthesisPopover::onCopyLinkItem);
-                connect(widget, &SynchronizedItemWidget::displayOnWebview, this, &SynthesisPopover::onOpenWebviewItem);
-
-                if (accountInfoIt->second._synchronizedListWidget->count() > maxSynchronizedItems) {
-                    // Remove last row
-                    QListWidgetItem *lastWidgetItem = accountInfoIt->second._synchronizedListWidget->takeItem(
-                                accountInfoIt->second._synchronizedListWidget->count() - 1);
-                    delete lastWidgetItem;
+                else {
+                    qCDebug(lcSynthesisPopover) << "Null pointer!";
+                    Q_ASSERT(false);
                 }
             }
+            else {
+                qCDebug(lcSynthesisPopover) << "Null pointer!";
+                Q_ASSERT(false);
+            }
         }
+    }
+    else {
+        qCDebug(lcSynthesisPopover) << "Null pointer!";
+        Q_ASSERT(false);
     }
 }
 
@@ -1224,16 +1308,23 @@ void SynthesisPopover::onCopyLinkItem(const SynchronizedItem &item)
     OCC::FolderMan::instance()->folderForPath(fullFilePath, &folderRelativePath);
 
     OCC::Folder *folder = OCC::FolderMan::instance()->folder(item.folderId());
-    QString serverRelativePath = QDir(folder->remotePath()).filePath(folderRelativePath);
+    if (folder) {
+        QString serverRelativePath = QDir(folder->remotePath()).filePath(folderRelativePath);
 
-    OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
+        OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
+        if (!accountPtr.isNull()) {
+            auto job = new OCC::GetOrCreatePublicLinkShare(accountPtr, serverRelativePath, this);
+            connect(job, &OCC::GetOrCreatePublicLinkShare::done, this, &SynthesisPopover::onCopyUrlToClipboard);
+            connect(job, &OCC::GetOrCreatePublicLinkShare::error, this,
+                    [=]() { emit openShareDialogPublicLinks(folderRelativePath, fullFilePath); });
 
-    auto job = new OCC::GetOrCreatePublicLinkShare(accountPtr, serverRelativePath, this);
-    connect(job, &OCC::GetOrCreatePublicLinkShare::done, this, &SynthesisPopover::onCopyUrlToClipboard);
-    connect(job, &OCC::GetOrCreatePublicLinkShare::error, this,
-            [=]() { emit openShareDialogPublicLinks(folderRelativePath, fullFilePath); });
-
-    job->run();
+            job->run();
+        }
+        else {
+            qCDebug(lcSynthesisPopover) << "Null pointer!";
+            Q_ASSERT(false);
+        }
+    }
 }
 
 void SynthesisPopover::onOpenWebviewItem(const SynchronizedItem &item)

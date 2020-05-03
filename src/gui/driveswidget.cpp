@@ -22,8 +22,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "accountitemwidget.h"
 
 #include <QBoxLayout>
+#include <QLoggingCategory>
 
 namespace KDC {
+
+Q_LOGGING_CATEGORY(lcDrivesWidget, "driveswidget", QtInfoMsg)
 
 static const int addDriveBoxHMargin= 12;
 static const int addDriveBoxVMargin = 10;
@@ -85,7 +88,13 @@ void DrivesWidget::addOrUpdateDrive(QString accountId, const AccountInfo &accoun
     else {
         // Update drive
         AccountItemWidget *accountItemWidget = (AccountItemWidget *) _driveListWidget->itemWidget(driveIt->second._item);
-        accountItemWidget->updateItem(accountInfo);
+        if (accountItemWidget) {
+            accountItemWidget->updateItem(accountInfo);
+        }
+        else {
+            qCDebug(lcDrivesWidget) << "Null pointer!";
+            Q_ASSERT(false);
+        }
     }
 }
 

@@ -71,6 +71,7 @@ namespace Utility {
     bool isPointInSystray(QScreen *screen, const QPoint &point);
 
     void setStyle(QApplication *app);
+    void setStyle(QApplication *app, bool darkTheme);
 
     QString getFileStatusIconPath(SyncFileItem::Status status);
     QString getFolderStatusIconPath(bool paused, OCC::SyncResult::Status status);

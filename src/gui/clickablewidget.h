@@ -19,34 +19,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include "clickablewidget.h"
-
-#include <QBoxLayout>
+#include <QEvent>
 #include <QWidget>
 
 namespace KDC {
 
-class PreferencesBlocWidget : public QWidget
+class ClickableWidget : public QWidget
 {
     Q_OBJECT
-
-    Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
-
 public:
-    explicit PreferencesBlocWidget(QWidget *parent = nullptr);
+    explicit ClickableWidget(QWidget *parent = nullptr);
 
-    QHBoxLayout *addLayout();
-    ClickableWidget *addWidget();
-    void addSeparator();
+signals:
+    void clicked();
 
 private:
-    QVBoxLayout *_layout;
-    QColor _backgroundColor;
-
-    void paintEvent(QPaintEvent* event) override;
-
-    inline QColor backgroundColor() const { return _backgroundColor; }
-    inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
+    bool event(QEvent *event) override;
 };
 
 }

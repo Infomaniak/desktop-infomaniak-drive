@@ -258,6 +258,7 @@ QIcon SynchronizedItemWidget::getIconWithStatus(const QString &filePath, OCC::Sy
     qreal statusItemScale = statusIconWidth / statusItem->boundingRect().width();
     statusItem->setScale(statusItemScale);
 
+    Q_CHECK_PTR(qApp->primaryScreen());
     qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     QPixmap pixmap(QSize(scene.width() * ratio, scene.height() * ratio));
     pixmap.fill(Qt::transparent);

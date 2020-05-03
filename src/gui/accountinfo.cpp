@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
+Q_LOGGING_CATEGORY(lcAccountInfo, "accountinfo", QtInfoMsg)
+
 AccountInfo::AccountInfo()
     : _name(QString())
     , _color(QColor())
@@ -42,23 +44,29 @@ void AccountInfo::updateStatus()
 
     if (cnt == 1) {
         FolderInfo *folderInfo = _folderMap.begin()->second;
-        if (folderInfo->_paused) {
-            _status = OCC::SyncResult::Paused;
-            _paused = true;
-        } else {
-            switch (folderInfo->_status) {
-            case OCC::SyncResult::Undefined:
-                _status = OCC::SyncResult::Error;
-                break;
-            case OCC::SyncResult::Problem: // don't show the problem
-                _status = OCC::SyncResult::Success;
-                break;
-            default:
-                _status = folderInfo->_status;
-                break;
+        if (folderInfo) {
+            if (folderInfo->_paused) {
+                _status = OCC::SyncResult::Paused;
+                _paused = true;
+            } else {
+                switch (folderInfo->_status) {
+                case OCC::SyncResult::Undefined:
+                    _status = OCC::SyncResult::Error;
+                    break;
+                case OCC::SyncResult::Problem: // don't show the problem
+                    _status = OCC::SyncResult::Success;
+                    break;
+                default:
+                    _status = folderInfo->_status;
+                    break;
+                }
             }
+            _unresolvedConflicts = folderInfo->_unresolvedConflicts;
         }
-        _unresolvedConflicts = folderInfo->_unresolvedConflicts;
+        else {
+            qCDebug(lcAccountInfo) << "Null pointer!";
+            Q_ASSERT(false);
+        }
     } else {
         int errorsSeen = 0;
         int goodSeen = 0;
@@ -68,33 +76,39 @@ void AccountInfo::updateStatus()
 
         for (auto it = _folderMap.begin(); it != _folderMap.end(); it++) {
             FolderInfo *folderInfo = it->second;
-            if (folderInfo->_paused) {
-                abortOrPausedSeen++;
-            } else {
-                switch (folderInfo->_status) {
-                case OCC::SyncResult::Undefined:
-                case OCC::SyncResult::NotYetStarted:
-                    various++;
-                    break;
-                case OCC::SyncResult::SyncPrepare:
-                case OCC::SyncResult::SyncRunning:
-                    runSeen++;
-                    break;
-                case OCC::SyncResult::Problem: // don't show the problem
-                case OCC::SyncResult::Success:
-                    goodSeen++;
-                    break;
-                case OCC::SyncResult::Error:
-                case OCC::SyncResult::SetupError:
-                    errorsSeen++;
-                    break;
-                case OCC::SyncResult::SyncAbortRequested:
-                case OCC::SyncResult::Paused:
+            if (folderInfo) {
+                if (folderInfo->_paused) {
                     abortOrPausedSeen++;
+                } else {
+                    switch (folderInfo->_status) {
+                    case OCC::SyncResult::Undefined:
+                    case OCC::SyncResult::NotYetStarted:
+                        various++;
+                        break;
+                    case OCC::SyncResult::SyncPrepare:
+                    case OCC::SyncResult::SyncRunning:
+                        runSeen++;
+                        break;
+                    case OCC::SyncResult::Problem: // don't show the problem
+                    case OCC::SyncResult::Success:
+                        goodSeen++;
+                        break;
+                    case OCC::SyncResult::Error:
+                    case OCC::SyncResult::SetupError:
+                        errorsSeen++;
+                        break;
+                    case OCC::SyncResult::SyncAbortRequested:
+                    case OCC::SyncResult::Paused:
+                        abortOrPausedSeen++;
+                    }
+                }
+                if (folderInfo->_unresolvedConflicts) {
+                    _unresolvedConflicts = true;
                 }
             }
-            if (folderInfo->_unresolvedConflicts) {
-                _unresolvedConflicts = true;
+            else {
+                qCDebug(lcAccountInfo) << "Null pointer!";
+                Q_ASSERT(false);
             }
         }
 

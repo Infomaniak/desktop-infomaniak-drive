@@ -241,6 +241,20 @@ void Utility::setStyle(QApplication *app)
     }
 }
 
+void Utility::setStyle(QApplication *app, bool darkTheme)
+{
+    // Load style sheet
+    QFile ssFile(darkTheme ? styleSheetBlackFile : styleSheetWhiteFile);
+    if (ssFile.exists()) {
+        ssFile.open(QFile::ReadOnly);
+        QString StyleSheet = QLatin1String(ssFile.readAll());
+        app->setStyleSheet(StyleSheet);
+    }
+    else {
+        qCWarning(lcGuiUtility) << "Style sheet file not found!";
+    }
+}
+
 QString Utility::getFileStatusIconPath(OCC::SyncFileItem::Status status)
 {
     QString path;

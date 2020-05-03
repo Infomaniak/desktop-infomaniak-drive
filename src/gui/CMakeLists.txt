@@ -127,6 +127,7 @@ set(client_SRCS
     adddrivewidget.cpp
     bottomwidget.cpp
     buttonsbarwidget.cpp
+    clickablewidget.cpp
     custompushbutton.cpp
     customtoolbutton.cpp
     customtooltip.cpp

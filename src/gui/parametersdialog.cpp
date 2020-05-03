@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QVBoxLayout>
 
 namespace KDC {
@@ -69,14 +70,23 @@ void ParametersDialog::initUI()
     _mainMenuBarWidget = new MainMenuBarWidget(this);
     mainVBox->addWidget(_mainMenuBarWidget);
 
+    //
     // Stacked widget
+    //
     _stackedWidget = new QStackedWidget(this);
 
+    // Drives list
     _drivesWidget = new DrivesWidget(this);
     _stackedWidget->insertWidget(StackedWidget::Drives, _drivesWidget);
 
+    // Preferences
     _preferencesWidget = new PreferencesWidget(this);
-    _stackedWidget->insertWidget(StackedWidget::Preferences, _preferencesWidget);
+
+    QScrollArea *preferencesScrollArea = new QScrollArea(this);
+    preferencesScrollArea->setWidget(_preferencesWidget);
+    preferencesScrollArea->setWidgetResizable(true);
+
+    _stackedWidget->insertWidget(StackedWidget::Preferences, preferencesScrollArea);
 
     mainVBox->addWidget(_stackedWidget);
     mainVBox->setStretchFactor(_stackedWidget, 1);
@@ -105,52 +115,70 @@ void ParametersDialog::onRefreshAccountList()
     }
     else {
         for (OCC::AccountStatePtr accountStatePtr : OCC::AccountManager::instance()->accounts()) {
-            QString accountId = accountStatePtr->account()->id();
-            auto accountInfoIt = _accountInfoMap.find(accountId);
-            if (accountInfoIt == _accountInfoMap.end()) {
-                // New account
-                _accountInfoMap[accountId] = AccountInfo();
-                accountInfoIt = _accountInfoMap.find(accountId);
-            }
+            if (accountStatePtr && !accountStatePtr->account().isNull()) {
+                QString accountId = accountStatePtr->account()->id();
+                auto accountInfoIt = _accountInfoMap.find(accountId);
+                if (accountInfoIt == _accountInfoMap.end()) {
+                    // New account
+                    _accountInfoMap[accountId] = AccountInfo();
+                    accountInfoIt = _accountInfoMap.find(accountId);
+                }
 
-            // Set or update account name & color
-            accountInfoIt->second._name = accountStatePtr->account()->driveName();
-            accountInfoIt->second._color = accountStatePtr->account()->getDriveColor();
-            accountInfoIt->second._isSignedIn = !accountStatePtr->isSignedOut();
+                // Set or update account name & color
+                accountInfoIt->second._name = accountStatePtr->account()->driveName();
+                accountInfoIt->second._color = accountStatePtr->account()->getDriveColor();
+                accountInfoIt->second._isSignedIn = !accountStatePtr->isSignedOut();
 
-            OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
-            for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
-                OCC::AccountPtr folderAccountPtr = folderIt.value()->accountState()->account();
-                if (folderAccountPtr->id() == accountId) {
-                    auto folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
-                    if (folderInfoIt == accountInfoIt->second._folderMap.end()) {
-                        // New folder
-                        accountInfoIt->second._folderMap[folderIt.key()] =
-                                new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path());
-                        folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
+                OCC::Folder::Map folderMap = OCC::FolderMan::instance()->map();
+                for (auto folderIt = folderMap.begin(); folderIt != folderMap.end(); folderIt++) {
+                    if (folderIt.value() && folderIt.value()->accountState()) {
+                        OCC::AccountPtr folderAccountPtr = folderIt.value()->accountState()->account();
+                        if (!folderAccountPtr.isNull()) {
+                            if (folderAccountPtr->id() == accountId) {
+                                auto folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
+                                if (folderInfoIt == accountInfoIt->second._folderMap.end()) {
+                                    // New folder
+                                    accountInfoIt->second._folderMap[folderIt.key()] =
+                                            new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path());
+                                    folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
+                                }
+
+                                folderInfoIt->second->_paused = folderIt.value()->syncPaused();
+                                folderInfoIt->second->_unresolvedConflicts = folderIt.value()->syncResult().hasUnresolvedConflicts();
+                                folderInfoIt->second->_status = folderIt.value()->syncResult().status();
+                            }
+                        }
+                        else {
+                            qCDebug(lcParametersDialog) << "Null pointer!";
+                            Q_ASSERT(false);
+                        }
                     }
-
-                    folderInfoIt->second->_paused = folderIt.value()->syncPaused();
-                    folderInfoIt->second->_unresolvedConflicts = folderIt.value()->syncResult().hasUnresolvedConflicts();
-                    folderInfoIt->second->_status = folderIt.value()->syncResult().status();
+                    else {
+                        qCDebug(lcParametersDialog) << "Null pointer!";
+                        Q_ASSERT(false);
+                    }
                 }
+
+                // Manage removed folders
+                auto folderInfoIt = accountInfoIt->second._folderMap.begin();
+                while (folderInfoIt != accountInfoIt->second._folderMap.end()) {
+                    if (folderMap.find(folderInfoIt->first) == folderMap.end()) {
+                        folderInfoIt = accountInfoIt->second._folderMap.erase(folderInfoIt);
+                    }
+                    else {
+                        folderInfoIt++;
+                    }
+                }
+
+                // Compute account status
+                accountInfoIt->second.updateStatus();
+
+                _drivesWidget->addOrUpdateDrive(accountInfoIt->first, accountInfoIt->second);
             }
-
-            // Manage removed folders
-            auto folderInfoIt = accountInfoIt->second._folderMap.begin();
-            while (folderInfoIt != accountInfoIt->second._folderMap.end()) {
-                if (folderMap.find(folderInfoIt->first) == folderMap.end()) {
-                    folderInfoIt = accountInfoIt->second._folderMap.erase(folderInfoIt);
-                }
-                else {
-                    folderInfoIt++;
-                }
+            else {
+                qCDebug(lcParametersDialog) << "Null pointer!";
+                Q_ASSERT(false);
             }
-
-            // Compute account status
-            accountInfoIt->second.updateStatus();
-
-            _drivesWidget->addOrUpdateDrive(accountInfoIt->first, accountInfoIt->second);
         }
 
         // Manage removed accounts
@@ -176,28 +204,44 @@ void ParametersDialog::onUpdateProgress(const QString &folderId, const OCC::Prog
                   << " - ParametersDialog::onUpdateProgress folder: " << folder->path().toStdString() << std::endl;
 #endif
 
-        OCC::AccountPtr account = folder->accountState()->account();
-        if (account) {
-            const auto accountInfoIt = _accountInfoMap.find(account->id());
-            if (accountInfoIt != _accountInfoMap.end()) {
-                const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
-                if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
-                    FolderInfo *folderInfo = folderInfoIt->second;
-                    folderInfo->_currentFile = progress.currentFile();
-                    folderInfo->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
-                    folderInfo->_completedSize = progress.completedSize();
-                    folderInfo->_totalSize = qMax(progress.completedSize(), progress.totalSize());
-                    folderInfo->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
-                    folderInfo->_paused = folder->syncPaused();
-                    folderInfo->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
-                    folderInfo->_status = folder->syncResult().status();
+        if (folder->accountState()) {
+            OCC::AccountPtr account = folder->accountState()->account();
+            if (!account.isNull()) {
+                const auto accountInfoIt = _accountInfoMap.find(account->id());
+                if (accountInfoIt != _accountInfoMap.end()) {
+                    const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
+                    if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
+                        FolderInfo *folderInfo = folderInfoIt->second;
+                        if (folderInfo) {
+                            folderInfo->_currentFile = progress.currentFile();
+                            folderInfo->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
+                            folderInfo->_completedSize = progress.completedSize();
+                            folderInfo->_totalSize = qMax(progress.completedSize(), progress.totalSize());
+                            folderInfo->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
+                            folderInfo->_paused = folder->syncPaused();
+                            folderInfo->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
+                            folderInfo->_status = folder->syncResult().status();
+                        }
+                        else {
+                            qCDebug(lcParametersDialog) << "Null pointer!";
+                            Q_ASSERT(false);
+                        }
+                    }
+
+                    // Compute account status
+                    accountInfoIt->second.updateStatus();
+
+                    _drivesWidget->addOrUpdateDrive(account->id(), accountInfoIt->second);
                 }
-
-                // Compute account status
-                accountInfoIt->second.updateStatus();
-
-                _drivesWidget->addOrUpdateDrive(account->id(), accountInfoIt->second);
             }
+            else {
+                qCDebug(lcParametersDialog) << "Null pointer!";
+                Q_ASSERT(false);
+            }
+        }
+        else {
+            qCDebug(lcParametersDialog) << "Null pointer!";
+            Q_ASSERT(false);
         }
     }
 }

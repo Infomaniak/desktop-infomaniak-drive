@@ -17,37 +17,21 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#pragma once
-
 #include "clickablewidget.h"
-
-#include <QBoxLayout>
-#include <QWidget>
 
 namespace KDC {
 
-class PreferencesBlocWidget : public QWidget
+ClickableWidget::ClickableWidget(QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-
-    Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
-
-public:
-    explicit PreferencesBlocWidget(QWidget *parent = nullptr);
-
-    QHBoxLayout *addLayout();
-    ClickableWidget *addWidget();
-    void addSeparator();
-
-private:
-    QVBoxLayout *_layout;
-    QColor _backgroundColor;
-
-    void paintEvent(QPaintEvent* event) override;
-
-    inline QColor backgroundColor() const { return _backgroundColor; }
-    inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
-};
-
 }
 
+bool ClickableWidget::event(QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress) {
+        emit clicked();
+    }
+    return QWidget::event(event);
+}
+
+}

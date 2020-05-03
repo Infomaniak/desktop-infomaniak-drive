@@ -166,6 +166,7 @@ QIcon AccountItemWidget::getIconWithStatus()
     qreal statusItemScale = _statusIconSize.width() / statusItem->boundingRect().width();
     statusItem->setScale(statusItemScale);
 
+    Q_CHECK_PTR(qApp->primaryScreen());
     qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     QPixmap pixmap(QSize(scene.width() * ratio, scene.height() * ratio));
     pixmap.fill(Qt::transparent);

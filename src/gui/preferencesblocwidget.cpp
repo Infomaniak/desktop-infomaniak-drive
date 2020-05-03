@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "preferencesblocwidget.h"
 
+#include <QFrame>
 #include <QPainter>
 
 namespace KDC {
@@ -26,7 +27,6 @@ namespace KDC {
 static const int cornerRadius = 10;
 static const int boxHMargin= 15;
 static const int boxVMargin = 18;
-static const int boxSpacing = 20;
 
 PreferencesBlocWidget::PreferencesBlocWidget(QWidget *parent)
     : QWidget(parent)
@@ -35,9 +35,43 @@ PreferencesBlocWidget::PreferencesBlocWidget(QWidget *parent)
     setContentsMargins(0, 0, 0, 0);
 
     _layout = new QVBoxLayout();
-    _layout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
-    _layout->setSpacing(boxSpacing);
+    _layout->setContentsMargins(0, 0, 0, 0);
+    _layout->setSpacing(0);
     setLayout(_layout);
+}
+
+QHBoxLayout *PreferencesBlocWidget::addLayout()
+{
+    QHBoxLayout *hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    hLayout->setSpacing(0);
+    _layout->addLayout(hLayout);
+
+    return hLayout;
+}
+
+ClickableWidget *PreferencesBlocWidget::addWidget()
+{
+    ClickableWidget *widget = new ClickableWidget(this);
+    widget->setContentsMargins(0, 0, 0, 0);
+    _layout->addWidget(widget);
+
+    QHBoxLayout *hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    hLayout->setSpacing(0);
+    widget->setLayout(hLayout);
+
+    return widget;
+}
+
+void PreferencesBlocWidget::addSeparator()
+{
+    QFrame *line = new QFrame(this);
+    line->setObjectName("line");
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Plain);
+    line->setLineWidth(1);
+    _layout->addWidget(line);
 }
 
 void PreferencesBlocWidget::paintEvent(QPaintEvent *event)

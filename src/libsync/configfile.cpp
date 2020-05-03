@@ -89,6 +89,7 @@ static const char newBigFolderSizeLimitC[] = "newBigFolderSizeLimit";
 static const char useNewBigFolderSizeLimitC[] = "useNewBigFolderSizeLimit";
 static const char confirmExternalStorageC[] = "confirmExternalStorage";
 static const char moveToTrashC[] = "moveToTrash";
+static const char darkThemeC[] = "darkTheme";
 
 static const char deltaSyncEnabledC[] = "DeltaSync/enabled";
 static const char deltaSyncMinimumFileSizeC[] = "DeltaSync/minFileSize";
@@ -733,6 +734,16 @@ bool ConfigFile::moveToTrash() const
 void ConfigFile::setMoveToTrash(bool isChecked)
 {
     setValue(moveToTrashC, isChecked);
+}
+
+bool ConfigFile::darkTheme() const
+{
+    return getValue(darkThemeC, QString(), false).toBool();
+}
+
+void ConfigFile::setDarkTheme(bool isChecked)
+{
+    setValue(darkThemeC, isChecked);
 }
 
 bool ConfigFile::deltaSyncEnabled() const

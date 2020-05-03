@@ -149,6 +149,9 @@ public:
     bool moveToTrash() const;
     void setMoveToTrash(bool);
 
+    bool darkTheme() const;
+    void setDarkTheme(bool);
+
     static bool setConfDir(const QString &value);
 
     bool optionalDesktopNotifications() const;

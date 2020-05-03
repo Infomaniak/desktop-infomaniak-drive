@@ -511,3 +511,54 @@ KDC--BottomWidget
     max-height: 5px;
     qproperty-background_color: #1A1A1C;
 }
+
+/**************************/
+/* KDC--PreferencesWidget */
+/**************************/
+
+KDC--PreferencesWidget
+{
+    background-color: transparent;
+    border: 0px;
+    qproperty-action_color: #B8B8B8;
+}
+
+KDC--PreferencesWidget QLabel#generalLabel
+{
+    color: #B8B8B8;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 13px;
+}
+
+KDC--PreferencesWidget QLabel#advancedLabel
+{
+    color: #B8B8B8;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 13px;
+}
+
+/******************************/
+/* KDC--PreferencesBlocWidget */
+/******************************/
+
+KDC--PreferencesBlocWidget
+{
+    background-color: transparent;
+    qproperty-background_color: #35393D;
+}
+
+KDC--PreferencesBlocWidget QLabel
+{
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 13px;
+}
+
+KDC--PreferencesBlocWidget QFrame#line
+{
+    background-color: #F5F5F5;
+    border: 0px;
+}

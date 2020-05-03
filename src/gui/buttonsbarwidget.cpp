@@ -41,11 +41,13 @@ ButtonsBarWidget::ButtonsBarWidget(QWidget *parent)
 
 void ButtonsBarWidget::insertButton(int position, CustomPushButton *button)
 {
-    _hboxLayout->insertWidget(position, button);
-    connect(button, &CustomPushButton::toggled, this, &ButtonsBarWidget::onToggle);
-    buttonsList.insert(position, button);
-    if (buttonsList.size() == 1) {
-        button->setChecked(true);
+    if (button) {
+        _hboxLayout->insertWidget(position, button);
+        connect(button, &CustomPushButton::toggled, this, &ButtonsBarWidget::onToggle);
+        buttonsList.insert(position, button);
+        if (buttonsList.size() == 1) {
+            button->setChecked(true);
+        }
     }
 }
 
