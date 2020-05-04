@@ -166,6 +166,18 @@ void AbstractNetworkJob::slotFinished()
     // Qt doesn't yet transparently resend HTTP2 requests, do so here
     const auto maxHttp2Resends = 3;
     QByteArray verb = requestVerb(*reply());
+
+    // Debug empty body bug
+    if (_requestBody && (!_requestBody->isOpen() || _requestBody->atEnd()) && _reply->request().header(QNetworkRequest::ContentLengthHeader) > 0) {
+        qCWarning(lcNetworkJob) << "Finishing " << verb
+                                 << " request with content-length=" << _reply->request().header(QNetworkRequest::ContentLengthHeader)
+                                 << " but " << (!_requestBody->isOpen() ? "IO device closed" : "IO device empty");
+        if (verb == "PROPFIND") {
+            qCCritical(lcNetworkJob) << "Bad PROPFIND request!";
+            return;
+        }
+    }
+
     if (_reply->error() == QNetworkReply::ContentReSendError
         && _reply->attribute(QNetworkRequest::HTTP2WasUsedAttribute).toBool()) {
 

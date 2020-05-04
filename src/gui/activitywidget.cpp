@@ -654,9 +654,12 @@ void ActivitySettings::slotSendDebugData()
 
 void ActivitySettings::slotDebugReporterDone(bool retCode, const QString &debugId)
 {
-    QMessageBox::information(this, Theme::instance()->appNameGUI(), retCode
+    QMessageBox information(QMessageBox::NoIcon, Theme::instance()->appNameGUI(),
+                            retCode
                              ? tr("Transmission done!\nPlease refer to identifier <b>%1</b> in bug reports.").arg(debugId)
                              : tr("Transmission failed!"));
+    information.setTextInteractionFlags(Qt::TextSelectableByMouse);
+    information.exec();
 }
 
 void ActivitySettings::slotShowIssuesTab(const QString &folderAlias)

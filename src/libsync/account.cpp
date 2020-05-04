@@ -280,6 +280,18 @@ QNetworkReply *Account::sendRawRequest(const QByteArray &verb, const QUrl &url, 
     } else if (verb == "DELETE" && !data) {
         return _am->deleteResource(req);
     }
+
+    // Debug empty body bug
+    if (data && (!data->isOpen() || data->atEnd()) && req.header(QNetworkRequest::ContentLengthHeader) > 0) {
+        qCWarning(lcAccount) << "Sending " << verb
+                              << " request with content-length=" << req.header(QNetworkRequest::ContentLengthHeader)
+                              << " but " << (!data->isOpen() ? "IO device closed" : "IO device empty");
+        if (verb == "PROPFIND") {
+            qCCritical(lcAccount) << "Bad PROPFIND request!";
+            req.setHeader(QNetworkRequest::ContentLengthHeader, QVariant(0));
+        }
+    }
+
     return _am->sendCustomRequest(req, verb, data);
 }
 
@@ -306,6 +318,7 @@ QSslConfiguration Account::getOrCreateSslConfig()
     // if setting the client certificate fails, you will probably get an error similar to this:
     //  "An internal error number 1060 happened. SSL handshake failed, client certificate was requested: SSL error: sslv3 alert handshake failure"
     QSslConfiguration sslConfig = QSslConfiguration::defaultConfiguration();
+    sslConfig.setProtocol(QSsl::TlsV1_0OrLater);
 
     // Try hard to re-use session for different requests
     sslConfig.setSslOption(QSsl::SslOptionDisableSessionTickets, false);
