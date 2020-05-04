@@ -45,10 +45,13 @@ Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
 ParametersDialog::ParametersDialog(QWidget *parent)
     : QDialog(parent)
     , _backgroundMainColor(QColor())
+    , _pageStackedLayout(nullptr)
     , _mainMenuBarWidget(nullptr)
-    , _stackedWidget(nullptr)
+    , _driveMenuBarWidget(nullptr)
+    , _mainStackedWidget(nullptr)
     , _drivesWidget(nullptr)
     , _preferencesWidget(nullptr)
+    , _drivePreferencesWidget(nullptr)
 {
     initUI();
 
@@ -64,22 +67,32 @@ ParametersDialog::ParametersDialog(QWidget *parent)
 
 void ParametersDialog::initUI()
 {
+    // Page stacked widget
+    _pageStackedLayout = new QStackedLayout(this);
+    setLayout(_pageStackedLayout);
+
+    //
+    // Main widget
+    //
+    QWidget *mainPage = new QWidget(this);
+    mainPage->setContentsMargins(0, 0, 0, 0);
+    _pageStackedLayout->insertWidget(Page::Main, mainPage);
+
     QVBoxLayout *mainVBox = new QVBoxLayout();
     mainVBox->setContentsMargins(0, 0, 0, 0);
     mainVBox->setSpacing(0);
+    mainPage->setLayout(mainVBox);
 
     // Main menu bar
     _mainMenuBarWidget = new MainMenuBarWidget(this);
     mainVBox->addWidget(_mainMenuBarWidget);
 
-    //
-    // Stacked widget
-    //
-    _stackedWidget = new QStackedWidget(this);
+    // Main stacked widget
+    _mainStackedWidget = new QStackedWidget(this);
 
     // Drives list
     _drivesWidget = new DrivesWidget(this);
-    _stackedWidget->insertWidget(StackedWidget::Drives, _drivesWidget);
+    _mainStackedWidget->insertWidget(StackedWidget::Drives, _drivesWidget);
 
     // Preferences
     _preferencesWidget = new PreferencesWidget(this);
@@ -88,12 +101,36 @@ void ParametersDialog::initUI()
     preferencesScrollArea->setWidget(_preferencesWidget);
     preferencesScrollArea->setWidgetResizable(true);
 
-    _stackedWidget->insertWidget(StackedWidget::Preferences, preferencesScrollArea);
+    _mainStackedWidget->insertWidget(StackedWidget::Preferences, preferencesScrollArea);
 
-    mainVBox->addWidget(_stackedWidget);
-    mainVBox->setStretchFactor(_stackedWidget, 1);
+    mainVBox->addWidget(_mainStackedWidget);
+    mainVBox->setStretchFactor(_mainStackedWidget, 1);
 
-    setLayout(mainVBox);
+    //
+    // Drive preferences widget
+    //
+    QWidget *drivePage = new QWidget(this);
+    drivePage->setContentsMargins(0, 0, 0, 0);
+    _pageStackedLayout->insertWidget(Page::Drive, drivePage);
+
+    QVBoxLayout *driveVBox = new QVBoxLayout();
+    driveVBox->setContentsMargins(0, 0, 0, 0);
+    driveVBox->setSpacing(0);
+    drivePage->setLayout(driveVBox);
+
+    // Drive menu bar
+    _driveMenuBarWidget = new DriveMenuBarWidget(this);
+    driveVBox->addWidget(_driveMenuBarWidget);
+
+    // Drive preferences
+    _drivePreferencesWidget = new DrivePreferencesWidget(this);
+
+    QScrollArea *drivePreferencesScrollArea = new QScrollArea(this);
+    drivePreferencesScrollArea->setWidget(_drivePreferencesWidget);
+    drivePreferencesScrollArea->setWidgetResizable(true);
+
+    driveVBox->addWidget(drivePreferencesScrollArea);
+    mainVBox->setStretchFactor(drivePreferencesScrollArea, 1);
 
     connect(_mainMenuBarWidget, &MainMenuBarWidget::drivesButtonClicked, this, &ParametersDialog::onDrivesButtonClicked);
     connect(_mainMenuBarWidget, &MainMenuBarWidget::preferencesButtonClicked, this, &ParametersDialog::onPreferencesButtonClicked);
@@ -103,6 +140,8 @@ void ParametersDialog::initUI()
     connect(_drivesWidget, &DrivesWidget::pauseSync, this, &ParametersDialog::onPauseSync);
     connect(_drivesWidget, &DrivesWidget::resumeSync, this, &ParametersDialog::onResumeSync);
     connect(_drivesWidget, &DrivesWidget::remove, this, &ParametersDialog::onRemove);
+    connect(_drivesWidget, &DrivesWidget::displayDriveParameters, this, &ParametersDialog::onDisplayDriveParameters);
+    connect(_driveMenuBarWidget, &DriveMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivesList);
 }
 
 void ParametersDialog::onRefreshAccountList()
@@ -251,12 +290,12 @@ void ParametersDialog::onUpdateProgress(const QString &folderId, const OCC::Prog
 
 void ParametersDialog::onDrivesButtonClicked()
 {
-    _stackedWidget->setCurrentIndex(StackedWidget::Drives);
+    _mainStackedWidget->setCurrentIndex(StackedWidget::Drives);
 }
 
 void ParametersDialog::onPreferencesButtonClicked()
 {
-    _stackedWidget->setCurrentIndex(StackedWidget::Preferences);
+    _mainStackedWidget->setCurrentIndex(StackedWidget::Preferences);
 }
 
 void ParametersDialog::onOpenHelp()
@@ -307,6 +346,21 @@ void ParametersDialog::onRemove(const QString &accountId)
         accountManager->deleteAccount(accountStatePtr.data());
         accountManager->save();
     }
+}
+
+void ParametersDialog::onDisplayDriveParameters(const QString &accountId)
+{
+    auto accountInfoIt = _accountInfoMap.find(accountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        _driveMenuBarWidget->setAccount(accountInfoIt->second._color, accountInfoIt->second._name);
+        _drivePreferencesWidget->loadData(accountId);
+        _pageStackedLayout->setCurrentIndex(Page::Drive);
+    }
+}
+
+void ParametersDialog::onDisplayDrivesList()
+{
+    _pageStackedLayout->setCurrentIndex(Page::Main);
 }
 
 }

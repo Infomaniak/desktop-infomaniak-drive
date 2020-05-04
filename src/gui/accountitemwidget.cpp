@@ -300,7 +300,7 @@ void AccountItemWidget::onResumeTriggered()
 
 void AccountItemWidget::onParametersTriggered()
 {
-
+    emit displayDriveParameters(_item.getId());
 }
 
 void AccountItemWidget::onManageOfferTriggered()

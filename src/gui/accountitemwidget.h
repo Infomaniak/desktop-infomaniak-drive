@@ -50,6 +50,7 @@ signals:
     void pauseSync(const QString &accountId);
     void resumeSync(const QString &accountId);
     void remove(const QString &accountId);
+    void displayDriveParameters(const QString &accountId);
     void accountIconSizeChanged();
     void accountIconColorChanged();
     void driveIconSizeChanged();

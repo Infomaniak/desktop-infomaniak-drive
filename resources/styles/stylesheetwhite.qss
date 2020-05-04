@@ -145,8 +145,18 @@ KDC--ParametersDialog QLabel#defaultTextLabel
 
 KDC--ParametersDialog QScrollArea
 {
-    background-color: transparent;
+    background-color: #F5F5F5;
     border: 0px;
+}
+
+KDC--ParametersDialog QCheckBox::indicator::checked
+{
+    image: url(:/client/resources/icons/actions/switch-on.svg);
+}
+
+KDC--ParametersDialog QCheckBox::indicator::unchecked
+{
+    image: url(:/client/resources/icons/actions/switch-off.svg);
 }
 
 /*********************/
@@ -409,6 +419,24 @@ KDC--MainMenuBarWidget QPushButton:checked
     text-decoration: underline;
 }
 
+/***************************/
+/* KDC--DriveMenuBarWidget */
+/***************************/
+
+KDC--DriveMenuBarWidget
+{
+    min-height: 65px;
+    max-height: 65px;
+}
+
+KDC--DriveMenuBarWidget QLabel#accountNameLabel
+{
+    color: #444444;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 18px;
+}
+
 /*************************/
 /* KDC--CustomPushButton */
 /*************************/
@@ -524,7 +552,6 @@ KDC--BottomWidget
 
 KDC--PreferencesWidget
 {
-    background-color: #F5F5F5;
     border: 0px;
     qproperty-action_color: #666666;
 }
@@ -538,6 +565,31 @@ KDC--PreferencesWidget QLabel#generalLabel
 }
 
 KDC--PreferencesWidget QLabel#advancedLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 13px;
+}
+
+/*******************************/
+/* KDC--DrivePreferencesWidget */
+/*******************************/
+
+KDC--DrivePreferencesWidget
+{
+    border: 0px;
+}
+
+KDC--DrivePreferencesWidget QLabel#storageLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 13px;
+}
+
+KDC--DrivePreferencesWidget QLabel#synchronizationLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";

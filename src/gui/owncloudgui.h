@@ -16,6 +16,7 @@
 #define OWNCLOUDGUI_H
 
 #define KDRIVE_V2
+#define KDRIVE_V2_NEW_SETTINGS
 
 #include "systray.h"
 #include "connectionvalidator.h"
@@ -141,10 +142,14 @@ private:
     QPointer<LogBrowser> _logBrowser;
 #ifdef KDRIVE_V2
     QScopedPointer<KDC::SynthesisPopover> _synthesisPopover;
-    QPointer<KDC::ParametersDialog> _parametersDialog;
 #else
     // tray's menu
     QScopedPointer<QMenu> _contextMenu;
+#endif
+
+#ifdef KDRIVE_V2_NEW_SETTINGS
+    QPointer<KDC::ParametersDialog> _parametersDialog;
+#else
     QPointer<SettingsDialog> _settingsDialog;
 #endif
 

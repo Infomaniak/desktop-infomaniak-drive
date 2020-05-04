@@ -71,6 +71,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
 
     QHBoxLayout *folderConfirmation1HBox = new QHBoxLayout();
     folderConfirmation1HBox->setContentsMargins(0, 0, 0, 0);
+    folderConfirmation1HBox->setSpacing(0);
     folderConfirmationBox->addLayout(folderConfirmation1HBox);
 
     QLabel *folderConfirmationLabel = new QLabel(tr("Ask for confirmation before synchronizing files greater than"), this);
@@ -78,16 +79,19 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     folderConfirmation1HBox->addStretch();
 
     QCheckBox *folderConfirmationCheckBox = new QCheckBox(this);
+    folderConfirmationCheckBox->setLayoutDirection(Qt::RightToLeft);
+    folderConfirmationCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
     auto folderLimit = cfg.newBigFolderSizeLimit();
     folderConfirmationCheckBox->setCheckState(folderLimit.first ? Qt::Checked : Qt::Unchecked);
     folderConfirmation1HBox->addWidget(folderConfirmationCheckBox);
 
     QHBoxLayout *folderConfirmation2HBox = new QHBoxLayout();
     folderConfirmation2HBox->setContentsMargins(0, 0, 0, 0);
-    folderConfirmationBox->addLayout(folderConfirmation2HBox);
     folderConfirmation2HBox->setSpacing(textHSpacing);
+    folderConfirmationBox->addLayout(folderConfirmation2HBox);
 
     _folderConfirmationAmountLineEdit = new QLineEdit(this);
+    _folderConfirmationAmountLineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
     _folderConfirmationAmountLineEdit->setEnabled(folderLimit.first);
     _folderConfirmationAmountLineEdit->setText(QString::number(folderLimit.second));
     _folderConfirmationAmountLineEdit->setValidator(new QIntValidator(0, 999999, this));
@@ -109,6 +113,8 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     darkThemeBox->addStretch();
 
     QCheckBox *darkThemeCheckBox = new QCheckBox(this);
+    darkThemeCheckBox->setLayoutDirection(Qt::RightToLeft);
+    darkThemeCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
     if (OCC::Utility::isMac()) {
         bool darkSystray = OCC::Utility::hasDarkSystray();
         darkThemeCheckBox->setCheckState(darkSystray ? Qt::Checked : Qt::Unchecked);
@@ -128,6 +134,8 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     monochromeIconsBox->addStretch();
 
     QCheckBox *monochromeCheckBox = new QCheckBox(this);
+    monochromeCheckBox->setLayoutDirection(Qt::RightToLeft);
+    monochromeCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
     monochromeCheckBox->setCheckState(cfg.monoIcons() ? Qt::Checked : Qt::Unchecked);
     monochromeIconsBox->addWidget(monochromeCheckBox);
     generalBloc->addSeparator();
@@ -140,6 +148,8 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     launchAtStartupBox->addStretch();
 
     QCheckBox *launchAtStartupCheckBox = new QCheckBox(this);
+    launchAtStartupCheckBox->setLayoutDirection(Qt::RightToLeft);
+    launchAtStartupCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
     bool hasSystemLauchAtStartup = OCC::Utility::hasSystemLaunchOnStartup(OCC::Theme::instance()->appName());
     if (hasSystemLauchAtStartup) {
         // Cannot disable autostart because system-wide autostart is enabled

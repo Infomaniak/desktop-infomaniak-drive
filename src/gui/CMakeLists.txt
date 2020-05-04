@@ -131,6 +131,8 @@ set(client_SRCS
     custompushbutton.cpp
     customtoolbutton.cpp
     customtooltip.cpp
+    drivemenubarwidget.cpp
+    drivepreferenceswidget.cpp
     driveswidget.cpp
     driveselectionwidget.cpp
     folderinfo.cpp

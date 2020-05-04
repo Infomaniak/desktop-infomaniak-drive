@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #pragma once
 
 #include "mainmenubarwidget.h"
+#include "drivemenubarwidget.h"
+#include "drivepreferenceswidget.h"
 #include "driveswidget.h"
 #include "preferenceswidget.h"
 #include "accountinfo.h"
@@ -29,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <QColor>
 #include <QDialog>
+#include <QStackedLayout>
 #include <QStackedWidget>
 #include <QString>
 
@@ -45,16 +48,24 @@ signals:
     void addDrive();
 
 private:
+    enum Page {
+        Main = 0,
+        Drive
+    };
+
     enum StackedWidget {
         Drives = 0,
         Preferences
     };
 
     QColor _backgroundMainColor;
+    QStackedLayout *_pageStackedLayout;
     MainMenuBarWidget *_mainMenuBarWidget;
-    QStackedWidget *_stackedWidget;
+    DriveMenuBarWidget *_driveMenuBarWidget;
+    QStackedWidget *_mainStackedWidget;
     DrivesWidget *_drivesWidget;
     PreferencesWidget *_preferencesWidget;
+    DrivePreferencesWidget *_drivePreferencesWidget;
     std::map<QString, AccountInfo> _accountInfoMap;
 
     void initUI();
@@ -70,6 +81,8 @@ private slots:
     void onPauseSync(const QString &accountId);
     void onResumeSync(const QString &accountId);
     void onRemove(const QString &accountId);
+    void onDisplayDriveParameters(const QString &accountId);
+    void onDisplayDrivesList();
 };
 
 }

@@ -352,12 +352,11 @@ void SynthesisPopover::paintEvent(QPaintEvent *event)
 
 bool SynthesisPopover::event(QEvent *event)
 {
+    bool ret = QWidget::event(event);
     if (event->type() == QEvent::WindowDeactivate) {
         done(QDialog::Accepted);
-        event->ignore();
-        return true;
     }
-    return QWidget::event(event);
+    return ret;
 }
 
 void SynthesisPopover::initUI()
@@ -533,12 +532,13 @@ void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
     }
 }
 
-const FolderInfo *SynthesisPopover::getActiveFolder(const std::map<QString, FolderInfo *> &folderMap)
+const FolderInfo *SynthesisPopover::getFirstFolderWithStatus(const std::map<QString, FolderInfo *> &folderMap,
+                                                             OCC::SyncResult::Status status)
 {
     const FolderInfo *folderInfo = nullptr;
     for (auto folderInfoIt : folderMap) {
         if (folderInfoIt.second) {
-            if (folderInfoIt.second->_status == OCC::SyncResult::Status::SyncRunning) {
+            if (folderInfoIt.second->_status == status) {
                 folderInfo = folderInfoIt.second;
                 break;
             }
@@ -546,6 +546,28 @@ const FolderInfo *SynthesisPopover::getActiveFolder(const std::map<QString, Fold
         else {
             qCDebug(lcSynthesisPopover) << "Null pointer!";
             Q_ASSERT(false);
+        }
+    }
+    return folderInfo;
+}
+
+const FolderInfo *SynthesisPopover::getFirstFolderByPriority(const std::map<QString, FolderInfo *> &folderMap)
+{
+    static QVector<OCC::SyncResult::Status> statusPriority = QVector<OCC::SyncResult::Status>()
+            << OCC::SyncResult::Status::NotYetStarted
+            << OCC::SyncResult::Status::SyncRunning
+            << OCC::SyncResult::Status::Paused
+            << OCC::SyncResult::Status::Error
+            << OCC::SyncResult::Status::SetupError
+            << OCC::SyncResult::Status::Problem
+            << OCC::SyncResult::Status::SyncPrepare
+            << OCC::SyncResult::Status::Success;
+
+    const FolderInfo *folderInfo = nullptr;
+    for (OCC::SyncResult::Status status : statusPriority) {
+        folderInfo = getFirstFolderWithStatus(folderMap, status);
+        if (folderInfo) {
+            break;
         }
     }
     if (!folderInfo) {
@@ -569,7 +591,7 @@ void SynthesisPopover::refreshStatusBar(const FolderInfo *folderInfo)
 void SynthesisPopover::refreshStatusBar(std::map<QString, AccountInfoPopover>::iterator accountInfoIt)
 {
     if (accountInfoIt != _accountInfoMap.end()) {
-        const FolderInfo *folderInfo = getActiveFolder(accountInfoIt->second._folderMap);
+        const FolderInfo *folderInfo = getFirstFolderByPriority(accountInfoIt->second._folderMap);
         refreshStatusBar(folderInfo);
     }
 }
@@ -1347,7 +1369,7 @@ void SynthesisPopover::onLinkActivated(const QString &link)
 {
     if (link == OCC::Utility::learnMoreLink) {
         // TODO: add parameters
-        emit openParametersDialog();
+        onOpenParameters();
     }
     else {
         // URL link

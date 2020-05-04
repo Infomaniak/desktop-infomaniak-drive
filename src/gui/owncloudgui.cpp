@@ -52,7 +52,7 @@ ownCloudGui::ownCloudGui(Application *parent)
     : QObject(parent)
     , _tray(nullptr)
     , _logBrowser(nullptr)
-#ifdef KDRIVE_V2
+#ifdef KDRIVE_V2_NEW_SETTINGS
     , _parametersDialog(new KDC::ParametersDialog())
 #else
     , _settingsDialog(new SettingsDialog(this))
@@ -105,7 +105,7 @@ void ownCloudGui::slotOpenParametersDialog()
 {
     // if account is set up, start the configuration wizard.
     if (!AccountManager::instance()->accounts().isEmpty()) {
-#ifdef KDRIVE_V2
+#ifdef KDRIVE_V2_NEW_SETTINGS
         if (_parametersDialog.isNull() || QApplication::activeWindow() != _parametersDialog) {
             slotShowParametersDialog();
         } else {
@@ -113,7 +113,7 @@ void ownCloudGui::slotOpenParametersDialog()
         }
 #else
         if (_settingsDialog.isNull() || QApplication::activeWindow() != _settingsDialog) {
-            slotShowSettings();
+            slotShowParametersDialog();
         } else {
             _settingsDialog->close();
         }
@@ -189,7 +189,7 @@ void ownCloudGui::slotSyncStateChange(Folder *folder)
     }
 
     if (result.status() == SyncResult::NotYetStarted) {
-#ifndef KDRIVE_V2
+#ifndef KDRIVE_V2_NEW_SETTINGS
         _settingsDialog->slotRefreshActivity(folder->accountState());
 #endif
     }
@@ -1158,7 +1158,7 @@ void ownCloudGui::slotShowGuiMessage(const QString &title, const QString &messag
 
 void ownCloudGui::slotShowParametersDialog()
 {
-#ifdef KDRIVE_V2
+#ifdef KDRIVE_V2_NEW_SETTINGS
     if (_parametersDialog.isNull()) {
         _parametersDialog = new KDC::ParametersDialog();
         connect(_parametersDialog, &KDC::ParametersDialog::addDrive, this, &ownCloudGui::slotNewAccountWizard);
@@ -1190,7 +1190,7 @@ void ownCloudGui::slotShutdown()
     // that saving the geometries happens ASAP during a OS shutdown
 
     // those do delete on close
-#ifdef KDRIVE_V2
+#ifdef KDRIVE_V2_NEW_SETTINGS
     if (!_parametersDialog.isNull())
         _parametersDialog->close();
 #else
@@ -1230,6 +1230,10 @@ void ownCloudGui::slotHelp()
 
 void ownCloudGui::raiseDialog(QWidget *raiseWidget)
 {
+    QWidget *activeWindow = QApplication::activeWindow();
+    if (activeWindow && activeWindow != raiseWidget) {
+        activeWindow->hide();
+    }
     if (raiseWidget && !raiseWidget->parentWidget()) {
         // Qt has a bug which causes parent-less dialogs to pop-under.
         raiseWidget->showNormal();
@@ -1332,7 +1336,7 @@ void ownCloudGui::slotAbout()
 {
     QString title = tr("About %1").arg(Theme::instance()->appNameGUI());
     QString about = Theme::instance()->about();
-#ifdef KDRIVE_V2
+#ifdef KDRIVE_V2_NEW_SETTINGS
     QMessageBox *msgBox = new QMessageBox(this->_parametersDialog);
 #else
     QMessageBox *msgBox = new QMessageBox(this->_settingsDialog);
