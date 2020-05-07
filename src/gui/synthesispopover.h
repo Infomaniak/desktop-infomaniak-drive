@@ -27,7 +27,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "synchronizeditemwidget.h"
 #include "accountinfo.h"
 #include "progressdispatcher.h"
-#include "quotainfo.h"
 
 #include <QColor>
 #include <QDateTime>
@@ -70,6 +69,7 @@ signals:
     void exit();
     void addDrive();
     void disableNotifications(NotificationsDisabled type, QDateTime dateTime);
+    void applyStyle();
     void crash();
     void crashEnforce();
     void crashFatal();
@@ -82,9 +82,6 @@ private:
     };
 
     struct AccountInfoPopover : public AccountInfo {
-        std::shared_ptr<OCC::QuotaInfo> _quotaInfoPtr;
-        qint64 _totalSize;
-        qint64 _used;
         StackedWidget _stackedWidgetPosition;
         QListWidget *_synchronizedListWidget;
         int _synchronizedListStackPosition;

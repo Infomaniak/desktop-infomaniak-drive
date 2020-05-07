@@ -130,6 +130,7 @@ set(client_SRCS
     clickablewidget.cpp
     custompushbutton.cpp
     customtoolbutton.cpp
+    customcheckbox.cpp
     customtooltip.cpp
     drivemenubarwidget.cpp
     drivepreferenceswidget.cpp

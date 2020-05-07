@@ -64,6 +64,7 @@ namespace Utility {
     /** Translated text for "free up local space" (and unpinning the item) */
     QString vfsFreeSpaceActionText();
 
+    QPixmap getPixmapFromImage(const QImage &image, const QSize &size = QSize());
     QIcon getIconWithColor(const QString &path, const QColor &color = QColor());
     QIcon getIconMenuWithColor(const QString &path, const QColor &color = QColor());
 

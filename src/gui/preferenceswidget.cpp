@@ -19,14 +19,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "preferenceswidget.h"
 #include "preferencesblocwidget.h"
+#include "customcheckbox.h"
 #include "configfile.h"
-#include "guiutility.h"
 #include "common/utility.h"
 #include "theme.h"
 
 #include <QBoxLayout>
-#include <QCheckBox>
 #include <QIntValidator>
+#include <QLabel>
 
 namespace KDC {
 
@@ -34,16 +34,10 @@ static const int boxHMargin= 20;
 static const int boxVMargin = 20;
 static const int boxSpacing = 12;
 static const int textHSpacing = 10;
-static const int textVSpacing = 5;
-static const int actionIconSize = 16;
 static const QSize amountLineEditSize = QSize(85, 40);
 
 PreferencesWidget::PreferencesWidget(QWidget *parent)
     : QWidget(parent)
-    , _actionColor(QColor())
-    , _filesToExcludeIconLabel(nullptr)
-    , _proxyServerIconLabel(nullptr)
-    , _bandwidthIconLabel(nullptr)
     , _folderConfirmationAmountLineEdit(nullptr)
 {
     setContentsMargins(0, 0, 0, 0);
@@ -59,7 +53,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     // General bloc
     //
     QLabel *generalLabel = new QLabel(tr("General"), this);
-    generalLabel->setObjectName("generalLabel");
+    generalLabel->setObjectName("blocLabel");
     vbox->addWidget(generalLabel);
 
     PreferencesBlocWidget *generalBloc = new PreferencesBlocWidget(this);
@@ -67,7 +61,6 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
 
     // Folder synchronization confirmation
     QBoxLayout *folderConfirmationBox = generalBloc->addLayout(QBoxLayout::Direction::TopToBottom);
-    folderConfirmationBox->setSpacing(textVSpacing);
 
     QHBoxLayout *folderConfirmation1HBox = new QHBoxLayout();
     folderConfirmation1HBox->setContentsMargins(0, 0, 0, 0);
@@ -78,7 +71,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     folderConfirmation1HBox->addWidget(folderConfirmationLabel);
     folderConfirmation1HBox->addStretch();
 
-    QCheckBox *folderConfirmationCheckBox = new QCheckBox(this);
+    CustomCheckBox *folderConfirmationCheckBox = new CustomCheckBox(this);
     folderConfirmationCheckBox->setLayoutDirection(Qt::RightToLeft);
     folderConfirmationCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
     auto folderLimit = cfg.newBigFolderSizeLimit();
@@ -112,7 +105,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     darkThemeBox->addWidget(darkThemeLabel);
     darkThemeBox->addStretch();
 
-    QCheckBox *darkThemeCheckBox = new QCheckBox(this);
+    CustomCheckBox *darkThemeCheckBox = new CustomCheckBox(this);
     darkThemeCheckBox->setLayoutDirection(Qt::RightToLeft);
     darkThemeCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
     if (OCC::Utility::isMac()) {
@@ -133,7 +126,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     monochromeIconsBox->addWidget(monochromeLabel);
     monochromeIconsBox->addStretch();
 
-    QCheckBox *monochromeCheckBox = new QCheckBox(this);
+    CustomCheckBox *monochromeCheckBox = new CustomCheckBox(this);
     monochromeCheckBox->setLayoutDirection(Qt::RightToLeft);
     monochromeCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
     monochromeCheckBox->setCheckState(cfg.monoIcons() ? Qt::Checked : Qt::Unchecked);
@@ -147,7 +140,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     launchAtStartupBox->addWidget(launchAtStartupLabel);
     launchAtStartupBox->addStretch();
 
-    QCheckBox *launchAtStartupCheckBox = new QCheckBox(this);
+    CustomCheckBox *launchAtStartupCheckBox = new CustomCheckBox(this);
     launchAtStartupCheckBox->setLayoutDirection(Qt::RightToLeft);
     launchAtStartupCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
     bool hasSystemLauchAtStartup = OCC::Utility::hasSystemLaunchOnStartup(OCC::Theme::instance()->appName());
@@ -166,86 +159,54 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     // Advanced bloc
     //
     QLabel *advancedLabel = new QLabel(tr("Advanced"), this);
-    advancedLabel->setObjectName("advancedLabel");
+    advancedLabel->setObjectName("blocLabel");
     vbox->addWidget(advancedLabel);
 
     PreferencesBlocWidget *advancedBloc = new PreferencesBlocWidget(this);
     vbox->addWidget(advancedBloc);
 
     // Files to exclude
-    ClickableWidget *filesToExcludeWidget = advancedBloc->addWidget();
-    QHBoxLayout *filesToExcludeHBox = qobject_cast<QHBoxLayout *>(filesToExcludeWidget->layout());
+    QVBoxLayout *filesToExcludeVBox = nullptr;
+    ClickableWidget *filesToExcludeWidget = advancedBloc->addActionWidget(&filesToExcludeVBox);
 
     QLabel *filesToExcludeLabel = new QLabel(tr("Files to exclude"), this);
-    filesToExcludeHBox->addWidget(filesToExcludeLabel);
-    filesToExcludeHBox->addStretch();
-
-    _filesToExcludeIconLabel = new QLabel(this);
-    filesToExcludeHBox->addWidget(_filesToExcludeIconLabel);
+    filesToExcludeVBox->addWidget(filesToExcludeLabel);
     advancedBloc->addSeparator();
 
     // Proxy server
-    ClickableWidget *proxyServerWidget = advancedBloc->addWidget();
-    QHBoxLayout *proxyServerHBox = qobject_cast<QHBoxLayout *>(proxyServerWidget->layout());
+    QVBoxLayout *proxyServerVBox = nullptr;
+    ClickableWidget *proxyServerWidget = advancedBloc->addActionWidget(&proxyServerVBox);
 
     QLabel *proxyServerLabel = new QLabel(tr("Proxy server"), this);
-    proxyServerHBox->addWidget(proxyServerLabel);
-    proxyServerHBox->addStretch();
-
-    _proxyServerIconLabel = new QLabel(this);
-    proxyServerHBox->addWidget(_proxyServerIconLabel);
+    proxyServerVBox->addWidget(proxyServerLabel);
     advancedBloc->addSeparator();
 
     // Bandwidth
-    ClickableWidget *bandwidthWidget = advancedBloc->addWidget();
-    QHBoxLayout *bandwidthHBox = qobject_cast<QHBoxLayout *>(bandwidthWidget->layout());
+    QVBoxLayout *bandwidthVBox = nullptr;
+    ClickableWidget *bandwidthWidget = advancedBloc->addActionWidget(&bandwidthVBox);
 
     QLabel *bandwidthLabel = new QLabel(tr("Bandwidth"), this);
-    bandwidthHBox->addWidget(bandwidthLabel);
-    bandwidthHBox->addStretch();
-
-    _bandwidthIconLabel = new QLabel(this);
-    bandwidthHBox->addWidget(_bandwidthIconLabel);
+    bandwidthVBox->addWidget(bandwidthLabel);
+    bandwidthVBox->addStretch();
 
     vbox->addStretch();
 
-    connect(this, &PreferencesWidget::actionColorChanged, this, &PreferencesWidget::onActionColorChanged);
-    connect(folderConfirmationCheckBox, &QCheckBox::stateChanged,
-            this, &PreferencesWidget::onFolderConfirmationCheckBoxStateChanged);
-    connect(_folderConfirmationAmountLineEdit, &QLineEdit::editingFinished,
-            this, &PreferencesWidget::onFolderConfirmationAmountEditingFinished);
-    connect(darkThemeCheckBox, &QCheckBox::stateChanged,
-            this, &PreferencesWidget::onDarkThemeCheckBoxStateChanged);
-    connect(monochromeCheckBox, &QCheckBox::stateChanged,
-            this, &PreferencesWidget::onMonochromeCheckBoxStateChanged);
-    connect(launchAtStartupCheckBox, &QCheckBox::stateChanged,
-            this, &PreferencesWidget::onLaunchAtStartupCheckBoxStateChanged);
+    connect(folderConfirmationCheckBox, &CustomCheckBox::clicked, this, &PreferencesWidget::onFolderConfirmationCheckBoxClicked);
+    connect(_folderConfirmationAmountLineEdit, &QLineEdit::editingFinished, this, &PreferencesWidget::onFolderConfirmationAmountEditingFinished);
+    connect(darkThemeCheckBox, &CustomCheckBox::clicked,this, &PreferencesWidget::onDarkThemeCheckBoxClicked);
+    connect(monochromeCheckBox, &CustomCheckBox::clicked, this, &PreferencesWidget::onMonochromeCheckBoxClicked);
+    connect(launchAtStartupCheckBox, &CustomCheckBox::clicked, this, &PreferencesWidget::onLaunchAtStartupCheckBoxClicked);
     connect(filesToExcludeWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onFilesToExcludeWidgetClicked);
     connect(proxyServerWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onProxyServerWidgetClicked);
     connect(bandwidthWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onBandwidthWidgetClicked);
 }
 
-void PreferencesWidget::onActionColorChanged()
-{
-    _filesToExcludeIconLabel->setPixmap(
-                OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-right.svg", _actionColor)
-                .pixmap(actionIconSize));
-
-    _proxyServerIconLabel->setPixmap(
-                OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-right.svg", _actionColor)
-                .pixmap(actionIconSize));
-
-    _bandwidthIconLabel->setPixmap(
-                OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-right.svg", _actionColor)
-                .pixmap(actionIconSize));
-}
-
-void PreferencesWidget::onFolderConfirmationCheckBoxStateChanged(int state)
+void PreferencesWidget::onFolderConfirmationCheckBoxClicked(bool checked)
 {
     OCC::ConfigFile cfg;
     auto folderLimit = cfg.newBigFolderSizeLimit();
-    cfg.setNewBigFolderSizeLimit(state == Qt::Checked ? true : false, folderLimit.second);
-    _folderConfirmationAmountLineEdit->setEnabled(state == Qt::Checked ? true : false);
+    cfg.setNewBigFolderSizeLimit(checked, folderLimit.second);
+    _folderConfirmationAmountLineEdit->setEnabled(checked);
 }
 
 void PreferencesWidget::onFolderConfirmationAmountEditingFinished()
@@ -256,25 +217,22 @@ void PreferencesWidget::onFolderConfirmationAmountEditingFinished()
     cfg.setNewBigFolderSizeLimit(folderLimit.first, lValue);
 }
 
-void PreferencesWidget::onDarkThemeCheckBoxStateChanged(int state)
+void PreferencesWidget::onDarkThemeCheckBoxClicked(bool checked)
 {
-    OCC::ConfigFile cfg;
-    cfg.setDarkTheme(state == Qt::Checked ? true : false);
-    OCC::Utility::setStyle(qApp, state == Qt::Checked ? true : false);
+    emit setStyle(checked);
 }
 
-void PreferencesWidget::onMonochromeCheckBoxStateChanged(int state)
+void PreferencesWidget::onMonochromeCheckBoxClicked(bool checked)
 {
     OCC::ConfigFile cfg;
-    cfg.setMonoIcons(state == Qt::Checked ? true : false);
-    OCC::Theme::instance()->setSystrayUseMonoIcons(state == Qt::Checked ? true : false);
+    cfg.setMonoIcons(checked);
+    OCC::Theme::instance()->setSystrayUseMonoIcons(checked);
 }
 
-void PreferencesWidget::onLaunchAtStartupCheckBoxStateChanged(int state)
+void PreferencesWidget::onLaunchAtStartupCheckBoxClicked(bool checked)
 {
     OCC::Theme *theme = OCC::Theme::instance();
-    OCC::Utility::setLaunchOnStartup(theme->appName(), theme->appNameGUI(),
-                                     state == Qt::Checked ? true : false);
+    OCC::Utility::setLaunchOnStartup(theme->appName(), theme->appNameGUI(), checked);
 }
 
 void PreferencesWidget::onFilesToExcludeWidgetClicked()

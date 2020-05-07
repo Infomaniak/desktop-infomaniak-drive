@@ -44,6 +44,7 @@ Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
 
 ParametersDialog::ParametersDialog(QWidget *parent)
     : QDialog(parent)
+    , _currentAccountId(QString())
     , _backgroundMainColor(QColor())
     , _pageStackedLayout(nullptr)
     , _mainMenuBarWidget(nullptr)
@@ -139,9 +140,16 @@ void ParametersDialog::initUI()
     connect(_drivesWidget, &DrivesWidget::runSync, this, &ParametersDialog::onRunSync);
     connect(_drivesWidget, &DrivesWidget::pauseSync, this, &ParametersDialog::onPauseSync);
     connect(_drivesWidget, &DrivesWidget::resumeSync, this, &ParametersDialog::onResumeSync);
+    connect(_drivesWidget, &DrivesWidget::manageOffer, this, &ParametersDialog::onManageOffer);
     connect(_drivesWidget, &DrivesWidget::remove, this, &ParametersDialog::onRemove);
     connect(_drivesWidget, &DrivesWidget::displayDriveParameters, this, &ParametersDialog::onDisplayDriveParameters);
+    connect(_preferencesWidget, &PreferencesWidget::setStyle, this, &ParametersDialog::onSetStyle);
     connect(_driveMenuBarWidget, &DriveMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivesList);
+    connect(_driveMenuBarWidget, &DriveMenuBarWidget::runSync, this, &ParametersDialog::onRunSync);
+    connect(_driveMenuBarWidget, &DriveMenuBarWidget::pauseSync, this, &ParametersDialog::onPauseSync);
+    connect(_driveMenuBarWidget, &DriveMenuBarWidget::resumeSync, this, &ParametersDialog::onResumeSync);
+    connect(_driveMenuBarWidget, &DriveMenuBarWidget::manageOffer, this, &ParametersDialog::onManageOffer);
+    connect(_driveMenuBarWidget, &DriveMenuBarWidget::remove, this, &ParametersDialog::onRemove);
 }
 
 void ParametersDialog::onRefreshAccountList()
@@ -162,7 +170,11 @@ void ParametersDialog::onRefreshAccountList()
                 auto accountInfoIt = _accountInfoMap.find(accountId);
                 if (accountInfoIt == _accountInfoMap.end()) {
                     // New account
-                    _accountInfoMap[accountId] = AccountInfo();
+                    AccountInfo accountInfo(accountStatePtr.data());
+                    connect(accountInfo._quotaInfoPtr.get(), &OCC::QuotaInfo::quotaUpdated,
+                            this, &ParametersDialog::onUpdateQuota);
+
+                    _accountInfoMap[accountId] = accountInfo;
                     accountInfoIt = _accountInfoMap.find(accountId);
                 }
 
@@ -228,6 +240,15 @@ void ParametersDialog::onRefreshAccountList()
         while (accountStatusIt != _accountInfoMap.end()) {
             if (!OCC::AccountManager::instance()->getAccountFromId(accountStatusIt->first)) {
                 _drivesWidget->removeDrive(accountStatusIt->first);
+                if (accountStatusIt->first == _currentAccountId) {
+                    // The current account is removed
+                    _currentAccountId = QString();
+                    _driveMenuBarWidget->reset();
+                    _drivePreferencesWidget->reset();
+                    if (_pageStackedLayout->currentIndex() == Page::Drive) {
+                        _pageStackedLayout->setCurrentIndex(Page::Main);
+                    }
+                }
                 accountStatusIt = _accountInfoMap.erase(accountStatusIt);
             }
             else {
@@ -288,6 +309,26 @@ void ParametersDialog::onUpdateProgress(const QString &folderId, const OCC::Prog
     }
 }
 
+void ParametersDialog::onUpdateQuota(qint64 total, qint64 used)
+{
+    QString accountId = qvariant_cast<QString>(sender()->property(accountIdProperty));
+
+#ifdef CONSOLE_DEBUG
+    std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
+              << " - ParametersDialog::onUpdateQuota account: " << accountId.toStdString() << std::endl;
+#endif
+
+    const auto accountInfoIt = _accountInfoMap.find(accountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        accountInfoIt->second._totalSize = total;
+        accountInfoIt->second._used = used;
+
+        if (accountId == _currentAccountId) {
+            _drivePreferencesWidget->setUsedSize(total, used);
+        }
+    }
+}
+
 void ParametersDialog::onDrivesButtonClicked()
 {
     _mainStackedWidget->setCurrentIndex(StackedWidget::Drives);
@@ -323,6 +364,11 @@ void ParametersDialog::onResumeSync(const QString &accountId)
     OCC::Utility::pauseSync(accountId, false);
 }
 
+void ParametersDialog::onManageOffer(const QString &accountId)
+{
+
+}
+
 void ParametersDialog::onRemove(const QString &accountId)
 {
     OCC::AccountManager *accountManager = OCC::AccountManager::instance();
@@ -352,10 +398,16 @@ void ParametersDialog::onDisplayDriveParameters(const QString &accountId)
 {
     auto accountInfoIt = _accountInfoMap.find(accountId);
     if (accountInfoIt != _accountInfoMap.end()) {
-        _driveMenuBarWidget->setAccount(accountInfoIt->second._color, accountInfoIt->second._name);
-        _drivePreferencesWidget->loadData(accountId);
+        _currentAccountId = accountInfoIt->first;
+        _driveMenuBarWidget->setAccount(accountInfoIt);
+        _drivePreferencesWidget->setAccount(accountInfoIt);
         _pageStackedLayout->setCurrentIndex(Page::Drive);
     }
+}
+
+void ParametersDialog::onSetStyle(bool darkTheme)
+{
+    emit setStyle(darkTheme);
 }
 
 void ParametersDialog::onDisplayDrivesList()

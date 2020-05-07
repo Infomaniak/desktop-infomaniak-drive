@@ -39,7 +39,6 @@ class AccountItemWidget : public QWidget
     Q_PROPERTY(QSize drive_icon_size READ driveIconSize WRITE setDriveIconSize)
     Q_PROPERTY(QSize status_icon_size READ statusIconSize WRITE setStatusIconSize)
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
-    Q_PROPERTY(QColor background_color_selection READ backgroundColorSelection WRITE setBackgroundColorSelection)
 
 public:
     explicit AccountItemWidget(const QString &accountId, QWidget *parent = nullptr);
@@ -49,6 +48,7 @@ signals:
     void runSync(const QString &accountId);
     void pauseSync(const QString &accountId);
     void resumeSync(const QString &accountId);
+    void manageOffer(const QString &accountId);
     void remove(const QString &accountId);
     void displayDriveParameters(const QString &accountId);
     void accountIconSizeChanged();
@@ -63,7 +63,6 @@ private:
     QSize _driveIconSize;
     QSize _statusIconSize;
     QColor _backgroundColor;
-    QColor _backgroundColorSelection;
     QLabel *_accountIconLabel;
     QLabel *_accountNameLabel;
     QLabel *_statusLabel;
@@ -98,9 +97,6 @@ private:
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
-
-    inline QColor backgroundColorSelection() const { return _backgroundColorSelection; }
-    inline void setBackgroundColorSelection(const QColor &value) { _backgroundColorSelection = value; }
 
     QIcon getIconWithStatus();
     void setAccountIcon();

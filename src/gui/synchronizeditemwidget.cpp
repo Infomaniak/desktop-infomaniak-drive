@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QBoxLayout>
 #include <QFile>
 #include <QFileInfo>
+#include <QGraphicsDropShadowEffect>
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QPainter>
@@ -39,7 +40,7 @@ namespace KDC {
 
 static const int cornerRadius = 10;
 static const int hMargin= 15;
-static const int vMargin = 0;
+static const int vMargin = 5;
 static const int boxHMargin= 12;
 static const int boxVMargin = 5;
 static const int boxSpacing = 12;
@@ -47,8 +48,9 @@ static const int toolBarHSpacing = 10;
 static const int buttonsVSpacing = 5;
 static const int textSpacing = 10;
 static const int statusIconWidth = 10;
+static const int shadowBlurRadius = 20;
 static const QString dateFormat = "d MMM - HH:mm";
-static const int fileNameMaxSize = 30;
+static const int fileNameMaxSize = 100;
 
 SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWidget *parent)
     : QWidget(parent)
@@ -56,7 +58,6 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     , _isSelected(false)
     , _fileIconSize(QSize())
     , _directionIconSize(QSize())
-    , _backgroundColor(QColor())
     , _backgroundColorSelection(QColor())
     , _fileIconLabel(nullptr)
 {
@@ -144,6 +145,18 @@ void SynchronizedItemWidget::setSelected(bool isSelected)
     _folderButton->setVisible(_isSelected && fileExists);
     _menuButton->setVisible(_isSelected && fileExists);
     _fileDirectionLabel->setVisible(_isSelected);
+
+    if (isSelected) {
+        // Shadow
+        QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
+        effect->setBlurRadius(shadowBlurRadius);
+        effect->setOffset(0);
+        setGraphicsEffect(effect);
+    }
+    else {
+        setGraphicsEffect(nullptr);
+    }
+
     repaint();
 }
 
@@ -151,24 +164,17 @@ void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
-    // Draw background
-    QPainterPath painterPath1;
-    painterPath1.addRect(rect());
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(backgroundColor());
-    painter.drawPath(painterPath1);
-
     if (_isSelected) {
         // Draw round rectangle
-        QPainterPath painterPath2;
-        painterPath2.addRoundedRect(rect().marginsRemoved(QMargins(hMargin, vMargin, hMargin, vMargin)),
-                                    cornerRadius, cornerRadius);
+        QPainterPath painterPath;
+        painterPath.addRoundedRect(rect().marginsRemoved(QMargins(hMargin, vMargin, hMargin, vMargin)),
+                                   cornerRadius, cornerRadius);
 
+        QPainter painter(this);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setPen(Qt::NoPen);
         painter.setBrush(backgroundColorSelection());
-        painter.drawPath(painterPath2);
+        painter.drawPath(painterPath);
     }
 }
 

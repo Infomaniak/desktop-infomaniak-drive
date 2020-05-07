@@ -31,7 +31,19 @@ AccountInfo::AccountInfo()
     , _unresolvedConflicts(false)
     , _status(OCC::SyncResult::Status::Undefined)
     , _folderMap(std::map<QString, FolderInfo *>())
+    , _quotaInfoPtr(nullptr)
+    , _totalSize(0)
+    , _used(0)
 {
+}
+
+AccountInfo::AccountInfo(OCC::AccountState *accountState)
+{
+    if (accountState) {
+        _quotaInfoPtr = std::unique_ptr<OCC::QuotaInfo>(new OCC::QuotaInfo(accountState));
+        _quotaInfoPtr.get()->setActive(true);
+        _quotaInfoPtr.get()->setProperty(accountIdProperty, accountState->account()->id());
+    }
 }
 
 void AccountInfo::updateStatus()
@@ -72,7 +84,6 @@ void AccountInfo::updateStatus()
         int goodSeen = 0;
         int abortOrPausedSeen = 0;
         int runSeen = 0;
-        int various = 0;
 
         for (auto it = _folderMap.begin(); it != _folderMap.end(); it++) {
             FolderInfo *folderInfo = it->second;
@@ -82,9 +93,8 @@ void AccountInfo::updateStatus()
                 } else {
                     switch (folderInfo->_status) {
                     case OCC::SyncResult::Undefined:
-                    case OCC::SyncResult::NotYetStarted:
-                        various++;
                         break;
+                    case OCC::SyncResult::NotYetStarted:
                     case OCC::SyncResult::SyncPrepare:
                     case OCC::SyncResult::SyncRunning:
                         runSeen++;

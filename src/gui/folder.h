@@ -75,6 +75,9 @@ public:
     /// Whether the vfs mode shall silently be updated if possible
     bool upgradeVfsMode = false;
 
+    /// notifications deactivation
+    bool notificationsDisabled = false;
+
     /// Saves the folder definition into the current settings group.
     static void save(QSettings &settings, const FolderDefinition &folder);
 
@@ -216,6 +219,12 @@ public:
       */
     bool ignoreHiddenFiles();
     void setIgnoreHiddenFiles(bool ignore);
+
+    /**
+      * Notifications deactivation flag
+      */
+    bool notificationsDisabled();
+    void setNotificationsDisabled(bool disabled);
 
     // Used by the Socket API
     SyncJournalDb *journalDb() { return &_journal; }

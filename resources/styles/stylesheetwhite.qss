@@ -58,8 +58,8 @@ KDC--SynthesisPopover QListWidget
 
 KDC--SynthesisPopover QListWidget::item
 {
-    min-height: 60px;
-    max-height: 60px;
+    min-height: 70px;
+    max-height: 70px;
 }
 
 KDC--SynthesisPopover QLabel#defaultTitleLabel
@@ -374,8 +374,8 @@ KDC--HalfRoundRectWidget
 
 KDC--StatusBarWidget
 {
-    min-height: 60px;
-    max-height: 60px;
+    min-height: 65px;
+    max-height: 65px;
 }
 
 KDC--StatusBarWidget QLabel#statusLabel
@@ -392,8 +392,8 @@ KDC--StatusBarWidget QLabel#statusLabel
 
 KDC--MainMenuBarWidget
 {
-    min-height: 65px;
-    max-height: 65px;
+    min-height: 70px;
+    max-height: 70px;
     qproperty-logo_color: #000000;
 }
 
@@ -425,8 +425,8 @@ KDC--MainMenuBarWidget QPushButton:checked
 
 KDC--DriveMenuBarWidget
 {
-    min-height: 65px;
-    max-height: 65px;
+    min-height: 70px;
+    max-height: 70px;
 }
 
 KDC--DriveMenuBarWidget QLabel#accountNameLabel
@@ -485,7 +485,6 @@ KDC--SynchronizedItemWidget
     qproperty-direction_icon_size: 10px;
     qproperty-direction_icon_color: #666666;
     /* !!! qproperty syntax cannot be used in pseudo-states !!! */
-    qproperty-background_color: #F5F5F5;
     qproperty-background_color_selection: #FFFFFF;
 }
 
@@ -515,8 +514,7 @@ KDC--AccountItemWidget
     qproperty-account_icon_color: #F5F5F5;
     qproperty-drive_icon_size: 24px;
     qproperty-status_icon_size: 15px;
-    qproperty-background_color: #F5F5F5;
-    qproperty-background_color_selection: #FFFFFF;
+    qproperty-background_color: #FFFFFF;
 }
 
 KDC--AccountItemWidget QLabel#accountNameLabel
@@ -553,18 +551,9 @@ KDC--BottomWidget
 KDC--PreferencesWidget
 {
     border: 0px;
-    qproperty-action_color: #666666;
 }
 
-KDC--PreferencesWidget QLabel#generalLabel
-{
-    color: #666666;
-    font-family: "Suisse Int'l";
-    font-weight: 350; /* normal */
-    font-size: 13px;
-}
-
-KDC--PreferencesWidget QLabel#advancedLabel
+KDC--PreferencesWidget QLabel#blocLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
@@ -581,7 +570,7 @@ KDC--DrivePreferencesWidget
     border: 0px;
 }
 
-KDC--DrivePreferencesWidget QLabel#storageLabel
+KDC--DrivePreferencesWidget QLabel#blocLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
@@ -589,11 +578,44 @@ KDC--DrivePreferencesWidget QLabel#storageLabel
     font-size: 13px;
 }
 
-KDC--DrivePreferencesWidget QLabel#synchronizationLabel
+KDC--DrivePreferencesWidget QLabel#accountNameLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
+    font-size: 12px;
+}
+
+KDC--DrivePreferencesWidget QLabel#accountMailLabel
+{
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 12px;
+}
+
+KDC--DrivePreferencesWidget QProgressBar
+{
+    background-color: #E0E0E0;
+    min-height: 5px;
+    max-height: 5px;
+    border: 0px;
+    border-radius: 2px;
+    padding: 0px;
+}
+
+KDC--DrivePreferencesWidget QProgressBar::chunk
+{
+    background-color: #66BC5C;
+    border: 0px;
+    border-radius: 2px;
+}
+
+KDC--DrivePreferencesWidget QLabel#progressLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
     font-size: 13px;
 }
 
@@ -605,6 +627,7 @@ KDC--PreferencesBlocWidget
 {
     background-color: transparent;
     qproperty-background_color: #FFFFFF;
+    qproperty-action_color: #666666;
 }
 
 KDC--PreferencesBlocWidget QLabel
@@ -613,6 +636,14 @@ KDC--PreferencesBlocWidget QLabel
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 13px;
+}
+
+KDC--PreferencesBlocWidget QLabel#description
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 12px;
 }
 
 KDC--PreferencesBlocWidget QLabel#folderConfirmationAmountLabel
@@ -630,6 +661,18 @@ KDC--PreferencesBlocWidget QLineEdit
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 16px;
+    border: 1px solid #ECECEC;
+    border-radius: 3px;
+    padding-left: 10px;
+    padding-width: 10px;
+}
+KDC--PreferencesBlocWidget QComboBox
+{
+    background-color: transparent;
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 12px;
     border: 1px solid #ECECEC;
     border-radius: 3px;
     padding-left: 10px;

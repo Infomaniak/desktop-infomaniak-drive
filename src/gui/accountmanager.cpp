@@ -137,6 +137,14 @@ AccountPtr AccountManager::getAccountFromId(const QString &id)
     return nullptr;
 }
 
+QString AccountManager::getUserId(AccountPtr accountPtr)
+{
+    if (!accountPtr.isNull()) {
+        return accountPtr->credentialSetting(QLatin1String(userC)).toString();
+    }
+    return QString();
+}
+
 bool AccountManager::restoreFromLegacySettings()
 {
     qCInfo(lcAccountManager) << "Migrate: restoreFromLegacySettings, checking settings group"

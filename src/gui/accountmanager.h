@@ -85,6 +85,7 @@ public:
 
     AccountStatePtr getAccountStateFromId(const QString &id);
     AccountPtr getAccountFromId(const QString &id);
+    QString getUserId(AccountPtr accountPtr);
 
 private:
     // saving and loading Account to settings

@@ -46,6 +46,7 @@ public:
 
 signals:
     void addDrive();
+    void setStyle(bool darkTheme);
 
 private:
     enum Page {
@@ -58,6 +59,7 @@ private:
         Preferences
     };
 
+    QString _currentAccountId;
     QColor _backgroundMainColor;
     QStackedLayout *_pageStackedLayout;
     MainMenuBarWidget *_mainMenuBarWidget;
@@ -73,6 +75,7 @@ private:
 private slots:
     void onRefreshAccountList();
     void onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
+    void onUpdateQuota(qint64 total, qint64 used);
     void onDrivesButtonClicked();
     void onPreferencesButtonClicked();
     void onOpenHelp();
@@ -80,8 +83,10 @@ private slots:
     void onRunSync(const QString &accountId);
     void onPauseSync(const QString &accountId);
     void onResumeSync(const QString &accountId);
+    void onManageOffer(const QString &accountId);
     void onRemove(const QString &accountId);
     void onDisplayDriveParameters(const QString &accountId);
+    void onSetStyle(bool darkTheme);
     void onDisplayDrivesList();
 };
 

@@ -130,6 +130,8 @@ private slots:
     void slotPauseAllFolders();
     void slotNewAccountWizard();
     void slotDisableNotifications(KDC::SynthesisPopover::NotificationsDisabled type, QDateTime value);
+    void slotApplyStyle();
+    void slotSetStyle(bool darkTheme);
 
 private:
     void setPauseOnAllFoldersHelper(bool pause);

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "accountitemwidget.h"
 
 #include <QBoxLayout>
+#include <QGraphicsDropShadowEffect>
 #include <QLoggingCategory>
 
 namespace KDC {
@@ -74,6 +75,7 @@ void DrivesWidget::addOrUpdateDrive(QString accountId, const AccountInfo &accoun
         // Add drive
         AccountInfoDrivesWidget accountInfoDrivesWidget(accountInfo);
         accountInfoDrivesWidget._item = new QListWidgetItem();
+        accountInfoDrivesWidget._item->setFlags(accountInfoDrivesWidget._item->flags() & ~Qt::ItemIsSelectable);
         AccountItemWidget *accountItemWidget = new AccountItemWidget(accountId, _driveListWidget);
         accountItemWidget->updateItem(accountInfo);
         _driveListWidget->insertItem(0, accountInfoDrivesWidget._item);
@@ -83,6 +85,7 @@ void DrivesWidget::addOrUpdateDrive(QString accountId, const AccountInfo &accoun
         connect(accountItemWidget, &AccountItemWidget::runSync, this, &DrivesWidget::onRunSync);
         connect(accountItemWidget, &AccountItemWidget::pauseSync, this, &DrivesWidget::onPauseSync);
         connect(accountItemWidget, &AccountItemWidget::resumeSync, this, &DrivesWidget::onResumeSync);
+        connect(accountItemWidget, &AccountItemWidget::manageOffer, this, &DrivesWidget::onManageOffer);
         connect(accountItemWidget, &AccountItemWidget::remove, this, &DrivesWidget::onRemove);
         connect(accountItemWidget, &AccountItemWidget::displayDriveParameters, this, &DrivesWidget::onDisplayDriveParameters);
     }
@@ -132,6 +135,11 @@ void DrivesWidget::onPauseSync(const QString &accountId)
 void DrivesWidget::onResumeSync(const QString &accountId)
 {
     emit resumeSync(accountId);
+}
+
+void DrivesWidget::onManageOffer(const QString &accountId)
+{
+    emit manageOffer(accountId);
 }
 
 void DrivesWidget::onRemove(const QString &accountId)

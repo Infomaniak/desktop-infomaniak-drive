@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #pragma once
 
 #include <QColor>
-#include <QLabel>
 #include <QLineEdit>
 #include <QWidget>
 
@@ -30,34 +29,21 @@ class PreferencesWidget : public QWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY(QColor action_color READ actionColor WRITE setActionColor)
-
 public:
     explicit PreferencesWidget(QWidget *parent = nullptr);
 
 signals:
-    void actionColorChanged();
+    void setStyle(bool darkTheme);
 
 private:
-    QColor _actionColor;
-    QLabel *_filesToExcludeIconLabel;
-    QLabel *_proxyServerIconLabel;
-    QLabel *_bandwidthIconLabel;
     QLineEdit *_folderConfirmationAmountLineEdit;
 
-    inline QColor actionColor() const { return _actionColor; }
-    inline void setActionColor(const QColor& color) {
-        _actionColor = color;
-        emit actionColorChanged();
-    }
-
 private slots:
-    void onActionColorChanged();
-    void onFolderConfirmationCheckBoxStateChanged(int state);
+    void onFolderConfirmationCheckBoxClicked(bool checked = false);
     void onFolderConfirmationAmountEditingFinished();
-    void onDarkThemeCheckBoxStateChanged(int state);
-    void onMonochromeCheckBoxStateChanged(int state);
-    void onLaunchAtStartupCheckBoxStateChanged(int state);
+    void onDarkThemeCheckBoxClicked(bool checked = false);
+    void onMonochromeCheckBoxClicked(bool checked = false);
+    void onLaunchAtStartupCheckBoxClicked(bool checked = false);
     void onFilesToExcludeWidgetClicked();
     void onProxyServerWidgetClicked();
     void onBandwidthWidgetClicked();

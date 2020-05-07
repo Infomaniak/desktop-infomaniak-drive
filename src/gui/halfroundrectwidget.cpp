@@ -24,10 +24,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QPainterPath>
 #include <QPoint>
 #include <QRect>
+#include <QRegion>
 
 namespace KDC {
 
-static const int cornerRadius = 40;
+static const int cornerRadius = 20;
+static const int shadowWidth = 5;
 
 HalfRoundRectWidget::HalfRoundRectWidget(QWidget *parent)
     : QWidget(parent)
@@ -67,15 +69,21 @@ void HalfRoundRectWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
-    QPointF rectangleLeftBottom(0, rect().height());
-    QPointF rectangleRightBottom(rect().width(), rect().height());
+    int diameter = 2 * cornerRadius;
+
+    QPointF rectangleLeftBottom(0, rect().height() - shadowWidth);
+    QPointF rectangleRightBottom(rect().width(), rect().height() - shadowWidth);
+    QRect rectangleLeft = QRect(0, rect().height() - diameter - shadowWidth, diameter, diameter);
+    QRect rectangleRight = QRect(rect().width() - diameter, rect().height() - diameter - shadowWidth, diameter, diameter);
+    QLine bottomLine = QLine(QPoint(cornerRadius, rect().height() - shadowWidth),
+                             QPoint(rect().width() - cornerRadius, rect().height() - shadowWidth));
 
     QPainterPath painterPath1(rectangleLeftBottom);
-    painterPath1.arcTo(QRect(0, rect().height() - cornerRadius, cornerRadius, cornerRadius), 180, 90);
+    painterPath1.arcTo(rectangleLeft, 180, 90);
     painterPath1.moveTo(rectangleLeftBottom);
 
     QPainterPath painterPath2(rectangleRightBottom);
-    painterPath2.arcTo(QRect(rect().width() - cornerRadius, rect().height() - cornerRadius, cornerRadius, cornerRadius), 270, 90);
+    painterPath2.arcTo(rectangleRight, 270, 90);
     painterPath2.moveTo(rectangleRightBottom);
 
     QPainter painter(this);
@@ -84,6 +92,19 @@ void HalfRoundRectWidget::paintEvent(QPaintEvent *event)
     painter.setPen(Qt::NoPen);
     painter.drawPath(painterPath1);
     painter.drawPath(painterPath2);
+
+    // Draw shadow
+    QColor penColor = bottomCornersColor();
+    for (int i = 0; i < shadowWidth; i++) {
+        //penColor.setAlpha(255 - (255 / shadowWidth) * i);
+        painter.setPen(penColor);
+        painter.drawArc(rectangleLeft, 180 * 16, 90 * 16);
+        painter.drawLine(bottomLine);
+        painter.drawArc(rectangleRight, 270 * 16, 90 * 16);
+        rectangleLeft.translate(0, 1);
+        bottomLine.translate(0, 1);
+        rectangleRight.translate(0, 1);
+    }
 }
 
 }

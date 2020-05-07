@@ -35,23 +35,22 @@ namespace KDC {
 
 static const int cornerRadius = 10;
 static const int hMargin= 20;
-static const int vTopMargin = 0;
-static const int vBottomMargin = 10;
+static const int vMargin = 5;
 static const int boxHMargin= 15;
 static const int boxVMargin = 5;
 static const int boxSpacing = 15;
 static const int textBoxHMargin= 0;
 static const int textBoxVMargin = 10;
 static const int driveNameMaxSize = 50;
+static const int shadowBlurRadius = 20;
 
 AccountItemWidget::AccountItemWidget(const QString &accountId, QWidget *parent)
     : QWidget(parent)
     , _item(accountId)
     , _backgroundColor(QColor())
-    , _backgroundColorSelection(QColor())
     , _accountIconLabel(nullptr)
 {
-    setContentsMargins(hMargin, vTopMargin, hMargin, vBottomMargin);
+    setContentsMargins(hMargin, vMargin, hMargin, vMargin);
 
     QHBoxLayout *hbox = new QHBoxLayout();
     hbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
@@ -79,6 +78,12 @@ AccountItemWidget::AccountItemWidget(const QString &accountId, QWidget *parent)
     _menuButton->setToolTip(tr("More actions"));
     hbox->addWidget(_menuButton);
     hbox->setStretchFactor(vboxText, 1);
+
+    // Shadow
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
+    effect->setBlurRadius(shadowBlurRadius);
+    effect->setOffset(0);
+    setGraphicsEffect(effect);
 
     connect(this, &AccountItemWidget::accountIconSizeChanged, this, &AccountItemWidget::onAccountIconSizeChanged);
     connect(this, &AccountItemWidget::accountIconColorChanged, this, &AccountItemWidget::onAccountIconColorChanged);
@@ -108,22 +113,15 @@ void AccountItemWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
-    // Draw background
-    QPainterPath painterPath1;
-    painterPath1.addRect(rect());
+    // Draw round rectangle
+    QPainterPath painterPath2;
+    painterPath2.addRoundedRect(rect().marginsRemoved(QMargins(hMargin, vMargin, hMargin, vMargin)),
+                                cornerRadius, cornerRadius);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(Qt::NoPen);
     painter.setBrush(backgroundColor());
-    painter.drawPath(painterPath1);
-
-    // Draw round rectangle
-    QPainterPath painterPath2;
-    painterPath2.addRoundedRect(rect().marginsRemoved(QMargins(hMargin, vTopMargin, hMargin, vBottomMargin)),
-                                cornerRadius, cornerRadius);
-
-    painter.setBrush(backgroundColorSelection());
     painter.drawPath(painterPath2);
 }
 
@@ -212,70 +210,68 @@ void AccountItemWidget::onStatusIconSizeChanged()
 
 void AccountItemWidget::onMenuButtonClicked()
 {
-    if (_menuButton) {
-        MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
+    MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
-        if (_item.accountInfo()._status == OCC::SyncResult::Problem) {
-            QWidgetAction *seeSyncErrorsAction = new QWidgetAction(this);
-            MenuItemWidget *seeSyncErrorsMenuItemWidget = new MenuItemWidget(tr("See synchronization errors"));
-            seeSyncErrorsMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/warning.svg");
-            seeSyncErrorsAction->setDefaultWidget(seeSyncErrorsMenuItemWidget);
-            connect(seeSyncErrorsAction, &QWidgetAction::triggered, this, &AccountItemWidget::onSeeSyncErrorsTriggered);
-            menu->addAction(seeSyncErrorsAction);
-        }
-
-        if (OCC::Utility::getSyncActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status, 0)) {
-            QWidgetAction *syncAction = new QWidgetAction(this);
-            MenuItemWidget *syncMenuItemWidget = new MenuItemWidget(tr("Force synchronization"));
-            syncMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/sync.svg");
-            syncAction->setDefaultWidget(syncMenuItemWidget);
-            connect(syncAction, &QWidgetAction::triggered, this, &AccountItemWidget::onSyncTriggered);
-            menu->addAction(syncAction);
-        }
-
-        if (OCC::Utility::getPauseActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status, 0)) {
-            QWidgetAction *pauseAction = new QWidgetAction(this);
-            MenuItemWidget *pauseMenuItemWidget = new MenuItemWidget(tr("Pause synchronization"));
-            pauseMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/pause.svg");
-            pauseAction->setDefaultWidget(pauseMenuItemWidget);
-            connect(pauseAction, &QWidgetAction::triggered, this, &AccountItemWidget::onPauseTriggered);
-            menu->addAction(pauseAction);
-        }
-
-        if (OCC::Utility::getResumeActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status, 0)) {
-            QWidgetAction *resumeAction = new QWidgetAction(this);
-            MenuItemWidget *resumeMenuItemWidget = new MenuItemWidget(tr("Resume synchronization"));
-            resumeMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/start.svg");
-            resumeAction->setDefaultWidget(resumeMenuItemWidget);
-            connect(resumeAction, &QWidgetAction::triggered, this, &AccountItemWidget::onResumeTriggered);
-            menu->addAction(resumeAction);
-        }
-
-        QWidgetAction *parametersAction = new QWidgetAction(this);
-        MenuItemWidget *parametersMenuItemWidget = new MenuItemWidget(tr("Settings"));
-        parametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
-        parametersAction->setDefaultWidget(parametersMenuItemWidget);
-        connect(parametersAction, &QWidgetAction::triggered, this, &AccountItemWidget::onParametersTriggered);
-        menu->addAction(parametersAction);
-
-        QWidgetAction *manageOfferAction = new QWidgetAction(this);
-        MenuItemWidget *manageOfferMenuItemWidget = new MenuItemWidget(tr("Manage my offer in Infomaniak manager"));
-        manageOfferMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/webview.svg");
-        manageOfferAction->setDefaultWidget(manageOfferMenuItemWidget);
-        connect(manageOfferAction, &QWidgetAction::triggered, this, &AccountItemWidget::onManageOfferTriggered);
-        menu->addAction(manageOfferAction);
-
-        menu->addSeparator();
-
-        QWidgetAction *signOutAction = new QWidgetAction(this);
-        MenuItemWidget *signOutMenuItemWidget = new MenuItemWidget(tr("Sign out"));
-        signOutMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/logout.svg");
-        signOutAction->setDefaultWidget(signOutMenuItemWidget);
-        connect(signOutAction, &QWidgetAction::triggered, this, &AccountItemWidget::onRemoveTriggered);
-        menu->addAction(signOutAction);
-
-        menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()));
+    if (_item.accountInfo()._status == OCC::SyncResult::Problem) {
+        QWidgetAction *seeSyncErrorsAction = new QWidgetAction(this);
+        MenuItemWidget *seeSyncErrorsMenuItemWidget = new MenuItemWidget(tr("See synchronization errors"));
+        seeSyncErrorsMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/warning.svg");
+        seeSyncErrorsAction->setDefaultWidget(seeSyncErrorsMenuItemWidget);
+        connect(seeSyncErrorsAction, &QWidgetAction::triggered, this, &AccountItemWidget::onSeeSyncErrorsTriggered);
+        menu->addAction(seeSyncErrorsAction);
     }
+
+    if (OCC::Utility::getSyncActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status, 0)) {
+        QWidgetAction *syncAction = new QWidgetAction(this);
+        MenuItemWidget *syncMenuItemWidget = new MenuItemWidget(tr("Force synchronization"));
+        syncMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/sync.svg");
+        syncAction->setDefaultWidget(syncMenuItemWidget);
+        connect(syncAction, &QWidgetAction::triggered, this, &AccountItemWidget::onSyncTriggered);
+        menu->addAction(syncAction);
+    }
+
+    if (OCC::Utility::getPauseActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status, 0)) {
+        QWidgetAction *pauseAction = new QWidgetAction(this);
+        MenuItemWidget *pauseMenuItemWidget = new MenuItemWidget(tr("Pause synchronization"));
+        pauseMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/pause.svg");
+        pauseAction->setDefaultWidget(pauseMenuItemWidget);
+        connect(pauseAction, &QWidgetAction::triggered, this, &AccountItemWidget::onPauseTriggered);
+        menu->addAction(pauseAction);
+    }
+
+    if (OCC::Utility::getResumeActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status, 0)) {
+        QWidgetAction *resumeAction = new QWidgetAction(this);
+        MenuItemWidget *resumeMenuItemWidget = new MenuItemWidget(tr("Resume synchronization"));
+        resumeMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/start.svg");
+        resumeAction->setDefaultWidget(resumeMenuItemWidget);
+        connect(resumeAction, &QWidgetAction::triggered, this, &AccountItemWidget::onResumeTriggered);
+        menu->addAction(resumeAction);
+    }
+
+    QWidgetAction *parametersAction = new QWidgetAction(this);
+    MenuItemWidget *parametersMenuItemWidget = new MenuItemWidget(tr("Settings"));
+    parametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
+    parametersAction->setDefaultWidget(parametersMenuItemWidget);
+    connect(parametersAction, &QWidgetAction::triggered, this, &AccountItemWidget::onParametersTriggered);
+    menu->addAction(parametersAction);
+
+    QWidgetAction *manageOfferAction = new QWidgetAction(this);
+    MenuItemWidget *manageOfferMenuItemWidget = new MenuItemWidget(tr("Manage my offer in Infomaniak manager"));
+    manageOfferMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/webview.svg");
+    manageOfferAction->setDefaultWidget(manageOfferMenuItemWidget);
+    connect(manageOfferAction, &QWidgetAction::triggered, this, &AccountItemWidget::onManageOfferTriggered);
+    menu->addAction(manageOfferAction);
+
+    menu->addSeparator();
+
+    QWidgetAction *signOutAction = new QWidgetAction(this);
+    MenuItemWidget *signOutMenuItemWidget = new MenuItemWidget(tr("Sign out"));
+    signOutMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/logout.svg");
+    signOutAction->setDefaultWidget(signOutMenuItemWidget);
+    connect(signOutAction, &QWidgetAction::triggered, this, &AccountItemWidget::onRemoveTriggered);
+    menu->addAction(signOutAction);
+
+    menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()));
 }
 
 void AccountItemWidget::onSeeSyncErrorsTriggered()
@@ -305,7 +301,7 @@ void AccountItemWidget::onParametersTriggered()
 
 void AccountItemWidget::onManageOfferTriggered()
 {
-
+    emit manageOffer(_item.getId());
 }
 
 void AccountItemWidget::onRemoveTriggered()

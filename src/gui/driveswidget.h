@@ -44,6 +44,7 @@ signals:
     void runSync(const QString &accountId);
     void pauseSync(const QString &accountId);
     void resumeSync(const QString &accountId);
+    void manageOffer(const QString &accountId);
     void remove(const QString &accountId);
     void displayDriveParameters(const QString &accountId);
 
@@ -63,6 +64,7 @@ private slots:
     void onRunSync(const QString &accountId);
     void onPauseSync(const QString &accountId);
     void onResumeSync(const QString &accountId);
+    void onManageOffer(const QString &accountId);
     void onRemove(const QString &accountId);
     void onDisplayDriveParameters(const QString &accountId);
 };

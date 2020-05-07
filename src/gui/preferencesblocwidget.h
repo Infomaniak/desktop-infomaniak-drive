@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "clickablewidget.h"
 
 #include <QBoxLayout>
+#include <QLabel>
 #include <QWidget>
 
 namespace KDC {
@@ -31,22 +32,36 @@ class PreferencesBlocWidget : public QWidget
     Q_OBJECT
 
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
+    Q_PROPERTY(QColor action_color READ actionColor WRITE setActionColor)
 
 public:
     explicit PreferencesBlocWidget(QWidget *parent = nullptr);
 
     QBoxLayout *addLayout(QBoxLayout::Direction direction);
-    ClickableWidget *addWidget();
+    ClickableWidget *addActionWidget(QVBoxLayout **vLayout);
     void addSeparator();
 
+signals:
+    void actionColorChanged();
+
 private:
-    QVBoxLayout *_layout;
     QColor _backgroundColor;
+    QColor _actionColor;
+    QVBoxLayout *_layout;
 
     void paintEvent(QPaintEvent* event) override;
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
+
+    inline QColor actionColor() const { return _actionColor; }
+    inline void setActionColor(const QColor& color) {
+        _actionColor = color;
+        emit actionColorChanged();
+    }
+
+private slots:
+    void onActionColorChanged();
 };
 
 }

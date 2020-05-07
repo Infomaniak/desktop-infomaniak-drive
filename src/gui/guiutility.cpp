@@ -22,6 +22,7 @@
 #include <QGraphicsSvgItem>
 #include <QGraphicsScene>
 #include <QIcon>
+#include <QImage>
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include <QPainter>
@@ -305,14 +306,12 @@ QString Utility::getFolderStatusIconPath(bool paused, OCC::SyncResult::Status st
             break;
         case OCC::SyncResult::NotYetStarted:
         case OCC::SyncResult::SyncRunning:
+        case OCC::SyncResult::SyncPrepare:
             path = QString(":/client/resources/icons/statuts/sync.svg");
             break;
-        case OCC::SyncResult::SyncPrepare:
         case OCC::SyncResult::Success:
-            path = QString(":/client/resources/icons/statuts/success.svg");
-            break;
         case OCC::SyncResult::Problem:
-            path = QString(":/client/resources/icons/statuts/warning.svg");
+            path = QString(":/client/resources/icons/statuts/success.svg");
             break;
         case OCC::SyncResult::Error:
         case OCC::SyncResult::SetupError:
@@ -365,7 +364,7 @@ QString Utility::getFolderStatusText(bool paused, bool unresolvedConflicts, Sync
             }
             break;
         case OCC::SyncResult::Error:
-            text = QCoreApplication::translate("utility", "Some files couldn't be synchronized."
+            text = QCoreApplication::translate("utility", "Some files couldn't be synchronized.<br>"
                                                " <a style=\"%1\" href=\"%2\">Learn more</a>")
                     .arg(linkStyle)
                     .arg(learnMoreLink);
@@ -403,6 +402,7 @@ bool Utility::getPauseActionAvailable(bool paused, SyncResult::Status status, qi
     }
     else if (status == OCC::SyncResult::NotYetStarted
              || status == OCC::SyncResult::SyncPrepare
+             || status == OCC::SyncResult::SyncRunning
              || status == OCC::SyncResult::Success) {
         return true;
     }
@@ -434,6 +434,7 @@ bool Utility::getSyncActionAvailable(bool paused, SyncResult::Status status, qin
     }
     else if (status == OCC::SyncResult::NotYetStarted
              || status == OCC::SyncResult::SyncPrepare
+             || status == OCC::SyncResult::SyncRunning
              || status == OCC::SyncResult::Success
              || status == OCC::SyncResult::Problem
              || status == OCC::SyncResult::Error
@@ -481,4 +482,9 @@ void Utility::runSync(const QString &accountid)
             }
         }
     }
+}
+
+QPixmap Utility::getPixmapFromImage(const QImage &image, const QSize &size)
+{
+    return QPixmap::fromImage(image.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }

@@ -19,6 +19,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
+#include "customcheckbox.h"
+#include "accountinfo.h"
+#include "folderman.h"
+
+#include <map>
+
+#include <QBoxLayout>
+#include <QLabel>
+#include <QMetaObject>
+#include <QProgressBar>
+#include <QString>
 #include <QWidget>
 
 namespace KDC {
@@ -30,12 +41,41 @@ class DrivePreferencesWidget : public QWidget
 public:
     explicit DrivePreferencesWidget(QWidget *parent = nullptr);
 
-    void loadData(const QString &accountId);
+    void setAccount(const std::map<QString, AccountInfo>::iterator accountInfoIt);
+    void reset();
+    void setUsedSize(qint64 totalSize, qint64 size);
 
 signals:
 
 private:
+    QString _accountId;
+    AccountInfo *_accountInfo;
+    QProgressBar *_progressBar;
+    QLabel *_progressLabel;
+    CustomCheckBox *_smartSyncCheckBox;
+    QLabel *_smartSyncDescriptionLabel;
+    QBoxLayout *_locationBox;
+    QLabel *_accountAvatarLabel;
+    QLabel *_accountNameLabel;
+    QLabel *_accountMailLabel;
+    CustomCheckBox *_notificationsCheckBox;
 
+    void updateSmartSyncCheckBoxState();
+    void resetDriveLocation();
+    void updateDriveLocation();
+    void updateAccountInfo();
+    void askEnableSmartSync(const std::function<void(bool enable)> &callback);
+    void askDisableSmartSync(const std::function<void(bool enable)> &callback);
+    void switchVfsOn(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection);
+    void switchVfsOff(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection);
+
+private slots:
+    void onDisplaySmartSyncInfo(const QString &link);
+    void onSmartSyncCheckBoxClicked(bool checked = false);
+    void onDriveFoldersWidgetClicked();
+    void onLocalFoldersWidgetClicked();
+    void onOtherDevicesWidgetClicked();
+    void onNotificationsCheckBoxClicked(bool checked = false);
 };
 
 }

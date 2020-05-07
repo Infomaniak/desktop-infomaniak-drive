@@ -72,7 +72,6 @@ static const int driveBarSpacing = 15;
 static const int logoIconSize = 30;
 static const int defaultLogoIconSize = 50;
 static const int maxSynchronizedItems = 1000;
-static const char accountIdProperty[] = "accountId";
 
 const std::map<SynthesisPopover::NotificationsDisabled, QString> SynthesisPopover::_notificationsDisabledMap = {
     { NotificationsDisabled::Never, QString(tr("Never")) },
@@ -146,7 +145,7 @@ void SynthesisPopover::changeEvent(QEvent *event)
     switch (event->type()) {
     case QEvent::PaletteChange:
     case QEvent::ThemeChange:
-        OCC::Utility::setStyle(qApp);
+        emit applyStyle();
         break;
     default:
         break;
@@ -917,9 +916,9 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                     if (accountInfoIt != _accountInfoMap.end()) {
                         if (!accountInfoIt->second._synchronizedListWidget) {
                             accountInfoIt->second._synchronizedListWidget = new QListWidget(this);
+                            accountInfoIt->second._synchronizedListWidget->setSpacing(0);
                             accountInfoIt->second._synchronizedListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
                             accountInfoIt->second._synchronizedListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-                            accountInfoIt->second._synchronizedListWidget->setSpacing(0);
                             accountInfoIt->second._synchronizedListStackPosition =
                                     _stackedWidget->addWidget(accountInfoIt->second._synchronizedListWidget);
                             if (_currentAccountId == accountInfoIt->first
@@ -1028,97 +1027,95 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
 {
     Q_UNUSED(checked)
 
-    if (_menuButton) {
-        MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
+    MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
-        // Parameters
-        QWidgetAction *parametersAction = new QWidgetAction(this);
-        MenuItemWidget *parametersMenuItemWidget = new MenuItemWidget(tr("Parameters"));
-        parametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
-        parametersAction->setDefaultWidget(parametersMenuItemWidget);
-        connect(parametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenParameters);
-        menu->addAction(parametersAction);
+    // Parameters
+    QWidgetAction *parametersAction = new QWidgetAction(this);
+    MenuItemWidget *parametersMenuItemWidget = new MenuItemWidget(tr("Parameters"));
+    parametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
+    parametersAction->setDefaultWidget(parametersMenuItemWidget);
+    connect(parametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenParameters);
+    menu->addAction(parametersAction);
 
-        // Disable Notifications
-        QWidgetAction *notificationsAction = new QWidgetAction(this);
-        bool notificationAlreadyDisabledForPeriod = _notificationsDisabled != NotificationsDisabled::Never
-                && _notificationsDisabled != NotificationsDisabled::Always;
-        MenuItemWidget *notificationsMenuItemWidget = new MenuItemWidget(
-                    notificationAlreadyDisabledForPeriod
-                    ? tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString())
-                    : tr("Disable Notifications"));
-        notificationsMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/notification-off.svg");
-        notificationsMenuItemWidget->setHasSubmenu(true);
-        notificationsAction->setDefaultWidget(notificationsMenuItemWidget);
-        menu->addAction(notificationsAction);
+    // Disable Notifications
+    QWidgetAction *notificationsAction = new QWidgetAction(this);
+    bool notificationAlreadyDisabledForPeriod = _notificationsDisabled != NotificationsDisabled::Never
+            && _notificationsDisabled != NotificationsDisabled::Always;
+    MenuItemWidget *notificationsMenuItemWidget = new MenuItemWidget(
+                notificationAlreadyDisabledForPeriod
+                ? tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString())
+                : tr("Disable Notifications"));
+    notificationsMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/notification-off.svg");
+    notificationsMenuItemWidget->setHasSubmenu(true);
+    notificationsAction->setDefaultWidget(notificationsMenuItemWidget);
+    menu->addAction(notificationsAction);
 
-        // Disable Notifications submenu
-        MenuWidget *submenu = new MenuWidget(MenuWidget::Submenu, menu);
+    // Disable Notifications submenu
+    MenuWidget *submenu = new MenuWidget(MenuWidget::Submenu, menu);
 
-        QActionGroup *notificationActionGroup = new QActionGroup(this);
-        notificationActionGroup->setExclusive(true);
+    QActionGroup *notificationActionGroup = new QActionGroup(this);
+    notificationActionGroup->setExclusive(true);
 
-        const std::map<NotificationsDisabled, QString> &notificationMap =
-                _notificationsDisabled == NotificationsDisabled::Never
-                || _notificationsDisabled == NotificationsDisabled::Always
-                ? _notificationsDisabledMap
-                : _notificationsDisabledForPeriodMap;
+    const std::map<NotificationsDisabled, QString> &notificationMap =
+            _notificationsDisabled == NotificationsDisabled::Never
+            || _notificationsDisabled == NotificationsDisabled::Always
+            ? _notificationsDisabledMap
+            : _notificationsDisabledForPeriodMap;
 
-        QWidgetAction *notificationAction;
-        for (auto notificationActionsItem : notificationMap) {
-            notificationAction = new QWidgetAction(this);
-            notificationAction->setProperty(MenuWidget::actionTypeProperty.c_str(), notificationActionsItem.first);
-            MenuItemWidget *notificationMenuItemWidget = new MenuItemWidget(notificationActionsItem.second);
-            notificationMenuItemWidget->setChecked(notificationActionsItem.first == _notificationsDisabled);
-            notificationAction->setDefaultWidget(notificationMenuItemWidget);
-            connect(notificationAction, &QWidgetAction::triggered, this, &SynthesisPopover::onNotificationActionTriggered);
-            notificationActionGroup->addAction(notificationAction);
-        }
-
-        submenu->addActions(notificationActionGroup->actions());
-        notificationsAction->setMenu(submenu);
-
-        // Help        
-        QWidgetAction *helpAction = new QWidgetAction(this);
-        MenuItemWidget *helpMenuItemWidget = new MenuItemWidget(tr("Need help"));
-        helpMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/help.svg");
-        helpAction->setDefaultWidget(helpMenuItemWidget);
-        connect(helpAction, &QWidgetAction::triggered, this, &SynthesisPopover::onDisplayHelp);
-        menu->addAction(helpAction);
-
-        // Quit
-        QWidgetAction *exitAction = new QWidgetAction(this);
-        MenuItemWidget *exitMenuItemWidget = new MenuItemWidget(tr("Quit application"));
-        exitMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/error-sync.svg");
-        exitAction->setDefaultWidget(exitMenuItemWidget);
-        connect(exitAction, &QWidgetAction::triggered, this, &SynthesisPopover::onExit);
-        menu->addAction(exitAction);
-
-        if (_debugMode) {
-            // Test crash
-            QWidgetAction *crashAction = new QWidgetAction(this);
-            MenuItemWidget *crashMenuItemWidget = new MenuItemWidget("Test crash");
-            crashAction->setDefaultWidget(crashMenuItemWidget);
-            connect(crashAction, &QWidgetAction::triggered, this, &SynthesisPopover::onCrash);
-            menu->addAction(crashAction);
-
-            // Test crash enforce
-            QWidgetAction *crashEnforceAction = new QWidgetAction(this);
-            MenuItemWidget *crashEnforceMenuItemWidget = new MenuItemWidget("Test crash enforce");
-            crashEnforceAction->setDefaultWidget(crashEnforceMenuItemWidget);
-            connect(crashEnforceAction, &QWidgetAction::triggered, this, &SynthesisPopover::onCrashEnforce);
-            menu->addAction(crashEnforceAction);
-
-            // Test crash fatal
-            QWidgetAction *crashFatalAction = new QWidgetAction(this);
-            MenuItemWidget *crashFatalMenuItemWidget = new MenuItemWidget("Test crash fatal");
-            crashFatalAction->setDefaultWidget(crashFatalMenuItemWidget);
-            connect(crashFatalAction, &QWidgetAction::triggered, this, &SynthesisPopover::onCrashFatal);
-            menu->addAction(crashFatalAction);
-        }
-
-        menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()));
+    QWidgetAction *notificationAction;
+    for (auto notificationActionsItem : notificationMap) {
+        notificationAction = new QWidgetAction(this);
+        notificationAction->setProperty(MenuWidget::actionTypeProperty.c_str(), notificationActionsItem.first);
+        MenuItemWidget *notificationMenuItemWidget = new MenuItemWidget(notificationActionsItem.second);
+        notificationMenuItemWidget->setChecked(notificationActionsItem.first == _notificationsDisabled);
+        notificationAction->setDefaultWidget(notificationMenuItemWidget);
+        connect(notificationAction, &QWidgetAction::triggered, this, &SynthesisPopover::onNotificationActionTriggered);
+        notificationActionGroup->addAction(notificationAction);
     }
+
+    submenu->addActions(notificationActionGroup->actions());
+    notificationsAction->setMenu(submenu);
+
+    // Help
+    QWidgetAction *helpAction = new QWidgetAction(this);
+    MenuItemWidget *helpMenuItemWidget = new MenuItemWidget(tr("Need help"));
+    helpMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/help.svg");
+    helpAction->setDefaultWidget(helpMenuItemWidget);
+    connect(helpAction, &QWidgetAction::triggered, this, &SynthesisPopover::onDisplayHelp);
+    menu->addAction(helpAction);
+
+    // Quit
+    QWidgetAction *exitAction = new QWidgetAction(this);
+    MenuItemWidget *exitMenuItemWidget = new MenuItemWidget(tr("Quit application"));
+    exitMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/error-sync.svg");
+    exitAction->setDefaultWidget(exitMenuItemWidget);
+    connect(exitAction, &QWidgetAction::triggered, this, &SynthesisPopover::onExit);
+    menu->addAction(exitAction);
+
+    if (_debugMode) {
+        // Test crash
+        QWidgetAction *crashAction = new QWidgetAction(this);
+        MenuItemWidget *crashMenuItemWidget = new MenuItemWidget("Test crash");
+        crashAction->setDefaultWidget(crashMenuItemWidget);
+        connect(crashAction, &QWidgetAction::triggered, this, &SynthesisPopover::onCrash);
+        menu->addAction(crashAction);
+
+        // Test crash enforce
+        QWidgetAction *crashEnforceAction = new QWidgetAction(this);
+        MenuItemWidget *crashEnforceMenuItemWidget = new MenuItemWidget("Test crash enforce");
+        crashEnforceAction->setDefaultWidget(crashEnforceMenuItemWidget);
+        connect(crashEnforceAction, &QWidgetAction::triggered, this, &SynthesisPopover::onCrashEnforce);
+        menu->addAction(crashEnforceAction);
+
+        // Test crash fatal
+        QWidgetAction *crashFatalAction = new QWidgetAction(this);
+        MenuItemWidget *crashFatalMenuItemWidget = new MenuItemWidget("Test crash fatal");
+        crashFatalAction->setDefaultWidget(crashFatalMenuItemWidget);
+        connect(crashFatalAction, &QWidgetAction::triggered, this, &SynthesisPopover::onCrashFatal);
+        menu->addAction(crashFatalAction);
+    }
+
+    menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()));
 }
 
 void SynthesisPopover::onOpenParameters(bool checked)
@@ -1393,9 +1390,6 @@ void SynthesisPopover::onLinkActivated(const QString &link)
 
 SynthesisPopover::AccountInfoPopover::AccountInfoPopover()
     : AccountInfo()
-    , _quotaInfoPtr(nullptr)
-    , _totalSize(0)
-    , _used(0)
     , _stackedWidgetPosition(StackedWidget::Synchronized)
     , _synchronizedListWidget(nullptr)
     , _synchronizedListStackPosition(StackedWidget::Synchronized)
@@ -1405,13 +1399,13 @@ SynthesisPopover::AccountInfoPopover::AccountInfoPopover()
 }
 
 SynthesisPopover::AccountInfoPopover::AccountInfoPopover(OCC::AccountState *accountState)
-    : AccountInfoPopover()
+    : AccountInfo(accountState)
+    , _stackedWidgetPosition(StackedWidget::Synchronized)
+    , _synchronizedListWidget(nullptr)
+    , _synchronizedListStackPosition(StackedWidget::Synchronized)
+    , _favoritesListStackPosition(StackedWidget::Favorites)
+    , _activityListStackPosition(StackedWidget::Activity)
 {
-    if (accountState) {
-        _quotaInfoPtr = std::unique_ptr<OCC::QuotaInfo>(new OCC::QuotaInfo(accountState));
-        _quotaInfoPtr.get()->setActive(true);
-        _quotaInfoPtr.get()->setProperty(accountIdProperty, accountState->account()->id());
-    }
 }
 
 }

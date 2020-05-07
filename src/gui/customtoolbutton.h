@@ -43,7 +43,6 @@ public:
     inline void setIconPath(const QString &path) { _iconPath = path; }
     void setWithMenu(bool withMenu);
     inline void setToolTip(const QString &text) { _toolTipText = text; }
-    inline void setToolTipDuration(int msec) { _toolTipDuration = msec; }
 
 signals:
     void baseIconSizeChanged();

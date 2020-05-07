@@ -166,18 +166,16 @@ void DriveSelectionWidget::onClick(bool checked)
         MenuWidget *menu = new MenuWidget(MenuWidget::List, this);
 
         for (auto driveMapElt : _driveMap) {
-            if (driveMapElt.first != _currentDriveId) {
-                QWidgetAction *selectDriveAction = new QWidgetAction(this);
-                selectDriveAction->setProperty(driveIdProperty, driveMapElt.first);
-                MenuItemWidget *driveMenuItemWidget = new MenuItemWidget(driveMapElt.second._name);
-                driveMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg", driveMapElt.second._color);
-                driveMenuItemWidget->setRightIcon(
-                            QIcon(OCC::Utility::getAccountStatusIconPath(driveMapElt.second._paused, driveMapElt.second._status)),
-                            _menuRightIconSize);
-                selectDriveAction->setDefaultWidget(driveMenuItemWidget);
-                connect(selectDriveAction, &QWidgetAction::triggered, this, &DriveSelectionWidget::onSelectDriveActionTriggered);
-                menu->addAction(selectDriveAction);
-            }
+            QWidgetAction *selectDriveAction = new QWidgetAction(this);
+            selectDriveAction->setProperty(driveIdProperty, driveMapElt.first);
+            MenuItemWidget *driveMenuItemWidget = new MenuItemWidget(driveMapElt.second._name);
+            driveMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg", driveMapElt.second._color);
+            driveMenuItemWidget->setRightIcon(
+                        QIcon(OCC::Utility::getAccountStatusIconPath(driveMapElt.second._paused, driveMapElt.second._status)),
+                        _menuRightIconSize);
+            selectDriveAction->setDefaultWidget(driveMenuItemWidget);
+            connect(selectDriveAction, &QWidgetAction::triggered, this, &DriveSelectionWidget::onSelectDriveActionTriggered);
+            menu->addAction(selectDriveAction);
         }
 
         QWidgetAction *addDriveAction = new QWidgetAction(this);
@@ -199,7 +197,9 @@ void DriveSelectionWidget::onSelectDriveActionTriggered(bool checked)
     Q_UNUSED(checked)
 
     QString driveId = qvariant_cast<QString>(sender()->property(driveIdProperty));
-    selectDrive(driveId);
+    if (driveId != _currentDriveId) {
+        selectDrive(driveId);
+    }
 }
 
 void DriveSelectionWidget::onAddDriveActionTriggered(bool checked)

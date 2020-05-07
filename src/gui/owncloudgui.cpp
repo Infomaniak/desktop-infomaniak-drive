@@ -29,6 +29,7 @@
 #include "accountmanager.h"
 #include "common/syncjournalfilerecord.h"
 #include "creds/abstractcredentials.h"
+#include "guiutility.h"
 
 #include <QDesktopServices>
 #include <QDir>
@@ -568,6 +569,7 @@ void ownCloudGui::setupPopover()
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::exit, _app, &Application::quit);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::addDrive, this, &ownCloudGui::slotNewAccountWizard);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::disableNotifications, this, &ownCloudGui::slotDisableNotifications);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::applyStyle, this, &ownCloudGui::slotApplyStyle);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crash, _app, &Application::slotCrash);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crashEnforce, _app, &Application::slotCrashEnforce);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crashFatal, _app, &Application::slotCrashFatal);
@@ -1125,6 +1127,20 @@ void ownCloudGui::slotDisableNotifications(KDC::SynthesisPopover::NotificationsD
     }
 }
 
+void ownCloudGui::slotApplyStyle()
+{
+    Utility::setStyle(qApp);
+    slotComputeOverallSyncStatus();
+}
+
+void ownCloudGui::slotSetStyle(bool darkTheme)
+{
+    ConfigFile cfg;
+    cfg.setDarkTheme(darkTheme);
+    Utility::setStyle(qApp, darkTheme);
+    slotComputeOverallSyncStatus();
+}
+
 void ownCloudGui::setPauseOnAllFoldersHelper(bool pause)
 {
     QList<AccountState *> accounts;
@@ -1162,6 +1178,7 @@ void ownCloudGui::slotShowParametersDialog()
     if (_parametersDialog.isNull()) {
         _parametersDialog = new KDC::ParametersDialog();
         connect(_parametersDialog, &KDC::ParametersDialog::addDrive, this, &ownCloudGui::slotNewAccountWizard);
+        connect(_parametersDialog, &KDC::ParametersDialog::setStyle, this, &ownCloudGui::slotSetStyle);
         _parametersDialog->setAttribute(Qt::WA_DeleteOnClose, true);
     }
     raiseDialog(_parametersDialog);

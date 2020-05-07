@@ -38,7 +38,6 @@ class SynchronizedItemWidget : public QWidget
     Q_PROPERTY(QSize file_icon_size READ fileIconSize WRITE setFileIconSize)
     Q_PROPERTY(QSize direction_icon_size READ directionIconSize WRITE setDirectionIconSize)
     Q_PROPERTY(QColor direction_icon_color READ directionIconColor WRITE setDirectionIconColor)
-    Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
     Q_PROPERTY(QColor background_color_selection READ backgroundColorSelection WRITE setBackgroundColorSelection)
 
 public:
@@ -63,7 +62,6 @@ private:
     QSize _fileIconSize;
     QSize _directionIconSize;
     QColor _directionIconColor;
-    QColor _backgroundColor;
     QColor _backgroundColorSelection;
     QLabel *_fileIconLabel;
     QLabel *_fileDirectionLabel;
@@ -91,9 +89,6 @@ private:
         _directionIconColor = color;
         emit directionIconColorChanged();
     }
-
-    inline QColor backgroundColor() const { return _backgroundColor; }
-    inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
 
     inline QColor backgroundColorSelection() const { return _backgroundColorSelection; }
     inline void setBackgroundColorSelection(const QColor &value) { _backgroundColorSelection = value; }

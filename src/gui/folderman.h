@@ -220,6 +220,10 @@ public:
     void setDirtyProxy();
     void setDirtyNetworkLimits();
 
+    /** Manage notifications */
+    bool notificationsDisabled(const QString &accountId);
+    void setNotificationsDisabled(const QString &accountId, bool disabled);
+
 signals:
     /**
       * signal to indicate a folder has changed its sync state.

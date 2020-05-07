@@ -213,6 +213,42 @@ QIcon Theme::themeIcon(const QString &name, bool sysTray, bool sysTrayMenuVisibl
     return cached;
 }
 
+QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVisible) const
+{
+    Q_UNUSED(sysTrayMenuVisible)
+    QString flavor;
+    if (sysTray) {
+        if (_mono) {
+            flavor = Utility::hasDarkSystray() ? QString("white") : QString("black");
+        } else {
+            flavor = QString("colored");
+        }
+    } else {
+        flavor = QString("colored");
+    }
+
+    QString key = name + "," + flavor;
+    QIcon &cached = _iconCache[key];
+    if (cached.isNull()) {
+        QString pixmapName = QString(":/client/resources/icons/theme/%1/%2.svg").arg(flavor).arg(name);
+        if (QFile::exists(pixmapName)) {
+            QList<int> sizes;
+            sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
+            foreach (int size, sizes) {
+                cached.addPixmap(QIcon(pixmapName).pixmap(QSize(size, size)));
+            }
+        }
+    }
+
+#ifdef Q_OS_MAC
+    // This defines the icon as a template and enables automatic macOS color handling
+    // See https://bugreports.qt.io/browse/QTBUG-42109
+    cached.setIsMask(false);
+#endif
+
+    return cached;
+}
+
 void Theme:: updateIconWithText(QIcon &icon, QString text) const
 {
     QList<QSize> sizes = icon.availableSizes();
@@ -503,7 +539,7 @@ QIcon Theme::syncStateIcon(SyncResult::Status status, bool sysTray, bool sysTray
         statusIcon = QLatin1String("state-error");
     }
 
-    QIcon icon = themeIcon(statusIcon, sysTray, sysTrayMenuVisible);
+    QIcon icon = newThemeIcon(statusIcon, sysTray, sysTrayMenuVisible);
 
     if (sysTray && alert) {
         updateIconWithText(icon, QString("!"));
@@ -514,12 +550,12 @@ QIcon Theme::syncStateIcon(SyncResult::Status status, bool sysTray, bool sysTray
 
 QIcon Theme::folderDisabledIcon() const
 {
-    return themeIcon(QLatin1String("state-pause"));
+    return newThemeIcon(QLatin1String("state-pause"));
 }
 
 QIcon Theme::folderOfflineIcon(bool sysTray, bool sysTrayMenuVisible) const
 {
-    return themeIcon(QLatin1String("state-offline"), sysTray, sysTrayMenuVisible);
+    return newThemeIcon(QLatin1String("state-offline"), sysTray, sysTrayMenuVisible);
 }
 
 QColor Theme::wizardHeaderTitleColor() const
@@ -655,7 +691,7 @@ bool Theme::noUnauthedRequests() const
 
 QIcon Theme::stateErrorIcon() const
 {
-    return themeIcon(QLatin1String("state-error"));
+    return newThemeIcon(QLatin1String("state-error"));
 }
 
 } // end namespace client
