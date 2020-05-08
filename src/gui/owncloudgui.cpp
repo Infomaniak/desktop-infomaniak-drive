@@ -53,9 +53,7 @@ ownCloudGui::ownCloudGui(Application *parent)
     : QObject(parent)
     , _tray(nullptr)
     , _logBrowser(nullptr)
-#ifdef KDRIVE_V2_NEW_SETTINGS
-    , _parametersDialog(new KDC::ParametersDialog())
-#else
+#ifndef KDRIVE_V2_NEW_SETTINGS
     , _settingsDialog(new SettingsDialog(this))
 #endif
     , _recentActionsMenu(nullptr)
@@ -72,7 +70,8 @@ ownCloudGui::ownCloudGui(Application *parent)
 
 #ifdef KDRIVE_V2
     _tray->show();
-    setupPopover();
+    setupSynthesisPopover();
+    setupParametersDialog();
 #else
     setupActions();
     setupPopover();
@@ -556,7 +555,7 @@ static QByteArray envForceWorkaroundManualVisibility()
     return var;
 }
 
-void ownCloudGui::setupPopover()
+void ownCloudGui::setupSynthesisPopover()
 {
 #ifdef KDRIVE_V2
     if (_synthesisPopover) {
@@ -665,6 +664,13 @@ void ownCloudGui::setupPopover()
 
     // Populate the context menu now.
     updatePopover();
+}
+
+void ownCloudGui::setupParametersDialog()
+{
+    _parametersDialog = new KDC::ParametersDialog();
+    connect(_parametersDialog, &KDC::ParametersDialog::addDrive, this, &ownCloudGui::slotNewAccountWizard);
+    connect(_parametersDialog, &KDC::ParametersDialog::setStyle, this, &ownCloudGui::slotSetStyle);
 }
 
 void ownCloudGui::updatePopover()
@@ -1176,10 +1182,7 @@ void ownCloudGui::slotShowParametersDialog()
 {
 #ifdef KDRIVE_V2_NEW_SETTINGS
     if (_parametersDialog.isNull()) {
-        _parametersDialog = new KDC::ParametersDialog();
-        connect(_parametersDialog, &KDC::ParametersDialog::addDrive, this, &ownCloudGui::slotNewAccountWizard);
-        connect(_parametersDialog, &KDC::ParametersDialog::setStyle, this, &ownCloudGui::slotSetStyle);
-        _parametersDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+        setupParametersDialog();
     }
     raiseDialog(_parametersDialog);
 #else

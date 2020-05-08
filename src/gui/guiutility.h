@@ -31,6 +31,7 @@ namespace OCC {
 namespace Utility {
     static const QString linkStyle = QString("color:#0098FF; font-weight: 450; text-decoration:none;");
     static const QString learnMoreLink = QString("learnMoreLink");
+    static bool darkTheme = false;
 
     enum systrayPosition {
         Top = 0,
@@ -71,8 +72,9 @@ namespace Utility {
     systrayPosition getSystrayPosition(QScreen *screen);
     bool isPointInSystray(QScreen *screen, const QPoint &point);
 
+    bool isDarkTheme();
     void setStyle(QApplication *app);
-    void setStyle(QApplication *app, bool darkTheme);
+    void setStyle(QApplication *app, bool isDarkTheme);
 
     QString getFileStatusIconPath(SyncFileItem::Status status);
     QString getFolderStatusIconPath(bool paused, OCC::SyncResult::Status status);
@@ -85,6 +87,7 @@ namespace Utility {
     bool getSyncActionAvailable(bool paused, OCC::SyncResult::Status status, qint64 totalFiles);
     void pauseSync(const QString &accountid, bool pause);
     void runSync(const QString &accountid);
+    QColor getShadowColor();
 
 } // namespace Utility
 } // namespace OCC

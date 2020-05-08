@@ -41,6 +41,8 @@ using namespace OCC;
 
 static const QString styleSheetWhiteFile(":/client/resources/styles/stylesheetwhite.qss");
 static const QString styleSheetBlackFile(":/client/resources/styles/stylesheetblack.qss");
+static const QColor styleSheetWhiteShadowColor = QColor(200, 200, 200, 180);
+static const QColor styleSheetBlackShadowColor = QColor(20, 20, 20, 180);
 
 Q_LOGGING_CATEGORY(lcGuiUtility, "gui.utility", QtInfoMsg)
 
@@ -231,30 +233,13 @@ QIcon Utility::getIconMenuWithColor(const QString &path, const QColor &color)
 
 void Utility::setStyle(QApplication *app)
 {
-    bool darkTheme = false;
-    if (OCC::Utility::isMac()) {
-        darkTheme = hasDarkSystray();
-    }
-    else {
-        ConfigFile cfg;
-        darkTheme = cfg.darkTheme();
-    }
-
-    // Load style sheet
-    QFile ssFile(darkTheme ? styleSheetBlackFile : styleSheetWhiteFile);
-    if (ssFile.exists()) {
-        ssFile.open(QFile::ReadOnly);
-        QString StyleSheet = QLatin1String(ssFile.readAll());
-        app->setStyleSheet(StyleSheet);
-    }
-    else {
-        qCWarning(lcGuiUtility) << "Style sheet file not found!";
-    }
+    setStyle(app, isDarkTheme());
 }
 
-void Utility::setStyle(QApplication *app, bool darkTheme)
+void Utility::setStyle(QApplication *app, bool isDarkTheme)
 {
     // Load style sheet
+    darkTheme = isDarkTheme;
     QFile ssFile(darkTheme ? styleSheetBlackFile : styleSheetWhiteFile);
     if (ssFile.exists()) {
         ssFile.open(QFile::ReadOnly);
@@ -487,4 +472,23 @@ void Utility::runSync(const QString &accountid)
 QPixmap Utility::getPixmapFromImage(const QImage &image, const QSize &size)
 {
     return QPixmap::fromImage(image.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+}
+
+QColor Utility::getShadowColor()
+{
+    return darkTheme ? styleSheetBlackShadowColor : styleSheetWhiteShadowColor;
+}
+
+bool Utility::isDarkTheme()
+{
+    bool darkTheme = false;
+    if (OCC::Utility::isMac()) {
+        darkTheme = hasDarkSystray();
+    }
+    else {
+        ConfigFile cfg;
+        darkTheme = cfg.darkTheme();
+    }
+
+    return darkTheme;
 }

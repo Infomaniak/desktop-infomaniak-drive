@@ -80,7 +80,7 @@ AccountItemWidget::AccountItemWidget(const QString &accountId, QWidget *parent)
     hbox->setStretchFactor(vboxText, 1);
 
     // Shadow
-    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
     setGraphicsEffect(effect);
@@ -112,6 +112,13 @@ void AccountItemWidget::updateItem(const AccountInfo &accountInfo)
 void AccountItemWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
+
+    // Shadow
+    QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
+    if (effect && effect->color() != OCC::Utility::getShadowColor()) {
+        effect->setColor(OCC::Utility::getShadowColor());
+        effect->update();
+    }
 
     // Draw round rectangle
     QPainterPath painterPath2;

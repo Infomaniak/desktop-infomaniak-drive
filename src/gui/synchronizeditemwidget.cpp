@@ -148,9 +148,10 @@ void SynchronizedItemWidget::setSelected(bool isSelected)
 
     if (isSelected) {
         // Shadow
-        QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
+        QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
         effect->setBlurRadius(shadowBlurRadius);
         effect->setOffset(0);
+        effect->setColor(OCC::Utility::getShadowColor());
         setGraphicsEffect(effect);
     }
     else {
@@ -163,6 +164,12 @@ void SynchronizedItemWidget::setSelected(bool isSelected)
 void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
+
+    // Update shadow color
+    QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
+    if (effect) {
+        effect->setColor(OCC::Utility::getShadowColor());
+    }
 
     if (_isSelected) {
         // Draw round rectangle

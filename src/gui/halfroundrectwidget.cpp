@@ -18,8 +18,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "halfroundrectwidget.h"
+#include "guiutility.h"
 
 #include <QBrush>
+#include <QLinearGradient>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPoint>
@@ -70,41 +72,74 @@ void HalfRoundRectWidget::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
 
     int diameter = 2 * cornerRadius;
-
-    QPointF rectangleLeftBottom(0, rect().height() - shadowWidth);
-    QPointF rectangleRightBottom(rect().width(), rect().height() - shadowWidth);
     QRect rectangleLeft = QRect(0, rect().height() - diameter - shadowWidth, diameter, diameter);
     QRect rectangleRight = QRect(rect().width() - diameter, rect().height() - diameter - shadowWidth, diameter, diameter);
-    QLine bottomLine = QLine(QPoint(cornerRadius, rect().height() - shadowWidth),
-                             QPoint(rect().width() - cornerRadius, rect().height() - shadowWidth));
+    QPoint bottomLeft(0, rect().height());
+    QPoint bottomRight(rect().width(), rect().height());
+    QPoint leftArcCenter(cornerRadius, rect().height() - cornerRadius - shadowWidth);
+    QPoint leftArcStart(0, rect().height() - cornerRadius - shadowWidth);
+    QPoint leftArcEnd(cornerRadius, rect().height() - shadowWidth);
+    QPoint rightArcCenter(rect().width() - cornerRadius, rect().height() - cornerRadius - shadowWidth);
+    QPoint rightArcStart(rect().width() - cornerRadius, rect().height() - shadowWidth);
+    QPoint rightArcEnd(rect().width(), rect().height() - cornerRadius - shadowWidth);
+    QPoint translation(0, shadowWidth);
 
-    QPainterPath painterPath1(rectangleLeftBottom);
-    painterPath1.arcTo(rectangleLeft, 180, 90);
-    painterPath1.moveTo(rectangleLeftBottom);
-
-    QPainterPath painterPath2(rectangleRightBottom);
-    painterPath2.arcTo(rectangleRight, 270, 90);
-    painterPath2.moveTo(rectangleRightBottom);
+    // Draw bottom
+    QPainterPath painterPath(bottomLeft);
+    painterPath.lineTo(leftArcStart);
+    painterPath.arcTo(rectangleLeft, 180, 90);
+    painterPath.lineTo(rightArcStart);
+    painterPath.arcTo(rectangleRight, 270, 90);
+    painterPath.lineTo(bottomRight);
+    painterPath.closeSubpath();
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setBrush(bottomCornersColor());
     painter.setPen(Qt::NoPen);
-    painter.drawPath(painterPath1);
-    painter.drawPath(painterPath2);
+    painter.drawPath(painterPath);
 
-    // Draw shadow
-    QColor penColor = bottomCornersColor();
-    for (int i = 0; i < shadowWidth; i++) {
-        //penColor.setAlpha(255 - (255 / shadowWidth) * i);
-        painter.setPen(penColor);
-        painter.drawArc(rectangleLeft, 180 * 16, 90 * 16);
-        painter.drawLine(bottomLine);
-        painter.drawArc(rectangleRight, 270 * 16, 90 * 16);
-        rectangleLeft.translate(0, 1);
-        bottomLine.translate(0, 1);
-        rectangleRight.translate(0, 1);
-    }
+    // Draw shadow - left arc
+    QPainterPath painterPathLeftArc(leftArcStart);
+    painterPathLeftArc.arcTo(rectangleLeft, 180, 90);
+    painterPathLeftArc.lineTo(leftArcEnd + translation);
+    rectangleLeft.translate(translation);
+    painterPathLeftArc.arcTo(rectangleLeft, 270, -90);
+    painterPathLeftArc.closeSubpath();
+
+    QRadialGradient gradientLeftArc(leftArcCenter, cornerRadius + shadowWidth);
+    gradientLeftArc.setColorAt(0, OCC::Utility::getShadowColor());
+    gradientLeftArc.setColorAt(1, bottomCornersColor());
+    painter.setBrush(gradientLeftArc);
+    painter.drawPath(painterPathLeftArc);
+
+    // Draw shadow - bottom
+    QPainterPath painterPathBottom(leftArcEnd + translation);
+    painterPathBottom.lineTo(leftArcEnd);
+    painterPathBottom.lineTo(rightArcStart);
+    painterPathBottom.lineTo(rightArcStart + translation);
+    painterPathBottom.closeSubpath();
+
+    QLinearGradient gradientBottom(leftArcCenter, leftArcEnd + translation);
+    gradientBottom.setColorAt(0, OCC::Utility::getShadowColor());
+    gradientBottom.setColorAt(1, bottomCornersColor());
+    painter.setBrush(gradientBottom);
+    painter.drawPath(painterPathBottom);
+
+    // Draw shadow - right arc
+    QPainterPath painterPathRightArc;
+    painterPathRightArc.moveTo(rightArcStart);
+    painterPathRightArc.arcTo(rectangleRight, 270, 90);
+    painterPathLeftArc.lineTo(rightArcEnd + translation);
+    rectangleRight.translate(translation);
+    painterPathRightArc.arcTo(rectangleRight, 0, -90);
+    painterPathRightArc.closeSubpath();
+
+    QRadialGradient gradientRightArc(rightArcCenter, cornerRadius + shadowWidth);
+    gradientRightArc.setColorAt(0, OCC::Utility::getShadowColor());
+    gradientRightArc.setColorAt(1, bottomCornersColor());
+    painter.setBrush(gradientRightArc);
+    painter.drawPath(painterPathRightArc);
 }
 
 }

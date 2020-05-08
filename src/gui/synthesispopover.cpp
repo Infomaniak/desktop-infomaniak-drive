@@ -453,9 +453,10 @@ void SynthesisPopover::initUI()
     setLayout(mainVBox);
 
     // Shadow
-    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
+    effect->setColor(OCC::Utility::getShadowColor());
     setGraphicsEffect(effect);
 
     connect(_folderButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenFolderMenu);
@@ -917,7 +918,7 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                         if (!accountInfoIt->second._synchronizedListWidget) {
                             accountInfoIt->second._synchronizedListWidget = new QListWidget(this);
                             accountInfoIt->second._synchronizedListWidget->setSpacing(0);
-                            accountInfoIt->second._synchronizedListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+                            accountInfoIt->second._synchronizedListWidget->setSelectionMode(QAbstractItemView::NoSelection);
                             accountInfoIt->second._synchronizedListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
                             accountInfoIt->second._synchronizedListStackPosition =
                                     _stackedWidget->addWidget(accountInfoIt->second._synchronizedListWidget);

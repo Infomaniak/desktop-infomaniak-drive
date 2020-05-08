@@ -73,7 +73,8 @@ signals:
     void setupProxy();
 
 public slots:
-    void setupPopover();
+    void setupSynthesisPopover();
+    void setupParametersDialog();
     void updatePopover();
     void updatePopoverNeeded();
     void onRefreshAccountList();

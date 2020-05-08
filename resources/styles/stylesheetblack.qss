@@ -580,7 +580,7 @@ KDC--DrivePreferencesWidget QLabel#blocLabel
 
 KDC--DrivePreferencesWidget QLabel#accountNameLabel
 {
-    color: #B8B8B8;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 12px;
@@ -588,7 +588,7 @@ KDC--DrivePreferencesWidget QLabel#accountNameLabel
 
 KDC--DrivePreferencesWidget QLabel#accountMailLabel
 {
-    color: #FFFFFF;
+    color: #B8B8B8;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 12px;
@@ -640,7 +640,7 @@ KDC--PreferencesBlocWidget QLabel
 
 KDC--PreferencesBlocWidget QLabel#description
 {
-    color: #FFFFFF;
+    color: #B8B8B8;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 12px;

@@ -48,7 +48,7 @@ PreferencesBlocWidget::PreferencesBlocWidget(QWidget *parent)
     setLayout(_layout);
 
     // Shadow
-    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
     setGraphicsEffect(effect);
@@ -108,6 +108,13 @@ void PreferencesBlocWidget::addSeparator()
 void PreferencesBlocWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
+
+    // Shadow
+    QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
+    if (effect && effect->color() != OCC::Utility::getShadowColor()) {
+        effect->setColor(OCC::Utility::getShadowColor());
+        effect->update();
+    }
 
     // Draw background
     QPainter painter(this);
