@@ -136,6 +136,7 @@ set(client_SRCS
     drivepreferenceswidget.cpp
     driveswidget.cpp
     driveselectionwidget.cpp
+    errorswidget.cpp
     folderinfo.cpp
     halfroundrectwidget.cpp
     mainmenubarwidget.cpp

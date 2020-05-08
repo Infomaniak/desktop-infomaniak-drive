@@ -69,16 +69,12 @@ QSize AddDriveWidget::sizeHint() const
 
 void AddDriveWidget::onAddIconSizeChanged()
 {
-    if (_addIconSize != QSize() && _addIconColor != QColor()) {
-        setAddIcon();
-    }
+    setAddIcon();
 }
 
 void AddDriveWidget::onAddIconColorChanged()
 {
-    if (_addIconSize != QSize() && _addIconColor != QColor()) {
-        setAddIcon();
-    }
+    setAddIcon();
 }
 
 void AddDriveWidget::onClick(bool checked)
@@ -90,7 +86,7 @@ void AddDriveWidget::onClick(bool checked)
 
 void AddDriveWidget::setAddIcon()
 {
-    if (_addIconLabel) {
+    if (_addIconLabel && _addIconSize != QSize() && _addIconColor != QColor()) {
         _addIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/add.svg", _addIconColor)
                                  .pixmap(_addIconSize));
     }

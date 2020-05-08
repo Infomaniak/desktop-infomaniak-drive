@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "drivepreferenceswidget.h"
 #include "preferencesblocwidget.h"
+#include "errorswidget.h"
 #include "accountmanager.h"
 #include "configfile.h"
 #include "guiutility.h"
@@ -94,6 +95,12 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     _progressLabel = new QLabel(this);
     _progressLabel->setObjectName("progressLabel");
     storageBox->addWidget(_progressLabel);
+
+    //
+    // Synchronization errors
+    //
+    ErrorsWidget *errorsWidget = new ErrorsWidget(this);
+    vbox->addWidget(errorsWidget);
 
     //
     // Synchronization bloc

@@ -675,3 +675,18 @@ KDC--PreferencesBlocWidget QFrame#line
     border: 0px;
 }
 
+/***********************/
+/* KDC--ErrorsWidget */
+/***********************/
+
+KDC--ErrorsWidget
+{
+    background-color: transparent;
+    min-height: 44px;
+    max-height: 44px;
+    border: 0px;
+    border-radius: 22px;
+    qproperty-background_color: #FA462D;
+    qproperty-warning_icon_size: 24px;
+    qproperty-warning_icon_color: #35393D;
+}
