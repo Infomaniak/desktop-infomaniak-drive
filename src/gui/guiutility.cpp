@@ -349,7 +349,7 @@ QString Utility::getFolderStatusText(bool paused, bool unresolvedConflicts, Sync
             }
             break;
         case OCC::SyncResult::Error:
-            text = QCoreApplication::translate("utility", "Some files couldn't be synchronized.<br>"
+            text = QCoreApplication::translate("utility", "Some files couldn't be synchronized."
                                                " <a style=\"%1\" href=\"%2\">Learn more</a>")
                     .arg(linkStyle)
                     .arg(learnMoreLink);

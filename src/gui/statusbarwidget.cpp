@@ -48,6 +48,7 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
 
     _statusLabel = new QLabel(this);
     _statusLabel->setObjectName("statusLabel");
+    _statusLabel->setWordWrap(true);
     addWidget(_statusLabel);
     addStretch();
 

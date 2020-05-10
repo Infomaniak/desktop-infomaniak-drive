@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QIcon>
 #include <QLabel>
 #include <QMessageBox>
+#include <QScrollArea>
 #include <QStandardPaths>
 #include <QStyle>
 
@@ -46,7 +47,6 @@ static const int progressBarMax = 100;
 static const int dirSepIconSize = 10;
 static const int dirIconSize = 18;
 static const int avatarSize = 40;
-static const int locationWidgetMaxSize = 450;
 
 Q_LOGGING_CATEGORY(lcDrivePreferencesWidget, "drivepreferenceswidget", QtInfoMsg)
 
@@ -58,7 +58,8 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     , _progressLabel(nullptr)
     , _smartSyncCheckBox(nullptr)
     , _smartSyncDescriptionLabel(nullptr)
-    , _locationBox(nullptr)
+    , _locationWidget(nullptr)
+    , _locationLayout(nullptr)
     , _accountAvatarLabel(nullptr)
     , _accountNameLabel(nullptr)
     , _accountMailLabel(nullptr)
@@ -72,6 +73,12 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     vbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
     vbox->setSpacing(boxVSpacing);
     setLayout(vbox);
+
+    //
+    // Synchronization errors
+    //
+    ErrorsWidget *errorsWidget = new ErrorsWidget(this);
+    vbox->addWidget(errorsWidget);
 
     //
     // Storage bloc
@@ -95,12 +102,6 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     _progressLabel = new QLabel(this);
     _progressLabel->setObjectName("progressLabel");
     storageBox->addWidget(_progressLabel);
-
-    //
-    // Synchronization errors
-    //
-    ErrorsWidget *errorsWidget = new ErrorsWidget(this);
-    vbox->addWidget(errorsWidget);
 
     //
     // Synchronization bloc
@@ -187,7 +188,10 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     PreferencesBlocWidget *locationBloc = new PreferencesBlocWidget(this);
     vbox->addWidget(locationBloc);
 
-    _locationBox = locationBloc->addLayout(QBoxLayout::Direction::LeftToRight);
+    _locationWidget = locationBloc->addScrollArea(QBoxLayout::Direction::LeftToRight);
+    _locationWidget->setObjectName("locationWidget");
+    _locationLayout = qobject_cast<QBoxLayout *>(_locationWidget->layout());
+    _locationLayout->addStretch();
 
     //
     // Connected with bloc
@@ -253,10 +257,12 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     QLabel *notificationsDescriptionLabel = new QLabel(tr("A notification will be displayed as soon as a new folder "
                                                           "has been synchronized or modified"), this);
     notificationsDescriptionLabel->setObjectName("description");
+    notificationsDescriptionLabel->setWordWrap(true);
     notifications2HBox->addWidget(notificationsDescriptionLabel);
 
     vbox->addStretch();
 
+    connect(errorsWidget, &ClickableWidget::clicked, this, &DrivePreferencesWidget::onErrorsWidgetClicked);
     if (_smartSyncCheckBox && _smartSyncDescriptionLabel) {
         connect(_smartSyncCheckBox, &CustomCheckBox::clicked, this, &DrivePreferencesWidget::onSmartSyncCheckBoxClicked);
         connect(_smartSyncDescriptionLabel, &QLabel::linkActivated, this, &DrivePreferencesWidget::onDisplaySmartSyncInfo);
@@ -336,22 +342,14 @@ void DrivePreferencesWidget::updateSmartSyncCheckBoxState()
 
 void DrivePreferencesWidget::resetDriveLocation()
 {
-    QWidget *locationWidget = findChild<QWidget *>("locationWidget");
-    if (locationWidget) {
-        delete locationWidget;
+    while (QWidget* widget = _locationWidget->findChild<QWidget*>()) {
+        delete widget;
     }
 }
 
 void DrivePreferencesWidget::updateDriveLocation()
 {
     resetDriveLocation();
-    QWidget *locationWidget = new QWidget(this);
-    locationWidget->setObjectName("locationWidget");
-    QHBoxLayout *hBox = new QHBoxLayout();
-    hBox->setContentsMargins(0, 0, 0, 0);
-    locationWidget->setLayout(hBox);
-    _locationBox->addWidget(locationWidget);
-
     auto folderInfoIt = _accountInfo->_folderMap.begin();
     if (folderInfoIt != _accountInfo->_folderMap.end()) {
         if (folderInfoIt->second) {
@@ -370,39 +368,24 @@ void DrivePreferencesWidget::updateDriveLocation()
                 folderPathPartList = folderPath.split("/");
             }
 
+            int position = 0;
             if (homeDir.isEmpty()) {
-                QLabel *dirIconLabel = new QLabel(this);
-                QIcon computerIcon = style()->standardIcon(QStyle::SP_DriveHDIcon);
-                dirIconLabel->setPixmap(computerIcon.pixmap(dirIconSize, dirIconSize));
-                hBox->addWidget(dirIconLabel);
+                insertIconToLocation(position++, style()->standardIcon(QStyle::SP_DriveHDIcon), QSize(dirIconSize, dirIconSize));
             }
             else {
-                QLabel *dirIconLabel = new QLabel(this);
-                QIcon homeIcon = style()->standardIcon(QStyle::SP_DirHomeIcon);
-                dirIconLabel->setPixmap(homeIcon.pixmap(dirIconSize, dirIconSize));
-                hBox->addWidget(dirIconLabel);
-
-                QLabel *dirLabel = new QLabel(homeDir, this);
-                hBox->addWidget(dirLabel);
+                insertIconToLocation(position++, style()->standardIcon(QStyle::SP_DirHomeIcon), QSize(dirIconSize, dirIconSize));
+                insertTextToLocation(position++, homeDir);
             }
 
+            QIcon dirSepIcon = OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-right.svg");
             QIcon dirIcon = style()->standardIcon(QStyle::SP_DirIcon);
             for (QString folderPathPart : folderPathPartList) {
-                if (!folderPathPart.isEmpty() && locationWidget->sizeHint().width() < locationWidgetMaxSize) {
-                    QLabel *dirSepIconLabel = new QLabel(this);
-                    dirSepIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-right.svg")
-                                               .pixmap(dirSepIconSize, dirSepIconSize));
-                    hBox->addWidget(dirSepIconLabel);
-
-                    QLabel *dirIconLabel = new QLabel(this);
-                    dirIconLabel->setPixmap(dirIcon.pixmap(dirIconSize, dirIconSize));
-                    hBox->addWidget(dirIconLabel);
-
-                    QLabel *dirLabel = new QLabel(folderPathPart, this);
-                    hBox->addWidget(dirLabel);
+                if (!folderPathPart.isEmpty()) {
+                    insertIconToLocation(position++, dirSepIcon, QSize(dirSepIconSize, dirSepIconSize));
+                    insertIconToLocation(position++, dirIcon, QSize(dirIconSize, dirIconSize));
+                    insertTextToLocation(position++, folderPathPart);
                 }
             }
-            hBox->addStretch();
         }
         else {
             qCDebug(lcDrivePreferencesWidget) << "Null pointer!";
@@ -539,10 +522,28 @@ void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, std::shared_ptr<Q
     updateSmartSyncCheckBoxState();
 }
 
+void DrivePreferencesWidget::insertIconToLocation(int position, const QIcon &icon, const QSize &size)
+{
+    QLabel *iconLabel = new QLabel(this);
+    iconLabel->setPixmap(icon.pixmap(size));
+    _locationLayout->insertWidget(position, iconLabel);
+}
+
+void DrivePreferencesWidget::insertTextToLocation(int position, const QString &text)
+{
+    QLabel *textLabel = new QLabel(text, this);
+    _locationLayout->insertWidget(position, textLabel);
+}
+
 void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
 {
     Q_UNUSED(link)
 
+
+}
+
+void DrivePreferencesWidget::onErrorsWidgetClicked()
+{
 
 }
 

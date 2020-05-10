@@ -21,19 +21,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "guiutility.h"
 
 #include <QHBoxLayout>
+#include <QPainterPath>
+#include <QPainter>
 
 namespace KDC {
 
-static const int boxHMargin= 10;
+static const int boxHMargin= 20;
 static const int boxVMargin = 5;
 static const int boxSpacing = 10;
 
 ErrorsWidget::ErrorsWidget(QWidget *parent)
     : ClickableWidget(parent)
     , _backgroundColor(QColor())
-    , _warningIconSize(QSize())
     , _warningIconColor(QColor())
+    , _warningIconSize(QSize())
+    , _actionIconColor(QColor())
+    , _actionIconSize(QSize())
     , _warningIconLabel(nullptr)
+    , _actionIconLabel(nullptr)
 {
     setContentsMargins(0, 0, 0, 0);
 
@@ -50,9 +55,29 @@ ErrorsWidget::ErrorsWidget(QWidget *parent)
     hbox->addWidget(errorTextLabel);
     hbox->addStretch();
 
+    _actionIconLabel = new QLabel(this);
+    hbox->addWidget(_actionIconLabel);
+
     connect(this, &ErrorsWidget::warningIconSizeChanged, this, &ErrorsWidget::onWarningIconSizeChanged);
     connect(this, &ErrorsWidget::warningIconColorChanged, this, &ErrorsWidget::onWarningIconColorChanged);
+    connect(this, &ErrorsWidget::actionIconColorChanged, this, &ErrorsWidget::onActionIconColorChanged);
+    connect(this, &ErrorsWidget::actionIconSizeChanged, this, &ErrorsWidget::onActionIconSizeChanged);
     connect(this, &ClickableWidget::clicked, this, &ErrorsWidget::onClick);
+}
+
+void ErrorsWidget::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+
+    // Draw round rectangle
+    QPainterPath painterPath2;
+    painterPath2.addRoundedRect(rect(), rect().height() / 2, rect().height() / 2);
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(backgroundColor());
+    painter.drawPath(painterPath2);
 }
 
 void ErrorsWidget::setWarningIcon()
@@ -60,6 +85,14 @@ void ErrorsWidget::setWarningIcon()
     if (_warningIconLabel && _warningIconSize != QSize() && _warningIconColor != QColor()) {
         _warningIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/warning.svg", _warningIconColor)
                                      .pixmap(_warningIconSize));
+    }
+}
+
+void ErrorsWidget::setActionIcon()
+{
+    if (_actionIconLabel && _actionIconSize != QSize() && _actionIconColor != QColor()) {
+        _actionIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-right.svg", _actionIconColor)
+                                    .pixmap(_actionIconSize));
     }
 }
 
@@ -71,6 +104,16 @@ void ErrorsWidget::onWarningIconSizeChanged()
 void ErrorsWidget::onWarningIconColorChanged()
 {
     setWarningIcon();
+}
+
+void ErrorsWidget::onActionIconColorChanged()
+{
+    setActionIcon();
+}
+
+void ErrorsWidget::onActionIconSizeChanged()
+{
+    setActionIcon();
 }
 
 void ErrorsWidget::onClick()

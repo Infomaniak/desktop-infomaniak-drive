@@ -54,7 +54,8 @@ private:
     QLabel *_progressLabel;
     CustomCheckBox *_smartSyncCheckBox;
     QLabel *_smartSyncDescriptionLabel;
-    QBoxLayout *_locationBox;
+    QWidget *_locationWidget;
+    QBoxLayout *_locationLayout;
     QLabel *_accountAvatarLabel;
     QLabel *_accountNameLabel;
     QLabel *_accountMailLabel;
@@ -68,9 +69,12 @@ private:
     void askDisableSmartSync(const std::function<void(bool enable)> &callback);
     void switchVfsOn(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection);
     void switchVfsOff(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection);
+    void insertIconToLocation(int position, const QIcon &icon, const QSize &size);
+    void insertTextToLocation(int position, const QString &text);
 
 private slots:
     void onDisplaySmartSyncInfo(const QString &link);
+    void onErrorsWidgetClicked();
     void onSmartSyncCheckBoxClicked(bool checked = false);
     void onDriveFoldersWidgetClicked();
     void onLocalFoldersWidgetClicked();

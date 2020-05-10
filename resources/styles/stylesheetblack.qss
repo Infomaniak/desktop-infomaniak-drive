@@ -16,7 +16,7 @@ KDC--SynthesisPopover
     qproperty-background_main_color: #35393D;
 }
 
-KDC--SynthesisPopover QScrollBar
+KDC--SynthesisPopover QScrollBar:vertical
 {
     background-color: #1A1A1C;
     border: 0px;
@@ -24,20 +24,20 @@ KDC--SynthesisPopover QScrollBar
     margin: 0px 0px 0px 0px;
 }
 
-KDC--SynthesisPopover QScrollBar::handle
+KDC--SynthesisPopover QScrollBar::handle:vertical
 {
     background-color: #666666;
     min-height: 20px;
 }
 
-KDC--SynthesisPopover QScrollBar::add-line
+KDC--SynthesisPopover QScrollBar::add-line:vertical
 {
     height: 0px;
     subcontrol-position: bottom;
     subcontrol-origin: margin;
 }
 
-KDC--SynthesisPopover QScrollBar::sub-line
+KDC--SynthesisPopover QScrollBar::sub-line:vertical
 {
     height: 0px;
     subcontrol-position: top;
@@ -52,7 +52,7 @@ KDC--SynthesisPopover QStackedWidget
 
 KDC--SynthesisPopover QListWidget
 {
-    background-color: #1A1A1C;
+    background-color: transparent;
     border: 0px;
 }
 
@@ -93,7 +93,7 @@ KDC--ParametersDialog
     corner-radius: 10px;
 }
 
-KDC--ParametersDialog QScrollBar
+KDC--ParametersDialog QScrollBar:vertical
 {
     background-color: #1A1A1C;
     border: 0px;
@@ -101,20 +101,20 @@ KDC--ParametersDialog QScrollBar
     margin: 0px 0px 0px 0px;
 }
 
-KDC--ParametersDialog QScrollBar::handle
+KDC--ParametersDialog QScrollBar::handle:vertical
 {
     background-color: #666666;
     min-height: 20px;
 }
 
-KDC--ParametersDialog QScrollBar::add-line
+KDC--ParametersDialog QScrollBar::add-line:vertical
 {
     height: 0px;
     subcontrol-position: bottom;
     subcontrol-origin: margin;
 }
 
-KDC--ParametersDialog QScrollBar::sub-line
+KDC--ParametersDialog QScrollBar::sub-line:vertical
 {
     height: 0px;
     subcontrol-position: top;
@@ -627,7 +627,8 @@ KDC--PreferencesBlocWidget
 {
     background-color: transparent;
     qproperty-background_color: #35393D;
-    qproperty-action_color: #B8B8B8;
+    qproperty-action_icon_color: #B8B8B8;
+    qproperty-action_icon_size: 16px;
 }
 
 KDC--PreferencesBlocWidget QLabel
@@ -675,6 +676,46 @@ KDC--PreferencesBlocWidget QFrame#line
     border: 0px;
 }
 
+KDC--PreferencesBlocWidget QScrollArea
+{
+    background-color: transparent;
+    border: 0px;
+}
+
+KDC--PreferencesBlocWidget QScrollBar:horizontal
+{
+    background-color: #1A1A1C;
+    border: 0px;
+    height: 3px;
+    margin: 0px 0px 0px 0px;
+}
+
+KDC--PreferencesBlocWidget QScrollBar::handle:horizontal
+{
+    background-color: #666666;
+    min-width: 20px;
+}
+
+KDC--PreferencesBlocWidget QScrollBar::add-line:horizontal
+{
+    width: 0px;
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+}
+
+KDC--PreferencesBlocWidget QScrollBar::sub-line:horizontal
+{
+    width: 0px;
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+}
+
+KDC--PreferencesBlocWidget QWidget#locationWidget
+{
+    background-color: transparent;
+    border: 0px;
+}
+
 /***********************/
 /* KDC--ErrorsWidget */
 /***********************/
@@ -687,6 +728,16 @@ KDC--ErrorsWidget
     border: 0px;
     border-radius: 22px;
     qproperty-background_color: #FA462D;
+    qproperty-warning_icon_color: #FFFFFF;
     qproperty-warning_icon_size: 24px;
-    qproperty-warning_icon_color: #35393D;
+    qproperty-action_icon_color: #FFFFFF;
+    qproperty-action_icon_size: 16px;
+}
+
+KDC--ErrorsWidget QLabel#errorTextLabel
+{
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* normal */
+    font-size: 13px;
 }

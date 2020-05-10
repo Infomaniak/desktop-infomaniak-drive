@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QFrame>
 #include <QGraphicsDropShadowEffect>
 #include <QPainter>
+#include <QScrollBar>
 
 namespace KDC {
 
@@ -31,13 +32,13 @@ static const int boxHMargin= 15;
 static const int boxVMargin = 18;
 static const int textVSpacing = 10;
 static const int textHSpacing = 10;
-static const int actionIconSize = 16;
 static const int shadowBlurRadius = 20;
 
 PreferencesBlocWidget::PreferencesBlocWidget(QWidget *parent)
     : QWidget(parent)
     , _backgroundColor(QColor())
-    , _actionColor(QColor())
+    , _actionIconColor(QColor())
+    , _actionIconSize(QSize())
     , _layout(nullptr)
 {
     setContentsMargins(0, 0, 0, 0);
@@ -53,7 +54,8 @@ PreferencesBlocWidget::PreferencesBlocWidget(QWidget *parent)
     effect->setOffset(0);
     setGraphicsEffect(effect);
 
-    connect(this, &PreferencesBlocWidget::actionColorChanged, this, &PreferencesBlocWidget::onActionColorChanged);
+    connect(this, &PreferencesBlocWidget::actionIconColorChanged, this, &PreferencesBlocWidget::onActionIconColorChanged);
+    connect(this, &PreferencesBlocWidget::actionIconSizeChanged, this, &PreferencesBlocWidget::onActionIconSizeChanged);
 }
 
 QBoxLayout *PreferencesBlocWidget::addLayout(QBoxLayout::Direction direction)
@@ -70,6 +72,36 @@ QBoxLayout *PreferencesBlocWidget::addLayout(QBoxLayout::Direction direction)
     _layout->addLayout(layout);
 
     return layout;
+}
+
+QWidget *PreferencesBlocWidget::addScrollArea(QBoxLayout::Direction direction)
+{
+    QBoxLayout *hLayout = new QBoxLayout(direction);
+    hLayout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    _layout->addLayout(hLayout);
+
+    QScrollArea *preferencesScrollArea = new QScrollArea(this);
+    preferencesScrollArea->setContentsMargins(0, 0, 0, 0);
+    preferencesScrollArea->setWidgetResizable(true);
+    preferencesScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    hLayout->addWidget(preferencesScrollArea);
+
+    QWidget *widget = new QWidget(this);
+    widget->setContentsMargins(0, 0, 0, 0);
+    preferencesScrollArea->setWidget(widget);
+
+    QBoxLayout *layout = new QBoxLayout(direction);
+    layout->setContentsMargins(0, 0, 0, 0);
+    if (direction == QBoxLayout::Direction::TopToBottom ||
+            direction == QBoxLayout::Direction::BottomToTop) {
+        layout->setSpacing(textVSpacing);
+    }
+    else {
+        layout->setSpacing(textHSpacing);
+    }
+    widget->setLayout(layout);
+
+    return widget;
 }
 
 ClickableWidget *PreferencesBlocWidget::addActionWidget(QVBoxLayout **vLayout)
@@ -90,7 +122,6 @@ ClickableWidget *PreferencesBlocWidget::addActionWidget(QVBoxLayout **vLayout)
     hLayout->addStretch();
 
     QLabel *actionIconLabel = new QLabel(this);
-    actionIconLabel->setObjectName("actionIconLabel");
     hLayout->addWidget(actionIconLabel);
 
     return widget;
@@ -129,14 +160,24 @@ void PreferencesBlocWidget::paintEvent(QPaintEvent *event)
     painter.drawPath(painterPath);
 }
 
-void PreferencesBlocWidget::onActionColorChanged()
+void PreferencesBlocWidget::setActionIcon()
 {
     QList<QLabel *> allActionIconLabels = findChildren<QLabel *>("actionIconLabel");
     for (QLabel *actionIconLabel : allActionIconLabels) {
         actionIconLabel->setPixmap(
-                    OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-right.svg", _actionColor)
-                    .pixmap(actionIconSize));
+                    OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-right.svg", _actionIconColor)
+                    .pixmap(_actionIconSize));
     }
+}
+
+void PreferencesBlocWidget::onActionIconColorChanged()
+{
+    setActionIcon();
+}
+
+void PreferencesBlocWidget::onActionIconSizeChanged()
+{
+    setActionIcon();
 }
 
 }
