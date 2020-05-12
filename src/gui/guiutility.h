@@ -29,9 +29,8 @@
 
 namespace OCC {
 namespace Utility {
-    static const QString linkStyle = QString("color:#0098FF; font-weight: 450; text-decoration:none;");
+    static const QString linkStyle = QString("color:#0098FF; font-weight:450; text-decoration:none;");
     static const QString learnMoreLink = QString("learnMoreLink");
-    static bool darkTheme = false;
 
     enum systrayPosition {
         Top = 0,

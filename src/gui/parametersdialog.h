@@ -21,9 +21,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "mainmenubarwidget.h"
 #include "drivemenubarwidget.h"
+#include "errorsmenubarwidget.h"
 #include "drivepreferenceswidget.h"
 #include "driveswidget.h"
 #include "preferenceswidget.h"
+#include "synchronizeditem.h"
 #include "accountinfo.h"
 #include "progressdispatcher.h"
 
@@ -51,12 +53,21 @@ signals:
 private:
     enum Page {
         Main = 0,
-        Drive
+        Drive,
+        Errors
     };
 
-    enum StackedWidget {
+    enum MainStackedWidget {
         Drives = 0,
         Preferences
+    };
+
+    struct AccountInfoParameters : public AccountInfo {
+        QListWidget *_errorsListWidget;
+        int _errorsListStackPosition;
+
+        AccountInfoParameters();
+        AccountInfoParameters(OCC::AccountState *accountState);
     };
 
     QString _currentAccountId;
@@ -64,18 +75,22 @@ private:
     QStackedLayout *_pageStackedLayout;
     MainMenuBarWidget *_mainMenuBarWidget;
     DriveMenuBarWidget *_driveMenuBarWidget;
+    ErrorsMenuBarWidget *_errorsMenuBarWidget;
     QStackedWidget *_mainStackedWidget;
     DrivesWidget *_drivesWidget;
     PreferencesWidget *_preferencesWidget;
     DrivePreferencesWidget *_drivePreferencesWidget;
-    std::map<QString, AccountInfo> _accountInfoMap;
+    QStackedWidget *_errorsStackedWidget;
+    std::map<QString, AccountInfoParameters> _accountInfoMap;
 
     void initUI();
+    QString folderPath(const QString &folderId, const QString &filePath);
 
 private slots:
     void onRefreshAccountList();
     void onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
     void onUpdateQuota(qint64 total, qint64 used);
+    void onItemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &item);
     void onDrivesButtonClicked();
     void onPreferencesButtonClicked();
     void onOpenHelp();
@@ -85,9 +100,12 @@ private slots:
     void onResumeSync(const QString &accountId);
     void onManageOffer(const QString &accountId);
     void onRemove(const QString &accountId);
+    void onDisplayErrors(const QString &accountId);
     void onDisplayDriveParameters(const QString &accountId);
     void onSetStyle(bool darkTheme);
     void onDisplayDrivesList();
+    void onOpenFolderItem(const SynchronizedItem &item);
+    void onOpenItem(const SynchronizedItem &item);
 };
 
 }

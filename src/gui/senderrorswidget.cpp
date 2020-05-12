@@ -1,4 +1,5 @@
 /*
+Infomaniak Drive
 Copyright (C) 2020 christophe.larchier@infomaniak.com
 
 This library is free software; you can redistribute it and/or
@@ -16,35 +17,22 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#pragma once
+#include "senderrorswidget.h"
 
-#include "folderinfo.h"
-#include "accountstate.h"
-#include "quotainfo.h"
-
-#include <QColor>
+#include <QVBoxLayout>
 
 namespace KDC {
 
-static const char accountIdProperty[] = "accountId";
+SendErrorsWidget::SendErrorsWidget(QWidget *parent)
+    : QWidget(parent)
+{
+    setContentsMargins(0, 0, 0, 0);
 
-struct AccountInfo {
-    QString _name;
-    QColor _color;
-    bool _isSignedIn;
-    bool _paused;
-    bool _unresolvedConflicts;
-    OCC::SyncResult::Status _status;
-    std::map<QString, FolderInfo *> _folderMap;
-    std::shared_ptr<OCC::QuotaInfo> _quotaInfoPtr;
-    qint64 _totalSize;
-    qint64 _used;
-
-    AccountInfo();
-    AccountInfo(OCC::AccountState *accountState);
-    void updateStatus();
-    QString folderPath(const QString &folderId, const QString &filePath);
-};
+    QVBoxLayout *mainVBox = new QVBoxLayout();
+    mainVBox->setContentsMargins(0, 0, 0, 0);
+    mainVBox->setSpacing(0);
+    setLayout(mainVBox);
 
 }
 
+}

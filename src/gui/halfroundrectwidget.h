@@ -40,6 +40,7 @@ public:
     void addWidget(QWidget *widget, int stretch = 0, Qt::Alignment alignment = Qt::Alignment());
     void addStretch(int stretch = 0);
     void addSpacing(int size);
+    bool setStretchFactor(QWidget *widget, int stretch);
 
 private:
     QColor _bottomCornersColor;

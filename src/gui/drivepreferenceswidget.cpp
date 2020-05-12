@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "drivepreferenceswidget.h"
 #include "preferencesblocwidget.h"
-#include "errorswidget.h"
 #include "accountmanager.h"
 #include "configfile.h"
 #include "guiutility.h"
@@ -44,7 +43,7 @@ static const int boxVSpacing = 12;
 static const int textHSpacing = 5;
 static const int progressBarMin = 0;
 static const int progressBarMax = 100;
-static const int dirSepIconSize = 10;
+static const int sepIconSize = 10;
 static const int dirIconSize = 18;
 static const int avatarSize = 40;
 
@@ -54,6 +53,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     : QWidget(parent)
     , _accountId(QString())
     , _accountInfo(nullptr)
+    , _displayErrorsWidget(nullptr)
     , _progressBar(nullptr)
     , _progressLabel(nullptr)
     , _smartSyncCheckBox(nullptr)
@@ -69,26 +69,75 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
 
     OCC::ConfigFile cfg;
 
-    QVBoxLayout *vbox = new QVBoxLayout();
-    vbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
-    vbox->setSpacing(boxVSpacing);
-    setLayout(vbox);
+    /*
+     *  vBox
+     *      errorsWidget
+     *      storageLabel
+     *      storageBloc
+     *          storageBox
+     *              _progressBar
+     *              _progressLabel
+     *      synchronizationLabel
+     *      synchronizationBloc
+     *          smartSyncBox
+     *              smartSync1HBox
+     *                  smartSyncLabel
+     *                  _smartSyncCheckBox
+     *              _smartSyncDescriptionLabel
+     *          driveFoldersWidget
+     *              driveFoldersVBox
+     *                  driveFoldersLabel
+     *                  driveFoldersStatusLabel
+     *          localFoldersWidget
+     *              localFoldersVBox
+     *                  localFoldersLabel
+     *                  localFoldersStatusLabel
+     *          otherDevicesWidget
+     *              otherDevicesVBox
+     *                  otherDevicesLabel
+     *                  otherDevicesStatusLabel
+     *      locationLabel
+     *      locationBloc
+     *          _locationWidget
+     *              _locationLayout
+     *      connectedWithLabel
+     *      connectedWithBloc
+     *          connectedWithBox
+     *              _accountAvatarLabel
+     *              connectedWithVBox
+     *                  _accountNameLabel
+     *                  _accountMailLabel
+     *      notificationsLabel
+     *      notificationsBloc
+     *          notificationsBox
+     *              notifications1HBox
+     *                  notificationsTitleLabel
+     *                  _notificationsCheckBox
+     *              notifications2HBox
+     *                  notificationsDescriptionLabel
+     */
+
+    QVBoxLayout *vBox = new QVBoxLayout();
+    vBox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    vBox->setSpacing(boxVSpacing);
+    setLayout(vBox);
 
     //
     // Synchronization errors
     //
-    ErrorsWidget *errorsWidget = new ErrorsWidget(this);
-    vbox->addWidget(errorsWidget);
+    _displayErrorsWidget = new DisplayErrorsWidget(this);
+    _displayErrorsWidget->setVisible(false);
+    vBox->addWidget(_displayErrorsWidget);
 
     //
     // Storage bloc
     //
     QLabel *storageLabel = new QLabel(tr("Storage space"), this);
     storageLabel->setObjectName("blocLabel");
-    vbox->addWidget(storageLabel);
+    vBox->addWidget(storageLabel);
 
     PreferencesBlocWidget *storageBloc = new PreferencesBlocWidget(this);
-    vbox->addWidget(storageBloc);
+    vBox->addWidget(storageBloc);
 
     QBoxLayout *storageBox = storageBloc->addLayout(QBoxLayout::Direction::LeftToRight);
     storageBox->setSpacing(boxHSpacing);
@@ -108,10 +157,10 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     //
     QLabel *synchronizationLabel = new QLabel(tr("Synchronization"), this);
     synchronizationLabel->setObjectName("blocLabel");
-    vbox->addWidget(synchronizationLabel);
+    vBox->addWidget(synchronizationLabel);
 
     PreferencesBlocWidget *synchronizationBloc = new PreferencesBlocWidget(this);
-    vbox->addWidget(synchronizationBloc);
+    vBox->addWidget(synchronizationBloc);
 
     // Smart sync
     if (OCC::Theme::instance()->showVirtualFilesOption() && OCC::bestAvailableVfsMode() != OCC::Vfs::Off) {
@@ -136,6 +185,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
         _smartSyncDescriptionLabel->setText(tr("Synchronize all your files without using your computer space."
                                               " <a style=\"%1\" href=\"ref\">Learn more</a>")
                                            .arg(OCC::Utility::linkStyle));
+        QString s = _smartSyncDescriptionLabel->text();
         _smartSyncDescriptionLabel->setWordWrap(true);
         smartSyncBox->addWidget(_smartSyncDescriptionLabel);
         synchronizationBloc->addSeparator();
@@ -183,10 +233,10 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     //
     QLabel *locationLabel = new QLabel(tr("kDrive location"), this);
     locationLabel->setObjectName("blocLabel");
-    vbox->addWidget(locationLabel);
+    vBox->addWidget(locationLabel);
 
     PreferencesBlocWidget *locationBloc = new PreferencesBlocWidget(this);
-    vbox->addWidget(locationBloc);
+    vBox->addWidget(locationBloc);
 
     _locationWidget = locationBloc->addScrollArea(QBoxLayout::Direction::LeftToRight);
     _locationWidget->setObjectName("locationWidget");
@@ -198,10 +248,10 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     //
     QLabel *connectedWithLabel = new QLabel(tr("Connected with"), this);
     connectedWithLabel->setObjectName("blocLabel");
-    vbox->addWidget(connectedWithLabel);
+    vBox->addWidget(connectedWithLabel);
 
     PreferencesBlocWidget *connectedWithBloc = new PreferencesBlocWidget(this);
-    vbox->addWidget(connectedWithBloc);
+    vBox->addWidget(connectedWithBloc);
 
     QBoxLayout *connectedWithBox = connectedWithBloc->addLayout(QBoxLayout::Direction::LeftToRight);
 
@@ -228,10 +278,10 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     //
     QLabel *notificationsLabel = new QLabel(tr("Notifications"), this);
     notificationsLabel->setObjectName("blocLabel");
-    vbox->addWidget(notificationsLabel);
+    vBox->addWidget(notificationsLabel);
 
     PreferencesBlocWidget *notificationsBloc = new PreferencesBlocWidget(this);
-    vbox->addWidget(notificationsBloc);
+    vBox->addWidget(notificationsBloc);
 
     QBoxLayout *notificationsBox = notificationsBloc->addLayout(QBoxLayout::Direction::TopToBottom);
 
@@ -260,9 +310,9 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     notificationsDescriptionLabel->setWordWrap(true);
     notifications2HBox->addWidget(notificationsDescriptionLabel);
 
-    vbox->addStretch();
+    vBox->addStretch();
 
-    connect(errorsWidget, &ClickableWidget::clicked, this, &DrivePreferencesWidget::onErrorsWidgetClicked);
+    connect(_displayErrorsWidget, &ClickableWidget::clicked, this, &DrivePreferencesWidget::onErrorsWidgetClicked);
     if (_smartSyncCheckBox && _smartSyncDescriptionLabel) {
         connect(_smartSyncCheckBox, &CustomCheckBox::clicked, this, &DrivePreferencesWidget::onSmartSyncCheckBoxClicked);
         connect(_smartSyncDescriptionLabel, &QLabel::linkActivated, this, &DrivePreferencesWidget::onDisplaySmartSyncInfo);
@@ -271,12 +321,14 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     connect(localFoldersWidget, &ClickableWidget::clicked, this, &DrivePreferencesWidget::onLocalFoldersWidgetClicked);
     connect(otherDevicesWidget, &ClickableWidget::clicked, this, &DrivePreferencesWidget::onOtherDevicesWidgetClicked);
     connect(_notificationsCheckBox, &CustomCheckBox::clicked, this, &DrivePreferencesWidget::onNotificationsCheckBoxClicked);
+    connect(this, &DrivePreferencesWidget::errorAdded, this, &DrivePreferencesWidget::onErrorAdded);
 }
 
-void DrivePreferencesWidget::setAccount(const std::map<QString, AccountInfo>::iterator accountInfoIt)
+void DrivePreferencesWidget::setAccount(const QString &accountId, const AccountInfo *accountInfo, bool errors)
 {
-    _accountId = accountInfoIt->first;
-    _accountInfo = &accountInfoIt->second;
+    _accountId = accountId;
+    _accountInfo = accountInfo;
+    _displayErrorsWidget->setVisible(errors);
     setUsedSize(_accountInfo->_totalSize, _accountInfo->_used);
     updateSmartSyncCheckBoxState();
     updateDriveLocation();
@@ -288,6 +340,7 @@ void DrivePreferencesWidget::reset()
 {
     _accountId = QString();
     _accountInfo = nullptr;
+    _displayErrorsWidget->setVisible(false);
     setUsedSize(0, 0);
     _smartSyncCheckBox->setChecked(false);
     resetDriveLocation();
@@ -342,8 +395,8 @@ void DrivePreferencesWidget::updateSmartSyncCheckBoxState()
 
 void DrivePreferencesWidget::resetDriveLocation()
 {
-    while (QWidget* widget = _locationWidget->findChild<QWidget*>()) {
-        delete widget;
+    while (QLabel* label = _locationWidget->findChild<QLabel*>()) {
+        delete label;
     }
 }
 
@@ -370,19 +423,17 @@ void DrivePreferencesWidget::updateDriveLocation()
 
             int position = 0;
             if (homeDir.isEmpty()) {
-                insertIconToLocation(position++, style()->standardIcon(QStyle::SP_DriveHDIcon), QSize(dirIconSize, dirIconSize));
+                insertDirIconToLocation(position++);
             }
             else {
-                insertIconToLocation(position++, style()->standardIcon(QStyle::SP_DirHomeIcon), QSize(dirIconSize, dirIconSize));
+                insertDirIconToLocation(position++);
                 insertTextToLocation(position++, homeDir);
             }
 
-            QIcon dirSepIcon = OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-right.svg");
-            QIcon dirIcon = style()->standardIcon(QStyle::SP_DirIcon);
             for (QString folderPathPart : folderPathPartList) {
                 if (!folderPathPart.isEmpty()) {
-                    insertIconToLocation(position++, dirSepIcon, QSize(dirSepIconSize, dirSepIconSize));
-                    insertIconToLocation(position++, dirIcon, QSize(dirIconSize, dirIconSize));
+                    insertSepIconToLocation(position++);
+                    insertDirIconToLocation(position++);
                     insertTextToLocation(position++, folderPathPart);
                 }
             }
@@ -522,16 +573,27 @@ void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, std::shared_ptr<Q
     updateSmartSyncCheckBoxState();
 }
 
-void DrivePreferencesWidget::insertIconToLocation(int position, const QIcon &icon, const QSize &size)
+void DrivePreferencesWidget::insertIconToLocation(int position, const QString &iconPath, const QSize &size)
 {
     QLabel *iconLabel = new QLabel(this);
-    iconLabel->setPixmap(icon.pixmap(size));
+    iconLabel->setPixmap(OCC::Utility::getIconWithColor(iconPath, locationIconsColor()).pixmap(size));
     _locationLayout->insertWidget(position, iconLabel);
+}
+
+void DrivePreferencesWidget::insertDirIconToLocation(int position)
+{
+    insertIconToLocation(position, ":/client/resources/icons/actions/folder.svg", QSize(dirIconSize, dirIconSize));
+}
+
+void DrivePreferencesWidget::insertSepIconToLocation(int position)
+{
+    insertIconToLocation(position, ":/client/resources/icons/actions/chevron-right.svg", QSize(sepIconSize, sepIconSize));
 }
 
 void DrivePreferencesWidget::insertTextToLocation(int position, const QString &text)
 {
     QLabel *textLabel = new QLabel(text, this);
+    textLabel->setObjectName("description");
     _locationLayout->insertWidget(position, textLabel);
 }
 
@@ -544,7 +606,7 @@ void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
 
 void DrivePreferencesWidget::onErrorsWidgetClicked()
 {
-
+    emit displayErrors(_accountId);
 }
 
 void DrivePreferencesWidget::onSmartSyncCheckBoxClicked(bool checked)
@@ -621,6 +683,11 @@ void DrivePreferencesWidget::onOtherDevicesWidgetClicked()
 void DrivePreferencesWidget::onNotificationsCheckBoxClicked(bool checked)
 {
     OCC::FolderMan::instance()->setNotificationsDisabled(_accountId, checked);
+}
+
+void DrivePreferencesWidget::onErrorAdded()
+{
+    _displayErrorsWidget->setVisible(true);
 }
 
 }

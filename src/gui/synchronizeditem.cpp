@@ -23,7 +23,7 @@ namespace KDC {
 
 SynchronizedItem::SynchronizedItem(const QString &folderId, const QString &filePath, const QByteArray &fileId,
                                    OCC::SyncFileItem::Status status, OCC::SyncFileItem::Direction direction,
-                                   const QString &fullFilePath, const QDateTime &dateTime)
+                                   const QString &fullFilePath, const QDateTime &dateTime, const QString &error)
     : _folderId(folderId)
     , _filePath(filePath)
     , _fileId(fileId)
@@ -31,6 +31,7 @@ SynchronizedItem::SynchronizedItem(const QString &folderId, const QString &fileP
     , _direction(direction)
     , _fullFilePath(fullFilePath)
     , _dateTime(dateTime)
+    , _error(error)
 {
 }
 

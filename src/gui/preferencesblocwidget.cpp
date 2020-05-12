@@ -122,6 +122,7 @@ ClickableWidget *PreferencesBlocWidget::addActionWidget(QVBoxLayout **vLayout)
     hLayout->addStretch();
 
     QLabel *actionIconLabel = new QLabel(this);
+    actionIconLabel->setObjectName("actionIconLabel");
     hLayout->addWidget(actionIconLabel);
 
     return widget;

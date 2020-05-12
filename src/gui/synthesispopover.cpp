@@ -107,7 +107,7 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
     , _statusBarWidget(nullptr)
     , _buttonsBarWidget(nullptr)
     , _stackedWidget(nullptr)
-    , _defaultSynchronizedPage(nullptr)
+    , _defaultSynchronizedPageWidget(nullptr)
     , _notificationsDisabled(NotificationsDisabled::Never)
     , _notificationsDisabledUntilDateTime(QDateTime())
 {
@@ -360,47 +360,71 @@ bool SynthesisPopover::event(QEvent *event)
 
 void SynthesisPopover::initUI()
 {
+    /*
+     *  mainVBox
+     *      hBoxToolBar
+     *          iconLabel
+     *          _folderButton
+     *          _webviewButton
+     *          _menuButton
+     *      hBoxDriveBar
+     *          _driveSelectionWidget
+     *      _progressBarWidget
+     *      _statusBarWidget
+     *      _buttonsBarWidget
+     *          synchronizedButton
+     *          favoritesButton
+     *          activityButton
+     *      _stackedWidget
+     *          _defaultSynchronizedPageWidget
+     *          notImplementedLabel
+     *          notImplementedLabel2
+     *          _synchronizedListWidget[]
+     *      bottomWidget
+     */
+
     QVBoxLayout *mainVBox = new QVBoxLayout();
     mainVBox->setContentsMargins(triangleHeight, triangleHeight, triangleHeight, triangleHeight);
     mainVBox->setSpacing(0);
+    setLayout(mainVBox);
 
     // Tool bar
-    QHBoxLayout *hboxToolBar = new QHBoxLayout();
-    hboxToolBar->setContentsMargins(toolBarHMargin, toolBarVMargin, toolBarHMargin, toolBarVMargin);
-    hboxToolBar->setSpacing(toolBarSpacing);
-    mainVBox->addLayout(hboxToolBar);
+    QHBoxLayout *hBoxToolBar = new QHBoxLayout();
+    hBoxToolBar->setContentsMargins(toolBarHMargin, toolBarVMargin, toolBarHMargin, toolBarVMargin);
+    hBoxToolBar->setSpacing(toolBarSpacing);
+    mainVBox->addLayout(hBoxToolBar);
 
     QLabel *iconLabel = new QLabel(this);
     iconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive-without-text.svg")
                          .pixmap(logoIconSize, logoIconSize));
-    hboxToolBar->addWidget(iconLabel);
-    hboxToolBar->addStretch();
+    hBoxToolBar->addWidget(iconLabel);
+    hBoxToolBar->addStretch();
 
     _folderButton = new CustomToolButton(this);
     _folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
     _folderButton->setToolTip(tr("Show in folder"));
-    hboxToolBar->addWidget(_folderButton);
+    hBoxToolBar->addWidget(_folderButton);
 
     _webviewButton = new CustomToolButton(this);
     _webviewButton->setIconPath(":/client/resources/icons/actions/webview.svg");
     _webviewButton->setToolTip(tr("Display on drive.infomaniak.com"));
-    hboxToolBar->addWidget(_webviewButton);
+    hBoxToolBar->addWidget(_webviewButton);
 
     _menuButton = new CustomToolButton(this);
     _menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
     _menuButton->setToolTip(tr("More actions"));
-    hboxToolBar->addWidget(_menuButton);
+    hBoxToolBar->addWidget(_menuButton);
 
     // Drive selection
-    QHBoxLayout *hboxDriveBar = new QHBoxLayout();
-    hboxDriveBar->setContentsMargins(driveBarHMargin, driveBarVMargin, driveBarHMargin, driveBarVMargin);
-    hboxDriveBar->setSpacing(driveBarSpacing);
+    QHBoxLayout *hBoxDriveBar = new QHBoxLayout();
+    hBoxDriveBar->setContentsMargins(driveBarHMargin, driveBarVMargin, driveBarHMargin, driveBarVMargin);
+    hBoxDriveBar->setSpacing(driveBarSpacing);
 
     _driveSelectionWidget = new DriveSelectionWidget(this);
-    hboxDriveBar->addWidget(_driveSelectionWidget);
+    hBoxDriveBar->addWidget(_driveSelectionWidget);
 
-    hboxDriveBar->addStretch();
-    mainVBox->addLayout(hboxDriveBar);
+    hBoxDriveBar->addStretch();
+    mainVBox->addLayout(hBoxDriveBar);
 
     // Progress bar
     _progressBarWidget = new ProgressBarWidget(this);
@@ -412,6 +436,7 @@ void SynthesisPopover::initUI()
 
     // Buttons bar
     _buttonsBarWidget = new ButtonsBarWidget(this);
+    mainVBox->addWidget(_buttonsBarWidget);
 
     CustomPushButton *synchronizedButton = new CustomPushButton(tr("Synchronized"), _buttonsBarWidget);
     synchronizedButton->setIconPath(":/client/resources/icons/actions/sync.svg");
@@ -425,13 +450,13 @@ void SynthesisPopover::initUI()
     activityButton->setIconPath(":/client/resources/icons/actions/notifications.svg");
     _buttonsBarWidget->insertButton(StackedWidget::Activity, activityButton);
 
-    mainVBox->addWidget(_buttonsBarWidget);
-
     // Stacked widget
     _stackedWidget = new QStackedWidget(this);
+    mainVBox->addWidget(_stackedWidget);
+    mainVBox->setStretchFactor(_stackedWidget, 1);
 
-    setSynchronizedDefaultPage(&_defaultSynchronizedPage, this);
-    _stackedWidget->insertWidget(StackedWidget::Synchronized, _defaultSynchronizedPage);
+    setSynchronizedDefaultPage(&_defaultSynchronizedPageWidget, this);
+    _stackedWidget->insertWidget(StackedWidget::Synchronized, _defaultSynchronizedPageWidget);
 
     QLabel *notImplementedLabel = new QLabel(tr("Not implemented!"), this);
     notImplementedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -443,14 +468,9 @@ void SynthesisPopover::initUI()
     notImplementedLabel2->setObjectName("defaultTitleLabel");
     _stackedWidget->insertWidget(StackedWidget::Activity, notImplementedLabel2);
 
-    mainVBox->addWidget(_stackedWidget);
-    mainVBox->setStretchFactor(_stackedWidget, 1);
-
     // Bottom
     BottomWidget *bottomWidget = new BottomWidget(this);
     mainVBox->addWidget(bottomWidget);
-
-    setLayout(mainVBox);
 
     // Shadow
     QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
@@ -498,20 +518,7 @@ QString SynthesisPopover::folderPath(const QString &folderId, const QString &fil
 
     const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
     if (accountInfoIt != _accountInfoMap.end()) {
-        const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
-        if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
-            if (folderInfoIt->second) {
-                fullFilePath = folderInfoIt->second->_path + filePath;
-                if (!QFile::exists(fullFilePath)) {
-                    qCWarning(lcSynthesisPopover) << "Invalid path " << fullFilePath;
-                    fullFilePath = QString();
-                }
-            }
-            else {
-                qCDebug(lcSynthesisPopover) << "Null pointer!";
-                Q_ASSERT(false);
-            }
-        }
+        return accountInfoIt->second.folderPath(folderId, filePath);
     }
 
     return fullFilePath;
@@ -588,7 +595,7 @@ void SynthesisPopover::refreshStatusBar(const FolderInfo *folderInfo)
     }
 }
 
-void SynthesisPopover::refreshStatusBar(std::map<QString, AccountInfoPopover>::iterator accountInfoIt)
+void SynthesisPopover::refreshStatusBar(std::map<QString, AccountInfoSynthesis>::iterator accountInfoIt)
 {
     if (accountInfoIt != _accountInfoMap.end()) {
         const FolderInfo *folderInfo = getFirstFolderByPriority(accountInfoIt->second._folderMap);
@@ -719,7 +726,7 @@ void SynthesisPopover::onRefreshAccountList()
                 auto accountInfoIt = _accountInfoMap.find(accountId);
                 if (accountInfoIt == _accountInfoMap.end()) {
                     // New account
-                    AccountInfoPopover accountInfo(accountStatePtr.data());
+                    AccountInfoSynthesis accountInfo(accountStatePtr.data());
                     connect(accountInfo._quotaInfoPtr.get(), &OCC::QuotaInfo::quotaUpdated,
                             this, &SynthesisPopover::onUpdateQuota);
 
@@ -812,7 +819,7 @@ void SynthesisPopover::onRefreshAccountList()
         refreshStatusBar(_currentAccountId);
     }
 
-    setSynchronizedDefaultPage(&_defaultSynchronizedPage, this);
+    setSynchronizedDefaultPage(&_defaultSynchronizedPageWidget, this);
 }
 
 void SynthesisPopover::onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress)
@@ -890,21 +897,21 @@ void SynthesisPopover::onUpdateQuota(qint64 total, qint64 used)
     }
 }
 
-void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &syncFileItemPtr)
+void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &item)
 {
 #ifdef CONSOLE_DEBUG
     std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
               << " - SynthesisPopover::onItemCompleted" << std::endl;
 #endif
 
-    if (!syncFileItemPtr.isNull()) {
-        if (syncFileItemPtr.data()->_status == OCC::SyncFileItem::NoStatus
-                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::FatalError
-                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::NormalError
-                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::SoftError
-                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::DetailError
-                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::BlacklistedError
-                || syncFileItemPtr.data()->_status == OCC::SyncFileItem::FileIgnored) {
+    if (!item.isNull()) {
+        if (item.data()->_status == OCC::SyncFileItem::NoStatus
+                || item.data()->_status == OCC::SyncFileItem::FatalError
+                || item.data()->_status == OCC::SyncFileItem::NormalError
+                || item.data()->_status == OCC::SyncFileItem::SoftError
+                || item.data()->_status == OCC::SyncFileItem::DetailError
+                || item.data()->_status == OCC::SyncFileItem::BlacklistedError
+                || item.data()->_status == OCC::SyncFileItem::FileIgnored) {
             return;
         }
 
@@ -929,18 +936,18 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                         }
 
                         // Add item to synchronized list
-                        QListWidgetItem *item = new QListWidgetItem();
+                        QListWidgetItem *widgetItem = new QListWidgetItem();
                         SynchronizedItem synchronizedItem(folderId,
-                                                          syncFileItemPtr.data()->_file,
-                                                          syncFileItemPtr.data()->_fileId,
-                                                          syncFileItemPtr.data()->_status,
-                                                          syncFileItemPtr.data()->_direction,
-                                                          folderPath(folderId, syncFileItemPtr.data()->_file),
+                                                          item.data()->_file,
+                                                          item.data()->_fileId,
+                                                          item.data()->_status,
+                                                          item.data()->_direction,
+                                                          folderPath(folderId, item.data()->_file),
                                                           QDateTime::currentDateTime());
-                        accountInfoIt->second._synchronizedListWidget->insertItem(0, item);
+                        accountInfoIt->second._synchronizedListWidget->insertItem(0, widgetItem);
                         SynchronizedItemWidget *widget = new SynchronizedItemWidget(synchronizedItem,
                                                                                     accountInfoIt->second._synchronizedListWidget);
-                        accountInfoIt->second._synchronizedListWidget->setItemWidget(item, widget);
+                        accountInfoIt->second._synchronizedListWidget->setItemWidget(widgetItem, widget);
                         connect(widget, &SynchronizedItemWidget::openFolder, this, &SynthesisPopover::onOpenFolderItem);
                         connect(widget, &SynchronizedItemWidget::open, this, &SynthesisPopover::onOpenItem);
                         connect(widget, &SynchronizedItemWidget::addToFavourites, this, &SynthesisPopover::onAddToFavouriteItem);
@@ -1221,7 +1228,7 @@ void SynthesisPopover::onAccountSelected(QString id)
         _folderButton->setWithMenu(currentFolderMapSize > 1);
         _progressBarWidget->setUsedSize(accountInfoIt->second._totalSize, accountInfoIt->second._used);
         refreshStatusBar(accountInfoIt);
-        setSynchronizedDefaultPage(&_defaultSynchronizedPage, this);
+        setSynchronizedDefaultPage(&_defaultSynchronizedPageWidget, this);
         _buttonsBarWidget->selectButton(int(accountInfoIt->second._stackedWidgetPosition));
     }
 }
@@ -1389,7 +1396,7 @@ void SynthesisPopover::onLinkActivated(const QString &link)
     }
 }
 
-SynthesisPopover::AccountInfoPopover::AccountInfoPopover()
+SynthesisPopover::AccountInfoSynthesis::AccountInfoSynthesis()
     : AccountInfo()
     , _stackedWidgetPosition(StackedWidget::Synchronized)
     , _synchronizedListWidget(nullptr)
@@ -1399,7 +1406,7 @@ SynthesisPopover::AccountInfoPopover::AccountInfoPopover()
 {
 }
 
-SynthesisPopover::AccountInfoPopover::AccountInfoPopover(OCC::AccountState *accountState)
+SynthesisPopover::AccountInfoSynthesis::AccountInfoSynthesis(OCC::AccountState *accountState)
     : AccountInfo(accountState)
     , _stackedWidgetPosition(StackedWidget::Synchronized)
     , _synchronizedListWidget(nullptr)

@@ -1,4 +1,5 @@
 /*
+Infomaniak Drive
 Copyright (C) 2020 christophe.larchier@infomaniak.com
 
 This library is free software; you can redistribute it and/or
@@ -18,32 +19,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include "folderinfo.h"
-#include "accountstate.h"
-#include "quotainfo.h"
-
-#include <QColor>
+#include <QWidget>
 
 namespace KDC {
 
-static const char accountIdProperty[] = "accountId";
+class SendErrorsWidget : public QWidget
+{
+    Q_OBJECT
 
-struct AccountInfo {
-    QString _name;
-    QColor _color;
-    bool _isSignedIn;
-    bool _paused;
-    bool _unresolvedConflicts;
-    OCC::SyncResult::Status _status;
-    std::map<QString, FolderInfo *> _folderMap;
-    std::shared_ptr<OCC::QuotaInfo> _quotaInfoPtr;
-    qint64 _totalSize;
-    qint64 _used;
+public:
+    explicit SendErrorsWidget(QWidget *parent = nullptr);
 
-    AccountInfo();
-    AccountInfo(OCC::AccountState *accountState);
-    void updateStatus();
-    QString folderPath(const QString &folderId, const QString &filePath);
+signals:
+
 };
 
 }

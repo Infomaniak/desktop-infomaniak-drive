@@ -67,6 +67,11 @@ void HalfRoundRectWidget::addSpacing(int size)
     _hboxLayout->addSpacing(size);
 }
 
+bool HalfRoundRectWidget::setStretchFactor(QWidget *widget, int stretch)
+{
+    return _hboxLayout->setStretchFactor(widget, stretch);
+}
+
 void HalfRoundRectWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);

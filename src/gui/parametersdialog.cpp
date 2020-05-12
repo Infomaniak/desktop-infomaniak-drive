@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 #include "parametersdialog.h"
+#include "erroritemwidget.h"
+#include "senderrorswidget.h"
 #include "accountmanager.h"
 #include "folderman.h"
 #include "progressdispatcher.h"
@@ -42,6 +44,11 @@ namespace KDC {
 
 Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
 
+static const int boxHMargin= 20;
+static const int boxVMargin = 20;
+static const int boxVSpacing = 15;
+static const int maxSynchronizedItems = 1000;
+
 ParametersDialog::ParametersDialog(QWidget *parent)
     : QDialog(parent)
     , _currentAccountId(QString())
@@ -49,10 +56,12 @@ ParametersDialog::ParametersDialog(QWidget *parent)
     , _pageStackedLayout(nullptr)
     , _mainMenuBarWidget(nullptr)
     , _driveMenuBarWidget(nullptr)
+    , _errorsMenuBarWidget(nullptr)
     , _mainStackedWidget(nullptr)
     , _drivesWidget(nullptr)
     , _preferencesWidget(nullptr)
     , _drivePreferencesWidget(nullptr)
+    , _errorsStackedWidget(nullptr)
 {
     initUI();
 
@@ -64,10 +73,36 @@ ParametersDialog::ParametersDialog(QWidget *parent)
             this, &ParametersDialog::onRefreshAccountList);
     connect(OCC::ProgressDispatcher::instance(), &OCC::ProgressDispatcher::progressInfo,
             this, &ParametersDialog::onUpdateProgress);
+    connect(OCC::ProgressDispatcher::instance(), &OCC::ProgressDispatcher::itemCompleted,
+            this, &ParametersDialog::onItemCompleted);
 }
 
 void ParametersDialog::initUI()
 {
+    /*
+     *  _pageStackedLayout
+     *      mainPageWidget
+     *          mainVBox
+     *              _mainMenuBarWidget
+     *              _mainStackedWidget
+     *                  _drivesWidget
+     *                  preferencesScrollArea
+     *                      _preferencesWidget
+     *      drivePageWidget
+     *          driveVBox
+     *              _driveMenuBarWidget
+     *              drivePreferencesScrollArea
+     *                  _drivePreferencesWidget
+     *      errorsPageWidget
+     *          errorsVBox
+     *              _errorsMenuBarWidget
+     *              errorsHeaderVBox
+     *                  sendErrorsWidget
+     *                  historyLabel
+     *              _errorsStackedWidget
+     *                  errorsListWidget[]
+     */
+
     // Page stacked widget
     _pageStackedLayout = new QStackedLayout(this);
     setLayout(_pageStackedLayout);
@@ -75,14 +110,14 @@ void ParametersDialog::initUI()
     //
     // Main widget
     //
-    QWidget *mainPage = new QWidget(this);
-    mainPage->setContentsMargins(0, 0, 0, 0);
-    _pageStackedLayout->insertWidget(Page::Main, mainPage);
+    QWidget *mainPageWidget = new QWidget(this);
+    mainPageWidget->setContentsMargins(0, 0, 0, 0);
+    _pageStackedLayout->insertWidget(Page::Main, mainPageWidget);
 
     QVBoxLayout *mainVBox = new QVBoxLayout();
     mainVBox->setContentsMargins(0, 0, 0, 0);
     mainVBox->setSpacing(0);
-    mainPage->setLayout(mainVBox);
+    mainPageWidget->setLayout(mainVBox);
 
     // Main menu bar
     _mainMenuBarWidget = new MainMenuBarWidget(this);
@@ -90,10 +125,12 @@ void ParametersDialog::initUI()
 
     // Main stacked widget
     _mainStackedWidget = new QStackedWidget(this);
+    mainVBox->addWidget(_mainStackedWidget);
+    mainVBox->setStretchFactor(_mainStackedWidget, 1);
 
     // Drives list
     _drivesWidget = new DrivesWidget(this);
-    _mainStackedWidget->insertWidget(StackedWidget::Drives, _drivesWidget);
+    _mainStackedWidget->insertWidget(MainStackedWidget::Drives, _drivesWidget);
 
     // Preferences
     _preferencesWidget = new PreferencesWidget(this);
@@ -102,22 +139,19 @@ void ParametersDialog::initUI()
     preferencesScrollArea->setWidget(_preferencesWidget);
     preferencesScrollArea->setWidgetResizable(true);
 
-    _mainStackedWidget->insertWidget(StackedWidget::Preferences, preferencesScrollArea);
-
-    mainVBox->addWidget(_mainStackedWidget);
-    mainVBox->setStretchFactor(_mainStackedWidget, 1);
+    _mainStackedWidget->insertWidget(MainStackedWidget::Preferences, preferencesScrollArea);
 
     //
-    // Drive preferences widget
+    // Drive preferences page widget
     //
-    QWidget *drivePage = new QWidget(this);
-    drivePage->setContentsMargins(0, 0, 0, 0);
-    _pageStackedLayout->insertWidget(Page::Drive, drivePage);
+    QWidget *drivePageWidget = new QWidget(this);
+    drivePageWidget->setContentsMargins(0, 0, 0, 0);
+    _pageStackedLayout->insertWidget(Page::Drive, drivePageWidget);
 
     QVBoxLayout *driveVBox = new QVBoxLayout();
     driveVBox->setContentsMargins(0, 0, 0, 0);
     driveVBox->setSpacing(0);
-    drivePage->setLayout(driveVBox);
+    drivePageWidget->setLayout(driveVBox);
 
     // Drive menu bar
     _driveMenuBarWidget = new DriveMenuBarWidget(this);
@@ -131,7 +165,45 @@ void ParametersDialog::initUI()
     drivePreferencesScrollArea->setWidgetResizable(true);
 
     driveVBox->addWidget(drivePreferencesScrollArea);
-    mainVBox->setStretchFactor(drivePreferencesScrollArea, 1);
+    driveVBox->setStretchFactor(drivePreferencesScrollArea, 1);
+
+    //
+    // Errors page widget
+    //
+    QWidget *errorsPageWidget = new QWidget(this);
+    errorsPageWidget->setContentsMargins(0, 0, 0, 0);
+    _pageStackedLayout->insertWidget(Page::Errors, errorsPageWidget);
+
+    QVBoxLayout *errorsVBox = new QVBoxLayout();
+    errorsVBox->setContentsMargins(0, 0, 0, 0);
+    errorsVBox->setSpacing(0);
+    errorsPageWidget->setLayout(errorsVBox);
+
+    // Error menu bar
+    _errorsMenuBarWidget = new ErrorsMenuBarWidget(this);
+    errorsVBox->addWidget(_errorsMenuBarWidget);
+
+    // Errors header
+    QWidget *errorsHeaderWidget = new QWidget(this);
+    errorsHeaderWidget->setObjectName("errorsHeaderWidget");
+    errorsVBox->addWidget(errorsHeaderWidget);
+
+    QVBoxLayout *errorsHeaderVBox = new QVBoxLayout();
+    errorsHeaderVBox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    errorsHeaderVBox->setSpacing(0);
+    errorsHeaderWidget->setLayout(errorsHeaderVBox);
+
+    SendErrorsWidget *sendErrorsWidget = new SendErrorsWidget(this);
+    errorsHeaderVBox->addWidget(sendErrorsWidget);
+
+    QLabel *historyLabel = new QLabel(tr("History"), this);
+    historyLabel->setObjectName("blocLabel");
+    errorsHeaderVBox->addWidget(historyLabel);
+
+    // Errors stacked widget
+    _errorsStackedWidget = new QStackedWidget(this);
+    errorsVBox->addWidget(_errorsStackedWidget);
+    errorsVBox->setStretchFactor(_errorsStackedWidget, 1);
 
     connect(_mainMenuBarWidget, &MainMenuBarWidget::drivesButtonClicked, this, &ParametersDialog::onDrivesButtonClicked);
     connect(_mainMenuBarWidget, &MainMenuBarWidget::preferencesButtonClicked, this, &ParametersDialog::onPreferencesButtonClicked);
@@ -150,6 +222,20 @@ void ParametersDialog::initUI()
     connect(_driveMenuBarWidget, &DriveMenuBarWidget::resumeSync, this, &ParametersDialog::onResumeSync);
     connect(_driveMenuBarWidget, &DriveMenuBarWidget::manageOffer, this, &ParametersDialog::onManageOffer);
     connect(_driveMenuBarWidget, &DriveMenuBarWidget::remove, this, &ParametersDialog::onRemove);
+    connect(_drivePreferencesWidget, &DrivePreferencesWidget::displayErrors, this, &ParametersDialog::onDisplayErrors);
+    connect(_errorsMenuBarWidget, &ErrorsMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivesList);
+}
+
+QString ParametersDialog::folderPath(const QString &folderId, const QString &filePath)
+{
+    QString fullFilePath = QString();
+
+    const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        return accountInfoIt->second.folderPath(folderId, filePath);
+    }
+
+    return fullFilePath;
 }
 
 void ParametersDialog::onRefreshAccountList()
@@ -170,7 +256,7 @@ void ParametersDialog::onRefreshAccountList()
                 auto accountInfoIt = _accountInfoMap.find(accountId);
                 if (accountInfoIt == _accountInfoMap.end()) {
                     // New account
-                    AccountInfo accountInfo(accountStatePtr.data());
+                    AccountInfoParameters accountInfo(accountStatePtr.data());
                     connect(accountInfo._quotaInfoPtr.get(), &OCC::QuotaInfo::quotaUpdated,
                             this, &ParametersDialog::onUpdateQuota);
 
@@ -329,14 +415,98 @@ void ParametersDialog::onUpdateQuota(qint64 total, qint64 used)
     }
 }
 
+void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &item)
+{
+#ifdef CONSOLE_DEBUG
+    std::cout << QTime::currentTime().toString("hh:mm:ss").toStdString()
+              << " - ParametersDialog::onItemCompleted" << std::endl;
+#endif
+
+    if (!item.isNull()) {
+        if (!(item.data()->_status == OCC::SyncFileItem::NoStatus
+                || item.data()->_status == OCC::SyncFileItem::FatalError
+                || item.data()->_status == OCC::SyncFileItem::NormalError
+                || item.data()->_status == OCC::SyncFileItem::SoftError
+                || item.data()->_status == OCC::SyncFileItem::DetailError
+                || item.data()->_status == OCC::SyncFileItem::BlacklistedError
+                || item.data()->_status == OCC::SyncFileItem::FileIgnored)) {
+            return;
+        }
+
+        OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderId);
+        if (folder) {
+            if (folder->accountState()) {
+                OCC::AccountPtr account = folder->accountState()->account();
+                if (!account.isNull()) {
+                    const auto accountInfoIt = _accountInfoMap.find(account->id());
+                    if (accountInfoIt != _accountInfoMap.end()) {
+                        if (!accountInfoIt->second._errorsListWidget) {
+                            accountInfoIt->second._errorsListWidget = new QListWidget(this);
+                            accountInfoIt->second._errorsListWidget->setSpacing(0);
+                            accountInfoIt->second._errorsListWidget->setSelectionMode(QAbstractItemView::NoSelection);
+                            accountInfoIt->second._errorsListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+                            accountInfoIt->second._errorsListStackPosition =
+                                    _errorsStackedWidget->addWidget(accountInfoIt->second._errorsListWidget);
+                        }
+
+                        // Add item to synchronized list
+                        QListWidgetItem *widgetItem = new QListWidgetItem();
+                        SynchronizedItem synchronizedItem(folderId,
+                                                          item.data()->_file,
+                                                          item.data()->_fileId,
+                                                          item.data()->_status,
+                                                          item.data()->_direction,
+                                                          folderPath(folderId, item.data()->_file),
+                                                          QDateTime::currentDateTime(),
+                                                          item.data()->_errorString);
+                        accountInfoIt->second._errorsListWidget->insertItem(0, widgetItem);
+                        ErrorItemWidget *widget = new ErrorItemWidget(synchronizedItem,
+                                                                      accountInfoIt->second,
+                                                                      accountInfoIt->second._errorsListWidget);
+                        accountInfoIt->second._errorsListWidget->setItemWidget(widgetItem, widget);
+                        // Adjust widgetItem sizeHint because widget has a variable height
+                        widgetItem->setSizeHint(widget->size());
+                        connect(widget, &ErrorItemWidget::openFolder, this, &ParametersDialog::onOpenFolderItem);
+                        connect(widget, &ErrorItemWidget::open, this, &ParametersDialog::onOpenItem);
+
+                        if (accountInfoIt->second._errorsListWidget->count() > maxSynchronizedItems) {
+                            // Remove last row
+                            QListWidgetItem *lastWidgetItem = accountInfoIt->second._errorsListWidget->takeItem(
+                                        accountInfoIt->second._errorsListWidget->count() - 1);
+                            delete lastWidgetItem;
+                        }
+
+                        if (_currentAccountId == accountInfoIt->first
+                                && _pageStackedLayout->currentIndex() == Page::Drive) {
+                            emit _drivePreferencesWidget->errorAdded();
+                        }
+                    }
+                }
+                else {
+                    qCDebug(lcParametersDialog) << "Null pointer!";
+                    Q_ASSERT(false);
+                }
+            }
+            else {
+                qCDebug(lcParametersDialog) << "Null pointer!";
+                Q_ASSERT(false);
+            }
+        }
+    }
+    else {
+        qCDebug(lcParametersDialog) << "Null pointer!";
+        Q_ASSERT(false);
+    }
+}
+
 void ParametersDialog::onDrivesButtonClicked()
 {
-    _mainStackedWidget->setCurrentIndex(StackedWidget::Drives);
+    _mainStackedWidget->setCurrentIndex(MainStackedWidget::Drives);
 }
 
 void ParametersDialog::onPreferencesButtonClicked()
 {
-    _mainStackedWidget->setCurrentIndex(StackedWidget::Preferences);
+    _mainStackedWidget->setCurrentIndex(MainStackedWidget::Preferences);
 }
 
 void ParametersDialog::onOpenHelp()
@@ -394,13 +564,24 @@ void ParametersDialog::onRemove(const QString &accountId)
     }
 }
 
+void ParametersDialog::onDisplayErrors(const QString &accountId)
+{
+    auto accountInfoIt = _accountInfoMap.find(accountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        _errorsMenuBarWidget->setAccount(accountInfoIt->first, &accountInfoIt->second);
+        _errorsStackedWidget->setCurrentIndex(accountInfoIt->second._errorsListStackPosition);
+        _pageStackedLayout->setCurrentIndex(Page::Errors);
+    }
+}
+
 void ParametersDialog::onDisplayDriveParameters(const QString &accountId)
 {
     auto accountInfoIt = _accountInfoMap.find(accountId);
     if (accountInfoIt != _accountInfoMap.end()) {
         _currentAccountId = accountInfoIt->first;
-        _driveMenuBarWidget->setAccount(accountInfoIt);
-        _drivePreferencesWidget->setAccount(accountInfoIt);
+        _driveMenuBarWidget->setAccount(accountInfoIt->first, &accountInfoIt->second);
+        _drivePreferencesWidget->setAccount(accountInfoIt->first, &accountInfoIt->second,
+                                            accountInfoIt->second._errorsListWidget != nullptr);
         _pageStackedLayout->setCurrentIndex(Page::Drive);
     }
 }
@@ -413,6 +594,32 @@ void ParametersDialog::onSetStyle(bool darkTheme)
 void ParametersDialog::onDisplayDrivesList()
 {
     _pageStackedLayout->setCurrentIndex(Page::Main);
+}
+
+void ParametersDialog::onOpenFolderItem(const SynchronizedItem &item)
+{
+
+}
+
+void ParametersDialog::onOpenItem(const SynchronizedItem &item)
+{
+
+}
+
+ParametersDialog::AccountInfoParameters::AccountInfoParameters()
+    : AccountInfo()
+    , _errorsListWidget(nullptr)
+    , _errorsListStackPosition(0)
+{
+
+}
+
+ParametersDialog::AccountInfoParameters::AccountInfoParameters(OCC::AccountState *accountState)
+    : AccountInfo(accountState)
+    , _errorsListWidget(nullptr)
+    , _errorsListStackPosition(0)
+{
+
 }
 
 }

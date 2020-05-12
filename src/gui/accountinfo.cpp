@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "accountinfo.h"
 #include "account.h"
 
+#include <QFile>
+
 namespace KDC {
 
 Q_LOGGING_CATEGORY(lcAccountInfo, "accountinfo", QtInfoMsg)
@@ -134,6 +136,28 @@ void AccountInfo::updateStatus()
             _status = OCC::SyncResult::Success;
         }
     }
+}
+
+QString AccountInfo::folderPath(const QString &folderId, const QString &filePath)
+{
+    QString fullFilePath = QString();
+
+    const auto folderInfoIt = _folderMap.find(folderId);
+    if (folderInfoIt != _folderMap.end()) {
+        if (folderInfoIt->second) {
+            fullFilePath = folderInfoIt->second->_path + filePath;
+            if (!QFile::exists(fullFilePath)) {
+                qCWarning(lcAccountInfo) << "Invalid path " << fullFilePath;
+                fullFilePath = QString();
+            }
+        }
+        else {
+            qCDebug(lcAccountInfo) << "Null pointer!";
+            Q_ASSERT(false);
+        }
+    }
+
+    return fullFilePath;
 }
 
 }

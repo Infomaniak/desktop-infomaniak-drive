@@ -81,15 +81,15 @@ private:
         Activity
     };
 
-    struct AccountInfoPopover : public AccountInfo {
+    struct AccountInfoSynthesis : public AccountInfo {
         StackedWidget _stackedWidgetPosition;
         QListWidget *_synchronizedListWidget;
         int _synchronizedListStackPosition;
         int _favoritesListStackPosition;
         int _activityListStackPosition;
 
-        AccountInfoPopover();
-        AccountInfoPopover(OCC::AccountState *accountState);
+        AccountInfoSynthesis();
+        AccountInfoSynthesis(OCC::AccountState *accountState);
     };
 
     bool _debugMode;
@@ -104,10 +104,10 @@ private:
     StatusBarWidget *_statusBarWidget;
     ButtonsBarWidget *_buttonsBarWidget;
     QStackedWidget *_stackedWidget;
-    QWidget *_defaultSynchronizedPage;
+    QWidget *_defaultSynchronizedPageWidget;
     NotificationsDisabled _notificationsDisabled;
     QDateTime _notificationsDisabledUntilDateTime;
-    std::map<QString, AccountInfoPopover> _accountInfoMap;
+    std::map<QString, AccountInfoSynthesis> _accountInfoMap;
 
     void changeEvent(QEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
@@ -124,7 +124,7 @@ private:
                                                OCC::SyncResult::Status status);
     const FolderInfo *getFirstFolderByPriority(const std::map<QString, FolderInfo *> &folderMap);
     void refreshStatusBar(const FolderInfo *folderInfo);
-    void refreshStatusBar(std::map<QString, AccountInfoPopover>::iterator accountStatusIt);
+    void refreshStatusBar(std::map<QString, AccountInfoSynthesis>::iterator accountStatusIt);
     void refreshStatusBar(QString accountId);
     void setSynchronizedDefaultPage(QWidget **widget, QWidget *parent);
 

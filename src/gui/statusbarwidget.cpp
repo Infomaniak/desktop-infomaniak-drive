@@ -50,6 +50,8 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
     _statusLabel->setObjectName("statusLabel");
     _statusLabel->setWordWrap(true);
     addWidget(_statusLabel);
+    setStretchFactor(_statusLabel, 1);
+
     addStretch();
 
     _pauseButton = new CustomToolButton(this);

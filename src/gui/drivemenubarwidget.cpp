@@ -73,10 +73,10 @@ DriveMenuBarWidget::DriveMenuBarWidget(QWidget *parent)
     connect(_menuButton, &CustomToolButton::clicked, this, &DriveMenuBarWidget::onMenuButtonClicked);
 }
 
-void DriveMenuBarWidget::setAccount(std::map<QString, AccountInfo>::iterator accountInfoIt)
+void DriveMenuBarWidget::setAccount(const QString &accountId, const AccountInfo *accountInfo)
 {
-    _accountId = accountInfoIt->first;
-    _accountInfo = &accountInfoIt->second;
+    _accountId = accountId;
+    _accountInfo = accountInfo;
     _accountIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/drive.svg",
                                                                 _accountInfo->_color).
                                  pixmap(QSize(driveLogoIconSize, driveLogoIconSize)));

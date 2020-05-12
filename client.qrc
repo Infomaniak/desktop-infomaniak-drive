@@ -124,5 +124,6 @@
         <file>resources/logos/kdrive-text-only.svg</file>
         <file>resources/icons/actions/switch-off.svg</file>
         <file>resources/icons/actions/switch-on.svg</file>
+        <file>resources/icons/actions/switch-disable.svg</file>
     </qresource>
 </RCC>

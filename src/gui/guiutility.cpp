@@ -44,6 +44,8 @@ static const QString styleSheetBlackFile(":/client/resources/styles/stylesheetbl
 static const QColor styleSheetWhiteShadowColor = QColor(200, 200, 200, 180);
 static const QColor styleSheetBlackShadowColor = QColor(20, 20, 20, 180);
 
+static bool darkTheme = false;
+
 Q_LOGGING_CATEGORY(lcGuiUtility, "gui.utility", QtInfoMsg)
 
 bool Utility::openBrowser(const QUrl &url, QWidget *errorWidgetParent)
@@ -349,8 +351,8 @@ QString Utility::getFolderStatusText(bool paused, bool unresolvedConflicts, Sync
             }
             break;
         case OCC::SyncResult::Error:
-            text = QCoreApplication::translate("utility", "Some files couldn't be synchronized."
-                                               " <a style=\"%1\" href=\"%2\">Learn more</a>")
+            text = QCoreApplication::translate("utility", "Some files couldn't be synchronized.<br>"
+                                               "<a style=\"%1\" href=\"%2\">Learn more</a>")
                     .arg(linkStyle)
                     .arg(learnMoreLink);
             break;

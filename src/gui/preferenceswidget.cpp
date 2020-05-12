@@ -44,20 +44,53 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
 
     OCC::ConfigFile cfg;
 
-    QVBoxLayout *vbox = new QVBoxLayout();
-    vbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
-    vbox->setSpacing(boxSpacing);
-    setLayout(vbox);
+    /*
+     *  vBox
+     *      generalLabel
+     *      generalBloc
+     *          folderConfirmationBox
+     *              folderConfirmation1HBox
+     *                  folderConfirmationLabel
+     *                  folderConfirmationCheckBox
+     *              folderConfirmation2HBox
+     *                  _folderConfirmationAmountLineEdit
+     *                  folderConfirmationAmountLabel
+     *          darkThemeBox
+     *              darkThemeLabel
+     *              darkThemeCheckBox
+     *          monochromeIconsBox
+     *              monochromeLabel
+     *              monochromeCheckBox
+     *          launchAtStartupBox
+     *              launchAtStartupLabel
+     *              launchAtStartupCheckBox
+     *      advancedLabel
+     *      advancedBloc
+     *          filesToExcludeWidget
+     *              filesToExcludeVBox
+     *                  filesToExcludeLabel
+     *          proxyServerWidget
+     *              proxyServerVBox
+     *                  proxyServerLabel
+     *          bandwidthWidget
+     *              bandwidthVBox
+     *                  bandwidthLabel
+     */
+
+    QVBoxLayout *vBox = new QVBoxLayout();
+    vBox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    vBox->setSpacing(boxSpacing);
+    setLayout(vBox);
 
     //
     // General bloc
     //
     QLabel *generalLabel = new QLabel(tr("General"), this);
     generalLabel->setObjectName("blocLabel");
-    vbox->addWidget(generalLabel);
+    vBox->addWidget(generalLabel);
 
     PreferencesBlocWidget *generalBloc = new PreferencesBlocWidget(this);
-    vbox->addWidget(generalBloc);
+    vBox->addWidget(generalBloc);
 
     // Folder synchronization confirmation
     QBoxLayout *folderConfirmationBox = generalBloc->addLayout(QBoxLayout::Direction::TopToBottom);
@@ -160,10 +193,10 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     //
     QLabel *advancedLabel = new QLabel(tr("Advanced"), this);
     advancedLabel->setObjectName("blocLabel");
-    vbox->addWidget(advancedLabel);
+    vBox->addWidget(advancedLabel);
 
     PreferencesBlocWidget *advancedBloc = new PreferencesBlocWidget(this);
-    vbox->addWidget(advancedBloc);
+    vBox->addWidget(advancedBloc);
 
     // Files to exclude
     QVBoxLayout *filesToExcludeVBox = nullptr;
@@ -189,7 +222,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     bandwidthVBox->addWidget(bandwidthLabel);
     bandwidthVBox->addStretch();
 
-    vbox->addStretch();
+    vBox->addStretch();
 
     connect(folderConfirmationCheckBox, &CustomCheckBox::clicked, this, &PreferencesWidget::onFolderConfirmationCheckBoxClicked);
     connect(_folderConfirmationAmountLineEdit, &QLineEdit::editingFinished, this, &PreferencesWidget::onFolderConfirmationAmountEditingFinished);

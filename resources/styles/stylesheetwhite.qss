@@ -127,6 +127,37 @@ KDC--ParametersDialog QStackedWidget
     border: 0px;
 }
 
+KDC--ParametersDialog QScrollArea
+{
+    background-color: #F5F5F5;
+    border: 0px;
+}
+
+KDC--ParametersDialog QListWidget
+{
+    background-color: transparent;
+    border: 0px;
+}
+
+KDC--ParametersDialog QListWidget::item
+{
+    min-height: 80px;
+}
+
+KDC--ParametersDialog QWidget#errorsHeaderWidget
+{
+    background-color: #F5F5F5;
+    border: 0px;
+}
+
+KDC--ParametersDialog QLabel#blocLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 13px;
+}
+
 KDC--ParametersDialog QLabel#defaultTitleLabel
 {
     color: #444444;
@@ -143,12 +174,6 @@ KDC--ParametersDialog QLabel#defaultTextLabel
     font-size: 14px;
 }
 
-KDC--ParametersDialog QScrollArea
-{
-    background-color: #F5F5F5;
-    border: 0px;
-}
-
 KDC--ParametersDialog QCheckBox::indicator::checked
 {
     image: url(:/client/resources/icons/actions/switch-on.svg);
@@ -159,17 +184,21 @@ KDC--ParametersDialog QCheckBox::indicator::unchecked
     image: url(:/client/resources/icons/actions/switch-off.svg);
 }
 
+KDC--ParametersDialog QCheckBox::indicator::checked:disabled
+{
+    image: url(:/client/resources/icons/actions/switch-disabled.svg);
+}
+
+KDC--ParametersDialog QCheckBox::indicator::unchecked:disabled
+{
+    image: url(:/client/resources/icons/actions/switch-disabled.svg);
+}
+
 /*********************/
 /* KDC--DrivesWidget */
 /*********************/
 
 KDC--DrivesWidget
-{
-    background-color: transparent;
-    border: 0px;
-}
-
-KDC--DrivesWidget QListWidget
 {
     background-color: transparent;
     border: 0px;
@@ -406,6 +435,7 @@ KDC--MainMenuBarWidget QPushButton
     font-weight: 550; /* semibold */
     font-size: 14px;
     text-decoration: none;
+    border: 0px;
 }
 
 KDC--MainMenuBarWidget QPushButton:checked
@@ -417,6 +447,7 @@ KDC--MainMenuBarWidget QPushButton:checked
     font-weight: 550; /* semibold */
     font-size: 14px;
     text-decoration: underline;
+    border: 0px;
 }
 
 /***************************/
@@ -430,6 +461,24 @@ KDC--DriveMenuBarWidget
 }
 
 KDC--DriveMenuBarWidget QLabel#accountNameLabel
+{
+    color: #444444;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 18px;
+}
+
+/****************************/
+/* KDC--ErrorsMenuBarWidget */
+/****************************/
+
+KDC--ErrorsMenuBarWidget
+{
+    min-height: 70px;
+    max-height: 70px;
+}
+
+KDC--ErrorsMenuBarWidget QLabel#titleLabel
 {
     color: #444444;
     font-family: "Suisse Int'l";
@@ -533,6 +582,47 @@ KDC--AccountItemWidget QLabel#statusLabel
     font-size: 13px;
 }
 
+/************************/
+/* KDC--ErrorItemWidget */
+/************************/
+
+KDC--ErrorItemWidget
+{
+    qproperty-background_color: #FFFFFF;
+}
+
+KDC--ErrorItemWidget QLabel#fileNameLabel
+{
+    color: #444444;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 14px;
+}
+
+KDC--ErrorItemWidget QLabel#fileErrorLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 12px;
+}
+
+KDC--ErrorItemWidget QLabel#filePathLabel
+{
+    color: #0098FF;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 11px;
+}
+
+KDC--ErrorItemWidget QLabel#fileDateLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 12px;
+}
+
 /*********************/
 /* KDC--BottomWidget */
 /*********************/
@@ -544,43 +634,20 @@ KDC--BottomWidget
     qproperty-background_color: #F5F5F5;
 }
 
-/**************************/
-/* KDC--PreferencesWidget */
-/**************************/
-
-KDC--PreferencesWidget
-{
-    border: 0px;
-}
-
-KDC--PreferencesWidget QLabel#blocLabel
-{
-    color: #666666;
-    font-family: "Suisse Int'l";
-    font-weight: 350; /* normal */
-    font-size: 13px;
-}
-
 /*******************************/
 /* KDC--DrivePreferencesWidget */
 /*******************************/
 
 KDC--DrivePreferencesWidget
 {
+    background-color: #F5F5F5;
     border: 0px;
-}
-
-KDC--DrivePreferencesWidget QLabel#blocLabel
-{
-    color: #666666;
-    font-family: "Suisse Int'l";
-    font-weight: 350; /* normal */
-    font-size: 13px;
+    qproperty-location_icons_color: #666666;
 }
 
 KDC--DrivePreferencesWidget QLabel#accountNameLabel
 {
-    color: #666666;
+    color: #333333;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 12px;
@@ -588,7 +655,7 @@ KDC--DrivePreferencesWidget QLabel#accountNameLabel
 
 KDC--DrivePreferencesWidget QLabel#accountMailLabel
 {
-    color: #333333;
+    color: #666666;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 12px;
@@ -716,11 +783,11 @@ KDC--PreferencesBlocWidget QWidget#locationWidget
     border: 0px;
 }
 
-/***********************/
-/* KDC--ErrorsWidget */
-/***********************/
+/****************************/
+/* KDC--DisplayErrorsWidget */
+/****************************/
 
-KDC--ErrorsWidget
+KDC--DisplayErrorsWidget
 {
     background-color: transparent;
     min-height: 44px;
@@ -734,10 +801,10 @@ KDC--ErrorsWidget
     qproperty-action_icon_size: 16px;
 }
 
-KDC--ErrorsWidget QLabel#errorTextLabel
+KDC--DisplayErrorsWidget QLabel#errorTextLabel
 {
     color: #FFFFFF;
     font-family: "Suisse Int'l";
-    font-weight: 450; /* normal */
+    font-weight: 450; /* medium */
     font-size: 13px;
 }

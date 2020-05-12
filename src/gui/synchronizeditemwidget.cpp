@@ -50,7 +50,7 @@ static const int textSpacing = 10;
 static const int statusIconWidth = 10;
 static const int shadowBlurRadius = 20;
 static const QString dateFormat = "d MMM - HH:mm";
-static const int fileNameMaxSize = 100;
+static const int fileNameMaxSize = 50;
 
 SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWidget *parent)
     : QWidget(parent)
