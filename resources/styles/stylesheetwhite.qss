@@ -141,7 +141,7 @@ KDC--ParametersDialog QListWidget
 
 KDC--ParametersDialog QListWidget::item
 {
-    min-height: 80px;
+    min-height: 100px;
 }
 
 KDC--ParametersDialog QWidget#errorsHeaderWidget
@@ -208,6 +208,16 @@ KDC--DrivesWidget QListWidget::item
 {
     min-height: 90px;
     max-height: 90px;
+}
+
+/**************************/
+/* KDC--PreferencesWidget */
+/**************************/
+
+KDC--PreferencesWidget
+{
+    background-color: transparent;
+    border: 0px;
 }
 
 /**********************/
@@ -783,28 +793,47 @@ KDC--PreferencesBlocWidget QWidget#locationWidget
     border: 0px;
 }
 
-/****************************/
-/* KDC--DisplayErrorsWidget */
-/****************************/
+/*********************/
+/* KDC--ActionWidget */
+/*********************/
 
-KDC--DisplayErrorsWidget
+KDC--ActionWidget
 {
     background-color: transparent;
     min-height: 44px;
     max-height: 44px;
     border: 0px;
     border-radius: 22px;
-    qproperty-background_color: #FA462D;
-    qproperty-warning_icon_color: #FFFFFF;
-    qproperty-warning_icon_size: 24px;
-    qproperty-action_icon_color: #FFFFFF;
+    qproperty-left_icon_size: 24px;
     qproperty-action_icon_size: 16px;
 }
 
-KDC--DisplayErrorsWidget QLabel#errorTextLabel
+KDC--ActionWidget#displayErrorsWidget
+{
+    qproperty-background_color: #FA462D;
+    qproperty-left_icon_color: #FFFFFF;
+    qproperty-action_icon_color: #FFFFFF;
+}
+
+KDC--ActionWidget#displayErrorsWidget QLabel#textLabel
 {
     color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 13px;
+}
+
+KDC--ActionWidget#sendLogsWidget
+{
+    qproperty-background_color: #FFFFFF;
+    qproperty-left_icon_color: #4098F8;
+    qproperty-action_icon_color: #666666;
+}
+
+KDC--ActionWidget#sendLogsWidget QLabel#textLabel
+{
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 12px;
 }

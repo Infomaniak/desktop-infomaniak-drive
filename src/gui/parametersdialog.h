@@ -46,6 +46,8 @@ class ParametersDialog : public QDialog
 public:
     explicit ParametersDialog(QWidget *parent = nullptr);
 
+    void openErrorPage(const QString &accountId);
+
 signals:
     void addDrive();
     void setStyle(bool darkTheme);
@@ -84,7 +86,6 @@ private:
     std::map<QString, AccountInfoParameters> _accountInfoMap;
 
     void initUI();
-    QString folderPath(const QString &folderId, const QString &filePath);
 
 private slots:
     void onRefreshAccountList();
@@ -104,8 +105,8 @@ private slots:
     void onDisplayDriveParameters(const QString &accountId);
     void onSetStyle(bool darkTheme);
     void onDisplayDrivesList();
-    void onOpenFolderItem(const SynchronizedItem &item);
-    void onOpenItem(const SynchronizedItem &item);
+    void onSendLogs();
+    void onOpenFolderItem(const QString &filePath);
 };
 
 }

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #pragma once
 
 #include "customcheckbox.h"
-#include "displayerrorswidget.h"
+#include "actionwidget.h"
 #include "accountinfo.h"
 #include "folderman.h"
 
@@ -57,7 +57,7 @@ private:
     QColor _locationIconsColor;
     QString _accountId;
     const AccountInfo *_accountInfo;
-    DisplayErrorsWidget *_displayErrorsWidget;
+    ActionWidget *_displayErrorsWidget;
     QProgressBar *_progressBar;
     QLabel *_progressLabel;
     CustomCheckBox *_smartSyncCheckBox;

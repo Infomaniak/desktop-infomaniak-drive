@@ -37,21 +37,19 @@ public:
     explicit ErrorItemWidget(const SynchronizedItem &item, const AccountInfo &accountInfo, QWidget *parent = nullptr);
 
 signals:
-    void openFolder(const SynchronizedItem &item);
-    void open(const SynchronizedItem &item);
+    void openFolder(const QString &filePath);
 
 private:
-    const SynchronizedItem &_item;
-    const AccountInfo &_accountInfo;
+    const SynchronizedItem _item;
     QColor _backgroundColor;
-    QLabel *_fileNameLabel;
-    QLabel *_fileErrorLabel;
-    QLabel *_filePathLabel;
 
     void paintEvent(QPaintEvent* event) override;
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
+
+private slots:
+    void onLinkActivated(const QString &link);
 };
 
 }

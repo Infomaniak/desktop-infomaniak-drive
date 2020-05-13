@@ -87,6 +87,7 @@ namespace Utility {
     void pauseSync(const QString &accountid, bool pause);
     void runSync(const QString &accountid);
     QColor getShadowColor();
+    QUrl getUrlFromLocalPath(const QString &path);
 
 } // namespace Utility
 } // namespace OCC

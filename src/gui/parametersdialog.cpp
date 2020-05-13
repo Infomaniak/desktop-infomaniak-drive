@@ -24,30 +24,35 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "parametersdialog.h"
 #include "erroritemwidget.h"
-#include "senderrorswidget.h"
+#include "actionwidget.h"
 #include "accountmanager.h"
 #include "folderman.h"
+#include "openfilemanager.h"
 #include "progressdispatcher.h"
 #include "guiutility.h"
 #include "theme.h"
 
 #include <QDesktopServices>
+#include <QDir>
+#include <QFile>
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QUrl>
 #include <QVBoxLayout>
 
 namespace KDC {
 
-Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
-
 static const int boxHMargin= 20;
-static const int boxVMargin = 20;
-static const int boxVSpacing = 15;
+static const int boxVTMargin = 15;
+static const int boxVBMargin = 5;
+static const int boxVSpacing = 20;
 static const int maxSynchronizedItems = 1000;
+
+Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
 
 ParametersDialog::ParametersDialog(QWidget *parent)
     : QDialog(parent)
@@ -75,6 +80,11 @@ ParametersDialog::ParametersDialog(QWidget *parent)
             this, &ParametersDialog::onUpdateProgress);
     connect(OCC::ProgressDispatcher::instance(), &OCC::ProgressDispatcher::itemCompleted,
             this, &ParametersDialog::onItemCompleted);
+}
+
+void ParametersDialog::openErrorPage(const QString &accountId)
+{
+    onDisplayErrors(accountId);
 }
 
 void ParametersDialog::initUI()
@@ -185,16 +195,19 @@ void ParametersDialog::initUI()
 
     // Errors header
     QWidget *errorsHeaderWidget = new QWidget(this);
+    errorsHeaderWidget->setContentsMargins(0, 0, 0, 0);
     errorsHeaderWidget->setObjectName("errorsHeaderWidget");
     errorsVBox->addWidget(errorsHeaderWidget);
 
     QVBoxLayout *errorsHeaderVBox = new QVBoxLayout();
-    errorsHeaderVBox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
-    errorsHeaderVBox->setSpacing(0);
+    errorsHeaderVBox->setContentsMargins(boxHMargin, boxVTMargin, boxHMargin, boxVBMargin);
+    errorsHeaderVBox->setSpacing(boxVSpacing);
     errorsHeaderWidget->setLayout(errorsHeaderVBox);
 
-    SendErrorsWidget *sendErrorsWidget = new SendErrorsWidget(this);
-    errorsHeaderVBox->addWidget(sendErrorsWidget);
+    ActionWidget *sendLogsWidget = new ActionWidget(":/client/resources/icons/actions/help.svg",
+                                                    tr("Need help? Generate an archive of the application logs to send it to our support"), this);
+    sendLogsWidget->setObjectName("sendLogsWidget");
+    errorsHeaderVBox->addWidget(sendLogsWidget);
 
     QLabel *historyLabel = new QLabel(tr("History"), this);
     historyLabel->setObjectName("blocLabel");
@@ -224,18 +237,7 @@ void ParametersDialog::initUI()
     connect(_driveMenuBarWidget, &DriveMenuBarWidget::remove, this, &ParametersDialog::onRemove);
     connect(_drivePreferencesWidget, &DrivePreferencesWidget::displayErrors, this, &ParametersDialog::onDisplayErrors);
     connect(_errorsMenuBarWidget, &ErrorsMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivesList);
-}
-
-QString ParametersDialog::folderPath(const QString &folderId, const QString &filePath)
-{
-    QString fullFilePath = QString();
-
-    const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
-    if (accountInfoIt != _accountInfoMap.end()) {
-        return accountInfoIt->second.folderPath(folderId, filePath);
-    }
-
-    return fullFilePath;
+    connect(sendLogsWidget, &ActionWidget::clicked, this, &ParametersDialog::onSendLogs);
 }
 
 void ParametersDialog::onRefreshAccountList()
@@ -456,7 +458,7 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                                                           item.data()->_fileId,
                                                           item.data()->_status,
                                                           item.data()->_direction,
-                                                          folderPath(folderId, item.data()->_file),
+                                                          accountInfoIt->second.folderPath(folderId, item.data()->_file),
                                                           QDateTime::currentDateTime(),
                                                           item.data()->_errorString);
                         accountInfoIt->second._errorsListWidget->insertItem(0, widgetItem);
@@ -467,7 +469,6 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                         // Adjust widgetItem sizeHint because widget has a variable height
                         widgetItem->setSizeHint(widget->size());
                         connect(widget, &ErrorItemWidget::openFolder, this, &ParametersDialog::onOpenFolderItem);
-                        connect(widget, &ErrorItemWidget::open, this, &ParametersDialog::onOpenItem);
 
                         if (accountInfoIt->second._errorsListWidget->count() > maxSynchronizedItems) {
                             // Remove last row
@@ -596,14 +597,30 @@ void ParametersDialog::onDisplayDrivesList()
     _pageStackedLayout->setCurrentIndex(Page::Main);
 }
 
-void ParametersDialog::onOpenFolderItem(const SynchronizedItem &item)
+void ParametersDialog::onSendLogs()
 {
 
 }
 
-void ParametersDialog::onOpenItem(const SynchronizedItem &item)
+void ParametersDialog::onOpenFolderItem(const QString &filePath)
 {
-
+    if (!filePath.isEmpty()) {
+        QFileInfo fileInfo(filePath);
+        if (fileInfo.exists()) {
+            OCC::showInFileManager(fileInfo.filePath());
+        }
+        else if (fileInfo.dir().exists()) {
+            QUrl url = OCC::Utility::getUrlFromLocalPath(fileInfo.dir().path());
+            if (url.isValid()) {
+                if (!QDesktopServices::openUrl(url)) {
+                    qCWarning(lcParametersDialog) << "QDesktopServices::openUrl failed for " << url.toString();
+                    QMessageBox msgBox;
+                    msgBox.setText(tr("Unable to open folder path %1.").arg(url.toString()));
+                    msgBox.exec();
+                }
+            }
+        }
+    }
 }
 
 ParametersDialog::AccountInfoParameters::AccountInfoParameters()
@@ -611,7 +628,6 @@ ParametersDialog::AccountInfoParameters::AccountInfoParameters()
     , _errorsListWidget(nullptr)
     , _errorsListStackPosition(0)
 {
-
 }
 
 ParametersDialog::AccountInfoParameters::AccountInfoParameters(OCC::AccountState *accountState)
@@ -619,7 +635,6 @@ ParametersDialog::AccountInfoParameters::AccountInfoParameters(OCC::AccountState
     , _errorsListWidget(nullptr)
     , _errorsListStackPosition(0)
 {
-
 }
 
 }

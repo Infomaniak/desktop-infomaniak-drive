@@ -93,7 +93,7 @@ public slots:
     void slotItemCompleted(const QString &folder, const SyncFileItemPtr &item);
     void slotShowGuiMessage(const QString &title, const QString &message);
     void slotFoldersChanged();
-    void slotShowParametersDialog();
+    void slotShowParametersDialog(const QString &accountId = QString());
 #ifndef KDRIVE_V2
     void slotShowSyncProtocol();
 #endif
@@ -102,7 +102,7 @@ public slots:
     void slotTrayClicked(QSystemTrayIcon::ActivationReason reason);
     void slotToggleLogBrowser();
     void slotOpenWebview();
-    void slotOpenParametersDialog();
+    void slotOpenParametersDialog(const QString &accountId = QString());
     void slotHelp();
     void slotAbout();
     void slotOpenPath(const QString &path);

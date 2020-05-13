@@ -20,8 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "erroritemwidget.h"
 #include "guiutility.h"
 
-#include <iostream>
-
 #include <QBoxLayout>
 #include <QFileInfo>
 #include <QGraphicsDropShadowEffect>
@@ -32,7 +30,7 @@ namespace KDC {
 
 static const int cornerRadius = 10;
 static const int hMargin= 20;
-static const int vMargin = 1;
+static const int vMargin = 5;
 static const int boxHMargin= 15;
 static const int boxVMargin = 15;
 static const int boxHSpacing = 10;
@@ -43,14 +41,8 @@ static const QString dateFormat = "d MMM yyyy - HH:mm";
 ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo &accountInfo, QWidget *parent)
     : QWidget(parent)
     , _item(item)
-    , _accountInfo(accountInfo)
     , _backgroundColor(QColor())
-    , _fileNameLabel(nullptr)
-    , _fileErrorLabel(nullptr)
-    , _filePathLabel(nullptr)
 {
-    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
-
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
 
     QHBoxLayout *hBox = new QHBoxLayout();
@@ -61,6 +53,7 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     // Left box
     QVBoxLayout *vBoxLeft = new QVBoxLayout();
     vBoxLeft->setContentsMargins(0, 0, 0, 0);
+    vBoxLeft->setMargin(0);
     hBox->addLayout(vBoxLeft);
 
     QLabel *statusIconLabel = new QLabel(this);
@@ -76,26 +69,26 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     hBox->addLayout(vBoxMiddle);
     hBox->setStretchFactor(vBoxMiddle, 1);
 
-    _fileNameLabel = new QLabel(this);
-    _fileNameLabel->setObjectName("fileNameLabel");
+    QLabel *fileNameLabel = new QLabel(this);
+    fileNameLabel->setObjectName("fileNameLabel");
     QFileInfo fileInfo(_item.filePath());
     QString fileName = fileInfo.fileName();
     /*if (fileName.size() > fileNameMaxSize) {
         fileName = fileName.left(fileNameMaxSize) + "...";
     }*/
-    _fileNameLabel->setText(fileName);
-    _fileNameLabel->setWordWrap(true);
-    vBoxMiddle->addWidget(_fileNameLabel);
+    fileNameLabel->setText(fileName);
+    fileNameLabel->setWordWrap(true);
+    vBoxMiddle->addWidget(fileNameLabel);
 
-    _fileErrorLabel = new QLabel(this);
-    _fileErrorLabel->setObjectName("fileErrorLabel");
-    _fileErrorLabel->setText(_item.error());
-    _fileErrorLabel->setWordWrap(true);
-    _fileErrorLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
-    vBoxMiddle->addWidget(_fileErrorLabel);
+    QLabel *fileErrorLabel = new QLabel(this);
+    fileErrorLabel->setObjectName("fileErrorLabel");
+    fileErrorLabel->setText(_item.error());
+    fileErrorLabel->setWordWrap(true);
+    vBoxMiddle->addWidget(fileErrorLabel);
 
     QHBoxLayout *hBoxFilePath = new QHBoxLayout();
     hBoxFilePath->setContentsMargins(0, 0, 0, 0);
+    hBoxFilePath->setSpacing(boxHSpacing);
     vBoxMiddle->addLayout(hBoxFilePath);
 
     QLabel *driveIconLabel = new QLabel(this);
@@ -103,20 +96,23 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
                               .pixmap(statusIconSize));
     hBoxFilePath->addWidget(driveIconLabel);
 
-    _filePathLabel = new QLabel(this);
-    _filePathLabel->setObjectName("filePathLabel");
+    QLabel *filePathLabel = new QLabel(this);
+    filePathLabel->setObjectName("filePathLabel");
     QString filePath = accountInfo._name + "/" + fileInfo.path();
     /*if (filePath.size() > fileNameMaxSize) {
         filePath = filePath.left(fileNameMaxSize) + "...";
     }*/
-    _filePathLabel->setText(filePath);
-    _filePathLabel->setWordWrap(true);
-    hBoxFilePath->addWidget(_filePathLabel);
-    hBoxFilePath->addStretch();
+    filePathLabel->setText(QString("<a style=\"%1\" href=\"ref\">%2</a>")
+                           .arg(OCC::Utility::linkStyle)
+                           .arg(filePath));
+    filePathLabel->setWordWrap(true);
+    hBoxFilePath->addWidget(filePathLabel);
+    hBoxFilePath->setStretchFactor(filePathLabel, 1);
 
     // Right box
     QVBoxLayout *vBoxRight = new QVBoxLayout();
     vBoxRight->setContentsMargins(0, 0, 0, 0);
+    vBoxRight->setSpacing(0);
     hBox->addLayout(vBoxRight);
 
     QLabel *fileDateLabel = new QLabel(this);
@@ -125,7 +121,7 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     vBoxRight->addWidget(fileDateLabel);
     vBoxRight->addStretch();
 
-    repaint();
+    connect(filePathLabel, &QLabel::linkActivated, this, &ErrorItemWidget::onLinkActivated);
 }
 
 void ErrorItemWidget::paintEvent(QPaintEvent *event)
@@ -148,8 +144,13 @@ void ErrorItemWidget::paintEvent(QPaintEvent *event)
     painter.setPen(Qt::NoPen);
     painter.setBrush(backgroundColor());
     painter.drawPath(painterPath);
+}
 
-    std::cout << "paint - rect height: " << rect().height() << std::endl;
+void ErrorItemWidget::onLinkActivated(const QString &link)
+{
+    Q_UNUSED(link)
+
+    emit openFolder(_item.fullFilePath());
 }
 
 }

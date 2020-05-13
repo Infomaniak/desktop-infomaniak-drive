@@ -125,8 +125,9 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     //
     // Synchronization errors
     //
-    _displayErrorsWidget = new DisplayErrorsWidget(this);
-    _displayErrorsWidget->setVisible(false);
+    _displayErrorsWidget = new ActionWidget(":/client/resources/icons/actions/warning.svg",
+                                            tr("Some files couldn't be synchronized"), this);
+    _displayErrorsWidget->setObjectName("displayErrorsWidget");
     vBox->addWidget(_displayErrorsWidget);
 
     //
@@ -312,7 +313,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
 
     vBox->addStretch();
 
-    connect(_displayErrorsWidget, &ClickableWidget::clicked, this, &DrivePreferencesWidget::onErrorsWidgetClicked);
+    connect(_displayErrorsWidget, &ActionWidget::clicked, this, &DrivePreferencesWidget::onErrorsWidgetClicked);
     if (_smartSyncCheckBox && _smartSyncDescriptionLabel) {
         connect(_smartSyncCheckBox, &CustomCheckBox::clicked, this, &DrivePreferencesWidget::onSmartSyncCheckBoxClicked);
         connect(_smartSyncDescriptionLabel, &QLabel::linkActivated, this, &DrivePreferencesWidget::onDisplaySmartSyncInfo);

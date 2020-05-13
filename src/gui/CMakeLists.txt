@@ -124,6 +124,7 @@ set(client_SRCS
     accountinfo.cpp
     accountitem.cpp
     accountitemwidget.cpp
+    actionwidget.cpp
     adddrivewidget.cpp
     bottomwidget.cpp
     buttonsbarwidget.cpp
@@ -132,13 +133,13 @@ set(client_SRCS
     customtoolbutton.cpp
     customcheckbox.cpp
     customtooltip.cpp
-    displayerrorswidget.cpp
     drivemenubarwidget.cpp
     drivepreferenceswidget.cpp
     driveswidget.cpp
     driveselectionwidget.cpp
     erroritemwidget.cpp
     errorsmenubarwidget.cpp
+    fileexclusiondialog.cpp
     folderinfo.cpp
     halfroundrectwidget.cpp
     mainmenubarwidget.cpp
@@ -148,7 +149,6 @@ set(client_SRCS
     preferencesblocwidget.cpp
     preferenceswidget.cpp
     progressbarwidget.cpp
-    senderrorswidget.cpp
     statusbarwidget.cpp
     synchronizeditem.cpp
     synchronizeditemwidget.cpp

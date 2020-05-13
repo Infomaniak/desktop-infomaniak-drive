@@ -495,21 +495,7 @@ QUrl SynthesisPopover::folderUrl(const QString &folderId, const QString &filePat
 {
     QUrl url = QUrl();
     QString fullFilePath = folderPath(folderId, filePath);
-    if (!fullFilePath.isEmpty()) {
-#ifndef Q_OS_WIN
-        url = QUrl::fromLocalFile(fullFilePath);
-#else
-        // work around a bug in QDesktopServices on Win32, see i-net
-        if (fullFilePath.startsWith(QLatin1String("\\\\")) || fullFilePath.startsWith(QLatin1String("//"))) {
-            url = QUrl::fromLocalFile(QDir::toNativeSeparators(fullFilePath));
-        }
-        else {
-            url = QUrl::fromLocalFile(fullFilePath);
-        }
-#endif
-    }
-
-    return url;
+    return OCC::Utility::getUrlFromLocalPath(fullFilePath);
 }
 
 QString SynthesisPopover::folderPath(const QString &folderId, const QString &filePath)
@@ -528,7 +514,7 @@ void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
 {
     if (!folderId.isEmpty()) {
         QUrl url = folderUrl(folderId, filePath);
-        if (!url.isEmpty()) {
+        if (url.isValid()) {
             if (!QDesktopServices::openUrl(url)) {
                 qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << url.toString();
                 QMessageBox msgBox;
@@ -1374,13 +1360,13 @@ void SynthesisPopover::onLinkActivated(const QString &link)
 {
     if (link == OCC::Utility::learnMoreLink) {
         // TODO: add parameters
-        onOpenParameters();
+        emit openParametersDialog(_currentAccountId);
     }
     else {
         // URL link
         QUrl url = QUrl(link);
         if (url.isValid()) {
-            if (!QDesktopServices::openUrl(QUrl(link))) {
+            if (!QDesktopServices::openUrl(url)) {
                 qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << link;
                 QMessageBox msgBox;
                 msgBox.setText(tr("Unable to open link %1.").arg(link));

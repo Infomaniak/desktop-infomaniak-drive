@@ -17,7 +17,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "displayerrorswidget.h"
+#include "actionwidget.h"
 #include "guiutility.h"
 
 #include <QHBoxLayout>
@@ -26,18 +26,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-static const int boxHMargin= 20;
+static const int boxHMargin= 15;
 static const int boxVMargin = 5;
 static const int boxSpacing = 10;
 
-DisplayErrorsWidget::DisplayErrorsWidget(QWidget *parent)
+ActionWidget::ActionWidget(const QString &path, const QString &text, QWidget *parent)
     : ClickableWidget(parent)
+    , _leftIconPath(path)
+    , _text(text)
     , _backgroundColor(QColor())
-    , _warningIconColor(QColor())
-    , _warningIconSize(QSize())
+    , _leftIconColor(QColor())
+    , _leftIconSize(QSize())
     , _actionIconColor(QColor())
     , _actionIconSize(QSize())
-    , _warningIconLabel(nullptr)
+    , _leftIconLabel(nullptr)
     , _actionIconLabel(nullptr)
 {
     setContentsMargins(0, 0, 0, 0);
@@ -47,25 +49,24 @@ DisplayErrorsWidget::DisplayErrorsWidget(QWidget *parent)
     hbox->setSpacing(boxSpacing);
     setLayout(hbox);
 
-    _warningIconLabel = new QLabel(this);
-    hbox->addWidget(_warningIconLabel);
+    _leftIconLabel = new QLabel(this);
+    hbox->addWidget(_leftIconLabel);
 
-    QLabel *errorTextLabel = new QLabel(tr("Some files couldn't be synchronized"), this);
-    errorTextLabel->setObjectName("errorTextLabel");
-    hbox->addWidget(errorTextLabel);
+    QLabel *leftTextLabel = new QLabel(_text, this);
+    leftTextLabel->setObjectName("textLabel");
+    hbox->addWidget(leftTextLabel);
     hbox->addStretch();
 
     _actionIconLabel = new QLabel(this);
     hbox->addWidget(_actionIconLabel);
 
-    connect(this, &DisplayErrorsWidget::warningIconSizeChanged, this, &DisplayErrorsWidget::onWarningIconSizeChanged);
-    connect(this, &DisplayErrorsWidget::warningIconColorChanged, this, &DisplayErrorsWidget::onWarningIconColorChanged);
-    connect(this, &DisplayErrorsWidget::actionIconColorChanged, this, &DisplayErrorsWidget::onActionIconColorChanged);
-    connect(this, &DisplayErrorsWidget::actionIconSizeChanged, this, &DisplayErrorsWidget::onActionIconSizeChanged);
-    connect(this, &ClickableWidget::clicked, this, &DisplayErrorsWidget::onClick);
+    connect(this, &ActionWidget::leftIconSizeChanged, this, &ActionWidget::onLeftIconSizeChanged);
+    connect(this, &ActionWidget::leftIconColorChanged, this, &ActionWidget::onLeftIconColorChanged);
+    connect(this, &ActionWidget::actionIconColorChanged, this, &ActionWidget::onActionIconColorChanged);
+    connect(this, &ActionWidget::actionIconSizeChanged, this, &ActionWidget::onActionIconSizeChanged);
 }
 
-void DisplayErrorsWidget::paintEvent(QPaintEvent *event)
+void ActionWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
@@ -80,15 +81,15 @@ void DisplayErrorsWidget::paintEvent(QPaintEvent *event)
     painter.drawPath(painterPath);
 }
 
-void DisplayErrorsWidget::setWarningIcon()
+void ActionWidget::setLeftIcon()
 {
-    if (_warningIconLabel && _warningIconSize != QSize() && _warningIconColor != QColor()) {
-        _warningIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/warning.svg", _warningIconColor)
-                                     .pixmap(_warningIconSize));
+    if (_leftIconLabel && _leftIconSize != QSize() && _leftIconColor != QColor()) {
+        _leftIconLabel->setPixmap(OCC::Utility::getIconWithColor(_leftIconPath, _leftIconColor)
+                                     .pixmap(_leftIconSize));
     }
 }
 
-void DisplayErrorsWidget::setActionIcon()
+void ActionWidget::setActionIcon()
 {
     if (_actionIconLabel && _actionIconSize != QSize() && _actionIconColor != QColor()) {
         _actionIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-right.svg", _actionIconColor)
@@ -96,29 +97,24 @@ void DisplayErrorsWidget::setActionIcon()
     }
 }
 
-void DisplayErrorsWidget::onWarningIconSizeChanged()
+void ActionWidget::onLeftIconSizeChanged()
 {
-    setWarningIcon();
+    setLeftIcon();
 }
 
-void DisplayErrorsWidget::onWarningIconColorChanged()
+void ActionWidget::onLeftIconColorChanged()
 {
-    setWarningIcon();
+    setLeftIcon();
 }
 
-void DisplayErrorsWidget::onActionIconColorChanged()
+void ActionWidget::onActionIconColorChanged()
 {
     setActionIcon();
 }
 
-void DisplayErrorsWidget::onActionIconSizeChanged()
+void ActionWidget::onActionIconSizeChanged()
 {
     setActionIcon();
-}
-
-void DisplayErrorsWidget::onClick()
-{
-    emit displayErrors();
 }
 
 }

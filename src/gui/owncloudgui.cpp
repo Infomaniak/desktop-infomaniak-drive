@@ -101,13 +101,13 @@ ownCloudGui::ownCloudGui(Application *parent)
 }
 
 // This should rather be in application.... or rather in ConfigFile?
-void ownCloudGui::slotOpenParametersDialog()
+void ownCloudGui::slotOpenParametersDialog(const QString &accountId)
 {
     // if account is set up, start the configuration wizard.
     if (!AccountManager::instance()->accounts().isEmpty()) {
 #ifdef KDRIVE_V2_NEW_SETTINGS
         if (_parametersDialog.isNull() || QApplication::activeWindow() != _parametersDialog) {
-            slotShowParametersDialog();
+            slotShowParametersDialog(accountId);
         } else {
             _parametersDialog->close();
         }
@@ -1178,11 +1178,14 @@ void ownCloudGui::slotShowGuiMessage(const QString &title, const QString &messag
     msgBox->open();
 }
 
-void ownCloudGui::slotShowParametersDialog()
+void ownCloudGui::slotShowParametersDialog(const QString &accountId)
 {
 #ifdef KDRIVE_V2_NEW_SETTINGS
     if (_parametersDialog.isNull()) {
         setupParametersDialog();
+    }
+    if (accountId != QString()) {
+        _parametersDialog->openErrorPage(accountId);
     }
     raiseDialog(_parametersDialog);
 #else

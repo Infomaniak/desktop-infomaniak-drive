@@ -494,3 +494,22 @@ bool Utility::isDarkTheme()
 
     return darkTheme;
 }
+
+QUrl Utility::getUrlFromLocalPath(const QString &path)
+{
+    QUrl url = QUrl();
+    if (!path.isEmpty()) {
+#ifndef Q_OS_WIN
+        url = QUrl::fromLocalFile(path);
+#else
+        // work around a bug in QDesktopServices on Win32, see i-net
+        if (fullFilePath.startsWith(QLatin1String("\\\\")) || fullFilePath.startsWith(QLatin1String("//"))) {
+            url = QUrl::fromLocalFile(QDir::toNativeSeparators(fullFilePath));
+        }
+        else {
+            url = QUrl::fromLocalFile(fullFilePath);
+        }
+#endif
+    }
+    return url;
+}

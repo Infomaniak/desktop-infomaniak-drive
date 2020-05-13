@@ -27,48 +27,49 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-class SendErrorsWidget : public ClickableWidget
+class ActionWidget : public ClickableWidget
 {
     Q_OBJECT
 
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
-    Q_PROPERTY(QColor help_icon_color READ helpIconColor WRITE setHelpIconColor)
-    Q_PROPERTY(QSize help_icon_size READ helpIconSize WRITE setHelpIconSize)
+    Q_PROPERTY(QColor left_icon_color READ leftIconColor WRITE setLeftIconColor)
+    Q_PROPERTY(QSize left_icon_size READ leftIconSize WRITE setLeftIconSize)
     Q_PROPERTY(QColor action_icon_color READ actionIconColor WRITE setActionIconColor)
     Q_PROPERTY(QSize action_icon_size READ actionIconSize WRITE setActionIconSize)
 
 public:
-    explicit SendErrorsWidget(QWidget *parent = nullptr);
+    explicit ActionWidget(const QString &path, const QString &text, QWidget *parent = nullptr);
 
 signals:
-    void helpIconColorChanged();
-    void helpIconSizeChanged();
+    void leftIconColorChanged();
+    void leftIconSizeChanged();
     void actionIconColorChanged();
     void actionIconSizeChanged();
-    void displayHelp();
 
 private:
+    QString _leftIconPath;
+    QString _text;
     QColor _backgroundColor;
-    QColor _helpIconColor;
-    QSize _helpIconSize;
+    QColor _leftIconColor;
+    QSize _leftIconSize;
     QColor _actionIconColor;
     QSize _actionIconSize;
-    QLabel *_helpIconLabel;
+    QLabel *_leftIconLabel;
     QLabel *_actionIconLabel;
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(QColor color) { _backgroundColor = color; }
 
-    inline QColor helpIconColor() const { return _helpIconColor; }
-    inline void setHelpIconColor(QColor color) {
-        _helpIconColor = color;
-        emit helpIconColorChanged();
+    inline QColor leftIconColor() const { return _leftIconColor; }
+    inline void setLeftIconColor(QColor color) {
+        _leftIconColor = color;
+        emit leftIconColorChanged();
     }
 
-    inline QSize helpIconSize() const { return _helpIconSize; }
-    inline void setHelpIconSize(QSize size) {
-        _helpIconSize = size;
-        emit helpIconSizeChanged();
+    inline QSize leftIconSize() const { return _leftIconSize; }
+    inline void setLeftIconSize(QSize size) {
+        _leftIconSize = size;
+        emit leftIconSizeChanged();
     }
 
     inline QColor actionIconColor() const { return _actionIconColor; }
@@ -85,16 +86,16 @@ private:
 
     void paintEvent(QPaintEvent *event) override;
 
-    void setHelpIcon();
+    void setLeftIcon();
     void setActionIcon();
 
 private slots:
-    void onHelpIconSizeChanged();
-    void onHelpIconColorChanged();
+    void onLeftIconSizeChanged();
+    void onLeftIconColorChanged();
     void onActionIconColorChanged();
     void onActionIconSizeChanged();
-    void onClick();
 };
 
 }
+
 

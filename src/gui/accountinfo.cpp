@@ -146,10 +146,6 @@ QString AccountInfo::folderPath(const QString &folderId, const QString &filePath
     if (folderInfoIt != _folderMap.end()) {
         if (folderInfoIt->second) {
             fullFilePath = folderInfoIt->second->_path + filePath;
-            if (!QFile::exists(fullFilePath)) {
-                qCWarning(lcAccountInfo) << "Invalid path " << fullFilePath;
-                fullFilePath = QString();
-            }
         }
         else {
             qCDebug(lcAccountInfo) << "Null pointer!";
