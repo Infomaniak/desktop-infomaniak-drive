@@ -308,6 +308,11 @@ KDC--CustomToolButton#helpButton
     qproperty-base_icon_size: 24px;
 }
 
+KDC--CustomToolButton#exitButton
+{
+    qproperty-base_icon_size: 15px;
+}
+
 /*****************************/
 /* KDC--DriveSelectionWidget */
 /*****************************/
@@ -837,3 +842,44 @@ KDC--ActionWidget#sendLogsWidget QLabel#textLabel
     font-weight: 450; /* medium */
     font-size: 12px;
 }
+
+/****************************/
+/* KDC--CustomSystemBar */
+/****************************/
+
+KDC--CustomSystemBar
+{
+    background-color: #FFFFFF;
+    min-height: 40px;
+    max-height: 40px;
+}
+
+/****************************/
+/* KDC--FileExclusionDialog */
+/****************************/
+
+KDC--FileExclusionDialog
+{
+    min-width: 625px;
+    max-width: 625px;
+    min-height: 505px;
+    max-height: 505px;
+    qproperty-background_color: #FFFFFF;
+}
+
+KDC--FileExclusionDialog QLabel#titleLabel
+{
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 18px;
+}
+
+KDC--FileExclusionDialog QLabel#descriptionLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 12px;
+}
+

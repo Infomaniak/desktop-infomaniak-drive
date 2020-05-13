@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "preferenceswidget.h"
 #include "preferencesblocwidget.h"
 #include "customcheckbox.h"
+#include "fileexclusiondialog.h"
 #include "configfile.h"
 #include "common/utility.h"
 #include "theme.h"
@@ -270,7 +271,8 @@ void PreferencesWidget::onLaunchAtStartupCheckBoxClicked(bool checked)
 
 void PreferencesWidget::onFilesToExcludeWidgetClicked()
 {
-
+    FileExclusionDialog *dialog = new FileExclusionDialog(this);
+    dialog->exec();
 }
 
 void PreferencesWidget::onProxyServerWidgetClicked()

@@ -35,6 +35,7 @@ static const int boxHMargin= 15;
 static const int boxVMargin = 15;
 static const int boxHSpacing = 10;
 static const int boxVSpacing = 10;
+static const int shadowBlurRadius = 20;
 static const QSize statusIconSize = QSize(15, 15);
 static const QString dateFormat = "d MMM yyyy - HH:mm";
 
@@ -120,6 +121,12 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     fileDateLabel->setText(_item.dateTime().toString(dateFormat));
     vBoxRight->addWidget(fileDateLabel);
     vBoxRight->addStretch();
+
+    // Shadow
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
+    effect->setBlurRadius(shadowBlurRadius);
+    effect->setOffset(0);
+    setGraphicsEffect(effect);
 
     connect(filePathLabel, &QLabel::linkActivated, this, &ErrorItemWidget::onLinkActivated);
 }
