@@ -125,5 +125,10 @@
         <file>resources/icons/actions/switch-off.svg</file>
         <file>resources/icons/actions/switch-on.svg</file>
         <file>resources/icons/actions/switch-disable.svg</file>
+        <file>resources/icons/actions/checkbox-checked.svg</file>
+        <file>resources/icons/actions/checkbox-indeterminate.svg</file>
+        <file>resources/icons/actions/checkbox-unchecked.svg</file>
+        <file>resources/icons/actions/radio-checked.svg</file>
+        <file>resources/icons/actions/radio-unchecked.svg</file>
     </qresource>
 </RCC>

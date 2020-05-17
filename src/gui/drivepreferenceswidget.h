@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include "customcheckbox.h"
+#include "customswitch.h"
 #include "actionwidget.h"
 #include "accountinfo.h"
 #include "folderman.h"
@@ -60,19 +60,19 @@ private:
     ActionWidget *_displayErrorsWidget;
     QProgressBar *_progressBar;
     QLabel *_progressLabel;
-    CustomCheckBox *_smartSyncCheckBox;
+    CustomSwitch *_smartSyncSwitch;
     QLabel *_smartSyncDescriptionLabel;
     QWidget *_locationWidget;
     QBoxLayout *_locationLayout;
     QLabel *_accountAvatarLabel;
     QLabel *_accountNameLabel;
     QLabel *_accountMailLabel;
-    CustomCheckBox *_notificationsCheckBox;
+    CustomSwitch *_notificationsSwitch;
 
     inline QColor locationIconsColor() const { return _locationIconsColor; }
     inline void setLocationIconsColor(const QColor& color) { _locationIconsColor = color; }
 
-    void updateSmartSyncCheckBoxState();
+    void updateSmartSyncSwitchState();
     void resetDriveLocation();
     void updateDriveLocation();
     void updateAccountInfo();
@@ -88,11 +88,11 @@ private:
 private slots:
     void onDisplaySmartSyncInfo(const QString &link);
     void onErrorsWidgetClicked();
-    void onSmartSyncCheckBoxClicked(bool checked = false);
+    void onSmartSyncSwitchClicked(bool checked = false);
     void onDriveFoldersWidgetClicked();
     void onLocalFoldersWidgetClicked();
     void onOtherDevicesWidgetClicked();
-    void onNotificationsCheckBoxClicked(bool checked = false);
+    void onNotificationsSwitchClicked(bool checked = false);
     void onErrorAdded();
 };
 

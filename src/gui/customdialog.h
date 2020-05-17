@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QDialog>
 #include <QPaintEvent>
 #include <QPoint>
+#include <QStandardItem>
 #include <QVBoxLayout>
 
 namespace KDC {
@@ -32,23 +33,39 @@ class CustomDialog : public QDialog
     Q_OBJECT
 
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
+    Q_PROPERTY(QColor action_icon_color READ actionIconColor WRITE setActionIconColor)
+    Q_PROPERTY(QSize action_icon_size READ actionIconSize WRITE setActionIconSize)
 
 public:
+    static const int actionIconPathRole = Qt::UserRole;
+
     explicit CustomDialog(QWidget *parent = nullptr);
 
     inline QVBoxLayout *mainLayout() const { return _layout; }
 
 signals:
     void exit();
+    void actionIconSet();
+
+protected:
+    inline QColor actionIconColor() const { return _actionIconColor; }
+    inline QSize actionIconSize() const { return _actionIconSize; }
 
 private:
     QColor _backgroundColor;
+    QColor _actionIconColor;
+    QSize _actionIconSize;
     QVBoxLayout *_layout;
+
+    void paintEvent(QPaintEvent *event) override;
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
 
-    void paintEvent(QPaintEvent *event) override;
+    void setActionIconColor(const QColor &color);
+    void setActionIconSize(const QSize &size);
+
+    virtual void setActionIcon() {};
 
 private slots:
     void onDrag(const QPoint &move);

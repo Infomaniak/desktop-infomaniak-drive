@@ -32,6 +32,11 @@ CustomCheckBox::CustomCheckBox(QWidget *parent)
     , _toolTipDuration(defaultToolTipDuration)
     , _customToolTip(nullptr)
 {
+    setStyleSheet("QCheckBox::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
+                  "QCheckBox::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
+                  "QCheckBox::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
+                  "QCheckBox::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }");
+
     connect(this, &CustomCheckBox::clicked, this, &CustomCheckBox::onClicked);
 }
 

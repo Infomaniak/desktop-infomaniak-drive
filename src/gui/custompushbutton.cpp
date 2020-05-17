@@ -20,55 +20,69 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "custompushbutton.h"
 #include "guiutility.h"
 
+#include <QHBoxLayout>
+#include <QSizePolicy>
+#include <QWidgetAction>
+
 namespace KDC {
 
-CustomPushButton::CustomPushButton(QWidget *parent)
+static const int boxHMargin= 10;
+static const int boxVMargin = 5;
+static const int boxSpacing = 10;
+
+CustomPushButton::CustomPushButton(const QString &path, const QString &text, QWidget *parent)
     : QPushButton(parent)
-    , _iconPath(QString())
+    , _iconPath(path)
+    , _text(text)
+    , _iconSize(QSize())
     , _iconColor(QColor())
-    , _iconColorChecked(QColor())
+    , _iconLabel(nullptr)
+    , _textLabel(nullptr)
 {
-    setFlat(true);
-    setCheckable(true);
+    setContentsMargins(0, 0, 0, 0);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
+    QHBoxLayout *hbox = new QHBoxLayout(this);
+    hbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    hbox->setSpacing(boxSpacing);
+    setLayout(hbox);
+
+    _iconLabel = new QLabel(this);
+    hbox->addWidget(_iconLabel);
+
+    _textLabel = new QLabel(_text, this);
+    _textLabel->setObjectName("textLabel");
+    hbox->addWidget(_textLabel);
+    hbox->addStretch();
+
+    connect(this, &CustomPushButton::iconSizeChanged, this, &CustomPushButton::onIconSizeChanged);
     connect(this, &CustomPushButton::iconColorChanged, this, &CustomPushButton::onIconColorChanged);
-    connect(this, &CustomPushButton::iconColorCheckedChanged, this, &CustomPushButton::onIconColorCheckedChanged);
-    connect(this, &CustomPushButton::toggled, this, &CustomPushButton::onToggle);
 }
 
-CustomPushButton::CustomPushButton(const QString &text, QWidget *parent)
-    : CustomPushButton(parent)
+QSize CustomPushButton::sizeHint() const
 {
-    setText(text);
+    return QSize(_iconLabel->sizeHint().width()
+                 + _textLabel->sizeHint().width()
+                 + boxSpacing
+                 + 2 * boxHMargin,
+                 QPushButton::sizeHint().height());
 }
 
-bool CustomPushButton::event(QEvent *event)
+void CustomPushButton::onIconSizeChanged()
 {
-    if (event->type() == QEvent::MouseButtonPress
-            || event->type() == QEvent::MouseButtonDblClick
-            || event->type() == QEvent::KeyPress) {
-        if (isChecked()) {
-            event->ignore();
-            return true;
-        }
-    }
-    return QPushButton::event(event);
+    setIcon();
 }
 
 void CustomPushButton::onIconColorChanged()
 {
-    onToggle(isChecked());
+    setIcon();
 }
 
-void CustomPushButton::onIconColorCheckedChanged()
+void CustomPushButton::setIcon()
 {
-    onToggle(isChecked());
-}
-
-void CustomPushButton::onToggle(bool checked)
-{
-    if (!_iconPath.isEmpty()) {
-        setIcon(OCC::Utility::getIconWithColor(_iconPath, checked ? _iconColorChecked : _iconColor));
+    if (_iconLabel && _iconSize != QSize() && _iconColor != QColor()) {
+        _iconLabel->setPixmap(OCC::Utility::getIconWithColor(_iconPath, _iconColor)
+                              .pixmap(_iconSize));
     }
 }
 

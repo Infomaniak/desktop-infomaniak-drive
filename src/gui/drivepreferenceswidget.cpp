@@ -56,14 +56,14 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     , _displayErrorsWidget(nullptr)
     , _progressBar(nullptr)
     , _progressLabel(nullptr)
-    , _smartSyncCheckBox(nullptr)
+    , _smartSyncSwitch(nullptr)
     , _smartSyncDescriptionLabel(nullptr)
     , _locationWidget(nullptr)
     , _locationLayout(nullptr)
     , _accountAvatarLabel(nullptr)
     , _accountNameLabel(nullptr)
     , _accountMailLabel(nullptr)
-    , _notificationsCheckBox(nullptr)
+    , _notificationsSwitch(nullptr)
 {
     setContentsMargins(0, 0, 0, 0);
 
@@ -82,7 +82,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
      *          smartSyncBox
      *              smartSync1HBox
      *                  smartSyncLabel
-     *                  _smartSyncCheckBox
+     *                  _smartSyncSwitch
      *              _smartSyncDescriptionLabel
      *          driveFoldersWidget
      *              driveFoldersVBox
@@ -112,7 +112,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
      *          notificationsBox
      *              notifications1HBox
      *                  notificationsTitleLabel
-     *                  _notificationsCheckBox
+     *                  _notificationsSwitch
      *              notifications2HBox
      *                  notificationsDescriptionLabel
      */
@@ -176,10 +176,10 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
         smartSync1HBox->addWidget(smartSyncLabel);
         smartSync1HBox->addStretch();
 
-        _smartSyncCheckBox = new CustomCheckBox(this);
-        _smartSyncCheckBox->setLayoutDirection(Qt::RightToLeft);
-        _smartSyncCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
-        smartSync1HBox->addWidget(_smartSyncCheckBox);
+        _smartSyncSwitch = new CustomSwitch(this);
+        _smartSyncSwitch->setLayoutDirection(Qt::RightToLeft);
+        _smartSyncSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
+        smartSync1HBox->addWidget(_smartSyncSwitch);
 
         _smartSyncDescriptionLabel = new QLabel(this);
         _smartSyncDescriptionLabel->setObjectName("description");
@@ -294,11 +294,11 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     QLabel *notificationsTitleLabel = new QLabel(tr("Disable the notifications"), this);
     notifications1HBox->addWidget(notificationsTitleLabel);
 
-    _notificationsCheckBox = new CustomCheckBox(this);
-    _notificationsCheckBox->setLayoutDirection(Qt::RightToLeft);
-    _notificationsCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
-    _notificationsCheckBox->setCheckState(cfg.monoIcons() ? Qt::Checked : Qt::Unchecked);
-    notifications1HBox->addWidget(_notificationsCheckBox);
+    _notificationsSwitch = new CustomSwitch(this);
+    _notificationsSwitch->setLayoutDirection(Qt::RightToLeft);
+    _notificationsSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
+    _notificationsSwitch->setCheckState(cfg.monoIcons() ? Qt::Checked : Qt::Unchecked);
+    notifications1HBox->addWidget(_notificationsSwitch);
 
     QHBoxLayout *notifications2HBox = new QHBoxLayout();
     notifications2HBox->setContentsMargins(0, 0, 0, 0);
@@ -314,14 +314,14 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     vBox->addStretch();
 
     connect(_displayErrorsWidget, &ActionWidget::clicked, this, &DrivePreferencesWidget::onErrorsWidgetClicked);
-    if (_smartSyncCheckBox && _smartSyncDescriptionLabel) {
-        connect(_smartSyncCheckBox, &CustomCheckBox::clicked, this, &DrivePreferencesWidget::onSmartSyncCheckBoxClicked);
+    if (_smartSyncSwitch && _smartSyncDescriptionLabel) {
+        connect(_smartSyncSwitch, &CustomSwitch::clicked, this, &DrivePreferencesWidget::onSmartSyncSwitchClicked);
         connect(_smartSyncDescriptionLabel, &QLabel::linkActivated, this, &DrivePreferencesWidget::onDisplaySmartSyncInfo);
     }
     connect(driveFoldersWidget, &ClickableWidget::clicked, this, &DrivePreferencesWidget::onDriveFoldersWidgetClicked);
     connect(localFoldersWidget, &ClickableWidget::clicked, this, &DrivePreferencesWidget::onLocalFoldersWidgetClicked);
     connect(otherDevicesWidget, &ClickableWidget::clicked, this, &DrivePreferencesWidget::onOtherDevicesWidgetClicked);
-    connect(_notificationsCheckBox, &CustomCheckBox::clicked, this, &DrivePreferencesWidget::onNotificationsCheckBoxClicked);
+    connect(_notificationsSwitch, &CustomSwitch::clicked, this, &DrivePreferencesWidget::onNotificationsSwitchClicked);
     connect(this, &DrivePreferencesWidget::errorAdded, this, &DrivePreferencesWidget::onErrorAdded);
 }
 
@@ -331,10 +331,10 @@ void DrivePreferencesWidget::setAccount(const QString &accountId, const AccountI
     _accountInfo = accountInfo;
     _displayErrorsWidget->setVisible(errors);
     setUsedSize(_accountInfo->_totalSize, _accountInfo->_used);
-    updateSmartSyncCheckBoxState();
+    updateSmartSyncSwitchState();
     updateDriveLocation();
     updateAccountInfo();
-    _notificationsCheckBox->setChecked(OCC::FolderMan::instance()->notificationsDisabled(_accountId));
+    _notificationsSwitch->setChecked(OCC::FolderMan::instance()->notificationsDisabled(_accountId));
 }
 
 void DrivePreferencesWidget::reset()
@@ -343,12 +343,12 @@ void DrivePreferencesWidget::reset()
     _accountInfo = nullptr;
     _displayErrorsWidget->setVisible(false);
     setUsedSize(0, 0);
-    _smartSyncCheckBox->setChecked(false);
+    _smartSyncSwitch->setChecked(false);
     resetDriveLocation();
     _accountAvatarLabel->setPixmap(QPixmap());
     _accountNameLabel->setText(QString());
     _accountMailLabel->setText(QString());
-    _notificationsCheckBox->setChecked(false);
+    _notificationsSwitch->setChecked(false);
 }
 
 void DrivePreferencesWidget::setUsedSize(qint64 totalSize, qint64 size)
@@ -372,9 +372,9 @@ void DrivePreferencesWidget::setUsedSize(qint64 totalSize, qint64 size)
     }
 }
 
-void DrivePreferencesWidget::updateSmartSyncCheckBoxState()
+void DrivePreferencesWidget::updateSmartSyncSwitchState()
 {
-    if (_smartSyncCheckBox) {
+    if (_smartSyncSwitch) {
         bool smartSyncAvailable = false;
         bool oneDoesntSupportsVirtualFiles = false;
         bool oneHasVfsOnOffSwitchPending = false;
@@ -386,10 +386,10 @@ void DrivePreferencesWidget::updateSmartSyncCheckBoxState()
             }
         }
         smartSyncAvailable = oneDoesntSupportsVirtualFiles && !oneHasVfsOnOffSwitchPending;
-        _smartSyncCheckBox->setCheckState(smartSyncAvailable ? Qt::Unchecked : Qt::Checked);
-        _smartSyncCheckBox->setEnabled(!oneHasVfsOnOffSwitchPending);
+        _smartSyncSwitch->setCheckState(smartSyncAvailable ? Qt::Unchecked : Qt::Checked);
+        _smartSyncSwitch->setEnabled(!oneHasVfsOnOffSwitchPending);
         if (!oneHasVfsOnOffSwitchPending) {
-            _smartSyncCheckBox->setToolTip("");
+            _smartSyncSwitch->setToolTip("");
         }
     }
 }
@@ -549,7 +549,7 @@ void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QM
 
     OCC::FolderMan::instance()->scheduleFolder(folder);
 
-    updateSmartSyncCheckBoxState();
+    updateSmartSyncSwitchState();
 }
 
 void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection)
@@ -571,7 +571,7 @@ void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, std::shared_ptr<Q
 
     OCC::FolderMan::instance()->scheduleFolder(folder);
 
-    updateSmartSyncCheckBoxState();
+    updateSmartSyncSwitchState();
 }
 
 void DrivePreferencesWidget::insertIconToLocation(int position, const QString &iconPath, const QSize &size)
@@ -610,17 +610,17 @@ void DrivePreferencesWidget::onErrorsWidgetClicked()
     emit displayErrors(_accountId);
 }
 
-void DrivePreferencesWidget::onSmartSyncCheckBoxClicked(bool checked)
+void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
 {
     if (checked) {
         askEnableSmartSync([this](bool enable) {
             if (!enable) {
-                _smartSyncCheckBox->setCheckState(Qt::Unchecked);
+                _smartSyncSwitch->setCheckState(Qt::Unchecked);
                 return;
             }
 
-            _smartSyncCheckBox->setEnabled(false);
-            _smartSyncCheckBox->setToolTip(tr("Smart synchronization activation in progress"));
+            _smartSyncSwitch->setEnabled(false);
+            _smartSyncSwitch->setToolTip(tr("Smart synchronization activation in progress"));
             for (auto folderInfoIt : _accountInfo->_folderMap) {
                 OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoIt.first);
                 if (folder) {
@@ -641,12 +641,12 @@ void DrivePreferencesWidget::onSmartSyncCheckBoxClicked(bool checked)
     else {
         askDisableSmartSync([this](bool enable) {
             if (!enable) {
-                _smartSyncCheckBox->setCheckState(Qt::Checked);
+                _smartSyncSwitch->setCheckState(Qt::Checked);
                 return;
             }
 
-            _smartSyncCheckBox->setEnabled(false);
-            _smartSyncCheckBox->setToolTip(tr("Smart synchronization deactivation in progress"));
+            _smartSyncSwitch->setEnabled(false);
+            _smartSyncSwitch->setToolTip(tr("Smart synchronization deactivation in progress"));
             for (auto folderInfoIt : _accountInfo->_folderMap) {
                 OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoIt.first);
                 if (folder) {
@@ -681,7 +681,7 @@ void DrivePreferencesWidget::onOtherDevicesWidgetClicked()
 
 }
 
-void DrivePreferencesWidget::onNotificationsCheckBoxClicked(bool checked)
+void DrivePreferencesWidget::onNotificationsSwitchClicked(bool checked)
 {
     OCC::FolderMan::instance()->setNotificationsDisabled(_accountId, checked);
 }

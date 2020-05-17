@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include "custompushbutton.h"
+#include "customtogglepushbutton.h"
 
 #include <QColor>
 #include <QBoxLayout>
@@ -38,7 +38,7 @@ class ButtonsBarWidget : public QWidget
 public:
     explicit ButtonsBarWidget(QWidget *parent = nullptr);
 
-    void insertButton(int position, CustomPushButton *button);
+    void insertButton(int position, CustomTogglePushButton *button);
     void selectButton(int position);
     inline int position() const { return _position; }
 
@@ -49,7 +49,7 @@ private:
     int _position;
     QColor _backgroundColor;
     QHBoxLayout *_hboxLayout;
-    QList<CustomPushButton*> buttonsList;
+    QList<CustomTogglePushButton*> buttonsList;
 
     void paintEvent(QPaintEvent *event) override;
 

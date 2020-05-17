@@ -19,34 +19,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include <QColor>
+#include "customdialog.h"
+
 #include <QLineEdit>
-#include <QWidget>
+#include <QPushButton>
 
 namespace KDC {
 
-class PreferencesWidget : public QWidget
+class FileExclusionNameDialog : public CustomDialog
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesWidget(QWidget *parent = nullptr);
+    explicit FileExclusionNameDialog(QWidget *parent = nullptr);
 
-signals:
-    void setStyle(bool darkTheme);
+    QString pattern();
 
 private:
-    QLineEdit *_folderConfirmationAmountLineEdit;
+    QLineEdit *_fileNameLineEdit;
+    QPushButton *_validateButton;
 
 private slots:
-    void onFolderConfirmationSwitchClicked(bool checked = false);
-    void onFolderConfirmationAmountEditingFinished();
-    void onDarkThemeSwitchClicked(bool checked = false);
-    void onMonochromeSwitchClicked(bool checked = false);
-    void onLaunchAtStartupSwitchClicked(bool checked = false);
-    void onFilesToExcludeWidgetClicked();
-    void onProxyServerWidgetClicked();
-    void onBandwidthWidgetClicked();
+    void onExit();
+    void onTextEdited(const QString &text);
+    void onValidateButtonTriggered(bool checked = false);
 };
 
 }

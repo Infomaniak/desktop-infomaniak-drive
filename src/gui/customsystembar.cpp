@@ -26,7 +26,7 @@ namespace KDC {
 
 static const int boxHMargin= 20;
 static const int boxVTMargin = 20;
-static const int boxVBMargin = 5;
+static const int boxVBMargin = 2;
 
 CustomSystemBar::CustomSystemBar(QWidget *parent)
     : QWidget(parent)

@@ -20,52 +20,52 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #pragma once
 
 #include <QColor>
-#include <QLabel>
+#include <QEvent>
 #include <QPushButton>
-#include <QSize>
+#include <QString>
 
 namespace KDC {
 
-class CustomPushButton : public QPushButton
+class CustomTogglePushButton : public QPushButton
 {
     Q_OBJECT
 
-    Q_PROPERTY(QSize icon_size READ iconSize WRITE setIconSize)
     Q_PROPERTY(QColor icon_color READ iconColor WRITE setIconColor)
+    Q_PROPERTY(QColor icon_color_checked READ iconColorChecked WRITE setIconColorChecked)
 
 public:
-    explicit CustomPushButton(const QString &path, const QString &text, QWidget *parent = nullptr);
-    QSize sizeHint() const override;
+    explicit CustomTogglePushButton(QWidget *parent = nullptr);
+    explicit CustomTogglePushButton(const QString &text, QWidget *parent = nullptr);
+
+    inline void setIconPath(const QString &path) { _iconPath = path; }
 
 signals:
-    void iconSizeChanged();
     void iconColorChanged();
+    void iconColorCheckedChanged();
 
 private:
     QString _iconPath;
-    QString _text;
-    QSize _iconSize;
     QColor _iconColor;
-    QLabel *_iconLabel;
-    QLabel *_textLabel;
+    QColor _iconColorChecked;
 
-    inline QSize iconSize() const { return _iconSize; }
-    inline void setIconSize(QSize size) {
-        _iconSize = size;
-        emit iconSizeChanged();
-    }
+    bool event(QEvent *event);
 
     inline QColor iconColor() const { return _iconColor; }
-    inline void setIconColor(QColor color) {
+    inline void setIconColor(const QColor& color) {
         _iconColor = color;
         emit iconColorChanged();
     }
 
-    void setIcon();
+    inline QColor iconColorChecked() const { return _iconColorChecked; }
+    inline void setIconColorChecked(const QColor& color) {
+        _iconColorChecked = color;
+        emit iconColorCheckedChanged();
+    }
 
 private slots:
-    void onIconSizeChanged();
     void onIconColorChanged();
+    void onIconColorCheckedChanged();
+    void onToggle(bool checked);
 };
 
 }

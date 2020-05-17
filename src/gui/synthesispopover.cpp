@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "menuitemwidget.h"
 #include "menuwidget.h"
 #include "bottomwidget.h"
-#include "custompushbutton.h"
+#include "customtogglepushbutton.h"
 #include "synchronizeditem.h"
 #include "accountmanager.h"
 #include "folderman.h"
@@ -438,15 +438,15 @@ void SynthesisPopover::initUI()
     _buttonsBarWidget = new ButtonsBarWidget(this);
     mainVBox->addWidget(_buttonsBarWidget);
 
-    CustomPushButton *synchronizedButton = new CustomPushButton(tr("Synchronized"), _buttonsBarWidget);
+    CustomTogglePushButton *synchronizedButton = new CustomTogglePushButton(tr("Synchronized"), _buttonsBarWidget);
     synchronizedButton->setIconPath(":/client/resources/icons/actions/sync.svg");
     _buttonsBarWidget->insertButton(StackedWidget::Synchronized, synchronizedButton);
 
-    CustomPushButton *favoritesButton = new CustomPushButton(tr("Favorites"), _buttonsBarWidget);
+    CustomTogglePushButton *favoritesButton = new CustomTogglePushButton(tr("Favorites"), _buttonsBarWidget);
     favoritesButton->setIconPath(":/client/resources/icons/actions/favorite.svg");
     _buttonsBarWidget->insertButton(StackedWidget::Favorites, favoritesButton);
 
-    CustomPushButton *activityButton = new CustomPushButton(tr("Activity"), _buttonsBarWidget);
+    CustomTogglePushButton *activityButton = new CustomTogglePushButton(tr("Activity"), _buttonsBarWidget);
     activityButton->setIconPath(":/client/resources/icons/actions/notifications.svg");
     _buttonsBarWidget->insertButton(StackedWidget::Activity, activityButton);
 

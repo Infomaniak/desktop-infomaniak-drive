@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "preferenceswidget.h"
 #include "preferencesblocwidget.h"
-#include "customcheckbox.h"
+#include "customswitch.h"
 #include "fileexclusiondialog.h"
 #include "configfile.h"
 #include "common/utility.h"
@@ -52,19 +52,19 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
      *          folderConfirmationBox
      *              folderConfirmation1HBox
      *                  folderConfirmationLabel
-     *                  folderConfirmationCheckBox
+     *                  folderConfirmationSwitch
      *              folderConfirmation2HBox
      *                  _folderConfirmationAmountLineEdit
      *                  folderConfirmationAmountLabel
      *          darkThemeBox
      *              darkThemeLabel
-     *              darkThemeCheckBox
+     *              darkThemeSwitch
      *          monochromeIconsBox
      *              monochromeLabel
-     *              monochromeCheckBox
+     *              monochromeSwitch
      *          launchAtStartupBox
      *              launchAtStartupLabel
-     *              launchAtStartupCheckBox
+     *              launchAtStartupSwitch
      *      advancedLabel
      *      advancedBloc
      *          filesToExcludeWidget
@@ -105,12 +105,12 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     folderConfirmation1HBox->addWidget(folderConfirmationLabel);
     folderConfirmation1HBox->addStretch();
 
-    CustomCheckBox *folderConfirmationCheckBox = new CustomCheckBox(this);
-    folderConfirmationCheckBox->setLayoutDirection(Qt::RightToLeft);
-    folderConfirmationCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
+    CustomSwitch *folderConfirmationSwitch = new CustomSwitch(this);
+    folderConfirmationSwitch->setLayoutDirection(Qt::RightToLeft);
+    folderConfirmationSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
     auto folderLimit = cfg.newBigFolderSizeLimit();
-    folderConfirmationCheckBox->setCheckState(folderLimit.first ? Qt::Checked : Qt::Unchecked);
-    folderConfirmation1HBox->addWidget(folderConfirmationCheckBox);
+    folderConfirmationSwitch->setCheckState(folderLimit.first ? Qt::Checked : Qt::Unchecked);
+    folderConfirmation1HBox->addWidget(folderConfirmationSwitch);
 
     QHBoxLayout *folderConfirmation2HBox = new QHBoxLayout();
     folderConfirmation2HBox->setContentsMargins(0, 0, 0, 0);
@@ -139,18 +139,18 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     darkThemeBox->addWidget(darkThemeLabel);
     darkThemeBox->addStretch();
 
-    CustomCheckBox *darkThemeCheckBox = new CustomCheckBox(this);
-    darkThemeCheckBox->setLayoutDirection(Qt::RightToLeft);
-    darkThemeCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
+    CustomSwitch *darkThemeSwitch = new CustomSwitch(this);
+    darkThemeSwitch->setLayoutDirection(Qt::RightToLeft);
+    darkThemeSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
     if (OCC::Utility::isMac()) {
         bool darkSystray = OCC::Utility::hasDarkSystray();
-        darkThemeCheckBox->setCheckState(darkSystray ? Qt::Checked : Qt::Unchecked);
-        darkThemeCheckBox->setDisabled(true);
+        darkThemeSwitch->setCheckState(darkSystray ? Qt::Checked : Qt::Unchecked);
+        darkThemeSwitch->setDisabled(true);
     }
     else {
-        darkThemeCheckBox->setCheckState(cfg.darkTheme() ? Qt::Checked : Qt::Unchecked);
+        darkThemeSwitch->setCheckState(cfg.darkTheme() ? Qt::Checked : Qt::Unchecked);
     }
-    darkThemeBox->addWidget(darkThemeCheckBox);
+    darkThemeBox->addWidget(darkThemeSwitch);
     generalBloc->addSeparator();
 
     // Monochrome icons activation
@@ -160,11 +160,11 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     monochromeIconsBox->addWidget(monochromeLabel);
     monochromeIconsBox->addStretch();
 
-    CustomCheckBox *monochromeCheckBox = new CustomCheckBox(this);
-    monochromeCheckBox->setLayoutDirection(Qt::RightToLeft);
-    monochromeCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
-    monochromeCheckBox->setCheckState(cfg.monoIcons() ? Qt::Checked : Qt::Unchecked);
-    monochromeIconsBox->addWidget(monochromeCheckBox);
+    CustomSwitch *monochromeSwitch = new CustomSwitch(this);
+    monochromeSwitch->setLayoutDirection(Qt::RightToLeft);
+    monochromeSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
+    monochromeSwitch->setCheckState(cfg.monoIcons() ? Qt::Checked : Qt::Unchecked);
+    monochromeIconsBox->addWidget(monochromeSwitch);
     generalBloc->addSeparator();
 
     // Launch kDrive at startup
@@ -174,20 +174,20 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     launchAtStartupBox->addWidget(launchAtStartupLabel);
     launchAtStartupBox->addStretch();
 
-    CustomCheckBox *launchAtStartupCheckBox = new CustomCheckBox(this);
-    launchAtStartupCheckBox->setLayoutDirection(Qt::RightToLeft);
-    launchAtStartupCheckBox->setAttribute(Qt::WA_MacShowFocusRect, false);
+    CustomSwitch *launchAtStartupSwitch = new CustomSwitch(this);
+    launchAtStartupSwitch->setLayoutDirection(Qt::RightToLeft);
+    launchAtStartupSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
     bool hasSystemLauchAtStartup = OCC::Utility::hasSystemLaunchOnStartup(OCC::Theme::instance()->appName());
     if (hasSystemLauchAtStartup) {
         // Cannot disable autostart because system-wide autostart is enabled
-        launchAtStartupCheckBox->setCheckState(Qt::Checked);
-        launchAtStartupCheckBox->setDisabled(true);
+        launchAtStartupSwitch->setCheckState(Qt::Checked);
+        launchAtStartupSwitch->setDisabled(true);
     }
     else {
         bool hasLaunchAtStartup = OCC::Utility::hasLaunchOnStartup(OCC::Theme::instance()->appName());
-        launchAtStartupCheckBox->setCheckState(hasLaunchAtStartup ? Qt::Checked : Qt::Unchecked);
+        launchAtStartupSwitch->setCheckState(hasLaunchAtStartup ? Qt::Checked : Qt::Unchecked);
     }
-    launchAtStartupBox->addWidget(launchAtStartupCheckBox);
+    launchAtStartupBox->addWidget(launchAtStartupSwitch);
 
     //
     // Advanced bloc
@@ -225,17 +225,17 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
 
     vBox->addStretch();
 
-    connect(folderConfirmationCheckBox, &CustomCheckBox::clicked, this, &PreferencesWidget::onFolderConfirmationCheckBoxClicked);
+    connect(folderConfirmationSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onFolderConfirmationSwitchClicked);
     connect(_folderConfirmationAmountLineEdit, &QLineEdit::editingFinished, this, &PreferencesWidget::onFolderConfirmationAmountEditingFinished);
-    connect(darkThemeCheckBox, &CustomCheckBox::clicked,this, &PreferencesWidget::onDarkThemeCheckBoxClicked);
-    connect(monochromeCheckBox, &CustomCheckBox::clicked, this, &PreferencesWidget::onMonochromeCheckBoxClicked);
-    connect(launchAtStartupCheckBox, &CustomCheckBox::clicked, this, &PreferencesWidget::onLaunchAtStartupCheckBoxClicked);
+    connect(darkThemeSwitch, &CustomSwitch::clicked,this, &PreferencesWidget::onDarkThemeSwitchClicked);
+    connect(monochromeSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onMonochromeSwitchClicked);
+    connect(launchAtStartupSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onLaunchAtStartupSwitchClicked);
     connect(filesToExcludeWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onFilesToExcludeWidgetClicked);
     connect(proxyServerWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onProxyServerWidgetClicked);
     connect(bandwidthWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onBandwidthWidgetClicked);
 }
 
-void PreferencesWidget::onFolderConfirmationCheckBoxClicked(bool checked)
+void PreferencesWidget::onFolderConfirmationSwitchClicked(bool checked)
 {
     OCC::ConfigFile cfg;
     auto folderLimit = cfg.newBigFolderSizeLimit();
@@ -251,19 +251,19 @@ void PreferencesWidget::onFolderConfirmationAmountEditingFinished()
     cfg.setNewBigFolderSizeLimit(folderLimit.first, lValue);
 }
 
-void PreferencesWidget::onDarkThemeCheckBoxClicked(bool checked)
+void PreferencesWidget::onDarkThemeSwitchClicked(bool checked)
 {
     emit setStyle(checked);
 }
 
-void PreferencesWidget::onMonochromeCheckBoxClicked(bool checked)
+void PreferencesWidget::onMonochromeSwitchClicked(bool checked)
 {
     OCC::ConfigFile cfg;
     cfg.setMonoIcons(checked);
     OCC::Theme::instance()->setSystrayUseMonoIcons(checked);
 }
 
-void PreferencesWidget::onLaunchAtStartupCheckBoxClicked(bool checked)
+void PreferencesWidget::onLaunchAtStartupSwitchClicked(bool checked)
 {
     OCC::Theme *theme = OCC::Theme::instance();
     OCC::Utility::setLaunchOnStartup(theme->appName(), theme->appNameGUI(), checked);

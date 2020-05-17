@@ -20,6 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #pragma once
 
 #include "customdialog.h"
+#include "customcheckbox.h"
+
+#include <QTableView>
+#include <QStandardItemModel>
 
 namespace KDC {
 
@@ -30,10 +34,33 @@ class FileExclusionDialog : public CustomDialog
 public:
     explicit FileExclusionDialog(QWidget *parent = nullptr);
 
+    void initUI();
+
 private:
+    enum tableColumn {
+        Pattern = 0,
+        Deletable,
+        Action
+    };
+
+    CustomCheckBox *_hiddenFilesCheckBox;
+    QStandardItemModel *_filesTableModel;
+    QTableView *_filesTableView;
+    QPushButton *_saveButton;
+    bool _needToSave;
+
+    void readIgnoreFile(const QString &file, bool global);
+    void addPattern(const QString &pattern, bool deletable, bool readOnly, bool global,
+        const QStringList &skippedLines = QStringList());
+    void setActionIcon();
+    void setActionIcon(QStandardItem *item, const QString &actionIconPath);
+    void setNeedToSave(bool value);
 
 private slots:
     void onExit();
+    void onAddFileButtonTriggered(bool checked = false);
+    void onTableViewClicked(const QModelIndex &index);
+    void onSaveButtonTriggered(bool checked = false);
 };
 
 }

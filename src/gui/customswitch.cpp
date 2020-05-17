@@ -17,37 +17,17 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#pragma once
-
-#include <QColor>
-#include <QLineEdit>
-#include <QWidget>
+#include "customswitch.h"
 
 namespace KDC {
 
-class PreferencesWidget : public QWidget
+CustomSwitch::CustomSwitch(QWidget *parent)
+    : CustomCheckBox(parent)
 {
-    Q_OBJECT
-
-public:
-    explicit PreferencesWidget(QWidget *parent = nullptr);
-
-signals:
-    void setStyle(bool darkTheme);
-
-private:
-    QLineEdit *_folderConfirmationAmountLineEdit;
-
-private slots:
-    void onFolderConfirmationSwitchClicked(bool checked = false);
-    void onFolderConfirmationAmountEditingFinished();
-    void onDarkThemeSwitchClicked(bool checked = false);
-    void onMonochromeSwitchClicked(bool checked = false);
-    void onLaunchAtStartupSwitchClicked(bool checked = false);
-    void onFilesToExcludeWidgetClicked();
-    void onProxyServerWidgetClicked();
-    void onBandwidthWidgetClicked();
-};
-
+    setStyleSheet("QCheckBox::indicator:checked { image: url(:/client/resources/icons/actions/switch-on.svg); }"
+                  "QCheckBox::indicator:unchecked { image: url(:/client/resources/icons/actions/switch-off.svg); }"
+                  "QCheckBox::indicator:checked:disabled { image: url(:/client/resources/icons/actions/switch-disabled.svg); }"
+                  "QCheckBox::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/switch-disabled.svg); }");
 }
 
+}

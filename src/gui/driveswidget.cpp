@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "driveswidget.h"
-#include "adddrivewidget.h"
+#include "custompushbutton.h"
 #include "accountitemwidget.h"
 
 #include <QBoxLayout>
@@ -42,12 +42,14 @@ DrivesWidget::DrivesWidget(QWidget *parent)
     mainVBox->setSpacing(0);
     setLayout(mainVBox);
 
-    // Add drive widget
+    // Add drive button
     QHBoxLayout *addDriveHBox = new QHBoxLayout();
     addDriveHBox->setContentsMargins(addDriveBoxHMargin, addDriveBoxVMargin, addDriveBoxHMargin, addDriveBoxVMargin);
 
-    AddDriveWidget *addDriveWidget = new AddDriveWidget(this);
-    addDriveHBox->addWidget(addDriveWidget);
+    CustomPushButton *addDriveButton = new CustomPushButton(":/client/resources/icons/actions/add.svg",
+                                                            tr("Add a kDrive"), this);
+    addDriveButton->setObjectName("addDriveButton");
+    addDriveHBox->addWidget(addDriveButton);
     addDriveHBox->addStretch();
     mainVBox->addLayout(addDriveHBox);
 
@@ -59,7 +61,7 @@ DrivesWidget::DrivesWidget(QWidget *parent)
     mainVBox->addWidget(_driveListWidget);
     mainVBox->setStretchFactor(_driveListWidget, 1);
 
-    connect(addDriveWidget, &AddDriveWidget::addDrive, this, &DrivesWidget::onAddDrive);
+    connect(addDriveButton, &CustomPushButton::clicked, this, &DrivesWidget::onAddDrive);
 }
 
 void DrivesWidget::clear()

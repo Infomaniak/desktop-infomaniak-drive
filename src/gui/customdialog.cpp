@@ -26,21 +26,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QLabel>
 #include <QPainter>
 #include <QPainterPath>
+#include <QTableView>
+#include <QVariant>
 
 namespace KDC {
 
 static const int cornerRadius = 5;
 static const int hMargin= 20;
 static const int vMargin = 5;
+static const int mainBoxHMargin= 0;
+static const int mainBoxVTMargin = 0;
+static const int mainBoxVBMargin = 40;
 static const int shadowBlurRadius = 20;
-static const int boxHMargin= 40;
-static const int boxVTMargin = 0;
-static const int boxVBMargin = 40;
-static const int boxSpacing = 15;
 
 CustomDialog::CustomDialog(QWidget *parent)
     : QDialog(parent)
     , _backgroundColor(QColor())
+    , _actionIconColor(QColor())
+    , _actionIconSize(QSize())
     , _layout(nullptr)
 {
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
@@ -58,8 +61,9 @@ CustomDialog::CustomDialog(QWidget *parent)
     mainVBox->addWidget(systemBar);
 
     _layout = new QVBoxLayout();
-    _layout->setContentsMargins(boxHMargin, boxVTMargin, boxHMargin, boxVBMargin);
-    _layout->setSpacing(boxSpacing);
+    _layout->setContentsMargins(mainBoxHMargin, mainBoxVTMargin, mainBoxHMargin, mainBoxVBMargin);
+    _layout->setSpacing(0);
+
     mainVBox->addLayout(_layout);
     mainVBox->setStretchFactor(_layout, 1);
 
@@ -71,6 +75,22 @@ CustomDialog::CustomDialog(QWidget *parent)
 
     connect(systemBar, &CustomSystemBar::drag, this, &CustomDialog::onDrag);
     connect(systemBar, &CustomSystemBar::exit, this, &CustomDialog::onExit);
+}
+
+void CustomDialog::setActionIconColor(const QColor &color)
+{
+    _actionIconColor = color;
+    if (_actionIconColor != QColor() && _actionIconSize != QSize()) {
+        setActionIcon();
+    }
+}
+
+void CustomDialog::setActionIconSize(const QSize &size)
+{
+    _actionIconSize = size;
+    if (_actionIconColor != QColor() && _actionIconSize != QSize()) {
+        setActionIcon();
+    }
 }
 
 void CustomDialog::paintEvent(QPaintEvent *event)
