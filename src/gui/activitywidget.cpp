@@ -624,9 +624,10 @@ void ActivitySettings::slotSendDebugData()
     int num = 0;
     foreach (AccountStatePtr account, accountList) {
         num++;
-        _debugReporter->setReportData(QString("Drive %1").arg(num).toUtf8(), account->account()->driveName().toUtf8());
-        _debugReporter->setReportData(QString("User id %1").arg(num).toUtf8(), account->account()->davUser().toUtf8());
-        _debugReporter->setReportData(QString("User name %1").arg(num).toUtf8(), account->account()->davDisplayName().toUtf8());
+        _debugReporter->setReportData(DebugReporter::MapKeyType::DriveId, num, account->account()->driveId().toUtf8());
+        _debugReporter->setReportData(DebugReporter::MapKeyType::DriveName, num, account->account()->driveName().toUtf8());
+        _debugReporter->setReportData(DebugReporter::MapKeyType::UserId, num, account->account()->davUser().toUtf8());
+        _debugReporter->setReportData(DebugReporter::MapKeyType::UserName, num, account->account()->davDisplayName().toUtf8());
     }
 
     // Write logs
@@ -637,7 +638,7 @@ void ActivitySettings::slotSendDebugData()
         num = 0;
         foreach (const QString &file, files) {
             num++;
-            _debugReporter->setReportData(QString("Log file %1").arg(num).toUtf8(),
+            _debugReporter->setReportData(DebugReporter::MapKeyType::LogName, num,
                 contents(temporaryFolderLogDirPath + "/" + file),
                 "application/octet-stream",
                 QFileInfo(file).fileName().toUtf8());
@@ -647,7 +648,7 @@ void ActivitySettings::slotSendDebugData()
         qCDebug(lcActivity) << "Empty log dir: " << temporaryFolderLogDirPath;
     }
 
-    connect(_debugReporter, &DebugReporter::done, this, &ActivitySettings::slotDebugReporterDone);
+    connect(_debugReporter, &DebugReporter::sent, this, &ActivitySettings::slotDebugReporterDone);
     _debugReporter->send();
 }
 

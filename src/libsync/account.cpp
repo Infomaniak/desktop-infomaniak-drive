@@ -153,6 +153,14 @@ QString Account::driveName() const
     return _driveName.isEmpty() ? displayName() : _driveName;
 }
 
+QString Account::driveId() const
+{
+    QString url = _url.toString();
+    QStringList urlParts = url.split(QRegExp("[(/|.)]"));
+    QString driveId = urlParts.size() >= 2 ? urlParts[2] : "";
+    return driveId;
+}
+
 AbstractCredentials *Account::credentials() const
 {
     return _credentials.data();

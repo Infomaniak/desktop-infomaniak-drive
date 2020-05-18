@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <map>
 
+#include <QByteArray>
 #include <QColor>
 #include <QDialog>
 #include <QStackedLayout>
@@ -86,6 +87,7 @@ private:
     std::map<QString, AccountInfoParameters> _accountInfoMap;
 
     void initUI();
+    QByteArray contents(const QString& path);
 
 private slots:
     void onRefreshAccountList();
@@ -107,6 +109,7 @@ private slots:
     void onDisplayDrivesList();
     void onSendLogs();
     void onOpenFolderItem(const QString &filePath);
+    void onDebugReporterDone(bool retCode);
 };
 
 }

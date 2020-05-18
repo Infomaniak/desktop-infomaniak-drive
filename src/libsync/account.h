@@ -110,6 +110,9 @@ public:
     void setDriveName(const QString &name);
     QString driveName() const;
 
+    /// The drive id
+    QString driveId() const;
+
     /** Server url of the account */
     void setUrl(const QUrl &url);
     QUrl url() const { return _url; }

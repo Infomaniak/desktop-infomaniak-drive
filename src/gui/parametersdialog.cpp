@@ -29,8 +29,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "folderman.h"
 #include "openfilemanager.h"
 #include "progressdispatcher.h"
+#include "debugreporter.h"
 #include "guiutility.h"
 #include "theme.h"
+#include "logger.h"
 
 #include <QDesktopServices>
 #include <QDir>
@@ -107,7 +109,7 @@ void ParametersDialog::initUI()
      *          errorsVBox
      *              _errorsMenuBarWidget
      *              errorsHeaderVBox
-     *                  sendErrorsWidget
+     *                  sendLogsWidget
      *                  historyLabel
      *              _errorsStackedWidget
      *                  errorsListWidget[]
@@ -238,6 +240,17 @@ void ParametersDialog::initUI()
     connect(_drivePreferencesWidget, &DrivePreferencesWidget::displayErrors, this, &ParametersDialog::onDisplayErrors);
     connect(_errorsMenuBarWidget, &ErrorsMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivesList);
     connect(sendLogsWidget, &ActionWidget::clicked, this, &ParametersDialog::onSendLogs);
+}
+
+QByteArray ParametersDialog::contents(const QString &path)
+{
+    QFile file(path);
+    if (file.open(QFile::ReadOnly)) {
+        return file.readAll();
+    }
+    else {
+        return QByteArray();
+    }
 }
 
 void ParametersDialog::onRefreshAccountList()
@@ -598,7 +611,63 @@ void ParametersDialog::onDisplayDrivesList()
 
 void ParametersDialog::onSendLogs()
 {
+    if (OCC::Theme::instance()->debugReporterUrl().isEmpty()) {
+        Q_ASSERT(false);
+        return;
+    }
 
+    QMessageBox msgBox(QMessageBox::Information, QString(),
+                       tr("Please confirm the transmission of debugging information to our support."),
+                       QMessageBox::Yes | QMessageBox::No, this);
+    msgBox.setWindowModality(Qt::WindowModal);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    if (msgBox.exec() == QMessageBox::No) {
+        return;
+    }
+
+    OCC::DebugReporter *debugReporter = new OCC::DebugReporter(QUrl(OCC::Theme::instance()->debugReporterUrl()), this);
+
+    // Write accounts
+    auto accountList = OCC::AccountManager::instance()->accounts();
+    int num = 0;
+    foreach (OCC::AccountStatePtr account, accountList) {
+        num++;
+        debugReporter->setReportData(OCC::DebugReporter::MapKeyType::DriveId, num, account->account()->driveName().toUtf8());
+        debugReporter->setReportData(OCC::DebugReporter::MapKeyType::UserId, num, account->account()->davUser().toUtf8());
+        debugReporter->setReportData(OCC::DebugReporter::MapKeyType::UserName, num, account->account()->davDisplayName().toUtf8());
+    }
+
+    if (num == 0) {
+        qCDebug(lcParametersDialog()) << "No account";
+        return;
+    }
+
+    // Write logs
+    QString temporaryFolderLogDirPath = OCC::Logger::instance()->temporaryFolderLogDirPath();
+    QDir dir(temporaryFolderLogDirPath);
+    if (dir.exists()) {
+        QStringList files = dir.entryList(QStringList("*owncloud.log.*.gz"), QDir::Files, QDir::Name);
+        num = 0;
+        foreach (const QString &file, files) {
+            num++;
+            debugReporter->setReportData(OCC::DebugReporter::MapKeyType::LogName, num,
+                contents(temporaryFolderLogDirPath + "/" + file),
+                "application/octet-stream",
+                QFileInfo(file).fileName().toUtf8());
+        }
+
+        if (num == 0) {
+            qCDebug(lcParametersDialog()) << "No log file";
+            return;
+        }
+    }
+    else {
+        qCDebug(lcParametersDialog()) << "Empty log dir: " << temporaryFolderLogDirPath;
+        return;
+    }
+
+    connect(debugReporter, &OCC::DebugReporter::sent, this, &ParametersDialog::onDebugReporterDone);
+    debugReporter->send();
 }
 
 void ParametersDialog::onOpenFolderItem(const QString &filePath)
@@ -622,6 +691,15 @@ void ParametersDialog::onOpenFolderItem(const QString &filePath)
             }
         }
     }
+}
+
+void ParametersDialog::onDebugReporterDone(bool retCode)
+{
+    QMessageBox msgBox(QMessageBox::Information, QString(),
+                       retCode ? tr("Transmission done!") : tr("Transmission failed!"),
+                       QMessageBox::Ok);
+    msgBox.setWindowModality(Qt::WindowModal);
+    msgBox.exec();
 }
 
 ParametersDialog::AccountInfoParameters::AccountInfoParameters()

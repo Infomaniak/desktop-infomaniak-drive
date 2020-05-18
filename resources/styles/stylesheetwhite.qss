@@ -3,6 +3,10 @@ QInputDialog QLabel
     qproperty-wordWrap:1;
 }
 
+/***************/
+/* QMessageBox */
+/***************/
+
 QMessageBox {
     background-color: #FFFFFF;
 }
@@ -31,6 +35,43 @@ QMessageBox QPushButton
 }
 
 QMessageBox QPushButton:default
+{
+    background-color: #0098FF;
+    color: #FFFFFF;
+}
+
+/*******************/
+/* QProgressDialog */
+/*******************/
+
+QProgressDialog {
+    background-color: #FFFFFF;
+}
+
+QProgressDialog QLabel {
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+}
+
+QProgressDialog QPushButton
+{
+    background-color: #F5F5F5;
+    border: 0px;
+    border-radius: 3px;
+    min-height: 40px;
+    max-height: 40px;
+    padding-left: 16px;
+    padding-right: 16px;
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+QProgressDialog QPushButton:default
 {
     background-color: #0098FF;
     color: #FFFFFF;
