@@ -830,7 +830,7 @@ void ConfigFile::setMinLogLevel(int level)
 int ConfigFile::minLogLevel() const
 {
     QSettings settings(configFile(), QSettings::IniFormat);
-    return settings.value(QLatin1String(minLogLevelC), 3).toInt(); // Default = Critical
+    return settings.value(QLatin1String(minLogLevelC), 0).toInt(); // Default = Info
 }
 
 Optional<chrono::hours> ConfigFile::automaticDeleteOldLogsAge() const

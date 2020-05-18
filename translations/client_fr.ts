@@ -48,16 +48,16 @@
         <translation>%L1 of %L2 Ko téléversés.</translation>
     </message>
     <message>
-        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
-        <translation>Envoyé! &lt;b&gt;Merci beaucoup&lt;/b&gt;. Veuillez vous référer au crash &lt;b&gt;%1&lt;/b&gt; dans les rapports de bugs.</translation>
-    </message>
-    <message>
         <source>Failed to send crash info.</source>
         <translation>Echec de l&apos;envoi des informations de crash.</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Désolé!&lt;/span&gt; %1 a rencontré un problème. Merci de nous en informer! %1 a créé un rapport d&apos;erreur afin de nous aider à améliorer la stabilité du produit. Vous pouvez maintenant envoyer ce rapport directement aux développeurs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation>Transmis! &lt;b&gt;Tous nos remerciements&lt;b&gt;. Veuillez vous référer à l&apos;identifiant de crash &lt;b&gt;%1&lt;/b&gt; dans vos rapports de bugs.</translation>
     </message>
 </context>
 <context>
@@ -523,12 +523,13 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <translation>Merci de confirmer la transmission des informations de débogage à notre support.</translation>
     </message>
     <message>
-        <source>Transmission done!</source>
-        <translation>Transmission terminée!</translation>
-    </message>
-    <message>
         <source>Transmission failed!</source>
         <translation>Echec de la transmission!</translation>
+    </message>
+    <message>
+        <source>Transmission done!
+Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation>Merci de vous référer à l&apos;identifiant &lt;b&gt;%1&lt;/b&gt; dans vos rapports de bug.</translation>
     </message>
 </context>
 <context>

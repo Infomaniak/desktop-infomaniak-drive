@@ -153,7 +153,7 @@ private slots:
     void slotShowIssueItemCount(int cnt);
     void slotShowActivityTab();
     void slotSendDebugData();
-    void slotDebugReporterDone(bool retCode);
+    void slotDebugReporterDone(bool retCode, const QString &debugId);
 
 signals:
     void guiLog(const QString &, const QString &);

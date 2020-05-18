@@ -48,15 +48,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Failed to send crash info.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -523,11 +523,12 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Transmission done!</source>
+        <source>Transmission failed!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Transmission failed!</source>
+        <source>Transmission done!
+Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

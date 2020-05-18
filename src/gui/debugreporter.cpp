@@ -101,6 +101,7 @@ void DebugReporter::onDone()
 
     if ((m_reply->error() != QNetworkReply::NoError) || !response.startsWith("DebugID=", Qt::CaseInsensitive))
     {
+        qCDebug(lcDebugReporter) << "Debug report error:" << m_reply->error() << " response:" << response;
         onFail(m_reply->error(), m_reply->errorString());
     }
     else
@@ -108,7 +109,7 @@ void DebugReporter::onDone()
         QString debugId = response.split("\n").at(0).split("=").at(1);
         qCDebug(lcDebugReporter) << "Debug report sent:" << debugId;
 
-        emit sent(true);
+        emit sent(true, debugId);
 
         reset();
     }

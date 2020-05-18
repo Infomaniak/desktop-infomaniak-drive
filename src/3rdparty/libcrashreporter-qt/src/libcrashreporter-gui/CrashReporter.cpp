@@ -51,7 +51,7 @@ CrashReporter::CrashReporter( const QUrl& url, const QStringList& args )
     m_ui->setupUi( this );
     m_ui->progressBar->setRange( 0, 100 );
     m_ui->progressBar->setValue( 0 );
-    m_ui->progressLabel->setPalette( Qt::gray );
+    //m_ui->progressLabel->setPalette( Qt::gray );
 
     #ifdef Q_OS_MAC
     QFont f = m_ui->bottomLabel->font();
@@ -274,7 +274,7 @@ CrashReporter::onDone()
     QString const response = QString::fromUtf8( data );
     qDebug() << "RESPONSE:" << response;
 
-    if ( ( m_reply->error() != QNetworkReply::NoError ) || !response.startsWith( "CrashID=" ) )
+    if ( ( m_reply->error() != QNetworkReply::NoError ) || !response.startsWith("CrashID=", Qt::CaseInsensitive) )
     {
         onFail( m_reply->error(), m_reply->errorString() );
     }
@@ -282,7 +282,7 @@ CrashReporter::onDone()
     {
         QString crashId = response.split("\n").at(0).split("=").at(1);
 
-        m_ui->progressLabel->setText( tr( "Sent! <b>Many thanks</b>. Please refer to crash <b>%1</b> in bug reports." ).arg(crashId) );
+        m_ui->progressLabel->setText( tr( "Sent! <b>Many thanks</b>. Please refer to crash identifier <b>%1</b> in bug reports." ).arg(crashId) );
     }
 }
 

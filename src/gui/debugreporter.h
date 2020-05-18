@@ -54,7 +54,7 @@ private:
     QMap<MapKey, QByteArray> m_formFileNames;
 
 signals:
-    void sent(bool retCode);
+    void sent(bool retCode, const QString &debugId = QString());
 
 public slots:
     void send();
