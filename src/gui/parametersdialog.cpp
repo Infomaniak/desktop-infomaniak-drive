@@ -632,7 +632,8 @@ void ParametersDialog::onSendLogs()
     int num = 0;
     foreach (OCC::AccountStatePtr account, accountList) {
         num++;
-        debugReporter->setReportData(OCC::DebugReporter::MapKeyType::DriveId, num, account->account()->driveName().toUtf8());
+        debugReporter->setReportData(OCC::DebugReporter::MapKeyType::DriveId, num, account->account()->driveId().toUtf8());
+        debugReporter->setReportData(OCC::DebugReporter::MapKeyType::DriveName, num, account->account()->driveName().toUtf8());
         debugReporter->setReportData(OCC::DebugReporter::MapKeyType::UserId, num, account->account()->davUser().toUtf8());
         debugReporter->setReportData(OCC::DebugReporter::MapKeyType::UserName, num, account->account()->davDisplayName().toUtf8());
     }
@@ -693,12 +694,15 @@ void ParametersDialog::onOpenFolderItem(const QString &filePath)
     }
 }
 
-void ParametersDialog::onDebugReporterDone(bool retCode)
+void ParametersDialog::onDebugReporterDone(bool retCode, const QString &debugId)
 {
     QMessageBox msgBox(QMessageBox::Information, QString(),
-                       retCode ? tr("Transmission done!") : tr("Transmission failed!"),
-                       QMessageBox::Ok);
+                       retCode
+                        ? tr("Transmission done!<br>Please refer to identifier <b>%1</b> in bug reports.").arg(debugId)
+                        : tr("Transmission failed!"),
+                       QMessageBox::Ok, this);
     msgBox.setWindowModality(Qt::WindowModal);
+    msgBox.setTextInteractionFlags(Qt::TextSelectableByMouse);
     msgBox.exec();
 }
 

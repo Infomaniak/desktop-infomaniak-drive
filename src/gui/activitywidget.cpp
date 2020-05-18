@@ -624,17 +624,10 @@ void ActivitySettings::slotSendDebugData()
     int num = 0;
     foreach (AccountStatePtr account, accountList) {
         num++;
-<<<<<<< HEAD
         _debugReporter->setReportData(DebugReporter::MapKeyType::DriveId, num, account->account()->driveId().toUtf8());
         _debugReporter->setReportData(DebugReporter::MapKeyType::DriveName, num, account->account()->driveName().toUtf8());
         _debugReporter->setReportData(DebugReporter::MapKeyType::UserId, num, account->account()->davUser().toUtf8());
         _debugReporter->setReportData(DebugReporter::MapKeyType::UserName, num, account->account()->davDisplayName().toUtf8());
-=======
-        _debugReporter->setReportData(QString("Drive id %1").arg(num).toUtf8(), account->account()->driveId().toUtf8());
-        _debugReporter->setReportData(QString("Drive %1").arg(num).toUtf8(), account->account()->driveName().toUtf8());
-        _debugReporter->setReportData(QString("User id %1").arg(num).toUtf8(), account->account()->davUser().toUtf8());
-        _debugReporter->setReportData(QString("User name %1").arg(num).toUtf8(), account->account()->davDisplayName().toUtf8());
->>>>>>> feature/drive-1.4
     }
 
     // Write logs
