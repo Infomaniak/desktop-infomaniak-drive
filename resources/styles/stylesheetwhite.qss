@@ -3,6 +3,39 @@ QInputDialog QLabel
     qproperty-wordWrap:1;
 }
 
+QMessageBox {
+    background-color: #FFFFFF;
+}
+
+QMessageBox QLabel {
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+}
+
+QMessageBox QPushButton
+{
+    background-color: #F5F5F5;
+    border: 0px;
+    border-radius: 3px;
+    min-height: 40px;
+    max-height: 40px;
+    padding-left: 16px;
+    padding-right: 16px;
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+QMessageBox QPushButton:default
+{
+    background-color: #0098FF;
+    color: #FFFFFF;
+}
+
 /**********************/
 /* KDC--CustomToolTip */
 /**********************/
@@ -222,16 +255,6 @@ KDC--CustomDialog QTableView
     font-weight: 350; /* normal */
     font-size: 14px;
     gridline-color: #F5F5F5;
-}
-
-KDC--CustomDialog QTableView::indicator:checked
-{
-    image: url(:/client/resources/icons/actions/checkbox-checked.svg);
-}
-
-KDC--CustomDialog QTableView::indicator:unchecked
-{
-    image: url(:/client/resources/icons/actions/checkbox-unchecked.svg);
 }
 
 /*******************/

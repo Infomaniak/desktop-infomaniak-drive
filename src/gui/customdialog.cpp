@@ -49,6 +49,11 @@ CustomDialog::CustomDialog(QWidget *parent)
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
+    setStyleSheet("QTableView::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
+                  "QTableView::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
+                  "QTableView::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
+                  "QTableView::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }");
+
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
 
     QVBoxLayout *mainVBox = new QVBoxLayout();

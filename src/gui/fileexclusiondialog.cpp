@@ -274,10 +274,10 @@ void FileExclusionDialog::setNeedToSave(bool value)
 void FileExclusionDialog::onExit()
 {
     if (_needToSave) {
-        QMessageBox msgBox;
-        msgBox.setText(tr("Do you want to save your modifications?"));
-        msgBox.setStandardButtons(QMessageBox::Yes);
-        msgBox.addButton(QMessageBox::No);
+        QMessageBox msgBox(QMessageBox::Question, QString(),
+                           tr("Do you want to save your modifications?"),
+                           QMessageBox::Yes | QMessageBox::No, this);
+        msgBox.setWindowModality(Qt::WindowModal);
         msgBox.setDefaultButton(QMessageBox::Yes);
         if (msgBox.exec() == QMessageBox::Yes) {
             onSaveButtonTriggered();
@@ -314,10 +314,10 @@ void FileExclusionDialog::onTableViewClicked(const QModelIndex &index)
             QStandardItem *item = _filesTableModel->item(index.row(), tableColumn::Deletable);
             if (item && item->flags() & Qt::ItemIsEnabled) {
                 // Delete
-                QMessageBox msgBox(this);
-                msgBox.setText(tr("Do you really want to delete?"));
-                msgBox.setStandardButtons(QMessageBox::Yes);
-                msgBox.addButton(QMessageBox::No);
+                QMessageBox msgBox(QMessageBox::Question, QString(),
+                                   tr("Do you really want to delete?"),
+                                   QMessageBox::Yes | QMessageBox::No, this);
+                msgBox.setWindowModality(Qt::WindowModal);
                 msgBox.setDefaultButton(QMessageBox::No);
                 if(msgBox.exec() == QMessageBox::Yes) {
                     _filesTableModel->removeRow(index.row());
@@ -358,8 +358,11 @@ void FileExclusionDialog::onSaveButtonTriggered(bool checked)
             ignoreFile.write(prepend + patternItem->text().toUtf8() + '\n');
         }
     } else {
-        QMessageBox::warning(this, tr("Could not open file"),
-            tr("Cannot write changes to '%1'.").arg(ignoreFilePath));
+        QMessageBox msgBox(QMessageBox::Warning, tr("Could not open file"),
+                    tr("Cannot write changes to '%1'.").arg(ignoreFilePath),
+                    QMessageBox::Ok, this);
+        msgBox.setWindowModality(Qt::WindowModal);
+        msgBox.exec();
     }
     ignoreFile.close();
 

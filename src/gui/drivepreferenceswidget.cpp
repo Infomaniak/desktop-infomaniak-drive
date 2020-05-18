@@ -470,32 +470,33 @@ void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)>
     QMessageBox *msgBox = nullptr;
     if (bestVfsMode == OCC::Vfs::WindowsCfApi) {
         msgBox = new QMessageBox(
-            QMessageBox::Warning,
-            tr("Enable technical preview feature?"),
-            tr("When the \"virtual files\" mode is enabled no files will be downloaded initially. "
-               "Instead a virtual file will be created for each file that exists on the server. "
-               "When a file is opened its contents will be downloaded automatically. "
-               "Alternatively, files can be downloaded manually by using their context menu.\n\n"
-               "The virtual files mode is mutually exclusive with selective sync. "
-               "Currently unselected folders will be translated to online-only folders "
-               "and your selective sync settings will be reset."));
+                    QMessageBox::Warning, tr("Enable technical preview feature?"),
+                    tr("When the \"virtual files\" mode is enabled no files will be downloaded initially. "
+                       "Instead a virtual file will be created for each file that exists on the server. "
+                       "When a file is opened its contents will be downloaded automatically. "
+                       "Alternatively, files can be downloaded manually by using their context menu.\n\n"
+                       "The virtual files mode is mutually exclusive with selective sync. "
+                       "Currently unselected folders will be translated to online-only folders "
+                       "and your selective sync settings will be reset."),
+                     QMessageBox::NoButton, this);
+        msgBox->setWindowModality(Qt::WindowModal);
         msgBox->addButton(tr("Enable virtual files"), QMessageBox::AcceptRole);
         msgBox->addButton(tr("Continue to use selective sync"), QMessageBox::RejectRole);
     } else {
         ASSERT(bestVfsMode == OCC::Vfs::WithSuffix)
         msgBox = new QMessageBox(
-            QMessageBox::Warning,
-            tr("Enable experimental feature?"),
-            tr("When the \"virtual files\" mode is enabled no files will be downloaded initially. "
-               "Instead, a tiny \"%1\" file will be created for each file that exists on the server. "
-               "The contents can be downloaded by running these files or by using their context menu.\n\n"
-               "The virtual files mode is mutually exclusive with selective sync. "
-               "Currently unselected folders will be translated to online-only folders "
-               "and your selective sync settings will be reset.\n\n"
-               "Switching to this mode will abort any currently running synchronization.\n\n"
-               "This is a new, experimental mode. If you decide to use it, please report any "
-               "issues that come up.")
-                .arg(APPLICATION_DOTVIRTUALFILE_SUFFIX));
+                    QMessageBox::Warning, tr("Enable experimental feature?"),
+                    tr("When the \"virtual files\" mode is enabled no files will be downloaded initially. "
+                       "Instead, a tiny \"%1\" file will be created for each file that exists on the server. "
+                       "The contents can be downloaded by running these files or by using their context menu.\n\n"
+                       "The virtual files mode is mutually exclusive with selective sync. "
+                       "Currently unselected folders will be translated to online-only folders "
+                       "and your selective sync settings will be reset.\n\n"
+                       "Switching to this mode will abort any currently running synchronization.\n\n"
+                       "This is a new, experimental mode. If you decide to use it, please report any "
+                       "issues that come up.").arg(APPLICATION_DOTVIRTUALFILE_SUFFIX),
+                    QMessageBox::NoButton, this);
+        msgBox->setWindowModality(Qt::WindowModal);
         msgBox->addButton(tr("Enable experimental placeholder mode"), QMessageBox::AcceptRole);
         msgBox->addButton(tr("Stay safe"), QMessageBox::RejectRole);
     }
@@ -509,11 +510,12 @@ void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)>
 void DrivePreferencesWidget::askDisableSmartSync(const std::function<void (bool)> &callback)
 {
     auto msgBox = new QMessageBox(
-        QMessageBox::Question,
-        tr("Disable virtual file support?"),
-        tr("This action will disable virtual file support. As a consequence contents of folders that "
-           "are currently marked as 'available online only' will be downloaded.\n\n"
-           "This action will abort any currently running synchronization."));
+                QMessageBox::Question, tr("Disable virtual file support?"),
+                tr("This action will disable virtual file support. As a consequence contents of folders that "
+                   "are currently marked as 'available online only' will be downloaded.\n\n"
+                   "This action will abort any currently running synchronization."),
+                QMessageBox::NoButton, this);
+    msgBox->setWindowModality(Qt::WindowModal);
     msgBox->addButton(tr("Disable support"), QMessageBox::AcceptRole);
     msgBox->addButton(tr("Cancel"), QMessageBox::RejectRole);
     connect(msgBox, &QMessageBox::finished, msgBox, [callback, msgBox](int result) {

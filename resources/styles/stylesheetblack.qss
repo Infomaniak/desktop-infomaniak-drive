@@ -3,6 +3,39 @@ QInputDialog QLabel
     qproperty-wordWrap:1;
 }
 
+QMessageBox {
+    background-color: #2D3034;
+}
+
+QMessageBox QLabel {
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+}
+
+QMessageBox QPushButton
+{
+    background-color: #F5F5F5;
+    border: 0px;
+    border-radius: 3px;
+    min-height: 40px;
+    max-height: 40px;
+    padding-left: 16px;
+    padding-right: 16px;
+    color: #1B1B1D;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+QMessageBox QPushButton:default
+{
+    background-color: #0098FF;
+    color: #FFFFFF;
+}
+
 /**********************/
 /* KDC--CustomToolTip */
 /**********************/
@@ -214,24 +247,14 @@ KDC--CustomDialog QTableView
     border: 0px;
     padding-left: 10px;
     padding-right: 1px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     border-radius: 5px;
     color: #C0C0C0;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 14px;
     gridline-color: #1B1B1D;
-}
-
-KDC--CustomDialog QTableView::indicator:checked
-{
-    image: url(:/client/resources/icons/actions/checkbox-checked.svg);
-}
-
-KDC--CustomDialog QTableView::indicator:unchecked
-{
-    image: url(:/client/resources/icons/actions/checkbox-unchecked.svg);
 }
 
 /*******************/

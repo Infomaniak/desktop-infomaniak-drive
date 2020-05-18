@@ -545,18 +545,17 @@ void ParametersDialog::onRemove(const QString &accountId)
     OCC::AccountManager *accountManager = OCC::AccountManager::instance();
     OCC::AccountStatePtr accountStatePtr = accountManager->getAccountStateFromId(accountId);
     if (accountStatePtr.data()) {
-        QMessageBox messageBox(QMessageBox::Question,
-            tr("Confirm Account Removal"),
-            tr("<p>Do you really want to remove the connection to the account <i>%1</i>?</p>"
-               "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
-                .arg(accountStatePtr->account()->driveName()),
-            QMessageBox::NoButton,
-            this);
-        QPushButton *yesButton = messageBox.addButton(tr("Remove connection"), QMessageBox::YesRole);
-        messageBox.addButton(tr("Cancel"), QMessageBox::NoRole);
-
-        messageBox.exec();
-        if (messageBox.clickedButton() != yesButton) {
+        QMessageBox msgBox(
+                    QMessageBox::Question, tr("Confirm Account Removal"),
+                    tr("<p>Do you really want to remove the connection to the account <i>%1</i>?</p>"
+                       "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
+                        .arg(accountStatePtr->account()->driveName()),
+                    QMessageBox::NoButton, this);
+        msgBox.setWindowModality(Qt::WindowModal);
+        QPushButton *yesButton = msgBox.addButton(tr("Remove connection"), QMessageBox::YesRole);
+        msgBox.addButton(tr("Cancel"), QMessageBox::NoRole);
+        msgBox.exec();
+        if (msgBox.clickedButton() != yesButton) {
             return;
         }
 
@@ -614,8 +613,10 @@ void ParametersDialog::onOpenFolderItem(const QString &filePath)
             if (url.isValid()) {
                 if (!QDesktopServices::openUrl(url)) {
                     qCWarning(lcParametersDialog) << "QDesktopServices::openUrl failed for " << url.toString();
-                    QMessageBox msgBox;
-                    msgBox.setText(tr("Unable to open folder path %1.").arg(url.toString()));
+                    QMessageBox msgBox(QMessageBox::Warning, QString(),
+                                tr("Unable to open folder path %1.").arg(url.toString()),
+                                QMessageBox::Ok, this);
+                    msgBox.setWindowModality(Qt::WindowModal);
                     msgBox.exec();
                 }
             }
