@@ -17,7 +17,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "customcheckbox.h"
+#include "customradiobutton.h"
 
 #include <QApplication>
 
@@ -25,21 +25,21 @@ namespace KDC {
 
 static int defaultToolTipDuration = 3000; // ms
 
-CustomCheckBox::CustomCheckBox(QWidget *parent)
-    : QCheckBox(parent)
+CustomRadioButton::CustomRadioButton(QWidget *parent)
+    : QRadioButton(parent)
     , _toolTipText(QString())
     , _toolTipDuration(defaultToolTipDuration)
     , _customToolTip(nullptr)
 {
-    setStyleSheet("QCheckBox::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QCheckBox::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
-                  "QCheckBox::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QCheckBox::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }");
+    setStyleSheet("QRadioButton::indicator:checked { image: url(:/client/resources/icons/actions/radio-checked.svg); }"
+                  "QRadioButton::indicator:unchecked { image: url(:/client/resources/icons/actions/radio-unchecked.svg); }"
+                  "QRadioButton::indicator:checked:disabled { image: url(:/client/resources/icons/actions/radio-checked.svg); }"
+                  "QRadioButton::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/radio-unchecked.svg); }");
 
-    connect(this, &QCheckBox::clicked, this, &CustomCheckBox::onClicked);
+    connect(this, &QRadioButton::clicked, this, &CustomRadioButton::onClicked);
 }
 
-bool CustomCheckBox::event(QEvent *event)
+bool CustomRadioButton::event(QEvent *event)
 {
     if (event->type() == QEvent::ToolTip) {
         if (!_toolTipText.isEmpty()) {
@@ -54,20 +54,20 @@ bool CustomCheckBox::event(QEvent *event)
         }
     }
 
-    return QCheckBox::event(event);
+    return QRadioButton::event(event);
 }
 
-void CustomCheckBox::leaveEvent(QEvent *event)
+void CustomRadioButton::leaveEvent(QEvent *event)
 {
     if (_customToolTip) {
         emit _customToolTip->close();
         _customToolTip = nullptr;
     }
 
-    QCheckBox::leaveEvent(event);
+    QRadioButton::leaveEvent(event);
 }
 
-void CustomCheckBox::onClicked(bool checked)
+void CustomRadioButton::onClicked(bool checked)
 {
     Q_UNUSED(checked)
 
@@ -76,4 +76,3 @@ void CustomCheckBox::onClicked(bool checked)
 }
 
 }
-

@@ -21,17 +21,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "customtooltip.h"
 
-#include <QCheckBox>
 #include <QEvent>
+#include <QRadioButton>
+#include <QString>
 
 namespace KDC {
 
-class CustomCheckBox : public QCheckBox
+class CustomRadioButton : public QRadioButton
 {
     Q_OBJECT
 
 public:
-    explicit CustomCheckBox(QWidget *parent = nullptr);
+    explicit CustomRadioButton(QWidget *parent = nullptr);
 
     inline void setToolTip(const QString &text) { _toolTipText = text; }
 
@@ -48,3 +49,4 @@ private slots:
 };
 
 }
+

@@ -109,7 +109,7 @@ private slots:
     void onDisplayDrivesList();
     void onSendLogs();
     void onOpenFolderItem(const QString &filePath);
-    void onDebugReporterDone(bool retCode, const QString &debugId);
+    void onDebugReporterDone(bool retCode, const QString &debugId = QString());
 };
 
 }

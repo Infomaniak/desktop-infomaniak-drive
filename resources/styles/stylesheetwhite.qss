@@ -261,6 +261,15 @@ KDC--CustomDialog QCheckBox
     font-size: 13px;
 }
 
+KDC--CustomDialog QRadioButton
+{
+    spacing: 10px;
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 13px;
+}
+
 KDC--CustomDialog QPushButton
 {
     background-color: #F5F5F5;
@@ -296,6 +305,36 @@ KDC--CustomDialog QTableView
     font-weight: 350; /* normal */
     font-size: 14px;
     gridline-color: #F5F5F5;
+}
+
+KDC--CustomDialog QLineEdit
+{
+    background-color: transparent;
+    color: #666666;
+    min-height: 36px;
+    max-height: 36px;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 16px;
+    border: 1px solid #E0E0E0;
+    border-radius: 3px;
+    padding-left: 10px;
+    padding-width: 10px;
+}
+
+KDC--CustomDialog QComboBox
+{
+    background-color: transparent;
+    color: #666666;
+    min-height: 36px;
+    max-height: 36px;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 16px;
+    border: 1px solid #E0E0E0;
+    border-radius: 3px;
+    padding-left: 10px;
+    padding-width: 10px;
 }
 
 /*******************/
@@ -915,10 +954,12 @@ KDC--PreferencesBlocWidget QLineEdit
 {
     background-color: transparent;
     color: #666666;
+    min-height: 36px;
+    max-height: 36px;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 16px;
-    border: 1px solid #ECECEC;
+    border: 1px solid #E0E0E0;
     border-radius: 3px;
     padding-left: 10px;
     padding-width: 10px;
@@ -1027,19 +1068,4 @@ KDC--FileExclusionNameDialog
     max-width: 410px;
     min-height: 195px;
     max-height: 195px;
-}
-
-KDC--FileExclusionNameDialog QLineEdit
-{
-    background-color: transparent;
-    color: #666666;
-    min-height: 36px;
-    max-height: 36px;
-    font-family: "Suisse Int'l";
-    font-weight: 350; /* normal */
-    font-size: 16px;
-    border: 1px solid #ECECEC;
-    border-radius: 3px;
-    padding-left: 10px;
-    padding-width: 10px;
 }

@@ -53,6 +53,7 @@ static const int boxVTMargin = 15;
 static const int boxVBMargin = 5;
 static const int boxVSpacing = 20;
 static const int maxSynchronizedItems = 1000;
+static const int maxLogFilesToSend = 25;
 
 Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
 
@@ -647,10 +648,13 @@ void ParametersDialog::onSendLogs()
     QString temporaryFolderLogDirPath = OCC::Logger::instance()->temporaryFolderLogDirPath();
     QDir dir(temporaryFolderLogDirPath);
     if (dir.exists()) {
-        QStringList files = dir.entryList(QStringList("*owncloud.log.*.gz"), QDir::Files, QDir::Name);
+        QStringList files = dir.entryList(QStringList("*owncloud.log.*.gz"), QDir::Files, QDir::Name | QDir::Reversed);
         num = 0;
-        foreach (const QString &file, files) {
+        for (const QString &file : files) {
             num++;
+            if (num > maxLogFilesToSend) {
+                break;
+            }
             debugReporter->setReportData(OCC::DebugReporter::MapKeyType::LogName, num,
                 contents(temporaryFolderLogDirPath + "/" + file),
                 "application/octet-stream",

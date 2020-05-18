@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "preferencesblocwidget.h"
 #include "customswitch.h"
 #include "fileexclusiondialog.h"
+#include "proxyserverdialog.h"
 #include "configfile.h"
 #include "common/utility.h"
 #include "theme.h"
@@ -35,7 +36,7 @@ static const int boxHMargin= 20;
 static const int boxVMargin = 20;
 static const int boxSpacing = 12;
 static const int textHSpacing = 10;
-static const QSize amountLineEditSize = QSize(85, 40);
+static const int amountLineEditWidth = 85;
 
 PreferencesWidget::PreferencesWidget(QWidget *parent)
     : QWidget(parent)
@@ -122,8 +123,8 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     _folderConfirmationAmountLineEdit->setEnabled(folderLimit.first);
     _folderConfirmationAmountLineEdit->setText(QString::number(folderLimit.second));
     _folderConfirmationAmountLineEdit->setValidator(new QIntValidator(0, 999999, this));
-    _folderConfirmationAmountLineEdit->setMinimumSize(amountLineEditSize);
-    _folderConfirmationAmountLineEdit->setMaximumSize(amountLineEditSize);
+    _folderConfirmationAmountLineEdit->setMinimumWidth(amountLineEditWidth);
+    _folderConfirmationAmountLineEdit->setMaximumWidth(amountLineEditWidth);
     folderConfirmation2HBox->addWidget(_folderConfirmationAmountLineEdit);
 
     QLabel *folderConfirmationAmountLabel = new QLabel("Mo", this);
@@ -277,7 +278,8 @@ void PreferencesWidget::onFilesToExcludeWidgetClicked()
 
 void PreferencesWidget::onProxyServerWidgetClicked()
 {
-
+    ProxyServerDialog *dialog = new ProxyServerDialog(this);
+    dialog->exec();
 }
 
 void PreferencesWidget::onBandwidthWidgetClicked()

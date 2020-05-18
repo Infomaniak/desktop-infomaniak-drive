@@ -133,6 +133,7 @@ set(client_SRCS
     customtogglepushbutton.cpp
     customtoolbutton.cpp
     customcheckbox.cpp
+    customradiobutton.cpp
     customswitch.cpp
     customtooltip.cpp
     customsystembar.cpp
@@ -153,6 +154,7 @@ set(client_SRCS
     preferencesblocwidget.cpp
     preferenceswidget.cpp
     progressbarwidget.cpp
+    proxyserverdialog.cpp
     statusbarwidget.cpp
     synchronizeditem.cpp
     synchronizeditemwidget.cpp
