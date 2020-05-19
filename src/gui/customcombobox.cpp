@@ -17,37 +17,14 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#pragma once
-
-#include <QColor>
-#include <QLineEdit>
-#include <QWidget>
+#include "customcombobox.h"
 
 namespace KDC {
 
-class PreferencesWidget : public QWidget
+CustomComboBox::CustomComboBox(QWidget *parent)
+    : QComboBox(parent)
 {
-    Q_OBJECT
-
-public:
-    explicit PreferencesWidget(QWidget *parent = nullptr);
-
-signals:
-    void setStyle(bool darkTheme);
-
-private:
-    QLineEdit *_folderConfirmationAmountLineEdit;
-
-private slots:
-    void onFolderConfirmationSwitchClicked(bool checked = false);
-    void onFolderConfirmationAmountTextEdited(const QString &text);
-    void onDarkThemeSwitchClicked(bool checked = false);
-    void onMonochromeSwitchClicked(bool checked = false);
-    void onLaunchAtStartupSwitchClicked(bool checked = false);
-    void onFilesToExcludeWidgetClicked();
-    void onProxyServerWidgetClicked();
-    void onBandwidthWidgetClicked();
-};
 
 }
 
+}

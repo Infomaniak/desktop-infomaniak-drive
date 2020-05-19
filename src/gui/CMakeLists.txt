@@ -133,6 +133,7 @@ set(client_SRCS
     customtogglepushbutton.cpp
     customtoolbutton.cpp
     customcheckbox.cpp
+    customcombobox.cpp
     customradiobutton.cpp
     customswitch.cpp
     customtooltip.cpp

@@ -34,8 +34,6 @@ class FileExclusionDialog : public CustomDialog
 public:
     explicit FileExclusionDialog(QWidget *parent = nullptr);
 
-    void initUI();
-
 private:
     enum tableColumn {
         Pattern = 0,
@@ -49,6 +47,7 @@ private:
     QPushButton *_saveButton;
     bool _needToSave;
 
+    void initUI();
     void readIgnoreFile(const QString &file, bool global);
     void addPattern(const QString &pattern, bool deletable, bool readOnly, bool global,
         const QStringList &skippedLines = QStringList());

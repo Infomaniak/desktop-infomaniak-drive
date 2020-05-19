@@ -227,7 +227,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     vBox->addStretch();
 
     connect(folderConfirmationSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onFolderConfirmationSwitchClicked);
-    connect(_folderConfirmationAmountLineEdit, &QLineEdit::editingFinished, this, &PreferencesWidget::onFolderConfirmationAmountEditingFinished);
+    connect(_folderConfirmationAmountLineEdit, &QLineEdit::textEdited, this, &PreferencesWidget::onFolderConfirmationAmountTextEdited);
     connect(darkThemeSwitch, &CustomSwitch::clicked,this, &PreferencesWidget::onDarkThemeSwitchClicked);
     connect(monochromeSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onMonochromeSwitchClicked);
     connect(launchAtStartupSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onLaunchAtStartupSwitchClicked);
@@ -244,9 +244,9 @@ void PreferencesWidget::onFolderConfirmationSwitchClicked(bool checked)
     _folderConfirmationAmountLineEdit->setEnabled(checked);
 }
 
-void PreferencesWidget::onFolderConfirmationAmountEditingFinished()
+void PreferencesWidget::onFolderConfirmationAmountTextEdited(const QString &text)
 {
-    long long lValue = _folderConfirmationAmountLineEdit->text().toLongLong();
+    long long lValue = text.toLongLong();
     OCC::ConfigFile cfg;
     auto folderLimit = cfg.newBigFolderSizeLimit();
     cfg.setNewBigFolderSizeLimit(folderLimit.first, lValue);

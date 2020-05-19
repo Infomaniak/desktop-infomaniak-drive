@@ -334,7 +334,19 @@ KDC--CustomDialog QComboBox
     border: 1px solid #E0E0E0;
     border-radius: 3px;
     padding-left: 10px;
-    padding-width: 10px;
+    padding-right: 10px;
+}
+
+KDC--CustomDialog QComboBox::drop-down
+{
+    border: 0px;
+}
+
+KDC--CustomDialog QComboBox::down-arrow
+{
+    image: url(:/client/resources/icons/actions/chevron-down.svg);
+    width: 10px;
+    height: 10px;
 }
 
 /*******************/

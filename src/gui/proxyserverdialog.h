@@ -24,6 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customcheckbox.h"
 
 #include <QBoxLayout>
+#include <QComboBox>
+#include <QIntValidator>
 #include <QLineEdit>
 #include <QNetworkProxy>
 #include <QPushButton>
@@ -37,31 +39,62 @@ class ProxyServerDialog : public CustomDialog
 public:
     explicit ProxyServerDialog(QWidget *parent = nullptr);
 
-    void initUI();
-
 private:
-    int _proxyType;
+    static std::map<QNetworkProxy::ProxyType, std::pair<int, QString>> _manualProxyMap;
+
+    class PortValidator : public QIntValidator
+    {
+    public:
+        PortValidator(QObject *parent = nullptr)
+            : QIntValidator(0, 65535, parent)
+        {
+        }
+
+    private:
+        QValidator::State validate(QString &input, int &pos) const override
+        {
+            QValidator::State state = QIntValidator::validate(input, pos);
+            return state == QValidator::Intermediate ? QValidator::Invalid : state;
+        }
+    };
+
+    QNetworkProxy::ProxyType _proxyType;
     QNetworkProxy _proxy;
+    bool _proxyNeedsAuth;
     CustomRadioButton *_noProxyButton;
     CustomRadioButton *_systemProxyButton;
     CustomRadioButton *_manualProxyButton;
-    QVBoxLayout *_manualProxyVBox;
+    QComboBox *_proxyTypeComboBox;
     QLineEdit *_portLineEdit;
     QLineEdit *_addressLineEdit;
     CustomCheckBox *_authenticationCheckBox;
-    QHBoxLayout *_authenticationHBox;
     QLineEdit *_loginLineEdit;
     QLineEdit *_pwdLineEdit;
     QPushButton *_saveButton;
     bool _needToSave;
+    PortValidator *_portValidator;
 
-    void updateWidgets();
+    void initUI();
+    void updateUI();
+    void setNeedToSave(bool value);
+    bool isSaveEnabled();
 
 private slots:
     void onExit();
     void onSaveButtonTriggered(bool checked = false);
     void onNoProxyButtonToggled(bool checked);
+    void onSystemProxyButtonToggled(bool checked);
+    void onManualProxyButtonToggled(bool checked);
+    void onProxyTypeComboBoxActivated(int index);
+    void onPortTextEdited(const QString &text);
+    void onAddressTextEdited(const QString &text);
+    void onAuthenticationCheckBoxClicked(bool checked = false);
+    void onLoginTextEdited(const QString &text);
+    void onPwdTextEdited(const QString &text);
 };
 
 }
+
+Q_DECLARE_METATYPE(QNetworkProxy::ProxyType)
+
 

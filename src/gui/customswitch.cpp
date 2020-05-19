@@ -26,8 +26,8 @@ CustomSwitch::CustomSwitch(QWidget *parent)
 {
     setStyleSheet("QCheckBox::indicator:checked { image: url(:/client/resources/icons/actions/switch-on.svg); }"
                   "QCheckBox::indicator:unchecked { image: url(:/client/resources/icons/actions/switch-off.svg); }"
-                  "QCheckBox::indicator:checked:disabled { image: url(:/client/resources/icons/actions/switch-disabled.svg); }"
-                  "QCheckBox::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/switch-disabled.svg); }");
+                  "QCheckBox::indicator:checked:disabled { image: url(:/client/resources/icons/actions/switch-disable.svg); }"
+                  "QCheckBox::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/switch-disable.svg); }");
 }
 
 }
