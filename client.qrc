@@ -130,5 +130,6 @@
         <file>resources/icons/actions/checkbox-unchecked.svg</file>
         <file>resources/icons/actions/radio-checked.svg</file>
         <file>resources/icons/actions/radio-unchecked.svg</file>
+        <file>resources/icons/actions/down-arrow.svg</file>
     </qresource>
 </RCC>

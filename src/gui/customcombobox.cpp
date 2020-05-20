@@ -24,7 +24,7 @@ namespace KDC {
 CustomComboBox::CustomComboBox(QWidget *parent)
     : QComboBox(parent)
 {
-
+    setStyleSheet("QComboBox::down-arrow { image: url(:/client/resources/icons/actions/down-arrow.svg); width: 10px; height: 10px; }");
 }
 
 }

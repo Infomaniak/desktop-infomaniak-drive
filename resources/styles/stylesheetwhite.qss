@@ -339,14 +339,8 @@ KDC--CustomDialog QComboBox
 
 KDC--CustomDialog QComboBox::drop-down
 {
-    border: 0px;
-}
-
-KDC--CustomDialog QComboBox::down-arrow
-{
-    image: url(:/client/resources/icons/actions/chevron-down.svg);
-    width: 10px;
-    height: 10px;
+     border: 0px;
+     width: 40px;
 }
 
 /*******************/

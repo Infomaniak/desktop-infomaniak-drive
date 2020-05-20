@@ -22,9 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customdialog.h"
 #include "customradiobutton.h"
 #include "customcheckbox.h"
+#include "customcombobox.h"
 
 #include <QBoxLayout>
-#include <QComboBox>
 #include <QIntValidator>
 #include <QLineEdit>
 #include <QNetworkProxy>
@@ -64,7 +64,7 @@ private:
     CustomRadioButton *_noProxyButton;
     CustomRadioButton *_systemProxyButton;
     CustomRadioButton *_manualProxyButton;
-    QComboBox *_proxyTypeComboBox;
+    CustomComboBox *_proxyTypeComboBox;
     QLineEdit *_portLineEdit;
     QLineEdit *_addressLineEdit;
     CustomCheckBox *_authenticationCheckBox;
@@ -88,6 +88,7 @@ private slots:
     void onProxyTypeComboBoxActivated(int index);
     void onPortTextEdited(const QString &text);
     void onAddressTextEdited(const QString &text);
+    void onAddressEditingFinished();
     void onAuthenticationCheckBoxClicked(bool checked = false);
     void onLoginTextEdited(const QString &text);
     void onPwdTextEdited(const QString &text);

@@ -296,6 +296,12 @@ KDC--CustomDialog QComboBox
     padding-width: 10px;
 }
 
+KDC--CustomDialog QComboBox::drop-down
+{
+     border: 0px;
+     width: 40px;
+}
+
 /*******************/
 /* KDC--MenuWidget */
 /*******************/

@@ -25,6 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <map>
 
+#include <QAbstractItemView>
+#include <QHostInfo>
 #include <QLabel>
 #include <QMessageBox>
 #include <QRadioButton>
@@ -38,8 +40,10 @@ static const int proxyBoxVMargin = 15;
 static const int proxyBoxSpacing = 15;
 static const int manualProxyBoxHMargin = 60;
 static const int manualProxyBoxVMargin = 15;
+static const int authenticationSpacing = 5;
 static const int portLineEditSize = 80;
 static const int defaultPortNumber = 8080;
+static const int hostNameMaxLength = 200;
 
 std::map<QNetworkProxy::ProxyType, std::pair<int, QString>> ProxyServerDialog::_manualProxyMap = {
     { QNetworkProxy::Socks5Proxy, { 0, QString(tr("SOCKS5 Proxy")) } },
@@ -123,14 +127,19 @@ void ProxyServerDialog::initUI()
     manualProxyVBox->setSpacing(proxyBoxSpacing);
     mainLayout->addLayout(manualProxyVBox);
 
-    _proxyTypeComboBox = new QComboBox(this);
-    _proxyTypeComboBox->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    QHBoxLayout *manualProxyTypeHBox = new QHBoxLayout();
+    manualProxyTypeHBox->setContentsMargins(0, 0, 0, 0);
+    manualProxyVBox->addLayout(manualProxyTypeHBox);
+
+    _proxyTypeComboBox = new CustomComboBox(this);
+    _proxyTypeComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
     _proxyTypeComboBox->setAttribute(Qt::WA_MacShowFocusRect, false);
 
     for (auto manualProxy : _manualProxyMap) {
         _proxyTypeComboBox->insertItem(manualProxy.second.first, manualProxy.second.second, manualProxy.first);
     }
-    manualProxyVBox->addWidget(_proxyTypeComboBox);
+    manualProxyTypeHBox->addWidget(_proxyTypeComboBox);
+    manualProxyTypeHBox->addStretch();
 
     QHBoxLayout *manualProxyPortHBox = new QHBoxLayout();
     manualProxyPortHBox->setContentsMargins(0, 0, 0, 0);
@@ -151,7 +160,10 @@ void ProxyServerDialog::initUI()
 
     _addressLineEdit = new QLineEdit(this);
     _addressLineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
+    _addressLineEdit->setPlaceholderText(tr("Address of the proxy server"));
+    _addressLineEdit->setMaxLength(hostNameMaxLength);
     manualProxyVBox->addWidget(_addressLineEdit);
+    manualProxyVBox->addSpacing(authenticationSpacing);
 
     _authenticationCheckBox = new CustomCheckBox(this);
     _authenticationCheckBox->setText(tr("Authentication needed"));
@@ -164,11 +176,13 @@ void ProxyServerDialog::initUI()
 
     _loginLineEdit = new QLineEdit(this);
     _loginLineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
+    _loginLineEdit->setPlaceholderText(tr("User"));
     authenticationHBox->addWidget(_loginLineEdit);
 
     _pwdLineEdit = new QLineEdit(this);
     _pwdLineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
     _pwdLineEdit->setEchoMode(QLineEdit::Password);
+    _pwdLineEdit->setPlaceholderText(tr("Password"));
     authenticationHBox->addWidget(_pwdLineEdit);
 
     mainLayout->addStretch();
@@ -201,6 +215,7 @@ void ProxyServerDialog::initUI()
     connect(_proxyTypeComboBox, QOverload<int>::of(&QComboBox::activated), this, &ProxyServerDialog::onProxyTypeComboBoxActivated);
     connect(_portLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onPortTextEdited);
     connect(_addressLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onAddressTextEdited);
+    connect(_addressLineEdit, &QLineEdit::editingFinished, this, &ProxyServerDialog::onAddressEditingFinished);
     connect(_authenticationCheckBox, &CustomCheckBox::clicked,this, &ProxyServerDialog::onAuthenticationCheckBoxClicked);
     connect(_loginLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onLoginTextEdited);
     connect(_pwdLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onPwdTextEdited);
@@ -376,6 +391,21 @@ void ProxyServerDialog::onAddressTextEdited(const QString &text)
 {
     _proxy.setHostName(text);
     setNeedToSave(true);
+}
+
+void ProxyServerDialog::onAddressEditingFinished()
+{
+    // Check host name
+    if (!_proxy.hostName().isEmpty()) {
+        QHostInfo info = QHostInfo::fromName(_proxy.hostName());
+        if (info.error() != QHostInfo::NoError) {
+            QMessageBox msgBox(QMessageBox::Warning, QString(),
+                               tr("Proxy not found!"),
+                               QMessageBox::Ok, this);
+            msgBox.setWindowModality(Qt::WindowModal);
+            msgBox.exec();
+        }
+    }
 }
 
 void ProxyServerDialog::onAuthenticationCheckBoxClicked(bool checked)
