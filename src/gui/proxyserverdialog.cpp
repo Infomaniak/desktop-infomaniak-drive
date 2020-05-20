@@ -51,7 +51,7 @@ std::map<QNetworkProxy::ProxyType, std::pair<int, QString>> ProxyServerDialog::_
 };
 
 ProxyServerDialog::ProxyServerDialog(QWidget *parent)
-    : CustomDialog(parent)
+    : CustomDialog(true, parent)
     , _proxyType(QNetworkProxy::NoProxy)
     , _proxy(QNetworkProxy())
     , _proxyNeedsAuth(false)

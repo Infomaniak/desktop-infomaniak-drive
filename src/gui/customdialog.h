@@ -39,7 +39,7 @@ class CustomDialog : public QDialog
 public:
     static const int actionIconPathRole = Qt::UserRole;
 
-    explicit CustomDialog(QWidget *parent = nullptr);
+    explicit CustomDialog(bool popup, QWidget *parent = nullptr);
 
     inline QVBoxLayout *mainLayout() const { return _layout; }
 

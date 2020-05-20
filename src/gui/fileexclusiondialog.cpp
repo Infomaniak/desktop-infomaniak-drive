@@ -60,13 +60,18 @@ static const int skippedLinesRole = CustomDialog::actionIconPathRole + 1;
 static const int isGlobalRole = CustomDialog::actionIconPathRole + 2;
 
 FileExclusionDialog::FileExclusionDialog(QWidget *parent)
-    : CustomDialog(parent)
+    : CustomDialog(true, parent)
     , _hiddenFilesCheckBox(nullptr)
     , _filesTableModel(nullptr)
     , _filesTableView(nullptr)
     , _saveButton(nullptr)
     , _needToSave(false)
 {
+    setStyleSheet("QTableView::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
+                  "QTableView::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
+                  "QTableView::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
+                  "QTableView::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }");
+
     initUI();
 
     OCC::ConfigFile cfgFile;

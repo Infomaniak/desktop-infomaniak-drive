@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customswitch.h"
 #include "fileexclusiondialog.h"
 #include "proxyserverdialog.h"
+#include "bandwidthdialog.h"
 #include "configfile.h"
 #include "common/utility.h"
 #include "theme.h"
@@ -284,7 +285,8 @@ void PreferencesWidget::onProxyServerWidgetClicked()
 
 void PreferencesWidget::onBandwidthWidgetClicked()
 {
-
+    BandwidthDialog *dialog = new BandwidthDialog(this);
+    dialog->exec();
 }
 
 }

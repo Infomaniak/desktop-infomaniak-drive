@@ -29,19 +29,21 @@ class CustomSystemBar : public QWidget
     Q_OBJECT
 
 public:
-    explicit CustomSystemBar(QWidget *parent = nullptr);
+    explicit CustomSystemBar(bool popup, QWidget *parent = nullptr);
 
 signals:
     void drag(const QPoint &move);
     void exit();
 
 private:
+    bool _popup;
     bool _dragging;
     QPoint _lastCursorPosition;
 
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    bool event(QEvent *event) override;
 
 private slots:
     void onExit(bool checked = false);

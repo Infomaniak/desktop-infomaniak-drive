@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
+#include "customdialog.h"
 #include "mainmenubarwidget.h"
 #include "drivemenubarwidget.h"
 #include "errorsmenubarwidget.h"
@@ -40,7 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-class ParametersDialog : public QDialog
+class ParametersDialog : public CustomDialog
 {
     Q_OBJECT
 
@@ -90,6 +91,7 @@ private:
     QByteArray contents(const QString& path);
 
 private slots:
+    void onExit();
     void onRefreshAccountList();
     void onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
     void onUpdateQuota(qint64 total, qint64 used);

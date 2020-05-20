@@ -86,6 +86,7 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     fileErrorLabel->setText(_item.error());
     fileErrorLabel->setWordWrap(true);
     vBoxMiddle->addWidget(fileErrorLabel);
+    vBoxMiddle->setStretchFactor(fileErrorLabel, 1);
 
     QHBoxLayout *hBoxFilePath = new QHBoxLayout();
     hBoxFilePath->setContentsMargins(0, 0, 0, 0);

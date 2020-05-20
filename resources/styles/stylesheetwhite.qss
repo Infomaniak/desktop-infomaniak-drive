@@ -209,8 +209,12 @@ KDC--CustomPushButton#addFileButton QLabel#textLabel
 KDC--CustomSystemBar
 {
     background-color: #FFFFFF;
-    min-height: 38px;
-    max-height: 38px;
+}
+
+KDC--CustomSystemBar QToolButton
+{
+    background-color: transparent;
+    margin: 0px;
 }
 
 /*********************/
@@ -234,6 +238,22 @@ KDC--CustomDialog QLabel#titleLabel
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 18px;
+}
+
+KDC--CustomDialog QLabel#subtitleLabel
+{
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 12px;
+}
+
+KDC--CustomDialog QLabel#textLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 13px;
 }
 
 KDC--CustomDialog QLabel#descriptionLabel
@@ -519,17 +539,6 @@ KDC--SynthesisPopover QLabel#defaultTextLabel
 /*************************/
 /* KDC--ParametersDialog */
 /*************************/
-
-KDC--ParametersDialog
-{
-    background-color: #FFFFFF;
-    min-width: 585px;
-    max-width: 585px;
-    min-height: 480px;
-    max-height: 480px;
-    border-width: 0px;
-    corner-radius: 10px;
-}
 
 KDC--ParametersDialog QScrollBar:vertical
 {

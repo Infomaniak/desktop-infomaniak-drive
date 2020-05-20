@@ -125,6 +125,7 @@ set(client_SRCS
     accountitem.cpp
     accountitemwidget.cpp
     actionwidget.cpp
+    bandwidthdialog.cpp
     bottomwidget.cpp
     buttonsbarwidget.cpp
     clickablewidget.cpp

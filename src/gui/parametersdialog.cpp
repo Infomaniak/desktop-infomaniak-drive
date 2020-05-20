@@ -58,7 +58,7 @@ static const int maxLogFilesToSend = 25;
 Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
 
 ParametersDialog::ParametersDialog(QWidget *parent)
-    : QDialog(parent)
+    : CustomDialog(false, parent)
     , _currentAccountId(QString())
     , _backgroundMainColor(QColor())
     , _pageStackedLayout(nullptr)
@@ -73,6 +73,7 @@ ParametersDialog::ParametersDialog(QWidget *parent)
 {
     initUI();
 
+    connect(this, &ParametersDialog::exit, this, &ParametersDialog::onExit);
     connect(OCC::FolderMan::instance(), &OCC::FolderMan::folderSyncStateChange,
             this, &ParametersDialog::onRefreshAccountList);
     connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountAdded,
@@ -118,7 +119,7 @@ void ParametersDialog::initUI()
 
     // Page stacked widget
     _pageStackedLayout = new QStackedLayout(this);
-    setLayout(_pageStackedLayout);
+    mainLayout()->addLayout(_pageStackedLayout);
 
     //
     // Main widget
@@ -252,6 +253,11 @@ QByteArray ParametersDialog::contents(const QString &path)
     else {
         return QByteArray();
     }
+}
+
+void ParametersDialog::onExit()
+{
+    accept();
 }
 
 void ParametersDialog::onRefreshAccountList()

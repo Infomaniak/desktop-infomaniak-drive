@@ -185,8 +185,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
         _smartSyncDescriptionLabel->setObjectName("description");
         _smartSyncDescriptionLabel->setText(tr("Synchronize all your files without using your computer space."
                                               " <a style=\"%1\" href=\"ref\">Learn more</a>")
-                                           .arg(OCC::Utility::linkStyle));
-        QString s = _smartSyncDescriptionLabel->text();
+                                            .arg(OCC::Utility::linkStyle));
         _smartSyncDescriptionLabel->setWordWrap(true);
         smartSyncBox->addWidget(_smartSyncDescriptionLabel);
         synchronizationBloc->addSeparator();

@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "customdialog.h"
 #include "customsystembar.h"
+#include "bottomwidget.h"
 #include "guiutility.h"
 
 #include <QBoxLayout>
@@ -39,7 +40,7 @@ static const int mainBoxVTMargin = 0;
 static const int mainBoxVBMargin = 40;
 static const int shadowBlurRadius = 20;
 
-CustomDialog::CustomDialog(QWidget *parent)
+CustomDialog::CustomDialog(bool popup, QWidget *parent)
     : QDialog(parent)
     , _backgroundColor(QColor())
     , _actionIconColor(QColor())
@@ -49,11 +50,6 @@ CustomDialog::CustomDialog(QWidget *parent)
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
-    setStyleSheet("QTableView::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QTableView::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
-                  "QTableView::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QTableView::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }");
-
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
 
     QVBoxLayout *mainVBox = new QVBoxLayout();
@@ -62,15 +58,21 @@ CustomDialog::CustomDialog(QWidget *parent)
     setLayout(mainVBox);
 
     // System bar
-    CustomSystemBar *systemBar = new CustomSystemBar(this);
+    CustomSystemBar *systemBar = new CustomSystemBar(popup, this);
     mainVBox->addWidget(systemBar);
 
     _layout = new QVBoxLayout();
-    _layout->setContentsMargins(mainBoxHMargin, mainBoxVTMargin, mainBoxHMargin, mainBoxVBMargin);
-    _layout->setSpacing(0);
+    if (popup) {
+        _layout->setContentsMargins(mainBoxHMargin, mainBoxVTMargin, mainBoxHMargin, mainBoxVBMargin);
+        _layout->setSpacing(0);
+    }
 
     mainVBox->addLayout(_layout);
     mainVBox->setStretchFactor(_layout, 1);
+
+    // Bottom
+    BottomWidget *bottomWidget = new BottomWidget(this);
+    mainVBox->addWidget(bottomWidget);
 
     // Shadow
     QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
