@@ -131,5 +131,12 @@
         <file>resources/icons/actions/radio-checked.svg</file>
         <file>resources/icons/actions/radio-unchecked.svg</file>
         <file>resources/icons/actions/down-arrow.svg</file>
+        <file>resources/icons/mac/dark/close-hover.svg</file>
+        <file>resources/icons/mac/dark/close.svg</file>
+        <file>resources/icons/mac/dark/unactive.svg</file>
+        <file>resources/icons/mac/white/close-hover.svg</file>
+        <file>resources/icons/mac/white/unactive.svg</file>
+        <file>resources/icons/windows/dark/close.svg</file>
+        <file>resources/icons/windows/white/close.svg</file>
     </qresource>
 </RCC>

@@ -300,8 +300,8 @@ void ParametersDialog::onRefreshAccountList()
                                 auto folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
                                 if (folderInfoIt == accountInfoIt->second._folderMap.end()) {
                                     // New folder
-                                    accountInfoIt->second._folderMap[folderIt.key()] =
-                                            new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path());
+                                    accountInfoIt->second._folderMap[folderIt.key()] = std::unique_ptr<FolderInfo>(
+                                            new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path()));
                                     folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
                                 }
 
@@ -382,16 +382,15 @@ void ParametersDialog::onUpdateProgress(const QString &folderId, const OCC::Prog
                 if (accountInfoIt != _accountInfoMap.end()) {
                     const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
                     if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
-                        FolderInfo *folderInfo = folderInfoIt->second;
-                        if (folderInfo) {
-                            folderInfo->_currentFile = progress.currentFile();
-                            folderInfo->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
-                            folderInfo->_completedSize = progress.completedSize();
-                            folderInfo->_totalSize = qMax(progress.completedSize(), progress.totalSize());
-                            folderInfo->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
-                            folderInfo->_paused = folder->syncPaused();
-                            folderInfo->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
-                            folderInfo->_status = folder->syncResult().status();
+                       if (folderInfoIt->second.get()) {
+                            folderInfoIt->second.get()->_currentFile = progress.currentFile();
+                            folderInfoIt->second.get()->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
+                            folderInfoIt->second.get()->_completedSize = progress.completedSize();
+                            folderInfoIt->second.get()->_totalSize = qMax(progress.completedSize(), progress.totalSize());
+                            folderInfoIt->second.get()->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
+                            folderInfoIt->second.get()->_paused = folder->syncPaused();
+                            folderInfoIt->second.get()->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
+                            folderInfoIt->second.get()->_status = folder->syncResult().status();
                         }
                         else {
                             qCDebug(lcParametersDialog) << "Null pointer!";

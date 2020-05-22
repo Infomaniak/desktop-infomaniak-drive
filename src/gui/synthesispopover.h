@@ -120,9 +120,8 @@ private:
     QString folderPath(const QString &folderId, const QString &filePath);
     QUrl folderUrl(const QString &folderId, const QString &filePath);
     void openUrl(const QString &folderId, const QString &filePath = QString());
-    const FolderInfo *getFirstFolderWithStatus(const std::map<QString, FolderInfo *> &folderMap,
-                                               OCC::SyncResult::Status status);
-    const FolderInfo *getFirstFolderByPriority(const std::map<QString, FolderInfo *> &folderMap);
+    const FolderInfo *getFirstFolderWithStatus(const FolderMap &folderMap, OCC::SyncResult::Status status);
+    const FolderInfo *getFirstFolderByPriority(const FolderMap &folderMap);
     void refreshStatusBar(const FolderInfo *folderInfo);
     void refreshStatusBar(std::map<QString, AccountInfoSynthesis>::iterator accountStatusIt);
     void refreshStatusBar(QString accountId);

@@ -32,7 +32,7 @@ AccountInfo::AccountInfo()
     , _paused(false)
     , _unresolvedConflicts(false)
     , _status(OCC::SyncResult::Status::Undefined)
-    , _folderMap(std::map<QString, FolderInfo *>())
+    , _folderMap(FolderMap())
     , _quotaInfoPtr(nullptr)
     , _totalSize(0)
     , _used(0)
@@ -57,7 +57,7 @@ void AccountInfo::updateStatus()
     std::size_t cnt = _folderMap.size();
 
     if (cnt == 1) {
-        FolderInfo *folderInfo = _folderMap.begin()->second;
+        FolderInfo *folderInfo = _folderMap.begin()->second.get();
         if (folderInfo) {
             if (folderInfo->_paused) {
                 _status = OCC::SyncResult::Paused;
@@ -87,8 +87,8 @@ void AccountInfo::updateStatus()
         int abortOrPausedSeen = 0;
         int runSeen = 0;
 
-        for (auto it = _folderMap.begin(); it != _folderMap.end(); it++) {
-            FolderInfo *folderInfo = it->second;
+        for (auto const &folderMapElt : _folderMap) {
+            const FolderInfo *folderInfo = folderMapElt.second.get();
             if (folderInfo) {
                 if (folderInfo->_paused) {
                     abortOrPausedSeen++;
@@ -138,7 +138,7 @@ void AccountInfo::updateStatus()
     }
 }
 
-QString AccountInfo::folderPath(const QString &folderId, const QString &filePath)
+QString AccountInfo::folderPath(const QString &folderId, const QString &filePath) const
 {
     QString fullFilePath = QString();
 

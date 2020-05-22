@@ -57,7 +57,7 @@ signals:
     void displayOnWebview(const SynchronizedItem &item);
 
 private:
-    const SynchronizedItem &_item;
+    const SynchronizedItem _item;
     bool _isSelected;
     QSize _fileIconSize;
     QSize _directionIconSize;

@@ -28,6 +28,8 @@ namespace KDC {
 
 static const char accountIdProperty[] = "accountId";
 
+typedef std::map<QString, std::shared_ptr<FolderInfo>> FolderMap;
+
 struct AccountInfo {
     QString _name;
     QColor _color;
@@ -35,7 +37,7 @@ struct AccountInfo {
     bool _paused;
     bool _unresolvedConflicts;
     OCC::SyncResult::Status _status;
-    std::map<QString, FolderInfo *> _folderMap;
+    FolderMap _folderMap;
     std::shared_ptr<OCC::QuotaInfo> _quotaInfoPtr;
     qint64 _totalSize;
     qint64 _used;
@@ -43,7 +45,7 @@ struct AccountInfo {
     AccountInfo();
     AccountInfo(OCC::AccountState *accountState);
     void updateStatus();
-    QString folderPath(const QString &folderId, const QString &filePath);
+    QString folderPath(const QString &folderId, const QString &filePath) const;
 };
 
 }

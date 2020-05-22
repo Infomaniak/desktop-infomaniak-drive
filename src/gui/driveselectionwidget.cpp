@@ -165,7 +165,7 @@ void DriveSelectionWidget::onClick(bool checked)
     if (_driveMap.size() > 0) {
         MenuWidget *menu = new MenuWidget(MenuWidget::List, this);
 
-        for (auto driveMapElt : _driveMap) {
+        for (auto const &driveMapElt : _driveMap) {
             QWidgetAction *selectDriveAction = new QWidgetAction(this);
             selectDriveAction->setProperty(driveIdProperty, driveMapElt.first);
             MenuItemWidget *driveMenuItemWidget = new MenuItemWidget(driveMapElt.second._name);

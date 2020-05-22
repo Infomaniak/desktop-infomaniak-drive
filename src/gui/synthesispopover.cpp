@@ -500,14 +500,13 @@ QUrl SynthesisPopover::folderUrl(const QString &folderId, const QString &filePat
 
 QString SynthesisPopover::folderPath(const QString &folderId, const QString &filePath)
 {
-    QString fullFilePath = QString();
-
-    const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
-    if (accountInfoIt != _accountInfoMap.end()) {
-        return accountInfoIt->second.folderPath(folderId, filePath);
+    for (auto const &accountInfoMapElt : _accountInfoMap) {
+        if (accountInfoMapElt.second._folderMap.find(folderId) != accountInfoMapElt.second._folderMap.end()) {
+            return accountInfoMapElt.second.folderPath(folderId, filePath);
+        }
     }
 
-    return fullFilePath;
+    return QString();
 }
 
 void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
@@ -527,14 +526,14 @@ void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
     }
 }
 
-const FolderInfo *SynthesisPopover::getFirstFolderWithStatus(const std::map<QString, FolderInfo *> &folderMap,
+const FolderInfo *SynthesisPopover::getFirstFolderWithStatus(const FolderMap &folderMap,
                                                              OCC::SyncResult::Status status)
 {
     const FolderInfo *folderInfo = nullptr;
-    for (auto folderInfoIt : folderMap) {
-        if (folderInfoIt.second) {
-            if (folderInfoIt.second->_status == status) {
-                folderInfo = folderInfoIt.second;
+    for (auto const &folderMapElt : folderMap) {
+        if (folderMapElt.second.get()) {
+            if (folderMapElt.second->_status == status) {
+                folderInfo = folderMapElt.second.get();
                 break;
             }
         }
@@ -546,7 +545,7 @@ const FolderInfo *SynthesisPopover::getFirstFolderWithStatus(const std::map<QStr
     return folderInfo;
 }
 
-const FolderInfo *SynthesisPopover::getFirstFolderByPriority(const std::map<QString, FolderInfo *> &folderMap)
+const FolderInfo *SynthesisPopover::getFirstFolderByPriority(const FolderMap &folderMap)
 {
     static QVector<OCC::SyncResult::Status> statusPriority = QVector<OCC::SyncResult::Status>()
             << OCC::SyncResult::Status::NotYetStarted
@@ -566,7 +565,7 @@ const FolderInfo *SynthesisPopover::getFirstFolderByPriority(const std::map<QStr
         }
     }
     if (!folderInfo) {
-        folderInfo = (folderMap.empty() ? nullptr : folderMap.begin()->second);
+        folderInfo = (folderMap.empty() ? nullptr : folderMap.begin()->second.get());
     }
     return folderInfo;
 }
@@ -736,8 +735,8 @@ void SynthesisPopover::onRefreshAccountList()
                                 auto folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
                                 if (folderInfoIt == accountInfoIt->second._folderMap.end()) {
                                     // New folder
-                                    accountInfoIt->second._folderMap[folderIt.key()] =
-                                            new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path());
+                                    accountInfoIt->second._folderMap[folderIt.key()] = std::unique_ptr<FolderInfo>(
+                                            new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path()));
                                     folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
                                 }
 
@@ -826,16 +825,15 @@ void SynthesisPopover::onUpdateProgress(const QString &folderId, const OCC::Prog
                 if (accountInfoIt != _accountInfoMap.end()) {
                     const auto folderInfoIt = accountInfoIt->second._folderMap.find(folderId);
                     if (folderInfoIt != accountInfoIt->second._folderMap.end()) {
-                        FolderInfo *folderInfo = folderInfoIt->second;
-                        if (folderInfo) {
-                            folderInfo->_currentFile = progress.currentFile();
-                            folderInfo->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
-                            folderInfo->_completedSize = progress.completedSize();
-                            folderInfo->_totalSize = qMax(progress.completedSize(), progress.totalSize());
-                            folderInfo->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
-                            folderInfo->_paused = folder->syncPaused();
-                            folderInfo->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
-                            folderInfo->_status = folder->syncResult().status();
+                        if (folderInfoIt->second.get()) {
+                            folderInfoIt->second.get()->_currentFile = progress.currentFile();
+                            folderInfoIt->second.get()->_totalFiles = qMax(progress.currentFile(), progress.totalFiles());
+                            folderInfoIt->second.get()->_completedSize = progress.completedSize();
+                            folderInfoIt->second.get()->_totalSize = qMax(progress.completedSize(), progress.totalSize());
+                            folderInfoIt->second.get()->_estimatedRemainingTime = progress.totalProgress().estimatedEta;
+                            folderInfoIt->second.get()->_paused = folder->syncPaused();
+                            folderInfoIt->second.get()->_unresolvedConflicts = folder->syncResult().hasUnresolvedConflicts();
+                            folderInfoIt->second.get()->_status = folder->syncResult().status();
                         }
                         else {
                             qCDebug(lcSynthesisPopover) << "Null pointer!";
@@ -843,7 +841,7 @@ void SynthesisPopover::onUpdateProgress(const QString &folderId, const OCC::Prog
                         }
 
                         if (account->id() == _currentAccountId) {
-                            refreshStatusBar(folderInfo);
+                            refreshStatusBar(folderInfoIt->second.get());
                         }
                     }
 
@@ -982,10 +980,10 @@ void SynthesisPopover::onOpenFolderMenu(bool checked)
         else if (accountInfoIt->second._folderMap.size() > 1) {
             // Open menu
             MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
-            for (auto folderInfoIt : accountInfoIt->second._folderMap) {
+            for (auto const &folderMapElt : accountInfoIt->second._folderMap) {
                 QWidgetAction *openFolderAction = new QWidgetAction(this);
-                openFolderAction->setProperty(MenuWidget::actionTypeProperty.c_str(), folderInfoIt.first);
-                MenuItemWidget *openFolderMenuItemWidget = new MenuItemWidget(folderInfoIt.second->_name);
+                openFolderAction->setProperty(MenuWidget::actionTypeProperty.c_str(), folderMapElt.first);
+                MenuItemWidget *openFolderMenuItemWidget = new MenuItemWidget(folderMapElt.second->_name);
                 openFolderMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/folder.svg");
                 openFolderAction->setDefaultWidget(openFolderMenuItemWidget);
                 connect(openFolderAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenFolder);
@@ -1061,11 +1059,11 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
             : _notificationsDisabledForPeriodMap;
 
     QWidgetAction *notificationAction;
-    for (auto notificationActionsItem : notificationMap) {
+    for (auto const &notificationMapElt : notificationMap) {
         notificationAction = new QWidgetAction(this);
-        notificationAction->setProperty(MenuWidget::actionTypeProperty.c_str(), notificationActionsItem.first);
-        MenuItemWidget *notificationMenuItemWidget = new MenuItemWidget(notificationActionsItem.second);
-        notificationMenuItemWidget->setChecked(notificationActionsItem.first == _notificationsDisabled);
+        notificationAction->setProperty(MenuWidget::actionTypeProperty.c_str(), notificationMapElt.first);
+        MenuItemWidget *notificationMenuItemWidget = new MenuItemWidget(notificationMapElt.second);
+        notificationMenuItemWidget->setChecked(notificationMapElt.first == _notificationsDisabled);
         notificationAction->setDefaultWidget(notificationMenuItemWidget);
         connect(notificationAction, &QWidgetAction::triggered, this, &SynthesisPopover::onNotificationActionTriggered);
         notificationActionGroup->addAction(notificationAction);

@@ -135,8 +135,8 @@ void ProxyServerDialog::initUI()
     _proxyTypeComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
     _proxyTypeComboBox->setAttribute(Qt::WA_MacShowFocusRect, false);
 
-    for (auto manualProxy : _manualProxyMap) {
-        _proxyTypeComboBox->insertItem(manualProxy.second.first, manualProxy.second.second, manualProxy.first);
+    for (auto const &manualProxyMapElt : _manualProxyMap) {
+        _proxyTypeComboBox->insertItem(manualProxyMapElt.second.first, manualProxyMapElt.second.second, manualProxyMapElt.first);
     }
     manualProxyTypeHBox->addWidget(_proxyTypeComboBox);
     manualProxyTypeHBox->addStretch();
@@ -331,7 +331,7 @@ void ProxyServerDialog::onSaveButtonTriggered(bool checked)
     // ... and set the folders dirty, they refresh their proxy next time they start the sync
     OCC::FolderMan::instance()->setDirtyProxy();
 
-    for (auto account : OCC::AccountManager::instance()->accounts()) {
+    for (auto const &account : OCC::AccountManager::instance()->accounts()) {
         account->freshConnectionAttempt();
     }
 
