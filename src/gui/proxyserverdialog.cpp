@@ -216,7 +216,7 @@ void ProxyServerDialog::initUI()
     connect(_portLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onPortTextEdited);
     connect(_addressLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onAddressTextEdited);
     connect(_addressLineEdit, &QLineEdit::editingFinished, this, &ProxyServerDialog::onAddressEditingFinished);
-    connect(_authenticationCheckBox, &CustomCheckBox::clicked,this, &ProxyServerDialog::onAuthenticationCheckBoxClicked);
+    connect(_authenticationCheckBox, &CustomCheckBox::clicked, this, &ProxyServerDialog::onAuthenticationCheckBoxClicked);
     connect(_loginLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onLoginTextEdited);
     connect(_pwdLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onPwdTextEdited);
 }

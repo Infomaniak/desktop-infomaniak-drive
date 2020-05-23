@@ -44,11 +44,6 @@ static const int winDialogBoxHMargin = 18;
 static const int winDialogBoxVMargin = 10;
 static const QSize winIconSize = QSize(10, 10);
 
-static const int linuxDialogBarHeight = 42;
-static const int linuxDialogBoxHMargin = 10;
-static const int linuxDialogBoxVMargin = 12;
-static const QSize linuxIconSize = QSize(18, 18);
-
 CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
     : QWidget(parent)
     , _popup(popup)
@@ -58,7 +53,7 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
     QHBoxLayout *hBox = new QHBoxLayout();
     setLayout(hBox);
 
-    if (_popup) {
+    if (_popup || OCC::Utility::isLinux()) {
         setMinimumHeight(popupBarHeight);
         setMaximumHeight(popupBarHeight);
         hBox->setContentsMargins(popupBoxHMargin, popupBoxVTMargin, popupBoxHMargin, popupBoxVBMargin);
@@ -73,8 +68,6 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
     }
     else {
         QToolButton *closeButton = new QToolButton(this);
-        QToolButton *minButton = new QToolButton(this);
-        QToolButton *maxButton = new QToolButton(this);
 
         if (OCC::Utility::isMac()) {
             setMinimumHeight(macDialogBarHeight);
@@ -93,6 +86,7 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
 
             QIcon minIcon;
             minIcon.addFile(":/client/resources/icons/mac/dark/unactive.svg", QSize(), QIcon::Disabled);
+            QToolButton *minButton = new QToolButton(this);
             minButton->setIcon(minIcon);
             minButton->setIconSize(macIconSize);
             minButton->setEnabled(false);
@@ -100,6 +94,7 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
 
             QIcon maxIcon;
             maxIcon.addFile(":/client/resources/icons/mac/dark/unactive.svg", QSize(), QIcon::Disabled);
+            QToolButton *maxButton = new QToolButton(this);
             maxButton->setIcon(maxIcon);
             maxButton->setIconSize(macIconSize);
             maxButton->setEnabled(false);
@@ -112,22 +107,9 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
             hBox->setContentsMargins(winDialogBoxHMargin, winDialogBoxVMargin, winDialogBoxHMargin, winDialogBoxVMargin);
 
             QIcon closeIcon;
-            closeIcon.addFile(":/client/resources/icons/windows/white/close.svg", QSize(), QIcon::Normal);
+            closeIcon.addFile(":/client/resources/icons/windows/white/close.svg");
             closeButton->setIcon(closeIcon);
             closeButton->setIconSize(winIconSize);
-            closeButton->setAutoRaise(true);
-            hBox->addStretch();
-            hBox->addWidget(closeButton);
-        }
-        else if (OCC::Utility::isLinux()) {
-            setMinimumHeight(linuxDialogBarHeight);
-            setMaximumHeight(linuxDialogBarHeight);
-            hBox->setContentsMargins(linuxDialogBoxHMargin, linuxDialogBoxVMargin, linuxDialogBoxHMargin, linuxDialogBoxVMargin);
-
-            QIcon closeIcon;
-            closeIcon.addFile(":/client/resources/icons/windows/white/close.svg", QSize(), QIcon::Normal);
-            closeButton->setIcon(closeIcon);
-            closeButton->setIconSize(linuxIconSize);
             closeButton->setAutoRaise(true);
             hBox->addStretch();
             hBox->addWidget(closeButton);
@@ -168,11 +150,9 @@ bool CustomSystemBar::event(QEvent *event)
     if (event->type() == QEvent::WindowActivate || event->type() == QEvent::WindowDeactivate) {
         QList<QToolButton *> buttonList = findChildren<QToolButton*>();
         for (QToolButton *button : buttonList) {
-            //QApplication::sendEvent(button, new QEvent(event->type()));
             button->setEnabled(event->type() == QEvent::WindowActivate ? true : false);
         }
     }
-
     return QWidget::event(event);
 }
 

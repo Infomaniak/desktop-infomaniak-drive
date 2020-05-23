@@ -226,6 +226,8 @@ KDC--CustomDialog QLabel#descriptionLabel
 KDC--CustomDialog QLabel#header
 {
     color: #9F9F9F;
+    padding-left: 10px;
+    padding-right: 10px;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 14px;
@@ -320,6 +322,18 @@ KDC--CustomDialog QComboBox::drop-down
 {
      border: 0px;
      width: 40px;
+}
+
+KDC--CustomDialog QToolButton
+{
+    background-color: transparent;
+    border: none;
+}
+
+KDC--CustomDialog QToolButton:hover
+{
+    background-color: transparent;
+    border: none;
 }
 
 /*******************/

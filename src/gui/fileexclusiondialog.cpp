@@ -46,15 +46,10 @@ static const int filesTableBoxVMargin= 20;
 
 static const int rowHeight = 38;
 
-static QVector<int> tableColumnHeaderWidth = QVector<int>()
+static QVector<int> tableColumnWidth = QVector<int>()
         << 270  // tableColumn::Pattern
         << 190  // tableColumn::Deletable
-        << 25;  // tableColumn::Action
-
-static QVector<int> tableColumnWidth = QVector<int>()
-        << 340  // tableColumn::Pattern
-        << 120  // tableColumn::Deletable
-        << 25;  // tableColumn::Action
+        << 20;  // tableColumn::Action
 
 static const int skippedLinesRole = CustomDialog::actionIconPathRole + 1;
 static const int isGlobalRole = CustomDialog::actionIconPathRole + 2;
@@ -73,13 +68,7 @@ FileExclusionDialog::FileExclusionDialog(QWidget *parent)
                   "QTableView::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }");
 
     initUI();
-
-    OCC::ConfigFile cfgFile;
-    addPattern(".csync_journal.db*", /*deletable=*/false, /*readonly=*/true, /*global=*/true);
-    addPattern("._sync_*.db*", /*deletable=*/false, /*readonly=*/true, /*global=*/true);
-    addPattern(".sync_*.db*", /*deletable=*/false, /*readonly=*/true, /*global=*/true);
-    readIgnoreFile(cfgFile.excludeFile(OCC::ConfigFile::SystemScope), /*global=*/true);
-    readIgnoreFile(cfgFile.excludeFile(OCC::ConfigFile::UserScope), /*global=*/false);
+    updateUI();
 }
 
 void FileExclusionDialog::initUI()
@@ -123,17 +112,20 @@ void FileExclusionDialog::initUI()
     // Files table header
     QHBoxLayout *filesTableHeaderHBox = new QHBoxLayout();
     filesTableHeaderHBox->setContentsMargins(boxHMargin, 0, boxHMargin, filesTableHeaderBoxVMargin);
+    filesTableHeaderHBox->setSpacing(0);
     mainLayout->addLayout(filesTableHeaderHBox);
 
-    QLabel *header1 = new QLabel(tr("NAME"), this);
-    header1->setObjectName("header");
-    header1->setFixedWidth(tableColumnHeaderWidth[tableColumn::Pattern]);
-    filesTableHeaderHBox->addWidget(header1);
+    QLabel *header1Label = new QLabel(tr("NAME"), this);
+    header1Label->setObjectName("header");
+    header1Label->setFixedWidth(tableColumnWidth[tableColumn::Pattern]);
+    filesTableHeaderHBox->addWidget(header1Label);
 
-    QLabel *header2 = new QLabel(tr("ALLOW DELETION"), this);
-    header2->setObjectName("header");
-    header2->setFixedWidth(tableColumnHeaderWidth[tableColumn::Deletable]);
-    filesTableHeaderHBox->addWidget(header2);
+    QLabel *header2Label = new QLabel(tr("ALLOW DELETION"), this);
+    header2Label->setObjectName("header");
+    header2Label->setFixedWidth(tableColumnWidth[tableColumn::Deletable]);
+    header2Label->setAlignment(Qt::AlignCenter);
+    filesTableHeaderHBox->addWidget(header2Label);
+    filesTableHeaderHBox->addStretch();
 
     // Files table view
     QHBoxLayout *filesTableHBox = new QHBoxLayout();
@@ -148,6 +140,7 @@ void FileExclusionDialog::initUI()
     _filesTableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     _filesTableView->verticalHeader()->setDefaultSectionSize(rowHeight);
     _filesTableView->setSelectionMode(QAbstractItemView::NoSelection);
+    _filesTableView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     filesTableHBox->addWidget(_filesTableView);
     mainLayout->setStretchFactor(_filesTableView, 1);
 
@@ -170,11 +163,24 @@ void FileExclusionDialog::initUI()
     buttonsHBox->addWidget(cancelButton);
     buttonsHBox->addStretch();
 
+    connect(_hiddenFilesCheckBox, &CustomCheckBox::clicked, this, &FileExclusionDialog::onHiddenFilesCheckBoxClicked);
     connect(addFileButton, &CustomPushButton::clicked, this, &FileExclusionDialog::onAddFileButtonTriggered);
     connect(_filesTableView, &QTableView::clicked, this, &FileExclusionDialog::onTableViewClicked);
     connect(_saveButton, &QPushButton::clicked, this, &FileExclusionDialog::onSaveButtonTriggered);
     connect(cancelButton, &QPushButton::clicked, this, &FileExclusionDialog::onExit);
     connect(this, &CustomDialog::exit, this, &FileExclusionDialog::onExit);
+}
+
+void FileExclusionDialog::updateUI()
+{
+    _hiddenFilesCheckBox->setChecked(OCC::FolderMan::instance()->ignoreHiddenFiles());
+
+    OCC::ConfigFile cfgFile;
+    addPattern(".csync_journal.db*", /*deletable=*/false, /*readonly=*/true, /*global=*/true);
+    addPattern("._sync_*.db*", /*deletable=*/false, /*readonly=*/true, /*global=*/true);
+    addPattern(".sync_*.db*", /*deletable=*/false, /*readonly=*/true, /*global=*/true);
+    readIgnoreFile(cfgFile.excludeFile(OCC::ConfigFile::SystemScope), /*global=*/true);
+    readIgnoreFile(cfgFile.excludeFile(OCC::ConfigFile::UserScope), /*global=*/false);
 }
 
 void FileExclusionDialog::readIgnoreFile(const QString &file, bool global)
@@ -226,9 +232,6 @@ void FileExclusionDialog::addPattern(const QString &pattern, bool deletable, boo
     patternItem->setData(global, isGlobalRole);
 
     QStandardItem *deletableItem = new QStandardItem();
-    deletableItem->setCheckable(true);
-    deletableItem->setEnabled(true);
-    deletableItem->setCheckState(deletable ? Qt::Checked : Qt::Unchecked);
 
     QStandardItem *actionItem = new QStandardItem();
     setActionIcon(actionItem, ":/client/resources/icons/actions/delete.svg");
@@ -243,6 +246,22 @@ void FileExclusionDialog::addPattern(const QString &pattern, bool deletable, boo
         patternItem->setFlags(patternItem->flags() ^ Qt::ItemIsEnabled);
         deletableItem->setFlags(deletableItem->flags() ^ Qt::ItemIsEnabled);
     }
+
+    // Set custom checkbox for Deletable column
+    QWidget *deletableWidget = new QWidget(this);
+    QHBoxLayout *deletableHBox = new QHBoxLayout();
+    deletableWidget->setLayout(deletableHBox);
+    deletableHBox->setContentsMargins(0, 0, 0, 0);
+    deletableHBox->setAlignment(Qt::AlignCenter);
+    CustomCheckBox *deletableCheckBox = new CustomCheckBox(this);
+    deletableCheckBox->setChecked(deletable);
+    deletableCheckBox->setAutoFillBackground(true);
+    deletableCheckBox->setObjectName("deletableCheckBox");
+    deletableHBox->addWidget(deletableCheckBox);
+    int rowNum = _filesTableModel->rowCount() - 1;
+    _filesTableView->setIndexWidget(_filesTableModel->index(rowNum, tableColumn::Deletable),
+                                    deletableWidget);
+    connect(deletableCheckBox, &CustomCheckBox::clicked, this, &FileExclusionDialog::onDeletableCheckBoxClicked);
 }
 
 void FileExclusionDialog::setActionIcon()
@@ -296,6 +315,13 @@ void FileExclusionDialog::onExit()
     }
 }
 
+void FileExclusionDialog::onHiddenFilesCheckBoxClicked(bool checked)
+{
+    Q_UNUSED(checked)
+
+    setNeedToSave(true);
+}
+
 void FileExclusionDialog::onAddFileButtonTriggered(bool checked)
 {
     Q_UNUSED(checked)
@@ -312,9 +338,6 @@ void FileExclusionDialog::onAddFileButtonTriggered(bool checked)
 void FileExclusionDialog::onTableViewClicked(const QModelIndex &index)
 {
     if (index.isValid()) {
-        if (index.column() == tableColumn::Deletable) {
-            setNeedToSave(true);
-        }
         if (index.column() == tableColumn::Action) {
             QStandardItem *item = _filesTableModel->item(index.row(), tableColumn::Deletable);
             if (item && item->flags() & Qt::ItemIsEnabled) {
@@ -333,6 +356,13 @@ void FileExclusionDialog::onTableViewClicked(const QModelIndex &index)
     }
 }
 
+void FileExclusionDialog::onDeletableCheckBoxClicked(bool checked)
+{
+    Q_UNUSED(checked)
+
+    setNeedToSave(true);
+}
+
 void FileExclusionDialog::onSaveButtonTriggered(bool checked)
 {
     Q_UNUSED(checked)
@@ -343,7 +373,16 @@ void FileExclusionDialog::onSaveButtonTriggered(bool checked)
     if (ignoreFile.open(QIODevice::WriteOnly)) {
         for (int row = 0; row < _filesTableModel->rowCount(); ++row) {
             QStandardItem *patternItem = _filesTableModel->item(row, tableColumn::Pattern);
-            QStandardItem *deletableItem = _filesTableModel->item(row, tableColumn::Deletable);
+
+            QWidget *deletableWidget = qobject_cast<QWidget *>(
+                        _filesTableView->indexWidget(_filesTableModel->index(row, tableColumn::Deletable)));
+            if (!deletableWidget) {
+               ASSERT(false);
+            }
+            CustomCheckBox *deletableCheckBox = deletableWidget->findChild<CustomCheckBox *>();
+            if (!deletableCheckBox) {
+               ASSERT(false);
+            }
 
             if (patternItem->data(isGlobalRole).toBool()) {
                 continue;
@@ -355,7 +394,7 @@ void FileExclusionDialog::onSaveButtonTriggered(bool checked)
             }
 
             QByteArray prepend;
-            if (deletableItem->checkState() == Qt::Checked) {
+            if (deletableCheckBox->isChecked()) {
                 prepend = "]";
             } else if (patternItem->text().startsWith('#')) {
                 prepend = "\\";

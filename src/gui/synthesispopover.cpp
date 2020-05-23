@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "configfile.h"
 #include "theme.h"
 
-#define CONSOLE_DEBUG
+#undef CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
 #include <iostream>
 #endif
@@ -111,7 +111,7 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
     , _notificationsDisabled(NotificationsDisabled::Never)
     , _notificationsDisabledUntilDateTime(QDateTime())
 {
-    setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
     OCC::ConfigFile cfg;
@@ -351,7 +351,7 @@ void SynthesisPopover::paintEvent(QPaintEvent *event)
 
 bool SynthesisPopover::event(QEvent *event)
 {
-    bool ret = QWidget::event(event);
+    bool ret = QDialog::event(event);
     if (event->type() == QEvent::WindowDeactivate) {
         done(QDialog::Accepted);
     }

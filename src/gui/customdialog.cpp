@@ -47,7 +47,7 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
     , _actionIconSize(QSize())
     , _layout(nullptr)
 {
-    setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
@@ -121,6 +121,17 @@ void CustomDialog::paintEvent(QPaintEvent *event)
     painter.setBrush(backgroundColor());
     painter.drawPath(painterPath);
 }
+
+#ifdef Q_OS_LINUX
+bool CustomDialog::event(QEvent *event)
+{
+    if (!isActiveWindow()) {
+        activateWindow();
+    }
+
+    return QDialog::event(event);
+}
+#endif
 
 void CustomDialog::onDrag(const QPoint &move)
 {

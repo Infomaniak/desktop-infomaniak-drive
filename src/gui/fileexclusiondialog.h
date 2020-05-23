@@ -48,6 +48,7 @@ private:
     bool _needToSave;
 
     void initUI();
+    void updateUI();
     void readIgnoreFile(const QString &file, bool global);
     void addPattern(const QString &pattern, bool deletable, bool readOnly, bool global,
         const QStringList &skippedLines = QStringList());
@@ -57,8 +58,10 @@ private:
 
 private slots:
     void onExit();
+    void onHiddenFilesCheckBoxClicked(bool checked = false);
     void onAddFileButtonTriggered(bool checked = false);
     void onTableViewClicked(const QModelIndex &index);
+    void onDeletableCheckBoxClicked(bool checked = false);
     void onSaveButtonTriggered(bool checked = false);
 };
 
