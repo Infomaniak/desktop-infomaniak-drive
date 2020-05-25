@@ -668,9 +668,11 @@ void ownCloudGui::setupSynthesisPopover()
 
 void ownCloudGui::setupParametersDialog()
 {
+#ifdef KDRIVE_V2_NEW_SETTINGS
     _parametersDialog = new KDC::ParametersDialog();
     connect(_parametersDialog, &KDC::ParametersDialog::addDrive, this, &ownCloudGui::slotNewAccountWizard);
     connect(_parametersDialog, &KDC::ParametersDialog::setStyle, this, &ownCloudGui::slotSetStyle);
+#endif
 }
 
 void ownCloudGui::updatePopover()
@@ -1136,7 +1138,6 @@ void ownCloudGui::slotDisableNotifications(KDC::SynthesisPopover::NotificationsD
 void ownCloudGui::slotApplyStyle()
 {
     Utility::setStyle(qApp);
-    slotComputeOverallSyncStatus();
 }
 
 void ownCloudGui::slotSetStyle(bool darkTheme)
@@ -1144,7 +1145,12 @@ void ownCloudGui::slotSetStyle(bool darkTheme)
     ConfigFile cfg;
     cfg.setDarkTheme(darkTheme);
     Utility::setStyle(qApp, darkTheme);
-    slotComputeOverallSyncStatus();
+
+    // Force apply style
+#ifdef KDRIVE_V2_NEW_SETTINGS
+    _parametersDialog->forceRedraw();
+    _synthesisPopover->forceRedraw();
+#endif
 }
 
 void ownCloudGui::setPauseOnAllFoldersHelper(bool pause)

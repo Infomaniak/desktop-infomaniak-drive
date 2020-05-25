@@ -44,7 +44,7 @@ ActionWidget::ActionWidget(const QString &path, const QString &text, QWidget *pa
 {
     setContentsMargins(0, 0, 0, 0);
 
-    QHBoxLayout *hbox = new QHBoxLayout(this);
+    QHBoxLayout *hbox = new QHBoxLayout();
     hbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
     hbox->setSpacing(boxSpacing);
     setLayout(hbox);

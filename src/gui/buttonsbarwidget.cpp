@@ -34,7 +34,7 @@ ButtonsBarWidget::ButtonsBarWidget(QWidget *parent)
     , _backgroundColor(QColor())
     , _hboxLayout(nullptr)
 {
-    _hboxLayout = new QHBoxLayout(this);
+    _hboxLayout = new QHBoxLayout();
     _hboxLayout->setContentsMargins(hMargin, vMargin, hMargin, vMargin);
     setLayout(_hboxLayout);
 }

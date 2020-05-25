@@ -42,6 +42,7 @@ public:
     explicit CustomDialog(bool popup, QWidget *parent = nullptr);
 
     inline QVBoxLayout *mainLayout() const { return _layout; }
+    void forceRedraw();
 
 signals:
     void exit();

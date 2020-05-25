@@ -58,6 +58,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
+static const QSize windowSize(440, 575);
 static const int triangleHeight = 10;
 static const int triangleWidth  = 20;
 static const int trianglePosition = 100; // Position from side
@@ -114,6 +115,9 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
+    setMinimumSize(windowSize);
+    setMaximumSize(windowSize);
+
     OCC::ConfigFile cfg;
     _notificationsDisabled = cfg.optionalDesktopNotifications()
             ? NotificationsDisabled::Never
@@ -136,6 +140,15 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
 void SynthesisPopover::setPosition(const QRect &sysTrayIconRect)
 {
     _sysTrayIconRect = sysTrayIconRect;
+}
+
+void SynthesisPopover::forceRedraw()
+{
+#ifdef Q_OS_WINDOWS
+    // Windows hack
+    setMinimumHeight(minimumHeight() + 1);
+    setMinimumHeight(minimumHeight());
+#endif
 }
 
 void SynthesisPopover::changeEvent(QEvent *event)

@@ -42,7 +42,7 @@ SendErrorsWidget::SendErrorsWidget(QWidget *parent)
 {
     setContentsMargins(0, 0, 0, 0);
 
-    QHBoxLayout *hbox = new QHBoxLayout(this);
+    QHBoxLayout *hbox = new QHBoxLayout();
     hbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
     hbox->setSpacing(boxSpacing);
     setLayout(hbox);

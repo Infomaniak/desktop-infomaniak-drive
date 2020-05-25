@@ -36,7 +36,7 @@ ProgressBarWidget::ProgressBarWidget(QWidget *parent)
     , _progressBar(nullptr)
     , _progressLabel(nullptr)
 {
-    QHBoxLayout *hboxProgressBar = new QHBoxLayout(this);
+    QHBoxLayout *hboxProgressBar = new QHBoxLayout();
     hboxProgressBar->setContentsMargins(hMargin, vMargin, hMargin, vMargin);
     hboxProgressBar->setSpacing(hSpacing);
 

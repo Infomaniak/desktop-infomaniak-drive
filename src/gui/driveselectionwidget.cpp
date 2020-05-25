@@ -51,7 +51,7 @@ DriveSelectionWidget::DriveSelectionWidget(QWidget *parent)
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    QHBoxLayout *hbox = new QHBoxLayout(this);
+    QHBoxLayout *hbox = new QHBoxLayout();
     hbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
     hbox->setSpacing(boxSpacing);
     setLayout(hbox);

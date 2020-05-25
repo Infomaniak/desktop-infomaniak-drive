@@ -60,6 +60,7 @@ public:
     explicit SynthesisPopover(bool debugMode, QWidget *parent = nullptr);
 
     void setPosition(const QRect &sysTrayIconRect);
+    void forceRedraw();
 
 signals:
     void updateProgress(const QString &folderId, const OCC::ProgressInfo &progress);

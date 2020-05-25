@@ -61,7 +61,7 @@ ParametersDialog::ParametersDialog(QWidget *parent)
     : CustomDialog(false, parent)
     , _currentAccountId(QString())
     , _backgroundMainColor(QColor())
-    , _pageStackedLayout(nullptr)
+    , _pageStackedWidget(nullptr)
     , _mainMenuBarWidget(nullptr)
     , _driveMenuBarWidget(nullptr)
     , _errorsMenuBarWidget(nullptr)
@@ -94,7 +94,7 @@ void ParametersDialog::openErrorPage(const QString &accountId)
 void ParametersDialog::initUI()
 {
     /*
-     *  _pageStackedLayout
+     *  _pageStackedWidget
      *      mainPageWidget
      *          mainVBox
      *              _mainMenuBarWidget
@@ -118,15 +118,15 @@ void ParametersDialog::initUI()
      */
 
     // Page stacked widget
-    _pageStackedLayout = new QStackedLayout(this);
-    mainLayout()->addLayout(_pageStackedLayout);
+    _pageStackedWidget = new QStackedWidget(this);
+    mainLayout()->addWidget(_pageStackedWidget);
 
     //
     // Main widget
     //
     QWidget *mainPageWidget = new QWidget(this);
     mainPageWidget->setContentsMargins(0, 0, 0, 0);
-    _pageStackedLayout->insertWidget(Page::Main, mainPageWidget);
+    _pageStackedWidget->insertWidget(Page::Main, mainPageWidget);
 
     QVBoxLayout *mainVBox = new QVBoxLayout();
     mainVBox->setContentsMargins(0, 0, 0, 0);
@@ -139,6 +139,7 @@ void ParametersDialog::initUI()
 
     // Main stacked widget
     _mainStackedWidget = new QStackedWidget(this);
+    _mainStackedWidget->setObjectName("mainStackedWidget");
     mainVBox->addWidget(_mainStackedWidget);
     mainVBox->setStretchFactor(_mainStackedWidget, 1);
 
@@ -160,7 +161,7 @@ void ParametersDialog::initUI()
     //
     QWidget *drivePageWidget = new QWidget(this);
     drivePageWidget->setContentsMargins(0, 0, 0, 0);
-    _pageStackedLayout->insertWidget(Page::Drive, drivePageWidget);
+    _pageStackedWidget->insertWidget(Page::Drive, drivePageWidget);
 
     QVBoxLayout *driveVBox = new QVBoxLayout();
     driveVBox->setContentsMargins(0, 0, 0, 0);
@@ -186,7 +187,7 @@ void ParametersDialog::initUI()
     //
     QWidget *errorsPageWidget = new QWidget(this);
     errorsPageWidget->setContentsMargins(0, 0, 0, 0);
-    _pageStackedLayout->insertWidget(Page::Errors, errorsPageWidget);
+    _pageStackedWidget->insertWidget(Page::Errors, errorsPageWidget);
 
     QVBoxLayout *errorsVBox = new QVBoxLayout();
     errorsVBox->setContentsMargins(0, 0, 0, 0);
@@ -219,6 +220,7 @@ void ParametersDialog::initUI()
 
     // Errors stacked widget
     _errorsStackedWidget = new QStackedWidget(this);
+    _errorsStackedWidget->setObjectName("errorsStackedWidget");
     errorsVBox->addWidget(_errorsStackedWidget);
     errorsVBox->setStretchFactor(_errorsStackedWidget, 1);
 
@@ -353,8 +355,8 @@ void ParametersDialog::onRefreshAccountList()
                     _currentAccountId = QString();
                     _driveMenuBarWidget->reset();
                     _drivePreferencesWidget->reset();
-                    if (_pageStackedLayout->currentIndex() == Page::Drive) {
-                        _pageStackedLayout->setCurrentIndex(Page::Main);
+                    if (_pageStackedWidget->currentIndex() == Page::Drive) {
+                        _pageStackedWidget->setCurrentIndex(Page::Main);
                     }
                 }
                 accountStatusIt = _accountInfoMap.erase(accountStatusIt);
@@ -497,7 +499,7 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                         }
 
                         if (_currentAccountId == accountInfoIt->first
-                                && _pageStackedLayout->currentIndex() == Page::Drive) {
+                                && _pageStackedWidget->currentIndex() == Page::Drive) {
                             emit _drivePreferencesWidget->errorAdded();
                         }
                     }
@@ -589,7 +591,7 @@ void ParametersDialog::onDisplayErrors(const QString &accountId)
     if (accountInfoIt != _accountInfoMap.end()) {
         _errorsMenuBarWidget->setAccount(accountInfoIt->first, &accountInfoIt->second);
         _errorsStackedWidget->setCurrentIndex(accountInfoIt->second._errorsListStackPosition);
-        _pageStackedLayout->setCurrentIndex(Page::Errors);
+        _pageStackedWidget->setCurrentIndex(Page::Errors);
     }
 }
 
@@ -601,7 +603,7 @@ void ParametersDialog::onDisplayDriveParameters(const QString &accountId)
         _driveMenuBarWidget->setAccount(accountInfoIt->first, &accountInfoIt->second);
         _drivePreferencesWidget->setAccount(accountInfoIt->first, &accountInfoIt->second,
                                             accountInfoIt->second._errorsListWidget != nullptr);
-        _pageStackedLayout->setCurrentIndex(Page::Drive);
+        _pageStackedWidget->setCurrentIndex(Page::Drive);
     }
 }
 
@@ -612,7 +614,7 @@ void ParametersDialog::onSetStyle(bool darkTheme)
 
 void ParametersDialog::onDisplayDrivesList()
 {
-    _pageStackedLayout->setCurrentIndex(Page::Main);
+    _pageStackedWidget->setCurrentIndex(Page::Main);
 }
 
 void ParametersDialog::onSendLogs()

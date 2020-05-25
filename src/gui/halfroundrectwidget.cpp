@@ -38,7 +38,7 @@ HalfRoundRectWidget::HalfRoundRectWidget(QWidget *parent)
     , _bottomCornersColor(QColor())
     , _hboxLayout(nullptr)
 {
-    _hboxLayout = new QHBoxLayout(this);
+    _hboxLayout = new QHBoxLayout();
     setLayout(_hboxLayout);
 }
 

@@ -182,10 +182,6 @@ KDC--CustomSystemBar QToolButton
 
 KDC--CustomDialog
 {
-    min-width: 625px;
-    max-width: 625px;
-    min-height: 510px;
-    max-height: 510px;
     qproperty-background_color: #2D3034;
     qproperty-action_icon_color: #C0C0C0;
     qproperty-action_icon_size: 18px;
@@ -420,6 +416,7 @@ KDC--ProgressBarWidget QLabel#progressLabel
 
 KDC--HalfRoundRectWidget
 {
+    background-color: #2D3034;
     qproperty-bottom_corners_color: #1B1B1D;
 }
 
@@ -440,10 +437,6 @@ KDC--BottomWidget
 
 KDC--SynthesisPopover
 {
-    min-width: 440px;
-    max-width: 440px;
-    min-height: 575px;
-    max-height: 575px;
     qproperty-background_main_color: #2D3034;
 }
 
@@ -543,8 +536,18 @@ KDC--ParametersDialog QScrollBar::sub-line:vertical
 
 KDC--ParametersDialog QStackedWidget
 {
-    background-color: #1B1B1D;
+    background-color: transparent;
     border: 0px;
+}
+
+KDC--ParametersDialog QStackedWidget#mainStackedWidget
+{
+    background-color: #1B1B1D;
+}
+
+KDC--ParametersDialog QStackedWidget#errorsStackedWidget
+{
+    background-color: #1B1B1D;
 }
 
 KDC--ParametersDialog QScrollArea
@@ -716,7 +719,7 @@ KDC--DriveMenuBarWidget
     max-height: 70px;
 }
 
-KDC--DriveMenuBarWidget QLabel#accountNameLabel
+KDC--DriveMenuBarWidget QLabel#titleLabel
 {
     color: #FFFFFF;
     font-family: "Suisse Int'l";
@@ -736,7 +739,7 @@ KDC--ErrorsMenuBarWidget
 
 KDC--ErrorsMenuBarWidget QLabel#titleLabel
 {
-    color: #444444;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 18px;

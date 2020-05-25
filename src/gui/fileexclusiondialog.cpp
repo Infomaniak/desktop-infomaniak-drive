@@ -195,7 +195,13 @@ void FileExclusionDialog::readIgnoreFile(const QString &file, bool global)
 
     while (!ignores.atEnd()) {
         QString line = QString::fromUtf8(ignores.readLine());
+
+        // Remove end of line
+#ifdef Q_OS_WINDOWS
+        line.chop(2);
+#else
         line.chop(1);
+#endif
 
         // Collect empty lines and comments, we want to preserve them
         if (line.isEmpty() || line.startsWith("#")) {

@@ -39,9 +39,9 @@ static const int macDialogBoxVMargin = 3;
 static const int macDialogBoxSpacing = 3;
 static const QSize macIconSize = QSize(12, 12);
 
-static const int winDialogBarHeight = 30;
+static const int winDialogBarHeight = 22;
 static const int winDialogBoxHMargin = 18;
-static const int winDialogBoxVMargin = 10;
+static const int winDialogBoxVMargin = 3;
 static const QSize winIconSize = QSize(10, 10);
 
 CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
@@ -53,7 +53,7 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
     QHBoxLayout *hBox = new QHBoxLayout();
     setLayout(hBox);
 
-    if (_popup || OCC::Utility::isLinux()) {
+    if (_popup) {
         setMinimumHeight(popupBarHeight);
         setMaximumHeight(popupBarHeight);
         hBox->setContentsMargins(popupBoxHMargin, popupBoxVTMargin, popupBoxHMargin, popupBoxVBMargin);
@@ -101,7 +101,7 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
             hBox->addWidget(maxButton);
             hBox->addStretch();
         }
-        else if (OCC::Utility::isWindows()) {
+        else {
             setMinimumHeight(winDialogBarHeight);
             setMaximumHeight(winDialogBarHeight);
             hBox->setContentsMargins(winDialogBoxHMargin, winDialogBoxVMargin, winDialogBoxHMargin, winDialogBoxVMargin);

@@ -17,6 +17,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QDesktopServices>
+#include <QDir>
 #include <QFile>
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsSvgItem>
@@ -503,11 +504,11 @@ QUrl Utility::getUrlFromLocalPath(const QString &path)
         url = QUrl::fromLocalFile(path);
 #else
         // work around a bug in QDesktopServices on Win32, see i-net
-        if (fullFilePath.startsWith(QLatin1String("\\\\")) || fullFilePath.startsWith(QLatin1String("//"))) {
-            url = QUrl::fromLocalFile(QDir::toNativeSeparators(fullFilePath));
+        if (path.startsWith(QLatin1String("\\\\")) || path.startsWith(QLatin1String("//"))) {
+            url = QUrl::fromLocalFile(QDir::toNativeSeparators(path));
         }
         else {
-            url = QUrl::fromLocalFile(fullFilePath);
+            url = QUrl::fromLocalFile(path);
         }
 #endif
     }

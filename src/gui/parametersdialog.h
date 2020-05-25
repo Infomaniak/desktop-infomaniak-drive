@@ -35,7 +35,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QByteArray>
 #include <QColor>
 #include <QDialog>
-#include <QStackedLayout>
 #include <QStackedWidget>
 #include <QString>
 
@@ -76,7 +75,7 @@ private:
 
     QString _currentAccountId;
     QColor _backgroundMainColor;
-    QStackedLayout *_pageStackedLayout;
+    QStackedWidget *_pageStackedWidget;
     MainMenuBarWidget *_mainMenuBarWidget;
     DriveMenuBarWidget *_driveMenuBarWidget;
     ErrorsMenuBarWidget *_errorsMenuBarWidget;

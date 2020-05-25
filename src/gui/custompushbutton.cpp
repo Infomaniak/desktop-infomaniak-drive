@@ -42,7 +42,7 @@ CustomPushButton::CustomPushButton(const QString &path, const QString &text, QWi
     setContentsMargins(0, 0, 0, 0);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    QHBoxLayout *hbox = new QHBoxLayout(this);
+    QHBoxLayout *hbox = new QHBoxLayout();
     hbox->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
     hbox->setSpacing(boxSpacing);
     setLayout(hbox);

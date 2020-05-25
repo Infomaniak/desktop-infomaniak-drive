@@ -57,7 +57,7 @@ DriveMenuBarWidget::DriveMenuBarWidget(QWidget *parent)
     addSpacing(hButtonsSpacing);
 
     _accountNameLabel = new QLabel(this);
-    _accountNameLabel->setObjectName("accountNameLabel");
+    _accountNameLabel->setObjectName("titleLabel");
     addWidget(_accountNameLabel);
 
     addStretch();

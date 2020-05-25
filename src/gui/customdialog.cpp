@@ -27,11 +27,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QLabel>
 #include <QPainter>
 #include <QPainterPath>
+#include <QStylePainter>
 #include <QTableView>
 #include <QVariant>
 
 namespace KDC {
 
+static const QSize windowSize(625, 510);
 static const int cornerRadius = 5;
 static const int hMargin= 20;
 static const int vMargin = 5;
@@ -49,6 +51,9 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
 {
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
+
+    setMinimumSize(windowSize);
+    setMaximumSize(windowSize);
 
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
 
@@ -98,6 +103,15 @@ void CustomDialog::setActionIconSize(const QSize &size)
     if (_actionIconColor != QColor() && _actionIconSize != QSize()) {
         setActionIcon();
     }
+}
+
+void CustomDialog::forceRedraw()
+{
+#ifdef Q_OS_WINDOWS
+    // Windows hack
+    setMinimumHeight(minimumHeight() + 1);
+    setMinimumHeight(minimumHeight());
+#endif
 }
 
 void CustomDialog::paintEvent(QPaintEvent *event)
