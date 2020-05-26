@@ -51,6 +51,7 @@ signals:
     void manageOffer(const QString &accountId);
     void remove(const QString &accountId);
     void displayDriveParameters(const QString &accountId);
+    void displayDriveErrors(const QString &accountId);
     void accountIconSizeChanged();
     void accountIconColorChanged();
     void driveIconSizeChanged();
@@ -66,6 +67,7 @@ private:
     QLabel *_accountIconLabel;
     QLabel *_accountNameLabel;
     QLabel *_statusLabel;
+    QLabel *_statusLinkLabel;
     CustomToolButton *_menuButton;
 
     void paintEvent(QPaintEvent *event) override;
@@ -114,6 +116,7 @@ private slots:
     void onParametersTriggered();
     void onManageOfferTriggered();
     void onRemoveTriggered();
+    void onLinkActivated(const QString &link);
 };
 
 }

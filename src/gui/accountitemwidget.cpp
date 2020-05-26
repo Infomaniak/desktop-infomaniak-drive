@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QPainter>
 #include <QPainterPath>
 #include <QScreen>
+#include <QStringList>
 #include <QWidgetAction>
 
 namespace KDC {
@@ -47,8 +48,16 @@ static const int shadowBlurRadius = 20;
 AccountItemWidget::AccountItemWidget(const QString &accountId, QWidget *parent)
     : QWidget(parent)
     , _item(accountId)
+    , _accountIconSize(QSize())
+    , _accountIconColor(QColor())
+    , _driveIconSize(QSize())
+    , _statusIconSize(QSize())
     , _backgroundColor(QColor())
     , _accountIconLabel(nullptr)
+    , _accountNameLabel(nullptr)
+    , _statusLabel(nullptr)
+    , _statusLinkLabel(nullptr)
+    , _menuButton(nullptr)
 {
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
 
@@ -67,11 +76,16 @@ AccountItemWidget::AccountItemWidget(const QString &accountId, QWidget *parent)
     _accountNameLabel = new QLabel(this);
     _accountNameLabel->setObjectName("accountNameLabel");
     vboxText->addWidget(_accountNameLabel);
+    hbox->addLayout(vboxText);
 
     _statusLabel = new QLabel(this);
     _statusLabel->setObjectName("statusLabel");
     vboxText->addWidget(_statusLabel);
-    hbox->addLayout(vboxText);
+
+    _statusLinkLabel = new QLabel(this);
+    _statusLinkLabel->setObjectName("statusLabel");
+    _statusLinkLabel->setAttribute(Qt::WA_NoMousePropagation);
+    vboxText->addWidget(_statusLinkLabel);
 
     _menuButton = new CustomToolButton(this);
     _menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
@@ -90,6 +104,7 @@ AccountItemWidget::AccountItemWidget(const QString &accountId, QWidget *parent)
     connect(this, &AccountItemWidget::driveIconSizeChanged, this, &AccountItemWidget::onDriveIconSizeChanged);
     connect(this, &AccountItemWidget::statusIconSizeChanged, this, &AccountItemWidget::onStatusIconSizeChanged);
     connect(_menuButton, &CustomToolButton::clicked, this, &AccountItemWidget::onMenuButtonClicked);
+    connect(_statusLinkLabel, &QLabel::linkActivated, this, &AccountItemWidget::onLinkActivated);
 }
 
 void AccountItemWidget::updateItem(const AccountInfo &accountInfo)
@@ -104,9 +119,14 @@ void AccountItemWidget::updateItem(const AccountInfo &accountInfo)
     }
     _accountNameLabel->setText(accountName);
 
-    _statusLabel->setText(OCC::Utility::getAccountStatusText(_item.accountInfo()._paused,
-                                                             _item.accountInfo()._unresolvedConflicts,
-                                                             _item.accountInfo()._status));
+    QStringList statusTextList = OCC::Utility::getAccountStatusText(_item.accountInfo()._paused,
+                                                                    _item.accountInfo()._unresolvedConflicts,
+                                                                    _item.accountInfo()._status);
+    _statusLabel->setText(statusTextList[0]);
+    _statusLinkLabel->setVisible(statusTextList.count() > 1);
+    if (statusTextList.count() > 1) {
+        _statusLinkLabel->setText(statusTextList[1]);
+    }
 }
 
 void AccountItemWidget::paintEvent(QPaintEvent *event)
@@ -219,7 +239,8 @@ void AccountItemWidget::onMenuButtonClicked()
 {
     MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
-    if (_item.accountInfo()._status == OCC::SyncResult::Problem) {
+    if (_item.accountInfo()._status == OCC::SyncResult::Problem ||
+            _item.accountInfo()._status == OCC::SyncResult::Error) {
         QWidgetAction *seeSyncErrorsAction = new QWidgetAction(this);
         MenuItemWidget *seeSyncErrorsMenuItemWidget = new MenuItemWidget(tr("See synchronization errors"));
         seeSyncErrorsMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/warning.svg");
@@ -283,7 +304,7 @@ void AccountItemWidget::onMenuButtonClicked()
 
 void AccountItemWidget::onSeeSyncErrorsTriggered()
 {
-
+    emit displayDriveErrors(_item.getId());
 }
 
 void AccountItemWidget::onSyncTriggered()
@@ -314,6 +335,13 @@ void AccountItemWidget::onManageOfferTriggered()
 void AccountItemWidget::onRemoveTriggered()
 {
     emit remove(_item.getId());
+}
+
+void AccountItemWidget::onLinkActivated(const QString &link)
+{
+    if (link == OCC::Utility::learnMoreLink) {
+        emit displayDriveErrors(_item.getId());
+    }
 }
 
 }

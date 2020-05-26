@@ -57,6 +57,11 @@ void HalfRoundRectWidget::addWidget(QWidget *widget, int stretch, Qt::Alignment 
     _hboxLayout->addWidget(widget, stretch, alignment);
 }
 
+void HalfRoundRectWidget::addLayout(QLayout *layout, int stretch)
+{
+    _hboxLayout->addLayout(layout, stretch);
+}
+
 void HalfRoundRectWidget::addStretch(int stretch)
 {
     _hboxLayout->addStretch(stretch);
@@ -70,6 +75,11 @@ void HalfRoundRectWidget::addSpacing(int size)
 bool HalfRoundRectWidget::setStretchFactor(QWidget *widget, int stretch)
 {
     return _hboxLayout->setStretchFactor(widget, stretch);
+}
+
+bool HalfRoundRectWidget::setStretchFactor(QLayout *layout, int stretch)
+{
+    return _hboxLayout->setStretchFactor(layout, stretch);
 }
 
 void HalfRoundRectWidget::paintEvent(QPaintEvent *event)

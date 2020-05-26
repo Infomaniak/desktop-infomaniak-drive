@@ -90,6 +90,7 @@ void DrivesWidget::addOrUpdateDrive(QString accountId, const AccountInfo &accoun
         connect(accountItemWidget, &AccountItemWidget::manageOffer, this, &DrivesWidget::onManageOffer);
         connect(accountItemWidget, &AccountItemWidget::remove, this, &DrivesWidget::onRemove);
         connect(accountItemWidget, &AccountItemWidget::displayDriveParameters, this, &DrivesWidget::onDisplayDriveParameters);
+        connect(accountItemWidget, &AccountItemWidget::displayDriveErrors, this, &DrivesWidget::onDisplayDriveErrors);
     }
     else {
         // Update drive
@@ -152,6 +153,11 @@ void DrivesWidget::onRemove(const QString &accountId)
 void DrivesWidget::onDisplayDriveParameters(const QString &accountId)
 {
     emit displayDriveParameters(accountId);
+}
+
+void DrivesWidget::onDisplayDriveErrors(const QString &accountId)
+{
+    emit displayDriveErrors(accountId);
 }
 
 DrivesWidget::AccountInfoDrivesWidget::AccountInfoDrivesWidget()

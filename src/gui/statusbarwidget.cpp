@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "guiutility.h"
 #include "common/utility.h"
 
+#include <QVBoxLayout>
+#include <QStringList>
 #include <QWidgetAction>
 
 namespace KDC {
@@ -36,6 +38,7 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
     , _status(OCC::SyncResult::Undefined)
     , _statusIconLabel(nullptr)
     , _statusLabel(nullptr)
+    , _statusLinkLabel(nullptr)
     , _pauseButton(nullptr)
     , _resumeButton(nullptr)
     , _syncButton(nullptr)
@@ -46,11 +49,20 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
     _statusIconLabel->setVisible(false);
     addWidget(_statusIconLabel);
 
+    QVBoxLayout *vBoxLayout = new QVBoxLayout();
+    vBoxLayout->setContentsMargins(0, 0, 0, 0);
+    addLayout(vBoxLayout);
+    setStretchFactor(vBoxLayout, 1);
+
     _statusLabel = new QLabel(this);
     _statusLabel->setObjectName("statusLabel");
     _statusLabel->setWordWrap(true);
-    addWidget(_statusLabel);
-    setStretchFactor(_statusLabel, 1);
+    vBoxLayout->addWidget(_statusLabel);
+
+    _statusLinkLabel = new QLabel(this);
+    _statusLinkLabel->setObjectName("statusLabel");
+    _statusLinkLabel->setWordWrap(true);
+    vBoxLayout->addWidget(_statusLinkLabel);
 
     addStretch();
 
@@ -83,15 +95,20 @@ void StatusBarWidget::setStatus(bool paused, bool unresolvedConflicts, OCC::Sync
     _statusIconLabel->setPixmap(QIcon(OCC::Utility::getFolderStatusIconPath(paused, status))
                                 .pixmap(QSize(statusIconSize, statusIconSize)));
 
-    _statusLabel->setText(OCC::Utility::getFolderStatusText(paused, unresolvedConflicts, status,
-                                                            currentFile, totalFiles, estimatedRemainingTime));
+    QStringList statusTextList = OCC::Utility::getFolderStatusText(paused, unresolvedConflicts, status,
+                                                                   currentFile, totalFiles, estimatedRemainingTime);
+    _statusLabel->setText(statusTextList[0]);
+    _statusLinkLabel->setVisible(statusTextList.count() > 1);
+    if (statusTextList.count() > 1) {
+        _statusLinkLabel->setText(statusTextList[1]);
+    }
 
     _statusIconLabel->setVisible(true);
     _pauseButton->setVisible(OCC::Utility::getPauseActionAvailable(paused, status, totalFiles));
     _resumeButton->setVisible(OCC::Utility::getResumeActionAvailable(paused, status, totalFiles));
     _syncButton->setVisible(OCC::Utility::getSyncActionAvailable(paused, status, totalFiles));
 
-    connect(_statusLabel, &QLabel::linkActivated, this, &StatusBarWidget::onLinkActivated);
+    connect(_statusLinkLabel, &QLabel::linkActivated, this, &StatusBarWidget::onLinkActivated);
 }
 
 void StatusBarWidget::setSeveralDrives(bool severalDrives)

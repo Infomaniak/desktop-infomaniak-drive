@@ -314,58 +314,58 @@ QString Utility::getFolderStatusIconPath(bool paused, OCC::SyncResult::Status st
 }
 
 
-QString Utility::getFolderStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status,
+QStringList Utility::getFolderStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status,
                                          qint64 currentFile, qint64 totalFiles, qint64 estimatedRemainingTime)
 {
-    QString text;
+    QStringList textList;
     if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
-        text = QCoreApplication::translate("utility", "Synchronization paused.");
+        textList << QCoreApplication::translate("utility", "Synchronization paused.");
     }
     else {
         switch (status) {
         case OCC::SyncResult::Undefined:
-            text = QCoreApplication::translate("utility", "No folder to synchronize.");
+            textList << QCoreApplication::translate("utility", "No folder to synchronize.");
             break;
         case OCC::SyncResult::NotYetStarted:
         case OCC::SyncResult::SyncRunning:
             if (totalFiles > 0) {
-                text = QCoreApplication::translate("utility", "Synchronization in progress (%1 on %2)\n%3 left...")
+                textList << QCoreApplication::translate("utility", "Synchronization in progress (%1 on %2)\n%3 left...")
                         .arg(currentFile).arg(totalFiles).arg(OCC::Utility::durationToDescriptiveString1(estimatedRemainingTime));
             }
             else if (status == OCC::SyncResult::NotYetStarted) {
-                text = QCoreApplication::translate("utility", "Waiting for synchronization...");
+                textList << QCoreApplication::translate("utility", "Waiting for synchronization...");
             }
             else {
-                text = QCoreApplication::translate("utility", "Synchronization in progress.");
+                textList << QCoreApplication::translate("utility", "Synchronization in progress.");
             }
             break;
         case OCC::SyncResult::SyncPrepare:
-            text = QCoreApplication::translate("utility", "Preparing to synchronize...");
+            textList << QCoreApplication::translate("utility", "Preparing to synchronize...");
             break;
         case OCC::SyncResult::Success:
         case OCC::SyncResult::Problem:
             if (unresolvedConflicts) {
-                text = QCoreApplication::translate("utility", "You are up to date, unresolved conflicts.");
+                textList << QCoreApplication::translate("utility", "You are up to date, unresolved conflicts.");
             }
             else {
-                text = QCoreApplication::translate("utility", "You are up to date!");
+                textList << QCoreApplication::translate("utility", "You are up to date!");
             }
             break;
         case OCC::SyncResult::Error:
-            text = QCoreApplication::translate("utility", "Some files couldn't be synchronized.<br>"
-                                               "<a style=\"%1\" href=\"%2\">Learn more</a>")
+            textList << QCoreApplication::translate("utility", "Some files couldn't be synchronized.")
+                     << QCoreApplication::translate("utility", "<a style=\"%1\" href=\"%2\">Learn more</a>")
                     .arg(linkStyle)
                     .arg(learnMoreLink);
             break;
         case OCC::SyncResult::SetupError:
-            text = QCoreApplication::translate("utility", "Setup error.");
+            textList << QCoreApplication::translate("utility", "Setup error.");
             break;
         default:
             break;
         }
     }
 
-    return text;
+    return textList;
 }
 
 QString Utility::getAccountStatusIconPath(bool paused, SyncResult::Status status)
@@ -373,7 +373,7 @@ QString Utility::getAccountStatusIconPath(bool paused, SyncResult::Status status
     return getFolderStatusIconPath(paused, status);
 }
 
-QString Utility::getAccountStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status)
+QStringList Utility::getAccountStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status)
 {
     return getFolderStatusText(paused, unresolvedConflicts, status, 0, 0, 0);
 }

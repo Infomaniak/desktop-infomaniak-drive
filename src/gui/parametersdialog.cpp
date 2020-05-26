@@ -88,7 +88,7 @@ ParametersDialog::ParametersDialog(QWidget *parent)
 
 void ParametersDialog::openErrorPage(const QString &accountId)
 {
-    onDisplayErrors(accountId);
+    onDisplayDriveErrors(accountId);
 }
 
 void ParametersDialog::initUI()
@@ -234,6 +234,7 @@ void ParametersDialog::initUI()
     connect(_drivesWidget, &DrivesWidget::manageOffer, this, &ParametersDialog::onManageOffer);
     connect(_drivesWidget, &DrivesWidget::remove, this, &ParametersDialog::onRemove);
     connect(_drivesWidget, &DrivesWidget::displayDriveParameters, this, &ParametersDialog::onDisplayDriveParameters);
+    connect(_drivesWidget, &DrivesWidget::displayDriveErrors, this, &ParametersDialog::onDisplayDriveErrors);
     connect(_preferencesWidget, &PreferencesWidget::setStyle, this, &ParametersDialog::onSetStyle);
     connect(_driveMenuBarWidget, &DriveMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivesList);
     connect(_driveMenuBarWidget, &DriveMenuBarWidget::runSync, this, &ParametersDialog::onRunSync);
@@ -241,7 +242,7 @@ void ParametersDialog::initUI()
     connect(_driveMenuBarWidget, &DriveMenuBarWidget::resumeSync, this, &ParametersDialog::onResumeSync);
     connect(_driveMenuBarWidget, &DriveMenuBarWidget::manageOffer, this, &ParametersDialog::onManageOffer);
     connect(_driveMenuBarWidget, &DriveMenuBarWidget::remove, this, &ParametersDialog::onRemove);
-    connect(_drivePreferencesWidget, &DrivePreferencesWidget::displayErrors, this, &ParametersDialog::onDisplayErrors);
+    connect(_drivePreferencesWidget, &DrivePreferencesWidget::displayErrors, this, &ParametersDialog::onDisplayDriveErrors);
     connect(_errorsMenuBarWidget, &ErrorsMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivesList);
     connect(sendLogsWidget, &ActionWidget::clicked, this, &ParametersDialog::onSendLogs);
 }
@@ -585,16 +586,6 @@ void ParametersDialog::onRemove(const QString &accountId)
     }
 }
 
-void ParametersDialog::onDisplayErrors(const QString &accountId)
-{
-    auto accountInfoIt = _accountInfoMap.find(accountId);
-    if (accountInfoIt != _accountInfoMap.end()) {
-        _errorsMenuBarWidget->setAccount(accountInfoIt->first, &accountInfoIt->second);
-        _errorsStackedWidget->setCurrentIndex(accountInfoIt->second._errorsListStackPosition);
-        _pageStackedWidget->setCurrentIndex(Page::Errors);
-    }
-}
-
 void ParametersDialog::onDisplayDriveParameters(const QString &accountId)
 {
     auto accountInfoIt = _accountInfoMap.find(accountId);
@@ -604,6 +595,16 @@ void ParametersDialog::onDisplayDriveParameters(const QString &accountId)
         _drivePreferencesWidget->setAccount(accountInfoIt->first, &accountInfoIt->second,
                                             accountInfoIt->second._errorsListWidget != nullptr);
         _pageStackedWidget->setCurrentIndex(Page::Drive);
+    }
+}
+
+void ParametersDialog::onDisplayDriveErrors(const QString &accountId)
+{
+    auto accountInfoIt = _accountInfoMap.find(accountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        _errorsMenuBarWidget->setAccount(accountInfoIt->first, &accountInfoIt->second);
+        _errorsStackedWidget->setCurrentIndex(accountInfoIt->second._errorsListStackPosition);
+        _pageStackedWidget->setCurrentIndex(Page::Errors);
     }
 }
 

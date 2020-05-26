@@ -38,9 +38,11 @@ public:
     void setContentsMargins(int left, int top, int right, int bottom);
     void setSpacing(int spacing);
     void addWidget(QWidget *widget, int stretch = 0, Qt::Alignment alignment = Qt::Alignment());
+    void addLayout(QLayout *layout, int stretch = 0);
     void addStretch(int stretch = 0);
     void addSpacing(int size);
     bool setStretchFactor(QWidget *widget, int stretch);
+    bool setStretchFactor(QLayout *layout, int stretch);
 
 private:
     QColor _bottomCornersColor;

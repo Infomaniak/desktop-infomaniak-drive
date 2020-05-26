@@ -52,6 +52,7 @@ private:
     bool _severalDrives;
     QLabel *_statusIconLabel;
     QLabel *_statusLabel;
+    QLabel *_statusLinkLabel;
     CustomToolButton *_pauseButton;
     CustomToolButton *_resumeButton;
     CustomToolButton *_syncButton;

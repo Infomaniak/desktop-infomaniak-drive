@@ -47,6 +47,7 @@ signals:
     void manageOffer(const QString &accountId);
     void remove(const QString &accountId);
     void displayDriveParameters(const QString &accountId);
+    void displayDriveErrors(const QString &accountId);
 
 private:
     struct AccountInfoDrivesWidget : public AccountInfo {
@@ -67,6 +68,7 @@ private slots:
     void onManageOffer(const QString &accountId);
     void onRemove(const QString &accountId);
     void onDisplayDriveParameters(const QString &accountId);
+    void onDisplayDriveErrors(const QString &accountId);
 };
 
 }

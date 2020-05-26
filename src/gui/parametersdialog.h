@@ -104,8 +104,8 @@ private slots:
     void onResumeSync(const QString &accountId);
     void onManageOffer(const QString &accountId);
     void onRemove(const QString &accountId);
-    void onDisplayErrors(const QString &accountId);
     void onDisplayDriveParameters(const QString &accountId);
+    void onDisplayDriveErrors(const QString &accountId);
     void onSetStyle(bool darkTheme);
     void onDisplayDrivesList();
     void onSendLogs();
