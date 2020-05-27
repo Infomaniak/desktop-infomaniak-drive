@@ -31,6 +31,9 @@ class FileExclusionDialog : public CustomDialog
 {
     Q_OBJECT
 
+    Q_PROPERTY(QColor action_icon_color READ actionIconColor WRITE setActionIconColor)
+    Q_PROPERTY(QSize action_icon_size READ actionIconSize WRITE setActionIconSize)
+
 public:
     explicit FileExclusionDialog(QWidget *parent = nullptr);
 
@@ -45,15 +48,22 @@ private:
     QStandardItemModel *_filesTableModel;
     QTableView *_filesTableView;
     QPushButton *_saveButton;
+    QColor _actionIconColor;
+    QSize _actionIconSize;
     bool _needToSave;
+
+    inline QColor actionIconColor() const { return _actionIconColor; }
+    inline QSize actionIconSize() const { return _actionIconSize; }
 
     void initUI();
     void updateUI();
     void readIgnoreFile(const QString &file, bool global);
     void addPattern(const QString &pattern, bool deletable, bool readOnly, bool global,
         const QStringList &skippedLines = QStringList());
+    void setActionIconColor(const QColor &color);
+    void setActionIconSize(const QSize &size);
     void setActionIcon();
-    void setActionIcon(QStandardItem *item, const QString &actionIconPath);
+    void setActionIcon(QStandardItem *item, const QString &viewIconPath);
     void setNeedToSave(bool value);
 
 private slots:

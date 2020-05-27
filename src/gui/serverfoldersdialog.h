@@ -21,9 +21,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "customdialog.h"
 #include "accountinfo.h"
+#include "folderman.h"
 #include "csync_exclude.h"
 
 #include <QColor>
+#include <QIcon>
 #include <QLabel>
 #include <QNetworkReply>
 #include <QPushButton>
@@ -39,13 +41,13 @@ class ServerFoldersDialog : public CustomDialog
 
     Q_PROPERTY(QColor info_icon_color READ infoIconColor WRITE setInfoIconColor)
     Q_PROPERTY(QSize info_icon_size READ infoIconSize WRITE setInfoIconSize)
+    Q_PROPERTY(QColor folder_icon_color READ folderIconColor WRITE setFolderIconColor)
+    Q_PROPERTY(QSize folder_icon_size READ folderIconSize WRITE setFolderIconSize)
+    Q_PROPERTY(int header_font_weight READ headerFontWeight WRITE setHeaderFontWeight)
+    Q_PROPERTY(QColor size_text_color READ sizeTextColor WRITE setSizeTextColor)
 
 public:
     explicit ServerFoldersDialog(const AccountInfo *accountInfo, QWidget *parent = nullptr);
-
-signals:
-    void infoIconColorChanged();
-    void infoIconSizeChanged();
 
 private:
     class TreeViewItem : public QTreeWidgetItem
@@ -82,35 +84,69 @@ private:
         }
     };
 
+    enum TreeWidgetColumn {
+        Folder = 0,
+        Size
+    };
+
     const AccountInfo *_accountInfo;
-    QString _currentFolderId;
-    QString _currentFolderPath;
+    OCC::Folder *_currentFolder;
+    QStringList _oldBlackList;
     bool _inserting;
     ExcludedFiles _excludedFiles;
     QLabel *_infoIconLabel;
     QLabel *_availableSpaceTextLabel;
+    QLabel *_messageLabel;
     QTreeWidget *_folderTreeWidget;
     QPushButton *_saveButton;
     QColor _infoIconColor;
     QSize _infoIconSize;
+    QColor _folderIconColor;
+    QSize _folderIconSize;
+    int _headerFontWeight;
+    QColor _sizeTextColor;
     bool _needToSave;
 
     inline QColor infoIconColor() const { return _infoIconColor; }
     inline void setInfoIconColor(QColor color) {
         _infoIconColor = color;
-        emit infoIconColorChanged();
+        setInfoIcon();
     }
 
     inline QSize infoIconSize() const { return _infoIconSize; }
     inline void setInfoIconSize(QSize size) {
         _infoIconSize = size;
-        emit infoIconSizeChanged();
+        setInfoIcon();
     }
 
-    void setInfoIcon();
+    inline QColor folderIconColor() const { return _folderIconColor; }
+    inline void setFolderIconColor(QColor color) {
+        _folderIconColor = color;
+        setFolderIcon();
+    }
+
+    inline QSize folderIconSize() const { return _folderIconSize; }
+    inline void setFolderIconSize(QSize size) {
+        _folderIconSize = size;
+        setFolderIcon();
+    }
+
+    inline int headerFontWeight() const { return _headerFontWeight; }
+    inline void setHeaderFontWeight(int headerFontWeight) { _headerFontWeight = headerFontWeight; }
+
+    inline QColor sizeTextColor() const { return _sizeTextColor; }
+    inline void setSizeTextColor(QColor color) { _sizeTextColor = color; }
+
     void initUI();
     void updateUI();
-    void refreshFolders();
+    void setInfoIcon();
+    void setFolderIcon();
+    void setFolderIcon(QTreeWidgetItem *item, const QString &viewIconPath);
+    void setFolderIconSubFolders(QTreeWidgetItem *parent);
+    void setNeedToSave(bool value);
+    QTreeWidgetItem *findFirstChild(QTreeWidgetItem *parent, const QString &text);
+    void recursiveInsert(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size);
+    qint64 estimatedSize(QTreeWidgetItem *root = 0);
 
 private slots:
     void onInfoIconColorChanged();

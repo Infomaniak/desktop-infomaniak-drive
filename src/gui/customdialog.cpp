@@ -45,8 +45,6 @@ static const int shadowBlurRadius = 20;
 CustomDialog::CustomDialog(bool popup, QWidget *parent)
     : QDialog(parent)
     , _backgroundColor(QColor())
-    , _actionIconColor(QColor())
-    , _actionIconSize(QSize())
     , _layout(nullptr)
 {
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
@@ -87,22 +85,6 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
 
     connect(systemBar, &CustomSystemBar::drag, this, &CustomDialog::onDrag);
     connect(systemBar, &CustomSystemBar::exit, this, &CustomDialog::onExit);
-}
-
-void CustomDialog::setActionIconColor(const QColor &color)
-{
-    _actionIconColor = color;
-    if (_actionIconColor != QColor() && _actionIconSize != QSize()) {
-        setActionIcon();
-    }
-}
-
-void CustomDialog::setActionIconSize(const QSize &size)
-{
-    _actionIconSize = size;
-    if (_actionIconColor != QColor() && _actionIconSize != QSize()) {
-        setActionIcon();
-    }
 }
 
 void CustomDialog::forceRedraw()

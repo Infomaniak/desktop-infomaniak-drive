@@ -47,12 +47,13 @@ static const int filesTableBoxVMargin= 20;
 static const int rowHeight = 38;
 
 static QVector<int> tableColumnWidth = QVector<int>()
-        << 270  // tableColumn::Pattern
+        << 255  // tableColumn::Pattern
         << 190  // tableColumn::Deletable
-        << 20;  // tableColumn::Action
+        << 35;  // tableColumn::Action
 
-static const int skippedLinesRole = CustomDialog::actionIconPathRole + 1;
-static const int isGlobalRole = CustomDialog::actionIconPathRole + 2;
+static const int viewIconPathRole = Qt::UserRole;
+static const int skippedLinesRole = Qt::UserRole + 1;
+static const int isGlobalRole = Qt::UserRole + 2;
 
 FileExclusionDialog::FileExclusionDialog(QWidget *parent)
     : CustomDialog(true, parent)
@@ -60,6 +61,8 @@ FileExclusionDialog::FileExclusionDialog(QWidget *parent)
     , _filesTableModel(nullptr)
     , _filesTableView(nullptr)
     , _saveButton(nullptr)
+    , _actionIconColor(QColor())
+    , _actionIconSize(QSize())
     , _needToSave(false)
 {
     setStyleSheet("QTableView::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
@@ -239,13 +242,13 @@ void FileExclusionDialog::addPattern(const QString &pattern, bool deletable, boo
 
     QStandardItem *deletableItem = new QStandardItem();
 
-    QStandardItem *actionItem = new QStandardItem();
-    setActionIcon(actionItem, ":/client/resources/icons/actions/delete.svg");
+    QStandardItem *viewItem = new QStandardItem();
+    setActionIcon(viewItem, ":/client/resources/icons/actions/delete.svg");
 
     QList<QStandardItem *> row;
     row.insert(tableColumn::Pattern, patternItem);
     row.insert(tableColumn::Deletable, deletableItem);
-    row.insert(tableColumn::Action, actionItem);
+    row.insert(tableColumn::Action, viewItem);
     _filesTableModel->appendRow(row);
 
     if (readOnly) {
@@ -270,26 +273,40 @@ void FileExclusionDialog::addPattern(const QString &pattern, bool deletable, boo
     connect(deletableCheckBox, &CustomCheckBox::clicked, this, &FileExclusionDialog::onDeletableCheckBoxClicked);
 }
 
+void FileExclusionDialog::setActionIconColor(const QColor &color)
+{
+    _actionIconColor = color;
+    setActionIcon();
+}
+
+void FileExclusionDialog::setActionIconSize(const QSize &size)
+{
+    _actionIconSize = size;
+    setActionIcon();
+}
+
 void FileExclusionDialog::setActionIcon()
 {
-    for (int row = 0; row < _filesTableModel->rowCount(); row++) {
-        QStandardItem *item = _filesTableModel->item(row, tableColumn::Action);
-        QVariant actionIconPathV = item->data(actionIconPathRole);
-        if (!actionIconPathV.isNull()) {
-            QString actionIconPath = qvariant_cast<QString>(actionIconPathV);
-            setActionIcon(item, actionIconPath);
+    if (_actionIconColor != QColor() && _actionIconSize != QSize()) {
+        for (int row = 0; row < _filesTableModel->rowCount(); row++) {
+            QStandardItem *item = _filesTableModel->item(row, tableColumn::Action);
+            QVariant viewIconPathV = item->data(viewIconPathRole);
+            if (!viewIconPathV.isNull()) {
+                QString viewIconPath = qvariant_cast<QString>(viewIconPathV);
+                setActionIcon(item, viewIconPath);
+            }
         }
     }
 }
 
-void FileExclusionDialog::setActionIcon(QStandardItem *item, const QString &actionIconPath)
+void FileExclusionDialog::setActionIcon(QStandardItem *item, const QString &viewIconPath)
 {
     if (item) {
-        if (item->data(actionIconPathRole).isNull()) {
-            item->setData(actionIconPath, actionIconPathRole);
+        if (item->data(viewIconPathRole).isNull()) {
+            item->setData(viewIconPath, viewIconPathRole);
         }
-        if (actionIconColor() != QColor() && actionIconSize() != QSize()) {
-            item->setData(OCC::Utility::getIconWithColor(actionIconPath, actionIconColor()).pixmap(actionIconSize()),
+        if (_actionIconColor != QColor() && _actionIconSize != QSize()) {
+            item->setData(OCC::Utility::getIconWithColor(viewIconPath, _actionIconColor).pixmap(_actionIconSize),
                           Qt::DecorationRole);
         }
     }

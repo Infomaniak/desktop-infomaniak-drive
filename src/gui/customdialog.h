@@ -33,12 +33,8 @@ class CustomDialog : public QDialog
     Q_OBJECT
 
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
-    Q_PROPERTY(QColor action_icon_color READ actionIconColor WRITE setActionIconColor)
-    Q_PROPERTY(QSize action_icon_size READ actionIconSize WRITE setActionIconSize)
 
 public:
-    static const int actionIconPathRole = Qt::UserRole;
-
     explicit CustomDialog(bool popup, QWidget *parent = nullptr);
 
     inline QVBoxLayout *mainLayout() const { return _layout; }
@@ -46,16 +42,10 @@ public:
 
 signals:
     void exit();
-    void actionIconSet();
-
-protected:
-    inline QColor actionIconColor() const { return _actionIconColor; }
-    inline QSize actionIconSize() const { return _actionIconSize; }
+    void viewIconSet();
 
 private:
     QColor _backgroundColor;
-    QColor _actionIconColor;
-    QSize _actionIconSize;
     QVBoxLayout *_layout;
 
     void paintEvent(QPaintEvent *event) override;
@@ -65,11 +55,6 @@ private:
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
-
-    void setActionIconColor(const QColor &color);
-    void setActionIconSize(const QSize &size);
-
-    virtual void setActionIcon() {};
 
 private slots:
     void onDrag(const QPoint &move);

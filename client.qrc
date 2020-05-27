@@ -138,5 +138,7 @@
         <file>resources/icons/mac/white/unactive.svg</file>
         <file>resources/icons/windows/dark/close.svg</file>
         <file>resources/icons/windows/white/close.svg</file>
+        <file>resources/icons/actions/branch-close.svg</file>
+        <file>resources/icons/actions/branch-open.svg</file>
     </qresource>
 </RCC>

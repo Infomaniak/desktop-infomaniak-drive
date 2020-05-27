@@ -183,8 +183,6 @@ KDC--CustomSystemBar QToolButton
 KDC--CustomDialog
 {
     qproperty-background_color: #2D3034;
-    qproperty-action_icon_color: #C0C0C0;
-    qproperty-action_icon_size: 18px;
 }
 
 KDC--CustomDialog QLabel#titleLabel
@@ -276,12 +274,17 @@ KDC--CustomDialog QPushButton#defaultbutton
     color: #FFFFFF;
 }
 
+KDC--CustomDialog QPushButton#defaultbutton:disabled
+{
+    background-color: rgba(0, 152, 255, 122); /* #0098FF with alpha 50% */
+}
+
 KDC--CustomDialog QTableView
 {
     background-color: #1B1B1D;
     border: 0px;
-    padding-left: 10px;
-    padding-right: 1px;
+    padding-left: 0px;
+    padding-right: 0px;
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 5px;
@@ -292,12 +295,20 @@ KDC--CustomDialog QTableView
     gridline-color: #1B1B1D;
 }
 
+KDC--CustomDialog QTableView::item
+{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
 KDC--CustomDialog QTreeWidget
 {
     background-color: #1B1B1D;
     border: 0px;
-    padding-left: 10px;
-    padding-right: 1px;
+    padding-left: 0px;
+    padding-right: 0px;
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 5px;
@@ -306,6 +317,14 @@ KDC--CustomDialog QTreeWidget
     font-weight: 350; /* normal */
     font-size: 14px;
     gridline-color: #1B1B1D;
+}
+
+KDC--CustomDialog QTreeWidget::item
+{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 KDC--CustomDialog QLineEdit
@@ -1073,6 +1092,16 @@ KDC--ActionWidget#sendLogsWidget QLabel#textLabel
     font-size: 12px;
 }
 
+/****************************/
+/* KDC--FileExclusionDialog */
+/****************************/
+
+KDC--FileExclusionDialog
+{
+    qproperty-action_icon_color: #C0C0C0;
+    qproperty-action_icon_size: 18px;
+}
+
 /********************************/
 /* KDC--FileExclusionNameDialog */
 /********************************/
@@ -1091,8 +1120,12 @@ KDC--FileExclusionNameDialog
 
 KDC--ServerFoldersDialog
 {
-    qproperty-info_icon_size: 20px;
     qproperty-info_icon_color: #9F9F9F;
+    qproperty-info_icon_size: 20px;
+    qproperty-folder_icon_color: #9F9F9F;
+    qproperty-folder_icon_size: 18px;
+    qproperty-header_font_weight: 650;
+    qproperty-size_text_color: #939393;
 }
 
 
