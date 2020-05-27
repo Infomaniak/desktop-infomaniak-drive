@@ -252,6 +252,14 @@ KDC--CustomDialog QLabel#textLabel
     font-size: 13px;
 }
 
+KDC--CustomDialog QLabel#largeTextLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 14px;
+}
+
 KDC--CustomDialog QLabel#descriptionLabel
 {
     color: #666666;
@@ -309,7 +317,28 @@ KDC--CustomDialog QPushButton#defaultbutton
     color: #FFFFFF;
 }
 
+KDC--CustomDialog QPushButton#defaultbutton:disabled
+{
+    opacity: 122;
+}
+
 KDC--CustomDialog QTableView
+{
+    background-color: #F5F5F5;
+    border: 0px;
+    padding-left: 10px;
+    padding-right: 1px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+    gridline-color: #F5F5F5;
+}
+
+KDC--CustomDialog QTreeWidget
 {
     background-color: #F5F5F5;
     border: 0px;
@@ -1100,4 +1129,14 @@ KDC--FileExclusionNameDialog
     max-width: 410px;
     min-height: 195px;
     max-height: 195px;
+}
+
+/****************************/
+/* KDC--ServerFoldersDialog */
+/****************************/
+
+KDC--ServerFoldersDialog
+{
+    qproperty-info_icon_size: 20px;
+    qproperty-info_icon_color: #9F9F9F;
 }

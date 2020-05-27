@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "drivepreferenceswidget.h"
 #include "preferencesblocwidget.h"
+#include "serverfoldersdialog.h"
 #include "accountmanager.h"
 #include "configfile.h"
 #include "guiutility.h"
@@ -669,7 +670,8 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
 
 void DrivePreferencesWidget::onDriveFoldersWidgetClicked()
 {
-
+    ServerFoldersDialog *dialog = new ServerFoldersDialog(_accountInfo, this);
+    dialog->exec();
 }
 
 void DrivePreferencesWidget::onLocalFoldersWidgetClicked()

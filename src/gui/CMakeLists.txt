@@ -157,6 +157,7 @@ set(client_SRCS
     preferenceswidget.cpp
     progressbarwidget.cpp
     proxyserverdialog.cpp
+    serverfoldersdialog.cpp
     statusbarwidget.cpp
     synchronizeditem.cpp
     synchronizeditemwidget.cpp
