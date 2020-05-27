@@ -153,7 +153,12 @@ QString OCUpdater::statusString() const
     case DownloadTimedOut:
         return tr("Could not check for new updates.");
     case UpdateOnlyAvailableThroughSystem:
-        return tr("New %1 available. Please use the system's update tool to install it.").arg(updateVersion);
+        if (Utility::isLinux()) {
+            return tr("New %1 available. Please install it.").arg(updateVersion);
+        }
+        else {
+            return tr("New %1 available. Please use the system's update tool to install it.").arg(updateVersion);
+        }
     case CheckingServer:
         return tr("Checking update server...");
     case Unknown:
