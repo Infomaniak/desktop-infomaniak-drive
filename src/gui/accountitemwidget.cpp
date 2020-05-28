@@ -239,8 +239,7 @@ void AccountItemWidget::onMenuButtonClicked()
 {
     MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
-    if (_item.accountInfo()._status == OCC::SyncResult::Problem ||
-            _item.accountInfo()._status == OCC::SyncResult::Error) {
+    if (_item.accountInfo().hasWarningOrError()) {
         QWidgetAction *seeSyncErrorsAction = new QWidgetAction(this);
         MenuItemWidget *seeSyncErrorsMenuItemWidget = new MenuItemWidget(tr("See synchronization errors"));
         seeSyncErrorsMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/warning.svg");
@@ -249,7 +248,7 @@ void AccountItemWidget::onMenuButtonClicked()
         menu->addAction(seeSyncErrorsAction);
     }
 
-    if (OCC::Utility::getSyncActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status, 0)) {
+    if (OCC::Utility::getSyncActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status)) {
         QWidgetAction *syncAction = new QWidgetAction(this);
         MenuItemWidget *syncMenuItemWidget = new MenuItemWidget(tr("Force synchronization"));
         syncMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/sync.svg");
@@ -258,7 +257,7 @@ void AccountItemWidget::onMenuButtonClicked()
         menu->addAction(syncAction);
     }
 
-    if (OCC::Utility::getPauseActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status, 0)) {
+    if (OCC::Utility::getPauseActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status)) {
         QWidgetAction *pauseAction = new QWidgetAction(this);
         MenuItemWidget *pauseMenuItemWidget = new MenuItemWidget(tr("Pause synchronization"));
         pauseMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/pause.svg");
@@ -267,7 +266,7 @@ void AccountItemWidget::onMenuButtonClicked()
         menu->addAction(pauseAction);
     }
 
-    if (OCC::Utility::getResumeActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status, 0)) {
+    if (OCC::Utility::getResumeActionAvailable(_item.accountInfo()._paused, _item.accountInfo()._status)) {
         QWidgetAction *resumeAction = new QWidgetAction(this);
         MenuItemWidget *resumeMenuItemWidget = new MenuItemWidget(tr("Resume synchronization"));
         resumeMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/start.svg");

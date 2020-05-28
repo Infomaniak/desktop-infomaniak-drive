@@ -97,6 +97,7 @@ private:
     QRect _sysTrayIconRect;
     QString _currentAccountId;
     QColor _backgroundMainColor;
+    CustomToolButton *_errorsButton;
     CustomToolButton *_folderButton;
     CustomToolButton *_webviewButton;
     CustomToolButton *_menuButton;
@@ -127,13 +128,16 @@ private:
     void refreshStatusBar(std::map<QString, AccountInfoSynthesis>::iterator accountStatusIt);
     void refreshStatusBar(QString accountId);
     void setSynchronizedDefaultPage(QWidget **widget, QWidget *parent);
+    void displayErrors(const QString &accountId);
 
 private slots:
     void onRefreshAccountList();
     void onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
     void onUpdateQuota(qint64 total, qint64 used);
     void onItemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &item);
-    void onOpenFolderMenu(bool checked);
+    void onOpenErrorsMenu(bool checked = false);
+    void onDisplayErrors(bool checked = false);
+    void onOpenFolderMenu(bool checked = false);
     void onOpenFolder(bool checked);
     void onOpenWebview(bool checked);
     void onOpenMiscellaneousMenu(bool checked);
@@ -146,9 +150,9 @@ private slots:
     void onCrashFatal(bool checked = false);
     void onAccountSelected(QString id);
     void onAddDrive();
-    void onPauseSync(bool all);
-    void onResumeSync(bool all);
-    void onRunSync(bool all);
+    void onPauseSync(StatusBarWidget::ActionType type, const QString &id = QString());
+    void onResumeSync(StatusBarWidget::ActionType type, const QString &id = QString());
+    void onRunSync(StatusBarWidget::ActionType type, const QString &id = QString());
     void onButtonBarToggled(int position);
     void onOpenFolderItem(const SynchronizedItem &item);
     void onOpenItem(const SynchronizedItem &item);

@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "halfroundrectwidget.h"
 #include "customtoolbutton.h"
+#include "accountinfo.h"
 #include "syncresult.h"
 #include "theme.h"
 
@@ -34,21 +35,29 @@ class StatusBarWidget : public HalfRoundRectWidget
     Q_OBJECT
 
 public:
+    enum ActionType {
+        Drive = 0,
+        Folder,
+        AllDrives
+    };
+
     explicit StatusBarWidget(QWidget *parent = nullptr);
 
     void setStatus(bool paused, bool unresolvedConflicts, OCC::SyncResult::Status status,
                    qint64 currentFile = 0, qint64 totalFiles = 0, qint64 estimatedRemainingTime = 0);
+    void setCurrentAccount(const AccountInfo *accountInfo);
     void setSeveralDrives(bool severalDrives);
     void reset();
 
 signals:
-    void pauseSync(bool all);
-    void resumeSync(bool all);
-    void runSync(bool all);
+    void pauseSync(ActionType type, const QString &id = QString());
+    void resumeSync(ActionType type, const QString &id = QString());
+    void runSync(ActionType type, const QString &id = QString());
     void linkActivated(const QString &link);
 
 private:
     OCC::SyncResult::Status _status;
+    const AccountInfo *_accountInfo;
     bool _severalDrives;
     QLabel *_statusIconLabel;
     QLabel *_statusLabel;
@@ -64,10 +73,13 @@ private slots:
     void onResumeClicked();
     void onSyncClicked();
     void onPauseSync();
+    void onPauseFolderSync();
     void onPauseAllSync();
     void onResumeSync();
+    void onResumeFolderSync();
     void onResumeAllSync();
     void onRunSync();
+    void onRunFolderSync();
     void onRunAllSync();
 };
 

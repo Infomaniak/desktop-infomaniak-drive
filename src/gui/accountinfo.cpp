@@ -156,4 +156,9 @@ QString AccountInfo::folderPath(const QString &folderId, const QString &filePath
     return fullFilePath;
 }
 
+bool AccountInfo::hasWarningOrError() const
+{
+    return _status == OCC::SyncResult::Error || _unresolvedConflicts;
+}
+
 }

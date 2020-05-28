@@ -544,17 +544,17 @@ void ParametersDialog::onAddDrive()
 
 void ParametersDialog::onRunSync(const QString &accountId)
 {
-    OCC::Utility::runSync(accountId);
+    OCC::Utility::runSync(accountId, QString());
 }
 
 void ParametersDialog::onPauseSync(const QString &accountId)
 {
-    OCC::Utility::pauseSync(accountId, true);
+    OCC::Utility::pauseSync(accountId, QString(), true);
 }
 
 void ParametersDialog::onResumeSync(const QString &accountId)
 {
-    OCC::Utility::pauseSync(accountId, false);
+    OCC::Utility::pauseSync(accountId, QString(), false);
 }
 
 void ParametersDialog::onManageOffer(const QString &accountId)

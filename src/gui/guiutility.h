@@ -82,11 +82,11 @@ namespace Utility {
                                     qint64 currentFile, qint64 totalFiles, qint64 estimatedRemainingTime);
     QString getAccountStatusIconPath(bool paused, OCC::SyncResult::Status status);
     QStringList getAccountStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status);
-    bool getPauseActionAvailable(bool paused, OCC::SyncResult::Status status, qint64 totalFiles);
-    bool getResumeActionAvailable(bool paused, OCC::SyncResult::Status status, qint64 totalFiles);
-    bool getSyncActionAvailable(bool paused, OCC::SyncResult::Status status, qint64 totalFiles);
-    void pauseSync(const QString &accountid, bool pause);
-    void runSync(const QString &accountid);
+    bool getPauseActionAvailable(bool paused, OCC::SyncResult::Status status);
+    bool getResumeActionAvailable(bool paused, OCC::SyncResult::Status status);
+    bool getSyncActionAvailable(bool paused, OCC::SyncResult::Status status);
+    void pauseSync(const QString &accountId, const QString &folderId, bool pause);
+    void runSync(const QString &accountId, const QString &folderId);
     QColor getShadowColor();
     QUrl getUrlFromLocalPath(const QString &path);
     int getQFontWeightFromQSSFontWeight(int weight);

@@ -109,7 +109,7 @@ void DriveMenuBarWidget::onMenuButtonClicked(bool checked)
 
     MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
-    if (OCC::Utility::getSyncActionAvailable(_accountInfo->_paused, _accountInfo->_status, 0)) {
+    if (OCC::Utility::getSyncActionAvailable(_accountInfo->_paused, _accountInfo->_status)) {
         QWidgetAction *syncAction = new QWidgetAction(this);
         MenuItemWidget *syncMenuItemWidget = new MenuItemWidget(tr("Force synchronization"));
         syncMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/sync.svg");
@@ -118,7 +118,7 @@ void DriveMenuBarWidget::onMenuButtonClicked(bool checked)
         menu->addAction(syncAction);
     }
 
-    if (OCC::Utility::getPauseActionAvailable(_accountInfo->_paused, _accountInfo->_status, 0)) {
+    if (OCC::Utility::getPauseActionAvailable(_accountInfo->_paused, _accountInfo->_status)) {
         QWidgetAction *pauseAction = new QWidgetAction(this);
         MenuItemWidget *pauseMenuItemWidget = new MenuItemWidget(tr("Pause synchronization"));
         pauseMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/pause.svg");
@@ -127,7 +127,7 @@ void DriveMenuBarWidget::onMenuButtonClicked(bool checked)
         menu->addAction(pauseAction);
     }
 
-    if (OCC::Utility::getResumeActionAvailable(_accountInfo->_paused, _accountInfo->_status, 0)) {
+    if (OCC::Utility::getResumeActionAvailable(_accountInfo->_paused, _accountInfo->_status)) {
         QWidgetAction *resumeAction = new QWidgetAction(this);
         MenuItemWidget *resumeMenuItemWidget = new MenuItemWidget(tr("Resume synchronization"));
         resumeMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/start.svg");

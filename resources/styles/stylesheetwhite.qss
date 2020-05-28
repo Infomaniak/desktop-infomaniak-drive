@@ -121,6 +121,11 @@ KDC--CustomToolButton#exitButton
     qproperty-base_icon_size: 15px;
 }
 
+KDC--CustomToolButton#errorsButton
+{
+    qproperty-icon_color: #E9563D;
+}
+
 /*******************************/
 /* KDC--CustomTogglePushButton */
 /*******************************/

@@ -378,30 +378,19 @@ QStringList Utility::getAccountStatusText(bool paused, bool unresolvedConflicts,
     return getFolderStatusText(paused, unresolvedConflicts, status, 0, 0, 0);
 }
 
-bool Utility::getPauseActionAvailable(bool paused, SyncResult::Status status, qint64 totalFiles)
+bool Utility::getPauseActionAvailable(bool paused, SyncResult::Status status)
 {
     if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
         // Pause
         return false;
     }
-    else if (totalFiles > 0) {
-        // Synchronization in progress
+    else {
         return true;
     }
-    else if (status == OCC::SyncResult::NotYetStarted
-             || status == OCC::SyncResult::SyncPrepare
-             || status == OCC::SyncResult::SyncRunning
-             || status == OCC::SyncResult::Success) {
-        return true;
-    }
-
-    return false;
 }
 
-bool Utility::getResumeActionAvailable(bool paused, SyncResult::Status status, qint64 totalFiles)
+bool Utility::getResumeActionAvailable(bool paused, SyncResult::Status status)
 {
-    Q_UNUSED(totalFiles)
-
     if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
         // Pause
         return true;
@@ -410,36 +399,25 @@ bool Utility::getResumeActionAvailable(bool paused, SyncResult::Status status, q
     return false;
 }
 
-bool Utility::getSyncActionAvailable(bool paused, SyncResult::Status status, qint64 totalFiles)
+bool Utility::getSyncActionAvailable(bool paused, SyncResult::Status status)
 {
     if (paused || status == OCC::SyncResult::Paused || status == OCC::SyncResult::SyncAbortRequested) {
         // Pause
         return false;
     }
-    else if (totalFiles > 0) {
-        // Synchronization in progress
+    else {
         return true;
     }
-    else if (status == OCC::SyncResult::NotYetStarted
-             || status == OCC::SyncResult::SyncPrepare
-             || status == OCC::SyncResult::SyncRunning
-             || status == OCC::SyncResult::Success
-             || status == OCC::SyncResult::Problem
-             || status == OCC::SyncResult::Error
-             || status == OCC::SyncResult::SetupError) {
-        return true;
-    }
-
-    return false;
 }
 
-void Utility::pauseSync(const QString &accountid, bool pause)
+void Utility::pauseSync(const QString &accountId, const QString &folderId, bool pause)
 {
     // (Un)pause all the folders of (all) the drive
     OCC::FolderMan *folderMan = OCC::FolderMan::instance();
     for (auto folder : folderMan->map()) {
         OCC::AccountPtr folderAccount = folder->accountState()->account();
-        if (accountid == QString() || folderAccount->id() == accountid) {
+        if ((accountId == QString() || folderAccount->id() == accountId)
+                && (folderId == QString() || folder->alias() ==  folderId)) {
             folder->setSyncPaused(pause);
             if (pause) {
                 folder->slotTerminateSync();
@@ -448,7 +426,7 @@ void Utility::pauseSync(const QString &accountid, bool pause)
     }
 }
 
-void Utility::runSync(const QString &accountid)
+void Utility::runSync(const QString &accountId, const QString &folderId)
 {
     // Terminate and reschedule any running sync
     OCC::FolderMan *folderMan = OCC::FolderMan::instance();
@@ -462,7 +440,8 @@ void Utility::runSync(const QString &accountid)
     for (auto folder : folderMan->map()) {
         OCC::AccountPtr account = folder->accountState()->account();
         if (account) {
-            if (accountid == QString() || account->id() == accountid) {
+            if ((accountId == QString() || account->id() == accountId)
+                    && (folderId == QString() || folder->alias() ==  folderId)) {
                 folder->slotWipeErrorBlacklist();
 
                 // Insert the selected folder at the front of the queue

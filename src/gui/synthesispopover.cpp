@@ -100,6 +100,7 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
     , _sysTrayIconRect(QRect())
     , _currentAccountId(QString())
     , _backgroundMainColor(QColor())
+    , _errorsButton(nullptr)
     , _folderButton(nullptr)
     , _webviewButton(nullptr)
     , _menuButton(nullptr)
@@ -377,6 +378,7 @@ void SynthesisPopover::initUI()
      *  mainVBox
      *      hBoxToolBar
      *          iconLabel
+     *          _errorsButton
      *          _folderButton
      *          _webviewButton
      *          _menuButton
@@ -413,9 +415,17 @@ void SynthesisPopover::initUI()
     hBoxToolBar->addWidget(iconLabel);
     hBoxToolBar->addStretch();
 
+    _errorsButton = new CustomToolButton(this);
+    _errorsButton->setObjectName("errorsButton");
+    _errorsButton->setIconPath(":/client/resources/icons/actions/warning.svg");
+    _errorsButton->setToolTip(tr("Show warnings and errors"));
+    _errorsButton->setVisible(false);
+    hBoxToolBar->addWidget(_errorsButton);
+
     _folderButton = new CustomToolButton(this);
     _folderButton->setIconPath(":/client/resources/icons/actions/folder.svg");
     _folderButton->setToolTip(tr("Show in folder"));
+    _folderButton->setVisible(false);
     hBoxToolBar->addWidget(_folderButton);
 
     _webviewButton = new CustomToolButton(this);
@@ -492,6 +502,7 @@ void SynthesisPopover::initUI()
     effect->setColor(OCC::Utility::getShadowColor());
     setGraphicsEffect(effect);
 
+    connect(_errorsButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenErrorsMenu);
     connect(_folderButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenFolderMenu);
     connect(_webviewButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenWebview);
     connect(_menuButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenMiscellaneousMenu);
@@ -600,6 +611,7 @@ void SynthesisPopover::refreshStatusBar(std::map<QString, AccountInfoSynthesis>:
     if (accountInfoIt != _accountInfoMap.end()) {
         const FolderInfo *folderInfo = getFirstFolderByPriority(accountInfoIt->second._folderMap);
         refreshStatusBar(folderInfo);
+        _statusBarWidget->setCurrentAccount(&accountInfoIt->second);
     }
 }
 
@@ -708,6 +720,8 @@ void SynthesisPopover::onRefreshAccountList()
     if (OCC::AccountManager::instance()->accounts().isEmpty()) {
         _currentAccountId.clear();
         _accountInfoMap.clear();
+        _errorsButton->setVisible(false);
+        _errorsButton->setWithMenu(false);
         _folderButton->setVisible(false);
         _folderButton->setWithMenu(false);
         _webviewButton->setVisible(false);
@@ -811,6 +825,16 @@ void SynthesisPopover::onRefreshAccountList()
             }
         }
 
+        // Count drives with warning/errors
+        int drivesWithErrors = 0;
+        for (auto const &accountInfo : _accountInfoMap) {
+            if (accountInfo.second.hasWarningOrError()) {
+                drivesWithErrors++;
+            }
+        }
+
+        _errorsButton->setVisible(drivesWithErrors > 0);
+        _errorsButton->setWithMenu(drivesWithErrors > 1);
         _folderButton->setVisible(currentFolderMapSize > 0);
         _folderButton->setWithMenu(currentFolderMapSize > 1);
         _webviewButton->setVisible(currentFolderMapSize > 0);
@@ -977,6 +1001,49 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
         qCDebug(lcSynthesisPopover) << "Null pointer!";
         Q_ASSERT(false);
     }
+}
+
+void SynthesisPopover::onOpenErrorsMenu(bool checked)
+{
+    Q_UNUSED(checked)
+
+    QList<std::pair<QString, QString>> accountList = QList<std::pair<QString, QString>>();
+    for (auto const &accountInfo : _accountInfoMap) {
+        if (accountInfo.second.hasWarningOrError()) {
+            accountList << std::make_pair(accountInfo.first, accountInfo.second._name);
+        }
+    }
+
+    if (accountList.size() == 1) {
+        displayErrors(accountList[0].first);
+    }
+    else if (accountList.size() > 1) {
+        MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
+        menu->setTitle(tr("Some files couldn't be synchronized on the following kDrive :"));
+        for (auto const &accountElt : accountList) {
+            QWidgetAction *openErrorsAction = new QWidgetAction(this);
+            openErrorsAction->setProperty(MenuWidget::actionTypeProperty.c_str(), accountElt.first);
+            MenuItemWidget *openErrorsMenuItemWidget = new MenuItemWidget(accountElt.second);
+            openErrorsMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg");
+            openErrorsAction->setDefaultWidget(openErrorsMenuItemWidget);
+            connect(openErrorsAction, &QWidgetAction::triggered, this, &SynthesisPopover::onDisplayErrors);
+            menu->addAction(openErrorsAction);
+        }
+        menu->exec(QWidget::mapToGlobal(_errorsButton->geometry().center()));
+    }
+}
+
+void SynthesisPopover::onDisplayErrors(bool checked)
+{
+    Q_UNUSED(checked)
+
+    QString accountId = qvariant_cast<QString>(sender()->property(MenuWidget::actionTypeProperty.c_str()));
+    displayErrors(accountId);
+}
+
+void SynthesisPopover::displayErrors(const QString &accountId)
+{
+    emit openParametersDialog(accountId);
 }
 
 void SynthesisPopover::onOpenFolderMenu(bool checked)
@@ -1239,19 +1306,33 @@ void SynthesisPopover::onAddDrive()
     emit addDrive();
 }
 
-void SynthesisPopover::onPauseSync(bool all)
+void SynthesisPopover::onPauseSync(StatusBarWidget::ActionType type, const QString &id)
 {
-    OCC::Utility::pauseSync(all ? QString() : _currentAccountId, true);
+    OCC::Utility::pauseSync(
+                type == StatusBarWidget::ActionType::Drive || type == StatusBarWidget::ActionType::Folder
+                ? _currentAccountId
+                : QString(),
+                type == StatusBarWidget::ActionType::Folder ? id : QString(),
+                true);
 }
 
-void SynthesisPopover::onResumeSync(bool all)
+void SynthesisPopover::onResumeSync(StatusBarWidget::ActionType type, const QString &id)
 {
-    OCC::Utility::pauseSync(all ? QString() : _currentAccountId, false);
+    OCC::Utility::pauseSync(
+                type == StatusBarWidget::ActionType::Drive || type == StatusBarWidget::ActionType::Folder
+                ? _currentAccountId
+                : QString(),
+                type == StatusBarWidget::ActionType::Folder ? id : QString(),
+                false);
 }
 
-void SynthesisPopover::onRunSync(bool all)
+void SynthesisPopover::onRunSync(StatusBarWidget::ActionType type, const QString &id)
 {
-    OCC::Utility::runSync(all ? QString() : _currentAccountId);
+    OCC::Utility::runSync(
+                type == StatusBarWidget::ActionType::Drive || type == StatusBarWidget::ActionType::Folder
+                ? _currentAccountId
+                : QString(),
+                type == StatusBarWidget::ActionType::Folder ? id : QString());
 }
 
 void SynthesisPopover::onButtonBarToggled(int position)
@@ -1378,8 +1459,7 @@ void SynthesisPopover::onCopyUrlToClipboard(const QString &url)
 void SynthesisPopover::onLinkActivated(const QString &link)
 {
     if (link == OCC::Utility::learnMoreLink) {
-        // TODO: add parameters
-        emit openParametersDialog(_currentAccountId);
+        displayErrors(_currentAccountId);
     }
     else {
         // URL link
