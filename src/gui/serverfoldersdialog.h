@@ -142,11 +142,14 @@ private:
     void setInfoIcon();
     void setFolderIcon();
     void setFolderIcon(QTreeWidgetItem *item, const QString &viewIconPath);
-    void setFolderIconSubFolders(QTreeWidgetItem *parent);
+    void setSubFoldersIcon(QTreeWidgetItem *parent);
     void setNeedToSave(bool value);
     QTreeWidgetItem *findFirstChild(QTreeWidgetItem *parent, const QString &text);
-    void recursiveInsert(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size);
-    qint64 estimatedSize(QTreeWidgetItem *root = 0);
+    void insertPath(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size);
+    qint64 selectionSize(QTreeWidgetItem *root = 0);
+    QStringList createBlackList(QTreeWidgetItem *root = 0) const;
+    OCC::AccountPtr getAccountPtr();
+    QString getFolderPath();
 
 private slots:
     void onInfoIconColorChanged();

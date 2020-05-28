@@ -514,3 +514,9 @@ QUrl Utility::getUrlFromLocalPath(const QString &path)
     }
     return url;
 }
+
+int Utility::getQFontWeightFromQSSFontWeight(int weight)
+{
+    // QFont::Weight[0, 99] = font-weight[100, 900] / 9
+    return weight / 9;
+}

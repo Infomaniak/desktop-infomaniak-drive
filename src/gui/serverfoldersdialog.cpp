@@ -46,8 +46,7 @@ static const int viewIconPathRole = Qt::UserRole;
 static const int dirRole = Qt::UserRole + 1;
 
 // 2nd column roles
-static const int displaySizeRole = Qt::UserRole;
-static const int fullSizeRole = Qt::UserRole + 1;
+static const int sizeRole = Qt::UserRole;
 
 Q_LOGGING_CATEGORY(lcServerFoldersDialog, "serverfoldersdialog", QtInfoMsg)
 
@@ -196,17 +195,9 @@ void ServerFoldersDialog::updateUI()
 
     bool ok;
     _oldBlackList = _currentFolder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
-    if (!ok) {
-        setNeedToSave(false);
-    }
 
     // Get subfolders
-    OCC::AccountPtr accountPtr = _currentFolder->accountState()->account();
-    QString folderPath = _currentFolder->remotePath().startsWith(QLatin1Char('/'))
-            ? _currentFolder->remotePath().mid(1)
-            : _currentFolder->remotePath();
-
-    OCC::LsColJob *job = new OCC::LsColJob(accountPtr, folderPath, this);
+    OCC::LsColJob *job = new OCC::LsColJob(getAccountPtr(), getFolderPath(), this);
     job->setProperties(QList<QByteArray>()
                        << "resourcetype"
                        << "http://owncloud.org/ns:size");
@@ -223,7 +214,7 @@ void ServerFoldersDialog::setFolderIcon()
     if (_folderIconColor != QColor() && _folderIconSize != QSize()) {
         _folderTreeWidget->setIconSize(_folderIconSize);
         if (_folderTreeWidget->topLevelItem(0)) {
-            setFolderIconSubFolders(_folderTreeWidget->topLevelItem(0));
+            setSubFoldersIcon(_folderTreeWidget->topLevelItem(0));
         }
     }
 }
@@ -241,7 +232,7 @@ void ServerFoldersDialog::setFolderIcon(QTreeWidgetItem *item, const QString &vi
     }
 }
 
-void ServerFoldersDialog::setFolderIconSubFolders(QTreeWidgetItem *parent)
+void ServerFoldersDialog::setSubFoldersIcon(QTreeWidgetItem *parent)
 {
     for (int i = 0; i < parent->childCount(); ++i) {
         QTreeWidgetItem *item = parent->child(i);
@@ -250,7 +241,7 @@ void ServerFoldersDialog::setFolderIconSubFolders(QTreeWidgetItem *parent)
             QString viewIconPath = qvariant_cast<QString>(viewIconPathV);
             setFolderIcon(item, viewIconPath);
         }
-        setFolderIconSubFolders(item);
+        setSubFoldersIcon(item);
     }
 }
 
@@ -271,18 +262,19 @@ QTreeWidgetItem *ServerFoldersDialog::findFirstChild(QTreeWidgetItem *parent, co
     return 0;
 }
 
-void ServerFoldersDialog::recursiveInsert(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size)
+void ServerFoldersDialog::insertPath(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size)
 {
     if (pathTrail.size() == 0) {
         if (path.endsWith('/')) {
             path.chop(1);
         }
-        parent->setToolTip(TreeWidgetColumn::Folder, path);
         parent->setData(TreeWidgetColumn::Folder, dirRole, path);
     } else {
         TreeViewItem *item = static_cast<TreeViewItem *>(findFirstChild(parent, pathTrail.first()));
         if (!item) {
             item = new TreeViewItem(parent);
+
+            // Set check status
             if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Checked
                 || parent->checkState(TreeWidgetColumn::Folder) == Qt::PartiallyChecked) {
                 item->setCheckState(TreeWidgetColumn::Folder, Qt::Checked);
@@ -297,25 +289,30 @@ void ServerFoldersDialog::recursiveInsert(QTreeWidgetItem *parent, QStringList p
             } else if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Unchecked) {
                 item->setCheckState(TreeWidgetColumn::Folder, Qt::Unchecked);
             }
+
+            // Set icon
             setFolderIcon(item, ":/client/resources/icons/actions/folder.svg");
+
+            // Set name
             item->setText(TreeWidgetColumn::Folder, pathTrail.first());
 
+            // Set size
             if (size >= 0) {
                 item->setText(TreeWidgetColumn::Size, OCC::Utility::octetsToString(size));
                 item->setTextColor(TreeWidgetColumn::Size, _sizeTextColor);
                 item->setTextAlignment(TreeWidgetColumn::Size, Qt::AlignRight);
-                item->setData(TreeWidgetColumn::Size, displaySizeRole, size);
-                item->setData(TreeWidgetColumn::Size, fullSizeRole, size);
+                item->setData(TreeWidgetColumn::Size, sizeRole, size);
             }
+
             item->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
         }
 
         pathTrail.removeFirst();
-        recursiveInsert(item, pathTrail, path, size);
+        insertPath(item, pathTrail, path, size);
     }
 }
 
-qint64 ServerFoldersDialog::estimatedSize(QTreeWidgetItem *root)
+qint64 ServerFoldersDialog::selectionSize(QTreeWidgetItem *root)
 {
     if (!root) {
         root = _folderTreeWidget->topLevelItem(0);
@@ -328,32 +325,92 @@ qint64 ServerFoldersDialog::estimatedSize(QTreeWidgetItem *root)
     case Qt::Unchecked:
         return 0;
     case Qt::Checked:
-        return root->data(TreeWidgetColumn::Size, displaySizeRole).toLongLong();
+        return root->data(TreeWidgetColumn::Size, sizeRole).toLongLong();
     case Qt::PartiallyChecked:
         break;
     }
 
-    qint64 result = 0;
+    qint64 size = 0;
     if (root->childCount()) {
-        result = root->data(TreeWidgetColumn::Size, fullSizeRole).toLongLong();
+        size = root->data(TreeWidgetColumn::Size, sizeRole).toLongLong();
         for (int i = 0; i < root->childCount(); ++i) {
             if (root->child(i)->checkState(TreeWidgetColumn::Folder) == Qt::Unchecked) {
-                result -= root->child(i)->data(TreeWidgetColumn::Size, fullSizeRole).toLongLong();
+                size -= root->child(i)->data(TreeWidgetColumn::Size, sizeRole).toLongLong();
             }
             else if (root->child(i)->checkState(TreeWidgetColumn::Folder) == Qt::PartiallyChecked) {
-                auto r = estimatedSize(root->child(i));
-                if (r < 0) {
-                    return r;
+                auto childSize = selectionSize(root->child(i));
+                if (childSize < 0) {
+                    return childSize;
                 }
 
-                result -= root->child(i)->data(TreeWidgetColumn::Size, fullSizeRole).toLongLong() - r;
+                size -= root->child(i)->data(TreeWidgetColumn::Size, sizeRole).toLongLong() - childSize;
             }
         }
     } else {
         // We did not load from the server so we have no idea how much we will sync from this branch
         return -1;
     }
+    return size;
+}
+
+QStringList ServerFoldersDialog::createBlackList(QTreeWidgetItem *root) const
+{
+    if (!root) {
+        root = _folderTreeWidget->topLevelItem(0);
+    }
+    if (!root) {
+        return QStringList();
+    }
+
+    switch (root->checkState(TreeWidgetColumn::Folder)) {
+    case Qt::Unchecked:
+        return QStringList(root->data(TreeWidgetColumn::Folder, dirRole).toString() + "/");
+    case Qt::Checked:
+        return QStringList();
+    case Qt::PartiallyChecked:
+        break;
+    }
+
+    QStringList result;
+    if (root->childCount()) {
+        for (int i = 0; i < root->childCount(); ++i) {
+            result += createBlackList(root->child(i));
+        }
+    } else {
+        // We did not load from the server so we re-use the one from the old black list
+        QString path = root->data(TreeWidgetColumn::Folder, dirRole).toString();
+        foreach (const QString &it, _oldBlackList) {
+            if (it.startsWith(path)) {
+                result += it;
+            }
+        }
+    }
     return result;
+}
+
+OCC::AccountPtr ServerFoldersDialog::getAccountPtr()
+{
+    if (_currentFolder && _currentFolder->accountState()) {
+        return _currentFolder->accountState()->account();
+    }
+    else {
+        qCDebug(lcServerFoldersDialog) << "Null pointer";
+        return nullptr;
+    }
+}
+
+QString ServerFoldersDialog::getFolderPath()
+{
+    if (_currentFolder) {
+        QString folderPath = _currentFolder->remotePath().startsWith(QLatin1Char('/'))
+                ? _currentFolder->remotePath().mid(1)
+                : _currentFolder->remotePath();
+        return folderPath;
+    }
+    else {
+        qCDebug(lcServerFoldersDialog) << "Null pointer";
+        return QString();
+    }
 }
 
 void ServerFoldersDialog::onInfoIconSizeChanged()
@@ -388,8 +445,33 @@ void ServerFoldersDialog::onExit()
 
 void ServerFoldersDialog::onSaveButtonTriggered(bool checked)
 {
+    Q_UNUSED(checked)
 
+    bool ok;
+    auto oldBlackListSet = _currentFolder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok).toSet();
+    if (!ok) {
+        return;
+    }
 
+    QStringList blackList = createBlackList();
+    _currentFolder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);
+
+    if (_currentFolder->isBusy()) {
+        _currentFolder->slotTerminateSync();
+    }
+
+    // The part that changed should not be read from the DB on next sync because there might be new folders
+    // (the ones that are no longer in the blacklist)
+    auto blackListSet = blackList.toSet();
+    auto changes = (oldBlackListSet - blackListSet) + (blackListSet - oldBlackListSet);
+    foreach (const auto &it, changes) {
+        _currentFolder->journalDb()->schedulePathForRemoteDiscovery(it);
+        _currentFolder->schedulePathForLocalDiscovery(it);
+    }
+    // Also make sure we see the local file that had been ignored before
+    _currentFolder->slotNextSyncFullLocalDiscovery();
+
+    OCC::FolderMan::instance()->scheduleFolder(_currentFolder);
 
     accept();
 }
@@ -402,18 +484,13 @@ void ServerFoldersDialog::slotUpdateDirectories(QStringList list)
 
     TreeViewItem *root = static_cast<TreeViewItem *>(_folderTreeWidget->topLevelItem(0));
 
-    OCC::AccountPtr accountPtr = _currentFolder->accountState()->account();
-    QUrl url = accountPtr->davUrl();
+    QUrl url = getAccountPtr() ? getAccountPtr()->davUrl() : QUrl();
     QString pathToRemove = url.path();
     if (!pathToRemove.endsWith('/')) {
         pathToRemove.append('/');
     }
-
-    QString folderPath = _currentFolder->remotePath().startsWith(QLatin1Char('/'))
-            ? _currentFolder->remotePath().mid(1)
-            : _currentFolder->remotePath();
-    if (!folderPath.isEmpty()) {
-        pathToRemove.append(folderPath);
+    pathToRemove.append(getFolderPath());
+    if (!pathToRemove.endsWith('/')) {
         pathToRemove.append('/');
     }
 
@@ -429,7 +506,7 @@ void ServerFoldersDialog::slotUpdateDirectories(QStringList list)
     // Since / cannot be in the blacklist, expand it to the actual list of top-level folders as soon as possible.
     if (_oldBlackList == QStringList("/")) {
         _oldBlackList.clear();
-        foreach (QString path, list) {
+        for (QString path : list) {
             path.remove(pathToRemove);
             if (path.isEmpty()) {
                 continue;
@@ -448,21 +525,25 @@ void ServerFoldersDialog::slotUpdateDirectories(QStringList list)
     if (!root) {
         root = new TreeViewItem(_folderTreeWidget);
         QFont font = _folderTreeWidget->font();
-        font.setWeight(_headerFontWeight / 9); // QFont::Weight[0, 99] = font-weight[100, 900] / 9
+        font.setWeight(OCC::Utility::getQFontWeightFromQSSFontWeight(_headerFontWeight));
         root->setFont(TreeWidgetColumn::Folder, font);
-        root->setText(TreeWidgetColumn::Folder, accountPtr->driveName());
+
+        // Set drive name
+        root->setText(TreeWidgetColumn::Folder, getAccountPtr() ? getAccountPtr()->driveName() : QString());
         root->setIcon(TreeWidgetColumn::Folder, OCC::Utility::getIconWithColor(":/client/resources/icons/actions/drive.svg",
                                                                                _accountInfo->_color));
         root->setData(TreeWidgetColumn::Folder, dirRole, QString());
-        root->setCheckState(0, Qt::Checked);
 
+        // Set check state
+        root->setCheckState(TreeWidgetColumn::Folder, Qt::Checked);
+
+        // Set size
         qint64 size = job ? job->_sizes.value(pathToRemove, -1) : -1;
         if (size >= 0) {
             root->setFont(TreeWidgetColumn::Size, font);
             root->setText(TreeWidgetColumn::Size, OCC::Utility::octetsToString(size));
             root->setTextAlignment(TreeWidgetColumn::Size, Qt::AlignRight);
-            root->setData(TreeWidgetColumn::Size, displaySizeRole, size);
-            root->setData(TreeWidgetColumn::Size, fullSizeRole, size);
+            root->setData(TreeWidgetColumn::Size, sizeRole, size);
         }
     }
 
@@ -471,14 +552,16 @@ void ServerFoldersDialog::slotUpdateDirectories(QStringList list)
         auto size = job ? job->_sizes.value(path) : 0;
         path.remove(pathToRemove);
         QStringList paths = path.split('/');
-        if (paths.last().isEmpty())
+        if (paths.last().isEmpty()) {
             paths.removeLast();
-        if (paths.isEmpty())
+        }
+        if (paths.isEmpty()) {
             continue;
+        }
         if (!path.endsWith('/')) {
             path.append('/');
         }
-        recursiveInsert(root, paths, path, size);
+        insertPath(root, paths, path, size);
     }
 
     // Root is partially checked if any children are not checked
@@ -491,26 +574,24 @@ void ServerFoldersDialog::slotUpdateDirectories(QStringList list)
     }
 
     root->setExpanded(true);
-    //_folderTreeWidget->viewport()->update();
 }
 
 void ServerFoldersDialog::slotItemExpanded(QTreeWidgetItem *item)
 {
+    item->setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
+
     QString dir = item->data(TreeWidgetColumn::Folder, dirRole).toString();
     if (dir.isEmpty()) {
         return;
     }
 
-    OCC::AccountPtr accountPtr = _currentFolder->accountState()->account();
-
-    QString folderPath = _currentFolder->remotePath().startsWith(QLatin1Char('/'))
-            ? _currentFolder->remotePath().mid(1)
-            : _currentFolder->remotePath();
+    QString folderPath = getFolderPath();
     if (!folderPath.isEmpty()) {
         folderPath.append('/');
     }
+    folderPath.append(dir);
 
-    OCC::LsColJob *job = new OCC::LsColJob(accountPtr, folderPath + dir, this);
+    OCC::LsColJob *job = new OCC::LsColJob(getAccountPtr(), folderPath, this);
     job->setProperties(QList<QByteArray>() << "resourcetype"
                                            << "http://owncloud.org/ns:size");
     connect(job, &OCC::LsColJob::directoryListingSubfolders, this, &ServerFoldersDialog::slotUpdateDirectories);
@@ -519,15 +600,12 @@ void ServerFoldersDialog::slotItemExpanded(QTreeWidgetItem *item)
 
 void ServerFoldersDialog::slotItemChanged(QTreeWidgetItem *item, int col)
 {
-    if (col != 0 || _inserting) {
+    if (col != TreeWidgetColumn::Folder || _inserting) {
         return;
     }
 
     if (item->checkState(TreeWidgetColumn::Folder) == Qt::Checked) {
-        // Update item display size
-        item->setData(TreeWidgetColumn::Size, displaySizeRole, item->data(TreeWidgetColumn::Size, fullSizeRole));
-
-        // If we are checked, check that we may need to check the parent as well if all the siblings are also checked
+        // Need to check the parent as well if all the siblings are also checked
         QTreeWidgetItem *parent = item->parent();
         if (parent && parent->checkState(TreeWidgetColumn::Folder) != Qt::Checked) {
             bool hasUnchecked = false;
@@ -546,7 +624,8 @@ void ServerFoldersDialog::slotItemChanged(QTreeWidgetItem *item, int col)
                 slotItemChanged(parent, col);
             }
         }
-        // also check all the children
+
+        // Check all the children
         for (int i = 0; i < item->childCount(); ++i) {
             if (item->child(i)->checkState(TreeWidgetColumn::Folder) != Qt::Checked) {
                 item->child(i)->setCheckState(TreeWidgetColumn::Folder, Qt::Checked);
@@ -555,9 +634,6 @@ void ServerFoldersDialog::slotItemChanged(QTreeWidgetItem *item, int col)
     }
 
     if (item->checkState(TreeWidgetColumn::Folder) == Qt::Unchecked) {
-        // Update item display size
-        item->setData(TreeWidgetColumn::Size, displaySizeRole, 0);
-
         QTreeWidgetItem *parent = item->parent();
         if (parent) {
             if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Checked) {
@@ -583,10 +659,6 @@ void ServerFoldersDialog::slotItemChanged(QTreeWidgetItem *item, int col)
     }
 
     if (item->checkState(TreeWidgetColumn::Folder) == Qt::PartiallyChecked) {
-        // Update item display size
-        auto size = estimatedSize(item);
-        item->setData(TreeWidgetColumn::Size, displaySizeRole, size);
-
         QTreeWidgetItem *parent = item->parent();
         if (parent) {
             if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Checked) {
@@ -599,9 +671,7 @@ void ServerFoldersDialog::slotItemChanged(QTreeWidgetItem *item, int col)
         }
     }
 
-    // Display size
-    item->setText(TreeWidgetColumn::Size,
-                  OCC::Utility::octetsToString(item->data(TreeWidgetColumn::Size, displaySizeRole).toLongLong()));
+    setNeedToSave(true);
 }
 
 void ServerFoldersDialog::slotLscolFinishedWithError(QNetworkReply *reply)
