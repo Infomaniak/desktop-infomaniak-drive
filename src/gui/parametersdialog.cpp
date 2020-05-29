@@ -447,16 +447,6 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
 #endif
 
     if (!item.isNull()) {
-        if (!(item.data()->_status == OCC::SyncFileItem::NoStatus
-                || item.data()->_status == OCC::SyncFileItem::FatalError
-                || item.data()->_status == OCC::SyncFileItem::NormalError
-                || item.data()->_status == OCC::SyncFileItem::SoftError
-                || item.data()->_status == OCC::SyncFileItem::DetailError
-                || item.data()->_status == OCC::SyncFileItem::BlacklistedError
-                || item.data()->_status == OCC::SyncFileItem::FileIgnored)) {
-            return;
-        }
-
         OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderId);
         if (folder) {
             if (folder->accountState()) {
@@ -464,6 +454,17 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                 if (!account.isNull()) {
                     const auto accountInfoIt = _accountInfoMap.find(account->id());
                     if (accountInfoIt != _accountInfoMap.end()) {
+                        if (!(item.data()->_status == OCC::SyncFileItem::NoStatus
+                                || item.data()->_status == OCC::SyncFileItem::FatalError
+                                || item.data()->_status == OCC::SyncFileItem::NormalError
+                                || item.data()->_status == OCC::SyncFileItem::SoftError
+                                || item.data()->_status == OCC::SyncFileItem::DetailError
+                                || item.data()->_status == OCC::SyncFileItem::BlacklistedError
+                                || item.data()->_status == OCC::SyncFileItem::FileIgnored)) {
+                            accountInfoIt->second._errorsCount++;
+                            return;
+                        }
+
                         if (!accountInfoIt->second._errorsListWidget) {
                             accountInfoIt->second._errorsListWidget = new QListWidget(this);
                             accountInfoIt->second._errorsListWidget->setSpacing(0);
@@ -726,10 +727,9 @@ ParametersDialog::AccountInfoParameters::AccountInfoParameters()
 }
 
 ParametersDialog::AccountInfoParameters::AccountInfoParameters(OCC::AccountState *accountState)
-    : AccountInfo(accountState)
-    , _errorsListWidget(nullptr)
-    , _errorsListStackPosition(0)
+    : AccountInfoParameters()
 {
+    initQuotaInfo(accountState);
 }
 
 }

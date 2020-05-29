@@ -41,9 +41,11 @@ struct AccountInfo {
     std::shared_ptr<OCC::QuotaInfo> _quotaInfoPtr;
     qint64 _totalSize;
     qint64 _used;
+    int _errorsCount;
 
     AccountInfo();
     AccountInfo(OCC::AccountState *accountState);
+    void initQuotaInfo(OCC::AccountState *accountState);
     void updateStatus();
     QString folderPath(const QString &folderId, const QString &filePath) const;
     bool hasWarningOrError() const;

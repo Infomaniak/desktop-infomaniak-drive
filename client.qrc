@@ -140,5 +140,6 @@
         <file>resources/icons/windows/white/close.svg</file>
         <file>resources/icons/actions/branch-close.svg</file>
         <file>resources/icons/actions/branch-open.svg</file>
+        <file>resources/icons/actions/arrow-right.svg</file>
     </qresource>
 </RCC>

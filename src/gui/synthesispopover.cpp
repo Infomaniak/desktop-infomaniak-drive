@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "bottomwidget.h"
 #include "customtogglepushbutton.h"
 #include "synchronizeditem.h"
+#include "errorspopup.h"
 #include "accountmanager.h"
 #include "folderman.h"
 #include "account.h"
@@ -420,6 +421,7 @@ void SynthesisPopover::initUI()
     _errorsButton->setIconPath(":/client/resources/icons/actions/warning.svg");
     _errorsButton->setToolTip(tr("Show warnings and errors"));
     _errorsButton->setVisible(false);
+    _errorsButton->setWithMenu(true);
     hBoxToolBar->addWidget(_errorsButton);
 
     _folderButton = new CustomToolButton(this);
@@ -721,7 +723,6 @@ void SynthesisPopover::onRefreshAccountList()
         _currentAccountId.clear();
         _accountInfoMap.clear();
         _errorsButton->setVisible(false);
-        _errorsButton->setWithMenu(false);
         _folderButton->setVisible(false);
         _folderButton->setWithMenu(false);
         _webviewButton->setVisible(false);
@@ -826,15 +827,15 @@ void SynthesisPopover::onRefreshAccountList()
         }
 
         // Count drives with warning/errors
-        int drivesWithErrors = 0;
+        bool drivesWithErrors = false;
         for (auto const &accountInfo : _accountInfoMap) {
             if (accountInfo.second.hasWarningOrError()) {
-                drivesWithErrors++;
+                drivesWithErrors = true;
+                break;
             }
         }
 
-        _errorsButton->setVisible(drivesWithErrors > 0);
-        _errorsButton->setWithMenu(drivesWithErrors > 1);
+        _errorsButton->setVisible(drivesWithErrors);
         _folderButton->setVisible(currentFolderMapSize > 0);
         _folderButton->setWithMenu(currentFolderMapSize > 1);
         _webviewButton->setVisible(currentFolderMapSize > 0);
@@ -928,16 +929,6 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
 #endif
 
     if (!item.isNull()) {
-        if (item.data()->_status == OCC::SyncFileItem::NoStatus
-                || item.data()->_status == OCC::SyncFileItem::FatalError
-                || item.data()->_status == OCC::SyncFileItem::NormalError
-                || item.data()->_status == OCC::SyncFileItem::SoftError
-                || item.data()->_status == OCC::SyncFileItem::DetailError
-                || item.data()->_status == OCC::SyncFileItem::BlacklistedError
-                || item.data()->_status == OCC::SyncFileItem::FileIgnored) {
-            return;
-        }
-
         OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderId);
         if (folder) {
             if (folder->accountState()) {
@@ -945,6 +936,17 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                 if (!account.isNull()) {
                     const auto accountInfoIt = _accountInfoMap.find(account->id());
                     if (accountInfoIt != _accountInfoMap.end()) {
+                        if (item.data()->_status == OCC::SyncFileItem::NoStatus
+                                || item.data()->_status == OCC::SyncFileItem::FatalError
+                                || item.data()->_status == OCC::SyncFileItem::NormalError
+                                || item.data()->_status == OCC::SyncFileItem::SoftError
+                                || item.data()->_status == OCC::SyncFileItem::DetailError
+                                || item.data()->_status == OCC::SyncFileItem::BlacklistedError
+                                || item.data()->_status == OCC::SyncFileItem::FileIgnored) {
+                            accountInfoIt->second._errorsCount++;
+                            return;
+                        }
+
                         if (!accountInfoIt->second._synchronizedListWidget) {
                             accountInfoIt->second._synchronizedListWidget = new QListWidget(this);
                             accountInfoIt->second._synchronizedListWidget->setSpacing(0);
@@ -1007,37 +1009,28 @@ void SynthesisPopover::onOpenErrorsMenu(bool checked)
 {
     Q_UNUSED(checked)
 
-    QList<std::pair<QString, QString>> accountList = QList<std::pair<QString, QString>>();
+    QList<ErrorsPopup::DriveError> driveErrorList = QList<ErrorsPopup::DriveError>();
     for (auto const &accountInfo : _accountInfoMap) {
         if (accountInfo.second.hasWarningOrError()) {
-            accountList << std::make_pair(accountInfo.first, accountInfo.second._name);
+            ErrorsPopup::DriveError driveError;
+            driveError.accountId = accountInfo.first;
+            driveError.accountName = accountInfo.second._name;
+            driveError.errorsCount = accountInfo.second._errorsCount;
+            driveErrorList << driveError;
         }
     }
 
-    if (accountList.size() == 1) {
-        displayErrors(accountList[0].first);
-    }
-    else if (accountList.size() > 1) {
-        MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
-        menu->setTitle(tr("Some files couldn't be synchronized on the following kDrive :"));
-        for (auto const &accountElt : accountList) {
-            QWidgetAction *openErrorsAction = new QWidgetAction(this);
-            openErrorsAction->setProperty(MenuWidget::actionTypeProperty.c_str(), accountElt.first);
-            MenuItemWidget *openErrorsMenuItemWidget = new MenuItemWidget(accountElt.second);
-            openErrorsMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg");
-            openErrorsAction->setDefaultWidget(openErrorsMenuItemWidget);
-            connect(openErrorsAction, &QWidgetAction::triggered, this, &SynthesisPopover::onDisplayErrors);
-            menu->addAction(openErrorsAction);
-        }
-        menu->exec(QWidget::mapToGlobal(_errorsButton->geometry().center()));
+    if (driveErrorList.size() > 0) {
+        QPoint position = QWidget::mapToGlobal(_errorsButton->geometry().center());
+        ErrorsPopup *errorsPopup = new ErrorsPopup(driveErrorList, position, this);
+        connect(errorsPopup, &ErrorsPopup::accountSelected, this, &SynthesisPopover::onDisplayErrors);
+        errorsPopup->show();
+        errorsPopup->setModal(true);
     }
 }
 
-void SynthesisPopover::onDisplayErrors(bool checked)
+void SynthesisPopover::onDisplayErrors(const QString &accountId)
 {
-    Q_UNUSED(checked)
-
-    QString accountId = qvariant_cast<QString>(sender()->property(MenuWidget::actionTypeProperty.c_str()));
     displayErrors(accountId);
 }
 
@@ -1496,13 +1489,9 @@ SynthesisPopover::AccountInfoSynthesis::AccountInfoSynthesis()
 }
 
 SynthesisPopover::AccountInfoSynthesis::AccountInfoSynthesis(OCC::AccountState *accountState)
-    : AccountInfo(accountState)
-    , _stackedWidgetPosition(StackedWidget::Synchronized)
-    , _synchronizedListWidget(nullptr)
-    , _synchronizedListStackPosition(StackedWidget::Synchronized)
-    , _favoritesListStackPosition(StackedWidget::Favorites)
-    , _activityListStackPosition(StackedWidget::Activity)
+    : AccountInfoSynthesis()
 {
+    initQuotaInfo(accountState);
 }
 
 }

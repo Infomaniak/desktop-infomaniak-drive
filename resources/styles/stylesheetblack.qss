@@ -1133,4 +1133,14 @@ KDC--ServerFoldersDialog
     qproperty-size_text_color: #939393;
 }
 
+/********************/
+/* KDC--ErrorsPopup */
+/********************/
+
+KDC--ErrorsPopup
+{
+    qproperty-background_color: #2D3034;
+    qproperty-warning_icon_size: 16px;
+    qproperty-warning_icon_color: #E9563D;
+}
 

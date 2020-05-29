@@ -52,10 +52,6 @@ signals:
     void remove(const QString &accountId);
     void displayDriveParameters(const QString &accountId);
     void displayDriveErrors(const QString &accountId);
-    void accountIconSizeChanged();
-    void accountIconColorChanged();
-    void driveIconSizeChanged();
-    void statusIconSizeChanged();
 
 private:
     AccountItem _item;
@@ -76,25 +72,25 @@ private:
     inline QSize accountIconSize() const { return _accountIconSize; }
     inline void setAccountIconSize(const QSize &size) {
         _accountIconSize = size;
-        emit accountIconSizeChanged();
+        setAccountIcon();
     }
 
     inline QColor accountIconColor() const { return _accountIconColor; }
     inline void setAccountIconColor(const QColor &value) {
         _accountIconColor = value;
-        emit accountIconColorChanged();
+        setAccountIcon();
     }
 
     inline QSize driveIconSize() const { return _driveIconSize; }
     inline void setDriveIconSize(const QSize &size) {
         _driveIconSize = size;
-        emit driveIconSizeChanged();
+        setAccountIcon();
     }
 
     inline QSize statusIconSize() const { return _statusIconSize; }
     inline void setStatusIconSize(const QSize &size) {
         _statusIconSize = size;
-        emit statusIconSizeChanged();
+        setAccountIcon();
     }
 
     inline QColor backgroundColor() const { return _backgroundColor; }
@@ -104,10 +100,6 @@ private:
     void setAccountIcon();
 
 private slots:
-    void onAccountIconSizeChanged();
-    void onAccountIconColorChanged();
-    void onDriveIconSizeChanged();
-    void onStatusIconSizeChanged();
     void onMenuButtonClicked();
     void onSeeSyncErrorsTriggered();
     void onSyncTriggered();

@@ -99,10 +99,6 @@ AccountItemWidget::AccountItemWidget(const QString &accountId, QWidget *parent)
     effect->setOffset(0);
     setGraphicsEffect(effect);
 
-    connect(this, &AccountItemWidget::accountIconSizeChanged, this, &AccountItemWidget::onAccountIconSizeChanged);
-    connect(this, &AccountItemWidget::accountIconColorChanged, this, &AccountItemWidget::onAccountIconColorChanged);
-    connect(this, &AccountItemWidget::driveIconSizeChanged, this, &AccountItemWidget::onDriveIconSizeChanged);
-    connect(this, &AccountItemWidget::statusIconSizeChanged, this, &AccountItemWidget::onStatusIconSizeChanged);
     connect(_menuButton, &CustomToolButton::clicked, this, &AccountItemWidget::onMenuButtonClicked);
     connect(_statusLinkLabel, &QLabel::linkActivated, this, &AccountItemWidget::onLinkActivated);
 }
@@ -213,26 +209,6 @@ void AccountItemWidget::setAccountIcon()
         QIcon accountIconWithStatus = getIconWithStatus();
         _accountIconLabel->setPixmap(accountIconWithStatus.pixmap(_accountIconSize));
     }
-}
-
-void AccountItemWidget::onAccountIconSizeChanged()
-{
-    setAccountIcon();
-}
-
-void AccountItemWidget::onAccountIconColorChanged()
-{
-    setAccountIcon();
-}
-
-void AccountItemWidget::onDriveIconSizeChanged()
-{
-    setAccountIcon();
-}
-
-void AccountItemWidget::onStatusIconSizeChanged()
-{
-    setAccountIcon();
 }
 
 void AccountItemWidget::onMenuButtonClicked()

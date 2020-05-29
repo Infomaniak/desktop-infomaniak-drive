@@ -136,7 +136,7 @@ private slots:
     void onUpdateQuota(qint64 total, qint64 used);
     void onItemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &item);
     void onOpenErrorsMenu(bool checked = false);
-    void onDisplayErrors(bool checked = false);
+    void onDisplayErrors(const QString &accountId);
     void onOpenFolderMenu(bool checked = false);
     void onOpenFolder(bool checked);
     void onOpenWebview(bool checked);

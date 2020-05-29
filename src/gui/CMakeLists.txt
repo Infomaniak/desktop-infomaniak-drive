@@ -145,6 +145,7 @@ set(client_SRCS
     driveselectionwidget.cpp
     erroritemwidget.cpp
     errorsmenubarwidget.cpp
+    errorspopup.cpp
     fileexclusiondialog.cpp
     fileexclusionnamedialog.cpp
     folderinfo.cpp

@@ -396,7 +396,7 @@ void DrivePreferencesWidget::updateSmartSyncSwitchState()
 
 void DrivePreferencesWidget::resetDriveLocation()
 {
-    while (QLabel* label = _locationWidget->findChild<QLabel*>()) {
+    while (QLabel* label = _locationWidget->findChild<QLabel *>()) {
         delete label;
     }
 }

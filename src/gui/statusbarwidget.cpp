@@ -333,6 +333,7 @@ void StatusBarWidget::onSyncClicked()
         runAllMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/sync-circle.svg");
         runAllAction->setDefaultWidget(runAllMenuItemWidget);
         connect(runAllAction, &QWidgetAction::triggered, this, &StatusBarWidget::onRunAllSync);
+        menu->addSeparator();
         menu->addAction(runAllAction);
 
         if (menu->exec(QWidget::mapToGlobal(_syncButton->geometry().center()))) {

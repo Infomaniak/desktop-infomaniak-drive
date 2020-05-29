@@ -36,10 +36,17 @@ AccountInfo::AccountInfo()
     , _quotaInfoPtr(nullptr)
     , _totalSize(0)
     , _used(0)
+    , _errorsCount(0)
 {
 }
 
 AccountInfo::AccountInfo(OCC::AccountState *accountState)
+    : AccountInfo()
+{
+    initQuotaInfo(accountState);
+}
+
+void AccountInfo::initQuotaInfo(OCC::AccountState *accountState)
 {
     if (accountState) {
         _quotaInfoPtr = std::unique_ptr<OCC::QuotaInfo>(new OCC::QuotaInfo(accountState));
@@ -158,7 +165,7 @@ QString AccountInfo::folderPath(const QString &folderId, const QString &filePath
 
 bool AccountInfo::hasWarningOrError() const
 {
-    return _status == OCC::SyncResult::Error || _unresolvedConflicts;
+    return _errorsCount > 0;
 }
 
 }

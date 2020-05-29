@@ -148,7 +148,7 @@ void CustomSystemBar::mouseMoveEvent(QMouseEvent *event)
 bool CustomSystemBar::event(QEvent *event)
 {
     if (event->type() == QEvent::WindowActivate || event->type() == QEvent::WindowDeactivate) {
-        QList<QToolButton *> buttonList = findChildren<QToolButton*>();
+        QList<QToolButton *> buttonList = findChildren<QToolButton *>();
         for (QToolButton *button : buttonList) {
             button->setEnabled(event->type() == QEvent::WindowActivate ? true : false);
         }
