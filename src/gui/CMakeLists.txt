@@ -139,6 +139,7 @@ set(client_SRCS
     customswitch.cpp
     customtooltip.cpp
     customsystembar.cpp
+    debuggingdialog.cpp
     drivemenubarwidget.cpp
     drivepreferenceswidget.cpp
     driveswidget.cpp

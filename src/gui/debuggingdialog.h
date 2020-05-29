@@ -19,37 +19,44 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include <QColor>
-#include <QLineEdit>
-#include <QWidget>
+#include "customdialog.h"
+#include "customswitch.h"
+#include "customcombobox.h"
+
+#include <QPushButton>
 
 namespace KDC {
 
-class PreferencesWidget : public QWidget
+class DebuggingDialog : public CustomDialog
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesWidget(QWidget *parent = nullptr);
-
-signals:
-    void setStyle(bool darkTheme);
+    explicit DebuggingDialog(QWidget *parent = nullptr);
 
 private:
-    QLineEdit *_folderConfirmationAmountLineEdit;
+    enum DebugLevel {
+        Info = 0,
+        Debug,
+        Warning,
+        Critical,
+        Fatal
+    };
+
+    static std::map<DebugLevel, std::pair<int, QString>> _debugLevelMap;
+
+    CustomSwitch *_recordDebuggingSwitch;
+    CustomComboBox *_debugLevelComboBox;
+    QPushButton *_saveButton;
+    bool _needToSave;
+
+    void initUI();
+    void updateUI();
+    void setNeedToSave(bool value);
 
 private slots:
-    void onFolderConfirmationSwitchClicked(bool checked = false);
-    void onFolderConfirmationAmountTextEdited(const QString &text);
-    void onDarkThemeSwitchClicked(bool checked = false);
-    void onMonochromeSwitchClicked(bool checked = false);
-    void onLaunchAtStartupSwitchClicked(bool checked = false);
-    void onDebuggingWidgetClicked();
-    void onFilesToExcludeWidgetClicked();
-    void onProxyServerWidgetClicked();
-    void onBandwidthWidgetClicked();
-    void onLinkActivated(const QString &link);
+    void onExit();
+    void onSaveButtonTriggered(bool checked = false);
 };
 
 }
-

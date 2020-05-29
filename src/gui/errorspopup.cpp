@@ -22,8 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customtoolbutton.h"
 #include "guiutility.h"
 
-#include <iostream>
-
 #include <QBoxLayout>
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>

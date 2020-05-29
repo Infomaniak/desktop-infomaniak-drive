@@ -20,16 +20,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "preferenceswidget.h"
 #include "preferencesblocwidget.h"
 #include "customswitch.h"
+#include "debuggingdialog.h"
 #include "fileexclusiondialog.h"
 #include "proxyserverdialog.h"
 #include "bandwidthdialog.h"
 #include "configfile.h"
+#include "guiutility.h"
 #include "common/utility.h"
+#include "logger.h"
 #include "theme.h"
 
 #include <QBoxLayout>
+#include <QDesktopServices>
 #include <QIntValidator>
 #include <QLabel>
+#include <QMessageBox>
 
 namespace KDC {
 
@@ -38,6 +43,10 @@ static const int boxVMargin = 20;
 static const int boxSpacing = 12;
 static const int textHSpacing = 10;
 static const int amountLineEditWidth = 85;
+
+static const QString debuggingFolderLink = "debuggingFolderLink";
+
+Q_LOGGING_CATEGORY(lcPerformancesWidget, "performanceswidget", QtInfoMsg)
 
 PreferencesWidget::PreferencesWidget(QWidget *parent)
     : QWidget(parent)
@@ -69,6 +78,9 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
      *              launchAtStartupSwitch
      *      advancedLabel
      *      advancedBloc
+     *          debuggingWidget
+     *              debuggingVBox
+     *                  debuggingLabel
      *          filesToExcludeWidget
      *              filesToExcludeVBox
      *                  filesToExcludeLabel
@@ -201,6 +213,21 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     PreferencesBlocWidget *advancedBloc = new PreferencesBlocWidget(this);
     vBox->addWidget(advancedBloc);
 
+    // Debugging informations
+    QVBoxLayout *debuggingVBox = nullptr;
+    ClickableWidget *debuggingWidget = advancedBloc->addActionWidget(&debuggingVBox);
+
+    QLabel *debuggingLabel = new QLabel(tr("Debugging information"), this);
+    debuggingVBox->addWidget(debuggingLabel);
+
+    QLabel *debuggingFolderLabel = new QLabel(tr("<a style=\"%1\" href=\"%2\">Open debugging folder</a>")
+                                              .arg(OCC::Utility::linkStyle)
+                                              .arg(debuggingFolderLink));
+    debuggingFolderLabel->setVisible(cfg.automaticLogDir());
+    debuggingFolderLabel->setAttribute(Qt::WA_NoMousePropagation);
+    debuggingVBox->addWidget(debuggingFolderLabel);
+    advancedBloc->addSeparator();
+
     // Files to exclude
     QVBoxLayout *filesToExcludeVBox = nullptr;
     ClickableWidget *filesToExcludeWidget = advancedBloc->addActionWidget(&filesToExcludeVBox);
@@ -232,6 +259,8 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     connect(darkThemeSwitch, &CustomSwitch::clicked,this, &PreferencesWidget::onDarkThemeSwitchClicked);
     connect(monochromeSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onMonochromeSwitchClicked);
     connect(launchAtStartupSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onLaunchAtStartupSwitchClicked);
+    connect(debuggingWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onDebuggingWidgetClicked);
+    connect(debuggingFolderLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
     connect(filesToExcludeWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onFilesToExcludeWidgetClicked);
     connect(proxyServerWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onProxyServerWidgetClicked);
     connect(bandwidthWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onBandwidthWidgetClicked);
@@ -271,6 +300,12 @@ void PreferencesWidget::onLaunchAtStartupSwitchClicked(bool checked)
     OCC::Utility::setLaunchOnStartup(theme->appName(), theme->appNameGUI(), checked);
 }
 
+void PreferencesWidget::onDebuggingWidgetClicked()
+{
+    DebuggingDialog *dialog = new DebuggingDialog(this);
+    dialog->exec();
+}
+
 void PreferencesWidget::onFilesToExcludeWidgetClicked()
 {
     FileExclusionDialog *dialog = new FileExclusionDialog(this);
@@ -287,6 +322,24 @@ void PreferencesWidget::onBandwidthWidgetClicked()
 {
     BandwidthDialog *dialog = new BandwidthDialog(this);
     dialog->exec();
+}
+
+void PreferencesWidget::onLinkActivated(const QString &link)
+{
+    if (link == debuggingFolderLink) {
+        QString debuggingFolderPath = OCC::Logger::instance()->temporaryFolderLogDirPath();
+        QUrl debuggingFolderUrl = OCC::Utility::getUrlFromLocalPath(debuggingFolderPath);
+        if (debuggingFolderUrl.isValid()) {
+            if (!QDesktopServices::openUrl(debuggingFolderUrl)) {
+                qCWarning(lcPerformancesWidget) << "QDesktopServices::openUrl failed for " << debuggingFolderUrl.toString();
+                QMessageBox msgBox(QMessageBox::Warning, QString(),
+                            tr("Unable to open debugging folder %1.").arg(debuggingFolderUrl.toString()),
+                            QMessageBox::Ok, this);
+                msgBox.setWindowModality(Qt::WindowModal);
+                msgBox.exec();
+            }
+        }
+    }
 }
 
 }

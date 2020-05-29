@@ -519,7 +519,6 @@ void SynthesisPopover::initUI()
 
 QUrl SynthesisPopover::folderUrl(const QString &folderId, const QString &filePath)
 {
-    QUrl url = QUrl();
     QString fullFilePath = folderPath(folderId, filePath);
     return OCC::Utility::getUrlFromLocalPath(fullFilePath);
 }

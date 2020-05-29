@@ -222,6 +222,14 @@ KDC--CustomDialog QLabel#largeTextLabel
     font-size: 14px;
 }
 
+KDC--CustomDialog QLabel#boldtextLabel
+{
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 13px;
+}
+
 KDC--CustomDialog QLabel#descriptionLabel
 {
     color: #C0C0C0;
