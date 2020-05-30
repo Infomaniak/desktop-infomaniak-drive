@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-static const int boxHMargin= 40;
+static const int boxHMargin = 40;
 static const int boxHSpacing = 10;
 static const int titleBoxVMargin = 14;
 static const int proxyBoxVMargin = 15;

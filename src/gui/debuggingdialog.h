@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customdialog.h"
 #include "customswitch.h"
 #include "customcombobox.h"
+#include "customcheckbox.h"
 
 #include <QPushButton>
 
@@ -32,9 +33,6 @@ class DebuggingDialog : public CustomDialog
     Q_OBJECT
 
 public:
-    explicit DebuggingDialog(QWidget *parent = nullptr);
-
-private:
     enum DebugLevel {
         Info = 0,
         Debug,
@@ -43,11 +41,18 @@ private:
         Fatal
     };
 
+    explicit DebuggingDialog(QWidget *parent = nullptr);
+
+private:
     static std::map<DebugLevel, std::pair<int, QString>> _debugLevelMap;
 
     CustomSwitch *_recordDebuggingSwitch;
     CustomComboBox *_debugLevelComboBox;
+    CustomCheckBox *_deleteLogsCheckBox;
     QPushButton *_saveButton;
+    bool _recordDebugging;
+    DebuggingDialog::DebugLevel _minLogLevel;
+    bool _deleteLogs;
     bool _needToSave;
 
     void initUI();
@@ -55,8 +60,14 @@ private:
     void setNeedToSave(bool value);
 
 private slots:
+    void onRecordDebuggingSwitchClicked(bool checked = false);
+    void onDebugLevelComboBoxActivated(int index);
+    void onDeleteLogsCheckBoxClicked(bool checked = false);
     void onExit();
     void onSaveButtonTriggered(bool checked = false);
 };
 
 }
+
+Q_DECLARE_METATYPE(KDC::DebuggingDialog::DebugLevel)
+

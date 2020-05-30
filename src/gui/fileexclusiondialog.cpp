@@ -34,15 +34,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-static const int boxHMargin= 40;
+static const int boxHMargin = 40;
 static const int boxHSpacing = 10;
 static const int titleBoxVMargin = 14;
 static const int descriptionBoxVMargin = 20;
 static const int hiddenFilesBoxVMargin = 15;
-static const int addFileBoxHMargin= 30;
-static const int addFileBoxVMargin= 12;
-static const int filesTableHeaderBoxVMargin= 15;
-static const int filesTableBoxVMargin= 20;
+static const int addFileBoxHMargin = 30;
+static const int addFileBoxVMargin = 12;
+static const int filesTableHeaderBoxVMargin = 15;
+static const int filesTableBoxVMargin = 20;
 
 static const int rowHeight = 38;
 

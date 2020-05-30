@@ -51,6 +51,7 @@ Q_LOGGING_CATEGORY(lcPerformancesWidget, "performanceswidget", QtInfoMsg)
 PreferencesWidget::PreferencesWidget(QWidget *parent)
     : QWidget(parent)
     , _folderConfirmationAmountLineEdit(nullptr)
+    , _debuggingFolderLabel(nullptr)
 {
     setContentsMargins(0, 0, 0, 0);
 
@@ -81,6 +82,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
      *          debuggingWidget
      *              debuggingVBox
      *                  debuggingLabel
+     *                  _debuggingFolderLabel
      *          filesToExcludeWidget
      *              filesToExcludeVBox
      *                  filesToExcludeLabel
@@ -220,12 +222,12 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     QLabel *debuggingLabel = new QLabel(tr("Debugging information"), this);
     debuggingVBox->addWidget(debuggingLabel);
 
-    QLabel *debuggingFolderLabel = new QLabel(tr("<a style=\"%1\" href=\"%2\">Open debugging folder</a>")
+    _debuggingFolderLabel = new QLabel(tr("<a style=\"%1\" href=\"%2\">Open debugging folder</a>")
                                               .arg(OCC::Utility::linkStyle)
                                               .arg(debuggingFolderLink));
-    debuggingFolderLabel->setVisible(cfg.automaticLogDir());
-    debuggingFolderLabel->setAttribute(Qt::WA_NoMousePropagation);
-    debuggingVBox->addWidget(debuggingFolderLabel);
+    _debuggingFolderLabel->setVisible(cfg.automaticLogDir());
+    _debuggingFolderLabel->setAttribute(Qt::WA_NoMousePropagation);
+    debuggingVBox->addWidget(_debuggingFolderLabel);
     advancedBloc->addSeparator();
 
     // Files to exclude
@@ -260,7 +262,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     connect(monochromeSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onMonochromeSwitchClicked);
     connect(launchAtStartupSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onLaunchAtStartupSwitchClicked);
     connect(debuggingWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onDebuggingWidgetClicked);
-    connect(debuggingFolderLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
+    connect(_debuggingFolderLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
     connect(filesToExcludeWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onFilesToExcludeWidgetClicked);
     connect(proxyServerWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onProxyServerWidgetClicked);
     connect(bandwidthWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onBandwidthWidgetClicked);
@@ -304,6 +306,8 @@ void PreferencesWidget::onDebuggingWidgetClicked()
 {
     DebuggingDialog *dialog = new DebuggingDialog(this);
     dialog->exec();
+    OCC::ConfigFile cfg;
+    _debuggingFolderLabel->setVisible(cfg.automaticLogDir());
 }
 
 void PreferencesWidget::onFilesToExcludeWidgetClicked()

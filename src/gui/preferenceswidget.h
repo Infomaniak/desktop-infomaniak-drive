@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #pragma once
 
 #include <QColor>
+#include <QLabel>
 #include <QLineEdit>
 #include <QWidget>
 
@@ -37,6 +38,7 @@ signals:
 
 private:
     QLineEdit *_folderConfirmationAmountLineEdit;
+    QLabel *_debuggingFolderLabel;
 
 private slots:
     void onFolderConfirmationSwitchClicked(bool checked = false);
