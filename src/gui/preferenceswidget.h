@@ -22,7 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QColor>
 #include <QLabel>
 #include <QLineEdit>
-#include <QWidget>
+#include <QLineEdit>
+#include <QPushButton>
 
 namespace KDC {
 
@@ -39,6 +40,7 @@ signals:
 private:
     QLineEdit *_folderConfirmationAmountLineEdit;
     QLabel *_debuggingFolderLabel;
+    QPushButton *_updateButton;
 
 private slots:
     void onFolderConfirmationSwitchClicked(bool checked = false);
@@ -51,6 +53,7 @@ private slots:
     void onProxyServerWidgetClicked();
     void onBandwidthWidgetClicked();
     void onLinkActivated(const QString &link);
+    void onUpdateInfo();
 };
 
 }

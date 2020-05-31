@@ -32,6 +32,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "theme.h"
 #include "version.h"
 #include "config.h"
+#include "updater/updater.h"
+#include "updater/ocupdater.h"
+#include "updater/sparkleupdater.h"
 
 #include <QBoxLayout>
 #include <QDesktopServices>
@@ -96,6 +99,13 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
      *          bandwidthWidget
      *              bandwidthVBox
      *                  bandwidthLabel
+     *      versionLabel
+     *      versionBloc
+     *          versionBox
+     *              versionVBox
+     *                  versionNumberLabel
+     *                  copyrightLabel
+     *              _updateButton
      */
 
     QVBoxLayout *vBox = new QVBoxLayout();
@@ -289,13 +299,15 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     copyrightLabel->setObjectName("textLabel");
     versionVBox->addWidget(copyrightLabel);
 
-    QPushButton *updateButton = new QPushButton(this);
-    updateButton->setObjectName("defaultbutton");
-    updateButton->setFlat(true);
-    updateButton->setText(tr("UPDATE"));
-    versionBox->addWidget(updateButton);
+    _updateButton = new QPushButton(this);
+    _updateButton->setObjectName("defaultbutton");
+    _updateButton->setFlat(true);
+    _updateButton->setText(tr("UPDATE"));
+    versionBox->addWidget(_updateButton);
 
     vBox->addStretch();
+
+    onUpdateInfo();
 
     connect(folderConfirmationSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onFolderConfirmationSwitchClicked);
     connect(_folderConfirmationAmountLineEdit, &QLineEdit::textEdited, this, &PreferencesWidget::onFolderConfirmationAmountTextEdited);
@@ -390,6 +402,30 @@ void PreferencesWidget::onLinkActivated(const QString &link)
         AboutDialog *dialog = new AboutDialog(this);
         dialog->exec();
     }
+}
+
+void PreferencesWidget::onUpdateInfo()
+{
+    OCC::ConfigFile cfg;
+    if (cfg.skipUpdateCheck() || !OCC::Updater::instance()) {
+        _updateButton->setVisible(false);
+        return;
+    }
+
+    // Note: the sparkle-updater is not an OCUpdater
+    OCC::OCUpdater *ocupdater = qobject_cast<OCC::OCUpdater *>(OCC::Updater::instance());
+    if (ocupdater) {
+        connect(ocupdater, &OCC::OCUpdater::downloadStateChanged, this, &PreferencesWidget::onUpdateInfo, Qt::UniqueConnection);
+        connect(_updateButton, &QPushButton::clicked, ocupdater, &OCC::OCUpdater::slotStartInstaller, Qt::UniqueConnection);
+        connect(_updateButton, &QPushButton::clicked, qApp, &QApplication::quit, Qt::UniqueConnection);
+
+        _updateButton->setVisible(ocupdater->downloadState() == OCC::OCUpdater::DownloadComplete);
+    }
+#if defined(Q_OS_MAC) && defined(HAVE_SPARKLE)
+    else if (OCC::SparkleUpdater *sparkleUpdater = qobject_cast<OCC::SparkleUpdater *>(OCC::Updater::instance())) {
+        _updateButton->setVisible(false);
+    }
+#endif
 }
 
 }
