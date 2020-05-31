@@ -255,7 +255,15 @@ KDC--CustomDialog QLabel#textLabel
     font-size: 13px;
 }
 
-KDC--CustomDialog QLabel#largeTextLabel
+KDC--CustomDialog QLabel#largeNormalTextLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+}
+
+KDC--CustomDialog QLabel#largeMediumTextLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";
@@ -1191,4 +1199,13 @@ KDC--ErrorsPopup
     qproperty-background_color: #FFFFFF;
     qproperty-warning_icon_size: 16px;
     qproperty-warning_icon_color: #E9563D;
+}
+
+/********************/
+/* KDC--AboutDialog */
+/********************/
+
+KDC--AboutDialog
+{
+    qproperty-logo_color: #000000;
 }

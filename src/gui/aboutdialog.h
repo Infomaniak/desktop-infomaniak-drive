@@ -19,27 +19,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include "halfroundrectwidget.h"
-#include "customtoolbutton.h"
+#include "customdialog.h"
 
+#include <QColor>
 #include <QLabel>
-#include <QWidget>
+#include <QString>
 
 namespace KDC {
 
-class MainMenuBarWidget : public HalfRoundRectWidget
+
+class AboutDialog : public CustomDialog
 {
     Q_OBJECT
 
     Q_PROPERTY(QColor logo_color READ logoColor WRITE setLogoColor)
 
 public:
-    explicit MainMenuBarWidget(QWidget *parent = nullptr);
-
-signals:
-    void drivesButtonClicked();
-    void preferencesButtonClicked();
-    void openHelp();
+    explicit AboutDialog(QWidget *parent = nullptr);
 
 private:
     QColor _logoColor;
@@ -48,11 +44,13 @@ private:
     inline QColor logoColor() const { return _logoColor; }
     void setLogoColor(const QColor& color);
 
+    void initUI();
+    QString aboutText() const;
+    QString gitSHA1() const;
+
 private slots:
-    void onDrivesButtonClicked(bool checked = false);
-    void onPreferencesButtonClicked(bool checked = false);
-    void onHelpButtonClicked(bool checked = false);
+    void onExit();
+    void onLinkActivated(const QString &link);
 };
 
 }
-

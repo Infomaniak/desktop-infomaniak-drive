@@ -24,11 +24,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "fileexclusiondialog.h"
 #include "proxyserverdialog.h"
 #include "bandwidthdialog.h"
+#include "aboutdialog.h"
 #include "configfile.h"
 #include "guiutility.h"
 #include "common/utility.h"
 #include "logger.h"
 #include "theme.h"
+#include "version.h"
+#include "config.h"
 
 #include <QBoxLayout>
 #include <QDesktopServices>
@@ -45,6 +48,7 @@ static const int textHSpacing = 10;
 static const int amountLineEditWidth = 85;
 
 static const QString debuggingFolderLink = "debuggingFolderLink";
+static const QString versionLink = "versionLink";
 
 Q_LOGGING_CATEGORY(lcPerformancesWidget, "performanceswidget", QtInfoMsg)
 
@@ -223,8 +227,9 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     debuggingVBox->addWidget(debuggingLabel);
 
     _debuggingFolderLabel = new QLabel(tr("<a style=\"%1\" href=\"%2\">Open debugging folder</a>")
-                                              .arg(OCC::Utility::linkStyle)
-                                              .arg(debuggingFolderLink));
+                                       .arg(OCC::Utility::linkStyle)
+                                       .arg(debuggingFolderLink),
+                                       this);
     _debuggingFolderLabel->setVisible(cfg.automaticLogDir());
     _debuggingFolderLabel->setAttribute(Qt::WA_NoMousePropagation);
     debuggingVBox->addWidget(_debuggingFolderLabel);
@@ -254,6 +259,42 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     bandwidthVBox->addWidget(bandwidthLabel);
     bandwidthVBox->addStretch();
 
+    //
+    // Version bloc
+    //
+    QLabel *versionLabel = new QLabel(tr("Version"), this);
+    versionLabel->setObjectName("blocLabel");
+    vBox->addWidget(versionLabel);
+
+    PreferencesBlocWidget *versionBloc = new PreferencesBlocWidget(this);
+    vBox->addWidget(versionBloc);
+
+    // Version
+    QBoxLayout *versionBox = versionBloc->addLayout(QBoxLayout::Direction::LeftToRight);
+
+    QVBoxLayout *versionVBox = new QVBoxLayout();
+    versionVBox->setContentsMargins(0, 0, 0, 0);
+    versionVBox->setSpacing(0);
+    versionBox->addLayout(versionVBox);
+    versionBox->addStretch();
+
+    QLabel *versionNumberLabel = new QLabel(tr("<a style=\"%1\" href=\"%2\">%3</a>")
+                                            .arg(OCC::Utility::linkStyle)
+                                            .arg(versionLink)
+                                            .arg(MIRALL_VERSION_STRING),
+                                            this);
+    versionVBox->addWidget(versionNumberLabel);
+
+    QLabel *copyrightLabel = new QLabel(QString("Copyright %1").arg(APPLICATION_VENDOR), this);
+    copyrightLabel->setObjectName("textLabel");
+    versionVBox->addWidget(copyrightLabel);
+
+    QPushButton *updateButton = new QPushButton(this);
+    updateButton->setObjectName("defaultbutton");
+    updateButton->setFlat(true);
+    updateButton->setText(tr("UPDATE"));
+    versionBox->addWidget(updateButton);
+
     vBox->addStretch();
 
     connect(folderConfirmationSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onFolderConfirmationSwitchClicked);
@@ -266,6 +307,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     connect(filesToExcludeWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onFilesToExcludeWidgetClicked);
     connect(proxyServerWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onProxyServerWidgetClicked);
     connect(bandwidthWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onBandwidthWidgetClicked);
+    connect(versionNumberLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
 }
 
 void PreferencesWidget::onFolderConfirmationSwitchClicked(bool checked)
@@ -343,6 +385,10 @@ void PreferencesWidget::onLinkActivated(const QString &link)
                 msgBox.exec();
             }
         }
+    }
+    else if (link == versionLink) {
+        AboutDialog *dialog = new AboutDialog(this);
+        dialog->exec();
     }
 }
 

@@ -121,6 +121,7 @@ set(client_SRCS
     getorcreatepubliclinkshare.cpp
 
     # KDrive V2
+    aboutdialog.cpp
     accountinfo.cpp
     accountitem.cpp
     accountitemwidget.cpp

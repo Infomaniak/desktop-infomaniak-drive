@@ -72,14 +72,13 @@ MainMenuBarWidget::MainMenuBarWidget(QWidget *parent)
     helpButton->setToolTip(tr("Help"));
     addWidget(helpButton);
 
-    connect(this, &MainMenuBarWidget::logoColorChanged, this, &MainMenuBarWidget::onLogoColorChanged);
     connect(drivesRadioButton, &QPushButton::clicked, this, &MainMenuBarWidget::onDrivesButtonClicked);
     connect(preferencesRadioButton, &QPushButton::clicked, this, &MainMenuBarWidget::onPreferencesButtonClicked);
     connect(helpButton, &CustomToolButton::clicked, this, &MainMenuBarWidget::onHelpButtonClicked);
 }
 
-void MainMenuBarWidget::onLogoColorChanged()
-{
+void MainMenuBarWidget::setLogoColor(const QColor &color) {
+    _logoColor = color;
     _logoTextIconLabel->setPixmap(
                 OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive-text-only.svg", _logoColor)
                 .pixmap(logoTextIconSize));

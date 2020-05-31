@@ -115,7 +115,7 @@ void ServerFoldersDialog::initUI()
     availableSpaceHBox->addWidget(_infoIconLabel);
 
     _availableSpaceTextLabel = new QLabel(this);
-    _availableSpaceTextLabel->setObjectName("largeTextLabel");
+    _availableSpaceTextLabel->setObjectName("largeMediumTextLabel");
     availableSpaceHBox->addWidget(_availableSpaceTextLabel);
     availableSpaceHBox->addStretch();
 
