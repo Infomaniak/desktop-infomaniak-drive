@@ -75,9 +75,14 @@ KDC--CustomToolButton#helpButton
     qproperty-base_icon_size: 24px;
 }
 
-KDC--CustomToolButton#exitButton
+KDC--CustomToolButton#exitBigButton
 {
     qproperty-base_icon_size: 15px;
+}
+
+KDC--CustomToolButton#exitLittleButton
+{
+    qproperty-base_icon_size: 10px;
 }
 
 KDC--CustomToolButton#errorsButton
@@ -314,6 +319,7 @@ KDC--CustomDialog QTableView
     font-weight: 350; /* normal */
     font-size: 14px;
     gridline-color: #1B1B1D;
+    outline: none;
 }
 
 KDC--CustomDialog QTableView::item
@@ -338,6 +344,7 @@ KDC--CustomDialog QTreeWidget
     font-weight: 350; /* normal */
     font-size: 14px;
     gridline-color: #1B1B1D;
+    outline: none;
 }
 
 KDC--CustomDialog QTreeWidget::item

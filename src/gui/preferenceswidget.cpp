@@ -362,6 +362,7 @@ void PreferencesWidget::onDebuggingWidgetClicked()
     dialog->exec();
     OCC::ConfigFile cfg;
     _debuggingFolderLabel->setVisible(cfg.automaticLogDir());
+    repaint();
 }
 
 void PreferencesWidget::onFilesToExcludeWidgetClicked()
