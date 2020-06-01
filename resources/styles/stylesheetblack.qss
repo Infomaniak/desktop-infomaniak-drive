@@ -1160,6 +1160,14 @@ KDC--ErrorsPopup
     qproperty-warning_icon_color: #E9563D;
 }
 
+KDC--ErrorsPopup QLabel
+{
+    color: #C0C0C0;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+}
+
 /********************/
 /* KDC--AboutDialog */
 /********************/

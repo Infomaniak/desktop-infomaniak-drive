@@ -93,7 +93,7 @@ void DebuggingDialog::initUI()
 
     // Minimum debug level
     QLabel *debugLevelLabel = new QLabel(this);
-    debugLevelLabel->setObjectName("boldtextLabel");
+    debugLevelLabel->setObjectName("boldTextLabel");
     debugLevelLabel->setContentsMargins(boxHMargin, 0, boxHMargin, debugLevelLabelBoxVMargin);
     debugLevelLabel->setText(tr("Minimum trace level"));
     mainLayout->addWidget(debugLevelLabel);
