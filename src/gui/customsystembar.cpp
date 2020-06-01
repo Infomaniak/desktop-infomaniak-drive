@@ -40,9 +40,9 @@ static const int macDialogBoxSpacing = 3;
 static const QSize macIconSize = QSize(12, 12);
 
 static const int winDialogBarHeight = 22;
-static const int winDialogBoxHMargin = 18;
-static const int winDialogBoxVMargin = 3;
-static const QSize winIconSize = QSize(10, 10);
+static const int winDialogBoxHMargin = 12;
+static const int winDialogBoxVTMargin = 10;
+static const int winDialogBoxVBMargin = 0;
 
 CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
     : QWidget(parent)
@@ -59,7 +59,7 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
         hBox->setContentsMargins(popupBoxHMargin, popupBoxVTMargin, popupBoxHMargin, popupBoxVBMargin);
 
         CustomToolButton *exitButton = new CustomToolButton(this);
-        exitButton->setObjectName("exitButton");
+        exitButton->setObjectName("exitBigButton");
         exitButton->setIconPath(":/client/resources/icons/actions/close.svg");
         hBox->addStretch();
         hBox->addWidget(exitButton);
@@ -67,8 +67,6 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
         connect(exitButton, &CustomToolButton::clicked, this, &CustomSystemBar::onExit);
     }
     else {
-        QToolButton *closeButton = new QToolButton(this);
-
         if (OCC::Utility::isMac()) {
             setMinimumHeight(macDialogBarHeight);
             setMaximumHeight(macDialogBarHeight);
@@ -79,6 +77,7 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
             closeIcon.addFile(":/client/resources/icons/mac/dark/close.svg", QSize(), QIcon::Normal);
             closeIcon.addFile(":/client/resources/icons/mac/dark/close-hover.svg", QSize(), QIcon::Active);
             closeIcon.addFile(":/client/resources/icons/mac/dark/unactive.svg", QSize(), QIcon::Disabled);
+            QToolButton *closeButton = new QToolButton(this);
             closeButton->setIcon(closeIcon);
             closeButton->setIconSize(macIconSize);
             closeButton->setAutoRaise(true);
@@ -100,22 +99,22 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
             maxButton->setEnabled(false);
             hBox->addWidget(maxButton);
             hBox->addStretch();
+
+            connect(closeButton, &QToolButton::clicked, this, &CustomSystemBar::onExit);
         }
         else {
             setMinimumHeight(winDialogBarHeight);
             setMaximumHeight(winDialogBarHeight);
-            hBox->setContentsMargins(winDialogBoxHMargin, winDialogBoxVMargin, winDialogBoxHMargin, winDialogBoxVMargin);
+            hBox->setContentsMargins(winDialogBoxHMargin, winDialogBoxVTMargin, winDialogBoxHMargin, winDialogBoxVBMargin);
 
-            QIcon closeIcon;
-            closeIcon.addFile(":/client/resources/icons/windows/white/close.svg");
-            closeButton->setIcon(closeIcon);
-            closeButton->setIconSize(winIconSize);
-            closeButton->setAutoRaise(true);
+            CustomToolButton *closeButton = new CustomToolButton(this);
+            closeButton->setObjectName("exitLittleButton");
+            closeButton->setIconPath(":/client/resources/icons/actions/close.svg");
             hBox->addStretch();
             hBox->addWidget(closeButton);
-        }
 
-        connect(closeButton, &QToolButton::clicked, this, &CustomSystemBar::onExit);
+            connect(closeButton, &CustomToolButton::clicked, this, &CustomSystemBar::onExit);
+        }
     }
 }
 

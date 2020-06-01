@@ -353,6 +353,7 @@ void FileExclusionDialog::onAddFileButtonTriggered(bool checked)
     if (dialog->exec() == QDialog::Accepted) {
         QString pattern = dialog->pattern();
         addPattern(pattern, /*deletable=*/false, /*readonly=*/false, /*global=*/false);
+        _filesTableView->repaint();
         _filesTableView->scrollToBottom();
         setNeedToSave(true);
     }
@@ -372,6 +373,7 @@ void FileExclusionDialog::onTableViewClicked(const QModelIndex &index)
                 msgBox.setDefaultButton(QMessageBox::No);
                 if(msgBox.exec() == QMessageBox::Yes) {
                     _filesTableModel->removeRow(index.row());
+                    _filesTableView->repaint();
                     setNeedToSave(true);
                 }
             }
