@@ -54,6 +54,7 @@ static QPair<QString, QString> pathsWithIssuesKey(const ProtocolItem::ExtraData 
 IssuesWidget::IssuesWidget(QWidget *parent)
     : QWidget(parent)
     , _ui(new Ui::IssuesWidget)
+    , _errorCount(0)
 {
     _ui->setupUi(this);
 
@@ -175,7 +176,7 @@ void IssuesWidget::cleanItems(const std::function<bool(QTreeWidgetItem *)> &shou
     _ui->_treeWidget->setSortingEnabled(true);
 
     // update the tabtext
-    emit(issueCountUpdated(_ui->_treeWidget->topLevelItemCount()));
+    emit(issueCountUpdated(_ui->_treeWidget->topLevelItemCount(), errorCount()));
 }
 
 void IssuesWidget::addItem(QTreeWidgetItem *item)
@@ -217,10 +218,17 @@ void IssuesWidget::addItem(QTreeWidgetItem *item)
         }
     }
 
+    // Update error count
+    if (newData.status == SyncFileItem::SoftError
+            || newData.status == SyncFileItem::NormalError
+            || newData.status == SyncFileItem::FatalError) {
+        _errorCount++;
+    }
+
     _ui->_treeWidget->insertTopLevelItem(insertLoc, item);
     _pathsWithIssues.insert(pathsWithIssuesKey(newData));
     item->setHidden(!shouldBeVisible(item, currentAccountFilter(), currentFolderFilter()));
-    emit issueCountUpdated(_ui->_treeWidget->topLevelItemCount());
+    emit issueCountUpdated(_ui->_treeWidget->topLevelItemCount(), errorCount());
 }
 
 void IssuesWidget::slotOpenFile(QTreeWidgetItem *item, int)

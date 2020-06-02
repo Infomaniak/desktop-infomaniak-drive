@@ -136,7 +136,8 @@ public:
     explicit ActivitySettings(QWidget *parent = 0);
     ~ActivitySettings();
     QSize sizeHint() const Q_DECL_OVERRIDE { return ownCloudGui::settingsDialogSize(); }
-    int getErrorCount();
+    int getIssueCount();
+    inline int getErrorCount() const { return _errorItemCount; };
 
 public slots:
     void slotRefresh(AccountState *ptr);
@@ -150,7 +151,7 @@ private slots:
     void slotCopyToClipboard();
     void setActivityTabHidden(bool hidden);
     void slotRegularNotificationCheck();
-    void slotShowIssueItemCount(int cnt);
+    void slotShowIssueItemCount(int issueCount, int errorCount);
     void slotShowActivityTab();
     void slotSendDebugData();
     void slotDebugReporterDone(bool retCode, const QString &debugId);
@@ -167,6 +168,7 @@ private:
     int _protocolTabId;
     int _syncIssueTabId;
     int _issueItemCount;
+    int _errorItemCount;
 
     ActivityWidget *_activityWidget;
     ProtocolWidget *_protocolWidget;

@@ -658,7 +658,15 @@ void ownCloudGui::updateContextMenu()
 
     _contextMenu->addSeparator();
 
-    if (_settingsDialog && _settingsDialog->getErrorCount() > 0) {
+    if (_settingsDialog && _settingsDialog->getIssueCount() > 0) {
+        if (_settingsDialog->getErrorCount() > 0) {
+            _actionShowErrors->setText(tr("See synchronization warnings and errors"));
+            _actionShowErrors->setIcon(Theme::instance()->stateErrorIcon());
+        }
+        else {
+            _actionShowErrors->setText(tr("See synchronization warnings"));
+            _actionShowErrors->setIcon(Theme::instance()->stateWarningIcon());
+        }
         _contextMenu->addAction(_actionShowErrors);
         _contextMenu->addSeparator();
     }
@@ -798,7 +806,7 @@ void ownCloudGui::slotFolderOpenAction(const QString &alias)
 
 void ownCloudGui::setupActions()
 {
-    _actionShowErrors = new QAction(Theme::instance()->stateErrorIcon(), tr("See synchronization errors"), this);
+    _actionShowErrors = new QAction(this);
     _actionStatus = new QAction(tr("Unknown status"), this);
     _actionStatus->setEnabled(false);
     _actionSettings = new QAction(tr("Settings..."), this);

@@ -175,9 +175,14 @@ SettingsDialog::~SettingsDialog()
     delete _ui;
 }
 
-int SettingsDialog::getErrorCount()
+int SettingsDialog::getErrorCount() const
 {
     return _activitySettings->getErrorCount();
+}
+
+int SettingsDialog::getIssueCount() const
+{
+    return _activitySettings->getIssueCount();
 }
 
 // close event is not being called here
