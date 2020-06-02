@@ -62,7 +62,7 @@ protected:
 
 signals:
     void copyToClipboard();
-    void issueCountUpdated(int);
+    void issueCountUpdated(int issueCount, int errorCount);
 
 private slots:
     void slotRefreshIssues();
@@ -88,6 +88,8 @@ private:
     /// Wipes all insufficient remote storgage blacklist entries
     void retryInsufficentRemoteStorageErrors(const QString &folderAlias);
 
+    inline int errorCount() { return _errorCount; }
+
     /// Each insert disables sorting, this timer reenables it
     QTimer _reenableSorting;
 
@@ -95,6 +97,8 @@ private:
     QSet<QPair<QString, QString>> _pathsWithIssues;
 
     Ui::IssuesWidget *_ui;
+
+    int _errorCount;
 };
 }
 

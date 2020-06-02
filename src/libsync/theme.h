@@ -384,6 +384,7 @@ public:
     virtual bool noUnauthedRequests() const;
 
     virtual QIcon stateErrorIcon() const;
+    virtual QIcon stateWarningIcon() const;
 
 protected:
 #ifndef TOKEN_AUTH_ONLY

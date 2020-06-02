@@ -545,7 +545,7 @@ ActivitySettings::ActivitySettings(QWidget *parent)
 
     _issuesWidget = new IssuesWidget(this);
     _syncIssueTabId = _tab->addTab(_issuesWidget, Theme::instance()->syncStateIcon(SyncResult::Problem), QString());
-    slotShowIssueItemCount(0); // to display the label.
+    slotShowIssueItemCount(0, 0); // to display the label.
     connect(_issuesWidget, &IssuesWidget::issueCountUpdated,
         this, &ActivitySettings::slotShowIssueItemCount);
     connect(_issuesWidget, &IssuesWidget::copyToClipboard,
@@ -587,13 +587,14 @@ void ActivitySettings::setActivityTabHidden(bool hidden)
     }
 }
 
-void ActivitySettings::slotShowIssueItemCount(int cnt)
+void ActivitySettings::slotShowIssueItemCount(int issueCount, int errorCount)
 {
-    _issueItemCount = cnt;
+    _issueItemCount = issueCount;
+    _errorItemCount = errorCount;
     QString cntText = tr("Not Synced");
-    if (cnt) {
+    if (issueCount) {
         //: %1 is the number of not synced files.
-        cntText = tr("Not Synced (%1)").arg(cnt);
+        cntText = tr("Not Synced (%1)").arg(issueCount);
     }
     _tab->setTabText(_syncIssueTabId, cntText);
 }
@@ -755,7 +756,7 @@ ActivitySettings::~ActivitySettings()
 {
 }
 
-int ActivitySettings::getErrorCount()
+int ActivitySettings::getIssueCount()
 {
     return _issueItemCount;
 }

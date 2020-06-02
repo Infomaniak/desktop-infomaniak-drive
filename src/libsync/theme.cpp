@@ -659,4 +659,9 @@ QIcon Theme::stateErrorIcon() const
     return themeIcon(QLatin1String("state-error"));
 }
 
+QIcon Theme::stateWarningIcon() const
+{
+    return themeIcon(QLatin1String("state-information"));
+}
+
 } // end namespace client
