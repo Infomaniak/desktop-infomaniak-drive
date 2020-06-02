@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "aboutdialog.h"
+#include "custommessagebox.h"
 #include "guiutility.h"
 #include "common/utility.h"
 #include "common/vfs.h"
@@ -27,7 +28,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QBoxLayout>
 #include <QDesktopServices>
 #include <QLabel>
-#include <QMessageBox>
 #include <QPushButton>
 #include <QSslSocket>
 
@@ -49,7 +49,7 @@ static const QString githubPrefix = "https://github.com/infomaniak/desktop-infom
 Q_LOGGING_CATEGORY(lcAboutDialog, "aboutdialog", QtInfoMsg)
 
 AboutDialog::AboutDialog(QWidget *parent)
-    : CustomDialog(true, parent)
+    : CustomDialog(true, false, parent)
     , _logoColor(QColor())
     , _logoTextIconLabel(nullptr)
 {
@@ -165,11 +165,11 @@ void AboutDialog::onLinkActivated(const QString &link)
         if (domainUrl.isValid()) {
             if (!QDesktopServices::openUrl(domainUrl)) {
                 qCWarning(lcAboutDialog) << "QDesktopServices::openUrl failed for " << domainUrl.toString();
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
                             tr("Unable to open debugging folder %1.").arg(domainUrl.toString()),
                             QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                msgBox->exec();
             }
         }
     }
@@ -179,11 +179,11 @@ void AboutDialog::onLinkActivated(const QString &link)
         if (gitUrl.isValid()) {
             if (!QDesktopServices::openUrl(gitUrl)) {
                 qCWarning(lcAboutDialog) << "QDesktopServices::openUrl failed for " << gitUrl.toString();
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
                             tr("Unable to open debugging folder %1.").arg(gitUrl.toString()),
                             QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                msgBox->exec();
             }
         }
     }

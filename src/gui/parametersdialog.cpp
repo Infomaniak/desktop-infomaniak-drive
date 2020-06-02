@@ -23,8 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 #include "parametersdialog.h"
+#include "bottomwidget.h"
 #include "erroritemwidget.h"
 #include "actionwidget.h"
+#include "custommessagebox.h"
 #include "accountmanager.h"
 #include "folderman.h"
 #include "openfilemanager.h"
@@ -40,7 +42,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
 #include <QLoggingCategory>
-#include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QUrl>
@@ -58,7 +59,7 @@ static const int maxLogFilesToSend = 25;
 Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
 
 ParametersDialog::ParametersDialog(QWidget *parent)
-    : CustomDialog(false, parent)
+    : CustomDialog(false, false, parent)
     , _currentAccountId(QString())
     , _backgroundMainColor(QColor())
     , _pageStackedWidget(nullptr)
@@ -115,11 +116,16 @@ void ParametersDialog::initUI()
      *                  historyLabel
      *              _errorsStackedWidget
      *                  errorsListWidget[]
+     *  bottomWidget
      */
 
     // Page stacked widget
     _pageStackedWidget = new QStackedWidget(this);
     mainLayout()->addWidget(_pageStackedWidget);
+
+    // Bottom
+    BottomWidget *bottomWidget = new BottomWidget(this);
+    mainLayout()->addWidget(bottomWidget);
 
     //
     // Main widget
@@ -568,22 +574,18 @@ void ParametersDialog::onRemove(const QString &accountId)
     OCC::AccountManager *accountManager = OCC::AccountManager::instance();
     OCC::AccountStatePtr accountStatePtr = accountManager->getAccountStateFromId(accountId);
     if (accountStatePtr.data()) {
-        QMessageBox msgBox(
-                    QMessageBox::Question, tr("Confirm Account Removal"),
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Question,
                     tr("<p>Do you really want to remove the connection to the account <i>%1</i>?</p>"
                        "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
                         .arg(accountStatePtr->account()->driveName()),
                     QMessageBox::NoButton, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        QPushButton *yesButton = msgBox.addButton(tr("Remove connection"), QMessageBox::YesRole);
-        msgBox.addButton(tr("Cancel"), QMessageBox::NoRole);
-        msgBox.exec();
-        if (msgBox.clickedButton() != yesButton) {
-            return;
+        msgBox->addButton(tr("Remove connection"), QMessageBox::YesRole);
+        msgBox->addButton(tr("Cancel"), QMessageBox::NoRole);
+        if (msgBox->exec() == QMessageBox::YesRole) {
+            accountManager->deleteAccount(accountStatePtr.data());
+            accountManager->save();
         }
-
-        accountManager->deleteAccount(accountStatePtr.data());
-        accountManager->save();
     }
 }
 
@@ -626,12 +628,12 @@ void ParametersDialog::onSendLogs()
         return;
     }
 
-    QMessageBox msgBox(QMessageBox::Information, QString(),
-                       tr("Please confirm the transmission of debugging information to our support."),
-                       QMessageBox::Yes | QMessageBox::No, this);
-    msgBox.setWindowModality(Qt::WindowModal);
-    msgBox.setDefaultButton(QMessageBox::Yes);
-    if (msgBox.exec() == QMessageBox::No) {
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Information,
+                tr("Please confirm the transmission of debugging information to our support."),
+                QMessageBox::Yes | QMessageBox::No, this);
+    msgBox->setDefaultButton(QMessageBox::Yes);
+    if (msgBox->exec() == QMessageBox::No) {
         return;
     }
 
@@ -696,11 +698,11 @@ void ParametersDialog::onOpenFolderItem(const QString &filePath)
             if (url.isValid()) {
                 if (!QDesktopServices::openUrl(url)) {
                     qCWarning(lcParametersDialog) << "QDesktopServices::openUrl failed for " << url.toString();
-                    QMessageBox msgBox(QMessageBox::Warning, QString(),
+                    CustomMessageBox *msgBox = new CustomMessageBox(
+                                QMessageBox::Warning,
                                 tr("Unable to open folder path %1.").arg(url.toString()),
                                 QMessageBox::Ok, this);
-                    msgBox.setWindowModality(Qt::WindowModal);
-                    msgBox.exec();
+                    msgBox->exec();
                 }
             }
         }
@@ -709,14 +711,13 @@ void ParametersDialog::onOpenFolderItem(const QString &filePath)
 
 void ParametersDialog::onDebugReporterDone(bool retCode, const QString &debugId)
 {
-    QMessageBox msgBox(QMessageBox::Information, QString(),
-                       retCode
-                        ? tr("Transmission done!<br>Please refer to identifier <b>%1</b> in bug reports.").arg(debugId)
-                        : tr("Transmission failed!"),
-                       QMessageBox::Ok, this);
-    msgBox.setWindowModality(Qt::WindowModal);
-    msgBox.setTextInteractionFlags(Qt::TextSelectableByMouse);
-    msgBox.exec();
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Information,
+                retCode
+                ? tr("Transmission done!<br>Please refer to identifier <b>%1</b> in bug reports.").arg(debugId)
+                : tr("Transmission failed!"),
+                QMessageBox::Ok, this);
+    msgBox->exec();
 }
 
 ParametersDialog::AccountInfoParameters::AccountInfoParameters()

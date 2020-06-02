@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "drivepreferenceswidget.h"
 #include "preferencesblocwidget.h"
 #include "serverfoldersdialog.h"
+#include "custommessagebox.h"
 #include "accountmanager.h"
 #include "configfile.h"
 #include "guiutility.h"
@@ -30,7 +31,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QDir>
 #include <QIcon>
 #include <QLabel>
-#include <QMessageBox>
 #include <QScrollArea>
 #include <QStandardPaths>
 #include <QStyle>
@@ -467,10 +467,10 @@ void DrivePreferencesWidget::updateAccountInfo()
 void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)> &callback)
 {
     const auto bestVfsMode = OCC::bestAvailableVfsMode();
-    QMessageBox *msgBox = nullptr;
+    CustomMessageBox *msgBox = nullptr;
     if (bestVfsMode == OCC::Vfs::WindowsCfApi) {
-        msgBox = new QMessageBox(
-                    QMessageBox::Warning, tr("Enable technical preview feature?"),
+        msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
                     tr("When the \"virtual files\" mode is enabled no files will be downloaded initially. "
                        "Instead a virtual file will be created for each file that exists on the server. "
                        "When a file is opened its contents will be downloaded automatically. "
@@ -479,13 +479,12 @@ void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)>
                        "Currently unselected folders will be translated to online-only folders "
                        "and your selective sync settings will be reset."),
                      QMessageBox::NoButton, this);
-        msgBox->setWindowModality(Qt::WindowModal);
         msgBox->addButton(tr("Enable virtual files"), QMessageBox::AcceptRole);
         msgBox->addButton(tr("Continue to use selective sync"), QMessageBox::RejectRole);
     } else {
         ASSERT(bestVfsMode == OCC::Vfs::WithSuffix)
-        msgBox = new QMessageBox(
-                    QMessageBox::Warning, tr("Enable experimental feature?"),
+        msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
                     tr("When the \"virtual files\" mode is enabled no files will be downloaded initially. "
                        "Instead, a tiny \"%1\" file will be created for each file that exists on the server. "
                        "The contents can be downloaded by running these files or by using their context menu.\n\n"
@@ -496,33 +495,25 @@ void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)>
                        "This is a new, experimental mode. If you decide to use it, please report any "
                        "issues that come up.").arg(APPLICATION_DOTVIRTUALFILE_SUFFIX),
                     QMessageBox::NoButton, this);
-        msgBox->setWindowModality(Qt::WindowModal);
         msgBox->addButton(tr("Enable experimental placeholder mode"), QMessageBox::AcceptRole);
         msgBox->addButton(tr("Stay safe"), QMessageBox::RejectRole);
     }
-    connect(msgBox, &QMessageBox::finished, msgBox, [callback, msgBox](int result) {
-        callback(result == QMessageBox::AcceptRole);
-        msgBox->deleteLater();
-    });
-    msgBox->open();
+    int result = msgBox->exec();
+    callback(result == QMessageBox::AcceptRole);
 }
 
 void DrivePreferencesWidget::askDisableSmartSync(const std::function<void (bool)> &callback)
 {
-    auto msgBox = new QMessageBox(
-                QMessageBox::Question, tr("Disable virtual file support?"),
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Question,
                 tr("This action will disable virtual file support. As a consequence contents of folders that "
                    "are currently marked as 'available online only' will be downloaded.\n\n"
                    "This action will abort any currently running synchronization."),
                 QMessageBox::NoButton, this);
-    msgBox->setWindowModality(Qt::WindowModal);
     msgBox->addButton(tr("Disable support"), QMessageBox::AcceptRole);
     msgBox->addButton(tr("Cancel"), QMessageBox::RejectRole);
-    connect(msgBox, &QMessageBox::finished, msgBox, [callback, msgBox](int result) {
-        callback(result == QMessageBox::AcceptRole);
-        msgBox->deleteLater();
-    });
-    msgBox->open();
+    int result = msgBox->exec();
+    callback(result == QMessageBox::AcceptRole);
 }
 
 void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection)

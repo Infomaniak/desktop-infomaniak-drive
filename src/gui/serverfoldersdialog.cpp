@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "serverfoldersdialog.h"
+#include "custommessagebox.h"
 #include "accountmanager.h"
 #include "networkjobs.h"
 #include "folderman.h"
@@ -26,7 +27,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <QBoxLayout>
 #include <QHeaderView>
-#include <QMessageBox>
 #include <QMutableListIterator>
 #include <QScopedValueRollback>
 
@@ -51,7 +51,7 @@ static const int sizeRole = Qt::UserRole;
 Q_LOGGING_CATEGORY(lcServerFoldersDialog, "serverfoldersdialog", QtInfoMsg)
 
 ServerFoldersDialog::ServerFoldersDialog(const AccountInfo *accountInfo, QWidget *parent)
-    : CustomDialog(true, parent)
+    : CustomDialog(true, false, parent)
     , _accountInfo(accountInfo)
     , _currentFolder(nullptr)
     , _oldBlackList(QStringList())
@@ -426,12 +426,12 @@ void ServerFoldersDialog::onInfoIconColorChanged()
 void ServerFoldersDialog::onExit()
 {
     if (_needToSave) {
-        QMessageBox msgBox(QMessageBox::Question, QString(),
-                           tr("Do you want to save your modifications?"),
-                           QMessageBox::Yes | QMessageBox::No, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.setDefaultButton(QMessageBox::Yes);
-        if (msgBox.exec() == QMessageBox::Yes) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Question,
+                    tr("Do you want to save your modifications?"),
+                    QMessageBox::Yes | QMessageBox::No, this);
+        msgBox->setDefaultButton(QMessageBox::Yes);
+        if (msgBox->exec() == QMessageBox::Yes) {
             onSaveButtonTriggered();
         }
         else {

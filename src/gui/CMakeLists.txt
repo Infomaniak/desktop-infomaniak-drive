@@ -131,6 +131,7 @@ set(client_SRCS
     buttonsbarwidget.cpp
     clickablewidget.cpp
     customdialog.cpp
+    custommessagebox.cpp
     custompushbutton.cpp
     customtogglepushbutton.cpp
     customtoolbutton.cpp

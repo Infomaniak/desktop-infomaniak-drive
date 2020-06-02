@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "customdialog.h"
 #include "customsystembar.h"
-#include "bottomwidget.h"
 #include "guiutility.h"
 
 #include <QBoxLayout>
@@ -42,7 +41,7 @@ static const int mainBoxVTMargin = 0;
 static const int mainBoxVBMargin = 40;
 static const int shadowBlurRadius = 20;
 
-CustomDialog::CustomDialog(bool popup, QWidget *parent)
+CustomDialog::CustomDialog(bool popup, bool emptyBar, QWidget *parent)
     : QDialog(parent)
     , _backgroundColor(QColor())
     , _layout(nullptr)
@@ -61,7 +60,8 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
     setLayout(mainVBox);
 
     // System bar
-    CustomSystemBar *systemBar = new CustomSystemBar(popup, this);
+    CustomSystemBar *systemBar = nullptr;
+    systemBar = new CustomSystemBar(popup, emptyBar, this);
     mainVBox->addWidget(systemBar);
 
     _layout = new QVBoxLayout();
@@ -72,10 +72,6 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
 
     mainVBox->addLayout(_layout);
     mainVBox->setStretchFactor(_layout, 1);
-
-    // Bottom
-    BottomWidget *bottomWidget = new BottomWidget(this);
-    mainVBox->addWidget(bottomWidget);
 
     // Shadow
     QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;

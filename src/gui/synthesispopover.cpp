@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customtogglepushbutton.h"
 #include "synchronizeditem.h"
 #include "errorspopup.h"
+#include "custommessagebox.h"
 #include "accountmanager.h"
 #include "folderman.h"
 #include "account.h"
@@ -51,7 +52,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QLoggingCategory>
-#include <QMessageBox>
 #include <QPainter>
 #include <QPainterPath>
 #include <QScreen>
@@ -541,11 +541,11 @@ void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
         if (url.isValid()) {
             if (!QDesktopServices::openUrl(url)) {
                 qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << url.toString();
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
                             tr("Unable to open folder path %1.").arg(url.toString()),
                             QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                msgBox->exec();
             }
         }
     }
@@ -1082,11 +1082,11 @@ void SynthesisPopover::onOpenWebview(bool checked)
     if (accountPtr) {
         if (!QDesktopServices::openUrl(accountPtr->url())) {
             qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << accountPtr->url().toString();
-            QMessageBox msgBox(QMessageBox::Warning, QString(),
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
                         tr("Unable to access web site %1.").arg(accountPtr->url().toString()),
                         QMessageBox::Ok, this);
-            msgBox.setWindowModality(Qt::WindowModal);
-            msgBox.exec();
+            msgBox->exec();
         }
     }
 }
@@ -1272,9 +1272,11 @@ void SynthesisPopover::onNotificationActionTriggered(bool checked)
 
     emit disableNotifications(_notificationsDisabled, _notificationsDisabledUntilDateTime);
 
-    QMessageBox msgBox(QMessageBox::Information, QString(), message, QMessageBox::Ok, this);
-    msgBox.setWindowModality(Qt::WindowModal);
-    msgBox.exec();
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Information,
+                message,
+                QMessageBox::Ok, this);
+    msgBox->exec();
 }
 
 void SynthesisPopover::onAccountSelected(QString id)
@@ -1382,9 +1384,11 @@ void SynthesisPopover::onAddToFavouriteItem(const SynchronizedItem &item)
 {
     Q_UNUSED(item)
 
-    QMessageBox msgBox(QMessageBox::Information, QString(), tr("Not implemented!"), QMessageBox::Ok, this);
-    msgBox.setWindowModality(Qt::WindowModal);
-    msgBox.exec();
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Information,
+                tr("Not implemented!"),
+                QMessageBox::Ok, this);
+    msgBox->exec();
 }
 
 void SynthesisPopover::onManageRightAndSharingItem(const SynchronizedItem &item)
@@ -1394,11 +1398,11 @@ void SynthesisPopover::onManageRightAndSharingItem(const SynchronizedItem &item)
     OCC::FolderMan::instance()->folderForPath(fullFilePath, &folderRelativePath);
     if (folderRelativePath == "/") {
         qCDebug(lcSynthesisPopover) << "Cannot share root directory!";
-        QMessageBox msgBox(QMessageBox::Information, QString(),
-                           tr("You cannot share the root directory of your Drive!"),
-                           QMessageBox::Ok, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.exec();
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Information,
+                    tr("You cannot share the root directory of your Drive!"),
+                    QMessageBox::Ok, this);
+        msgBox->exec();
     }
     else {
         emit openShareDialogPublicLinks(folderRelativePath, fullFilePath);
@@ -1441,11 +1445,11 @@ void SynthesisPopover::onOpenWebviewItem(const SynchronizedItem &item)
 void SynthesisPopover::onCopyUrlToClipboard(const QString &url)
 {
     QApplication::clipboard()->setText(url);
-    QMessageBox msgBox(QMessageBox::Information, QString(),
-                       tr("The shared link has been copied to the clipboard."),
-                       QMessageBox::Ok, this);
-    msgBox.setWindowModality(Qt::WindowModal);
-    msgBox.exec();
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Information,
+                tr("The shared link has been copied to the clipboard."),
+                QMessageBox::Ok, this);
+    msgBox->exec();
 }
 
 void SynthesisPopover::onLinkActivated(const QString &link)
@@ -1459,20 +1463,20 @@ void SynthesisPopover::onLinkActivated(const QString &link)
         if (url.isValid()) {
             if (!QDesktopServices::openUrl(url)) {
                 qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << link;
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
-                                   tr("Unable to open link %1.").arg(link),
-                                   QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
+                            tr("Unable to open link %1.").arg(link),
+                            QMessageBox::Ok, this);
+                msgBox->exec();
             }
         }
         else {
             qCWarning(lcSynthesisPopover) << "Invalid link " << link;
-            QMessageBox msgBox(QMessageBox::Warning, QString(),
-                               tr("Invalid link %1.").arg(link),
-                               QMessageBox::Ok, this);
-            msgBox.setWindowModality(Qt::WindowModal);
-            msgBox.exec();
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Invalid link %1.").arg(link),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
         }
     }
 }

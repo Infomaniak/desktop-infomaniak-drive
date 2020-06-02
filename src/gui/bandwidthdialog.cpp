@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "bandwidthdialog.h"
+#include "custommessagebox.h"
 #include "configfile.h"
 #include "folderman.h"
 
@@ -25,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QIntValidator>
 #include <QLabel>
 #include <QLoggingCategory>
-#include <QMessageBox>
 
 namespace KDC {
 
@@ -40,7 +40,7 @@ static const int valueEditSize = 80;
 Q_LOGGING_CATEGORY(lcBandwidthDialog, "bandwidthdialog", QtInfoMsg)
 
 BandwidthDialog::BandwidthDialog(QWidget *parent)
-    : CustomDialog(true, parent)
+    : CustomDialog(true, false, parent)
     , _useDownloadLimit(0)
     , _downloadLimit(0)
     , _useUploadLimit(0)
@@ -286,12 +286,12 @@ void BandwidthDialog::setNeedToSave(bool value)
 void BandwidthDialog::onExit()
 {
     if (_needToSave) {
-        QMessageBox msgBox(QMessageBox::Question, QString(),
-                           tr("Do you want to save your modifications?"),
-                           QMessageBox::Yes | QMessageBox::No, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.setDefaultButton(QMessageBox::Yes);
-        if (msgBox.exec() == QMessageBox::Yes) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Question,
+                    tr("Do you want to save your modifications?"),
+                    QMessageBox::Yes | QMessageBox::No, this);
+        msgBox->setDefaultButton(QMessageBox::Yes);
+        if (msgBox->exec() == QMessageBox::Yes) {
             onSaveButtonTriggered();
         }
         else {

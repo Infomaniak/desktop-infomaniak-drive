@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "proxyserverdialog.h"
 #include "bandwidthdialog.h"
 #include "aboutdialog.h"
+#include "custommessagebox.h"
 #include "configfile.h"
 #include "guiutility.h"
 #include "common/utility.h"
@@ -40,7 +41,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QDesktopServices>
 #include <QIntValidator>
 #include <QLabel>
-#include <QMessageBox>
 
 namespace KDC {
 
@@ -391,11 +391,11 @@ void PreferencesWidget::onLinkActivated(const QString &link)
         if (debuggingFolderUrl.isValid()) {
             if (!QDesktopServices::openUrl(debuggingFolderUrl)) {
                 qCWarning(lcPerformancesWidget) << "QDesktopServices::openUrl failed for " << debuggingFolderUrl.toString();
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
                             tr("Unable to open debugging folder %1.").arg(debuggingFolderUrl.toString()),
                             QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                msgBox->exec();
             }
         }
     }

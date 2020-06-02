@@ -29,7 +29,7 @@ class CustomSystemBar : public QWidget
     Q_OBJECT
 
 public:
-    explicit CustomSystemBar(bool popup, QWidget *parent = nullptr);
+    explicit CustomSystemBar(bool popup, bool emptyBar, QWidget *parent = nullptr);
 
 signals:
     void drag(const QPoint &move);

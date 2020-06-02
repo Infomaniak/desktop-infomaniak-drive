@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "proxyserverdialog.h"
+#include "custommessagebox.h"
 #include "configfile.h"
 #include "clientproxy.h"
 #include "folderman.h"
@@ -28,7 +29,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QAbstractItemView>
 #include <QHostInfo>
 #include <QLabel>
-#include <QMessageBox>
 #include <QRadioButton>
 
 namespace KDC {
@@ -51,7 +51,7 @@ std::map<QNetworkProxy::ProxyType, std::pair<int, QString>> ProxyServerDialog::_
 };
 
 ProxyServerDialog::ProxyServerDialog(QWidget *parent)
-    : CustomDialog(true, parent)
+    : CustomDialog(true, false, parent)
     , _proxyType(QNetworkProxy::NoProxy)
     , _proxy(QNetworkProxy())
     , _proxyNeedsAuth(false)
@@ -291,21 +291,21 @@ bool ProxyServerDialog::isSaveEnabled()
 void ProxyServerDialog::onExit()
 {
     if (_needToSave) {
-        QMessageBox msgBox(QMessageBox::Question, QString(),
-                           tr("Do you want to save your modifications?"),
-                           QMessageBox::Yes | QMessageBox::No, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.setDefaultButton(QMessageBox::Yes);
-        if (msgBox.exec() == QMessageBox::Yes) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Question,
+                    tr("Do you want to save your modifications?"),
+                    QMessageBox::Yes | QMessageBox::No, this);
+        msgBox->setDefaultButton(QMessageBox::Yes);
+        if (msgBox->exec() == QMessageBox::Yes) {
             if (isSaveEnabled()) {
                 onSaveButtonTriggered();
             }
             else {
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
-                                   tr("Unable to save, all mandatory fields are not completed!"),
-                                   QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
+                            tr("Unable to save, all mandatory fields are not completed!"),
+                            QMessageBox::Ok, this);
+                msgBox->exec();
             }
         }
         else {
@@ -399,11 +399,11 @@ void ProxyServerDialog::onAddressEditingFinished()
     if (!_proxy.hostName().isEmpty()) {
         QHostInfo info = QHostInfo::fromName(_proxy.hostName());
         if (info.error() != QHostInfo::NoError) {
-            QMessageBox msgBox(QMessageBox::Warning, QString(),
-                               tr("Proxy not found!"),
-                               QMessageBox::Ok, this);
-            msgBox.setWindowModality(Qt::WindowModal);
-            msgBox.exec();
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Proxy not found!"),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
         }
     }
 }

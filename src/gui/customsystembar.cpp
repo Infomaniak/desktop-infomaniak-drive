@@ -30,7 +30,7 @@ namespace KDC {
 
 static const int popupBarHeight = 38;
 static const int popupBoxHMargin = 20;
-static const int popupBoxVTMargin = 20;
+static const int popupBoxVTMargin = 18;
 static const int popupBoxVBMargin = 2;
 
 static const int macDialogBarHeight = 22;
@@ -44,7 +44,7 @@ static const int winDialogBoxHMargin = 12;
 static const int winDialogBoxVTMargin = 10;
 static const int winDialogBoxVBMargin = 0;
 
-CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
+CustomSystemBar::CustomSystemBar(bool popup, bool emptyBar, QWidget *parent)
     : QWidget(parent)
     , _popup(popup)
     , _dragging(false)
@@ -58,13 +58,15 @@ CustomSystemBar::CustomSystemBar(bool popup, QWidget *parent)
         setMaximumHeight(popupBarHeight);
         hBox->setContentsMargins(popupBoxHMargin, popupBoxVTMargin, popupBoxHMargin, popupBoxVBMargin);
 
-        CustomToolButton *exitButton = new CustomToolButton(this);
-        exitButton->setObjectName("exitBigButton");
-        exitButton->setIconPath(":/client/resources/icons/actions/close.svg");
-        hBox->addStretch();
-        hBox->addWidget(exitButton);
+        if (!emptyBar) {
+            CustomToolButton *exitButton = new CustomToolButton(this);
+            exitButton->setObjectName("exitBigButton");
+            exitButton->setIconPath(":/client/resources/icons/actions/close.svg");
+            hBox->addStretch();
+            hBox->addWidget(exitButton);
 
-        connect(exitButton, &CustomToolButton::clicked, this, &CustomSystemBar::onExit);
+            connect(exitButton, &CustomToolButton::clicked, this, &CustomSystemBar::onExit);
+        }
     }
     else {
         if (OCC::Utility::isMac()) {

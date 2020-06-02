@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "debuggingdialog.h"
+#include "custommessagebox.h"
 #include "configfile.h"
 #include "logger.h"
 
@@ -25,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <QBoxLayout>
 #include <QLabel>
-#include <QMessageBox>
 
 namespace KDC {
 
@@ -46,7 +46,7 @@ std::map<DebuggingDialog::DebugLevel, std::pair<int, QString>> DebuggingDialog::
 };
 
 DebuggingDialog::DebuggingDialog(QWidget *parent)
-    : CustomDialog(true, parent)
+    : CustomDialog(true, false, parent)
     , _recordDebuggingSwitch(nullptr)
     , _debugLevelComboBox(nullptr)
     , _saveButton(nullptr)
@@ -190,12 +190,12 @@ void DebuggingDialog::onDeleteLogsCheckBoxClicked(bool checked)
 void DebuggingDialog::onExit()
 {
     if (_needToSave) {
-        QMessageBox msgBox(QMessageBox::Question, QString(),
-                           tr("Do you want to save your modifications?"),
-                           QMessageBox::Yes | QMessageBox::No, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.setDefaultButton(QMessageBox::Yes);
-        if (msgBox.exec() == QMessageBox::Yes) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Question,
+                    tr("Do you want to save your modifications?"),
+                    QMessageBox::Yes | QMessageBox::No, this);
+        msgBox->setDefaultButton(QMessageBox::Yes);
+        if (msgBox->exec() == QMessageBox::Yes) {
             onSaveButtonTriggered();
         }
         else {

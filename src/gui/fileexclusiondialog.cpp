@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "fileexclusiondialog.h"
 #include "fileexclusionnamedialog.h"
 #include "custompushbutton.h"
+#include "custommessagebox.h"
 #include "configfile.h"
 #include "folderman.h"
 #include "guiutility.h"
@@ -27,7 +28,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QFile>
 #include <QHeaderView>
 #include <QLabel>
-#include <QMessageBox>
 #include <QStandardItem>
 #include <QStringList>
 #include <QVector>
@@ -56,7 +56,7 @@ static const int skippedLinesRole = Qt::UserRole + 1;
 static const int isGlobalRole = Qt::UserRole + 2;
 
 FileExclusionDialog::FileExclusionDialog(QWidget *parent)
-    : CustomDialog(true, parent)
+    : CustomDialog(true, false, parent)
     , _hiddenFilesCheckBox(nullptr)
     , _filesTableModel(nullptr)
     , _filesTableView(nullptr)
@@ -321,12 +321,12 @@ void FileExclusionDialog::setNeedToSave(bool value)
 void FileExclusionDialog::onExit()
 {
     if (_needToSave) {
-        QMessageBox msgBox(QMessageBox::Question, QString(),
-                           tr("Do you want to save your modifications?"),
-                           QMessageBox::Yes | QMessageBox::No, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.setDefaultButton(QMessageBox::Yes);
-        if (msgBox.exec() == QMessageBox::Yes) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Question,
+                    tr("Do you want to save your modifications?"),
+                    QMessageBox::Yes | QMessageBox::No, this);
+        msgBox->setDefaultButton(QMessageBox::Yes);
+        if (msgBox->exec() == QMessageBox::Yes) {
             onSaveButtonTriggered();
         }
         else {
@@ -366,12 +366,12 @@ void FileExclusionDialog::onTableViewClicked(const QModelIndex &index)
             QStandardItem *item = _filesTableModel->item(index.row(), tableColumn::Deletable);
             if (item && item->flags() & Qt::ItemIsEnabled) {
                 // Delete
-                QMessageBox msgBox(QMessageBox::Question, QString(),
-                                   tr("Do you really want to delete?"),
-                                   QMessageBox::Yes | QMessageBox::No, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.setDefaultButton(QMessageBox::No);
-                if(msgBox.exec() == QMessageBox::Yes) {
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Question,
+                            tr("Do you really want to delete?"),
+                            QMessageBox::Yes | QMessageBox::No, this);
+                msgBox->setDefaultButton(QMessageBox::No);
+                if(msgBox->exec() == QMessageBox::Yes) {
                     _filesTableModel->removeRow(index.row());
                     _filesTableView->repaint();
                     setNeedToSave(true);
@@ -427,11 +427,11 @@ void FileExclusionDialog::onSaveButtonTriggered(bool checked)
             ignoreFile.write(prepend + patternItem->text().toUtf8() + '\n');
         }
     } else {
-        QMessageBox msgBox(QMessageBox::Warning, tr("Could not open file"),
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
                     tr("Cannot write changes to '%1'.").arg(ignoreFilePath),
                     QMessageBox::Ok, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.exec();
+        msgBox->exec();
     }
     ignoreFile.close();
 
