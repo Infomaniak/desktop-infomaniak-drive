@@ -159,7 +159,7 @@ if(BUILD_CLIENT)
     find_package(Sphinx)
     find_package(PdfLatex)
 
-   find_package(ZLIB REQUIRED)
+   find_package(ZLIB)
 endif()
 
 if (NOT DEFINED APPLICATION_ICON_NAME)
