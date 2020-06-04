@@ -49,7 +49,7 @@ static const QString githubPrefix = "https://github.com/infomaniak/desktop-infom
 Q_LOGGING_CATEGORY(lcAboutDialog, "aboutdialog", QtInfoMsg)
 
 AboutDialog::AboutDialog(QWidget *parent)
-    : CustomDialog(true, false, parent)
+    : CustomDialog(true, parent)
     , _logoColor(QColor())
     , _logoTextIconLabel(nullptr)
 {
@@ -106,6 +106,7 @@ void AboutDialog::initUI()
     mainLayout->addLayout(buttonsHBox);
 
     QPushButton *closeButton = new QPushButton(this);
+    closeButton->setObjectName("defaultbutton");
     closeButton->setFlat(true);
     closeButton->setText(tr("CLOSE"));
     buttonsHBox->addWidget(closeButton);

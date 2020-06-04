@@ -40,7 +40,7 @@ static const int valueEditSize = 80;
 Q_LOGGING_CATEGORY(lcBandwidthDialog, "bandwidthdialog", QtInfoMsg)
 
 BandwidthDialog::BandwidthDialog(QWidget *parent)
-    : CustomDialog(true, false, parent)
+    : CustomDialog(true, parent)
     , _useDownloadLimit(0)
     , _downloadLimit(0)
     , _useUploadLimit(0)
@@ -208,6 +208,7 @@ void BandwidthDialog::initUI()
     buttonsHBox->addWidget(_saveButton);
 
     QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setObjectName("nondefaultbutton");
     cancelButton->setFlat(true);
     cancelButton->setText(tr("CANCEL"));
     buttonsHBox->addWidget(cancelButton);
@@ -291,11 +292,14 @@ void BandwidthDialog::onExit()
                     tr("Do you want to save your modifications?"),
                     QMessageBox::Yes | QMessageBox::No, this);
         msgBox->setDefaultButton(QMessageBox::Yes);
-        if (msgBox->exec() == QMessageBox::Yes) {
-            onSaveButtonTriggered();
-        }
-        else {
-            reject();
+        int ret = msgBox->exec();
+        if (ret != QDialog::Rejected) {
+            if (ret == QMessageBox::Yes) {
+                onSaveButtonTriggered();
+            }
+            else {
+                reject();
+            }
         }
     }
     else {

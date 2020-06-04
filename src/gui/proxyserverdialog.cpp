@@ -51,7 +51,7 @@ std::map<QNetworkProxy::ProxyType, std::pair<int, QString>> ProxyServerDialog::_
 };
 
 ProxyServerDialog::ProxyServerDialog(QWidget *parent)
-    : CustomDialog(true, false, parent)
+    : CustomDialog(true, parent)
     , _proxyType(QNetworkProxy::NoProxy)
     , _proxy(QNetworkProxy())
     , _proxyNeedsAuth(false)
@@ -201,6 +201,7 @@ void ProxyServerDialog::initUI()
     buttonsHBox->addWidget(_saveButton);
 
     QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setObjectName("nondefaultbutton");
     cancelButton->setFlat(true);
     cancelButton->setText(tr("CANCEL"));
     buttonsHBox->addWidget(cancelButton);
@@ -296,20 +297,23 @@ void ProxyServerDialog::onExit()
                     tr("Do you want to save your modifications?"),
                     QMessageBox::Yes | QMessageBox::No, this);
         msgBox->setDefaultButton(QMessageBox::Yes);
-        if (msgBox->exec() == QMessageBox::Yes) {
-            if (isSaveEnabled()) {
-                onSaveButtonTriggered();
+        int ret = msgBox->exec();
+        if (ret != QDialog::Rejected) {
+            if (ret == QMessageBox::Yes) {
+                if (isSaveEnabled()) {
+                    onSaveButtonTriggered();
+                }
+                else {
+                    msgBox = new CustomMessageBox(
+                                QMessageBox::Warning,
+                                tr("Unable to save, all mandatory fields are not completed!"),
+                                QMessageBox::Ok, this);
+                    msgBox->exec();
+                }
             }
             else {
-                msgBox = new CustomMessageBox(
-                            QMessageBox::Warning,
-                            tr("Unable to save, all mandatory fields are not completed!"),
-                            QMessageBox::Ok, this);
-                msgBox->exec();
+                reject();
             }
-        }
-        else {
-            reject();
         }
     }
     else {

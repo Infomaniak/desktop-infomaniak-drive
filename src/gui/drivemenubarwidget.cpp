@@ -46,7 +46,7 @@ DriveMenuBarWidget::DriveMenuBarWidget(QWidget *parent)
 
     CustomToolButton *backButton = new CustomToolButton(this);
     backButton->setIconPath(":/client/resources/icons/actions/arrow-left.svg");
-    backButton->setToolTip(tr("Back to drive list"));
+    backButton->setToolTip(tr("Back to drive preferences"));
     addWidget(backButton);
 
     addSpacing(hButtonsSpacing);

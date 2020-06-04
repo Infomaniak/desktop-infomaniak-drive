@@ -68,9 +68,8 @@ static const int shadowBlurRadius = 20;
 static const int toolBarHMargin = 10;
 static const int toolBarVMargin = 10;
 static const int toolBarSpacing = 10;
-static const int driveBarHMargin = 10;
-static const int driveBarVMargin = 10;
-static const int driveBarSpacing = 15;
+static const int driveBoxHMargin = 10;
+static const int driveBoxVMargin = 10;
 static const int logoIconSize = 30;
 static const int defaultLogoIconSize = 50;
 static const int maxSynchronizedItems = 1000;
@@ -442,8 +441,7 @@ void SynthesisPopover::initUI()
 
     // Drive selection
     QHBoxLayout *hBoxDriveBar = new QHBoxLayout();
-    hBoxDriveBar->setContentsMargins(driveBarHMargin, driveBarVMargin, driveBarHMargin, driveBarVMargin);
-    hBoxDriveBar->setSpacing(driveBarSpacing);
+    hBoxDriveBar->setContentsMargins(driveBoxHMargin, driveBoxVMargin, driveBoxHMargin, driveBoxVMargin);
 
     _driveSelectionWidget = new DriveSelectionWidget(this);
     hBoxDriveBar->addWidget(_driveSelectionWidget);

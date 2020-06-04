@@ -61,6 +61,7 @@ private:
 
 private slots:
     void onButtonClicked(bool checked = false);
+    void onExit();
 };
 
 }

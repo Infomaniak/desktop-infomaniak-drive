@@ -152,12 +152,15 @@ set(client_SRCS
     fileexclusiondialog.cpp
     fileexclusionnamedialog.cpp
     folderinfo.cpp
+    folderitemwidget.cpp
+    foldertreeitemwidget.cpp
     halfroundrectwidget.cpp
     mainmenubarwidget.cpp
     menuitemwidget.cpp
     menuwidget.cpp
     parametersdialog.cpp
     preferencesblocwidget.cpp
+    preferencesmenubarwidget.cpp
     preferenceswidget.cpp
     progressbarwidget.cpp
     proxyserverdialog.cpp

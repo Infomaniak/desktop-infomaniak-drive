@@ -20,75 +20,78 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "mainmenubarwidget.h"
 #include "guiutility.h"
 
+#include <QBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 
 namespace KDC {
 
-static const int hMargin = 15;
-static const int vMargin = 10;
-static const int hLogoSpacing = 10;
-static const int hButtonsSpacing = 30;
-static const int logoIconSize = 39;
-static const QSize logoTextIconSize = QSize(60, 42);
+static const int hMargin = 10;
+static const int vMargin = 0;
+static const int driveBoxHMargin = 10;
+static const int driveBoxVMargin = 10;
+static const int hButtonsSpacing = 20;
 
 MainMenuBarWidget::MainMenuBarWidget(QWidget *parent)
     : HalfRoundRectWidget(parent)
-    , _logoColor(QColor())
-    , _logoTextIconLabel(nullptr)
+    , _driveSelectionWidget(nullptr)
+    , _progressBarWidget(nullptr)
 {
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
     setSpacing(0);
 
-    QLabel *logoIconLabel = new QLabel(this);
-    logoIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive-without-text.svg")
-                             .pixmap(QSize(logoIconSize, logoIconSize)));
-    addWidget(logoIconLabel);
-    addSpacing(hLogoSpacing);
+    QVBoxLayout *vBox = new QVBoxLayout();
+    vBox->setContentsMargins(0, 0, 0, 0);
+    addLayout(vBox);
 
-    _logoTextIconLabel = new QLabel(this);
-    addWidget(_logoTextIconLabel);
+    // 1st line
+    QHBoxLayout *hBox = new QHBoxLayout();
+    hBox->setContentsMargins(driveBoxHMargin, driveBoxVMargin, driveBoxHMargin, driveBoxVMargin);
+    vBox->addLayout(hBox);
 
-    addStretch();
+    // Drive selection
+    _driveSelectionWidget = new DriveSelectionWidget(this);
+    hBox->addWidget(_driveSelectionWidget);
+    hBox->addStretch();
 
-    QPushButton *drivesRadioButton = new QPushButton(tr("Drives"), this);
-    drivesRadioButton->setFlat(true);
-    drivesRadioButton->setCheckable(true);
-    drivesRadioButton->setAutoExclusive(true);
-    drivesRadioButton->setChecked(true);
-    addWidget(drivesRadioButton);
-    addSpacing(hButtonsSpacing);
+    // Preferences button
+    QPushButton *preferencesButton = new QPushButton(tr("Preferences"), this);
+    preferencesButton->setObjectName("preferencesButton");
+    preferencesButton->setFlat(true);
+    hBox->addWidget(preferencesButton);
+    hBox->addSpacing(hButtonsSpacing);
 
-    QPushButton *preferencesRadioButton = new QPushButton(tr("Preferences"), this);
-    preferencesRadioButton->setFlat(true);
-    preferencesRadioButton->setCheckable(true);
-    preferencesRadioButton->setAutoExclusive(true);
-    addWidget(preferencesRadioButton);
-    addSpacing(hButtonsSpacing);
-
+    // Help button
     CustomToolButton *helpButton = new CustomToolButton(this);
     helpButton->setObjectName("helpButton");
     helpButton->setIconPath(":/client/resources/icons/actions/help.svg");
     helpButton->setToolTip(tr("Help"));
-    addWidget(helpButton);
+    hBox->addWidget(helpButton);
 
-    connect(drivesRadioButton, &QPushButton::clicked, this, &MainMenuBarWidget::onDrivesButtonClicked);
-    connect(preferencesRadioButton, &QPushButton::clicked, this, &MainMenuBarWidget::onPreferencesButtonClicked);
+    // Quota line
+    QHBoxLayout *quotaHBox = new QHBoxLayout();
+    quotaHBox->setContentsMargins(0, 0, 0, 0);
+    vBox->addLayout(quotaHBox);
+    vBox->addStretch();
+
+    // Progress bar
+    _progressBarWidget = new ProgressBarWidget(this);
+    quotaHBox->addWidget(_progressBarWidget);
+
+    connect(_driveSelectionWidget, &DriveSelectionWidget::driveSelected, this, &MainMenuBarWidget::onAccountSelected);
+    connect(_driveSelectionWidget, &DriveSelectionWidget::addDrive, this, &MainMenuBarWidget::onAddDrive);
+    connect(preferencesButton, &QPushButton::clicked, this, &MainMenuBarWidget::onPreferencesButtonClicked);
     connect(helpButton, &CustomToolButton::clicked, this, &MainMenuBarWidget::onHelpButtonClicked);
 }
 
-void MainMenuBarWidget::setLogoColor(const QColor &color) {
-    _logoColor = color;
-    _logoTextIconLabel->setPixmap(
-                OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive-text-only.svg", _logoColor)
-                .pixmap(logoTextIconSize));
+void MainMenuBarWidget::onAccountSelected(QString id)
+{
+    emit accountSelected(id);
 }
 
-void MainMenuBarWidget::onDrivesButtonClicked(bool checked)
+void MainMenuBarWidget::onAddDrive()
 {
-    Q_UNUSED(checked)
-
-    emit drivesButtonClicked();
+    emit addDrive();
 }
 
 void MainMenuBarWidget::onPreferencesButtonClicked(bool checked)

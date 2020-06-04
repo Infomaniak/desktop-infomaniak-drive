@@ -41,7 +41,7 @@ static const int mainBoxVTMargin = 0;
 static const int mainBoxVBMargin = 40;
 static const int shadowBlurRadius = 20;
 
-CustomDialog::CustomDialog(bool popup, bool emptyBar, QWidget *parent)
+CustomDialog::CustomDialog(bool popup, QWidget *parent)
     : QDialog(parent)
     , _backgroundColor(QColor())
     , _layout(nullptr)
@@ -61,7 +61,7 @@ CustomDialog::CustomDialog(bool popup, bool emptyBar, QWidget *parent)
 
     // System bar
     CustomSystemBar *systemBar = nullptr;
-    systemBar = new CustomSystemBar(popup, emptyBar, this);
+    systemBar = new CustomSystemBar(popup, this);
     mainVBox->addWidget(systemBar);
 
     _layout = new QVBoxLayout();

@@ -1,0 +1,471 @@
+/*
+Infomaniak Drive
+Copyright (C) 2020 christophe.larchier@infomaniak.com
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+#include "foldertreeitemwidget.h"
+#include "guiutility.h"
+#include "networkjobs.h"
+#include "folderman.h"
+#include "accountmanager.h"
+#include "common/utility.h"
+#include "configfile.h"
+
+#include <QHeaderView>
+#include <QMutableListIterator>
+#include <QScopedValueRollback>
+
+namespace KDC {
+
+static const int treeWidgetIndentation = 30;
+
+// 1st column roles
+static const int viewIconPathRole = Qt::UserRole;
+static const int dirRole = Qt::UserRole + 1;
+
+// 2nd column roles
+static const int sizeRole = Qt::UserRole;
+
+Q_LOGGING_CATEGORY(lcFolderTreeItemWidget, "foldertreeitemwidget", QtInfoMsg)
+
+FolderTreeItemWidget::FolderTreeItemWidget(const QString &folderId, bool displayRoot, QWidget *parent)
+    : QTreeWidget(parent)
+    , _folderId(folderId)
+    , _displayRoot(displayRoot)
+    , _currentFolder(nullptr)
+    , _folderIconColor(QColor())
+    , _folderIconSize(QSize())
+    , _sizeTextColor(QColor())
+    , _inserting(false)
+    , _oldBlackList(QStringList())
+{
+    setStyleSheet("QTreeWidget::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
+                  "QTreeWidget::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
+                  "QTreeWidget::indicator:indeterminate { image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg); }"
+                  "QTreeWidget::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
+                  "QTreeWidget::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
+                  "QTreeWidget::indicator:indeterminate:disabled { image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg); }"
+                  "QTreeWidget::branch:!has-children:adjoins-item { image: none; }"
+                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg); margin-left: 20px; margin-right: 0px; }"
+                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg); margin-left: 20px; margin-right: 0px; }");
+
+    setSelectionMode(QAbstractItemView::NoSelection);
+    setSortingEnabled(true);
+    sortByColumn(TreeWidgetColumn::Folder, Qt::AscendingOrder);
+    setColumnCount(2);
+    header()->hide();
+    header()->setSectionResizeMode(TreeWidgetColumn::Folder, QHeaderView::Stretch);
+    header()->setSectionResizeMode(TreeWidgetColumn::Size, QHeaderView::ResizeToContents);
+    header()->setStretchLastSection(false);
+    setRootIsDecorated(false);
+    setIndentation(treeWidgetIndentation);
+
+    connect(this, &QTreeWidget::itemExpanded, this, &FolderTreeItemWidget::slotItemExpanded);
+    connect(this, &QTreeWidget::itemChanged, this, &FolderTreeItemWidget::slotItemChanged);
+
+    _currentFolder = OCC::FolderMan::instance()->folder(folderId);
+    if (!_currentFolder) {
+        qCDebug(lcFolderTreeItemWidget) << "Folder not found: " << folderId;
+    }
+
+    // Make sure we don't get crashes if the folder is destroyed while the dialog is still opened
+    connect(_currentFolder, &QObject::destroyed, this, &QObject::deleteLater);
+
+    bool ok;
+    _oldBlackList = _currentFolder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
+
+    OCC::ConfigFile::setupDefaultExcludeFilePaths(_excludedFiles);
+    _excludedFiles.reloadExcludeFiles();
+}
+
+void FolderTreeItemWidget::loadSubFolders()
+{
+    clear();
+    OCC::LsColJob *job = new OCC::LsColJob(getAccountPtr(), getFolderPath(), this);
+    job->setProperties(QList<QByteArray>()
+                       << "resourcetype"
+                       << "http://owncloud.org/ns:size");
+    connect(job, &OCC::LsColJob::directoryListingSubfolders, this, &FolderTreeItemWidget::slotUpdateDirectories);
+    connect(job, &OCC::LsColJob::finishedWithError, this, &FolderTreeItemWidget::slotLscolFinishedWithError);
+    job->start();
+}
+
+void FolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size)
+{
+    if (pathTrail.size() == 0) {
+        if (path.endsWith('/')) {
+            path.chop(1);
+        }
+        parent->setData(TreeWidgetColumn::Folder, dirRole, path);
+    } else {
+        TreeViewItem *item = static_cast<TreeViewItem *>(findFirstChild(parent, pathTrail.first()));
+        if (!item) {
+            item = new TreeViewItem(parent);
+
+            // Set check status
+            if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Checked
+                || parent->checkState(TreeWidgetColumn::Folder) == Qt::PartiallyChecked) {
+                item->setCheckState(TreeWidgetColumn::Folder, Qt::Checked);
+                foreach (const QString &str, _oldBlackList) {
+                    if (str == path || str == QLatin1String("/")) {
+                        item->setCheckState(TreeWidgetColumn::Folder, Qt::Unchecked);
+                        break;
+                    } else if (str.startsWith(path)) {
+                        item->setCheckState(TreeWidgetColumn::Folder, Qt::PartiallyChecked);
+                    }
+                }
+            } else if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Unchecked) {
+                item->setCheckState(TreeWidgetColumn::Folder, Qt::Unchecked);
+            }
+
+            // Set icon
+            setFolderIcon(item, ":/client/resources/icons/actions/folder.svg");
+
+            // Set name
+            item->setText(TreeWidgetColumn::Folder, pathTrail.first());
+
+            // Set size
+            if (size >= 0) {
+                item->setText(TreeWidgetColumn::Size, OCC::Utility::octetsToString(size));
+                item->setTextColor(TreeWidgetColumn::Size, _sizeTextColor);
+                item->setTextAlignment(TreeWidgetColumn::Size, Qt::AlignRight);
+                item->setData(TreeWidgetColumn::Size, sizeRole, size);
+            }
+
+            item->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
+        }
+
+        pathTrail.removeFirst();
+        insertPath(item, pathTrail, path, size);
+    }
+}
+
+QStringList FolderTreeItemWidget::createBlackList(QTreeWidgetItem *root) const
+{
+    if (!root) {
+        root = topLevelItem(0);
+    }
+    if (!root) {
+        return QStringList();
+    }
+
+    switch (root->checkState(TreeWidgetColumn::Folder)) {
+    case Qt::Unchecked:
+        return QStringList(root->data(TreeWidgetColumn::Folder, dirRole).toString() + "/");
+    case Qt::Checked:
+        return QStringList();
+    case Qt::PartiallyChecked:
+        break;
+    }
+
+    QStringList result;
+    if (root->childCount()) {
+        for (int i = 0; i < root->childCount(); ++i) {
+            result += createBlackList(root->child(i));
+        }
+    } else {
+        // We did not load from the server so we re-use the one from the old black list
+        QString path = root->data(TreeWidgetColumn::Folder, dirRole).toString();
+        foreach (const QString &it, _oldBlackList) {
+            if (it.startsWith(path)) {
+                result += it;
+            }
+        }
+    }
+    return result;
+}
+
+void FolderTreeItemWidget::setFolderIcon()
+{
+    if (_folderIconColor != QColor() && _folderIconSize != QSize()) {
+        setIconSize(_folderIconSize);
+        if (topLevelItem(0)) {
+            setSubFoldersIcon(topLevelItem(0));
+        }
+    }
+}
+
+void FolderTreeItemWidget::setFolderIcon(QTreeWidgetItem *item, const QString &viewIconPath)
+{
+    if (item) {
+        if (item->data(TreeWidgetColumn::Folder, viewIconPathRole).isNull()) {
+            item->setData(TreeWidgetColumn::Folder, viewIconPathRole, viewIconPath);
+        }
+        if (_folderIconColor != QColor() && _folderIconSize != QSize()) {
+            item->setIcon(TreeWidgetColumn::Folder,
+                          OCC::Utility::getIconWithColor(viewIconPath, _folderIconColor));
+        }
+    }
+}
+
+void FolderTreeItemWidget::setSubFoldersIcon(QTreeWidgetItem *parent)
+{
+    for (int i = 0; i < parent->childCount(); ++i) {
+        QTreeWidgetItem *item = parent->child(i);
+        QVariant viewIconPathV = item->data(TreeWidgetColumn::Folder, viewIconPathRole);
+        if (!viewIconPathV.isNull()) {
+            QString viewIconPath = qvariant_cast<QString>(viewIconPathV);
+            setFolderIcon(item, viewIconPath);
+        }
+        setSubFoldersIcon(item);
+    }
+}
+
+QTreeWidgetItem *FolderTreeItemWidget::findFirstChild(QTreeWidgetItem *parent, const QString &text)
+{
+    for (int i = 0; i < parent->childCount(); ++i) {
+        QTreeWidgetItem *child = parent->child(i);
+        if (child->text(TreeWidgetColumn::Folder) == text) {
+            return child;
+        }
+    }
+    return 0;
+}
+
+OCC::AccountPtr FolderTreeItemWidget::getAccountPtr()
+{
+    if (_currentFolder && _currentFolder->accountState()) {
+        return _currentFolder->accountState()->account();
+    }
+    else {
+        qCDebug(lcFolderTreeItemWidget) << "Null pointer";
+        return nullptr;
+    }
+}
+
+QString FolderTreeItemWidget::getFolderPath()
+{
+    if (_currentFolder) {
+        QString folderPath = _currentFolder->remotePath().startsWith(QLatin1Char('/'))
+                ? _currentFolder->remotePath().mid(1)
+                : _currentFolder->remotePath();
+        return folderPath;
+    }
+    else {
+        qCDebug(lcFolderTreeItemWidget) << "Null pointer";
+        return QString();
+    }
+}
+
+void FolderTreeItemWidget::slotUpdateDirectories(QStringList list)
+{
+    auto job = qobject_cast<OCC::LsColJob *>(sender());
+    QScopedValueRollback<bool> isInserting(_inserting);
+    _inserting = true;
+
+    TreeViewItem *root = static_cast<TreeViewItem *>(topLevelItem(0));
+
+    QUrl url = getAccountPtr() ? getAccountPtr()->davUrl() : QUrl();
+    QString pathToRemove = url.path();
+    if (!pathToRemove.endsWith('/')) {
+        pathToRemove.append('/');
+    }
+    pathToRemove.append(getFolderPath());
+    if (!pathToRemove.endsWith('/')) {
+        pathToRemove.append('/');
+    }
+
+    // Check for excludes.
+    QMutableListIterator<QString> it(list);
+    while (it.hasNext()) {
+        it.next();
+        if (_excludedFiles.isExcluded(it.value(), pathToRemove, OCC::FolderMan::instance()->ignoreHiddenFiles())) {
+            it.remove();
+        }
+    }
+
+    // Since / cannot be in the blacklist, expand it to the actual list of top-level folders as soon as possible.
+    if (_oldBlackList == QStringList("/")) {
+        _oldBlackList.clear();
+        for (QString path : list) {
+            path.remove(pathToRemove);
+            if (path.isEmpty()) {
+                continue;
+            }
+            _oldBlackList.append(path);
+        }
+    }
+
+    if (!root && list.size() <= 1) {
+        emit message(tr("No subfolders currently on the server."));
+        return;
+    } else {
+        emit showMessage(false);
+    }
+
+    if (!root) {
+        root = new TreeViewItem(this);
+        QFont treeFont = font();
+        treeFont.setWeight(OCC::Utility::getQFontWeightFromQSSFontWeight(_headerFontWeight));
+        root->setFont(TreeWidgetColumn::Folder, treeFont);
+
+        // Set drive name
+        root->setText(TreeWidgetColumn::Folder, getAccountPtr() ? getAccountPtr()->driveName() : QString());
+        root->setIcon(TreeWidgetColumn::Folder, OCC::Utility::getIconWithColor(":/client/resources/icons/actions/drive.svg",
+                                                                               getAccountPtr()->getDriveColor()));
+        root->setData(TreeWidgetColumn::Folder, dirRole, QString());
+
+        // Set check state
+        root->setCheckState(TreeWidgetColumn::Folder, Qt::Checked);
+
+        // Set size
+        qint64 size = job ? job->_sizes.value(pathToRemove, -1) : -1;
+        if (size >= 0) {
+            root->setFont(TreeWidgetColumn::Size, treeFont);
+            root->setText(TreeWidgetColumn::Size, OCC::Utility::octetsToString(size));
+            root->setTextAlignment(TreeWidgetColumn::Size, Qt::AlignRight);
+            root->setData(TreeWidgetColumn::Size, sizeRole, size);
+        }
+    }
+
+    OCC::Utility::sortFilenames(list);
+    foreach (QString path, list) {
+        auto size = job ? job->_sizes.value(path) : 0;
+        path.remove(pathToRemove);
+        QStringList paths = path.split('/');
+        if (paths.last().isEmpty()) {
+            paths.removeLast();
+        }
+        if (paths.isEmpty()) {
+            continue;
+        }
+        if (!path.endsWith('/')) {
+            path.append('/');
+        }
+        insertPath(root, paths, path, size);
+    }
+
+    // Root is partially checked if any children are not checked
+    for (int i = 0; i < root->childCount(); ++i) {
+        const auto child = root->child(i);
+        if (child->checkState(TreeWidgetColumn::Folder) != Qt::Checked) {
+            root->setCheckState(TreeWidgetColumn::Folder, Qt::PartiallyChecked);
+            break;
+        }
+    }
+
+    root->setExpanded(true);
+}
+
+void FolderTreeItemWidget::slotLscolFinishedWithError(QNetworkReply *reply)
+{
+    if (reply->error() == QNetworkReply::ContentNotFoundError) {
+        emit message(tr("No subfolders currently on the server."));
+    } else {
+        emit message(tr("An error occurred while loading the list of sub folders."));
+    }
+}
+
+void FolderTreeItemWidget::slotItemExpanded(QTreeWidgetItem *item)
+{
+    item->setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
+
+    QString dir = item->data(TreeWidgetColumn::Folder, dirRole).toString();
+    if (dir.isEmpty()) {
+        return;
+    }
+
+    QString folderPath = getFolderPath();
+    if (!folderPath.isEmpty()) {
+        folderPath.append('/');
+    }
+    folderPath.append(dir);
+
+    OCC::LsColJob *job = new OCC::LsColJob(getAccountPtr(), folderPath, this);
+    job->setProperties(QList<QByteArray>() << "resourcetype"
+                                           << "http://owncloud.org/ns:size");
+    connect(job, &OCC::LsColJob::directoryListingSubfolders, this, &FolderTreeItemWidget::slotUpdateDirectories);
+    job->start();
+}
+
+void FolderTreeItemWidget::slotItemChanged(QTreeWidgetItem *item, int col)
+{
+    if (col != TreeWidgetColumn::Folder || _inserting) {
+        return;
+    }
+
+    if (item->checkState(TreeWidgetColumn::Folder) == Qt::Checked) {
+        // Need to check the parent as well if all the siblings are also checked
+        QTreeWidgetItem *parent = item->parent();
+        if (parent && parent->checkState(TreeWidgetColumn::Folder) != Qt::Checked) {
+            bool hasUnchecked = false;
+            for (int i = 0; i < parent->childCount(); ++i) {
+                if (parent->child(i)->checkState(TreeWidgetColumn::Folder) != Qt::Checked) {
+                    hasUnchecked = true;
+                    break;
+                }
+            }
+            if (!hasUnchecked) {
+                parent->setCheckState(TreeWidgetColumn::Folder, Qt::Checked);
+            } else if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Unchecked) {
+                parent->setCheckState(TreeWidgetColumn::Folder, Qt::PartiallyChecked);
+            } else {
+                // Refresh parent
+                slotItemChanged(parent, col);
+            }
+        }
+
+        // Check all the children
+        for (int i = 0; i < item->childCount(); ++i) {
+            if (item->child(i)->checkState(TreeWidgetColumn::Folder) != Qt::Checked) {
+                item->child(i)->setCheckState(TreeWidgetColumn::Folder, Qt::Checked);
+            }
+        }
+    }
+
+    if (item->checkState(TreeWidgetColumn::Folder) == Qt::Unchecked) {
+        QTreeWidgetItem *parent = item->parent();
+        if (parent) {
+            if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Checked) {
+                parent->setCheckState(TreeWidgetColumn::Folder, Qt::PartiallyChecked);
+            }
+            else {
+                // Refresh parent
+                slotItemChanged(parent, col);
+            }
+        }
+
+        // Uncheck all the children
+        for (int i = 0; i < item->childCount(); ++i) {
+            if (item->child(i)->checkState(TreeWidgetColumn::Folder) != Qt::Unchecked) {
+                item->child(i)->setCheckState(TreeWidgetColumn::Folder, Qt::Unchecked);
+            }
+        }
+
+        // Can't uncheck the root.
+        if (!parent) {
+            item->setCheckState(TreeWidgetColumn::Folder, Qt::PartiallyChecked);
+        }
+    }
+
+    if (item->checkState(TreeWidgetColumn::Folder) == Qt::PartiallyChecked) {
+        QTreeWidgetItem *parent = item->parent();
+        if (parent) {
+            if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Checked) {
+                parent->setCheckState(TreeWidgetColumn::Folder, Qt::PartiallyChecked);
+            }
+            else {
+                // Refresh parent
+                slotItemChanged(parent, col);
+            }
+        }
+    }
+
+    emit needToSave();
+}
+
+}

@@ -17,22 +17,17 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "errorsmenubarwidget.h"
+#include "preferencesmenubarwidget.h"
 #include "customtoolbutton.h"
-#include "guiutility.h"
 
 namespace KDC {
 
 static const int hMargin = 15;
 static const int vMargin = 15;
 static const int hButtonsSpacing = 10;
-static const int driveLogoIconSize = 24;
 
-ErrorsMenuBarWidget::ErrorsMenuBarWidget(QWidget *parent)
+PreferencesMenuBarWidget::PreferencesMenuBarWidget(QWidget *parent)
     : HalfRoundRectWidget(parent)
-    , _accountId(QString())
-    , _accountInfo(nullptr)
-    , _accountIconLabel(nullptr)
     , _titleLabel(nullptr)
 {
     setContentsMargins(hMargin, 0, hMargin, vMargin);
@@ -40,42 +35,22 @@ ErrorsMenuBarWidget::ErrorsMenuBarWidget(QWidget *parent)
 
     CustomToolButton *backButton = new CustomToolButton(this);
     backButton->setIconPath(":/client/resources/icons/actions/arrow-left.svg");
-    backButton->setToolTip(tr("Back to drive preferences"));
+    backButton->setToolTip(tr("Back to drive list"));
     addWidget(backButton);
-
-    addSpacing(hButtonsSpacing);
-
-    _accountIconLabel = new QLabel(this);
-    addWidget(_accountIconLabel);
 
     addSpacing(hButtonsSpacing);
 
     _titleLabel = new QLabel(this);
     _titleLabel->setObjectName("titleLabel");
-    _titleLabel->setText(tr("Synchronization errors"));
+    _titleLabel->setText(tr("Preferences"));
     addWidget(_titleLabel);
 
     addStretch();
 
-    connect(backButton, &CustomToolButton::clicked, this, &ErrorsMenuBarWidget::onBackButtonClicked);
+    connect(backButton, &CustomToolButton::clicked, this, &PreferencesMenuBarWidget::onBackButtonClicked);
 }
 
-void ErrorsMenuBarWidget::setAccount(const QString &accountId, const AccountInfo *accountInfo)
-{
-    _accountId = accountId;
-    _accountInfo = accountInfo;
-    _accountIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/drive.svg",
-                                                                _accountInfo->_color).
-                                 pixmap(QSize(driveLogoIconSize, driveLogoIconSize)));
-}
-
-void ErrorsMenuBarWidget::reset()
-{
-    _accountId = QString();
-    _accountInfo = nullptr;
-}
-
-void ErrorsMenuBarWidget::onBackButtonClicked(bool checked)
+void PreferencesMenuBarWidget::onBackButtonClicked(bool checked)
 {
     Q_UNUSED(checked)
 

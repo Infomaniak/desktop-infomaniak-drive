@@ -35,7 +35,7 @@ class CustomDialog : public QDialog
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
 
 public:
-    explicit CustomDialog(bool popup, bool emptyBar, QWidget *parent = nullptr);
+    explicit CustomDialog(bool popup, QWidget *parent = nullptr);
 
     inline QVBoxLayout *mainLayout() const { return _layout; }
     void forceRedraw();

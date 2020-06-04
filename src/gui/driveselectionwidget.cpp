@@ -125,10 +125,8 @@ void DriveSelectionWidget::selectDrive(QString id)
         _driveTextLabel->setText(driveName);
         _downIconLabel->setVisible(true);
         setDriveIcon(_driveMap[id]._color);
-        if (_currentDriveId != id) {
-            _currentDriveId = id;
-            emit driveSelected(id);
-        }
+        _currentDriveId = id;
+        emit driveSelected(id);
     }
 }
 

@@ -31,21 +31,19 @@ namespace KDC {
 static const int boxHMargin = 40;
 static const int boxHSpacing = 10;
 static const int messageVTMargin = 2;
-static const int messageVBMargin = 40;
+static const int messageVBMargin = 15;
 
 const std::string buttonTypeProperty = "buttonType";
 
 CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
                                    QMessageBox::StandardButtons buttons, QWidget *parent)
-    : CustomDialog(true, true, parent)
+    : CustomDialog(true, parent)
     , _icon(icon)
     , _iconLabel(nullptr)
     , _buttonsHBox(nullptr)
     , _iconSize(QSize())
     , _buttonCount(0)
 {
-    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-
     QVBoxLayout *mainLayout = this->mainLayout();
 
     // Icon + text
@@ -63,7 +61,7 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
     messageVBox->addStretch();
 
     QLabel *textLabel = new QLabel(this);
-    textLabel->setObjectName("textLabel");
+    textLabel->setObjectName("largeNormalTextLabel");
     textLabel->setText(text);
     textLabel->setWordWrap(true);
     textLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
@@ -80,6 +78,7 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
 
     if (buttons & QMessageBox::Ok) {
         QPushButton *button = new QPushButton(this);
+        button->setObjectName("nondefaultbutton");
         button->setFlat(true);
         button->setText(tr("OK"));
         _buttonsHBox->insertWidget(_buttonCount++, button);
@@ -89,6 +88,7 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
 
     if (buttons & QMessageBox::Cancel) {
         QPushButton *button = new QPushButton(this);
+        button->setObjectName("nondefaultbutton");
         button->setFlat(true);
         button->setText(tr("CANCEL"));
         _buttonsHBox->insertWidget(_buttonCount++, button);
@@ -98,6 +98,7 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
 
     if (buttons & QMessageBox::Yes) {
         QPushButton *button = new QPushButton(this);
+        button->setObjectName("nondefaultbutton");
         button->setFlat(true);
         button->setText(tr("YES"));
         _buttonsHBox->insertWidget(_buttonCount++, button);
@@ -107,6 +108,7 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
 
     if (buttons & QMessageBox::No) {
         QPushButton *button = new QPushButton(this);
+        button->setObjectName("nondefaultbutton");
         button->setFlat(true);
         button->setText(tr("NO"));
         _buttonsHBox->insertWidget(_buttonCount++, button);
@@ -115,11 +117,14 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
     }
 
     _buttonsHBox->addStretch();
+
+    connect(this, &CustomDialog::exit, this, &CustomMessageBox::onExit);
 }
 
 void CustomMessageBox::addButton(const QString &text, QMessageBox::ButtonRole role)
 {
     QPushButton *button = new QPushButton(this);
+    button->setObjectName("nondefaultbutton");
     button->setFlat(true);
     button->setText(text);
     _buttonsHBox->insertWidget(_buttonCount++, button);
@@ -134,6 +139,7 @@ void CustomMessageBox::setDefaultButton(QMessageBox::StandardButton buttonType)
         QMessageBox::StandardButton currentButtonType =
                 (QMessageBox::StandardButton) qvariant_cast<int>(button->property(buttonTypeProperty.c_str()));
         if (currentButtonType == buttonType) {
+            button->setObjectName("defaultbutton");
             button->setDefault(true);
         }
     }
@@ -149,11 +155,11 @@ void CustomMessageBox::setIcon()
             return;
         case QMessageBox::Information:
             iconPath = ":/client/resources/icons/actions/information.svg";
-            iconColor = QColor("#0000FF");
+            iconColor = QColor("#9F9F9F");
         break;
         case QMessageBox::Warning:
             iconPath = ":/client/resources/icons/actions/warning.svg";
-            iconColor = QColor("#FFAA00");
+            iconColor = QColor("#FF0000");
         break;
         case QMessageBox::Critical:
             iconPath = ":/client/resources/icons/actions/error-sync.svg";
@@ -161,7 +167,7 @@ void CustomMessageBox::setIcon()
         break;
         case QMessageBox::Question:
             iconPath = ":/client/resources/icons/actions/help.svg";
-            iconColor = QColor("#0000FF");
+            iconColor = QColor("#9F9F9F");
         break;
         }
 
@@ -176,6 +182,11 @@ void CustomMessageBox::onButtonClicked(bool checked)
     QMessageBox::StandardButton buttonType =
             (QMessageBox::StandardButton) qvariant_cast<int>(sender()->property(buttonTypeProperty.c_str()));
     done(buttonType);
+}
+
+void CustomMessageBox::onExit()
+{
+    reject();
 }
 
 }

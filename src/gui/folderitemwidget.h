@@ -19,41 +19,49 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include "halfroundrectwidget.h"
+#include "folderinfo.h"
 #include "customtoolbutton.h"
-#include "driveselectionwidget.h"
-#include "progressbarwidget.h"
 
 #include <QLabel>
+#include <QString>
 #include <QWidget>
 
 namespace KDC {
 
-class MainMenuBarWidget : public HalfRoundRectWidget
+class FolderItemWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MainMenuBarWidget(QWidget *parent = nullptr);
+    explicit FolderItemWidget(const QString &folderId, const FolderInfo *folderInfo, QWidget *parent = nullptr);
 
-    inline DriveSelectionWidget *driveSelectionWidget() const { return _driveSelectionWidget; }
-    inline ProgressBarWidget *progressBarWidget() const { return _progressBarWidget; }
+    inline QString folderId() const { return _folderId; };
+    void updateItem(const FolderInfo *folderInfo);
 
 signals:
-    void accountSelected(const QString &accountId);
-    void addDrive();
-    void preferencesButtonClicked();
-    void openHelp();
+    void runSync(const QString &folderId);
+    void pauseSync(const QString &folderId);
+    void resumeSync(const QString &folderId);
+    void unSync(const QString &folderId);
+    void displayFolderDetail(const QString &folderId, bool display);
 
 private:
-    DriveSelectionWidget *_driveSelectionWidget;
-    ProgressBarWidget *_progressBarWidget;
+    const QString _folderId;
+    const FolderInfo *_folderInfo;
+    CustomToolButton *_expandButton;
+    CustomToolButton *_menuButton;
+    QLabel *_statusIconLabel;
+    bool _isExpanded;
+
+    void setExpandButton();
 
 private slots:
-    void onAccountSelected(QString id);
-    void onAddDrive();
-    void onPreferencesButtonClicked(bool checked = false);
-    void onHelpButtonClicked(bool checked = false);
+    void onMenuButtonClicked();
+    void onExpandButtonClicked();
+    void onSyncTriggered();
+    void onPauseTriggered();
+    void onResumeTriggered();
+    void onUnsyncTriggered();
 };
 
 }

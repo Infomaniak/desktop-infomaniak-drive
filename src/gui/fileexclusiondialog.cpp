@@ -56,7 +56,7 @@ static const int skippedLinesRole = Qt::UserRole + 1;
 static const int isGlobalRole = Qt::UserRole + 2;
 
 FileExclusionDialog::FileExclusionDialog(QWidget *parent)
-    : CustomDialog(true, false, parent)
+    : CustomDialog(true, parent)
     , _hiddenFilesCheckBox(nullptr)
     , _filesTableModel(nullptr)
     , _filesTableView(nullptr)
@@ -161,6 +161,7 @@ void FileExclusionDialog::initUI()
     buttonsHBox->addWidget(_saveButton);
 
     QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setObjectName("nondefaultbutton");
     cancelButton->setFlat(true);
     cancelButton->setText(tr("CANCEL"));
     buttonsHBox->addWidget(cancelButton);
@@ -326,11 +327,14 @@ void FileExclusionDialog::onExit()
                     tr("Do you want to save your modifications?"),
                     QMessageBox::Yes | QMessageBox::No, this);
         msgBox->setDefaultButton(QMessageBox::Yes);
-        if (msgBox->exec() == QMessageBox::Yes) {
-            onSaveButtonTriggered();
-        }
-        else {
-            reject();
+        int ret = msgBox->exec();
+        if (ret != QDialog::Rejected) {
+            if (ret == QMessageBox::Yes) {
+                onSaveButtonTriggered();
+            }
+            else {
+                reject();
+            }
         }
     }
     else {
@@ -371,10 +375,13 @@ void FileExclusionDialog::onTableViewClicked(const QModelIndex &index)
                             tr("Do you really want to delete?"),
                             QMessageBox::Yes | QMessageBox::No, this);
                 msgBox->setDefaultButton(QMessageBox::No);
-                if(msgBox->exec() == QMessageBox::Yes) {
-                    _filesTableModel->removeRow(index.row());
-                    _filesTableView->repaint();
-                    setNeedToSave(true);
+                int ret = msgBox->exec();
+                if (ret != QDialog::Rejected) {
+                    if (ret == QMessageBox::Yes) {
+                        _filesTableModel->removeRow(index.row());
+                        _filesTableView->repaint();
+                        setNeedToSave(true);
+                    }
                 }
             }
         }

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customdialog.h"
 #include "mainmenubarwidget.h"
 #include "drivemenubarwidget.h"
+#include "preferencesmenubarwidget.h"
 #include "errorsmenubarwidget.h"
 #include "drivepreferenceswidget.h"
 #include "driveswidget.h"
@@ -55,14 +56,9 @@ signals:
 
 private:
     enum Page {
-        Main = 0,
-        Drive,
+        Drive = 0,
+        Preferences,
         Errors
-    };
-
-    enum MainStackedWidget {
-        Drives = 0,
-        Preferences
     };
 
     struct AccountInfoParameters : public AccountInfo {
@@ -76,11 +72,9 @@ private:
     QString _currentAccountId;
     QColor _backgroundMainColor;
     QStackedWidget *_pageStackedWidget;
-    MainMenuBarWidget *_mainMenuBarWidget;
-    DriveMenuBarWidget *_driveMenuBarWidget;
+    MainMenuBarWidget *_driveMenuBarWidget;
+    PreferencesMenuBarWidget *_preferencesMenuBarWidget;
     ErrorsMenuBarWidget *_errorsMenuBarWidget;
-    QStackedWidget *_mainStackedWidget;
-    DrivesWidget *_drivesWidget;
     PreferencesWidget *_preferencesWidget;
     DrivePreferencesWidget *_drivePreferencesWidget;
     QStackedWidget *_errorsStackedWidget;
@@ -88,6 +82,7 @@ private:
 
     void initUI();
     QByteArray contents(const QString& path);
+    void displayDriveParameters(const QString &accountId);
 
 private slots:
     void onExit();
@@ -95,19 +90,15 @@ private slots:
     void onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
     void onUpdateQuota(qint64 total, qint64 used);
     void onItemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &item);
-    void onDrivesButtonClicked();
     void onPreferencesButtonClicked();
     void onOpenHelp();
+    void onAccountSelected(QString id);
     void onAddDrive();
-    void onRunSync(const QString &accountId);
-    void onPauseSync(const QString &accountId);
-    void onResumeSync(const QString &accountId);
-    void onManageOffer(const QString &accountId);
     void onRemove(const QString &accountId);
-    void onDisplayDriveParameters(const QString &accountId);
     void onDisplayDriveErrors(const QString &accountId);
+    void onDisplayDrivePreferences();
+    void onDisplayPreferences();
     void onSetStyle(bool darkTheme);
-    void onDisplayDrivesList();
     void onSendLogs();
     void onOpenFolderItem(const QString &filePath);
     void onDebugReporterDone(bool retCode, const QString &debugId = QString());

@@ -20,41 +20,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #pragma once
 
 #include "halfroundrectwidget.h"
-#include "customtoolbutton.h"
-#include "driveselectionwidget.h"
-#include "progressbarwidget.h"
 
 #include <QLabel>
-#include <QWidget>
 
 namespace KDC {
 
-class MainMenuBarWidget : public HalfRoundRectWidget
+class PreferencesMenuBarWidget : public HalfRoundRectWidget
 {
     Q_OBJECT
 
 public:
-    explicit MainMenuBarWidget(QWidget *parent = nullptr);
-
-    inline DriveSelectionWidget *driveSelectionWidget() const { return _driveSelectionWidget; }
-    inline ProgressBarWidget *progressBarWidget() const { return _progressBarWidget; }
+    explicit PreferencesMenuBarWidget(QWidget *parent = nullptr);
 
 signals:
-    void accountSelected(const QString &accountId);
-    void addDrive();
-    void preferencesButtonClicked();
-    void openHelp();
+    void backButtonClicked();
 
 private:
-    DriveSelectionWidget *_driveSelectionWidget;
-    ProgressBarWidget *_progressBarWidget;
+    QLabel *_titleLabel;
 
 private slots:
-    void onAccountSelected(QString id);
-    void onAddDrive();
-    void onPreferencesButtonClicked(bool checked = false);
-    void onHelpButtonClicked(bool checked = false);
+    void onBackButtonClicked(bool checked = false);
 };
 
 }
-

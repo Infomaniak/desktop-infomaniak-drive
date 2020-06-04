@@ -46,7 +46,7 @@ std::map<DebuggingDialog::DebugLevel, std::pair<int, QString>> DebuggingDialog::
 };
 
 DebuggingDialog::DebuggingDialog(QWidget *parent)
-    : CustomDialog(true, false, parent)
+    : CustomDialog(true, parent)
     , _recordDebuggingSwitch(nullptr)
     , _debugLevelComboBox(nullptr)
     , _saveButton(nullptr)
@@ -138,6 +138,7 @@ void DebuggingDialog::initUI()
     buttonsHBox->addWidget(_saveButton);
 
     QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setObjectName("nondefaultbutton");
     cancelButton->setFlat(true);
     cancelButton->setText(tr("CANCEL"));
     buttonsHBox->addWidget(cancelButton);
@@ -195,11 +196,14 @@ void DebuggingDialog::onExit()
                     tr("Do you want to save your modifications?"),
                     QMessageBox::Yes | QMessageBox::No, this);
         msgBox->setDefaultButton(QMessageBox::Yes);
-        if (msgBox->exec() == QMessageBox::Yes) {
-            onSaveButtonTriggered();
-        }
-        else {
-            reject();
+        int ret = msgBox->exec();
+        if (ret != QDialog::Rejected) {
+            if (ret == QMessageBox::Yes) {
+                onSaveButtonTriggered();
+            }
+            else {
+                reject();
+            }
         }
     }
     else {

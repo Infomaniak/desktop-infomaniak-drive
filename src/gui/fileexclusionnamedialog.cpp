@@ -28,7 +28,7 @@ static const int boxHSpacing = 10;
 static const int fileNameVMargin = 2;
 
 FileExclusionNameDialog::FileExclusionNameDialog(QWidget *parent)
-    : CustomDialog(true, false, parent)
+    : CustomDialog(true, parent)
     , _fileNameLineEdit(nullptr)
     , _validateButton(nullptr)
 {
@@ -58,6 +58,7 @@ FileExclusionNameDialog::FileExclusionNameDialog(QWidget *parent)
     buttonsHBox->addWidget(_validateButton);
 
     QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setObjectName("nondefaultbutton");
     cancelButton->setFlat(true);
     cancelButton->setText(tr("CANCEL"));
     buttonsHBox->addWidget(cancelButton);
