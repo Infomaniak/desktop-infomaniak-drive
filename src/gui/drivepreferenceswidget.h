@@ -52,6 +52,8 @@ public:
 signals:
     void displayErrors(const QString &accountId);
     void errorAdded();
+    void openFolder(const QString &filePath);
+    void removeDrive(QString accountId);
 
 private:
     QString _accountId;
@@ -78,15 +80,18 @@ private:
 private slots:
     void onDisplaySmartSyncInfo(const QString &link);
     void onErrorsWidgetClicked();
+    void onAddFolder(bool checked = false);
     void onSmartSyncSwitchClicked(bool checked = false);
     void onDriveFoldersWidgetClicked();
     void onNotificationsSwitchClicked(bool checked = false);
     void onErrorAdded();
+    void onRemoveDrive(bool checked = false);
     void onSyncTriggered(const QString &folderId);
     void onPauseTriggered(const QString &folderId);
     void onResumeTriggered(const QString &folderId);
     void onUnsyncTriggered(const QString &folderId);
     void onDisplayFolderDetail(const QString &folderId, bool display);
+    void onOpenFolder(const QString &filePath);
 };
 
 }

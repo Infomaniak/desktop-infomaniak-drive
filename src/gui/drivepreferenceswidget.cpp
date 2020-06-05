@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "drivepreferenceswidget.h"
 #include "serverfoldersdialog.h"
 #include "custommessagebox.h"
+#include "custompushbutton.h"
 #include "accountmanager.h"
 #include "configfile.h"
 #include "guiutility.h"
@@ -117,10 +118,20 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     //
     // Folders blocs
     //
+    QHBoxLayout *foldersHeaderHBox = new QHBoxLayout();
+    foldersHeaderHBox->setContentsMargins(0, 0, 0, 0);
+    _mainVBox->addLayout(foldersHeaderHBox);
+    _foldersBeginIndex = _mainVBox->indexOf(foldersHeaderHBox) + 1;
+
     QLabel *foldersLabel = new QLabel(tr("Folders"), this);
     foldersLabel->setObjectName("blocLabel");
-    _mainVBox->addWidget(foldersLabel);
-    _foldersBeginIndex = _mainVBox->indexOf(foldersLabel) + 1;
+    foldersHeaderHBox->addWidget(foldersLabel);
+    foldersHeaderHBox->addStretch();
+
+    CustomPushButton *addFolderButton = new CustomPushButton(":/client/resources/icons/actions/add.svg",
+                                                            tr("Add an advanced synchronization"), this);
+    addFolderButton->setObjectName("addFolderButton");
+    foldersHeaderHBox->addWidget(addFolderButton);
 
     //
     // Synchronization bloc
@@ -226,15 +237,22 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
 
     connectedWithBox->addStretch();
 
+    CustomToolButton *removeDriveButton = new CustomToolButton(this);
+    removeDriveButton->setIconPath(":/client/resources/icons/actions/error-sync.svg");
+    removeDriveButton->setToolTip(tr("Remove synchronization"));
+    connectedWithBox->addWidget(removeDriveButton);
+
     _mainVBox->addStretch();
 
     connect(_displayErrorsWidget, &ActionWidget::clicked, this, &DrivePreferencesWidget::onErrorsWidgetClicked);
+    connect(addFolderButton, &CustomPushButton::clicked, this, &DrivePreferencesWidget::onAddFolder);
     if (_smartSyncSwitch && _smartSyncDescriptionLabel) {
         connect(_smartSyncSwitch, &CustomSwitch::clicked, this, &DrivePreferencesWidget::onSmartSyncSwitchClicked);
         connect(_smartSyncDescriptionLabel, &QLabel::linkActivated, this, &DrivePreferencesWidget::onDisplaySmartSyncInfo);
     }
     connect(_notificationsSwitch, &CustomSwitch::clicked, this, &DrivePreferencesWidget::onNotificationsSwitchClicked);
     connect(this, &DrivePreferencesWidget::errorAdded, this, &DrivePreferencesWidget::onErrorAdded);
+    connect(removeDriveButton, &CustomToolButton::clicked, this, &DrivePreferencesWidget::onRemoveDrive);
 }
 
 void DrivePreferencesWidget::setAccount(const QString &accountId, const AccountInfo *accountInfo, bool errors)
@@ -320,8 +338,8 @@ void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)>
                        "Currently unselected folders will be translated to online-only folders "
                        "and your selective sync settings will be reset."),
                      QMessageBox::NoButton, this);
-        msgBox->addButton(tr("Enable virtual files"), QMessageBox::AcceptRole);
-        msgBox->addButton(tr("Continue to use selective sync"), QMessageBox::RejectRole);
+        msgBox->addButton(tr("Enable virtual files"), QMessageBox::Yes);
+        msgBox->addButton(tr("Continue to use selective sync"), QMessageBox::No);
     } else {
         ASSERT(bestVfsMode == OCC::Vfs::WithSuffix)
         msgBox = new CustomMessageBox(
@@ -336,11 +354,11 @@ void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)>
                        "This is a new, experimental mode. If you decide to use it, please report any "
                        "issues that come up.").arg(APPLICATION_DOTVIRTUALFILE_SUFFIX),
                     QMessageBox::NoButton, this);
-        msgBox->addButton(tr("Enable experimental placeholder mode"), QMessageBox::AcceptRole);
-        msgBox->addButton(tr("Stay safe"), QMessageBox::RejectRole);
+        msgBox->addButton(tr("Enable experimental placeholder mode"), QMessageBox::Yes);
+        msgBox->addButton(tr("Stay safe"), QMessageBox::No);
     }
     int result = msgBox->exec();
-    callback(result == QMessageBox::AcceptRole);
+    callback(result == QMessageBox::Yes);
 }
 
 void DrivePreferencesWidget::askDisableSmartSync(const std::function<void (bool)> &callback)
@@ -351,10 +369,10 @@ void DrivePreferencesWidget::askDisableSmartSync(const std::function<void (bool)
                    "are currently marked as 'available online only' will be downloaded.\n\n"
                    "This action will abort any currently running synchronization."),
                 QMessageBox::NoButton, this);
-    msgBox->addButton(tr("Disable support"), QMessageBox::AcceptRole);
-    msgBox->addButton(tr("Cancel"), QMessageBox::RejectRole);
+    msgBox->addButton(tr("Disable support"), QMessageBox::Yes);
+    msgBox->addButton(tr("Cancel"), QMessageBox::No);
     int result = msgBox->exec();
-    callback(result == QMessageBox::AcceptRole);
+    callback(result == QMessageBox::Yes);
 }
 
 void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection)
@@ -463,9 +481,9 @@ void DrivePreferencesWidget::updateFoldersBlocs()
                 folderBloc->addSeparator();
 
                 // Folder tree
-                QBoxLayout *folderTreeBox = folderBloc->addLayout(QBoxLayout::Direction::LeftToRight);
+                QBoxLayout *folderTreeBox = folderBloc->addLayout(QBoxLayout::Direction::LeftToRight, true);
 
-                FolderTreeItemWidget *folderTreeItemWidget = new FolderTreeItemWidget(folderInfoElt.first, true, this);
+                FolderTreeItemWidget *folderTreeItemWidget = new FolderTreeItemWidget(folderInfoElt.first, false, this);
                 folderTreeItemWidget->setVisible(false);
                 folderTreeBox->addWidget(folderTreeItemWidget);
 
@@ -474,6 +492,7 @@ void DrivePreferencesWidget::updateFoldersBlocs()
                 connect(folderItemWidget, &FolderItemWidget::resumeSync, this, &DrivePreferencesWidget::onResumeTriggered);
                 connect(folderItemWidget, &FolderItemWidget::unSync, this, &DrivePreferencesWidget::onUnsyncTriggered);
                 connect(folderItemWidget, &FolderItemWidget::displayFolderDetail, this, &DrivePreferencesWidget::onDisplayFolderDetail);
+                connect(folderItemWidget, &FolderItemWidget::openFolder, this, &DrivePreferencesWidget::onOpenFolder);
             }
         }
 
@@ -491,6 +510,15 @@ void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
 void DrivePreferencesWidget::onErrorsWidgetClicked()
 {
     emit displayErrors(_accountId);
+}
+
+void DrivePreferencesWidget::onAddFolder(bool checked)
+{
+    Q_UNUSED(checked)
+
+
+
+
 }
 
 void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
@@ -565,6 +593,13 @@ void DrivePreferencesWidget::onErrorAdded()
     _displayErrorsWidget->setVisible(true);
 }
 
+void DrivePreferencesWidget::onRemoveDrive(bool checked)
+{
+    Q_UNUSED(checked)
+
+    emit removeDrive(_accountId);
+}
+
 void DrivePreferencesWidget::onSyncTriggered(const QString &folderId)
 {
     OCC::Utility::runSync(_accountId, folderId);
@@ -582,7 +617,24 @@ void DrivePreferencesWidget::onResumeTriggered(const QString &folderId)
 
 void DrivePreferencesWidget::onUnsyncTriggered(const QString &folderId)
 {
+    OCC::FolderMan *folderMan = OCC::FolderMan::instance();
+    auto folder = folderMan->folder(folderId);
 
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Question,
+                tr("Do you really want to stop syncing the folder <i>%1</i> ?<br>"
+                   "<b>Note:</b> This will <b>not</b> delete any files.")
+                .arg(folder->path()),
+                QMessageBox::NoButton, this);
+    msgBox->addButton(tr("Remove Folder Sync Connection"), QMessageBox::Yes);
+    msgBox->addButton(tr("Cancel"), QMessageBox::No);
+    msgBox->setDefaultButton(QMessageBox::No);
+    int ret = msgBox->exec();
+    if (ret != QDialog::Rejected) {
+        if (ret == QMessageBox::YesRole) {
+            folderMan->removeFolder(folder);
+        }
+    }
 }
 
 void DrivePreferencesWidget::onDisplayFolderDetail(const QString &folderId, bool display)
@@ -607,6 +659,11 @@ void DrivePreferencesWidget::onDisplayFolderDetail(const QString &folderId, bool
             }
         }
     }
+}
+
+void DrivePreferencesWidget::onOpenFolder(const QString &filePath)
+{
+    emit openFolder(filePath);
 }
 
 }

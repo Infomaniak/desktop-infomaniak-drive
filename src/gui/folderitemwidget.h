@@ -44,6 +44,7 @@ signals:
     void resumeSync(const QString &folderId);
     void unSync(const QString &folderId);
     void displayFolderDetail(const QString &folderId, bool display);
+    void openFolder(const QString &filePath);
 
 private:
     const QString _folderId;
@@ -58,6 +59,7 @@ private:
 private slots:
     void onMenuButtonClicked();
     void onExpandButtonClicked();
+    void onDisplaySmartSyncInfo(const QString &link);
     void onSyncTriggered();
     void onPauseTriggered();
     void onResumeTriggered();

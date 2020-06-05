@@ -220,6 +220,8 @@ void ParametersDialog::initUI()
     connect(_driveMenuBarWidget, &MainMenuBarWidget::accountSelected, this, &ParametersDialog::onAccountSelected);
     connect(_driveMenuBarWidget, &MainMenuBarWidget::addDrive, this, &ParametersDialog::onAddDrive);
     connect(_drivePreferencesWidget, &DrivePreferencesWidget::displayErrors, this, &ParametersDialog::onDisplayDriveErrors);
+    connect(_drivePreferencesWidget, &DrivePreferencesWidget::openFolder, this, &ParametersDialog::onOpenFolderItem);
+    connect(_drivePreferencesWidget, &DrivePreferencesWidget::removeDrive, this, &ParametersDialog::onRemoveDrive);
     connect(_preferencesMenuBarWidget, &PreferencesMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivePreferences);
     connect(_errorsMenuBarWidget, &ErrorsMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivePreferences);
     connect(_preferencesWidget, &PreferencesWidget::setStyle, this, &ParametersDialog::onSetStyle);
@@ -528,22 +530,23 @@ void ParametersDialog::onAddDrive()
     emit addDrive();
 }
 
-void ParametersDialog::onRemove(const QString &accountId)
+void ParametersDialog::onRemoveDrive(const QString &accountId)
 {
     OCC::AccountManager *accountManager = OCC::AccountManager::instance();
     OCC::AccountStatePtr accountStatePtr = accountManager->getAccountStateFromId(accountId);
     if (accountStatePtr.data()) {
         CustomMessageBox *msgBox = new CustomMessageBox(
                     QMessageBox::Question,
-                    tr("<p>Do you really want to remove the connection to the account <i>%1</i>?</p>"
-                       "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
-                        .arg(accountStatePtr->account()->driveName()),
+                    tr("Do you really want to remove the synchronization of the account <i>%1</i> ?<br>"
+                       "<b>Note:</b> This will <b>not</b> delete any files.")
+                    .arg(accountStatePtr->account()->driveName()),
                     QMessageBox::NoButton, this);
-        msgBox->addButton(tr("Remove connection"), QMessageBox::YesRole);
-        msgBox->addButton(tr("Cancel"), QMessageBox::NoRole);
+        msgBox->addButton(tr("Remove synchronization"), QMessageBox::Yes);
+        msgBox->addButton(tr("Cancel"), QMessageBox::No);
+        msgBox->setDefaultButton(QMessageBox::No);
         int ret = msgBox->exec();
         if (ret != QDialog::Rejected) {
-            if (ret == QMessageBox::YesRole) {
+            if (ret == QMessageBox::Yes) {
                 accountManager->deleteAccount(accountStatePtr.data());
                 accountManager->save();
             }

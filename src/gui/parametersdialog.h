@@ -94,7 +94,7 @@ private slots:
     void onOpenHelp();
     void onAccountSelected(QString id);
     void onAddDrive();
-    void onRemove(const QString &accountId);
+    void onRemoveDrive(const QString &accountId);
     void onDisplayDriveErrors(const QString &accountId);
     void onDisplayDrivePreferences();
     void onDisplayPreferences();

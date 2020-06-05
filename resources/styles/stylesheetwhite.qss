@@ -137,28 +137,28 @@ KDC--CustomTogglePushButton:checked
 /* KDC--CustomPushButton */
 /*************************/
 
-KDC--CustomPushButton#addDriveButton
+KDC--CustomPushButton#addFolderButton
 {
     background-color: transparent;
     border: 0px;
-    min-height: 40px;
-    max-height: 40px;
-    border-radius: 20px;
-    qproperty-icon_size: 24px;
+    min-height: 32px;
+    max-height: 32px;
+    border-radius: 16px;
+    qproperty-icon_size: 20px;
     qproperty-icon_color: #0098FF;
 }
 
-KDC--CustomPushButton#addDriveButton:hover
+KDC--CustomPushButton#addFolderButton:hover
 {
     background-color: #E8E8E8;
 }
 
-KDC--CustomPushButton#addDriveButton QLabel#textLabel
+KDC--CustomPushButton#addFolderButton QLabel#textLabel
 {
     color: #444444;
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
-    font-size: 14px;
+    font-size: 13px;
 }
 
 KDC--CustomPushButton#addFileButton
@@ -354,31 +354,6 @@ KDC--CustomDialog QTableView
 }
 
 KDC--CustomDialog QTableView::item
-{
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
-
-KDC--CustomDialog QTreeWidget
-{
-    background-color: #F5F5F5;
-    border: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-radius: 5px;
-    color: #333333;
-    font-family: "Suisse Int'l";
-    font-weight: 350; /* normal */
-    font-size: 14px;
-    gridline-color: #F5F5F5;
-    outline: none;
-}
-
-KDC--CustomDialog QTreeWidget::item
 {
     padding-left: 10px;
     padding-right: 10px;
@@ -1251,8 +1226,29 @@ KDC--CustomMessageBox QPushButton:default
 
 KDC--FolderTreeItemWidget
 {
+    background-color: transparent;
+    border: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+    gridline-color: transparent;
+    outline: none;
     qproperty-folder_icon_color: #9F9F9F;
     qproperty-folder_icon_size: 18px;
     qproperty-header_font_weight: 650;
     qproperty-size_text_color: #939393;
+}
+
+KDC--FolderTreeItemWidget::item
+{
+    padding-left: 0px;
+    padding-right: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }

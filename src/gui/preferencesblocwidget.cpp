@@ -58,10 +58,12 @@ PreferencesBlocWidget::PreferencesBlocWidget(QWidget *parent)
     connect(this, &PreferencesBlocWidget::actionIconSizeChanged, this, &PreferencesBlocWidget::onActionIconSizeChanged);
 }
 
-QBoxLayout *PreferencesBlocWidget::addLayout(QBoxLayout::Direction direction)
+QBoxLayout *PreferencesBlocWidget::addLayout(QBoxLayout::Direction direction, bool noMargins)
 {
     QBoxLayout *layout = new QBoxLayout(direction);
-    layout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    if (!noMargins) {
+        layout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    }
     if (direction == QBoxLayout::Direction::TopToBottom ||
             direction == QBoxLayout::Direction::BottomToTop) {
         layout->setSpacing(textVSpacing);
@@ -74,10 +76,12 @@ QBoxLayout *PreferencesBlocWidget::addLayout(QBoxLayout::Direction direction)
     return layout;
 }
 
-QWidget *PreferencesBlocWidget::addScrollArea(QBoxLayout::Direction direction)
+QWidget *PreferencesBlocWidget::addScrollArea(QBoxLayout::Direction direction, bool noMargins)
 {
     QBoxLayout *hLayout = new QBoxLayout(direction);
-    hLayout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    if (!noMargins) {
+        hLayout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    }
     _layout->addLayout(hLayout);
 
     QScrollArea *preferencesScrollArea = new QScrollArea(this);
@@ -104,14 +108,16 @@ QWidget *PreferencesBlocWidget::addScrollArea(QBoxLayout::Direction direction)
     return widget;
 }
 
-ClickableWidget *PreferencesBlocWidget::addActionWidget(QVBoxLayout **vLayout)
+ClickableWidget *PreferencesBlocWidget::addActionWidget(QVBoxLayout **vLayout, bool noMargins)
 {
     ClickableWidget *widget = new ClickableWidget(this);
     widget->setContentsMargins(0, 0, 0, 0);
     _layout->addWidget(widget);
 
     QHBoxLayout *hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    if (!noMargins) {
+        hLayout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
+    }
     hLayout->setSpacing(0);
     widget->setLayout(hLayout);
 

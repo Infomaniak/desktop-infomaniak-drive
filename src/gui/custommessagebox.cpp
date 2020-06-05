@@ -121,14 +121,14 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
     connect(this, &CustomDialog::exit, this, &CustomMessageBox::onExit);
 }
 
-void CustomMessageBox::addButton(const QString &text, QMessageBox::ButtonRole role)
+void CustomMessageBox::addButton(const QString &text, QMessageBox::StandardButton buttonType)
 {
     QPushButton *button = new QPushButton(this);
     button->setObjectName("nondefaultbutton");
     button->setFlat(true);
     button->setText(text);
     _buttonsHBox->insertWidget(_buttonCount++, button);
-    button->setProperty(buttonTypeProperty.c_str(), role);
+    button->setProperty(buttonTypeProperty.c_str(), buttonType);
     connect(button, &QPushButton::clicked, this, &CustomMessageBox::onButtonClicked);
 }
 

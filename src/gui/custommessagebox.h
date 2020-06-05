@@ -40,7 +40,7 @@ public:
                               QMessageBox::StandardButtons buttons = QMessageBox::NoButton,
                               QWidget *parent = nullptr);
 
-    void addButton(const QString &text, QMessageBox::ButtonRole role);
+    void addButton(const QString &text, QMessageBox::StandardButton button);
     void setDefaultButton(QMessageBox::StandardButton buttonType);
 
 private:

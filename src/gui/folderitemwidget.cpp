@@ -29,7 +29,7 @@ namespace KDC {
 
 static const int hSpacing = 10;
 static const int vSpacing = 10;
-static const int expandButtonVMargin = 10;
+static const int expandButtonVMargin = 5;
 static const int statusIconSize = 20;
 
 FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *folderInfo, QWidget *parent)
@@ -42,13 +42,13 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     , _isExpanded(false)
 {
     QHBoxLayout *mainLayout = new QHBoxLayout();
-    mainLayout->setContentsMargins(0, expandButtonVMargin, 0, expandButtonVMargin);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(hSpacing);
     setLayout(mainLayout);
 
     // Expand button
     QVBoxLayout *expandVBoxLayout = new QVBoxLayout();
-    expandVBoxLayout->setContentsMargins(0, 0, 0, 0);
+    expandVBoxLayout->setContentsMargins(0, expandButtonVMargin, 0, expandButtonVMargin);
     mainLayout->addLayout(expandVBoxLayout);
 
     _expandButton = new CustomToolButton(this);
@@ -86,15 +86,18 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     _menuButton->setToolTip(tr("More actions"));
     mainLayout->addWidget(_menuButton);
 
-    if (folderInfo) {
-        updateItem(folderInfo);
+    if (_folderInfo) {
+        updateItem(_folderInfo);
         setExpandButton();
-        nameLabel->setText(folderInfo->_name);
-        synchroLabel->setText(tr("Synchronized into %1").arg(folderInfo->_path));
+        nameLabel->setText(_folderInfo->_name);
+        synchroLabel->setText(tr("Synchronized into <a style=\"%1\" href=\"ref\">%2</a>")
+                              .arg(OCC::Utility::linkStyle)
+                              .arg(_folderInfo->_path));
     }
 
     connect(_menuButton, &CustomToolButton::clicked, this, &FolderItemWidget::onMenuButtonClicked);
     connect(_expandButton, &CustomToolButton::clicked, this, &FolderItemWidget::onExpandButtonClicked);
+    connect(synchroLabel, &QLabel::linkActivated, this, &FolderItemWidget::onDisplaySmartSyncInfo);
 }
 
 void FolderItemWidget::updateItem(const FolderInfo *folderInfo)
@@ -164,6 +167,13 @@ void FolderItemWidget::onExpandButtonClicked()
     _isExpanded = !_isExpanded;
     setExpandButton();
     emit displayFolderDetail(_folderId, _isExpanded);
+}
+
+void FolderItemWidget::onDisplaySmartSyncInfo(const QString &link)
+{
+    Q_UNUSED(link)
+
+    emit openFolder(_folderInfo->_path);
 }
 
 void FolderItemWidget::onSyncTriggered()

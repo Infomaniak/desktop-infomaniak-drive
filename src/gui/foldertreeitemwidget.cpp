@@ -60,8 +60,8 @@ FolderTreeItemWidget::FolderTreeItemWidget(const QString &folderId, bool display
                   "QTreeWidget::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
                   "QTreeWidget::indicator:indeterminate:disabled { image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg); }"
                   "QTreeWidget::branch:!has-children:adjoins-item { image: none; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg); margin-left: 20px; margin-right: 0px; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg); margin-left: 20px; margin-right: 0px; }");
+                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg); margin-left: 15px; margin-right: 5px; }"
+                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg); margin-left: 15px; margin-right: 5px; }");
 
     setSelectionMode(QAbstractItemView::NoSelection);
     setSortingEnabled(true);
@@ -71,8 +71,8 @@ FolderTreeItemWidget::FolderTreeItemWidget(const QString &folderId, bool display
     header()->setSectionResizeMode(TreeWidgetColumn::Folder, QHeaderView::Stretch);
     header()->setSectionResizeMode(TreeWidgetColumn::Size, QHeaderView::ResizeToContents);
     header()->setStretchLastSection(false);
-    setRootIsDecorated(false);
     setIndentation(treeWidgetIndentation);
+    setRootIsDecorated(!displayRoot);
 
     connect(this, &QTreeWidget::itemExpanded, this, &FolderTreeItemWidget::slotItemExpanded);
     connect(this, &QTreeWidget::itemChanged, this, &FolderTreeItemWidget::slotItemChanged);
@@ -267,8 +267,6 @@ void FolderTreeItemWidget::slotUpdateDirectories(QStringList list)
     QScopedValueRollback<bool> isInserting(_inserting);
     _inserting = true;
 
-    TreeViewItem *root = static_cast<TreeViewItem *>(topLevelItem(0));
-
     QUrl url = getAccountPtr() ? getAccountPtr()->davUrl() : QUrl();
     QString pathToRemove = url.path();
     if (!pathToRemove.endsWith('/')) {
@@ -300,6 +298,7 @@ void FolderTreeItemWidget::slotUpdateDirectories(QStringList list)
         }
     }
 
+    TreeViewItem *root = static_cast<TreeViewItem *>(topLevelItem(0));
     if (!root && list.size() <= 1) {
         emit message(tr("No subfolders currently on the server."));
         return;
@@ -359,6 +358,9 @@ void FolderTreeItemWidget::slotUpdateDirectories(QStringList list)
     }
 
     root->setExpanded(true);
+    if (!_displayRoot) {
+        setRootIndex(indexFromItem(root));
+    }
 }
 
 void FolderTreeItemWidget::slotLscolFinishedWithError(QNetworkReply *reply)
