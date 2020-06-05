@@ -18,7 +18,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "drivepreferenceswidget.h"
-#include "serverfoldersdialog.h"
+#include "localfolderdialog.h"
+#include "foldertreeitemwidget.h"
 #include "custommessagebox.h"
 #include "custompushbutton.h"
 #include "accountmanager.h"
@@ -493,6 +494,9 @@ void DrivePreferencesWidget::updateFoldersBlocs()
                 connect(folderItemWidget, &FolderItemWidget::unSync, this, &DrivePreferencesWidget::onUnsyncTriggered);
                 connect(folderItemWidget, &FolderItemWidget::displayFolderDetail, this, &DrivePreferencesWidget::onDisplayFolderDetail);
                 connect(folderItemWidget, &FolderItemWidget::openFolder, this, &DrivePreferencesWidget::onOpenFolder);
+                connect(folderTreeItemWidget, &FolderTreeItemWidget::message, this, &DrivePreferencesWidget::onDisplayMessage);
+                connect(folderTreeItemWidget, &FolderTreeItemWidget::showMessage, this, &DrivePreferencesWidget::onShowMessage);
+                connect(folderTreeItemWidget, &FolderTreeItemWidget::needToSave, this, &DrivePreferencesWidget::onNeedToSave);
             }
         }
 
@@ -504,7 +508,7 @@ void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
 {
     Q_UNUSED(link)
 
-
+    // TODO
 }
 
 void DrivePreferencesWidget::onErrorsWidgetClicked()
@@ -515,6 +519,15 @@ void DrivePreferencesWidget::onErrorsWidgetClicked()
 void DrivePreferencesWidget::onAddFolder(bool checked)
 {
     Q_UNUSED(checked)
+
+    // Choose local folder
+    LocalFolderDialog *localFolderDialog = new LocalFolderDialog(this);
+    connect(localFolderDialog, &LocalFolderDialog::openFolder, this, &DrivePreferencesWidget::onOpenFolder);
+    if (localFolderDialog->exec() == QDialog::Rejected) {
+        return;
+    }
+
+    QString localFolderPath = localFolderDialog->localFolderPath();
 
 
 
@@ -575,12 +588,6 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
             }
         });
     }
-}
-
-void DrivePreferencesWidget::onDriveFoldersWidgetClicked()
-{
-    ServerFoldersDialog *dialog = new ServerFoldersDialog(_accountInfo, this);
-    dialog->exec();
 }
 
 void DrivePreferencesWidget::onNotificationsSwitchClicked(bool checked)
@@ -664,6 +671,21 @@ void DrivePreferencesWidget::onDisplayFolderDetail(const QString &folderId, bool
 void DrivePreferencesWidget::onOpenFolder(const QString &filePath)
 {
     emit openFolder(filePath);
+}
+
+void DrivePreferencesWidget::onDisplayMessage(const QString &text)
+{
+
+}
+
+void DrivePreferencesWidget::onShowMessage(bool show)
+{
+
+}
+
+void DrivePreferencesWidget::onNeedToSave()
+{
+
 }
 
 }

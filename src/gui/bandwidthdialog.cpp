@@ -76,23 +76,26 @@ void BandwidthDialog::initUI()
     // Title
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
-    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, titleBoxVMargin);
+    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     titleLabel->setText(tr("Bandwidth"));
     mainLayout->addWidget(titleLabel);
+    mainLayout->addSpacing(titleBoxVMargin);
 
     // Download bandwidth
     QLabel *downloadLabel = new QLabel(this);
     downloadLabel->setObjectName("subtitleLabel");
-    downloadLabel->setContentsMargins(boxHMargin, 0, boxHMargin, subtitleLabelVMargin);
+    downloadLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     downloadLabel->setText(tr("Download bandwidth"));
     mainLayout->addWidget(downloadLabel);
+    mainLayout->addSpacing(subtitleLabelVMargin);
 
     QButtonGroup *downloadButtonGroup = new QButtonGroup(this);
     downloadButtonGroup->setExclusive(true);
 
     QHBoxLayout *downloadNoLimitHBox = new QHBoxLayout();
-    downloadNoLimitHBox->setContentsMargins(boxHMargin, 0, boxHMargin, noLimitButtonVMargin);
+    downloadNoLimitHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(downloadNoLimitHBox);
+    mainLayout->addSpacing(noLimitButtonVMargin);
 
     _downloadNoLimitButton = new CustomRadioButton(this);
     _downloadNoLimitButton->setText(tr("No limit"));
@@ -113,9 +116,10 @@ void BandwidthDialog::initUI()
     downloadButtonGroup->addButton(_downloadAutoLimitButton);
 
     QHBoxLayout *downloadValueLimitHBox = new QHBoxLayout();
-    downloadValueLimitHBox->setContentsMargins(boxHMargin, 0, boxHMargin, valueLimitButtonVMargin);
+    downloadValueLimitHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     downloadValueLimitHBox->setSpacing(boxHSpacing);
     mainLayout->addLayout(downloadValueLimitHBox);
+    mainLayout->addSpacing(valueLimitButtonVMargin);
 
     _downloadValueLimitButton = new CustomRadioButton(this);
     _downloadValueLimitButton->setText(tr("Limit to"));
@@ -139,16 +143,18 @@ void BandwidthDialog::initUI()
     // Upload bandwidth
     QLabel *uploadLabel = new QLabel(this);
     uploadLabel->setObjectName("subtitleLabel");
-    uploadLabel->setContentsMargins(boxHMargin, 0, boxHMargin, subtitleLabelVMargin);
+    uploadLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     uploadLabel->setText(tr("Upload bandwidth"));
     mainLayout->addWidget(uploadLabel);
+    mainLayout->addSpacing(subtitleLabelVMargin);
 
     QButtonGroup *uploadButtonGroup = new QButtonGroup(this);
     uploadButtonGroup->setExclusive(true);
 
     QHBoxLayout *uploadNoLimitHBox = new QHBoxLayout();
-    uploadNoLimitHBox->setContentsMargins(boxHMargin, 0, boxHMargin, noLimitButtonVMargin);
+    uploadNoLimitHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(uploadNoLimitHBox);
+    mainLayout->addSpacing(noLimitButtonVMargin);
 
     _uploadNoLimitButton = new CustomRadioButton(this);
     _uploadNoLimitButton->setText(tr("No limit"));
@@ -169,9 +175,10 @@ void BandwidthDialog::initUI()
     uploadButtonGroup->addButton(_uploadAutoLimitButton);
 
     QHBoxLayout *uploadValueLimitHBox = new QHBoxLayout();
-    uploadValueLimitHBox->setContentsMargins(boxHMargin, 0, boxHMargin, valueLimitButtonVMargin);
+    uploadValueLimitHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     uploadValueLimitHBox->setSpacing(boxHSpacing);
     mainLayout->addLayout(uploadValueLimitHBox);
+    mainLayout->addSpacing(valueLimitButtonVMargin);
 
     _uploadValueLimitButton = new CustomRadioButton(this);
     _uploadValueLimitButton->setText(tr("Limit to"));

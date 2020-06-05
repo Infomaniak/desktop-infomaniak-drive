@@ -71,14 +71,16 @@ void DebuggingDialog::initUI()
     // Title
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
-    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, titleBoxVMargin);
+    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     titleLabel->setText(tr("Record debugging information"));
     mainLayout->addWidget(titleLabel);
+    mainLayout->addSpacing(titleBoxVMargin);
 
     // Record debugging information
     QHBoxLayout *recordDebuggingHBox = new QHBoxLayout();
-    recordDebuggingHBox->setContentsMargins(boxHMargin, 0, boxHMargin, recordDebuggingBoxVMargin);
+    recordDebuggingHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(recordDebuggingHBox);
+    mainLayout->addSpacing(recordDebuggingBoxVMargin);
 
     QLabel *recordDebuggingLabel = new QLabel(this);
     recordDebuggingLabel->setObjectName("boldTextLabel");
@@ -94,13 +96,15 @@ void DebuggingDialog::initUI()
     // Minimum debug level
     QLabel *debugLevelLabel = new QLabel(this);
     debugLevelLabel->setObjectName("boldTextLabel");
-    debugLevelLabel->setContentsMargins(boxHMargin, 0, boxHMargin, debugLevelLabelBoxVMargin);
+    debugLevelLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     debugLevelLabel->setText(tr("Minimum trace level"));
     mainLayout->addWidget(debugLevelLabel);
+    mainLayout->addSpacing(debugLevelLabelBoxVMargin);
 
     QHBoxLayout *debugLevelHBox = new QHBoxLayout();
-    debugLevelHBox->setContentsMargins(boxHMargin, 0, boxHMargin, debugLevelSelectBoxVMargin);
+    debugLevelHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(debugLevelHBox);
+    mainLayout->addSpacing(debugLevelSelectBoxVMargin);
 
     _debugLevelComboBox = new CustomComboBox(this);
     _debugLevelComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);

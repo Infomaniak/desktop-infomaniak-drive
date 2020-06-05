@@ -81,21 +81,24 @@ void FileExclusionDialog::initUI()
     // Title
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
-    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, titleBoxVMargin);
+    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     titleLabel->setText(tr("Excluded files"));
     mainLayout->addWidget(titleLabel);
+    mainLayout->addSpacing(titleBoxVMargin);
 
     // Description
     QLabel *descriptionLabel = new QLabel(this);
     descriptionLabel->setObjectName("descriptionLabel");
-    descriptionLabel->setContentsMargins(boxHMargin, 0, boxHMargin, descriptionBoxVMargin);
+    descriptionLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     descriptionLabel->setText(tr("Add files or folders that will not be synchronized on your computer."));
     mainLayout->addWidget(descriptionLabel);
+    mainLayout->addSpacing(descriptionBoxVMargin);
 
     // Synchronize hidden files
     QHBoxLayout *hiddenFilesHBox = new QHBoxLayout();
-    hiddenFilesHBox->setContentsMargins(boxHMargin, 0, boxHMargin, hiddenFilesBoxVMargin);
+    hiddenFilesHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(hiddenFilesHBox);
+    mainLayout->addSpacing(hiddenFilesBoxVMargin);
 
     _hiddenFilesCheckBox = new CustomCheckBox(this);
     _hiddenFilesCheckBox->setObjectName("hiddenFilesCheckBox");
@@ -104,8 +107,9 @@ void FileExclusionDialog::initUI()
 
     // Add file button
     QHBoxLayout *addFileHBox = new QHBoxLayout();
-    addFileHBox->setContentsMargins(addFileBoxHMargin, 0, addFileBoxHMargin, addFileBoxVMargin);
+    addFileHBox->setContentsMargins(addFileBoxHMargin, 0, addFileBoxHMargin, 0);
     mainLayout->addLayout(addFileHBox);
+    mainLayout->addSpacing(addFileBoxVMargin);
 
     CustomPushButton *addFileButton = new CustomPushButton(":/client/resources/icons/actions/add.svg", tr("Add"), this);
     addFileButton->setObjectName("addFileButton");
@@ -114,9 +118,10 @@ void FileExclusionDialog::initUI()
 
     // Files table header
     QHBoxLayout *filesTableHeaderHBox = new QHBoxLayout();
-    filesTableHeaderHBox->setContentsMargins(boxHMargin, 0, boxHMargin, filesTableHeaderBoxVMargin);
+    filesTableHeaderHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     filesTableHeaderHBox->setSpacing(0);
     mainLayout->addLayout(filesTableHeaderHBox);
+    mainLayout->addSpacing(filesTableHeaderBoxVMargin);
 
     QLabel *header1Label = new QLabel(tr("NAME"), this);
     header1Label->setObjectName("header");
@@ -132,8 +137,9 @@ void FileExclusionDialog::initUI()
 
     // Files table view
     QHBoxLayout *filesTableHBox = new QHBoxLayout();
-    filesTableHBox->setContentsMargins(boxHMargin, 0, boxHMargin, filesTableBoxVMargin);
+    filesTableHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(filesTableHBox);
+    mainLayout->addSpacing(filesTableBoxVMargin);
 
     _filesTableModel = new QStandardItemModel();
     _filesTableView = new QTableView(this);

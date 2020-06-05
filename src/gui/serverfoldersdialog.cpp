@@ -66,22 +66,25 @@ void ServerFoldersDialog::initUI()
     // Title
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
-    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, titleBoxVMargin);
+    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     titleLabel->setText(tr("kDrive folders"));
     mainLayout->addWidget(titleLabel);
+    mainLayout->addSpacing(titleBoxVMargin);
 
     // Description
     QLabel *descriptionLabel = new QLabel(this);
     descriptionLabel->setObjectName("descriptionLabel");
-    descriptionLabel->setContentsMargins(boxHMargin, 0, boxHMargin, descriptionBoxVMargin);
+    descriptionLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     descriptionLabel->setText(tr("Select the folders you want to synchronize on your computer."));
     mainLayout->addWidget(descriptionLabel);
+    mainLayout->addSpacing(descriptionBoxVMargin);
 
     // Available space
     QHBoxLayout *availableSpaceHBox = new QHBoxLayout();
-    availableSpaceHBox->setContentsMargins(boxHMargin, 0, boxHMargin, availableSpaceBoxVMargin);
+    availableSpaceHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     availableSpaceHBox->setSpacing(boxHSpacing);
     mainLayout->addLayout(availableSpaceHBox);
+    mainLayout->addSpacing(availableSpaceBoxVMargin);
 
     _infoIconLabel = new QLabel(this);
     availableSpaceHBox->addWidget(_infoIconLabel);
@@ -96,13 +99,15 @@ void ServerFoldersDialog::initUI()
     _messageLabel->setObjectName("messageLabel");
     _messageLabel->setText(tr("Loading..."));
     _messageLabel->setVisible(false);
-    _messageLabel->setContentsMargins(boxHMargin, 0, boxHMargin, messageVMargin);
+    _messageLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addWidget(_messageLabel);
+    mainLayout->addSpacing(messageVMargin);
 
     // Folder tree
     QHBoxLayout *folderTreeHBox = new QHBoxLayout();
-    folderTreeHBox->setContentsMargins(boxHMargin, 0, boxHMargin, folderTreeBoxVMargin);
+    folderTreeHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(folderTreeHBox);
+    mainLayout->addSpacing(folderTreeBoxVMargin);
 
     QString folderId = _accountInfo->_folderMap.begin()->first;
     _currentFolder = OCC::FolderMan::instance()->folder(folderId);

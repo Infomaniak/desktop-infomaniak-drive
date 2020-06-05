@@ -82,7 +82,6 @@ private slots:
     void onErrorsWidgetClicked();
     void onAddFolder(bool checked = false);
     void onSmartSyncSwitchClicked(bool checked = false);
-    void onDriveFoldersWidgetClicked();
     void onNotificationsSwitchClicked(bool checked = false);
     void onErrorAdded();
     void onRemoveDrive(bool checked = false);
@@ -92,6 +91,9 @@ private slots:
     void onUnsyncTriggered(const QString &folderId);
     void onDisplayFolderDetail(const QString &folderId, bool display);
     void onOpenFolder(const QString &filePath);
+    void onDisplayMessage(const QString &text);
+    void onShowMessage(bool show);
+    void onNeedToSave();
 };
 
 }

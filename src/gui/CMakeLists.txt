@@ -155,6 +155,7 @@ set(client_SRCS
     folderitemwidget.cpp
     foldertreeitemwidget.cpp
     halfroundrectwidget.cpp
+    localfolderdialog.cpp
     mainmenubarwidget.cpp
     menuitemwidget.cpp
     menuwidget.cpp

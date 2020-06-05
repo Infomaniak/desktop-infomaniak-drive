@@ -71,14 +71,16 @@ void AboutDialog::initUI()
     // Title
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
-    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, titleBoxVMargin);
+    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     titleLabel->setText(tr("About"));
     mainLayout->addWidget(titleLabel);
+    mainLayout->addSpacing(titleBoxVMargin);
 
     // Logo
     QHBoxLayout *logoHBox = new QHBoxLayout();
-    logoHBox->setContentsMargins(boxHMargin, 0, boxHMargin, logoBoxVMargin);
+    logoHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(logoHBox);
+    mainLayout->addSpacing(logoBoxVMargin);
 
     QLabel *logoIconLabel = new QLabel(this);
     logoIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive-without-text.svg")

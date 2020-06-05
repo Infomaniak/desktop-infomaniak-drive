@@ -1252,3 +1252,52 @@ KDC--FolderTreeItemWidget::item
     padding-top: 6px;
     padding-bottom: 6px;
 }
+
+/**************************/
+/* KDC--LocalFolderDialog */
+/**************************/
+
+KDC--LocalFolderDialog
+{
+    qproperty-folder_icon_color: #9F9F9F;
+    qproperty-folder_icon_size: 20px;
+}
+
+KDC--LocalFolderDialog QWidget#folderSelectionWidget
+{
+    background-color: #F5F5F5;
+    border: 0px;
+    border-radius: 10px;
+    min-height: 80px;
+    max-height: 80px;
+}
+
+KDC--LocalFolderDialog QPushButton#selectButton
+{
+    background-color: transparent;
+    margin: 0px 0px 0px 0px;
+    color: #0098FF;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 16px;
+    text-decoration: none;
+    border: 0px;
+}
+
+KDC--LocalFolderDialog QLabel#folderNameLabel
+{
+    color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 650; /* bold */
+    font-size: 16px;
+}
+
+KDC--LocalFolderDialog QLabel#folderPathLabel
+{
+    color: #0098FF;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 12px;
+}
+
+

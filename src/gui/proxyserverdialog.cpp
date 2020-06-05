@@ -96,15 +96,17 @@ void ProxyServerDialog::initUI()
     // Title
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
-    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, titleBoxVMargin);
+    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     titleLabel->setText(tr("Proxy server"));
     mainLayout->addWidget(titleLabel);
+    mainLayout->addSpacing(titleBoxVMargin);
 
     // Proxy
     QVBoxLayout *proxyVBox = new QVBoxLayout();
-    proxyVBox->setContentsMargins(boxHMargin, 0, boxHMargin, proxyBoxVMargin);
+    proxyVBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     proxyVBox->setSpacing(proxyBoxSpacing);
     mainLayout->addLayout(proxyVBox);
+    mainLayout->addSpacing(proxyBoxVMargin);
 
     _noProxyButton = new CustomRadioButton(this);
     _noProxyButton->setText(tr("No proxy server"));
@@ -123,9 +125,10 @@ void ProxyServerDialog::initUI()
 
     // Manual proxy
     QVBoxLayout *manualProxyVBox = new QVBoxLayout();
-    manualProxyVBox->setContentsMargins(manualProxyBoxHMargin, 0, boxHMargin, manualProxyBoxVMargin);
+    manualProxyVBox->setContentsMargins(manualProxyBoxHMargin, 0, boxHMargin, 0);
     manualProxyVBox->setSpacing(proxyBoxSpacing);
     mainLayout->addLayout(manualProxyVBox);
+    mainLayout->addSpacing(manualProxyBoxVMargin);
 
     QHBoxLayout *manualProxyTypeHBox = new QHBoxLayout();
     manualProxyTypeHBox->setContentsMargins(0, 0, 0, 0);
