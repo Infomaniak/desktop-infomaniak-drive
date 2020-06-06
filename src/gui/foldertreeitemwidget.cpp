@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "foldertreeitemwidget.h"
+#include "customtreewidgetitem.h"
 #include "guiutility.h"
 #include "networkjobs.h"
 #include "folderman.h"
@@ -32,6 +33,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 namespace KDC {
 
 static const int treeWidgetIndentation = 30;
+
+static const QString commonDocumentsFolderName("Common documents");
+static const QString sharedFolderName("Shared");
 
 // 1st column roles
 static const int viewIconPathRole = Qt::UserRole;
@@ -60,8 +64,10 @@ FolderTreeItemWidget::FolderTreeItemWidget(const QString &folderId, bool display
                   "QTreeWidget::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
                   "QTreeWidget::indicator:indeterminate:disabled { image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg); }"
                   "QTreeWidget::branch:!has-children:adjoins-item { image: none; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg); margin-left: 15px; margin-right: 5px; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg); margin-left: 15px; margin-right: 5px; }");
+                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg);"
+                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }"
+                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg);"
+                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }");
 
     setSelectionMode(QAbstractItemView::NoSelection);
     setSortingEnabled(true);
@@ -74,8 +80,8 @@ FolderTreeItemWidget::FolderTreeItemWidget(const QString &folderId, bool display
     setIndentation(treeWidgetIndentation);
     setRootIsDecorated(!displayRoot);
 
-    connect(this, &QTreeWidget::itemExpanded, this, &FolderTreeItemWidget::slotItemExpanded);
-    connect(this, &QTreeWidget::itemChanged, this, &FolderTreeItemWidget::slotItemChanged);
+    connect(this, &QTreeWidget::itemExpanded, this, &FolderTreeItemWidget::onItemExpanded);
+    connect(this, &QTreeWidget::itemChanged, this, &FolderTreeItemWidget::onItemChanged);
 
     _currentFolder = OCC::FolderMan::instance()->folder(folderId);
     if (!_currentFolder) {
@@ -99,8 +105,8 @@ void FolderTreeItemWidget::loadSubFolders()
     job->setProperties(QList<QByteArray>()
                        << "resourcetype"
                        << "http://owncloud.org/ns:size");
-    connect(job, &OCC::LsColJob::directoryListingSubfolders, this, &FolderTreeItemWidget::slotUpdateDirectories);
-    connect(job, &OCC::LsColJob::finishedWithError, this, &FolderTreeItemWidget::slotLscolFinishedWithError);
+    connect(job, &OCC::LsColJob::directoryListingSubfolders, this, &FolderTreeItemWidget::onUpdateDirectories);
+    connect(job, &OCC::LsColJob::finishedWithError, this, &FolderTreeItemWidget::onLscolFinishedWithError);
     job->start();
 }
 
@@ -112,9 +118,9 @@ void FolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList pathT
         }
         parent->setData(TreeWidgetColumn::Folder, dirRole, path);
     } else {
-        TreeViewItem *item = static_cast<TreeViewItem *>(findFirstChild(parent, pathTrail.first()));
+        CustomTreeWidgetItem *item = static_cast<CustomTreeWidgetItem *>(findFirstChild(parent, pathTrail.first()));
         if (!item) {
-            item = new TreeViewItem(parent);
+            item = new CustomTreeWidgetItem(parent);
 
             // Set check status
             if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Checked
@@ -133,7 +139,15 @@ void FolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList pathT
             }
 
             // Set icon
-            setFolderIcon(item, ":/client/resources/icons/actions/folder.svg");
+            if (pathTrail.first() == commonDocumentsFolderName) {
+                setFolderIcon(item, ":/client/resources/icons/document types/folder-common-documents.svg");
+            }
+            else if (pathTrail.first() == sharedFolderName) {
+                setFolderIcon(item, ":/client/resources/icons/document types/folder-disable.svg");
+            }
+            else {
+                setFolderIcon(item, ":/client/resources/icons/actions/folder.svg");
+            }
 
             // Set name
             item->setText(TreeWidgetColumn::Folder, pathTrail.first());
@@ -261,7 +275,7 @@ QString FolderTreeItemWidget::getFolderPath()
     }
 }
 
-void FolderTreeItemWidget::slotUpdateDirectories(QStringList list)
+void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
 {
     auto job = qobject_cast<OCC::LsColJob *>(sender());
     QScopedValueRollback<bool> isInserting(_inserting);
@@ -298,7 +312,7 @@ void FolderTreeItemWidget::slotUpdateDirectories(QStringList list)
         }
     }
 
-    TreeViewItem *root = static_cast<TreeViewItem *>(topLevelItem(0));
+    CustomTreeWidgetItem *root = static_cast<CustomTreeWidgetItem *>(topLevelItem(0));
     if (!root && list.size() <= 1) {
         emit message(tr("No subfolders currently on the server."));
         return;
@@ -307,7 +321,7 @@ void FolderTreeItemWidget::slotUpdateDirectories(QStringList list)
     }
 
     if (!root) {
-        root = new TreeViewItem(this);
+        root = new CustomTreeWidgetItem(this);
         QFont treeFont = font();
         treeFont.setWeight(OCC::Utility::getQFontWeightFromQSSFontWeight(_headerFontWeight));
         root->setFont(TreeWidgetColumn::Folder, treeFont);
@@ -363,7 +377,7 @@ void FolderTreeItemWidget::slotUpdateDirectories(QStringList list)
     }
 }
 
-void FolderTreeItemWidget::slotLscolFinishedWithError(QNetworkReply *reply)
+void FolderTreeItemWidget::onLscolFinishedWithError(QNetworkReply *reply)
 {
     if (reply->error() == QNetworkReply::ContentNotFoundError) {
         emit message(tr("No subfolders currently on the server."));
@@ -372,7 +386,7 @@ void FolderTreeItemWidget::slotLscolFinishedWithError(QNetworkReply *reply)
     }
 }
 
-void FolderTreeItemWidget::slotItemExpanded(QTreeWidgetItem *item)
+void FolderTreeItemWidget::onItemExpanded(QTreeWidgetItem *item)
 {
     item->setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
 
@@ -390,11 +404,11 @@ void FolderTreeItemWidget::slotItemExpanded(QTreeWidgetItem *item)
     OCC::LsColJob *job = new OCC::LsColJob(getAccountPtr(), folderPath, this);
     job->setProperties(QList<QByteArray>() << "resourcetype"
                                            << "http://owncloud.org/ns:size");
-    connect(job, &OCC::LsColJob::directoryListingSubfolders, this, &FolderTreeItemWidget::slotUpdateDirectories);
+    connect(job, &OCC::LsColJob::directoryListingSubfolders, this, &FolderTreeItemWidget::onUpdateDirectories);
     job->start();
 }
 
-void FolderTreeItemWidget::slotItemChanged(QTreeWidgetItem *item, int col)
+void FolderTreeItemWidget::onItemChanged(QTreeWidgetItem *item, int col)
 {
     if (col != TreeWidgetColumn::Folder || _inserting) {
         return;
@@ -417,7 +431,7 @@ void FolderTreeItemWidget::slotItemChanged(QTreeWidgetItem *item, int col)
                 parent->setCheckState(TreeWidgetColumn::Folder, Qt::PartiallyChecked);
             } else {
                 // Refresh parent
-                slotItemChanged(parent, col);
+                onItemChanged(parent, col);
             }
         }
 
@@ -437,7 +451,7 @@ void FolderTreeItemWidget::slotItemChanged(QTreeWidgetItem *item, int col)
             }
             else {
                 // Refresh parent
-                slotItemChanged(parent, col);
+                onItemChanged(parent, col);
             }
         }
 
@@ -462,7 +476,7 @@ void FolderTreeItemWidget::slotItemChanged(QTreeWidgetItem *item, int col)
             }
             else {
                 // Refresh parent
-                slotItemChanged(parent, col);
+                onItemChanged(parent, col);
             }
         }
     }

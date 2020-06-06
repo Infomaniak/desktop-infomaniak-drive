@@ -28,30 +28,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-class FolderTreeItemWidget : public QTreeWidget
+class BaseFolderTreeItemWidget : public QTreeWidget
 {
     Q_OBJECT
 
     Q_PROPERTY(QColor folder_icon_color READ folderIconColor WRITE setFolderIconColor)
     Q_PROPERTY(QSize folder_icon_size READ folderIconSize WRITE setFolderIconSize)
-    Q_PROPERTY(QColor size_text_color READ sizeTextColor WRITE setSizeTextColor)
-    Q_PROPERTY(int header_font_weight READ headerFontWeight WRITE setHeaderFontWeight)
 
 public:
-    explicit FolderTreeItemWidget(const QString &folderId, bool displayRoot, QWidget *parent = nullptr);
+    explicit BaseFolderTreeItemWidget(const QString &folderId, bool displayRoot, QWidget *parent = nullptr);
 
     void loadSubFolders();
-    QStringList createBlackList(QTreeWidgetItem *root = 0) const;
 
 signals:
     void message(const QString &text);
     void showMessage(bool show);
-    void needToSave();
+    void folderSelected(const QString &folderPath);
 
 private:
     enum TreeWidgetColumn {
         Folder = 0,
-        Size
+        Action
     };
 
     QString _folderId;
@@ -60,10 +57,8 @@ private:
     ExcludedFiles _excludedFiles;
     QColor _folderIconColor;
     QSize _folderIconSize;
-    QColor _sizeTextColor;
-    int _headerFontWeight;
     bool _inserting;
-    QStringList _oldBlackList;
+    QString _currentFolderPath;
 
     inline QColor folderIconColor() const { return _folderIconColor; }
     inline void setFolderIconColor(QColor color) {
@@ -77,12 +72,6 @@ private:
         setFolderIcon();
     }
 
-    inline QColor sizeTextColor() const { return _sizeTextColor; }
-    inline void setSizeTextColor(QColor color) { _sizeTextColor = color; }
-
-    inline int headerFontWeight() const { return _headerFontWeight; }
-    inline void setHeaderFontWeight(int headerFontWeight) { _headerFontWeight = headerFontWeight; }
-
     void setFolderIcon();
     void setFolderIcon(QTreeWidgetItem *item, const QString &viewIconPath);
     void setSubFoldersIcon(QTreeWidgetItem *parent);
@@ -95,7 +84,9 @@ private slots:
     void onUpdateDirectories(QStringList list);
     void onLscolFinishedWithError(QNetworkReply *reply);
     void onItemExpanded(QTreeWidgetItem *item);
-    void onItemChanged(QTreeWidgetItem *item, int col);
+    void onCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
+    void onItemClicked(QTreeWidgetItem *item, int column);
+    void onItemDoubleClicked(QTreeWidgetItem *item, int column);
 };
 
 }

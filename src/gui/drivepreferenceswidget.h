@@ -56,6 +56,12 @@ signals:
     void removeDrive(QString accountId);
 
 private:
+    enum AddFolderStep {
+        SelectLocalFolder = 0,
+        SelectServerBaseFolder,
+        SelectServerFolders
+    };
+
     QString _accountId;
     const AccountInfo *_accountInfo;
     QVBoxLayout *_mainVBox;

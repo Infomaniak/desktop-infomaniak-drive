@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "drivepreferenceswidget.h"
 #include "localfolderdialog.h"
+#include "serverbasefolderdialog.h"
 #include "foldertreeitemwidget.h"
 #include "custommessagebox.h"
 #include "custompushbutton.h"
@@ -520,18 +521,45 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
 {
     Q_UNUSED(checked)
 
-    // Choose local folder
-    LocalFolderDialog *localFolderDialog = new LocalFolderDialog(this);
-    connect(localFolderDialog, &LocalFolderDialog::openFolder, this, &DrivePreferencesWidget::onOpenFolder);
-    if (localFolderDialog->exec() == QDialog::Rejected) {
-        return;
+    QString localFolderPath = QString();
+    QString serverFolderPath = QString();
+    AddFolderStep nextStep = SelectLocalFolder;
+
+    while (true) {
+        if (nextStep == SelectLocalFolder) {
+            // Choose local folder
+            LocalFolderDialog *localFolderDialog = new LocalFolderDialog(localFolderPath, this);
+            connect(localFolderDialog, &LocalFolderDialog::openFolder, this, &DrivePreferencesWidget::onOpenFolder);
+            if (localFolderDialog->exec() == QDialog::Rejected) {
+                break;
+            }
+
+            localFolderPath = localFolderDialog->localFolderPath();
+            nextStep = SelectServerBaseFolder;
+        }
+
+        if (nextStep == SelectServerBaseFolder) {
+            // Choose server base folder
+            QFileInfo localFolderInfo(localFolderPath);
+            ServerBaseFolderDialog *serverBaseFolderDialog = new ServerBaseFolderDialog(_accountInfo, localFolderInfo.baseName(), this);
+            int ret = serverBaseFolderDialog->exec();
+            if (ret == QDialog::Rejected) {
+                break;
+            }
+            else if (ret == -1) {
+                // Go back
+                nextStep = SelectLocalFolder;
+                continue;
+            }
+
+            serverFolderPath = serverBaseFolderDialog->serverFolderPath();
+            nextStep = SelectServerFolders;
+        }
+
+        if (nextStep == SelectServerFolders) {
+            break;
+        }
     }
-
-    QString localFolderPath = localFolderDialog->localFolderPath();
-
-
-
-
 }
 
 void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)

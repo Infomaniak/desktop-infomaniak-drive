@@ -1164,16 +1164,6 @@ KDC--FileExclusionNameDialog
     max-height: 195px;
 }
 
-/****************************/
-/* KDC--ServerFoldersDialog */
-/****************************/
-
-KDC--ServerFoldersDialog
-{
-    qproperty-info_icon_color: #9F9F9F;
-    qproperty-info_icon_size: 20px;
-}
-
 /********************/
 /* KDC--ErrorsPopup */
 /********************/
@@ -1240,17 +1230,59 @@ KDC--FolderTreeItemWidget
     gridline-color: transparent;
     outline: none;
     qproperty-folder_icon_color: #9F9F9F;
-    qproperty-folder_icon_size: 18px;
+    qproperty-folder_icon_size: 20px;
     qproperty-header_font_weight: 650;
     qproperty-size_text_color: #939393;
 }
 
 KDC--FolderTreeItemWidget::item
 {
+    min-height: 30px;
+    max-height: 30px;
     padding-left: 0px;
     padding-right: 10px;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+/*********************************/
+/* KDC--BaseFolderTreeItemWidget */
+/*********************************/
+
+KDC--BaseFolderTreeItemWidget
+{
+    background-color: #F5F5F5;
+    selection-background-color: #E0E0E0;
+    border: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    color: #333333;
+    selection-color: #333333;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+    gridline-color: transparent;
+    outline: none;
+    qproperty-folder_icon_color: #9F9F9F;
+    qproperty-folder_icon_size: 20px;
+}
+
+KDC--BaseFolderTreeItemWidget::item
+{
+    min-height: 42px;
+    max-height: 42px;
+    padding-left: 0px;
+    padding-right: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+KDC--BaseFolderTreeItemWidget QLineEdit
+{
+    background-color: #F5F5F5;
 }
 
 /**************************/
@@ -1299,4 +1331,15 @@ KDC--LocalFolderDialog QLabel#folderPathLabel
     font-weight: 350; /* normal */
     font-size: 12px;
 }
+
+/*******************************/
+/* KDC--ServerBaseFolderDialog */
+/*******************************/
+
+KDC--ServerBaseFolderDialog
+{
+    qproperty-info_icon_color: #9F9F9F;
+    qproperty-info_icon_size: 20px;
+}
+
 

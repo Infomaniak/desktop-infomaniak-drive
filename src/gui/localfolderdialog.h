@@ -36,7 +36,7 @@ class LocalFolderDialog : public CustomDialog
     Q_PROPERTY(QSize folder_icon_size READ folderIconSize WRITE setFolderIconSize)
 
 public:
-    explicit LocalFolderDialog(QWidget *parent = nullptr);
+    explicit LocalFolderDialog(const QString &localFolderPath, QWidget *parent = nullptr);
 
     inline QString localFolderPath() const { return _localFolderPath; }
 
@@ -44,6 +44,7 @@ signals:
     void openFolder(const QString &filePath);
 
 private:
+    QString _localFolderPath;
     QPushButton *_continueButton;
     QWidget *_folderSelectionWidget;
     QWidget *_folderSelectedWidget;
@@ -53,7 +54,6 @@ private:
     QColor _folderIconColor;
     QSize _folderIconSize;
     bool _okToContinue;
-    QString _localFolderPath;
 
     inline QColor folderIconColor() const { return _folderIconColor; }
     inline void setFolderIconColor(QColor color)
@@ -70,6 +70,7 @@ private:
     }
 
     void initUI();
+    void updateUI();
     void setOkToContinue(bool value);
     void selectFolder(const QString &startDirPath);
     void setFolderIcon();

@@ -127,6 +127,7 @@ set(client_SRCS
     accountitemwidget.cpp
     actionwidget.cpp
     bandwidthdialog.cpp
+    basefoldertreeitemwidget.cpp
     bottomwidget.cpp
     buttonsbarwidget.cpp
     clickablewidget.cpp
@@ -140,6 +141,7 @@ set(client_SRCS
     customradiobutton.cpp
     customswitch.cpp
     customtooltip.cpp
+    customtreewidgetitem.cpp
     customsystembar.cpp
     debuggingdialog.cpp
     drivemenubarwidget.cpp
@@ -165,6 +167,7 @@ set(client_SRCS
     preferenceswidget.cpp
     progressbarwidget.cpp
     proxyserverdialog.cpp
+    serverbasefolderdialog.cpp
     serverfoldersdialog.cpp
     statusbarwidget.cpp
     synchronizeditem.cpp

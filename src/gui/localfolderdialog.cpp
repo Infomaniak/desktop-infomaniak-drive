@@ -35,8 +35,9 @@ static const int selectionBoxHMargin = 15;
 static const int selectionBoxVMargin = 20;
 static const int selectionBoxSpacing = 10;
 
-LocalFolderDialog::LocalFolderDialog(QWidget *parent)
+LocalFolderDialog::LocalFolderDialog(const QString &localFolderPath, QWidget *parent)
     : CustomDialog(true, parent)
+    , _localFolderPath(localFolderPath)
     , _continueButton(nullptr)
     , _folderSelectionWidget(nullptr)
     , _folderSelectedWidget(nullptr)
@@ -44,9 +45,9 @@ LocalFolderDialog::LocalFolderDialog(QWidget *parent)
     , _folderNameLabel(nullptr)
     , _folderPathLabel(nullptr)
     , _okToContinue(false)
-    , _localFolderPath(QString())
 {
     initUI();
+    updateUI();
 }
 
 void LocalFolderDialog::initUI()
@@ -93,7 +94,6 @@ void LocalFolderDialog::initUI()
     // Folder selected widget
     _folderSelectedWidget = new QWidget(this);
     _folderSelectedWidget->setObjectName("folderSelectionWidget");
-    _folderSelectedWidget->setVisible(false);
     folderSelectionVBox->addWidget(_folderSelectedWidget);
 
     QHBoxLayout *folderSelectedHBox = new QHBoxLayout();
@@ -154,6 +154,21 @@ void LocalFolderDialog::initUI()
     connect(this, &CustomDialog::exit, this, &LocalFolderDialog::onExit);
 }
 
+void LocalFolderDialog::updateUI()
+{
+    bool ok = !_localFolderPath.isEmpty();
+    if (ok) {
+        QDir dir(_localFolderPath);
+        _folderNameLabel->setText(dir.dirName());
+        _folderPathLabel->setText(QString("<a style=\"%1\" href=\"ref\">%2</a>")
+                                  .arg(OCC::Utility::linkStyle)
+                                  .arg(_localFolderPath));
+    }
+    _folderSelectionWidget->setVisible(!ok);
+    _folderSelectedWidget->setVisible(ok);
+    setOkToContinue(ok);
+}
+
 void LocalFolderDialog::setOkToContinue(bool value)
 {
     _okToContinue = value;
@@ -167,16 +182,8 @@ void LocalFolderDialog::selectFolder(const QString &startDirPath)
     if (!dirPath.isEmpty()) {
         QDir dir(dirPath);
         _localFolderPath = dir.canonicalPath();
-        _folderNameLabel->setText(dir.dirName());
-        _folderPathLabel->setText(QString("<a style=\"%1\" href=\"ref\">%2</a>")
-                                  .arg(OCC::Utility::linkStyle)
-                                  .arg(_localFolderPath));
+        updateUI();
     }
-
-    bool ok = !_localFolderPath.isEmpty();
-    _folderSelectionWidget->setVisible(!ok);
-    _folderSelectedWidget->setVisible(ok);
-    setOkToContinue(ok);
 }
 
 void LocalFolderDialog::setFolderIcon()
