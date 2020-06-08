@@ -27,8 +27,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "accountinfo.h"
 #include "folderman.h"
 
-#include <map>
-
 #include <QBoxLayout>
 #include <QColor>
 #include <QLabel>
@@ -44,6 +42,12 @@ class DrivePreferencesWidget : public QWidget
     Q_OBJECT
 
 public:
+    enum HasSubfoldersResult {
+        Yes = 0,
+        No,
+        Error
+    };
+
     explicit DrivePreferencesWidget(QWidget *parent = nullptr);
 
     void setAccount(const QString &accountId, const AccountInfo *accountInfo, bool errors);
@@ -54,12 +58,14 @@ signals:
     void errorAdded();
     void openFolder(const QString &filePath);
     void removeDrive(QString accountId);
+    void jobTerminated(HasSubfoldersResult result);
 
 private:
     enum AddFolderStep {
         SelectLocalFolder = 0,
         SelectServerBaseFolder,
-        SelectServerFolders
+        SelectServerFolders,
+        Confirm
     };
 
     QString _accountId;
@@ -82,6 +88,7 @@ private:
     void switchVfsOff(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection);
     void resetFoldersBlocs();
     void updateFoldersBlocs();
+    bool folderHasSubfolders(const QString &folderPath);
 
 private slots:
     void onDisplaySmartSyncInfo(const QString &link);
@@ -100,6 +107,7 @@ private slots:
     void onDisplayMessage(const QString &text);
     void onShowMessage(bool show);
     void onNeedToSave();
+    void onSave();
 };
 
 }

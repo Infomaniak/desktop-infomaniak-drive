@@ -22,41 +22,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "guiutility.h"
 
 #include <QBoxLayout>
+#include <QDir>
 
 namespace KDC {
 
 static const int boxHMargin = 40;
 static const int boxHSpacing = 10;
 static const int titleBoxVMargin = 14;
-static const int descriptionBoxVMargin = 15;
-static const int availableSpaceBoxVMargin = 20;
 static const int messageVMargin = 20;
 static const int folderTreeBoxVMargin = 20;
 
 Q_LOGGING_CATEGORY(lcServerFoldersDialog, "serverfoldersdialog", QtInfoMsg)
 
-ServerFoldersDialog::ServerFoldersDialog(const AccountInfo *accountInfo, QWidget *parent)
+ServerFoldersDialog::ServerFoldersDialog(const QString &accountId, const QString &serverFolderPath, QWidget *parent)
     : CustomDialog(true, parent)
-    , _accountInfo(accountInfo)
-    , _infoIconLabel(nullptr)
-    , _availableSpaceTextLabel(nullptr)
+    , _accountId(accountId)
+    , _serverFolderPath(serverFolderPath)
     , _messageLabel(nullptr)
     , _folderTreeItemWidget(nullptr)
-    , _saveButton(nullptr)
-    , _infoIconColor(QColor())
-    , _infoIconSize(QSize())
+    , _continueButton(nullptr)
     , _needToSave(false)
 {
     initUI();
     updateUI();
 }
 
-void ServerFoldersDialog::setInfoIcon()
+QStringList ServerFoldersDialog::createBlackList() const
 {
-    if (_infoIconLabel && _infoIconSize != QSize() && _infoIconColor != QColor()) {
-        _infoIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/information.svg",
-                                                                 _infoIconColor).pixmap(_infoIconSize));
-    }
+    return _folderTreeItemWidget->createBlackList();
 }
 
 void ServerFoldersDialog::initUI()
@@ -67,32 +60,11 @@ void ServerFoldersDialog::initUI()
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
     titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
-    titleLabel->setText(tr("kDrive folders"));
+    QDir dir(_serverFolderPath);
+    titleLabel->setText(tr("The <b>%1</b> folder contains subfolders,<br> select the ones you want to synchronize")
+                        .arg(dir.dirName()));
     mainLayout->addWidget(titleLabel);
     mainLayout->addSpacing(titleBoxVMargin);
-
-    // Description
-    QLabel *descriptionLabel = new QLabel(this);
-    descriptionLabel->setObjectName("descriptionLabel");
-    descriptionLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
-    descriptionLabel->setText(tr("Select the folders you want to synchronize on your computer."));
-    mainLayout->addWidget(descriptionLabel);
-    mainLayout->addSpacing(descriptionBoxVMargin);
-
-    // Available space
-    QHBoxLayout *availableSpaceHBox = new QHBoxLayout();
-    availableSpaceHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
-    availableSpaceHBox->setSpacing(boxHSpacing);
-    mainLayout->addLayout(availableSpaceHBox);
-    mainLayout->addSpacing(availableSpaceBoxVMargin);
-
-    _infoIconLabel = new QLabel(this);
-    availableSpaceHBox->addWidget(_infoIconLabel);
-
-    _availableSpaceTextLabel = new QLabel(this);
-    _availableSpaceTextLabel->setObjectName("largeMediumTextLabel");
-    availableSpaceHBox->addWidget(_availableSpaceTextLabel);
-    availableSpaceHBox->addStretch();
 
     // Message
     _messageLabel = new QLabel(this);
@@ -109,13 +81,7 @@ void ServerFoldersDialog::initUI()
     mainLayout->addLayout(folderTreeHBox);
     mainLayout->addSpacing(folderTreeBoxVMargin);
 
-    QString folderId = _accountInfo->_folderMap.begin()->first;
-    _currentFolder = OCC::FolderMan::instance()->folder(folderId);
-    if (!_currentFolder) {
-        qCDebug(lcServerFoldersDialog) << "Folder not found: " << folderId;
-    }
-
-    _folderTreeItemWidget = new FolderTreeItemWidget(folderId, true, this);
+    _folderTreeItemWidget = new FolderTreeItemWidget(_accountId, _serverFolderPath, true, this);
     folderTreeHBox->addWidget(_folderTreeItemWidget);
     mainLayout->setStretchFactor(_folderTreeItemWidget, 1);
 
@@ -125,107 +91,48 @@ void ServerFoldersDialog::initUI()
     buttonsHBox->setSpacing(boxHSpacing);
     mainLayout->addLayout(buttonsHBox);
 
-    _saveButton = new QPushButton(this);
-    _saveButton->setObjectName("defaultbutton");
-    _saveButton->setFlat(true);
-    _saveButton->setText(tr("SAVE"));
-    _saveButton->setEnabled(false);
-    buttonsHBox->addWidget(_saveButton);
-
-    QPushButton *cancelButton = new QPushButton(this);
-    cancelButton->setObjectName("nondefaultbutton");
-    cancelButton->setFlat(true);
-    cancelButton->setText(tr("CANCEL"));
-    buttonsHBox->addWidget(cancelButton);
+    QPushButton *backButton = new QPushButton(this);
+    backButton->setObjectName("nondefaultbutton");
+    backButton->setFlat(true);
+    backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg"));
+    buttonsHBox->addWidget(backButton);
     buttonsHBox->addStretch();
+
+    _continueButton = new QPushButton(this);
+    _continueButton->setObjectName("defaultbutton");
+    _continueButton->setFlat(true);
+    _continueButton->setText(tr("CONTINUE"));
+    buttonsHBox->addWidget(_continueButton);
 
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::message, this, &ServerFoldersDialog::onDisplayMessage);
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::showMessage, this, &ServerFoldersDialog::onShowMessage);
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::needToSave, this, &ServerFoldersDialog::onNeedToSave);
-    connect(_saveButton, &QPushButton::clicked, this, &ServerFoldersDialog::onSaveButtonTriggered);
-    connect(cancelButton, &QPushButton::clicked, this, &ServerFoldersDialog::onExit);
+    connect(backButton, &QPushButton::clicked, this, &ServerFoldersDialog::onBackButtonTriggered);
+    connect(_continueButton, &QPushButton::clicked, this, &ServerFoldersDialog::onContinueButtonTriggered);
     connect(this, &CustomDialog::exit, this, &ServerFoldersDialog::onExit);
 }
 
 void ServerFoldersDialog::updateUI()
 {
-    // Available space
-    qint64 freeBytes = OCC::Utility::freeDiskSpace(_currentFolder->remotePath());
-    _availableSpaceTextLabel->setText(tr("Space available on your computer for the current folder : %1")
-                                      .arg(OCC::Utility::octetsToString(freeBytes)));
-
-    _folderTreeItemWidget->clear();
+    _folderTreeItemWidget->loadSubFolders();
     onShowMessage(true);
-}
-
-void ServerFoldersDialog::setNeedToSave(bool value)
-{
-    _needToSave = value;
-    _saveButton->setEnabled(value);
-}
-
-void ServerFoldersDialog::onInfoIconSizeChanged()
-{
-    setInfoIcon();
-}
-
-void ServerFoldersDialog::onInfoIconColorChanged()
-{
-    setInfoIcon();
 }
 
 void ServerFoldersDialog::onExit()
 {
-    if (_needToSave) {
-        CustomMessageBox *msgBox = new CustomMessageBox(
-                    QMessageBox::Question,
-                    tr("Do you want to save your modifications?"),
-                    QMessageBox::Yes | QMessageBox::No, this);
-        msgBox->setDefaultButton(QMessageBox::Yes);
-        int ret = msgBox->exec();
-        if (ret != QDialog::Rejected) {
-            if (ret == QMessageBox::Yes) {
-                onSaveButtonTriggered();
-            }
-            else {
-                reject();
-            }
-        }
-    }
-    else {
-        reject();
-    }
+    reject();
 }
 
-void ServerFoldersDialog::onSaveButtonTriggered(bool checked)
+void ServerFoldersDialog::onBackButtonTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    bool ok;
-    auto oldBlackListSet = _currentFolder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok).toSet();
-    if (!ok) {
-        return;
-    }
+    done(-1);
+}
 
-    QStringList blackList = _folderTreeItemWidget->createBlackList();
-    _currentFolder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);
-
-    if (_currentFolder->isBusy()) {
-        _currentFolder->slotTerminateSync();
-    }
-
-    // The part that changed should not be read from the DB on next sync because there might be new folders
-    // (the ones that are no longer in the blacklist)
-    auto blackListSet = blackList.toSet();
-    auto changes = (oldBlackListSet - blackListSet) + (blackListSet - oldBlackListSet);
-    foreach (const auto &it, changes) {
-        _currentFolder->journalDb()->schedulePathForRemoteDiscovery(it);
-        _currentFolder->schedulePathForLocalDiscovery(it);
-    }
-    // Also make sure we see the local file that had been ignored before
-    _currentFolder->slotNextSyncFullLocalDiscovery();
-
-    OCC::FolderMan::instance()->scheduleFolder(_currentFolder);
+void ServerFoldersDialog::onContinueButtonTriggered(bool checked)
+{
+    Q_UNUSED(checked)
 
     accept();
 }
@@ -242,7 +149,7 @@ void ServerFoldersDialog::onShowMessage(bool show)
 
 void ServerFoldersDialog::onNeedToSave()
 {
-    setNeedToSave(true);
+    _needToSave = true;
 }
 
 }

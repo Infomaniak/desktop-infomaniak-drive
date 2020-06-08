@@ -1216,7 +1216,7 @@ KDC--CustomMessageBox QPushButton:default
 
 KDC--FolderTreeItemWidget
 {
-    background-color: transparent;
+    background-color: #F5F5F5;
     border: 0px;
     padding-left: 0px;
     padding-right: 0px;
@@ -1231,7 +1231,6 @@ KDC--FolderTreeItemWidget
     outline: none;
     qproperty-folder_icon_color: #9F9F9F;
     qproperty-folder_icon_size: 20px;
-    qproperty-header_font_weight: 650;
     qproperty-size_text_color: #939393;
 }
 
@@ -1239,10 +1238,20 @@ KDC--FolderTreeItemWidget::item
 {
     min-height: 30px;
     max-height: 30px;
-    padding-left: 0px;
+    padding-left: 10px;
     padding-right: 10px;
     padding-top: 0px;
     padding-bottom: 0px;
+}
+
+KDC--FolderTreeItemWidget#updateFolderTreeItemWidget
+{
+    background-color: transparent;
+}
+
+KDC--FolderTreeItemWidget#updateFolderTreeItemWidget::item
+{
+    padding-left: 0px;
 }
 
 /*********************************/

@@ -36,7 +36,7 @@ class BaseFolderTreeItemWidget : public QTreeWidget
     Q_PROPERTY(QSize folder_icon_size READ folderIconSize WRITE setFolderIconSize)
 
 public:
-    explicit BaseFolderTreeItemWidget(const QString &folderId, bool displayRoot, QWidget *parent = nullptr);
+    explicit BaseFolderTreeItemWidget(const QString &accountId, bool displayRoot, QWidget *parent = nullptr);
 
     void loadSubFolders();
 
@@ -51,9 +51,8 @@ private:
         Action
     };
 
-    QString _folderId;
+    QString _accountId;
     bool _displayRoot;
-    OCC::Folder *_currentFolder;
     ExcludedFiles _excludedFiles;
     QColor _folderIconColor;
     QSize _folderIconSize;
@@ -72,6 +71,7 @@ private:
         setFolderIcon();
     }
 
+    void initUI();
     void setFolderIcon();
     void setFolderIcon(QTreeWidgetItem *item, const QString &viewIconPath);
     void setSubFoldersIcon(QTreeWidgetItem *parent);
@@ -82,11 +82,12 @@ private:
 
 private slots:
     void onUpdateDirectories(QStringList list);
-    void onLscolFinishedWithError(QNetworkReply *reply);
+    void onLoadSubFoldersError(QNetworkReply *reply);
     void onItemExpanded(QTreeWidgetItem *item);
     void onCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void onItemClicked(QTreeWidgetItem *item, int column);
     void onItemDoubleClicked(QTreeWidgetItem *item, int column);
+    void onItemChanged(QTreeWidgetItem *item, int column);
 };
 
 }

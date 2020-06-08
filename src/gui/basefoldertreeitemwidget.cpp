@@ -43,48 +43,19 @@ static const int dirRole = Qt::UserRole + 1;
 
 Q_LOGGING_CATEGORY(lcBaseFolderTreeItemWidget, "foldertreeitemwidget", QtInfoMsg)
 
-BaseFolderTreeItemWidget::BaseFolderTreeItemWidget(const QString &folderId, bool displayRoot, QWidget *parent)
+BaseFolderTreeItemWidget::BaseFolderTreeItemWidget(const QString &accountId, bool displayRoot, QWidget *parent)
     : QTreeWidget(parent)
-    , _folderId(folderId)
+    , _accountId(accountId)
     , _displayRoot(displayRoot)
-    , _currentFolder(nullptr)
     , _folderIconColor(QColor())
     , _folderIconSize(QSize())
     , _inserting(false)
     , _currentFolderPath(QString())
 {
-    setStyleSheet("QTreeWidget::branch:!has-children:adjoins-item { image: none; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg);"
-                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg);"
-                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }");
-
-    setSelectionMode(QAbstractItemView::SingleSelection);
-    setSortingEnabled(true);
-    sortByColumn(TreeWidgetColumn::Folder, Qt::AscendingOrder);
-    setColumnCount(2);
-    header()->hide();
-    header()->setSectionResizeMode(TreeWidgetColumn::Folder, QHeaderView::Stretch);
-    header()->setSectionResizeMode(TreeWidgetColumn::Action, QHeaderView::ResizeToContents);
-    header()->setStretchLastSection(false);
-    setIndentation(treeWidgetIndentation);
-    setRootIsDecorated(true);
-
-    _currentFolder = OCC::FolderMan::instance()->folder(folderId);
-    if (!_currentFolder) {
-        qCDebug(lcBaseFolderTreeItemWidget) << "Folder not found: " << folderId;
-    }
-
-    // Make sure we don't get crashes if the folder is destroyed while the dialog is still opened
-    connect(_currentFolder, &QObject::destroyed, this, &QObject::deleteLater);
+    initUI();
 
     OCC::ConfigFile::setupDefaultExcludeFilePaths(_excludedFiles);
     _excludedFiles.reloadExcludeFiles();
-
-    connect(this, &QTreeWidget::itemExpanded, this, &BaseFolderTreeItemWidget::onItemExpanded);
-    connect(this, &QTreeWidget::currentItemChanged, this, &BaseFolderTreeItemWidget::onCurrentItemChanged);
-    connect(this, &QTreeWidget::itemClicked, this, &BaseFolderTreeItemWidget::onItemClicked);
-    connect(this, &QTreeWidget::itemDoubleClicked, this, &BaseFolderTreeItemWidget::onItemDoubleClicked);
 }
 
 void BaseFolderTreeItemWidget::loadSubFolders()
@@ -95,7 +66,7 @@ void BaseFolderTreeItemWidget::loadSubFolders()
                        << "resourcetype"
                        << "http://owncloud.org/ns:size");
     connect(job, &OCC::LsColJob::directoryListingSubfolders, this, &BaseFolderTreeItemWidget::onUpdateDirectories);
-    connect(job, &OCC::LsColJob::finishedWithError, this, &BaseFolderTreeItemWidget::onLscolFinishedWithError);
+    connect(job, &OCC::LsColJob::finishedWithError, this, &BaseFolderTreeItemWidget::onLoadSubFoldersError);
     job->start();
 }
 
@@ -106,7 +77,8 @@ void BaseFolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList p
             path.chop(1);
         }
         parent->setData(TreeWidgetColumn::Folder, dirRole, path);
-    } else {
+    }
+    else {
         CustomTreeWidgetItem *item = static_cast<CustomTreeWidgetItem *>(findFirstChild(parent, pathTrail.first()));
         if (!item) {
             item = new CustomTreeWidgetItem(parent);
@@ -131,6 +103,32 @@ void BaseFolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList p
         pathTrail.removeFirst();
         insertPath(item, pathTrail, path, size);
     }
+}
+
+void BaseFolderTreeItemWidget::initUI()
+{
+    setStyleSheet("QTreeWidget::branch:!has-children:adjoins-item { image: none; }"
+                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg);"
+                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }"
+                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg);"
+                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }");
+
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    setSortingEnabled(true);
+    sortByColumn(TreeWidgetColumn::Folder, Qt::AscendingOrder);
+    setColumnCount(2);
+    header()->hide();
+    header()->setSectionResizeMode(TreeWidgetColumn::Folder, QHeaderView::Stretch);
+    header()->setSectionResizeMode(TreeWidgetColumn::Action, QHeaderView::ResizeToContents);
+    header()->setStretchLastSection(false);
+    setIndentation(treeWidgetIndentation);
+    setRootIsDecorated(true);
+
+    connect(this, &QTreeWidget::itemExpanded, this, &BaseFolderTreeItemWidget::onItemExpanded);
+    connect(this, &QTreeWidget::currentItemChanged, this, &BaseFolderTreeItemWidget::onCurrentItemChanged);
+    connect(this, &QTreeWidget::itemClicked, this, &BaseFolderTreeItemWidget::onItemClicked);
+    connect(this, &QTreeWidget::itemDoubleClicked, this, &BaseFolderTreeItemWidget::onItemDoubleClicked);
+    connect(this, &QTreeWidget::itemChanged, this, &BaseFolderTreeItemWidget::onItemChanged);
 }
 
 void BaseFolderTreeItemWidget::setFolderIcon()
@@ -182,27 +180,14 @@ QTreeWidgetItem *BaseFolderTreeItemWidget::findFirstChild(QTreeWidgetItem *paren
 
 OCC::AccountPtr BaseFolderTreeItemWidget::getAccountPtr()
 {
-    if (_currentFolder && _currentFolder->accountState()) {
-        return _currentFolder->accountState()->account();
-    }
-    else {
-        qCDebug(lcBaseFolderTreeItemWidget) << "Null pointer";
-        return nullptr;
-    }
+    OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
+
+    return accountPtr;
 }
 
 QString BaseFolderTreeItemWidget::getFolderPath()
 {
-    if (_currentFolder) {
-        QString folderPath = _currentFolder->remotePath().startsWith(QLatin1Char('/'))
-                ? _currentFolder->remotePath().mid(1)
-                : _currentFolder->remotePath();
-        return folderPath;
-    }
-    else {
-        qCDebug(lcBaseFolderTreeItemWidget) << "Null pointer";
-        return QString();
-    }
+    return QString();
 }
 
 void BaseFolderTreeItemWidget::onUpdateDirectories(QStringList list)
@@ -271,7 +256,7 @@ void BaseFolderTreeItemWidget::onUpdateDirectories(QStringList list)
     }
 }
 
-void BaseFolderTreeItemWidget::onLscolFinishedWithError(QNetworkReply *reply)
+void BaseFolderTreeItemWidget::onLoadSubFoldersError(QNetworkReply *reply)
 {
     if (reply->error() == QNetworkReply::ContentNotFoundError) {
         emit message(tr("No subfolders currently on the server."));
@@ -309,7 +294,7 @@ void BaseFolderTreeItemWidget::onCurrentItemChanged(QTreeWidgetItem *current, QT
         previous->setIcon(TreeWidgetColumn::Action, QIcon());
     }
 
-    if (current) {
+    if (current && !current->text(TreeWidgetColumn::Folder).isEmpty()) {
         // Add action icon
         current->setIcon(TreeWidgetColumn::Action, OCC::Utility::getIconWithColor(":/client/resources/icons/actions/folder-add.svg"));
 
@@ -333,6 +318,9 @@ void BaseFolderTreeItemWidget::onItemClicked(QTreeWidgetItem *item, int column)
         // Expand item
         item->setExpanded(true);
 
+        // Select new item
+        setCurrentItem(newItem);
+
         // Allow editing new item name
         newItem->setFlags(newItem->flags() | Qt::ItemIsEditable);
         editItem(newItem, TreeWidgetColumn::Folder);
@@ -344,6 +332,18 @@ void BaseFolderTreeItemWidget::onItemDoubleClicked(QTreeWidgetItem *item, int co
     if (column == TreeWidgetColumn::Folder && item->flags() & Qt::ItemIsEditable) {
         // Allow editing item name
         editItem(item, TreeWidgetColumn::Folder);
+    }
+}
+
+void BaseFolderTreeItemWidget::onItemChanged(QTreeWidgetItem *item, int column)
+{
+    if (column == TreeWidgetColumn::Folder && item->flags() & Qt::ItemIsEditable) {
+        // Set path
+        QString path = item->parent()->data(TreeWidgetColumn::Folder, dirRole).toString()
+                + "/" + item->text(TreeWidgetColumn::Folder);
+        item->setData(TreeWidgetColumn::Folder, dirRole, path);
+        onCurrentItemChanged(item, nullptr);
+        scrollToItem(item);
     }
 }
 

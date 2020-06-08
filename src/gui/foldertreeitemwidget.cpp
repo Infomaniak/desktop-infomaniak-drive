@@ -21,11 +21,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customtreewidgetitem.h"
 #include "guiutility.h"
 #include "networkjobs.h"
+#include "accountmanager.h"
 #include "folderman.h"
 #include "accountmanager.h"
 #include "common/utility.h"
 #include "configfile.h"
 
+#include <QDir>
 #include <QHeaderView>
 #include <QMutableListIterator>
 #include <QScopedValueRollback>
@@ -49,43 +51,23 @@ Q_LOGGING_CATEGORY(lcFolderTreeItemWidget, "foldertreeitemwidget", QtInfoMsg)
 FolderTreeItemWidget::FolderTreeItemWidget(const QString &folderId, bool displayRoot, QWidget *parent)
     : QTreeWidget(parent)
     , _folderId(folderId)
+    , _accountId(QString())
+    , _folderPath(QString())
+    , _oldBlackList(QStringList())
     , _displayRoot(displayRoot)
+    , _mode(Update)
     , _currentFolder(nullptr)
     , _folderIconColor(QColor())
     , _folderIconSize(QSize())
     , _sizeTextColor(QColor())
     , _inserting(false)
-    , _oldBlackList(QStringList())
 {
-    setStyleSheet("QTreeWidget::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QTreeWidget::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
-                  "QTreeWidget::indicator:indeterminate { image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg); }"
-                  "QTreeWidget::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QTreeWidget::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
-                  "QTreeWidget::indicator:indeterminate:disabled { image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg); }"
-                  "QTreeWidget::branch:!has-children:adjoins-item { image: none; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg);"
-                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg);"
-                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }");
+    initUI();
 
-    setSelectionMode(QAbstractItemView::NoSelection);
-    setSortingEnabled(true);
-    sortByColumn(TreeWidgetColumn::Folder, Qt::AscendingOrder);
-    setColumnCount(2);
-    header()->hide();
-    header()->setSectionResizeMode(TreeWidgetColumn::Folder, QHeaderView::Stretch);
-    header()->setSectionResizeMode(TreeWidgetColumn::Size, QHeaderView::ResizeToContents);
-    header()->setStretchLastSection(false);
-    setIndentation(treeWidgetIndentation);
-    setRootIsDecorated(!displayRoot);
-
-    connect(this, &QTreeWidget::itemExpanded, this, &FolderTreeItemWidget::onItemExpanded);
-    connect(this, &QTreeWidget::itemChanged, this, &FolderTreeItemWidget::onItemChanged);
-
-    _currentFolder = OCC::FolderMan::instance()->folder(folderId);
+    _currentFolder = OCC::FolderMan::instance()->folder(_folderId);
     if (!_currentFolder) {
-        qCDebug(lcFolderTreeItemWidget) << "Folder not found: " << folderId;
+        qCDebug(lcFolderTreeItemWidget) << "Folder not found: " << _folderId;
+        return;
     }
 
     // Make sure we don't get crashes if the folder is destroyed while the dialog is still opened
@@ -93,6 +75,26 @@ FolderTreeItemWidget::FolderTreeItemWidget(const QString &folderId, bool display
 
     bool ok;
     _oldBlackList = _currentFolder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
+
+    OCC::ConfigFile::setupDefaultExcludeFilePaths(_excludedFiles);
+    _excludedFiles.reloadExcludeFiles();
+}
+
+FolderTreeItemWidget::FolderTreeItemWidget(const QString &accountId, const QString &serverFolderPath, bool displayRoot, QWidget *parent)
+    : QTreeWidget(parent)
+    , _folderId(QString())
+    , _accountId(accountId)
+    , _folderPath(serverFolderPath)
+    , _oldBlackList(QStringList())
+    , _displayRoot(displayRoot)
+    , _mode(Creation)
+    , _currentFolder(nullptr)
+    , _folderIconColor(QColor())
+    , _folderIconSize(QSize())
+    , _sizeTextColor(QColor())
+    , _inserting(false)
+{
+    initUI();
 
     OCC::ConfigFile::setupDefaultExcludeFilePaths(_excludedFiles);
     _excludedFiles.reloadExcludeFiles();
@@ -106,7 +108,7 @@ void FolderTreeItemWidget::loadSubFolders()
                        << "resourcetype"
                        << "http://owncloud.org/ns:size");
     connect(job, &OCC::LsColJob::directoryListingSubfolders, this, &FolderTreeItemWidget::onUpdateDirectories);
-    connect(job, &OCC::LsColJob::finishedWithError, this, &FolderTreeItemWidget::onLscolFinishedWithError);
+    connect(job, &OCC::LsColJob::finishedWithError, this, &FolderTreeItemWidget::onLoadSubFoldersError);
     job->start();
 }
 
@@ -203,6 +205,35 @@ QStringList FolderTreeItemWidget::createBlackList(QTreeWidgetItem *root) const
     return result;
 }
 
+void FolderTreeItemWidget::initUI()
+{
+    setStyleSheet("QTreeWidget::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
+                  "QTreeWidget::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
+                  "QTreeWidget::indicator:indeterminate { image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg); }"
+                  "QTreeWidget::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
+                  "QTreeWidget::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
+                  "QTreeWidget::indicator:indeterminate:disabled { image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg); }"
+                  "QTreeWidget::branch:!has-children:adjoins-item { image: none; }"
+                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg);"
+                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }"
+                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg);"
+                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }");
+
+    setSelectionMode(QAbstractItemView::NoSelection);
+    setSortingEnabled(true);
+    sortByColumn(TreeWidgetColumn::Folder, Qt::AscendingOrder);
+    setColumnCount(2);
+    header()->hide();
+    header()->setSectionResizeMode(TreeWidgetColumn::Folder, QHeaderView::Stretch);
+    header()->setSectionResizeMode(TreeWidgetColumn::Size, QHeaderView::ResizeToContents);
+    header()->setStretchLastSection(false);
+    setIndentation(treeWidgetIndentation);
+    setRootIsDecorated(!_displayRoot);
+
+    connect(this, &QTreeWidget::itemExpanded, this, &FolderTreeItemWidget::onItemExpanded);
+    connect(this, &QTreeWidget::itemChanged, this, &FolderTreeItemWidget::onItemChanged);
+}
+
 void FolderTreeItemWidget::setFolderIcon()
 {
     if (_folderIconColor != QColor() && _folderIconSize != QSize()) {
@@ -252,27 +283,40 @@ QTreeWidgetItem *FolderTreeItemWidget::findFirstChild(QTreeWidgetItem *parent, c
 
 OCC::AccountPtr FolderTreeItemWidget::getAccountPtr()
 {
-    if (_currentFolder && _currentFolder->accountState()) {
-        return _currentFolder->accountState()->account();
+    OCC::AccountPtr accountPtr;
+    if (_mode == Update) {
+        if (_currentFolder && _currentFolder->accountState()) {
+            accountPtr = _currentFolder->accountState()->account();
+        }
+        else {
+            qCDebug(lcFolderTreeItemWidget) << "Null pointer";
+            return nullptr;
+        }
     }
     else {
-        qCDebug(lcFolderTreeItemWidget) << "Null pointer";
-        return nullptr;
+        accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
     }
+
+    return accountPtr;
 }
 
 QString FolderTreeItemWidget::getFolderPath()
 {
-    if (_currentFolder) {
-        QString folderPath = _currentFolder->remotePath().startsWith(QLatin1Char('/'))
-                ? _currentFolder->remotePath().mid(1)
-                : _currentFolder->remotePath();
-        return folderPath;
+    QString folderPath;
+    if (_mode == Update) {
+        if (_currentFolder) {
+            folderPath = _currentFolder->remotePath();
+        }
+        else {
+            qCDebug(lcFolderTreeItemWidget) << "Null pointer";
+            return QString();
+        }
     }
     else {
-        qCDebug(lcFolderTreeItemWidget) << "Null pointer";
-        return QString();
+        folderPath = _folderPath;
     }
+
+    return folderPath.startsWith(QLatin1Char('/')) ? folderPath.mid(1) : folderPath;
 }
 
 void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
@@ -322,15 +366,20 @@ void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
 
     if (!root) {
         root = new CustomTreeWidgetItem(this);
-        QFont treeFont = font();
-        treeFont.setWeight(OCC::Utility::getQFontWeightFromQSSFontWeight(_headerFontWeight));
-        root->setFont(TreeWidgetColumn::Folder, treeFont);
-
-        // Set drive name
-        root->setText(TreeWidgetColumn::Folder, getAccountPtr() ? getAccountPtr()->driveName() : QString());
-        root->setIcon(TreeWidgetColumn::Folder, OCC::Utility::getIconWithColor(":/client/resources/icons/actions/drive.svg",
-                                                                               getAccountPtr()->getDriveColor()));
-        root->setData(TreeWidgetColumn::Folder, dirRole, QString());
+        if (_folderPath.isEmpty()) {
+            // Set drive name
+            root->setText(TreeWidgetColumn::Folder, getAccountPtr() ? getAccountPtr()->driveName() : QString());
+            root->setIcon(TreeWidgetColumn::Folder, OCC::Utility::getIconWithColor(":/client/resources/icons/actions/drive.svg",
+                                                                                   getAccountPtr()->getDriveColor()));
+            root->setData(TreeWidgetColumn::Folder, dirRole, QString());
+        }
+        else {
+            // Set folder name
+            QDir dir(_folderPath);
+            root->setText(TreeWidgetColumn::Folder, dir.dirName());
+            setFolderIcon(root, ":/client/resources/icons/actions/folder.svg");
+            root->setData(TreeWidgetColumn::Folder, dirRole, _folderPath);
+        }
 
         // Set check state
         root->setCheckState(TreeWidgetColumn::Folder, Qt::Checked);
@@ -338,7 +387,6 @@ void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
         // Set size
         qint64 size = job ? job->_sizes.value(pathToRemove, -1) : -1;
         if (size >= 0) {
-            root->setFont(TreeWidgetColumn::Size, treeFont);
             root->setText(TreeWidgetColumn::Size, OCC::Utility::octetsToString(size));
             root->setTextAlignment(TreeWidgetColumn::Size, Qt::AlignRight);
             root->setData(TreeWidgetColumn::Size, sizeRole, size);
@@ -377,7 +425,7 @@ void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
     }
 }
 
-void FolderTreeItemWidget::onLscolFinishedWithError(QNetworkReply *reply)
+void FolderTreeItemWidget::onLoadSubFoldersError(QNetworkReply *reply)
 {
     if (reply->error() == QNetworkReply::ContentNotFoundError) {
         emit message(tr("No subfolders currently on the server."));

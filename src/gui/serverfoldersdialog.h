@@ -39,46 +39,27 @@ class ServerFoldersDialog : public CustomDialog
 {
     Q_OBJECT
 
-    Q_PROPERTY(QColor info_icon_color READ infoIconColor WRITE setInfoIconColor)
-    Q_PROPERTY(QSize info_icon_size READ infoIconSize WRITE setInfoIconSize)
-
 public:
-    explicit ServerFoldersDialog(const AccountInfo *accountInfo, QWidget *parent = nullptr);
+    explicit ServerFoldersDialog(const QString &accountId, const QString &serverFolderPath, QWidget *parent = nullptr);
+
+    QStringList createBlackList() const;
 
 private:
-    const AccountInfo *_accountInfo;
+    QString _accountId;
+    const QString _serverFolderPath;
     OCC::Folder *_currentFolder;
-    QLabel *_infoIconLabel;
-    QLabel *_availableSpaceTextLabel;
     QLabel *_messageLabel;
     FolderTreeItemWidget *_folderTreeItemWidget;
-    QPushButton *_saveButton;
-    QColor _infoIconColor;
-    QSize _infoIconSize;
+    QPushButton *_continueButton;
     bool _needToSave;
-
-    inline QColor infoIconColor() const { return _infoIconColor; }
-    inline void setInfoIconColor(QColor color) {
-        _infoIconColor = color;
-        setInfoIcon();
-    }
-
-    inline QSize infoIconSize() const { return _infoIconSize; }
-    inline void setInfoIconSize(QSize size) {
-        _infoIconSize = size;
-        setInfoIcon();
-    }
 
     void initUI();
     void updateUI();
-    void setInfoIcon();
-    void setNeedToSave(bool value);
 
 private slots:
-    void onInfoIconColorChanged();
-    void onInfoIconSizeChanged();
     void onExit();
-    void onSaveButtonTriggered(bool checked = false);
+    void onBackButtonTriggered(bool checked = false);
+    void onContinueButtonTriggered(bool checked = false);
     void onDisplayMessage(const QString &text);
     void onShowMessage(bool show);
     void onNeedToSave();

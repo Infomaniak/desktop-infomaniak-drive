@@ -35,9 +35,9 @@ static const int folderTreeBoxVMargin = 20;
 
 Q_LOGGING_CATEGORY(lcServerBaseFolderDialog, "serverbasefolderdialog", QtInfoMsg)
 
-ServerBaseFolderDialog::ServerBaseFolderDialog(const AccountInfo *accountInfo, const QString &localFolderName, QWidget *parent)
+ServerBaseFolderDialog::ServerBaseFolderDialog(const QString &accountId, const QString &localFolderName, QWidget *parent)
     : CustomDialog(true, parent)
-    , _accountInfo(accountInfo)
+    , _accountId(accountId)
     , _localFolderName(localFolderName)
     , _infoIconLabel(nullptr)
     , _availableSpaceTextLabel(nullptr)
@@ -111,13 +111,7 @@ void ServerBaseFolderDialog::initUI()
     mainLayout->addLayout(folderTreeHBox);
     mainLayout->addSpacing(folderTreeBoxVMargin);
 
-    QString folderId = _accountInfo->_folderMap.begin()->first;
-    _currentFolder = OCC::FolderMan::instance()->folder(folderId);
-    if (!_currentFolder) {
-        qCDebug(lcServerBaseFolderDialog) << "Folder not found: " << folderId;
-    }
-
-    _folderTreeItemWidget = new BaseFolderTreeItemWidget(folderId, true, this);
+    _folderTreeItemWidget = new BaseFolderTreeItemWidget(_accountId, true, this);
     folderTreeHBox->addWidget(_folderTreeItemWidget);
     mainLayout->setStretchFactor(_folderTreeItemWidget, 1);
 
@@ -152,7 +146,7 @@ void ServerBaseFolderDialog::initUI()
 void ServerBaseFolderDialog::updateUI()
 {
     // Available space
-    qint64 freeBytes = OCC::Utility::freeDiskSpace(_currentFolder->remotePath());
+    qint64 freeBytes = OCC::Utility::freeDiskSpace(QString("/"));
     _availableSpaceTextLabel->setText(tr("Space available on your computer for the current folder : %1")
                                       .arg(OCC::Utility::octetsToString(freeBytes)));
 

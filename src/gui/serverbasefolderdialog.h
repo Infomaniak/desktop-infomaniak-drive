@@ -43,12 +43,12 @@ class ServerBaseFolderDialog : public CustomDialog
     Q_PROPERTY(QSize info_icon_size READ infoIconSize WRITE setInfoIconSize)
 
 public:
-    explicit ServerBaseFolderDialog(const AccountInfo *accountInfo, const QString &localFolderName, QWidget *parent = nullptr);
+    explicit ServerBaseFolderDialog(const QString &accountId, const QString &localFolderName, QWidget *parent = nullptr);
 
     inline QString serverFolderPath() const { return _serverFolderPath; }
 
 private:
-    const AccountInfo *_accountInfo;
+    QString _accountId;
     QString _localFolderName;
     OCC::Folder *_currentFolder;
     QLabel *_infoIconLabel;
