@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "guiutility.h"
 
 #include <QBoxLayout>
+#include <QPushButton>
 #include <QWidgetAction>
 
 namespace KDC {
@@ -39,6 +40,7 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     , _expandButton(nullptr)
     , _menuButton(nullptr)
     , _statusIconLabel(nullptr)
+    , _updateWidget(nullptr)
     , _isExpanded(false)
 {
     QHBoxLayout *mainLayout = new QHBoxLayout();
@@ -68,23 +70,33 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     detailHBoxLayout->setSpacing(hSpacing);
     detailVBoxLayout->addLayout(detailHBoxLayout);
 
+    QVBoxLayout *folderVBoxLayout = new QVBoxLayout();
+    folderVBoxLayout->setContentsMargins(0, 0, 0, 0);
+    folderVBoxLayout->setSpacing(hSpacing);
+    detailHBoxLayout->addLayout(folderVBoxLayout);
+
+    QHBoxLayout *folderHBoxLayout = new QHBoxLayout();
+    folderHBoxLayout->setContentsMargins(0, 0, 0, 0);
+    folderHBoxLayout->setSpacing(hSpacing);
+    folderVBoxLayout->addLayout(folderHBoxLayout);
+
     _statusIconLabel = new QLabel(this);
-    detailHBoxLayout->addWidget(_statusIconLabel);
+    folderHBoxLayout->addWidget(_statusIconLabel);
 
     QLabel *nameLabel = new QLabel(this);
     nameLabel->setObjectName("largeMediumBoldTextLabel");
-    detailHBoxLayout->addWidget(nameLabel);
-    detailHBoxLayout->addStretch();
+    folderHBoxLayout->addWidget(nameLabel);
+    folderHBoxLayout->addStretch();
 
     QLabel *synchroLabel = new QLabel(this);
     synchroLabel->setObjectName("descriptionLabel");
-    detailVBoxLayout->addWidget(synchroLabel);
+    folderVBoxLayout->addWidget(synchroLabel);
 
     // Menu button
     _menuButton = new CustomToolButton(this);
     _menuButton->setIconPath(":/client/resources/icons/actions/menu.svg");
     _menuButton->setToolTip(tr("More actions"));
-    mainLayout->addWidget(_menuButton);
+    detailHBoxLayout->addWidget(_menuButton);
 
     if (_folderInfo) {
         updateItem(_folderInfo);
@@ -95,8 +107,39 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
                               .arg(_folderInfo->_path));
     }
 
+    // Update widget
+    _updateWidget = new QWidget(this);
+    _updateWidget->setVisible(false);
+    detailVBoxLayout->addWidget(_updateWidget);
+
+    QHBoxLayout *updateHBoxLayout = new QHBoxLayout();
+    updateHBoxLayout->setContentsMargins(0, 0, 0, 0);
+    updateHBoxLayout->setSpacing(hSpacing);
+    _updateWidget->setLayout(updateHBoxLayout);
+
+    QLabel *saveLabel = new QLabel(this);
+    saveLabel->setObjectName("subtitleLabel");
+    saveLabel->setText(tr("Unselected folders will be deleted and will no longer be synchronized with this computer."));
+    saveLabel->setWordWrap(true);
+    updateHBoxLayout->addWidget(saveLabel);
+    updateHBoxLayout->setStretchFactor(saveLabel, 1);
+
+    QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setObjectName("nondefaultsmallbutton");
+    cancelButton->setFlat(true);
+    cancelButton->setText(tr("Cancel"));
+    updateHBoxLayout->addWidget(cancelButton);
+
+    QPushButton *validateButton = new QPushButton(this);
+    validateButton->setObjectName("defaultsmallbutton");
+    validateButton->setFlat(true);
+    validateButton->setText(tr("VALIDATE"));
+    updateHBoxLayout->addWidget(validateButton);
+
     connect(_menuButton, &CustomToolButton::clicked, this, &FolderItemWidget::onMenuButtonClicked);
     connect(_expandButton, &CustomToolButton::clicked, this, &FolderItemWidget::onExpandButtonClicked);
+    connect(cancelButton, &QPushButton::clicked, this, &FolderItemWidget::onCancelButtonClicked);
+    connect(validateButton, &QPushButton::clicked, this, &FolderItemWidget::onValidateButtonClicked);
     connect(synchroLabel, &QLabel::linkActivated, this, &FolderItemWidget::onDisplaySmartSyncInfo);
 }
 
@@ -107,6 +150,11 @@ void FolderItemWidget::updateItem(const FolderInfo *folderInfo)
                     QIcon(OCC::Utility::getAccountStatusIconPath(folderInfo->_paused, folderInfo->_status))
                     .pixmap(QSize(statusIconSize, statusIconSize)));
     }
+}
+
+void FolderItemWidget::setUpdateWidgetVisible(bool visible)
+{
+    _updateWidget->setVisible(visible);
 }
 
 void FolderItemWidget::setExpandButton()
@@ -167,6 +215,16 @@ void FolderItemWidget::onExpandButtonClicked()
     _isExpanded = !_isExpanded;
     setExpandButton();
     emit displayFolderDetail(_folderId, _isExpanded);
+}
+
+void FolderItemWidget::onCancelButtonClicked()
+{
+    emit cancelUpdate();
+}
+
+void FolderItemWidget::onValidateButtonClicked()
+{
+    emit validateUpdate();
 }
 
 void FolderItemWidget::onDisplaySmartSyncInfo(const QString &link)

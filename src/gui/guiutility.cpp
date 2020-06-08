@@ -18,6 +18,7 @@
 #include <QClipboard>
 #include <QDesktopServices>
 #include <QDir>
+#include <QDirIterator>
 #include <QFile>
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsSvgItem>
@@ -132,7 +133,7 @@ QIcon Utility::getIconWithColor(const QString &path, const QColor &color)
     QGraphicsScene scene;
     scene.addItem(item);
 
-    qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+    int ratio = 3;
     QPixmap pixmap(QSize(scene.width() * ratio, scene.height() * ratio));
     pixmap.fill(Qt::transparent);
 
@@ -498,4 +499,16 @@ int Utility::getQFontWeightFromQSSFontWeight(int weight)
 {
     // QFont::Weight[0, 99] = font-weight[100, 900] / 9
     return weight / 9;
+}
+
+qint64 Utility::dirSize(const QString &dirPath)
+{
+    QDirIterator it(dirPath, QDirIterator::Subdirectories);
+    qint64 total = 0;
+    while (it.hasNext()) {
+        total += it.fileInfo().size();
+        it.next();
+    }
+
+    return total;
 }

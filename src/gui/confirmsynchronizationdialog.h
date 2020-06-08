@@ -20,48 +20,46 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #pragma once
 
 #include "customdialog.h"
-#include "foldertreeitemwidget.h"
-#include "accountinfo.h"
-#include "folderman.h"
 
-#include <QColor>
-#include <QIcon>
 #include <QLabel>
-#include <QNetworkReply>
 #include <QPushButton>
-#include <QSize>
-#include <QStringList>
-#include <QTreeWidget>
 
 namespace KDC {
 
-class ServerFoldersDialog : public CustomDialog
+class ConfirmSynchronizationDialog : public CustomDialog
 {
     Q_OBJECT
 
-public:
-    explicit ServerFoldersDialog(const QString &accountId, const QString &serverFolderPath, QWidget *parent = nullptr);
+    Q_PROPERTY(QColor arrow_icon_color READ arrowIconColor WRITE setArrowIconColor)
 
-    qint64 selectionSize() const;
-    QStringList createBlackList() const;
+public:
+    explicit ConfirmSynchronizationDialog(const QString &localFolderName, qint64 localFolderSize,
+                                          const QString &serverFolderName, qint64 serverFolderSize,
+                                          QWidget *parent = nullptr);
 
 private:
-    QString _accountId;
-    const QString _serverFolderPath;
-    OCC::Folder *_currentFolder;
-    FolderTreeItemWidget *_folderTreeItemWidget;
+    QString _localFolderName;
+    qint64 _localFolderSize;
+    QString _serverFolderName;
+    qint64 _serverFolderSize;
+    QLabel *_leftArrowIconLabel;
+    QLabel *_rightArrowIconLabel;
     QPushButton *_continueButton;
-    bool _needToSave;
+    QColor _arrowIconColor;
+
+    inline QColor arrowIconColor() const { return _arrowIconColor; }
+    inline void setArrowIconColor(QColor color) {
+        _arrowIconColor = color;
+        setArrowIcon();
+    }
 
     void initUI();
-    void updateUI();
+    void setArrowIcon();
 
 private slots:
     void onExit();
     void onBackButtonTriggered(bool checked = false);
     void onContinueButtonTriggered(bool checked = false);
-    void onDisplayMessage(const QString &text);
-    void onNeedToSave();
 };
 
 }

@@ -37,6 +37,7 @@ public:
 
     inline QString folderId() const { return _folderId; };
     void updateItem(const FolderInfo *folderInfo);
+    void setUpdateWidgetVisible(bool visible);
 
 signals:
     void runSync(const QString &folderId);
@@ -45,6 +46,8 @@ signals:
     void unSync(const QString &folderId);
     void displayFolderDetail(const QString &folderId, bool display);
     void openFolder(const QString &filePath);
+    void cancelUpdate();
+    void validateUpdate();
 
 private:
     const QString _folderId;
@@ -52,6 +55,7 @@ private:
     CustomToolButton *_expandButton;
     CustomToolButton *_menuButton;
     QLabel *_statusIconLabel;
+    QWidget *_updateWidget;
     bool _isExpanded;
 
     void setExpandButton();
@@ -59,6 +63,8 @@ private:
 private slots:
     void onMenuButtonClicked();
     void onExpandButtonClicked();
+    void onCancelButtonClicked();
+    void onValidateButtonClicked();
     void onDisplaySmartSyncInfo(const QString &link);
     void onSyncTriggered();
     void onPauseTriggered();

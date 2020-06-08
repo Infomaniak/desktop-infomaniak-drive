@@ -29,7 +29,6 @@ namespace KDC {
 static const int boxHMargin = 40;
 static const int boxHSpacing = 10;
 static const int titleBoxVMargin = 14;
-static const int messageVMargin = 20;
 static const int folderTreeBoxVMargin = 20;
 
 Q_LOGGING_CATEGORY(lcServerFoldersDialog, "serverfoldersdialog", QtInfoMsg)
@@ -38,13 +37,21 @@ ServerFoldersDialog::ServerFoldersDialog(const QString &accountId, const QString
     : CustomDialog(true, parent)
     , _accountId(accountId)
     , _serverFolderPath(serverFolderPath)
-    , _messageLabel(nullptr)
     , _folderTreeItemWidget(nullptr)
     , _continueButton(nullptr)
     , _needToSave(false)
 {
     initUI();
     updateUI();
+}
+
+qint64 ServerFoldersDialog::selectionSize() const
+{
+    CustomTreeWidgetItem *root = static_cast<CustomTreeWidgetItem *>(_folderTreeItemWidget->topLevelItem(0));
+    if (root) {
+        return _folderTreeItemWidget->selectionSize(root);
+    }
+    return 0;
 }
 
 QStringList ServerFoldersDialog::createBlackList() const
@@ -65,15 +72,6 @@ void ServerFoldersDialog::initUI()
                         .arg(dir.dirName()));
     mainLayout->addWidget(titleLabel);
     mainLayout->addSpacing(titleBoxVMargin);
-
-    // Message
-    _messageLabel = new QLabel(this);
-    _messageLabel->setObjectName("messageLabel");
-    _messageLabel->setText(tr("Loading..."));
-    _messageLabel->setVisible(false);
-    _messageLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
-    mainLayout->addWidget(_messageLabel);
-    mainLayout->addSpacing(messageVMargin);
 
     // Folder tree
     QHBoxLayout *folderTreeHBox = new QHBoxLayout();
@@ -105,7 +103,6 @@ void ServerFoldersDialog::initUI()
     buttonsHBox->addWidget(_continueButton);
 
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::message, this, &ServerFoldersDialog::onDisplayMessage);
-    connect(_folderTreeItemWidget, &FolderTreeItemWidget::showMessage, this, &ServerFoldersDialog::onShowMessage);
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::needToSave, this, &ServerFoldersDialog::onNeedToSave);
     connect(backButton, &QPushButton::clicked, this, &ServerFoldersDialog::onBackButtonTriggered);
     connect(_continueButton, &QPushButton::clicked, this, &ServerFoldersDialog::onContinueButtonTriggered);
@@ -115,7 +112,6 @@ void ServerFoldersDialog::initUI()
 void ServerFoldersDialog::updateUI()
 {
     _folderTreeItemWidget->loadSubFolders();
-    onShowMessage(true);
 }
 
 void ServerFoldersDialog::onExit()
@@ -139,12 +135,12 @@ void ServerFoldersDialog::onContinueButtonTriggered(bool checked)
 
 void ServerFoldersDialog::onDisplayMessage(const QString &text)
 {
-    _messageLabel->setText(text);
-}
-
-void ServerFoldersDialog::onShowMessage(bool show)
-{
-    _messageLabel->setVisible(show);
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Warning,
+                text,
+                QMessageBox::Ok, this);
+    msgBox->setDefaultButton(QMessageBox::Ok);
+    msgBox->exec();
 }
 
 void ServerFoldersDialog::onNeedToSave()

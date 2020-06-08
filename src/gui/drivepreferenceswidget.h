@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customtoolbutton.h"
 #include "preferencesblocwidget.h"
 #include "folderitemwidget.h"
+#include "foldertreeitemwidget.h"
 #include "accountinfo.h"
 #include "folderman.h"
 
@@ -42,7 +43,7 @@ class DrivePreferencesWidget : public QWidget
     Q_OBJECT
 
 public:
-    enum HasSubfoldersResult {
+    enum JobResult {
         Yes = 0,
         No,
         Error
@@ -58,7 +59,7 @@ signals:
     void errorAdded();
     void openFolder(const QString &filePath);
     void removeDrive(QString accountId);
-    void jobTerminated(HasSubfoldersResult result);
+    void jobTerminated(JobResult result);
 
 private:
     enum AddFolderStep {
@@ -89,6 +90,9 @@ private:
     void resetFoldersBlocs();
     void updateFoldersBlocs();
     bool folderHasSubfolders(const QString &folderPath);
+    bool createFolder(const QString &folderPath);
+    FolderTreeItemWidget *folderTreeItemWidget(QObject *folderItemWidget);
+    FolderItemWidget *folderItemWidget(QObject *folderTreeItemWidget);
 
 private slots:
     void onDisplaySmartSyncInfo(const QString &link);
@@ -105,9 +109,9 @@ private slots:
     void onDisplayFolderDetail(const QString &folderId, bool display);
     void onOpenFolder(const QString &filePath);
     void onDisplayMessage(const QString &text);
-    void onShowMessage(bool show);
     void onNeedToSave();
-    void onSave();
+    void onCancelUpdate();
+    void onValidateUpdate();
 };
 
 }

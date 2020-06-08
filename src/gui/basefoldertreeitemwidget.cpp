@@ -40,6 +40,7 @@ static const QString sharedFolderName("Shared");
 // 1st column roles
 static const int viewIconPathRole = Qt::UserRole;
 static const int dirRole = Qt::UserRole + 1;
+static const int baseDirRole = Qt::UserRole + 2;
 
 Q_LOGGING_CATEGORY(lcBaseFolderTreeItemWidget, "foldertreeitemwidget", QtInfoMsg)
 
@@ -77,6 +78,7 @@ void BaseFolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList p
             path.chop(1);
         }
         parent->setData(TreeWidgetColumn::Folder, dirRole, path);
+        parent->setData(TreeWidgetColumn::Folder, baseDirRole, path);
     }
     else {
         CustomTreeWidgetItem *item = static_cast<CustomTreeWidgetItem *>(findFirstChild(parent, pathTrail.first()));
@@ -231,6 +233,7 @@ void BaseFolderTreeItemWidget::onUpdateDirectories(QStringList list)
         root->setIcon(TreeWidgetColumn::Folder, OCC::Utility::getIconWithColor(":/client/resources/icons/actions/drive.svg",
                                                                                getAccountPtr()->getDriveColor()));
         root->setData(TreeWidgetColumn::Folder, dirRole, QString());
+        root->setData(TreeWidgetColumn::Folder, baseDirRole, QString());
     }
 
     OCC::Utility::sortFilenames(list);
@@ -299,7 +302,8 @@ void BaseFolderTreeItemWidget::onCurrentItemChanged(QTreeWidgetItem *current, QT
         current->setIcon(TreeWidgetColumn::Action, OCC::Utility::getIconWithColor(":/client/resources/icons/actions/folder-add.svg"));
 
         _currentFolderPath = current->data(TreeWidgetColumn::Folder, dirRole).toString();
-        emit folderSelected(_currentFolderPath);
+        QString currentFolderBasePath = current->data(TreeWidgetColumn::Folder, baseDirRole).toString();
+        emit folderSelected(_currentFolderPath, currentFolderBasePath);
     }
 }
 
@@ -339,9 +343,11 @@ void BaseFolderTreeItemWidget::onItemChanged(QTreeWidgetItem *item, int column)
 {
     if (column == TreeWidgetColumn::Folder && item->flags() & Qt::ItemIsEditable) {
         // Set path
-        QString path = item->parent()->data(TreeWidgetColumn::Folder, dirRole).toString()
-                + "/" + item->text(TreeWidgetColumn::Folder);
+        QString parentPath = item->parent()->data(TreeWidgetColumn::Folder, dirRole).toString();
+        QString path = parentPath + "/" + item->text(TreeWidgetColumn::Folder);
         item->setData(TreeWidgetColumn::Folder, dirRole, path);
+        QString parentBasePath = item->parent()->data(TreeWidgetColumn::Folder, baseDirRole).toString();
+        item->setData(TreeWidgetColumn::Folder, baseDirRole, parentBasePath);
         onCurrentItemChanged(item, nullptr);
         scrollToItem(item);
     }

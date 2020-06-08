@@ -21,11 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "customdialog.h"
 #include "mainmenubarwidget.h"
-#include "drivemenubarwidget.h"
 #include "preferencesmenubarwidget.h"
 #include "errorsmenubarwidget.h"
 #include "drivepreferenceswidget.h"
-#include "driveswidget.h"
 #include "preferenceswidget.h"
 #include "synchronizeditem.h"
 #include "accountinfo.h"
@@ -36,6 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QByteArray>
 #include <QColor>
 #include <QDialog>
+#include <QListWidget>
 #include <QStackedWidget>
 #include <QString>
 

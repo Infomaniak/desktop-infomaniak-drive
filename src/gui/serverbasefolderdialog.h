@@ -46,6 +46,7 @@ public:
     explicit ServerBaseFolderDialog(const QString &accountId, const QString &localFolderName, QWidget *parent = nullptr);
 
     inline QString serverFolderPath() const { return _serverFolderPath; }
+    inline QString serverFolderBasePath() const { return _serverFolderBasePath; }
 
 private:
     QString _accountId;
@@ -53,13 +54,13 @@ private:
     OCC::Folder *_currentFolder;
     QLabel *_infoIconLabel;
     QLabel *_availableSpaceTextLabel;
-    QLabel *_messageLabel;
     BaseFolderTreeItemWidget *_folderTreeItemWidget;
     QPushButton *_continueButton;
     QColor _infoIconColor;
     QSize _infoIconSize;
     bool _okToContinue;
     QString _serverFolderPath;
+    QString _serverFolderBasePath;
 
     inline QColor infoIconColor() const { return _infoIconColor; }
     inline void setInfoIconColor(QColor color) {
@@ -85,8 +86,7 @@ private slots:
     void onBackButtonTriggered(bool checked = false);
     void onContinueButtonTriggered(bool checked = false);
     void onDisplayMessage(const QString &text);
-    void onShowMessage(bool show);
-    void onFolderSelected(const QString &folderPath);
+    void onFolderSelected(const QString &folderPath, const QString &folderBasePath);
 };
 
 }

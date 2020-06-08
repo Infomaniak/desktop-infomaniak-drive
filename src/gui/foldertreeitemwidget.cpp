@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "foldertreeitemwidget.h"
-#include "customtreewidgetitem.h"
 #include "guiutility.h"
 #include "networkjobs.h"
 #include "accountmanager.h"
@@ -203,6 +202,20 @@ QStringList FolderTreeItemWidget::createBlackList(QTreeWidgetItem *root) const
         }
     }
     return result;
+}
+
+qint64 FolderTreeItemWidget::selectionSize(QTreeWidgetItem *item) const
+{
+    qint64 size = 0;
+    if (item->isSelected()) {
+        size = item->data(TreeWidgetColumn::Size, sizeRole).toLongLong();
+    }
+    else {
+        for (int i = 0; i < item->childCount(); ++i) {
+            size += selectionSize(item->child(i));
+        }
+    }
+    return size;
 }
 
 void FolderTreeItemWidget::initUI()

@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
+#include "customtreewidgetitem.h"
 #include "accountinfo.h"
 #include "folderman.h"
 #include "csync_exclude.h"
@@ -44,6 +45,7 @@ public:
     void loadSubFolders();
     QStringList createBlackList(QTreeWidgetItem *root = 0) const;
     inline QString folderId() { return _folderId; }
+    qint64 selectionSize(QTreeWidgetItem *item) const;
 
 signals:
     void message(const QString &text);

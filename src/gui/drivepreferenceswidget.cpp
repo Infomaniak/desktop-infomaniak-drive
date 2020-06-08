@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "localfolderdialog.h"
 #include "serverbasefolderdialog.h"
 #include "serverfoldersdialog.h"
-#include "foldertreeitemwidget.h"
+#include "confirmsynchronizationdialog.h"
 #include "custommessagebox.h"
 #include "custompushbutton.h"
 #include "accountmanager.h"
@@ -497,8 +497,9 @@ void DrivePreferencesWidget::updateFoldersBlocs()
                 connect(folderItemWidget, &FolderItemWidget::unSync, this, &DrivePreferencesWidget::onUnsyncTriggered);
                 connect(folderItemWidget, &FolderItemWidget::displayFolderDetail, this, &DrivePreferencesWidget::onDisplayFolderDetail);
                 connect(folderItemWidget, &FolderItemWidget::openFolder, this, &DrivePreferencesWidget::onOpenFolder);
+                connect(folderItemWidget, &FolderItemWidget::cancelUpdate, this, &DrivePreferencesWidget::onCancelUpdate);
+                connect(folderItemWidget, &FolderItemWidget::validateUpdate, this, &DrivePreferencesWidget::onValidateUpdate);
                 connect(folderTreeItemWidget, &FolderTreeItemWidget::message, this, &DrivePreferencesWidget::onDisplayMessage);
-                connect(folderTreeItemWidget, &FolderTreeItemWidget::showMessage, this, &DrivePreferencesWidget::onShowMessage);
                 connect(folderTreeItemWidget, &FolderTreeItemWidget::needToSave, this, &DrivePreferencesWidget::onNeedToSave);
             }
         }
@@ -509,7 +510,7 @@ void DrivePreferencesWidget::updateFoldersBlocs()
 
 bool DrivePreferencesWidget::folderHasSubfolders(const QString &folderPath)
 {
-    HasSubfoldersResult jobResult;
+    JobResult jobResult;
     OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
     OCC::LsColJob *job;
     job = new OCC::LsColJob(accountPtr, folderPath, this);
@@ -519,22 +520,29 @@ bool DrivePreferencesWidget::folderHasSubfolders(const QString &folderPath)
 
     connect(job, &OCC::LsColJob::directoryListingSubfolders, this, [&](QStringList list)
     {
-        Q_UNUSED(list)
-        emit jobTerminated(HasSubfoldersResult::Yes);
+        qCDebug(lcDrivePreferencesWidget) << "LsColJob request finished";
+        if (list.size() <= 1) {
+            emit jobTerminated(JobResult::No);
+        }
+        else {
+            emit jobTerminated(JobResult::Yes);
+        }
     });
 
     connect(job, &OCC::LsColJob::finishedWithError, this, [&](QNetworkReply *reply)
     {
         if (reply->error() == QNetworkReply::ContentNotFoundError) {
-            emit jobTerminated(HasSubfoldersResult::No);
+            qCDebug(lcDrivePreferencesWidget) << "LsColJob request finished";
+            emit jobTerminated(JobResult::No);
         }
         else {
-            emit jobTerminated(HasSubfoldersResult::Error);
+            qCDebug(lcDrivePreferencesWidget) << "LsColJob request failed: " << reply->error();
+            emit jobTerminated(JobResult::Error);
         }
     });
 
     QEventLoop loop;
-    loop.connect(this, &DrivePreferencesWidget::jobTerminated, &loop, [&](HasSubfoldersResult result)
+    loop.connect(this, &DrivePreferencesWidget::jobTerminated, &loop, [&](JobResult result)
     {
         jobResult = result;
         loop.quit();
@@ -542,7 +550,81 @@ bool DrivePreferencesWidget::folderHasSubfolders(const QString &folderPath)
     job->start();
     loop.exec();
 
-    return jobResult == HasSubfoldersResult::Yes;
+    return jobResult == JobResult::Yes;
+}
+
+bool DrivePreferencesWidget::createFolder(const QString &folderPath)
+{
+    JobResult jobResult;
+    OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
+    OCC::MkColJob *job = new OCC::MkColJob(accountPtr, folderPath, this);
+
+    connect(job, static_cast<void (OCC::MkColJob::*)(QNetworkReply::NetworkError)>(&OCC::MkColJob::finished), this, [&](QNetworkReply::NetworkError error)
+    {
+        if (error == QNetworkReply::NoError) {
+            qCDebug(lcDrivePreferencesWidget) << "MkColJob request finished";
+            emit jobTerminated(JobResult::Yes);
+        }
+        else {
+            qCDebug(lcDrivePreferencesWidget) << "MkColJob request failed: " << error;
+            emit jobTerminated(JobResult::Error);
+        }
+    });
+
+    connect(job, &OCC::AbstractNetworkJob::networkError, this, [&](QNetworkReply *reply)
+    {
+        qCDebug(lcDrivePreferencesWidget) << "MkColJob request failed: " << reply->error();
+        emit jobTerminated(JobResult::Error);
+    });
+
+    QEventLoop loop;
+    loop.connect(this, &DrivePreferencesWidget::jobTerminated, &loop, [&](JobResult result)
+    {
+        jobResult = result;
+        loop.quit();
+    });
+    job->start();
+    loop.exec();
+
+    return jobResult == JobResult::Yes;
+}
+
+FolderTreeItemWidget *DrivePreferencesWidget::folderTreeItemWidget(QObject *folderItemWidget)
+{
+    PreferencesBlocWidget *folderBloc = (PreferencesBlocWidget *) folderItemWidget->parent();
+    if (!folderBloc) {
+        qCDebug(lcDrivePreferencesWidget) << "Bad function sender!";
+        Q_ASSERT(false);
+        return nullptr;
+    }
+
+    FolderTreeItemWidget *folderTreeItemWidget = folderBloc->findChild<FolderTreeItemWidget *>();
+    if (!folderTreeItemWidget) {
+        qCDebug(lcDrivePreferencesWidget) << "Bad folder bloc!";
+        Q_ASSERT(false);
+        return nullptr;
+    }
+
+    return folderTreeItemWidget;
+}
+
+FolderItemWidget *DrivePreferencesWidget::folderItemWidget(QObject *folderTreeItemWidget)
+{
+    PreferencesBlocWidget *folderBloc = (PreferencesBlocWidget *) folderTreeItemWidget->parent();
+    if (!folderBloc) {
+        qCDebug(lcDrivePreferencesWidget) << "Bad function sender!";
+        Q_ASSERT(false);
+        return nullptr;
+    }
+
+    FolderItemWidget *folderItemWidget = folderBloc->findChild<FolderItemWidget *>();
+    if (!folderItemWidget) {
+        qCDebug(lcDrivePreferencesWidget) << "Bad folder bloc!";
+        Q_ASSERT(false);
+        return nullptr;
+    }
+
+    return folderItemWidget;
 }
 
 void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
@@ -563,7 +645,13 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
 
     QString localFolderPath = QString();
     QString serverFolderPath = QString();
+    QString serverFolderBasePath = QString();
+    bool serverFolderHasSubfolders = false;
     QStringList blackList = QStringList();
+    QString localFolderName = QString();
+    qint64 localFolderSize = 0;
+    QString serverFolderName = QString();
+    qint64 serverFolderSize = 0;
     AddFolderStep nextStep = SelectLocalFolder;
 
     while (true) {
@@ -575,12 +663,14 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             }
 
             localFolderPath = localFolderDialog->localFolderPath();
+            QFileInfo localFolderInfo(localFolderPath);
+            localFolderName = localFolderInfo.baseName();
+            localFolderSize = OCC::Utility::dirSize(localFolderPath);
             nextStep = SelectServerBaseFolder;
         }
 
         if (nextStep == SelectServerBaseFolder) {
-            QFileInfo localFolderInfo(localFolderPath);
-            ServerBaseFolderDialog *serverBaseFolderDialog = new ServerBaseFolderDialog(_accountId, localFolderInfo.baseName(), this);
+            ServerBaseFolderDialog *serverBaseFolderDialog = new ServerBaseFolderDialog(_accountId, localFolderName, this);
             int ret = serverBaseFolderDialog->exec();
             if (ret == QDialog::Rejected) {
                 break;
@@ -592,11 +682,15 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             }
 
             serverFolderPath = serverBaseFolderDialog->serverFolderPath();
+            serverFolderBasePath = serverBaseFolderDialog->serverFolderBasePath();
+            QDir serverFolderDir(serverFolderPath);
+            serverFolderName = serverFolderDir.dirName();
             nextStep = SelectServerFolders;
         }
 
         if (nextStep == SelectServerFolders) {
-            if (folderHasSubfolders(serverFolderPath)) {
+            serverFolderHasSubfolders = folderHasSubfolders(serverFolderPath);
+            if (serverFolderHasSubfolders) {
                 ServerFoldersDialog *serverFoldersDialog = new ServerFoldersDialog(_accountId, serverFolderPath, this);
                 int ret = serverFoldersDialog->exec();
                 if (ret == QDialog::Rejected) {
@@ -608,12 +702,67 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
                     continue;
                 }
 
+                serverFolderSize = serverFoldersDialog->selectionSize();
                 blackList = serverFoldersDialog->createBlackList();
             }
             nextStep = Confirm;
         }
 
         if (nextStep == Confirm) {
+            ConfirmSynchronizationDialog *confirmSynchronizationDialog = new ConfirmSynchronizationDialog(
+                        localFolderName, localFolderSize, serverFolderName, serverFolderSize, this);
+            int ret = confirmSynchronizationDialog->exec();
+            if (ret == QDialog::Rejected) {
+                break;
+            }
+            else if (ret == -1) {
+                // Go back
+                nextStep = serverFolderHasSubfolders ? SelectServerFolders : SelectServerBaseFolder;
+                continue;
+            }
+
+            if (serverFolderPath != serverFolderBasePath) {
+                // Create server folders
+
+
+
+                if (!createFolder(serverFolderPath)) {
+                    CustomMessageBox *msgBox = new CustomMessageBox(
+                                QMessageBox::Warning,
+                                tr("Synchronization of a new folder failed!"),
+                                QMessageBox::Ok, this);
+                    msgBox->setDefaultButton(QMessageBox::Ok);
+                    msgBox->exec();
+
+                    break;
+                }
+            }
+
+            QStringList warnStrings;
+            if (!serverFolderPath.startsWith(QLatin1Char('/'))) {
+                serverFolderPath.prepend(QLatin1Char('/'));
+            }
+
+            OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
+            OCC::Folder::Map map = OCC::FolderMan::instance()->map();
+            OCC::Folder::Map::const_iterator i = map.constBegin();
+            for (i = map.constBegin(); i != map.constEnd(); i++) {
+                OCC::Folder *folder = static_cast<OCC::Folder *>(i.value());
+                if (folder->accountState()->account() != accountPtr) {
+                    continue;
+                }
+                QString curDir = folder->remotePathTrailingSlash();
+                if (QDir::cleanPath(serverFolderPath) == QDir::cleanPath(curDir))
+                {
+                    warnStrings.append(tr("This folder is already being synced."));
+                }
+                else if (serverFolderPath.startsWith(curDir))
+                {
+                    warnStrings.append(tr("You are already syncing <i>%1</i>, which is a parent folder of <i>%2</i>.")
+                                       .arg(OCC::Utility::escape(curDir), OCC::Utility::escape(serverFolderPath)));
+                }
+            }
+
             break;
         }
     }
@@ -766,62 +915,75 @@ void DrivePreferencesWidget::onOpenFolder(const QString &filePath)
 
 void DrivePreferencesWidget::onDisplayMessage(const QString &text)
 {
-
-}
-
-void DrivePreferencesWidget::onShowMessage(bool show)
-{
-
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Warning,
+                text,
+                QMessageBox::Ok, this);
+    msgBox->setDefaultButton(QMessageBox::Ok);
+    msgBox->exec();
 }
 
 void DrivePreferencesWidget::onNeedToSave()
 {
-
+    // Show update widget
+    FolderItemWidget *itemWidget = folderItemWidget(sender());
+    if (itemWidget) {
+        itemWidget->setUpdateWidgetVisible(true);
+    }
 }
 
-void DrivePreferencesWidget::onSave()
+void DrivePreferencesWidget::onCancelUpdate()
 {
-    PreferencesBlocWidget *folderBloc = (PreferencesBlocWidget *) sender()->parent();
-    if (!folderBloc) {
-        qCDebug(lcDrivePreferencesWidget) << "Bad function sender!";
-        Q_ASSERT(false);
-        return;
+    FolderTreeItemWidget *treeItemWidget = folderTreeItemWidget(sender());
+    if (treeItemWidget) {
+        treeItemWidget->loadSubFolders();
+
+        // Hide update widget
+        FolderItemWidget *itemWidget = (FolderItemWidget *) sender();
+        if (itemWidget) {
+            itemWidget->setUpdateWidgetVisible(false);
+        }
     }
+}
 
-    FolderTreeItemWidget *folderTreeItemWidget = folderBloc->findChild<FolderTreeItemWidget *>();
-    if (!folderTreeItemWidget) {
-        qCDebug(lcDrivePreferencesWidget) << "Bad folder bloc!";
-        Q_ASSERT(false);
-        return;
-    }
+void DrivePreferencesWidget::onValidateUpdate()
+{
+    FolderTreeItemWidget *treeItemWidget = folderTreeItemWidget(sender());
+    if (treeItemWidget) {
+        OCC::Folder *folder = OCC::FolderMan::instance()->folder(treeItemWidget->folderId());
+        if (folder) {
+            bool ok;
+            auto oldBlackListSet = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok).toSet();
+            if (!ok) {
+                return;
+            }
 
-    OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderTreeItemWidget->folderId());
-    if (folder) {
-        bool ok;
-        auto oldBlackListSet = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok).toSet();
-        if (!ok) {
-            return;
+            QStringList blackList = treeItemWidget->createBlackList();
+            folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);
+
+            if (folder->isBusy()) {
+                folder->slotTerminateSync();
+            }
+
+            // The part that changed should not be read from the DB on next sync because there might be new folders
+            // (the ones that are no longer in the blacklist)
+            auto blackListSet = blackList.toSet();
+            auto changes = (oldBlackListSet - blackListSet) + (blackListSet - oldBlackListSet);
+            foreach (const auto &it, changes) {
+                folder->journalDb()->schedulePathForRemoteDiscovery(it);
+                folder->schedulePathForLocalDiscovery(it);
+            }
+            // Also make sure we see the local file that had been ignored before
+            folder->slotNextSyncFullLocalDiscovery();
+
+            OCC::FolderMan::instance()->scheduleFolder(folder);
+
+            // Hide update widget
+            FolderItemWidget *itemWidget = (FolderItemWidget *) sender();
+            if (itemWidget) {
+                itemWidget->setUpdateWidgetVisible(false);
+            }
         }
-
-        QStringList blackList = folderTreeItemWidget->createBlackList();
-        folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);
-
-        if (folder->isBusy()) {
-            folder->slotTerminateSync();
-        }
-
-        // The part that changed should not be read from the DB on next sync because there might be new folders
-        // (the ones that are no longer in the blacklist)
-        auto blackListSet = blackList.toSet();
-        auto changes = (oldBlackListSet - blackListSet) + (blackListSet - oldBlackListSet);
-        foreach (const auto &it, changes) {
-            folder->journalDb()->schedulePathForRemoteDiscovery(it);
-            folder->schedulePathForLocalDiscovery(it);
-        }
-        // Also make sure we see the local file that had been ignored before
-        folder->slotNextSyncFullLocalDiscovery();
-
-        OCC::FolderMan::instance()->scheduleFolder(folder);
     }
 }
 

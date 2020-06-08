@@ -124,13 +124,13 @@ set(client_SRCS
     aboutdialog.cpp
     accountinfo.cpp
     accountitem.cpp
-    accountitemwidget.cpp
     actionwidget.cpp
     bandwidthdialog.cpp
     basefoldertreeitemwidget.cpp
     bottomwidget.cpp
     buttonsbarwidget.cpp
     clickablewidget.cpp
+    confirmsynchronizationdialog.cpp
     customdialog.cpp
     custommessagebox.cpp
     custompushbutton.cpp
@@ -144,9 +144,7 @@ set(client_SRCS
     customtreewidgetitem.cpp
     customsystembar.cpp
     debuggingdialog.cpp
-    drivemenubarwidget.cpp
     drivepreferenceswidget.cpp
-    driveswidget.cpp
     driveselectionwidget.cpp
     erroritemwidget.cpp
     errorsmenubarwidget.cpp
