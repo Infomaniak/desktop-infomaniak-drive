@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "theme.h"
 #include "common/utility.h"
 #include "common/vfs.h"
+#include "filesystem.h"
 
 #include <QDir>
 #include <QIcon>
@@ -508,7 +509,7 @@ void DrivePreferencesWidget::updateFoldersBlocs()
     }
 }
 
-bool DrivePreferencesWidget::folderHasSubfolders(const QString &folderPath)
+DrivePreferencesWidget::JobResult DrivePreferencesWidget::folderHasSubfolders(const QString &folderPath)
 {
     JobResult jobResult;
     OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
@@ -550,10 +551,10 @@ bool DrivePreferencesWidget::folderHasSubfolders(const QString &folderPath)
     job->start();
     loop.exec();
 
-    return jobResult == JobResult::Yes;
+    return jobResult;
 }
 
-bool DrivePreferencesWidget::createFolder(const QString &folderPath)
+DrivePreferencesWidget::JobResult DrivePreferencesWidget::createFolder(const QString &folderPath)
 {
     JobResult jobResult;
     OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
@@ -586,7 +587,7 @@ bool DrivePreferencesWidget::createFolder(const QString &folderPath)
     job->start();
     loop.exec();
 
-    return jobResult == JobResult::Yes;
+    return jobResult;
 }
 
 FolderTreeItemWidget *DrivePreferencesWidget::folderTreeItemWidget(QObject *folderItemWidget)
@@ -627,6 +628,63 @@ FolderItemWidget *DrivePreferencesWidget::folderItemWidget(QObject *folderTreeIt
     return folderItemWidget;
 }
 
+bool DrivePreferencesWidget::createMissingFolders(const QString &folderBasePath, const QString &folderPath)
+{
+    if (!folderPath.startsWith(folderBasePath)) {
+        qCDebug(lcDrivePreferencesWidget) << "Bad folders: " << folderBasePath << " - " << folderPath;
+        return false;
+    }
+
+    // Create server folders
+    QStringList folderBasePaths = folderBasePath.split(QDir::separator());
+    int folderBasePathsCount = folderBasePaths.size();
+    QStringList folderPaths = folderPath.split(QDir::separator());
+    int folderPathsCount = folderPaths.size();
+    QString folderToCreate(folderBasePath);
+    for (int i = folderBasePathsCount; i < folderPathsCount; i++) {
+        folderToCreate += QDir::separator() + folderPaths[i];
+        if (createFolder(folderToCreate) == JobResult::Yes) {
+            qCDebug(lcDrivePreferencesWidget) << "Folder created: " << folderToCreate;
+        }
+        else {
+            qCDebug(lcDrivePreferencesWidget) << "Folder creation error: " << folderToCreate;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, const QString &serverFolderPath, QStringList blackList)
+{
+    bool useVirtualFileSync = false;
+
+    OCC::FolderDefinition folderDefinition;
+    folderDefinition.localPath = localFolderPath;
+    folderDefinition.targetPath = OCC::FolderDefinition::prepareTargetPath(serverFolderPath);
+    folderDefinition.ignoreHiddenFiles = OCC::FolderMan::instance()->ignoreHiddenFiles();
+    folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode();
+    if (OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane()) {
+        folderDefinition.navigationPaneClsid = QUuid::createUuid();
+    }
+
+    OCC::AccountStatePtr accountStatePtr = OCC::AccountManager::instance()->getAccountStateFromId(_accountId);
+    auto folder = OCC::FolderMan::instance()->addFolder(accountStatePtr.data(), folderDefinition);
+    if (folder) {
+        if (folderDefinition.virtualFilesMode != OCC::Vfs::Off && useVirtualFileSync) {
+            folder->setRootPinState(OCC::PinState::OnlineOnly);
+        }
+
+        folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);
+        OCC::ConfigFile cfg;
+        if (!cfg.newBigFolderSizeLimit().first) {
+            folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, QStringList() << QDir::separator());
+        }
+    }
+
+    return true;
+}
+
 void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
 {
     Q_UNUSED(link)
@@ -643,10 +701,11 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
 {
     Q_UNUSED(checked)
 
+    const QString addFolderError = tr("New folder synchronization failed!");
     QString localFolderPath = QString();
     QString serverFolderPath = QString();
     QString serverFolderBasePath = QString();
-    bool serverFolderHasSubfolders = false;
+    JobResult folderHasSubfoldersJobResult = JobResult::No;
     QStringList blackList = QStringList();
     QString localFolderName = QString();
     qint64 localFolderSize = 0;
@@ -666,6 +725,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             QFileInfo localFolderInfo(localFolderPath);
             localFolderName = localFolderInfo.baseName();
             localFolderSize = OCC::Utility::dirSize(localFolderPath);
+            qCDebug(lcDrivePreferencesWidget) << "Local folder selected: " << localFolderPath;
             nextStep = SelectServerBaseFolder;
         }
 
@@ -673,6 +733,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             ServerBaseFolderDialog *serverBaseFolderDialog = new ServerBaseFolderDialog(_accountId, localFolderName, this);
             int ret = serverBaseFolderDialog->exec();
             if (ret == QDialog::Rejected) {
+                qCDebug(lcDrivePreferencesWidget) << "Cancel: " << nextStep;
                 break;
             }
             else if (ret == -1) {
@@ -683,17 +744,35 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
 
             serverFolderPath = serverBaseFolderDialog->serverFolderPath();
             serverFolderBasePath = serverBaseFolderDialog->serverFolderBasePath();
-            QDir serverFolderDir(serverFolderPath);
-            serverFolderName = serverFolderDir.dirName();
+            serverFolderSize = serverBaseFolderDialog->selectionSize();
+            if (serverFolderPath.isEmpty()) {
+                serverFolderName = _accountInfo->_name;
+            }
+            else {
+                QDir serverFolderDir(serverFolderPath);
+                serverFolderName = serverFolderDir.dirName();
+            }
+            qCDebug(lcDrivePreferencesWidget) << "Server folder selected: " << serverFolderPath;
             nextStep = SelectServerFolders;
         }
 
         if (nextStep == SelectServerFolders) {
-            serverFolderHasSubfolders = folderHasSubfolders(serverFolderPath);
-            if (serverFolderHasSubfolders) {
-                ServerFoldersDialog *serverFoldersDialog = new ServerFoldersDialog(_accountId, serverFolderPath, this);
+            folderHasSubfoldersJobResult = folderHasSubfolders(serverFolderPath);
+            if (folderHasSubfoldersJobResult == JobResult::Error) {
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
+                            addFolderError,
+                            QMessageBox::Ok, this);
+                msgBox->setDefaultButton(QMessageBox::Ok);
+                msgBox->exec();
+                break;
+            }
+
+            if (folderHasSubfoldersJobResult == JobResult::Yes) {
+                ServerFoldersDialog *serverFoldersDialog = new ServerFoldersDialog(_accountId, serverFolderName, serverFolderPath, this);
                 int ret = serverFoldersDialog->exec();
                 if (ret == QDialog::Rejected) {
+                    qCDebug(lcDrivePreferencesWidget) << "Cancel: " << nextStep;
                     break;
                 }
                 else if (ret == -1) {
@@ -704,6 +783,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
 
                 serverFolderSize = serverFoldersDialog->selectionSize();
                 blackList = serverFoldersDialog->createBlackList();
+                qCDebug(lcDrivePreferencesWidget) << "Server subfolders selected";
             }
             nextStep = Confirm;
         }
@@ -713,54 +793,62 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
                         localFolderName, localFolderSize, serverFolderName, serverFolderSize, this);
             int ret = confirmSynchronizationDialog->exec();
             if (ret == QDialog::Rejected) {
+                qCDebug(lcDrivePreferencesWidget) << "Cancel: " << nextStep;
                 break;
             }
             else if (ret == -1) {
                 // Go back
-                nextStep = serverFolderHasSubfolders ? SelectServerFolders : SelectServerBaseFolder;
+                nextStep = folderHasSubfoldersJobResult == JobResult::Yes ? SelectServerFolders : SelectServerBaseFolder;
                 continue;
             }
 
+            // Setup local folder
+            const QDir localFolderDir(localFolderPath);
+            if (localFolderDir.exists()) {
+                OCC::FileSystem::setFolderMinimumPermissions(localFolderPath);
+                OCC::Utility::setupFavLink(localFolderPath);
+                qCDebug(lcDrivePreferencesWidget) << "Local folder setup: " << localFolderPath;
+            }
+            else {
+                qCDebug(lcDrivePreferencesWidget) << "Local folder doesn't exist anymore: " << localFolderPath;
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
+                            addFolderError,
+                            QMessageBox::Ok, this);
+                msgBox->setDefaultButton(QMessageBox::Ok);
+                msgBox->exec();
+                break;
+            }
+
             if (serverFolderPath != serverFolderBasePath) {
-                // Create server folders
-
-
-
-                if (!createFolder(serverFolderPath)) {
+                // Create missing server folders
+                if (!createMissingFolders(serverFolderBasePath, serverFolderPath)) {
                     CustomMessageBox *msgBox = new CustomMessageBox(
                                 QMessageBox::Warning,
-                                tr("Synchronization of a new folder failed!"),
+                                addFolderError,
                                 QMessageBox::Ok, this);
                     msgBox->setDefaultButton(QMessageBox::Ok);
                     msgBox->exec();
-
                     break;
                 }
             }
 
-            QStringList warnStrings;
-            if (!serverFolderPath.startsWith(QLatin1Char('/'))) {
-                serverFolderPath.prepend(QLatin1Char('/'));
+            // Add folder to synchronization
+            if (addSynchronization(localFolderPath, serverFolderPath, blackList)) {
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
+                            tr("New folder successfully added!"),
+                            QMessageBox::Ok, this);
+                msgBox->setDefaultButton(QMessageBox::Ok);
+                msgBox->exec();
             }
-
-            OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
-            OCC::Folder::Map map = OCC::FolderMan::instance()->map();
-            OCC::Folder::Map::const_iterator i = map.constBegin();
-            for (i = map.constBegin(); i != map.constEnd(); i++) {
-                OCC::Folder *folder = static_cast<OCC::Folder *>(i.value());
-                if (folder->accountState()->account() != accountPtr) {
-                    continue;
-                }
-                QString curDir = folder->remotePathTrailingSlash();
-                if (QDir::cleanPath(serverFolderPath) == QDir::cleanPath(curDir))
-                {
-                    warnStrings.append(tr("This folder is already being synced."));
-                }
-                else if (serverFolderPath.startsWith(curDir))
-                {
-                    warnStrings.append(tr("You are already syncing <i>%1</i>, which is a parent folder of <i>%2</i>.")
-                                       .arg(OCC::Utility::escape(curDir), OCC::Utility::escape(serverFolderPath)));
-                }
+            else {
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
+                            addFolderError,
+                            QMessageBox::Ok, this);
+                msgBox->setDefaultButton(QMessageBox::Ok);
+                msgBox->exec();
             }
 
             break;
@@ -872,7 +960,11 @@ void DrivePreferencesWidget::onUnsyncTriggered(const QString &folderId)
     msgBox->setDefaultButton(QMessageBox::No);
     int ret = msgBox->exec();
     if (ret != QDialog::Rejected) {
-        if (ret == QMessageBox::YesRole) {
+        if (ret == QMessageBox::Yes) {
+            PreferencesBlocWidget *folderBloc = (PreferencesBlocWidget *) sender()->parent();
+            ASSERT(folderBloc)
+
+            folderBloc->setEnabled(false);
             folderMan->removeFolder(folder);
         }
     }
@@ -881,29 +973,21 @@ void DrivePreferencesWidget::onUnsyncTriggered(const QString &folderId)
 void DrivePreferencesWidget::onDisplayFolderDetail(const QString &folderId, bool display)
 {
     if (_accountInfo) {
-        QList<PreferencesBlocWidget *> folderBlocList = findChildren<PreferencesBlocWidget *>(folderBlocName);
-        for (PreferencesBlocWidget *folderBloc : folderBlocList) {
-            FolderItemWidget *folderItemWidget = folderBloc->findChild<FolderItemWidget *>();
-            if (!folderItemWidget) {
-                qCDebug(lcDrivePreferencesWidget) << "Bad folder bloc!";
-                Q_ASSERT(false);
-                break;
-            }
+        FolderTreeItemWidget *treeItemWidget = folderTreeItemWidget(sender());
+        if (treeItemWidget) {
+            ASSERT(treeItemWidget->folderId() == folderId);
 
-            if (folderItemWidget->folderId() == folderId) {
-                FolderTreeItemWidget *folderTreeItemWidget = folderBloc->findChild<FolderTreeItemWidget *>();
-                QFrame *separatorFrame = folderBloc->findChild<QFrame *>();
-                if (!folderTreeItemWidget || !separatorFrame) {
-                    qCDebug(lcDrivePreferencesWidget) << "Bad folder bloc!";
-                    Q_ASSERT(false);
-                    break;
-                }
+            PreferencesBlocWidget *folderBloc = (PreferencesBlocWidget *) sender()->parent();
+            ASSERT(folderBloc)
 
-                folderTreeItemWidget->loadSubFolders();
-                folderTreeItemWidget->setVisible(display);
-                separatorFrame->setVisible(display);
-                break;
+            QFrame *separatorFrame = folderBloc->findChild<QFrame *>();
+            ASSERT(separatorFrame)
+
+            if (display) {
+                treeItemWidget->loadSubFolders();
             }
+            treeItemWidget->setVisible(display);
+            separatorFrame->setVisible(display);
         }
     }
 }
@@ -932,10 +1016,11 @@ void DrivePreferencesWidget::onNeedToSave()
     }
 }
 
-void DrivePreferencesWidget::onCancelUpdate()
+void DrivePreferencesWidget::onCancelUpdate(const QString &folderId)
 {
     FolderTreeItemWidget *treeItemWidget = folderTreeItemWidget(sender());
     if (treeItemWidget) {
+        ASSERT(treeItemWidget->folderId() == folderId);
         treeItemWidget->loadSubFolders();
 
         // Hide update widget
@@ -946,10 +1031,11 @@ void DrivePreferencesWidget::onCancelUpdate()
     }
 }
 
-void DrivePreferencesWidget::onValidateUpdate()
+void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
 {
     FolderTreeItemWidget *treeItemWidget = folderTreeItemWidget(sender());
     if (treeItemWidget) {
+        ASSERT(treeItemWidget->folderId() == folderId);
         OCC::Folder *folder = OCC::FolderMan::instance()->folder(treeItemWidget->folderId());
         if (folder) {
             bool ok;

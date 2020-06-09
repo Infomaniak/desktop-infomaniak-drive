@@ -85,6 +85,7 @@ void ConfirmSynchronizationDialog::initUI()
 
     QLabel *localIconLabel = new QLabel(this);
     localIconLabel->setPixmap(QIcon(":/client/resources/icons/actions/folder-computer.svg").pixmap(QSize(logoSize, logoSize)));
+    localIconLabel->setAlignment(Qt::AlignCenter);
     summaryLocalLayout->addWidget(localIconLabel);
     summaryLocalLayout->addSpacing(iconVSpacing);
 
@@ -120,6 +121,7 @@ void ConfirmSynchronizationDialog::initUI()
 
     QLabel *serverIconLabel = new QLabel(this);
     serverIconLabel->setPixmap(QIcon(":/client/resources/icons/actions/folder-folder-drive.svg").pixmap(QSize(logoSize, logoSize)));
+    serverIconLabel->setAlignment(Qt::AlignCenter);
     summaryServerLayout->addWidget(serverIconLabel);
     summaryServerLayout->addSpacing(iconVSpacing);
 

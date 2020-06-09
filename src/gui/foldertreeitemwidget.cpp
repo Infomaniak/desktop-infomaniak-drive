@@ -114,7 +114,7 @@ void FolderTreeItemWidget::loadSubFolders()
 void FolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size)
 {
     if (pathTrail.size() == 0) {
-        if (path.endsWith('/')) {
+        if (path.endsWith(QDir::separator())) {
             path.chop(1);
         }
         parent->setData(TreeWidgetColumn::Folder, dirRole, path);
@@ -128,7 +128,7 @@ void FolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList pathT
                 || parent->checkState(TreeWidgetColumn::Folder) == Qt::PartiallyChecked) {
                 item->setCheckState(TreeWidgetColumn::Folder, Qt::Checked);
                 foreach (const QString &str, _oldBlackList) {
-                    if (str == path || str == QLatin1String("/")) {
+                    if (str == path || str == QDir::separator()) {
                         item->setCheckState(TreeWidgetColumn::Folder, Qt::Unchecked);
                         break;
                     } else if (str.startsWith(path)) {
@@ -180,7 +180,7 @@ QStringList FolderTreeItemWidget::createBlackList(QTreeWidgetItem *root) const
 
     switch (root->checkState(TreeWidgetColumn::Folder)) {
     case Qt::Unchecked:
-        return QStringList(root->data(TreeWidgetColumn::Folder, dirRole).toString() + "/");
+        return QStringList(root->data(TreeWidgetColumn::Folder, dirRole).toString() + QDir::separator());
     case Qt::Checked:
         return QStringList();
     case Qt::PartiallyChecked:
@@ -204,15 +204,23 @@ QStringList FolderTreeItemWidget::createBlackList(QTreeWidgetItem *root) const
     return result;
 }
 
-qint64 FolderTreeItemWidget::selectionSize(QTreeWidgetItem *item) const
+qint64 FolderTreeItemWidget::nodeSize(QTreeWidgetItem *item) const
 {
     qint64 size = 0;
-    if (item->isSelected()) {
+    if (item->checkState(TreeWidgetColumn::Folder) == Qt::Checked) {
         size = item->data(TreeWidgetColumn::Size, sizeRole).toLongLong();
     }
-    else {
+    else if (item->checkState(TreeWidgetColumn::Folder) == Qt::PartiallyChecked) {
+        size = item->data(TreeWidgetColumn::Size, sizeRole).toLongLong();
+
+        // Remove the size of unchecked subfolders
         for (int i = 0; i < item->childCount(); ++i) {
-            size += selectionSize(item->child(i));
+            if (item->child(i)->checkState(TreeWidgetColumn::Folder) == Qt::PartiallyChecked) {
+                size -= nodeSize(item->child(i));
+            }
+            else if (item->child(i)->checkState(TreeWidgetColumn::Folder) == Qt::Unchecked) {
+                size -= item->child(i)->data(TreeWidgetColumn::Size, sizeRole).toLongLong();
+            }
         }
     }
     return size;
@@ -329,7 +337,7 @@ QString FolderTreeItemWidget::getFolderPath()
         folderPath = _folderPath;
     }
 
-    return folderPath.startsWith(QLatin1Char('/')) ? folderPath.mid(1) : folderPath;
+    return folderPath.startsWith(QDir::separator()) ? folderPath.mid(1) : folderPath;
 }
 
 void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
@@ -340,12 +348,12 @@ void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
 
     QUrl url = getAccountPtr() ? getAccountPtr()->davUrl() : QUrl();
     QString pathToRemove = url.path();
-    if (!pathToRemove.endsWith('/')) {
-        pathToRemove.append('/');
+    if (!pathToRemove.endsWith(QDir::separator())) {
+        pathToRemove.append(QDir::separator());
     }
     pathToRemove.append(getFolderPath());
-    if (!pathToRemove.endsWith('/')) {
-        pathToRemove.append('/');
+    if (!pathToRemove.endsWith(QDir::separator())) {
+        pathToRemove.append(QDir::separator());
     }
 
     // Check for excludes.
@@ -358,7 +366,7 @@ void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
     }
 
     // Since / cannot be in the blacklist, expand it to the actual list of top-level folders as soon as possible.
-    if (_oldBlackList == QStringList("/")) {
+    if (_oldBlackList == QStringList(QDir::separator())) {
         _oldBlackList.clear();
         for (QString path : list) {
             path.remove(pathToRemove);
@@ -410,15 +418,15 @@ void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
     foreach (QString path, list) {
         auto size = job ? job->_sizes.value(path) : 0;
         path.remove(pathToRemove);
-        QStringList paths = path.split('/');
+        QStringList paths = path.split(QDir::separator());
         if (paths.last().isEmpty()) {
             paths.removeLast();
         }
         if (paths.isEmpty()) {
             continue;
         }
-        if (!path.endsWith('/')) {
-            path.append('/');
+        if (!path.endsWith(QDir::separator())) {
+            path.append(QDir::separator());
         }
         insertPath(root, paths, path, size);
     }
@@ -458,7 +466,7 @@ void FolderTreeItemWidget::onItemExpanded(QTreeWidgetItem *item)
 
     QString folderPath = getFolderPath();
     if (!folderPath.isEmpty()) {
-        folderPath.append('/');
+        folderPath.append(QDir::separator());
     }
     folderPath.append(dir);
 

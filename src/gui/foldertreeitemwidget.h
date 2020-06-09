@@ -45,7 +45,7 @@ public:
     void loadSubFolders();
     QStringList createBlackList(QTreeWidgetItem *root = 0) const;
     inline QString folderId() { return _folderId; }
-    qint64 selectionSize(QTreeWidgetItem *item) const;
+    qint64 nodeSize(QTreeWidgetItem *item) const;
 
 signals:
     void message(const QString &text);

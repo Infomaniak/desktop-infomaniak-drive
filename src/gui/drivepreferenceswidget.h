@@ -89,10 +89,12 @@ private:
     void switchVfsOff(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection);
     void resetFoldersBlocs();
     void updateFoldersBlocs();
-    bool folderHasSubfolders(const QString &folderPath);
-    bool createFolder(const QString &folderPath);
+    JobResult folderHasSubfolders(const QString &folderPath);
+    JobResult createFolder(const QString &folderPath);
     FolderTreeItemWidget *folderTreeItemWidget(QObject *folderItemWidget);
     FolderItemWidget *folderItemWidget(QObject *folderTreeItemWidget);
+    bool createMissingFolders(const QString &folderBasePath, const QString &folderPath);
+    bool addSynchronization(const QString &localFolderPath, const QString &serverFolderPath, QStringList blackList);
 
 private slots:
     void onDisplaySmartSyncInfo(const QString &link);
@@ -110,8 +112,8 @@ private slots:
     void onOpenFolder(const QString &filePath);
     void onDisplayMessage(const QString &text);
     void onNeedToSave();
-    void onCancelUpdate();
-    void onValidateUpdate();
+    void onCancelUpdate(const QString &folderId);
+    void onValidateUpdate(const QString &folderId);
 };
 
 }

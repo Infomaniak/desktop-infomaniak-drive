@@ -20,8 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "serverbasefolderdialog.h"
 #include "custommessagebox.h"
 #include "guiutility.h"
+#include "accountmanager.h"
 
 #include <QBoxLayout>
+#include <QDir>
 
 namespace KDC {
 
@@ -47,6 +49,7 @@ ServerBaseFolderDialog::ServerBaseFolderDialog(const QString &accountId, const Q
     , _okToContinue(false)
     , _serverFolderPath(QString())
     , _serverFolderBasePath(QString())
+    , _serverFolderSize(0)
 {
     initUI();
     updateUI();
@@ -136,7 +139,7 @@ void ServerBaseFolderDialog::initUI()
 void ServerBaseFolderDialog::updateUI()
 {
     // Available space
-    qint64 freeBytes = OCC::Utility::freeDiskSpace(QString("/"));
+    qint64 freeBytes = OCC::Utility::freeDiskSpace(QDir::separator());
     _availableSpaceTextLabel->setText(tr("Space available on your computer for the current folder : %1")
                                       .arg(OCC::Utility::octetsToString(freeBytes)));
 
@@ -168,7 +171,58 @@ void ServerBaseFolderDialog::onContinueButtonTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    accept();
+    QStringList warnStrings;
+    QString folderPath = _serverFolderPath;
+    if (!folderPath.startsWith(QDir::separator())) {
+        folderPath.prepend(QDir::separator());
+    }
+
+    OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
+    OCC::Folder::Map map = OCC::FolderMan::instance()->map();
+    OCC::Folder::Map::const_iterator i = map.constBegin();
+    for (i = map.constBegin(); i != map.constEnd(); i++) {
+        OCC::Folder *folder = static_cast<OCC::Folder *>(i.value());
+        if (folder->accountState()->account() != accountPtr) {
+            continue;
+        }
+        QString currentFolderPath = folder->remotePathTrailingSlash();
+        if (QDir::cleanPath(folderPath) == QDir::cleanPath(currentFolderPath))
+        {
+            warnStrings.append(tr("This folder is already being synced."));
+        }
+        else if (folderPath.startsWith(currentFolderPath))
+        {
+            warnStrings.append(tr("You are already syncing <i>%1</i>, which is a parent folder of <i>%2</i>.")
+                               .arg(OCC::Utility::escape(currentFolderPath), OCC::Utility::escape(folderPath)));
+        }
+    }
+
+    if (warnStrings.size() > 0) {
+        QString text = QString();
+        for (QString warnString : warnStrings) {
+            if (!text.isEmpty()) {
+                text += "<br>";
+            }
+            text += warnString;
+        }
+
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
+                    text,
+                    QMessageBox::NoButton, this);
+        msgBox->addButton(tr("Confirm"), QMessageBox::Yes);
+        msgBox->addButton(tr("Cancel"), QMessageBox::No);
+        msgBox->setDefaultButton(QMessageBox::No);
+        int ret = msgBox->exec();
+        if (ret != QDialog::Rejected) {
+            if (ret == QMessageBox::Yes) {
+                accept();
+            }
+        }
+    }
+    else {
+        accept();
+    }
 }
 
 void ServerBaseFolderDialog::onBackButtonTriggered(bool checked)
@@ -188,10 +242,11 @@ void ServerBaseFolderDialog::onDisplayMessage(const QString &text)
     msgBox->exec();
 }
 
-void ServerBaseFolderDialog::onFolderSelected(const QString &folderPath, const QString &folderBasePath)
+void ServerBaseFolderDialog::onFolderSelected(const QString &folderPath, const QString &folderBasePath, qint64 folderSize)
 {
     _serverFolderPath = folderPath;
     _serverFolderBasePath = folderBasePath;
+    _serverFolderSize = folderSize;
     setOkToContinue(true);
 }
 

@@ -47,6 +47,7 @@ public:
 
     inline QString serverFolderPath() const { return _serverFolderPath; }
     inline QString serverFolderBasePath() const { return _serverFolderBasePath; }
+    inline qint64 selectionSize() const { return _serverFolderSize; };
 
 private:
     QString _accountId;
@@ -61,6 +62,7 @@ private:
     bool _okToContinue;
     QString _serverFolderPath;
     QString _serverFolderBasePath;
+    qint64 _serverFolderSize;
 
     inline QColor infoIconColor() const { return _infoIconColor; }
     inline void setInfoIconColor(QColor color) {
@@ -86,7 +88,7 @@ private slots:
     void onBackButtonTriggered(bool checked = false);
     void onContinueButtonTriggered(bool checked = false);
     void onDisplayMessage(const QString &text);
-    void onFolderSelected(const QString &folderPath, const QString &folderBasePath);
+    void onFolderSelected(const QString &folderPath, const QString &folderBasePath, qint64 folderSize);
 };
 
 }

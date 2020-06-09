@@ -40,13 +40,15 @@ class ServerFoldersDialog : public CustomDialog
     Q_OBJECT
 
 public:
-    explicit ServerFoldersDialog(const QString &accountId, const QString &serverFolderPath, QWidget *parent = nullptr);
+    explicit ServerFoldersDialog(const QString &accountId, const QString &serverFolderName,
+                                 const QString &serverFolderPath, QWidget *parent = nullptr);
 
     qint64 selectionSize() const;
     QStringList createBlackList() const;
 
 private:
     QString _accountId;
+    const QString _serverFolderName;
     const QString _serverFolderPath;
     OCC::Folder *_currentFolder;
     FolderTreeItemWidget *_folderTreeItemWidget;

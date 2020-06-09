@@ -43,7 +43,7 @@ public:
 signals:
     void message(const QString &text);
     void showMessage(bool show);
-    void folderSelected(const QString &folderPath, const QString &folderBasePath);
+    void folderSelected(const QString &folderPath, const QString &folderBasePath, qint64 folderSize);
 
 private:
     enum TreeWidgetColumn {

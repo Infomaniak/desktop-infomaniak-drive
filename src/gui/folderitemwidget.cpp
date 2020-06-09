@@ -219,12 +219,12 @@ void FolderItemWidget::onExpandButtonClicked()
 
 void FolderItemWidget::onCancelButtonClicked()
 {
-    emit cancelUpdate();
+    emit cancelUpdate(_folderId);
 }
 
 void FolderItemWidget::onValidateButtonClicked()
 {
-    emit validateUpdate();
+    emit validateUpdate(_folderId);
 }
 
 void FolderItemWidget::onDisplaySmartSyncInfo(const QString &link)

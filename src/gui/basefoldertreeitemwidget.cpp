@@ -25,7 +25,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "accountmanager.h"
 #include "common/utility.h"
 #include "configfile.h"
+#include "theme.h"
 
+#include <QDir>
 #include <QHeaderView>
 #include <QMutableListIterator>
 #include <QScopedValueRollback>
@@ -41,6 +43,7 @@ static const QString sharedFolderName("Shared");
 static const int viewIconPathRole = Qt::UserRole;
 static const int dirRole = Qt::UserRole + 1;
 static const int baseDirRole = Qt::UserRole + 2;
+static const int sizeRole = Qt::UserRole + 3;
 
 Q_LOGGING_CATEGORY(lcBaseFolderTreeItemWidget, "foldertreeitemwidget", QtInfoMsg)
 
@@ -74,7 +77,7 @@ void BaseFolderTreeItemWidget::loadSubFolders()
 void BaseFolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size)
 {
     if (pathTrail.size() == 0) {
-        if (path.endsWith('/')) {
+        if (path.endsWith(QDir::separator())) {
             path.chop(1);
         }
         parent->setData(TreeWidgetColumn::Folder, dirRole, path);
@@ -98,6 +101,11 @@ void BaseFolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList p
 
             // Set name
             item->setText(TreeWidgetColumn::Folder, pathTrail.first());
+
+            // Set size
+            if (size >= 0) {
+                item->setData(TreeWidgetColumn::Folder, sizeRole, size);
+            }
 
             item->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
         }
@@ -189,7 +197,8 @@ OCC::AccountPtr BaseFolderTreeItemWidget::getAccountPtr()
 
 QString BaseFolderTreeItemWidget::getFolderPath()
 {
-    return QString();
+    QString folderPath = OCC::Theme::instance()->defaultServerFolder();
+    return folderPath.startsWith(QDir::separator()) ? folderPath.mid(1) : folderPath;
 }
 
 void BaseFolderTreeItemWidget::onUpdateDirectories(QStringList list)
@@ -200,12 +209,12 @@ void BaseFolderTreeItemWidget::onUpdateDirectories(QStringList list)
 
     QUrl url = getAccountPtr() ? getAccountPtr()->davUrl() : QUrl();
     QString pathToRemove = url.path();
-    if (!pathToRemove.endsWith('/')) {
-        pathToRemove.append('/');
+    if (!pathToRemove.endsWith(QDir::separator())) {
+        pathToRemove.append(QDir::separator());
     }
     pathToRemove.append(getFolderPath());
-    if (!pathToRemove.endsWith('/')) {
-        pathToRemove.append('/');
+    if (!pathToRemove.endsWith(QDir::separator())) {
+        pathToRemove.append(QDir::separator());
     }
 
     // Check for excludes.
@@ -234,21 +243,27 @@ void BaseFolderTreeItemWidget::onUpdateDirectories(QStringList list)
                                                                                getAccountPtr()->getDriveColor()));
         root->setData(TreeWidgetColumn::Folder, dirRole, QString());
         root->setData(TreeWidgetColumn::Folder, baseDirRole, QString());
+
+        // Set size
+        qint64 size = job ? job->_sizes.value(pathToRemove, -1) : -1;
+        if (size >= 0) {
+            root->setData(TreeWidgetColumn::Folder, sizeRole, size);
+        }
     }
 
     OCC::Utility::sortFilenames(list);
     foreach (QString path, list) {
         auto size = job ? job->_sizes.value(path) : 0;
         path.remove(pathToRemove);
-        QStringList paths = path.split('/');
+        QStringList paths = path.split(QDir::separator());
         if (paths.last().isEmpty()) {
             paths.removeLast();
         }
         if (paths.isEmpty()) {
             continue;
         }
-        if (!path.endsWith('/')) {
-            path.append('/');
+        if (!path.endsWith(QDir::separator())) {
+            path.append(QDir::separator());
         }
         insertPath(root, paths, path, size);
     }
@@ -279,7 +294,7 @@ void BaseFolderTreeItemWidget::onItemExpanded(QTreeWidgetItem *item)
 
     QString folderPath = getFolderPath();
     if (!folderPath.isEmpty()) {
-        folderPath.append('/');
+        folderPath.append(QDir::separator());
     }
     folderPath.append(dir);
 
@@ -303,7 +318,8 @@ void BaseFolderTreeItemWidget::onCurrentItemChanged(QTreeWidgetItem *current, QT
 
         _currentFolderPath = current->data(TreeWidgetColumn::Folder, dirRole).toString();
         QString currentFolderBasePath = current->data(TreeWidgetColumn::Folder, baseDirRole).toString();
-        emit folderSelected(_currentFolderPath, currentFolderBasePath);
+        qint64 currentFolderSize = current->data(TreeWidgetColumn::Folder, sizeRole).toLongLong();
+        emit folderSelected(_currentFolderPath, currentFolderBasePath, currentFolderSize);
     }
 }
 
@@ -344,10 +360,11 @@ void BaseFolderTreeItemWidget::onItemChanged(QTreeWidgetItem *item, int column)
     if (column == TreeWidgetColumn::Folder && item->flags() & Qt::ItemIsEditable) {
         // Set path
         QString parentPath = item->parent()->data(TreeWidgetColumn::Folder, dirRole).toString();
-        QString path = parentPath + "/" + item->text(TreeWidgetColumn::Folder);
+        QString path = parentPath + QDir::separator() + item->text(TreeWidgetColumn::Folder);
         item->setData(TreeWidgetColumn::Folder, dirRole, path);
         QString parentBasePath = item->parent()->data(TreeWidgetColumn::Folder, baseDirRole).toString();
         item->setData(TreeWidgetColumn::Folder, baseDirRole, parentBasePath);
+        item->setData(TreeWidgetColumn::Folder, sizeRole, 0);
         onCurrentItemChanged(item, nullptr);
         scrollToItem(item);
     }

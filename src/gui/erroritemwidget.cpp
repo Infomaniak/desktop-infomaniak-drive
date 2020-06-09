@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "guiutility.h"
 
 #include <QBoxLayout>
+#include <QDir>
 #include <QFileInfo>
 #include <QGraphicsDropShadowEffect>
 #include <QPainter>
@@ -100,7 +101,7 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
 
     QLabel *filePathLabel = new QLabel(this);
     filePathLabel->setObjectName("filePathLabel");
-    QString filePath = accountInfo._name + "/" + fileInfo.path();
+    QString filePath = accountInfo._name + QDir::separator() + fileInfo.path();
     /*if (filePath.size() > fileNameMaxSize) {
         filePath = filePath.left(fileNameMaxSize) + "...";
     }*/

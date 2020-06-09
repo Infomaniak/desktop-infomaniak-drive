@@ -640,7 +640,7 @@ void ParametersDialog::onSendLogs()
                 break;
             }
             debugReporter->setReportData(OCC::DebugReporter::MapKeyType::LogName, num,
-                contents(temporaryFolderLogDirPath + "/" + file),
+                contents(temporaryFolderLogDirPath + QDir::separator() + file),
                 "application/octet-stream",
                 QFileInfo(file).fileName().toUtf8());
         }

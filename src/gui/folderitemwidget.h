@@ -46,8 +46,8 @@ signals:
     void unSync(const QString &folderId);
     void displayFolderDetail(const QString &folderId, bool display);
     void openFolder(const QString &filePath);
-    void cancelUpdate();
-    void validateUpdate();
+    void cancelUpdate(const QString &folderId);
+    void validateUpdate(const QString &folderId);
 
 private:
     const QString _folderId;

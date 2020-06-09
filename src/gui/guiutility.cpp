@@ -506,8 +506,8 @@ qint64 Utility::dirSize(const QString &dirPath)
     QDirIterator it(dirPath, QDirIterator::Subdirectories);
     qint64 total = 0;
     while (it.hasNext()) {
-        total += it.fileInfo().size();
-        it.next();
+        QFileInfo fileInfo(it.next());
+        total += fileInfo.size();
     }
 
     return total;

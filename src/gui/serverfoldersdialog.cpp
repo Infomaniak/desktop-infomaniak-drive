@@ -33,9 +33,11 @@ static const int folderTreeBoxVMargin = 20;
 
 Q_LOGGING_CATEGORY(lcServerFoldersDialog, "serverfoldersdialog", QtInfoMsg)
 
-ServerFoldersDialog::ServerFoldersDialog(const QString &accountId, const QString &serverFolderPath, QWidget *parent)
+ServerFoldersDialog::ServerFoldersDialog(const QString &accountId, const QString &serverFolderName,
+                                         const QString &serverFolderPath, QWidget *parent)
     : CustomDialog(true, parent)
     , _accountId(accountId)
+    , _serverFolderName(serverFolderName)
     , _serverFolderPath(serverFolderPath)
     , _folderTreeItemWidget(nullptr)
     , _continueButton(nullptr)
@@ -49,7 +51,7 @@ qint64 ServerFoldersDialog::selectionSize() const
 {
     CustomTreeWidgetItem *root = static_cast<CustomTreeWidgetItem *>(_folderTreeItemWidget->topLevelItem(0));
     if (root) {
-        return _folderTreeItemWidget->selectionSize(root);
+        return _folderTreeItemWidget->nodeSize(root);
     }
     return 0;
 }
@@ -67,9 +69,8 @@ void ServerFoldersDialog::initUI()
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
     titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
-    QDir dir(_serverFolderPath);
     titleLabel->setText(tr("The <b>%1</b> folder contains subfolders,<br> select the ones you want to synchronize")
-                        .arg(dir.dirName()));
+                        .arg(_serverFolderName));
     mainLayout->addWidget(titleLabel);
     mainLayout->addSpacing(titleBoxVMargin);
 
