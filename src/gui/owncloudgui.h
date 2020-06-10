@@ -15,9 +15,6 @@
 #ifndef OWNCLOUDGUI_H
 #define OWNCLOUDGUI_H
 
-#define KDRIVE_V2
-#define KDRIVE_V2_NEW_SETTINGS
-
 #include "systray.h"
 #include "connectionvalidator.h"
 #include "progressdispatcher.h"
@@ -61,12 +58,6 @@ public:
     static void raiseDialog(QWidget *raiseWidget);
     static QSize settingsDialogSize() { return QSize(800, 500); }
     void setupOverlayIcons();
-
-#ifndef KDRIVE_V2
-    /// Whether the tray menu is visible
-    bool popoverVisible() const;
-#endif
-
     void hideAndShowTray();
 
 signals:
@@ -78,25 +69,15 @@ public slots:
     void updatePopover();
     void updatePopoverNeeded();
     void onRefreshAccountList();
-#ifndef KDRIVE_V2
-    void slotPopoverAboutToShow();
-    void slotPopoverAboutToHide();
-#endif
     void slotComputeOverallSyncStatus();
     void slotShowTrayMessage(const QString &title, const QString &msg);
     void slotShowOptionalTrayMessage(const QString &title, const QString &msg);
     void slotFolderOpenAction(const QString &alias);
-#ifndef KDRIVE_V2
-    void slotRebuildRecentMenus();
-#endif
     void slotUpdateProgress(const QString &folder, const ProgressInfo &progress);
     void slotItemCompleted(const QString &folder, const SyncFileItemPtr &item);
     void slotShowGuiMessage(const QString &title, const QString &message);
     void slotFoldersChanged();
     void slotShowParametersDialog(const QString &accountId = QString());
-#ifndef KDRIVE_V2
-    void slotShowSyncProtocol();
-#endif
     void slotShutdown();
     void slotSyncStateChange(Folder *);
     void slotTrayClicked(QSystemTrayIcon::ActivationReason reason);
@@ -123,10 +104,6 @@ public slots:
     void slotRemoveDestroyedShareDialogs();
 
 private slots:
-#ifndef KDRIVE_V2
-    void slotLogin();
-    void slotLogout();
-#endif
     void slotUnpauseAllFolders();
     void slotPauseAllFolders();
     void slotNewAccountWizard();
@@ -136,34 +113,11 @@ private slots:
 
 private:
     void setPauseOnAllFoldersHelper(bool pause);
-#ifndef KDRIVE_V2
-    void setupActions();
-    void addAccountContextMenu(AccountStatePtr accountState, QMenu *menu, bool separateMenu);
-#endif
 
     QPointer<Systray> _tray;
     QPointer<LogBrowser> _logBrowser;
-#ifdef KDRIVE_V2
     QScopedPointer<KDC::SynthesisPopover> _synthesisPopover;
-#else
-    // tray's menu
-    QScopedPointer<QMenu> _contextMenu;
-#endif
-
-#ifdef KDRIVE_V2_NEW_SETTINGS
     QPointer<KDC::ParametersDialog> _parametersDialog;
-#else
-    QPointer<SettingsDialog> _settingsDialog;
-#endif
-
-#ifndef KDRIVE_V2
-    // Manually tracking whether the context menu is visible via aboutToShow
-    // and aboutToHide. Unfortunately aboutToHide isn't reliable everywhere
-    // so this only gets used with _workaroundManualVisibility (when the tray's
-    // isVisible() is unreliable)
-    bool _popoverVisibleManual = false;
-#endif
-
     QMenu *_recentActionsMenu;
     QVector<QMenu *> _accountMenus;
     bool _workaroundShowAndHideTray = false;
@@ -176,7 +130,6 @@ private:
 
     QAction *_actionLogin;
     QAction *_actionLogout;
-
     QAction *_actionNewAccountWizard;
     QAction *_actionSettings;
     QAction *_actionShowErrors;
@@ -189,7 +142,6 @@ private:
     QAction *_actionCrash;
     QAction *_actionCrashEnforce;
     QAction *_actionCrashFatal;
-
 
     QList<QAction *> _recentItemsActions;
     Application *_app;

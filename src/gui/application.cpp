@@ -721,10 +721,7 @@ void Application::openVirtualFile(const QString &filename)
 void Application::tryTrayAgain()
 {
     qCInfo(lcApplication) << "Trying tray icon, tray available:" << QSystemTrayIcon::isSystemTrayAvailable();
-#ifndef KDRIVE_V2
-    if (!_gui->popoverVisible())
-#endif
-        _gui->hideAndShowTray();
+    _gui->hideAndShowTray();
 }
 
 bool Application::event(QEvent *event)

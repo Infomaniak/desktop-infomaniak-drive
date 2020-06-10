@@ -964,7 +964,12 @@ void DrivePreferencesWidget::onUnsyncTriggered(const QString &folderId)
             PreferencesBlocWidget *folderBloc = (PreferencesBlocWidget *) sender()->parent();
             ASSERT(folderBloc)
 
+            // Remove folder
             folderBloc->setEnabled(false);
+            FolderItemWidget *itemWidget = folderItemWidget(sender());
+            if (itemWidget) {
+                itemWidget->setDeleting();
+            }
             folderMan->removeFolder(folder);
         }
     }
@@ -1000,7 +1005,7 @@ void DrivePreferencesWidget::onOpenFolder(const QString &filePath)
 void DrivePreferencesWidget::onDisplayMessage(const QString &text)
 {
     CustomMessageBox *msgBox = new CustomMessageBox(
-                QMessageBox::Warning,
+                QMessageBox::Information,
                 text,
                 QMessageBox::Ok, this);
     msgBox->setDefaultButton(QMessageBox::Ok);

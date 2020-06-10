@@ -459,6 +459,7 @@ void SynthesisPopover::initUI()
 
     // Buttons bar
     _buttonsBarWidget = new ButtonsBarWidget(this);
+    _buttonsBarWidget->hide();
     mainVBox->addWidget(_buttonsBarWidget);
 
     CustomTogglePushButton *synchronizedButton = new CustomTogglePushButton(tr("Synchronized"), _buttonsBarWidget);

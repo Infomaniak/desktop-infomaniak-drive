@@ -342,6 +342,7 @@ void SynchronizedItemWidget::onMenuButtonClicked()
 
         QWidgetAction *favoritesAction = new QWidgetAction(this);
         MenuItemWidget *favoritesMenuItemWidget = new MenuItemWidget(tr("Add to favorites"));
+        favoritesMenuItemWidget->hide();
         favoritesMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/favorite.svg");
         favoritesAction->setDefaultWidget(favoritesMenuItemWidget);
         connect(favoritesAction, &QWidgetAction::triggered, this, &SynchronizedItemWidget::onFavoritesActionTriggered);
@@ -349,6 +350,7 @@ void SynchronizedItemWidget::onMenuButtonClicked()
 
         QWidgetAction *rightsAndSharingAction = new QWidgetAction(this);
         MenuItemWidget *rightsAndSharingMenuItemWidget = new MenuItemWidget(tr("Rights and sharing"));
+        rightsAndSharingMenuItemWidget->hide();
         rightsAndSharingMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/share.svg");
         rightsAndSharingAction->setDefaultWidget(rightsAndSharingMenuItemWidget);
         connect(rightsAndSharingAction, &QWidgetAction::triggered, this, &SynchronizedItemWidget::onRightAndSharingActionTriggered);

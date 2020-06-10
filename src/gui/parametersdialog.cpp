@@ -201,7 +201,7 @@ void ParametersDialog::initUI()
     errorsHeaderWidget->setLayout(errorsHeaderVBox);
 
     ActionWidget *sendLogsWidget = new ActionWidget(":/client/resources/icons/actions/help.svg",
-                                                    tr("Need help? Generate an archive of the application logs to send it to our support"), this);
+                                                    tr("Need help ? Generate an archive of the application logs to send it to our support"), this);
     sendLogsWidget->setObjectName("sendLogsWidget");
     errorsHeaderVBox->addWidget(sendLogsWidget);
 

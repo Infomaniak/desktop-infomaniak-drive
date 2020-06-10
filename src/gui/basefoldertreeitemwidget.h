@@ -72,8 +72,10 @@ private:
     }
 
     void initUI();
+    QString iconPath(const QString &folderName);
+    QColor iconColor(const QString &folderName);
     void setFolderIcon();
-    void setFolderIcon(QTreeWidgetItem *item, const QString &viewIconPath);
+    void setFolderIcon(QTreeWidgetItem *item, const QString &folderName);
     void setSubFoldersIcon(QTreeWidgetItem *parent);
     QTreeWidgetItem *findFirstChild(QTreeWidgetItem *parent, const QString &text);
     OCC::AccountPtr getAccountPtr();

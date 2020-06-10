@@ -149,6 +149,965 @@
     </message>
 </context>
 <context>
+    <name>KDC::AboutDialog</name>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CLOSE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Version %1. For more information visit &lt;a style=&quot;%2&quot; href=&quot;%3&quot;&gt;%4&lt;/a&gt;&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copyright Infomaniak Network SA, ownCloud GmbH and Nextcloud GmbH&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distributed by %1 and licensed under the GNU Lesser General Public License (LGPL) Version 2.1.&lt;br&gt;&lt;br&gt;%2 and the %2 logo are registered trademarks of %1.&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Built from Git revision &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;%3&lt;/a&gt; on %4, %5 using Qt %6, %7&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open debugging folder %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::BandwidthDialog</name>
+    <message>
+        <source>Bandwidth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download bandwidth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No limit</source>
+        <translation type="unfinished">Keine Begrenzung</translation>
+    </message>
+    <message>
+        <source>Automatically limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limit to</source>
+        <translation type="unfinished">Begrenzen auf</translation>
+    </message>
+    <message>
+        <source>Upload bandwidth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SAVE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to save your modifications?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::BaseFolderTreeItemWidget</name>
+    <message>
+        <source>No subfolders currently on the server.</source>
+        <translation type="unfinished">Aktuell befinden sich keine Unterordner auf dem Server.</translation>
+    </message>
+    <message>
+        <source>An error occurred while loading the list of sub folders.</source>
+        <translation type="unfinished">Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ConfirmSynchronizationDialog</name>
+    <message>
+        <source>Summary of your advanced folder synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The contents of the folder on your computer will be synchronized to the folder of the selected kDrive and vice versa.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SYNCHRONIZE</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::CustomMessageBox</name>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>YES</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NO</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::DebuggingDialog</name>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Critical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Record debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Activate the recording of information in a temporary folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum trace level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete logs older than %1 hours</source>
+        <translation type="unfinished">Logs löschen, die älter sind als %1 Stunden</translation>
+    </message>
+    <message>
+        <source>SAVE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to save your modifications?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::DisplayErrorsWidget</name>
+    <message>
+        <source>Some files couldn&apos;t be synchronized</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::DrivePreferencesWidget</name>
+    <message>
+        <source>Some files couldn&apos;t be synchronized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Folders</source>
+        <translation type="unfinished">Ordner</translation>
+    </message>
+    <message>
+        <source>Add an advanced synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Activate smart synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable the notifications</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A notification will be displayed as soon as a new folder has been synchronized or modified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected with</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead a virtual file will be created for each file that exists on the server. When a file is opened its contents will be downloaded automatically. Alternatively, files can be downloaded manually by using their context menu.
+
+The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.</source>
+        <translation type="unfinished">Wenn der Modus &quot;Virtuelle Dateien&quot; freigeschaltet ist, werden die Dateien nicht sofort heruntergeladen. Stattdessen wird für jede Datei des Servers eine Platzhalter-Datei erstellt. Der Inhalt der Datei wird beim Ausführen automatisch heruntergeladen. Stattdessen können Dateien auch händisch über das Kontext-Menü heruntergeladen werden.
+
+Der Modus &quot;Virtuelle Dateien&quot; schließt sich mit dem Modus &quot;Selective Sync&quot; gegenseitig aus. Aktuell abgewählte Ordner werden zu nur online verfügbaren Ordnern umgesetzt und die Einstellungen im &quot;Selective Sync&quot; werden verworfen.</translation>
+    </message>
+    <message>
+        <source>Enable virtual files</source>
+        <translation type="unfinished"> Virtuelle Dateien freischalten</translation>
+    </message>
+    <message>
+        <source>Continue to use selective sync</source>
+        <translation type="unfinished">Selective Sync&quot; weiterbenutzen</translation>
+    </message>
+    <message>
+        <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead, a tiny &quot;%1&quot; file will be created for each file that exists on the server. The contents can be downloaded by running these files or by using their context menu.
+
+The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.
+
+Switching to this mode will abort any currently running synchronization.
+
+This is a new, experimental mode. If you decide to use it, please report any issues that come up.</source>
+        <translation type="unfinished">Wenn der Modus &quot;Virtuelle Dateien&quot; aktiviert ist, werden die Dateien nicht sofort heruntergeladen. Stattdessen wird für jede Datei des Servers eine winzige &quot;%1&quot; Datei erstellt. Der Inhalt der Dateien kann durch Ausführen der Datei oder über das Kontext-Menü heruntergeladen werden.
+
+Der Modus virtuelle Dateien schließt sich mit dem Modus &quot;Selective Sync&quot; gegenseitig aus. Aktuell abgewählte Ordner werden zu nur online verfügbaren Ordnern umgesetzt und die Einstellungen im &quot;Selective Sync&quot; werden verworfen.
+
+Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, berichten sie bitte alle Probleme, die auftreten.</translation>
+    </message>
+    <message>
+        <source>Enable experimental placeholder mode</source>
+        <translation type="unfinished">Experimentellen Platzhalter Modus freischalten</translation>
+    </message>
+    <message>
+        <source>Stay safe</source>
+        <translation type="unfinished">Sicher bleiben</translation>
+    </message>
+    <message>
+        <source>This action will disable virtual file support. As a consequence contents of folders that are currently marked as &apos;available online only&apos; will be downloaded.
+
+This action will abort any currently running synchronization.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable support</source>
+        <translation type="unfinished">Unterstützung abschalten</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Abbrechen</translation>
+    </message>
+    <message>
+        <source>New folder synchronization failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New folder successfully added!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smart synchronization activation in progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smart synchronization deactivation in progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to stop syncing the folder &lt;i&gt;%1&lt;/i&gt; ?&lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Folder Sync Connection</source>
+        <translation type="unfinished">Ordner-Synchronisation entfernen</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::DriveSelectionWidget</name>
+    <message>
+        <source>Add a kDrive</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ErrorsMenuBarWidget</name>
+    <message>
+        <source>Back to drive preferences</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronization errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ErrorsPopup</name>
+    <message numerus="yes">
+        <source>Some files couldn&apos;t be synchronized on the following kDrive(s) :</source>
+        <comment>Number of kDrives</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source> (%n error(s))</source>
+        <comment>Number of errors</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ErrorsWidget</name>
+    <message>
+        <source>Some files couldn&apos;t be synchronized</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::FileExclusionDialog</name>
+    <message>
+        <source>Excluded files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add files or folders that will not be synchronized on your computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronize hidden files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished">Hinzufügen</translation>
+    </message>
+    <message>
+        <source>NAME</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ALLOW DELETION</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SAVE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to save your modifications?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to delete?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot write changes to &apos;%1&apos;.</source>
+        <translation type="unfinished">Konnte Änderungen nicht in &apos;%1&apos; schreiben.</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::FileExclusionNameDialog</name>
+    <message>
+        <source>VALIDATE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::FolderItemWidget</name>
+    <message>
+        <source>More actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronized into &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;%2&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unselected folders will be deleted and will no longer be synchronized with this computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Abbrechen</translation>
+    </message>
+    <message>
+        <source>VALIDATE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Force synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pause synchronization</source>
+        <translation type="unfinished">Stoppe Synchronisation</translation>
+    </message>
+    <message>
+        <source>Resume synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove advanced synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> (Deleting...)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::FolderTreeItemWidget</name>
+    <message>
+        <source>No subfolders currently on the server.</source>
+        <translation type="unfinished">Aktuell befinden sich keine Unterordner auf dem Server.</translation>
+    </message>
+    <message>
+        <source>An error occurred while loading the list of sub folders.</source>
+        <translation type="unfinished">Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::LocalFolderDialog</name>
+    <message>
+        <source>Which folder on your computer would you like to&lt;br&gt;synchronize ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The content of this folder will be synchronized on the kDrive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select a folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CONTINUE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::MainMenuBarWidget</name>
+    <message>
+        <source>Preferences</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished">Hilfe</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ParametersDialog</name>
+    <message>
+        <source>History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to remove the synchronization of the account &lt;i&gt;%1&lt;/i&gt; ?&lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Abbrechen</translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open folder path %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission done!&lt;br&gt;Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Need help ? Generate an archive of the application logs to send it to our support</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::PreferencesMenuBarWidget</name>
+    <message>
+        <source>Back to drive list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::PreferencesWidget</name>
+    <message>
+        <source>General</source>
+        <translation type="unfinished">Allgemein</translation>
+    </message>
+    <message>
+        <source>Ask for confirmation before synchronizing files greater than</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Activate dark theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Activate monochrome icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Launch kDrive at startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation type="unfinished">Erweitert</translation>
+    </message>
+    <message>
+        <source>Debugging information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Open debugging folder&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Files to exclude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Proxy server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bandwidth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation type="unfinished">Version</translation>
+    </message>
+    <message>
+        <source>&lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;%3&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UPDATE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open debugging folder %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ProgressBarWidget</name>
+    <message>
+        <source>%1 in use</source>
+        <translation type="unfinished">%1 wird verwendet</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ProxyServerDialog</name>
+    <message>
+        <source>SOCKS5 Proxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HTTP(S) Proxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Proxy server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No proxy server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use system parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Indicate a proxy manually</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address of the proxy server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Authentication needed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SAVE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to save your modifications?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to save, all mandatory fields are not completed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Proxy not found!</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::SendErrorsWidget</name>
+    <message>
+        <source>Generate an archive of the application logs to send it to our support</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ServerBaseFolderDialog</name>
+    <message>
+        <source>Select a folder on your kDrive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The content of the selected folder will be synchronized into the &lt;b&gt;%1&lt;/b&gt; folder.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CONTINUE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Space available on your computer for the current folder : %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This folder is already being synced.</source>
+        <translation type="unfinished">Dieser Ordner wird bereits synchronisiert.</translation>
+    </message>
+    <message>
+        <source>You are already syncing &lt;i&gt;%1&lt;/i&gt;, which is a parent folder of &lt;i&gt;%2&lt;/i&gt;.</source>
+        <translation type="unfinished">Sie synchronisieren bereits &lt;i&gt;%1&lt;/i&gt;, das ein übergeordneten Ordner von &lt;i&gt;%2&lt;/i&gt; ist.</translation>
+    </message>
+    <message>
+        <source>Confirm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Abbrechen</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ServerFoldersDialog</name>
+    <message>
+        <source>The &lt;b&gt;%1&lt;/b&gt; folder contains subfolders,&lt;br&gt; select the ones you want to synchronize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CONTINUE</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::StatusBarWidget</name>
+    <message>
+        <source>Pause synchronization</source>
+        <translation type="unfinished">Stoppe Synchronisation</translation>
+    </message>
+    <message>
+        <source>Resume synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Force synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pause kDrive &quot;%1&quot; synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pause folder synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pause all kDrives synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resume kDrive &quot;%1&quot; synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resume folder synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resume all kDrives synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Force kDrive &quot;%1&quot; synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Force folder synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Force all kDrives synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::SynchronizedItemWidget</name>
+    <message>
+        <source>Show in folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to favorites</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rights and sharing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy sharing link</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display on drive.infomaniak.com</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::SynthesisPopover</name>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>During 1 hour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Until tomorrow 8:00AM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>During 3 days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>During 1 week</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Always</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For 1 more hour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For 3 more days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For 1 more week</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show warnings and errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show in folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display on drive.infomaniak.com</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Favorites</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation type="unfinished">Aktivität</translation>
+    </message>
+    <message>
+        <source>Not implemented!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open folder path %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No recently synchronized files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No synchronized folder for this Drive!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You can synchronize files &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;from your computer&lt;/a&gt; or on &lt;a style=&quot;%1&quot; href=&quot;%3&quot;&gt;drive.infomaniak.com&lt;/a&gt;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No kDrive configured!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to access web site %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Notifications disabled until %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable Notifications</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Need help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Notifications enabled!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Notifications disabled!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You cannot share the root directory of your Drive!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The shared link has been copied to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid link %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>NotificationWidget</name>
     <message>
         <source>Form</source>
@@ -1393,6 +2352,17 @@ Beachten Sie, das dies nur bestimmt von welchem Bereich Sie Upgrades erhalten un
     <message>
         <source>state</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>OCC::GetOrCreatePublicLinkShare</name>
+    <message>
+        <source>Context menu share</source>
+        <translation type="unfinished">Teilen über das Kontextmenü</translation>
+    </message>
+    <message>
+        <source>Context menu share %1</source>
+        <translation type="unfinished">Freigabe %1 über das Kontextmenü</translation>
     </message>
 </context>
 <context>
@@ -2908,14 +3878,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>Via %1 teilen</translation>
     </message>
     <message>
-        <source>Context menu share</source>
-        <translation>Teilen über das Kontextmenü</translation>
-    </message>
-    <message>
-        <source>Context menu share %1</source>
-        <translation>Freigabe %1 über das Kontextmenü</translation>
-    </message>
-    <message>
         <source>Confirm deletion</source>
         <translation>Löschung bestätigen</translation>
     </message>
@@ -3333,56 +4295,8 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>Es wurden keine Synchonisationsordner konfiguriert.</translation>
     </message>
     <message>
-        <source>Open in browser</source>
-        <translation>Im Browser öffnen</translation>
-    </message>
-    <message>
-        <source>Log in...</source>
-        <translation>Einloggen...</translation>
-    </message>
-    <message>
-        <source>Log out</source>
-        <translation>Abmelden</translation>
-    </message>
-    <message>
-        <source>Recent Changes</source>
-        <translation>Letzte Änderungen</translation>
-    </message>
-    <message>
-        <source>Managed Folders:</source>
-        <translation>Verwaltete Ordner:</translation>
-    </message>
-    <message>
-        <source>Open folder &apos;%1&apos;</source>
-        <translation>Ordner »%1« öffnen</translation>
-    </message>
-    <message>
-        <source>Open %1 in browser</source>
-        <translation>%1 im Browser öffnen</translation>
-    </message>
-    <message>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>Der Server mit Konto %1 läuft mit einer nicht unterstützten Version %2. Die Verwendung dieses Clienten mit nicht unterstützten Serverversionen ist ungetestet und möglicherweise gefährlich. Fortfahren auf eigenes Risiko.</translation>
-    </message>
-    <message>
-        <source>Unknown status</source>
-        <translation>Unbekannter Status</translation>
-    </message>
-    <message>
-        <source>Settings...</source>
-        <translation>Einstellungen …</translation>
-    </message>
-    <message>
-        <source>Details...</source>
-        <translation>Details …</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Hilfe</translation>
-    </message>
-    <message>
-        <source>Quit %1</source>
-        <translation>%1 beenden</translation>
     </message>
     <message>
         <source>Disconnected from %1</source>
@@ -3393,14 +4307,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>nicht unterstützte Server Version</translation>
     </message>
     <message>
-        <source>Disconnected</source>
-        <translation>Getrennt</translation>
-    </message>
-    <message>
-        <source>Disconnected from some accounts</source>
-        <translation>Die Verbindungen zu einigen Konten wurde getrennt</translation>
-    </message>
-    <message>
         <source>Disconnected from accounts:</source>
         <translation>Verbindungen zu Konten wurde getrennt:</translation>
     </message>
@@ -3409,108 +4315,12 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>Konto %1: %2</translation>
     </message>
     <message>
-        <source>Signed out</source>
-        <translation>Abgemeldet</translation>
-    </message>
-    <message>
         <source>Account synchronization is disabled</source>
         <translation>Account Synchronisation ist deaktiviert</translation>
     </message>
     <message>
-        <source>Synchronization is paused</source>
-        <translation>Synchronisation pausiert</translation>
-    </message>
-    <message>
-        <source>Unresolved conflicts</source>
-        <translation>Ungelöste Konflikte</translation>
-    </message>
-    <message>
-        <source>Error during synchronization</source>
-        <translation>Fehler bei der Synchronisation</translation>
-    </message>
-    <message>
-        <source>No sync folders configured</source>
-        <translation>Keine Ordner zur Synchronisation konfiguriert</translation>
-    </message>
-    <message>
-        <source>Unpause all folders</source>
-        <translation>Setze alle Ordner fort</translation>
-    </message>
-    <message>
-        <source>Pause all folders</source>
-        <translation>Stoppe alle Ordner</translation>
-    </message>
-    <message>
-        <source>Unpause all synchronization</source>
-        <translation>Setze gesamte Synchronisation fort</translation>
-    </message>
-    <message>
-        <source>Unpause synchronization</source>
-        <translation>Setze Synchronisation fort</translation>
-    </message>
-    <message>
-        <source>Pause all synchronization</source>
-        <translation>Stoppe gesamte Synchronisation</translation>
-    </message>
-    <message>
-        <source>Pause synchronization</source>
-        <translation>Stoppe Synchronisation</translation>
-    </message>
-    <message>
-        <source>Log out of all accounts</source>
-        <translation>Bei allen Konten abmelden</translation>
-    </message>
-    <message>
-        <source>Log in to all accounts...</source>
-        <translation>Bei allen Konten anmelden...</translation>
-    </message>
-    <message>
-        <source>New account...</source>
-        <translation>Neues Konto...</translation>
-    </message>
-    <message>
         <source>About %1</source>
         <translation>Über %1</translation>
-    </message>
-    <message>
-        <source>No items synced recently</source>
-        <translation>Keine kürzlich synchronisierten Elemente</translation>
-    </message>
-    <message>
-        <source>Checking for changes in remote &apos;%1&apos;</source>
-        <translation>Änderungen der entfernten Ressource &apos;%1&apos; werden geprüft</translation>
-    </message>
-    <message>
-        <source>Checking for changes in local &apos;%1&apos;</source>
-        <translation>Änderungen der lokalen Ressource &apos;%1&apos; werden geprüft</translation>
-    </message>
-    <message>
-        <source>Syncing %1 of %2  (%3 left)</source>
-        <translation>Synchronisiere %1 von %2  (%3 übrig)</translation>
-    </message>
-    <message>
-        <source>Syncing %1 of %2</source>
-        <translation>Synchronisiere %1 von %2</translation>
-    </message>
-    <message>
-        <source>Syncing %1 (%2 left)</source>
-        <translation>Synchronisiere %1 (%2 übrig)</translation>
-    </message>
-    <message>
-        <source>Syncing %1</source>
-        <translation>Synchronisiere %1</translation>
-    </message>
-    <message>
-        <source>%1 (%2, %3)</source>
-        <translation>%1 (%2, %3)</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Aktuell</translation>
-    </message>
-    <message>
-        <source>See synchronization errors</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3975,6 +4785,51 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     <message>
         <source>Free up local space</source>
         <translation>Lokalen Speicherplatz freigeben</translation>
+    </message>
+    <message>
+        <source>Synchronization paused.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No folder to synchronize.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronization in progress (%1 on %2)
+%3 left...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waiting for synchronization...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronization in progress.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preparing to synchronize...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You are up to date, unresolved conflicts.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You are up to date!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Some files couldn&apos;t be synchronized.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setup error.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

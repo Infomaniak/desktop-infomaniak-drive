@@ -81,7 +81,6 @@ void ConfirmSynchronizationDialog::initUI()
     QVBoxLayout *summaryLocalLayout = new QVBoxLayout();
     summaryLocalLayout->setContentsMargins(0, 0, 0, 0);
     summaryLayout->addLayout(summaryLocalLayout);
-    summaryLayout->addStretch();
 
     QLabel *localIconLabel = new QLabel(this);
     localIconLabel->setPixmap(QIcon(":/client/resources/icons/actions/folder-computer.svg").pixmap(QSize(logoSize, logoSize)));
@@ -93,6 +92,7 @@ void ConfirmSynchronizationDialog::initUI()
     localNameLabel->setObjectName("foldername");
     localNameLabel->setText(_localFolderName);
     localNameLabel->setAlignment(Qt::AlignCenter);
+    localNameLabel->setWordWrap(true);
     summaryLocalLayout->addWidget(localNameLabel);
     summaryLocalLayout->addSpacing(nameVSpacing);
 
@@ -106,7 +106,6 @@ void ConfirmSynchronizationDialog::initUI()
     summaryArrowsLayout->setContentsMargins(0, 0, 0, 0);
     summaryArrowsLayout->addSpacing(arrowVSpacing);
     summaryLayout->addLayout(summaryArrowsLayout);
-    summaryLayout->addStretch();
 
     _leftArrowIconLabel = new QLabel(this);
     summaryArrowsLayout->addWidget(_leftArrowIconLabel);
@@ -129,6 +128,7 @@ void ConfirmSynchronizationDialog::initUI()
     serverNameLabel->setObjectName("foldername");
     serverNameLabel->setText(_serverFolderName);
     serverNameLabel->setAlignment(Qt::AlignCenter);
+    serverNameLabel->setWordWrap(true);
     summaryServerLayout->addWidget(serverNameLabel);
     summaryServerLayout->addSpacing(nameVSpacing);
 
@@ -138,6 +138,8 @@ void ConfirmSynchronizationDialog::initUI()
     serverSizeLabel->setAlignment(Qt::AlignCenter);
     summaryServerLayout->addWidget(serverSizeLabel);
 
+    summaryLayout->setStretchFactor(summaryLocalLayout, 1);
+    summaryLayout->setStretchFactor(summaryServerLayout, 1);
     mainLayout->addStretch();
 
     // Add dialog buttons

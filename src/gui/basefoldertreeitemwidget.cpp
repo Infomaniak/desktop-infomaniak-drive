@@ -84,23 +84,16 @@ void BaseFolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList p
         parent->setData(TreeWidgetColumn::Folder, baseDirRole, path);
     }
     else {
-        CustomTreeWidgetItem *item = static_cast<CustomTreeWidgetItem *>(findFirstChild(parent, pathTrail.first()));
+        QString folderName = pathTrail.first();
+        CustomTreeWidgetItem *item = static_cast<CustomTreeWidgetItem *>(findFirstChild(parent, folderName));
         if (!item) {
             item = new CustomTreeWidgetItem(parent);
 
             // Set icon
-            if (pathTrail.first() == commonDocumentsFolderName) {
-                setFolderIcon(item, ":/client/resources/icons/document types/folder-common-documents.svg");
-            }
-            else if (pathTrail.first() == sharedFolderName) {
-                setFolderIcon(item, ":/client/resources/icons/document types/folder-disable.svg");
-            }
-            else {
-                setFolderIcon(item, ":/client/resources/icons/actions/folder.svg");
-            }
+            setFolderIcon(item, folderName);
 
             // Set name
-            item->setText(TreeWidgetColumn::Folder, pathTrail.first());
+            item->setText(TreeWidgetColumn::Folder, folderName);
 
             // Set size
             if (size >= 0) {
@@ -141,6 +134,36 @@ void BaseFolderTreeItemWidget::initUI()
     connect(this, &QTreeWidget::itemChanged, this, &BaseFolderTreeItemWidget::onItemChanged);
 }
 
+QString BaseFolderTreeItemWidget::iconPath(const QString &folderName)
+{
+    QString iconPath;
+    if (folderName == commonDocumentsFolderName) {
+        iconPath = ":/client/resources/icons/document types/folder-common-documents.svg";
+    }
+    else if (folderName == sharedFolderName) {
+        iconPath = ":/client/resources/icons/document types/folder-disable.svg";
+    }
+    else {
+        iconPath = ":/client/resources/icons/actions/folder.svg";
+    }
+    return iconPath;
+}
+
+QColor BaseFolderTreeItemWidget::iconColor(const QString &folderName)
+{
+    QColor iconColor;
+    if (folderName == commonDocumentsFolderName) {
+        iconColor = QColor();
+    }
+    else if (folderName == sharedFolderName) {
+        iconColor = QColor();
+    }
+    else {
+        iconColor = _folderIconColor;
+    }
+    return iconColor;
+}
+
 void BaseFolderTreeItemWidget::setFolderIcon()
 {
     if (_folderIconColor != QColor() && _folderIconSize != QSize()) {
@@ -151,15 +174,15 @@ void BaseFolderTreeItemWidget::setFolderIcon()
     }
 }
 
-void BaseFolderTreeItemWidget::setFolderIcon(QTreeWidgetItem *item, const QString &viewIconPath)
+void BaseFolderTreeItemWidget::setFolderIcon(QTreeWidgetItem *item, const QString &folderName)
 {
     if (item) {
         if (item->data(TreeWidgetColumn::Folder, viewIconPathRole).isNull()) {
-            item->setData(TreeWidgetColumn::Folder, viewIconPathRole, viewIconPath);
+            item->setData(TreeWidgetColumn::Folder, viewIconPathRole, iconPath(folderName));
         }
         if (_folderIconColor != QColor() && _folderIconSize != QSize()) {
             item->setIcon(TreeWidgetColumn::Folder,
-                          OCC::Utility::getIconWithColor(viewIconPath, _folderIconColor));
+                          OCC::Utility::getIconWithColor(iconPath(folderName), iconColor(folderName)));
         }
     }
 }
@@ -330,7 +353,7 @@ void BaseFolderTreeItemWidget::onItemClicked(QTreeWidgetItem *item, int column)
         CustomTreeWidgetItem *newItem = new CustomTreeWidgetItem(item);
 
         // Set icon
-        setFolderIcon(newItem, ":/client/resources/icons/actions/folder.svg");
+        setFolderIcon(newItem, QString());
 
         // Set name
         newItem->setText(TreeWidgetColumn::Folder, QString());

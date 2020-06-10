@@ -119,7 +119,8 @@ void FolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList pathT
         }
         parent->setData(TreeWidgetColumn::Folder, dirRole, path);
     } else {
-        CustomTreeWidgetItem *item = static_cast<CustomTreeWidgetItem *>(findFirstChild(parent, pathTrail.first()));
+        QString folderName = pathTrail.first();
+        CustomTreeWidgetItem *item = static_cast<CustomTreeWidgetItem *>(findFirstChild(parent, folderName));
         if (!item) {
             item = new CustomTreeWidgetItem(parent);
 
@@ -140,24 +141,16 @@ void FolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList pathT
             }
 
             // Set icon
-            if (pathTrail.first() == commonDocumentsFolderName) {
-                setFolderIcon(item, ":/client/resources/icons/document types/folder-common-documents.svg");
-            }
-            else if (pathTrail.first() == sharedFolderName) {
-                setFolderIcon(item, ":/client/resources/icons/document types/folder-disable.svg");
-            }
-            else {
-                setFolderIcon(item, ":/client/resources/icons/actions/folder.svg");
-            }
+            setFolderIcon(item, folderName);
 
             // Set name
-            item->setText(TreeWidgetColumn::Folder, pathTrail.first());
+            item->setText(TreeWidgetColumn::Folder, folderName);
 
             // Set size
             if (size >= 0) {
                 item->setText(TreeWidgetColumn::Size, OCC::Utility::octetsToString(size));
                 item->setTextColor(TreeWidgetColumn::Size, _sizeTextColor);
-                item->setTextAlignment(TreeWidgetColumn::Size, Qt::AlignRight);
+                item->setTextAlignment(TreeWidgetColumn::Size, Qt::AlignRight | Qt::AlignVCenter);
                 item->setData(TreeWidgetColumn::Size, sizeRole, size);
             }
 
@@ -255,6 +248,36 @@ void FolderTreeItemWidget::initUI()
     connect(this, &QTreeWidget::itemChanged, this, &FolderTreeItemWidget::onItemChanged);
 }
 
+QString FolderTreeItemWidget::iconPath(const QString &folderName)
+{
+    QString iconPath;
+    if (folderName == commonDocumentsFolderName) {
+        iconPath = ":/client/resources/icons/document types/folder-common-documents.svg";
+    }
+    else if (folderName == sharedFolderName) {
+        iconPath = ":/client/resources/icons/document types/folder-disable.svg";
+    }
+    else {
+        iconPath = ":/client/resources/icons/actions/folder.svg";
+    }
+    return iconPath;
+}
+
+QColor FolderTreeItemWidget::iconColor(const QString &folderName)
+{
+    QColor iconColor;
+    if (folderName == commonDocumentsFolderName) {
+        iconColor = QColor();
+    }
+    else if (folderName == sharedFolderName) {
+        iconColor = QColor();
+    }
+    else {
+        iconColor = _folderIconColor;
+    }
+    return iconColor;
+}
+
 void FolderTreeItemWidget::setFolderIcon()
 {
     if (_folderIconColor != QColor() && _folderIconSize != QSize()) {
@@ -265,15 +288,15 @@ void FolderTreeItemWidget::setFolderIcon()
     }
 }
 
-void FolderTreeItemWidget::setFolderIcon(QTreeWidgetItem *item, const QString &viewIconPath)
+void FolderTreeItemWidget::setFolderIcon(QTreeWidgetItem *item, const QString &folderName)
 {
     if (item) {
         if (item->data(TreeWidgetColumn::Folder, viewIconPathRole).isNull()) {
-            item->setData(TreeWidgetColumn::Folder, viewIconPathRole, viewIconPath);
+            item->setData(TreeWidgetColumn::Folder, viewIconPathRole, iconPath(folderName));
         }
         if (_folderIconColor != QColor() && _folderIconSize != QSize()) {
             item->setIcon(TreeWidgetColumn::Folder,
-                          OCC::Utility::getIconWithColor(viewIconPath, _folderIconColor));
+                          OCC::Utility::getIconWithColor(iconPath(folderName), iconColor(folderName)));
         }
     }
 }
@@ -409,7 +432,7 @@ void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
         qint64 size = job ? job->_sizes.value(pathToRemove, -1) : -1;
         if (size >= 0) {
             root->setText(TreeWidgetColumn::Size, OCC::Utility::octetsToString(size));
-            root->setTextAlignment(TreeWidgetColumn::Size, Qt::AlignRight);
+            root->setTextAlignment(TreeWidgetColumn::Size, Qt::AlignRight | Qt::AlignVCenter);
             root->setData(TreeWidgetColumn::Size, sizeRole, size);
         }
     }

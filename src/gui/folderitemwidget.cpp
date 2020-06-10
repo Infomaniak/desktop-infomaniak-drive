@@ -40,6 +40,7 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     , _expandButton(nullptr)
     , _menuButton(nullptr)
     , _statusIconLabel(nullptr)
+    , _nameLabel(nullptr)
     , _updateWidget(nullptr)
     , _isExpanded(false)
 {
@@ -83,9 +84,9 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     _statusIconLabel = new QLabel(this);
     folderHBoxLayout->addWidget(_statusIconLabel);
 
-    QLabel *nameLabel = new QLabel(this);
-    nameLabel->setObjectName("largeMediumBoldTextLabel");
-    folderHBoxLayout->addWidget(nameLabel);
+    _nameLabel = new QLabel(this);
+    _nameLabel->setObjectName("largeMediumBoldTextLabel");
+    folderHBoxLayout->addWidget(_nameLabel);
     folderHBoxLayout->addStretch();
 
     QLabel *synchroLabel = new QLabel(this);
@@ -101,7 +102,7 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     if (_folderInfo) {
         updateItem(_folderInfo);
         setExpandButton();
-        nameLabel->setText(_folderInfo->_name);
+        _nameLabel->setText(_folderInfo->_name);
         synchroLabel->setText(tr("Synchronized into <a style=\"%1\" href=\"ref\">%2</a>")
                               .arg(OCC::Utility::linkStyle)
                               .arg(_folderInfo->_path));
@@ -155,6 +156,11 @@ void FolderItemWidget::updateItem(const FolderInfo *folderInfo)
 void FolderItemWidget::setUpdateWidgetVisible(bool visible)
 {
     _updateWidget->setVisible(visible);
+}
+
+void FolderItemWidget::setDeleting()
+{
+    _nameLabel->setText(_folderInfo->_name + tr(" (Deleting...)"));
 }
 
 void FolderItemWidget::setExpandButton()
