@@ -125,6 +125,12 @@ set(client_SRCS
     accountinfo.cpp
     accountitem.cpp
     actionwidget.cpp
+    adddriveconfirmationwidget.cpp
+    adddrivelocalfolderwidget.cpp
+    adddriveloginwidget.cpp
+    adddriveserverfolderswidget.cpp
+    adddrivestartwidget.cpp
+    adddrivewizard.cpp
     bandwidthdialog.cpp
     basefoldertreeitemwidget.cpp
     bottomwidget.cpp

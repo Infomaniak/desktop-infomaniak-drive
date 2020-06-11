@@ -19,6 +19,7 @@
 #include "configfile.h"
 #include "progressdispatcher.h"
 #include "owncloudsetupwizard.h"
+#include "adddrivewizard.h"
 #include "sharedialog.h"
 #include "settingsdialog.h"
 #include "logger.h"
@@ -119,9 +120,9 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
 
     // Left click
     if (reason == QSystemTrayIcon::Trigger) {
-        if (OwncloudSetupWizard::bringWizardToFrontIfVisible()) {
+        /*if (OwncloudSetupWizard::bringWizardToFrontIfVisible()) {
             // brought wizard to front
-        } else if (_shareDialogs.size() > 0) {
+        } else*/ if (_shareDialogs.size() > 0) {
             // Share dialog(s) be hidden by other apps, bring them back
             Q_FOREACH (const QPointer<ShareDialog> &shareDialog, _shareDialogs) {
                 Q_ASSERT(shareDialog.data());
@@ -501,7 +502,22 @@ void ownCloudGui::slotPauseAllFolders()
 
 void ownCloudGui::slotNewAccountWizard()
 {
-    OwncloudSetupWizard::runWizard(qApp, SLOT(slotownCloudWizardDone(int)));
+    KDC::AddDriveWizard *wizard = new KDC::AddDriveWizard();
+    int res = wizard->exec();
+    Application *app = qobject_cast<Application *>(qApp);
+    app->slotownCloudWizardDone(res);
+
+    // Run next action
+    switch (wizard->nextAction()) {
+    case Utility::WizardAction::OpenFolder:
+        break;
+    case Utility::WizardAction::OpenParameters:
+        slotShowParametersDialog(wizard->accountId());
+        break;
+    case Utility::WizardAction::AddDrive:
+        slotNewAccountWizard();
+        break;
+    }
 }
 
 void ownCloudGui::slotDisableNotifications(KDC::SynthesisPopover::NotificationsDisabled type,

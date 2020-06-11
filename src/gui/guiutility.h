@@ -40,6 +40,12 @@ namespace Utility {
         Right
     };
 
+    enum WizardAction {
+        OpenFolder = 0,
+        OpenParameters,
+        AddDrive
+    };
+
     /** Open an url in the browser.
      *
      * If launching the browser fails, display a message.

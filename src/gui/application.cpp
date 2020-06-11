@@ -38,7 +38,7 @@
 #include "accountmanager.h"
 #include "creds/abstractcredentials.h"
 #include "updater/ocupdater.h"
-#include "owncloudsetupwizard.h"
+#include "adddrivewizard.h"
 #include "version.h"
 #include "csync_exclude.h"
 #include "common/vfs.h"
@@ -395,7 +395,10 @@ void Application::slotAccountStateRemoved(AccountState *accountState)
     if (AccountManager::instance()->accounts().isEmpty()) {
         // allow to add a new account if there is non any more. Always think
         // about single account theming!
-        OwncloudSetupWizard::runWizard(this, SLOT(slotownCloudWizardDone(int)));
+        //OwncloudSetupWizard::runWizard(this, SLOT(slotownCloudWizardDone(int)));
+        /*KDC::AddDriveWizard *wizard = new KDC::AddDriveWizard();
+        Application *app = qobject_cast<Application *>(qApp);
+        app->slotownCloudWizardDone(wizard->exec());*/
     }
 }
 
@@ -495,8 +498,6 @@ void Application::slotownCloudWizardDone(int res)
         if (shouldSetAutoStart) {
             Utility::setLaunchOnStartup(_theme->appName(), _theme->appNameGUI(), true);
         }
-
-        _gui->slotShowParametersDialog();
     }
 }
 

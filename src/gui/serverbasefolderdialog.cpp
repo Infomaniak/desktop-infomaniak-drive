@@ -152,16 +152,6 @@ void ServerBaseFolderDialog::setOkToContinue(bool value)
     _continueButton->setEnabled(value);
 }
 
-void ServerBaseFolderDialog::onInfoIconSizeChanged()
-{
-    setInfoIcon();
-}
-
-void ServerBaseFolderDialog::onInfoIconColorChanged()
-{
-    setInfoIcon();
-}
-
 void ServerBaseFolderDialog::onExit()
 {
     reject();

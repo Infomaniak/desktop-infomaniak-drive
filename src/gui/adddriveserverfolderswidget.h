@@ -19,8 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include "customdialog.h"
-#include "basefoldertreeitemwidget.h"
+#include "foldertreeitemwidget.h"
 #include "accountinfo.h"
 #include "folderman.h"
 
@@ -35,34 +34,35 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-class ServerBaseFolderDialog : public CustomDialog
+class AddDriveServerFoldersWidget : public QWidget
 {
     Q_OBJECT
 
     Q_PROPERTY(QColor info_icon_color READ infoIconColor WRITE setInfoIconColor)
     Q_PROPERTY(QSize info_icon_size READ infoIconSize WRITE setInfoIconSize)
+    Q_PROPERTY(QColor logo_color READ logoColor WRITE setLogoColor)
 
 public:
-    explicit ServerBaseFolderDialog(const QString &accountId, const QString &localFolderName, QWidget *parent = nullptr);
+    explicit AddDriveServerFoldersWidget(QWidget *parent = nullptr);
 
-    inline QString serverFolderPath() const { return _serverFolderPath; }
-    inline QString serverFolderBasePath() const { return _serverFolderBasePath; }
-    inline qint64 selectionSize() const { return _serverFolderSize; };
+    void setAccountPtr(OCC::AccountPtr accountPtr);
+    qint64 selectionSize() const;
+    QStringList createBlackList() const;
+
+signals:
+    void terminated(bool next = true);
 
 private:
-    QString _accountId;
-    QString _localFolderName;
     OCC::Folder *_currentFolder;
+    QLabel *_logoTextIconLabel;
     QLabel *_infoIconLabel;
     QLabel *_availableSpaceTextLabel;
-    BaseFolderTreeItemWidget *_folderTreeItemWidget;
+    FolderTreeItemWidget *_folderTreeItemWidget;
     QPushButton *_continueButton;
     QColor _infoIconColor;
     QSize _infoIconSize;
-    bool _okToContinue;
-    QString _serverFolderPath;
-    QString _serverFolderBasePath;
-    qint64 _serverFolderSize;
+    QColor _logoColor;
+    bool _needToSave;
 
     inline QColor infoIconColor() const { return _infoIconColor; }
     inline void setInfoIconColor(QColor color) {
@@ -76,17 +76,18 @@ private:
         setInfoIcon();
     }
 
+    inline QColor logoColor() const { return _logoColor; }
+    void setLogoColor(const QColor& color);
+
     void initUI();
     void updateUI();
     void setInfoIcon();
-    void setOkToContinue(bool value);
 
 private slots:
-    void onExit();
+    void onDisplayMessage(const QString &text);
+    void onNeedToSave();
     void onBackButtonTriggered(bool checked = false);
     void onContinueButtonTriggered(bool checked = false);
-    void onDisplayMessage(const QString &text);
-    void onFolderSelected(const QString &folderPath, const QString &folderBasePath, qint64 folderSize);
 };
 
 }

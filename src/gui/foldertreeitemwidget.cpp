@@ -327,21 +327,28 @@ QTreeWidgetItem *FolderTreeItemWidget::findFirstChild(QTreeWidgetItem *parent, c
 
 OCC::AccountPtr FolderTreeItemWidget::getAccountPtr()
 {
-    OCC::AccountPtr accountPtr;
-    if (_mode == Update) {
-        if (_currentFolder && _currentFolder->accountState()) {
-            accountPtr = _currentFolder->accountState()->account();
+    if (_accountPtr.isNull()) {
+        if (_mode == Update) {
+            if (_currentFolder && _currentFolder->accountState()) {
+                _accountPtr = _currentFolder->accountState()->account();
+            }
+            else {
+                qCDebug(lcFolderTreeItemWidget) << "Null pointer";
+                return nullptr;
+            }
         }
         else {
-            qCDebug(lcFolderTreeItemWidget) << "Null pointer";
-            return nullptr;
+            if (!_accountId.isEmpty()) {
+                _accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
+            }
+            else {
+                qCDebug(lcFolderTreeItemWidget) << "No account id";
+                return nullptr;
+            }
         }
     }
-    else {
-        accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
-    }
 
-    return accountPtr;
+    return _accountPtr;
 }
 
 QString FolderTreeItemWidget::getFolderPath()

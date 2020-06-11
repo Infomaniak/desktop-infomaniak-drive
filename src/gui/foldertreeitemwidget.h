@@ -42,6 +42,7 @@ public:
     explicit FolderTreeItemWidget(const QString &folderId, bool displayRoot, QWidget *parent = nullptr);
     explicit FolderTreeItemWidget(const QString &accountId, const QString &folderPath, bool displayRoot, QWidget *parent = nullptr);
 
+    inline void setAccountPtr(OCC::AccountPtr accountPtr) { _accountPtr = accountPtr; };
     void loadSubFolders();
     QStringList createBlackList(QTreeWidgetItem *root = 0) const;
     inline QString folderId() { return _folderId; }
@@ -71,6 +72,7 @@ private:
     Mode _mode;
     OCC::Folder *_currentFolder;
     ExcludedFiles _excludedFiles;
+    OCC::AccountPtr _accountPtr;
     QColor _folderIconColor;
     QSize _folderIconSize;
     QColor _sizeTextColor;

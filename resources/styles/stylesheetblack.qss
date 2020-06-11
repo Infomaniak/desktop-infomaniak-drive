@@ -336,6 +336,21 @@ KDC--CustomDialog QPushButton#defaultbutton:disabled
     background-color: rgba(0, 152, 255, 122); /* #0098FF with alpha 50% */
 }
 
+KDC--CustomDialog QPushButton#transparentbutton
+{
+    background-color: transparent;
+    border: 0px;
+    border-radius: 3px;
+    min-height: 40px;
+    max-height: 40px;
+    padding-left: 16px;
+    padding-right: 16px;
+    color: #0098FF;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+}
+
 KDC--CustomDialog QPushButton#nondefaultsmallbutton
 {
     background-color: transparent;
@@ -1279,6 +1294,34 @@ KDC--FolderTreeItemWidget::item
     padding-bottom: 0px;
 }
 
+KDC--FolderTreeItemWidget QScrollBar:vertical
+{
+    background-color: #1B1B1D;
+    border: 0px;
+    width: 3px;
+    margin: 0px 0px 0px 0px;
+}
+
+KDC--FolderTreeItemWidget QScrollBar::handle:vertical
+{
+    background-color: #666666;
+    min-height: 20px;
+}
+
+KDC--FolderTreeItemWidget QScrollBar::add-line:vertical
+{
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+KDC--FolderTreeItemWidget QScrollBar::sub-line:vertical
+{
+    height: 0px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
 KDC--FolderTreeItemWidget#updateFolderTreeItemWidget
 {
     background-color: transparent;
@@ -1403,4 +1446,101 @@ KDC--ConfirmSynchronizationDialog QLabel#foldername
     font-size: 16px;
 }
 
+/********************************/
+/* KDC--ServerFoldersWizardPage */
+/********************************/
 
+KDC--ServerFoldersWizardPage
+{
+    qproperty-info_icon_color: #9F9F9F;
+    qproperty-info_icon_size: 20px;
+}
+
+KDC--ServerFoldersWizardPage QLabel#titleLabel
+{
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 18px;
+}
+
+KDC--ServerFoldersWizardPage QLabel#largeMediumTextLabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 14px;
+}
+
+/************************************/
+/* KDC--AddDriveServerFoldersWidget */
+/************************************/
+
+KDC--AddDriveServerFoldersWidget
+{
+    qproperty-info_icon_color: #9F9F9F;
+    qproperty-info_icon_size: 20px;
+    qproperty-logo_color: #FFFFFF;
+}
+
+KDC--AddDriveServerFoldersWidget QProgressBar
+{
+    background-color: #C0C0C0;
+    min-height: 5px;
+    max-height: 5px;
+    border: 0px;
+    border-radius: 2px;
+    padding: 0px;
+}
+
+KDC--AddDriveServerFoldersWidget QProgressBar::chunk
+{
+    background-color: #0098FF;
+    border: 0px;
+    border-radius: 2px;
+}
+
+/**********************************/
+/* KDC--AddDriveLocalFolderWidget */
+/**********************************/
+
+KDC--AddDriveLocalFolderWidget
+{
+    qproperty-folder_icon_color: #9F9F9F;
+    qproperty-folder_icon_size: 20px;
+    qproperty-logo_color: #FFFFFF;
+}
+
+KDC--AddDriveLocalFolderWidget QWidget#folderSelectionWidget
+{
+    background-color: #F5F5F5;
+    border: 0px;
+    border-radius: 10px;
+    min-height: 80px;
+    max-height: 80px;
+}
+
+KDC--AddDriveLocalFolderWidget QLabel#folderNameLabel
+{
+    color: #1B1B1B;
+    font-family: "Suisse Int'l";
+    font-weight: 650; /* bold */
+    font-size: 16px;
+}
+
+KDC--AddDriveLocalFolderWidget QLabel#folderPathLabel
+{
+    color: #0098FF;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 12px;
+}
+
+/***********************************/
+/* KDC--AddDriveConfirmationWidget */
+/***********************************/
+
+KDC--AddDriveConfirmationWidget
+{
+    qproperty-logo_color: #FFFFFF;
+}

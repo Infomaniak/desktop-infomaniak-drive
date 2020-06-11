@@ -280,7 +280,9 @@ void DrivePreferencesWidget::reset()
     _accountInfo = nullptr;
     _displayErrorsWidget->setVisible(false);
     resetFoldersBlocs();
-    _smartSyncSwitch->setChecked(false);
+    if (_smartSyncSwitch) {
+        _smartSyncSwitch->setChecked(false);
+    }
     _notificationsSwitch->setChecked(false);
     _accountAvatarLabel->setPixmap(QPixmap());
     _accountNameLabel->setText(QString());
@@ -659,6 +661,8 @@ bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, 
 {
     bool useVirtualFileSync = false;
 
+    qCInfo(lcDrivePreferencesWidget) << "Adding folder definition for" << localFolderPath << serverFolderPath;
+
     OCC::FolderDefinition folderDefinition;
     folderDefinition.localPath = localFolderPath;
     folderDefinition.targetPath = OCC::FolderDefinition::prepareTargetPath(serverFolderPath);
@@ -669,7 +673,7 @@ bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, 
     }
 
     OCC::AccountStatePtr accountStatePtr = OCC::AccountManager::instance()->getAccountStateFromId(_accountId);
-    auto folder = OCC::FolderMan::instance()->addFolder(accountStatePtr.data(), folderDefinition);
+    OCC::Folder *folder = OCC::FolderMan::instance()->addFolder(accountStatePtr.data(), folderDefinition);
     if (folder) {
         if (folderDefinition.virtualFilesMode != OCC::Vfs::Off && useVirtualFileSync) {
             folder->setRootPinState(OCC::PinState::OnlineOnly);
