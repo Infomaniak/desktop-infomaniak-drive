@@ -328,6 +328,24 @@ void ProxyServerDialog::onSaveButtonTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
+    // Check host name
+    if (!_proxy.hostName().isEmpty()) {
+        QHostInfo info = QHostInfo::fromName(_proxy.hostName());
+        if (info.error() != QHostInfo::NoError) {
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Proxy not found, save anyway?"),
+                        QMessageBox::Ok | QMessageBox::Cancel, this);
+            msgBox->setDefaultButton(QMessageBox::Cancel);
+            int ret = msgBox->exec();
+            if (ret != QDialog::Rejected) {
+                if (ret == QMessageBox::Cancel) {
+                    return;
+                }
+            }
+        }
+    }
+
     OCC::ConfigFile cfgFile;
     cfgFile.setProxyType(_proxyType, _proxy.hostName(), _proxy.port(), _proxyNeedsAuth, _proxy.user(), _proxy.password());
 
@@ -402,17 +420,6 @@ void ProxyServerDialog::onAddressTextEdited(const QString &text)
 
 void ProxyServerDialog::onAddressEditingFinished()
 {
-    // Check host name
-    if (!_proxy.hostName().isEmpty()) {
-        QHostInfo info = QHostInfo::fromName(_proxy.hostName());
-        if (info.error() != QHostInfo::NoError) {
-            CustomMessageBox *msgBox = new CustomMessageBox(
-                        QMessageBox::Warning,
-                        tr("Proxy not found!"),
-                        QMessageBox::Ok, this);
-            msgBox->exec();
-        }
-    }
 }
 
 void ProxyServerDialog::onAuthenticationCheckBoxClicked(bool checked)

@@ -251,7 +251,7 @@ KDC--CustomDialog QLabel#largeMediumTextLabel
 
 KDC--CustomDialog QLabel#largeMediumBoldTextLabel
 {
-    color: #333333;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 14px;
@@ -259,7 +259,7 @@ KDC--CustomDialog QLabel#largeMediumBoldTextLabel
 
 KDC--CustomDialog QLabel#boldTextLabel
 {
-    color: #333333;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 13px;
@@ -438,7 +438,7 @@ KDC--CustomDialog QComboBox
     border: 1px solid #1B1B1D;
     border-radius: 3px;
     padding-left: 10px;
-    padding-width: 10px;
+    padding-right: 10px;
 }
 
 KDC--CustomDialog QComboBox::drop-down
@@ -811,7 +811,7 @@ KDC--MainMenuBarWidget
     max-height: 95px;
 }
 
-KDC--MainMenuBarWidget QPushButton
+KDC--MainMenuBarWidget QPushButton#preferencesButton
 {
     background-color: transparent;
     margin: 0px 0px 0px 0px;
@@ -823,7 +823,7 @@ KDC--MainMenuBarWidget QPushButton
     border: 0px;
 }
 
-KDC--MainMenuBarWidget QPushButton:checked
+KDC--MainMenuBarWidget QPushButton#preferencesButton:hover
 {
     background-color: transparent;
     margin: 0px 0px 0px 0px;
@@ -1173,7 +1173,7 @@ KDC--ActionWidget#displayErrorsWidget QLabel#textLabel
 {
     color: #FFFFFF;
     font-family: "Suisse Int'l";
-    font-weight: 450; /* normal */
+    font-weight: 450; /* medium */
     font-size: 13px;
 }
 
@@ -1246,7 +1246,7 @@ KDC--AboutDialog
 /* KDC - CustomMessageBox */
 /**************************/
 
-CustomMessageBox {
+KDC--CustomMessageBox {
     min-width: 500px;
     max-width: 800px;
     min-height: 175px;
@@ -1286,8 +1286,8 @@ KDC--FolderTreeItemWidget
 
 KDC--FolderTreeItemWidget::item
 {
-    min-height: 30px;
-    max-height: 30px;
+    min-height: 35px;
+    max-height: 35px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 0px;
@@ -1339,7 +1339,6 @@ KDC--FolderTreeItemWidget#updateFolderTreeItemWidget::item
 KDC--BaseFolderTreeItemWidget
 {
     background-color: #F5F5F5;
-    selection-background-color: #E0E0E0;
     border: 0px;
     padding-left: 0px;
     padding-right: 0px;
@@ -1347,12 +1346,13 @@ KDC--BaseFolderTreeItemWidget
     padding-bottom: 10px;
     border-radius: 10px;
     color: #333333;
-    selection-color: #333333;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 14px;
     gridline-color: transparent;
     outline: none;
+    selection-background-color: #E0E0E0;
+    selection-color: #333333;
     qproperty-folder_icon_color: #9F9F9F;
     qproperty-folder_icon_size: 20px;
 }
@@ -1444,32 +1444,6 @@ KDC--ConfirmSynchronizationDialog QLabel#foldername
     font-family: "Suisse Int'l";
     font-weight: 650; /* bold */
     font-size: 16px;
-}
-
-/********************************/
-/* KDC--ServerFoldersWizardPage */
-/********************************/
-
-KDC--ServerFoldersWizardPage
-{
-    qproperty-info_icon_color: #9F9F9F;
-    qproperty-info_icon_size: 20px;
-}
-
-KDC--ServerFoldersWizardPage QLabel#titleLabel
-{
-    color: #FFFFFF;
-    font-family: "Suisse Int'l";
-    font-weight: 450; /* medium */
-    font-size: 18px;
-}
-
-KDC--ServerFoldersWizardPage QLabel#largeMediumTextLabel
-{
-    color: #666666;
-    font-family: "Suisse Int'l";
-    font-weight: 450; /* medium */
-    font-size: 14px;
 }
 
 /************************************/

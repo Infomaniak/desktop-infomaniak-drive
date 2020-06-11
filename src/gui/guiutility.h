@@ -96,7 +96,8 @@ namespace Utility {
     QColor getShadowColor();
     QUrl getUrlFromLocalPath(const QString &path);
     int getQFontWeightFromQSSFontWeight(int weight);
-    qint64 dirSize(const QString &dirPath);
+    qint64 folderSize(const QString &dirPath);
+    bool openFolder(const QString &path);
 
 } // namespace Utility
 } // namespace OCC

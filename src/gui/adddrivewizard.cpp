@@ -53,6 +53,7 @@ AddDriveWizard::AddDriveWizard(QWidget *parent)
     , _serverFolderPath(QString())
     , _selectionSize(0)
     , _blackList(QStringList())
+    , _serverUrl(QString())
     , _localFolderPath(QString())
     , _action(OCC::Utility::WizardAction::OpenFolder)
 {
@@ -115,9 +116,9 @@ void AddDriveWizard::startNextStep()
         _addDriveStartWidget->setServerUrl(_accountPtr->url().toString());
     }
     else if (_currentStep == Login) {
-        QString serverUrl = _addDriveStartWidget->serverUrl();
+        _serverUrl = _addDriveStartWidget->serverUrl();
         _addDriveLoginWidget->setAccountPtr(_accountPtr);
-        _addDriveLoginWidget->login(serverUrl);
+        _addDriveLoginWidget->login(_serverUrl);
     }
     else if (_currentStep == RemoteFoders) {
         _addDriveServerFoldersWidget->setAccountPtr(_accountPtr);
@@ -128,10 +129,11 @@ void AddDriveWizard::startNextStep()
         if (!QDir(localFolderPath).isAbsolute()) {
             localFolderPath = QDir::homePath() + QDir::separator() + localFolderPath;
         }
-        _addDriveLocalFolderWidget->setLocalFolderPath(localFolderPath);
+        QString goodLocalFolderPath = OCC::FolderMan::instance()->findGoodPathForNewSyncFolder(localFolderPath, _serverUrl);
+        _addDriveLocalFolderWidget->setLocalFolderPath(goodLocalFolderPath);
     }
     else if (_currentStep == Confirmation) {
-        _addDriveConfirmationWidget->setFolderName(_localFolderPath);
+        _addDriveConfirmationWidget->setFolderPath(_localFolderPath);
     }
 }
 

@@ -663,8 +663,8 @@ KDC--ParametersDialog QScrollBar::sub-line:vertical
 
 KDC--ParametersDialog QStackedWidget
 {
+    background-color: transparent;
     border: 0px;
-    background-color: #transparent;
 }
 
 KDC--ParametersDialog QStackedWidget#mainStackedWidget

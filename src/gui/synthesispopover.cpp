@@ -539,10 +539,9 @@ void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
         QUrl url = folderUrl(folderId, filePath);
         if (url.isValid()) {
             if (!QDesktopServices::openUrl(url)) {
-                qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << url.toString();
                 CustomMessageBox *msgBox = new CustomMessageBox(
                             QMessageBox::Warning,
-                            tr("Unable to open folder path %1.").arg(url.toString()),
+                            tr("Unable to open folder url %1.").arg(url.toString()),
                             QMessageBox::Ok, this);
                 msgBox->exec();
             }
@@ -1034,7 +1033,7 @@ void SynthesisPopover::onDisplayErrors(const QString &accountId)
 
 void SynthesisPopover::displayErrors(const QString &accountId)
 {
-    emit openParametersDialog(accountId);
+    emit openParametersDialog(accountId, true);
 }
 
 void SynthesisPopover::onOpenFolderMenu(bool checked)
@@ -1189,7 +1188,7 @@ void SynthesisPopover::onOpenParameters(bool checked)
 {
     Q_UNUSED(checked)
 
-    emit openParametersDialog();
+    emit openParametersDialog(_currentAccountId);
 }
 
 void SynthesisPopover::onDisplayHelp(bool checked)

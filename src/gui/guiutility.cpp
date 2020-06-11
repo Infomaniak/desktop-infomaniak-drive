@@ -38,6 +38,7 @@
 #include "accountmanager.h"
 #include "folderman.h"
 #include "configfile.h"
+#include "openfilemanager.h"
 
 using namespace OCC;
 
@@ -501,7 +502,7 @@ int Utility::getQFontWeightFromQSSFontWeight(int weight)
     return weight / 9;
 }
 
-qint64 Utility::dirSize(const QString &dirPath)
+qint64 Utility::folderSize(const QString &dirPath)
 {
     QDirIterator it(dirPath, QDirIterator::Subdirectories);
     qint64 total = 0;
@@ -511,4 +512,29 @@ qint64 Utility::dirSize(const QString &dirPath)
     }
 
     return total;
+}
+
+bool Utility::openFolder(const QString &dirPath)
+{
+    if (!dirPath.isEmpty()) {
+        QFileInfo fileInfo(dirPath);
+        if (fileInfo.exists()) {
+            showInFileManager(fileInfo.filePath());
+        }
+        else if (fileInfo.dir().exists()) {
+            QUrl url = getUrlFromLocalPath(fileInfo.dir().path());
+            if (url.isValid()) {
+                if (!QDesktopServices::openUrl(url)) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    return true;
 }

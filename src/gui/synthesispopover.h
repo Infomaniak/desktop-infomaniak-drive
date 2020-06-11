@@ -65,7 +65,7 @@ public:
 signals:
     void updateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
     void itemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &syncFileItemPtr);
-    void openParametersDialog(const QString &accountId = QString());
+    void openParametersDialog(const QString &accountId = QString(), bool errorPage = false);
     void openShareDialogPublicLinks(const QString &sharePath, const QString &localPath);
     void exit();
     void addDrive();

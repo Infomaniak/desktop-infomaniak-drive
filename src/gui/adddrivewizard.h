@@ -39,6 +39,7 @@ public:
     explicit AddDriveWizard(QWidget *parent = nullptr);
 
     inline OCC::Utility::WizardAction nextAction() { return _action; }
+    inline QString localFolderPath() { return _localFolderPath; }
     inline QString accountId() { return _accountPtr->id(); }
 
 private:
@@ -63,6 +64,7 @@ private:
     QString _serverFolderPath;
     qint64 _selectionSize;
     QStringList _blackList;
+    QString _serverUrl;
     QString _localFolderPath;
     OCC::Utility::WizardAction _action;
 

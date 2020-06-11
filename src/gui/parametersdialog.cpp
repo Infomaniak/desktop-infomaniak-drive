@@ -85,16 +85,22 @@ ParametersDialog::ParametersDialog(QWidget *parent)
             this, &ParametersDialog::onItemCompleted);
 }
 
-void ParametersDialog::openErrorPage(const QString &accountId)
+void ParametersDialog::openDriveErrorsPage(const QString &accountId)
 {
+    openDriveParametersPage(accountId);
     onDisplayDriveErrors(accountId);
+}
+
+void ParametersDialog::openDriveParametersPage(const QString &accountId)
+{
+    _driveMenuBarWidget->driveSelectionWidget()->selectDrive(accountId);
 }
 
 void ParametersDialog::initUI()
 {
     /*
      *  _pageStackedWidget
-     *      mainPageWidget
+     *      drivePageWidget
      *          driveBox
      *              _driveMenuBarWidget
      *              drivePreferencesScrollArea
@@ -521,7 +527,8 @@ void ParametersDialog::onAccountSelected(QString id)
     if (accountInfoIt != _accountInfoMap.end()) {
         _currentAccountId = id;
         _driveMenuBarWidget->progressBarWidget()->setUsedSize(accountInfoIt->second._totalSize, accountInfoIt->second._used);
-        displayDriveParameters(id);
+        _drivePreferencesWidget->setAccount(accountInfoIt->first, &accountInfoIt->second,
+                                            accountInfoIt->second._errorsListWidget != nullptr);
     }
 }
 
@@ -554,22 +561,13 @@ void ParametersDialog::onRemoveDrive(const QString &accountId)
     }
 }
 
-void ParametersDialog::displayDriveParameters(const QString &accountId)
-{
-    auto accountInfoIt = _accountInfoMap.find(accountId);
-    if (accountInfoIt != _accountInfoMap.end()) {
-        _drivePreferencesWidget->setAccount(accountInfoIt->first, &accountInfoIt->second,
-                                            accountInfoIt->second._errorsListWidget != nullptr);
-    }
-}
-
 void ParametersDialog::onDisplayDriveErrors(const QString &accountId)
 {
+    _pageStackedWidget->setCurrentIndex(Page::Errors);
     auto accountInfoIt = _accountInfoMap.find(accountId);
     if (accountInfoIt != _accountInfoMap.end()) {
         _errorsMenuBarWidget->setAccount(accountInfoIt->first, &accountInfoIt->second);
         _errorsStackedWidget->setCurrentIndex(accountInfoIt->second._errorsListStackPosition);
-        _pageStackedWidget->setCurrentIndex(Page::Errors);
     }
 }
 
@@ -661,24 +659,12 @@ void ParametersDialog::onSendLogs()
 
 void ParametersDialog::onOpenFolderItem(const QString &filePath)
 {
-    if (!filePath.isEmpty()) {
-        QFileInfo fileInfo(filePath);
-        if (fileInfo.exists()) {
-            OCC::showInFileManager(fileInfo.filePath());
-        }
-        else if (fileInfo.dir().exists()) {
-            QUrl url = OCC::Utility::getUrlFromLocalPath(fileInfo.dir().path());
-            if (url.isValid()) {
-                if (!QDesktopServices::openUrl(url)) {
-                    qCWarning(lcParametersDialog) << "QDesktopServices::openUrl failed for " << url.toString();
-                    CustomMessageBox *msgBox = new CustomMessageBox(
-                                QMessageBox::Warning,
-                                tr("Unable to open folder path %1.").arg(url.toString()),
-                                QMessageBox::Ok, this);
-                    msgBox->exec();
-                }
-            }
-        }
+    if (!OCC::Utility::openFolder(filePath)) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
+                    tr("Unable to open folder path %1.").arg(filePath),
+                    QMessageBox::Ok, this);
+        msgBox->exec();
     }
 }
 

@@ -140,15 +140,15 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     //
     // Synchronization bloc
     //
-    QLabel *synchronizationLabel = new QLabel(tr("Synchronization"), this);
-    synchronizationLabel->setObjectName("blocLabel");
-    _mainVBox->addWidget(synchronizationLabel);
 
-    PreferencesBlocWidget *synchronizationBloc = new PreferencesBlocWidget(this);
-    _mainVBox->addWidget(synchronizationBloc);
-
-    // Smart sync
     if (OCC::Theme::instance()->showVirtualFilesOption() && OCC::bestAvailableVfsMode() != OCC::Vfs::Off) {
+        QLabel *synchronizationLabel = new QLabel(tr("Synchronization"), this);
+        synchronizationLabel->setObjectName("blocLabel");
+        _mainVBox->addWidget(synchronizationLabel);
+
+        PreferencesBlocWidget *synchronizationBloc = new PreferencesBlocWidget(this);
+        _mainVBox->addWidget(synchronizationBloc);
+
         QBoxLayout *smartSyncBox = synchronizationBloc->addLayout(QBoxLayout::Direction::TopToBottom);
 
         QHBoxLayout *smartSync1HBox = new QHBoxLayout();
@@ -728,7 +728,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             localFolderPath = localFolderDialog->localFolderPath();
             QFileInfo localFolderInfo(localFolderPath);
             localFolderName = localFolderInfo.baseName();
-            localFolderSize = OCC::Utility::dirSize(localFolderPath);
+            localFolderSize = OCC::Utility::folderSize(localFolderPath);
             qCDebug(lcDrivePreferencesWidget) << "Local folder selected: " << localFolderPath;
             nextStep = SelectServerBaseFolder;
         }

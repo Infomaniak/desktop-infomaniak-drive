@@ -39,7 +39,7 @@ class AddDriveConfirmationWidget : public QWidget
 public:
     explicit AddDriveConfirmationWidget(QWidget *parent = nullptr);
 
-    void setFolderName(const QString &name);
+    void setFolderPath(const QString &path);
     inline OCC::Utility::WizardAction action() { return _action; }
 
 signals:

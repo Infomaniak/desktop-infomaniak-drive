@@ -31,6 +31,7 @@
 #include "common/syncjournalfilerecord.h"
 #include "creds/abstractcredentials.h"
 #include "guiutility.h"
+#include "custommessagebox.h"
 
 #include <QDesktopServices>
 #include <QDir>
@@ -510,6 +511,13 @@ void ownCloudGui::slotNewAccountWizard()
     // Run next action
     switch (wizard->nextAction()) {
     case Utility::WizardAction::OpenFolder:
+        if (!Utility::openFolder(wizard->localFolderPath())) {
+            KDC::CustomMessageBox *msgBox = new KDC::CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Unable to open folder path %1.").arg(wizard->localFolderPath()),
+                        QMessageBox::Ok);
+            msgBox->exec();
+        }
         break;
     case Utility::WizardAction::OpenParameters:
         slotShowParametersDialog(wizard->accountId());
@@ -585,13 +593,18 @@ void ownCloudGui::slotShowGuiMessage(const QString &title, const QString &messag
     msgBox->open();
 }
 
-void ownCloudGui::slotShowParametersDialog(const QString &accountId)
+void ownCloudGui::slotShowParametersDialog(const QString &accountId, bool errorPage)
 {
     if (_parametersDialog.isNull()) {
         setupParametersDialog();
     }
-    if (accountId != QString()) {
-        _parametersDialog->openErrorPage(accountId);
+    if (!accountId.isEmpty()) {
+        if (errorPage) {
+            _parametersDialog->openDriveErrorsPage(accountId);
+        }
+        else {
+            _parametersDialog->openDriveParametersPage(accountId);
+        }
     }
     raiseDialog(_parametersDialog);
 }

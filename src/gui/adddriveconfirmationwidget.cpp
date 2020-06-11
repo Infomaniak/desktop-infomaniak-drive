@@ -56,10 +56,11 @@ AddDriveConfirmationWidget::AddDriveConfirmationWidget(QWidget *parent)
     initUI();
 }
 
-void AddDriveConfirmationWidget::setFolderName(const QString &name)
+void AddDriveConfirmationWidget::setFolderPath(const QString &path)
 {
+    QDir dir(path);
     _descriptionLabel->setText(tr("Synchronization will start and you will be able to add files to your %1 folder.")
-                               .arg(name));
+                               .arg(dir.dirName()));
 }
 
 void AddDriveConfirmationWidget::initUI()

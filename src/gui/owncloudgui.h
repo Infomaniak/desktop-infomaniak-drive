@@ -77,7 +77,7 @@ public slots:
     void slotItemCompleted(const QString &folder, const SyncFileItemPtr &item);
     void slotShowGuiMessage(const QString &title, const QString &message);
     void slotFoldersChanged();
-    void slotShowParametersDialog(const QString &accountId = QString());
+    void slotShowParametersDialog(const QString &accountId = QString(), bool errorPage = false);
     void slotShutdown();
     void slotSyncStateChange(Folder *);
     void slotTrayClicked(QSystemTrayIcon::ActivationReason reason);
