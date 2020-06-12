@@ -191,7 +191,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     notifications1HBox->setSpacing(0);
     notificationsBox->addLayout(notifications1HBox);
 
-    QLabel *notificationsTitleLabel = new QLabel(tr("Disable the notifications"), this);
+    QLabel *notificationsTitleLabel = new QLabel(tr("Disable the notifications for this kDrive"), this);
     notifications1HBox->addWidget(notificationsTitleLabel);
 
     _notificationsSwitch = new CustomSwitch(this);
