@@ -49,14 +49,12 @@ public:
 private:
     Type _type;
     QColor _backgroundColor;
+    bool _painted;
 
     void paintEvent(QPaintEvent *event) override;
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(const QColor &color) { _backgroundColor = color; }
-
-private slots:
-    void onAboutToShow();
 };
 
 }
