@@ -93,8 +93,8 @@ private:
     inline QColor backgroundColorSelection() const { return _backgroundColorSelection; }
     inline void setBackgroundColorSelection(const QColor &value) { _backgroundColorSelection = value; }
 
-    QString getFileIconPathFromFileName(const QString &fileName) const;
-    QIcon getIconWithStatus(const QString &filePath, OCC::SyncFileItem::Status status);
+    QString getFileIconPathFromFileName(const QString &fileName, ItemType type) const;
+    QIcon getIconWithStatus(const QString &filePath, ItemType type, OCC::SyncFileItem::Status status);
     void setDirectionIcon();
     void setSelected(bool isSelected);
 

@@ -199,65 +199,73 @@ void SynchronizedItemWidget::leaveEvent(QEvent *event)
     setSelected(false);
 }
 
-QString SynchronizedItemWidget::getFileIconPathFromFileName(const QString &fileName) const
+QString SynchronizedItemWidget::getFileIconPathFromFileName(const QString &fileName, ItemType type) const
 {
-    QMimeDatabase db;
-    QMimeType mime = db.mimeTypeForFile(fileName, QMimeDatabase::MatchExtension);
-    if (mime.name().startsWith("image/")) {
-        return QString(":/client/resources/icons/document types/file-image.svg");
+    if (type == ItemType::ItemTypeDirectory) {
+        return QString(":/client/resources/icons/document types/folder.svg");
     }
-    else if (mime.name().startsWith("audio/")) {
-        return QString(":/client/resources/icons/document types/file-audio.svg");
-    }
-    else if (mime.name().startsWith("video/")) {
-        return QString(":/client/resources/icons/document types/file-video.svg");
-    }
-    else if (mime.inherits("application/pdf")) {
-        return QString(":/client/resources/icons/document types/file-pdf.svg");
-    }
-    else if (mime.name().startsWith("application/vnd.ms-powerpoint")
-             || mime.name().startsWith("application/vnd.openxmlformats-officedocument.presentationml")
-             || mime.inherits("application/vnd.oasis.opendocument.presentation")) {
-        return QString(":/client/resources/icons/document types/file-presentation.svg");
-    }
-    else if (mime.name().startsWith("application/vnd.ms-excel")
-             || mime.name().startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")
-             || mime.inherits("application/vnd.oasis.opendocument.spreadsheet")) {
-        return QString(":/client/resources/icons/document types/file-sheets.svg");
-    }
-    else if (mime.inherits("application/zip")
-             || mime.inherits("application/gzip")
-             || mime.inherits("application/tar")
-             || mime.inherits("application/rar")
-             || mime.inherits("application/x-bzip2")) {
-        return QString(":/client/resources/icons/document types/file-zip.svg");
-    }
-    else if (mime.inherits("text/x-csrc")
-             || mime.inherits("text/x-c++src")
-             || mime.inherits("text/x-java")
-             || mime.inherits("text/x-objcsrc")
-             || mime.inherits("text/x-python")
-             || mime.inherits("text/asp")
-             || mime.inherits("text/html")
-             || mime.inherits("text/javascript")
-             || mime.inherits("application/x-php")
-             || mime.inherits("application/x-perl")) {
-        return QString(":/client/resources/icons/document types/file-code.svg");
-    }
-    else if (mime.inherits("text/plain")
-             || mime.inherits("text/xml")) {
-       return QString(":/client/resources/icons/document types/file-text.svg");
-    }
-    else if (mime.inherits("application/x-msdos-program")) {
-        return QString(":/client/resources/icons/document types/file-application.svg");
-    }
+    else if (type == ItemType::ItemTypeFile) {
+        QMimeDatabase db;
+        QMimeType mime = db.mimeTypeForFile(fileName, QMimeDatabase::MatchExtension);
+        if (mime.name().startsWith("image/")) {
+            return QString(":/client/resources/icons/document types/file-image.svg");
+        }
+        else if (mime.name().startsWith("audio/")) {
+            return QString(":/client/resources/icons/document types/file-audio.svg");
+        }
+        else if (mime.name().startsWith("video/")) {
+            return QString(":/client/resources/icons/document types/file-video.svg");
+        }
+        else if (mime.inherits("application/pdf")) {
+            return QString(":/client/resources/icons/document types/file-pdf.svg");
+        }
+        else if (mime.name().startsWith("application/vnd.ms-powerpoint")
+                 || mime.name().startsWith("application/vnd.openxmlformats-officedocument.presentationml")
+                 || mime.inherits("application/vnd.oasis.opendocument.presentation")) {
+            return QString(":/client/resources/icons/document types/file-presentation.svg");
+        }
+        else if (mime.name().startsWith("application/vnd.ms-excel")
+                 || mime.name().startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")
+                 || mime.inherits("application/vnd.oasis.opendocument.spreadsheet")) {
+            return QString(":/client/resources/icons/document types/file-sheets.svg");
+        }
+        else if (mime.inherits("application/zip")
+                 || mime.inherits("application/gzip")
+                 || mime.inherits("application/tar")
+                 || mime.inherits("application/rar")
+                 || mime.inherits("application/x-bzip2")) {
+            return QString(":/client/resources/icons/document types/file-zip.svg");
+        }
+        else if (mime.inherits("text/x-csrc")
+                 || mime.inherits("text/x-c++src")
+                 || mime.inherits("text/x-java")
+                 || mime.inherits("text/x-objcsrc")
+                 || mime.inherits("text/x-python")
+                 || mime.inherits("text/asp")
+                 || mime.inherits("text/html")
+                 || mime.inherits("text/javascript")
+                 || mime.inherits("application/x-php")
+                 || mime.inherits("application/x-perl")) {
+            return QString(":/client/resources/icons/document types/file-code.svg");
+        }
+        else if (mime.inherits("text/plain")
+                 || mime.inherits("text/xml")) {
+           return QString(":/client/resources/icons/document types/file-text.svg");
+        }
+        else if (mime.inherits("application/x-msdos-program")) {
+            return QString(":/client/resources/icons/document types/file-application.svg");
+        }
 
-    return QString(":/client/resources/icons/document types/file-default.svg");
+        return QString(":/client/resources/icons/document types/file-default.svg");
+    }
+    else {
+        return QString(":/client/resources/icons/document types/file-default.svg");
+    }
 }
 
-QIcon SynchronizedItemWidget::getIconWithStatus(const QString &filePath, OCC::SyncFileItem::Status status)
+QIcon SynchronizedItemWidget::getIconWithStatus(const QString &filePath, ItemType type, OCC::SyncFileItem::Status status)
 {
-    QGraphicsSvgItem *fileItem = new QGraphicsSvgItem(getFileIconPathFromFileName(filePath));
+    QGraphicsSvgItem *fileItem = new QGraphicsSvgItem(getFileIconPathFromFileName(filePath, type));
     QGraphicsSvgItem *statusItem = new QGraphicsSvgItem(OCC::Utility::getFileStatusIconPath(status));
 
     QGraphicsScene scene;
@@ -307,8 +315,8 @@ void SynchronizedItemWidget::setDirectionIcon()
 void SynchronizedItemWidget::onFileIconSizeChanged()
 {
     if (_fileIconLabel) {
-        QFileInfo fileInfo(_item.filePath());
-        QIcon fileIconWithStatus = getIconWithStatus(fileInfo.fileName(), _item.status());
+        QFileInfo fileInfo(_item.fullFilePath());
+        QIcon fileIconWithStatus = getIconWithStatus(fileInfo.fileName(), _item.type(), _item.status());
         _fileIconLabel->setPixmap(fileIconWithStatus.pixmap(_fileIconSize));
     }
 }

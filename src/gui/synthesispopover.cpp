@@ -964,6 +964,7 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                                                           item.data()->_fileId,
                                                           item.data()->_status,
                                                           item.data()->_direction,
+                                                          item.data()->_type,
                                                           folderPath(folderId, item.data()->_file),
                                                           QDateTime::currentDateTime());
                         accountInfoIt->second._synchronizedListWidget->insertItem(0, widgetItem);

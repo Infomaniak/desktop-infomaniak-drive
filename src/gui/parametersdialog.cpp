@@ -469,6 +469,7 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                                                           item.data()->_fileId,
                                                           item.data()->_status,
                                                           item.data()->_direction,
+                                                          item.data()->_type,
                                                           accountInfoIt->second.folderPath(folderId, item.data()->_file),
                                                           QDateTime::currentDateTime(),
                                                           item.data()->_errorString);

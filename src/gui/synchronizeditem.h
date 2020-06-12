@@ -32,13 +32,15 @@ class SynchronizedItem
 public:
     SynchronizedItem(const QString &folderId, const QString &filePath, const QByteArray &fileId,
                      OCC::SyncFileItem::Status status, OCC::SyncFileItem::Direction direction,
-                     const QString &fullFilePath, const QDateTime &dateTime, const QString &error = QString());
+                     ItemType type, const QString &fullFilePath, const QDateTime &dateTime,
+                     const QString &error = QString());
 
     inline QString folderId() const { return _folderId; };
     inline QString filePath() const { return _filePath; };
     inline QByteArray fileId() const { return _fileId; };
     inline OCC::SyncFileItem::Status status() const { return _status; };
     inline OCC::SyncFileItem::Direction direction() const { return _direction; };
+    inline ItemType type() const { return _type; };
     inline QString fullFilePath() const { return _fullFilePath; };
     inline QDateTime dateTime() const { return _dateTime; };
     inline QString error() const { return _error; };
@@ -49,6 +51,7 @@ private:
     QByteArray _fileId;
     OCC::SyncFileItem::Status _status;
     OCC::SyncFileItem::Direction _direction;
+    ItemType _type;
     QString _fullFilePath;
     QDateTime _dateTime;
     QString _error;
