@@ -114,12 +114,12 @@ void LocalFolderDialog::initUI()
     folderNameSelectedHBox->addWidget(_folderIconLabel);
 
     _folderNameLabel = new QLabel(this);
-    _folderNameLabel->setObjectName("folderNameLabel");
+    _folderNameLabel->setObjectName("foldernamelabel");
     folderNameSelectedHBox->addWidget(_folderNameLabel);
     folderNameSelectedHBox->addStretch();
 
     _folderPathLabel = new QLabel(this);
-    _folderPathLabel->setObjectName("folderPathLabel");
+    _folderPathLabel->setObjectName("folderpathlabel");
     folderSelectedVBox->addWidget(_folderPathLabel);
 
     CustomToolButton *updateButton = new CustomToolButton(this);

@@ -1403,7 +1403,7 @@ KDC--LocalFolderDialog QPushButton#selectButton
     border: 0px;
 }
 
-KDC--LocalFolderDialog QLabel#folderNameLabel
+KDC--LocalFolderDialog QLabel#foldernamelabel
 {
     color: #333333;
     font-family: "Suisse Int'l";
@@ -1411,7 +1411,7 @@ KDC--LocalFolderDialog QLabel#folderNameLabel
     font-size: 16px;
 }
 
-KDC--LocalFolderDialog QLabel#folderPathLabel
+KDC--LocalFolderDialog QLabel#folderpathlabel
 {
     color: #0098FF;
     font-family: "Suisse Int'l";
