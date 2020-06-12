@@ -86,6 +86,7 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     fileErrorLabel->setObjectName("fileErrorLabel");
     fileErrorLabel->setText(_item.error());
     fileErrorLabel->setWordWrap(true);
+    fileErrorLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
     vBoxMiddle->addWidget(fileErrorLabel);
     vBoxMiddle->setStretchFactor(fileErrorLabel, 1);
 
