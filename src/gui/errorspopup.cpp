@@ -83,8 +83,9 @@ ErrorsPopup::ErrorsPopup(const QList<DriveError> &driveErrorList, QPoint positio
         driveErrorHBox->addWidget(warningIconLabel);
 
         QLabel *driveNameLabel = new QLabel(this);
-        QString text = driveError.accountName + QString(tr(" (%n error(s))", "Number of errors", driveError.errorsCount));
+        QString text = driveError.accountName + QString(tr(" (%n warning(s) or error(s))", "Number of warnings or errors", driveError.errorsCount));
         driveNameLabel->setText(text);
+        driveNameLabel->setWordWrap(true);
         driveErrorHBox->addWidget(driveNameLabel);
         driveErrorHBox->addStretch();
 

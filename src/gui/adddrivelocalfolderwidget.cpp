@@ -67,8 +67,7 @@ AddDriveLocalFolderWidget::AddDriveLocalFolderWidget(QWidget *parent)
 
 void AddDriveLocalFolderWidget::setAccountPtr(OCC::AccountPtr accountPtr)
 {
-    //_titleLabel->setText(tr("Location of your %1 kDrive").arg(accountPtr->driveName()));
-    _titleLabel->setText(tr("Location of your kDrive").arg(accountPtr->driveName()));
+    _titleLabel->setText(tr("Location of your %1 kDrive").arg(accountPtr->driveName()));
 }
 
 void AddDriveLocalFolderWidget::setLocalFolderPath(const QString &path)

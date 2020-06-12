@@ -176,6 +176,10 @@ void AddDriveWizard::setCredentials(OCC::AbstractCredentials *creds)
 {
     _accountPtr->setCredentials(creds);
     testConnection();
+
+    // Fetch user information
+    OCC::ConnectionValidator *conValidator = new OCC::ConnectionValidator(_accountPtr);
+    conValidator->fetchUser();
 }
 
 QString AddDriveWizard::printQNetworkProxy(const QNetworkProxy &proxy)
@@ -227,7 +231,6 @@ void AddDriveWizard::testConnection()
     connect(job, &OCC::PropfindJob::result, this, &AddDriveWizard::onAuthTestOk);
     connect(job, &OCC::PropfindJob::finishedWithError, this, &AddDriveWizard::onAuthTestError);
     job->start();
-
 }
 
 OCC::AccountState *AddDriveWizard::applyAccountChanges()

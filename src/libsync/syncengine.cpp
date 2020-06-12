@@ -643,7 +643,7 @@ void SyncEngine::slotDiscoveryFinished()
     //    qCInfo(lcEngine) << "Permissions of the root folder: " << _csync_ctx->remote.root_perms.toString();
 
     if (!_hasNoneFiles && _hasRemoveFile) {
-        qCInfo(lcEngine) << "All the files are going to be changed, asking the user";
+        /*qCInfo(lcEngine) << "All the files are going to be changed, asking the user";
         bool cancel = false;
         int side = 0; // > 0 means more deleted on the server.  < 0 means more deleted on the client
         foreach (const auto &it, _syncItems) {
@@ -656,7 +656,9 @@ void SyncEngine::slotDiscoveryFinished()
             qCInfo(lcEngine) << "User aborted sync";
             finalize(false);
             return;
-        }
+        }*/
+        finalize(false);
+        return;
     }
 
     auto databaseFingerprint = _journal->dataFingerprint();
