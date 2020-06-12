@@ -43,6 +43,7 @@
 #include "csync_exclude.h"
 #include "common/vfs.h"
 #include "libcommon/commonutility.h"
+#include "customproxystyle.h"
 
 #include "config.h"
 
@@ -188,6 +189,7 @@ Application::Application(int &argc, char **argv)
     setWindowIcon(_theme->applicationIcon());
     setApplicationVersion(_theme->version());
     setAttribute(Qt::AA_UseHighDpiPixmaps, true);
+    setStyle(new KDC::CustomProxyStyle);
 
     if (!ConfigFile().exists()) {
         // Migrate from version <= 2.4

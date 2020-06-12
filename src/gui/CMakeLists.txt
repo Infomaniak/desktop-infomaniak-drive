@@ -139,6 +139,7 @@ set(client_SRCS
     confirmsynchronizationdialog.cpp
     customdialog.cpp
     custommessagebox.cpp
+    customproxystyle.cpp
     custompushbutton.cpp
     customtogglepushbutton.cpp
     customtoolbutton.cpp
