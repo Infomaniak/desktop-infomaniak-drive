@@ -58,10 +58,12 @@ ProxyServerDialog::ProxyServerDialog(QWidget *parent)
     , _noProxyButton(nullptr)
     , _systemProxyButton(nullptr)
     , _manualProxyButton(nullptr)
+    , _manualProxyWidget(nullptr)
     , _proxyTypeComboBox(nullptr)
     , _portLineEdit(nullptr)
     , _addressLineEdit(nullptr)
     , _authenticationCheckBox(nullptr)
+    , _authenticationWidget(nullptr)
     , _loginLineEdit(nullptr)
     , _pwdLineEdit(nullptr)
     , _saveButton(nullptr)
@@ -124,11 +126,14 @@ void ProxyServerDialog::initUI()
     proxyVBox->addWidget(_manualProxyButton);
 
     // Manual proxy
+    _manualProxyWidget = new QWidget(this);
+    _manualProxyWidget->setContentsMargins(0, 0, 0, 0);
+    mainLayout->addWidget(_manualProxyWidget);
+
     QVBoxLayout *manualProxyVBox = new QVBoxLayout();
     manualProxyVBox->setContentsMargins(manualProxyBoxHMargin, 0, boxHMargin, 0);
     manualProxyVBox->setSpacing(proxyBoxSpacing);
-    mainLayout->addLayout(manualProxyVBox);
-    mainLayout->addSpacing(manualProxyBoxVMargin);
+    _manualProxyWidget->setLayout(manualProxyVBox);
 
     QHBoxLayout *manualProxyTypeHBox = new QHBoxLayout();
     manualProxyTypeHBox->setContentsMargins(0, 0, 0, 0);
@@ -172,10 +177,15 @@ void ProxyServerDialog::initUI()
     _authenticationCheckBox->setText(tr("Authentication needed"));
     manualProxyVBox->addWidget(_authenticationCheckBox);
 
+    _authenticationWidget = new QWidget(this);
+    _authenticationWidget->setContentsMargins(0, 0, 0, 0);
+    manualProxyVBox->addWidget(_authenticationWidget);
+    manualProxyVBox->addSpacing(manualProxyBoxVMargin);
+
     QHBoxLayout *authenticationHBox = new QHBoxLayout();
     authenticationHBox->setContentsMargins(0, 0, 0, 0);
     authenticationHBox->setSpacing(proxyBoxSpacing);
-    manualProxyVBox->addLayout(authenticationHBox);
+    _authenticationWidget->setLayout(authenticationHBox);
 
     _loginLineEdit = new QLineEdit(this);
     _loginLineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -213,13 +223,12 @@ void ProxyServerDialog::initUI()
     connect(_saveButton, &QPushButton::clicked, this, &ProxyServerDialog::onSaveButtonTriggered);
     connect(cancelButton, &QPushButton::clicked, this, &ProxyServerDialog::onExit);
     connect(this, &CustomDialog::exit, this, &ProxyServerDialog::onExit);
-    connect(_noProxyButton, &CustomRadioButton::toggled, this, &ProxyServerDialog::onNoProxyButtonToggled);
-    connect(_systemProxyButton, &CustomRadioButton::toggled, this, &ProxyServerDialog::onSystemProxyButtonToggled);
-    connect(_manualProxyButton, &CustomRadioButton::toggled, this, &ProxyServerDialog::onManualProxyButtonToggled);
+    connect(_noProxyButton, &CustomRadioButton::clicked, this, &ProxyServerDialog::onNoProxyButtonClicked);
+    connect(_systemProxyButton, &CustomRadioButton::clicked, this, &ProxyServerDialog::onSystemProxyButtonClicked);
+    connect(_manualProxyButton, &CustomRadioButton::clicked, this, &ProxyServerDialog::onManualProxyButtonClicked);
     connect(_proxyTypeComboBox, QOverload<int>::of(&QComboBox::activated), this, &ProxyServerDialog::onProxyTypeComboBoxActivated);
     connect(_portLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onPortTextEdited);
     connect(_addressLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onAddressTextEdited);
-    connect(_addressLineEdit, &QLineEdit::editingFinished, this, &ProxyServerDialog::onAddressEditingFinished);
     connect(_authenticationCheckBox, &CustomCheckBox::clicked, this, &ProxyServerDialog::onAuthenticationCheckBoxClicked);
     connect(_loginLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onLoginTextEdited);
     connect(_pwdLineEdit, &QLineEdit::textEdited, this, &ProxyServerDialog::onPwdTextEdited);
@@ -242,6 +251,8 @@ void ProxyServerDialog::updateUI()
     }
 
     bool manualProxy = _manualProxyButton->isChecked();
+    _manualProxyWidget->setVisible(manualProxy);
+
     if (manualProxy) {
         if (_proxyTypeComboBox->currentIndex() != _manualProxyMap[_proxyType].first) {
             _proxyTypeComboBox->setCurrentIndex(_manualProxyMap[_proxyType].first);
@@ -250,27 +261,21 @@ void ProxyServerDialog::updateUI()
     else {
         _proxyTypeComboBox->setCurrentIndex(-1);
     }
-    _proxyTypeComboBox->setEnabled(manualProxy);
 
     _portLineEdit->setText(manualProxy
                            ? QString::number(_proxy.port() ? _proxy.port() : defaultPortNumber)
                            : QString());
-    _portLineEdit->setEnabled(manualProxy);
-
     _addressLineEdit->setText(manualProxy ? _proxy.hostName() : QString());
-    _addressLineEdit->setEnabled(manualProxy);
 
     bool authentication = manualProxy && _proxyNeedsAuth;
     if (_authenticationCheckBox->isChecked() != authentication) {
         _authenticationCheckBox->setChecked(authentication);
     }
-    _authenticationCheckBox->setEnabled(manualProxy);
+
+    _authenticationWidget->setVisible(authentication);
 
     _loginLineEdit->setText(authentication ? _proxy.user() : QString());
-    _loginLineEdit->setEnabled(authentication);
-
     _pwdLineEdit->setText(authentication ? _proxy.password() : QString());
-    _pwdLineEdit->setEnabled(authentication);
 }
 
 void ProxyServerDialog::setNeedToSave(bool value)
@@ -290,6 +295,20 @@ bool ProxyServerDialog::isSaveEnabled()
                             && !_proxy.password().isEmpty()))));
 
     return saveButtonEnabled;
+}
+
+void ProxyServerDialog::resetManualProxy()
+{
+    _proxy.setPort(0);
+    _proxy.setHostName(QString());
+    _proxyNeedsAuth = false;
+    resetAuthentication();
+}
+
+void ProxyServerDialog::resetAuthentication()
+{
+    _proxy.setUser(QString());
+    _proxy.setPassword(QString());
 }
 
 void ProxyServerDialog::onExit()
@@ -363,39 +382,32 @@ void ProxyServerDialog::onSaveButtonTriggered(bool checked)
     accept();
 }
 
-void ProxyServerDialog::onNoProxyButtonToggled(bool checked)
-{
-    if (checked && _proxyType != QNetworkProxy::NoProxy) {
-        _proxyType = QNetworkProxy::NoProxy;
-        updateUI();
-        setNeedToSave(true);
-    }
-}
-
-void ProxyServerDialog::onSystemProxyButtonToggled(bool checked)
-{
-    if (checked && _proxyType != QNetworkProxy::DefaultProxy) {
-        _proxyType = QNetworkProxy::DefaultProxy;
-        updateUI();
-        setNeedToSave(true);
-    }
-}
-
-void ProxyServerDialog::onManualProxyButtonToggled(bool checked)
+void ProxyServerDialog::onNoProxyButtonClicked(bool checked)
 {
     if (checked) {
-        if (_proxyType == QNetworkProxy::NoProxy || _proxyType == QNetworkProxy::DefaultProxy) {
-            _proxyType = QNetworkProxy::HttpProxy;
-        }
+        _proxyType = QNetworkProxy::NoProxy;
+        resetManualProxy();
         updateUI();
         setNeedToSave(true);
     }
-    else {
-        _proxy.setPort(0);
-        _proxy.setHostName(QString());
-        _proxy.setUser(QString());
-        _proxy.setPassword(QString());
-        _proxyNeedsAuth = false;
+}
+
+void ProxyServerDialog::onSystemProxyButtonClicked(bool checked)
+{
+    if (checked) {
+        _proxyType = QNetworkProxy::DefaultProxy;
+        resetManualProxy();
+        updateUI();
+        setNeedToSave(true);
+    }
+}
+
+void ProxyServerDialog::onManualProxyButtonClicked(bool checked)
+{
+    if (checked) {
+        _proxyType = QNetworkProxy::HttpProxy;
+        updateUI();
+        setNeedToSave(true);
     }
 }
 
@@ -418,15 +430,15 @@ void ProxyServerDialog::onAddressTextEdited(const QString &text)
     setNeedToSave(true);
 }
 
-void ProxyServerDialog::onAddressEditingFinished()
-{
-}
-
 void ProxyServerDialog::onAuthenticationCheckBoxClicked(bool checked)
 {
     _proxyNeedsAuth = checked;
     updateUI();
     setNeedToSave(true);
+
+    if (!checked) {
+        resetAuthentication();
+    }
 }
 
 void ProxyServerDialog::onLoginTextEdited(const QString &text)
