@@ -1230,7 +1230,6 @@ void SynthesisPopover::onNotificationActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    QString message;
     bool notificationAlreadyDisabledForPeriod = _notificationsDisabled != NotificationsDisabled::Never
             && _notificationsDisabled != NotificationsDisabled::Always;
 
@@ -1238,43 +1237,31 @@ void SynthesisPopover::onNotificationActionTriggered(bool checked)
     switch (_notificationsDisabled) {
     case NotificationsDisabled::Never:
         _notificationsDisabledUntilDateTime = QDateTime();
-        message = QString(tr("Notifications enabled!"));
         break;
     case NotificationsDisabled::OneHour:
         _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
                 ? _notificationsDisabledUntilDateTime.addSecs(60 * 60)
                 : QDateTime::currentDateTime().addSecs(60 * 60);
-        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
     case NotificationsDisabled::UntilTomorrow:
         _notificationsDisabledUntilDateTime = QDateTime(QDateTime::currentDateTime().addDays(1).date(), QTime(8, 0));
-        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
     case NotificationsDisabled::TreeDays:
         _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
                 ? _notificationsDisabledUntilDateTime.addDays(3)
                 : QDateTime::currentDateTime().addDays(3);
-        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
     case NotificationsDisabled::OneWeek:
         _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
                 ? _notificationsDisabledUntilDateTime.addDays(7)
                 : QDateTime::currentDateTime().addDays(7);
-        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
     case NotificationsDisabled::Always:
         _notificationsDisabledUntilDateTime = QDateTime();
-        message = QString(tr("Notifications disabled!"));
         break;
     }
 
     emit disableNotifications(_notificationsDisabled, _notificationsDisabledUntilDateTime);
-
-    CustomMessageBox *msgBox = new CustomMessageBox(
-                QMessageBox::Information,
-                message,
-                QMessageBox::Ok, this);
-    msgBox->exec();
 }
 
 void SynthesisPopover::onAccountSelected(QString id)
