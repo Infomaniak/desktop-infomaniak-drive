@@ -1254,6 +1254,14 @@ KDC--CustomMessageBox {
     qproperty-icon_size: 24px;
 }
 
+KDC--CustomMessageBox QLabel#textlabel
+{
+    color: #666666;
+    font-family: "Suisse Int'l";
+    font-weight: 350; /* normal */
+    font-size: 14px;
+}
+
 KDC--CustomMessageBox QPushButton:default
 {
     background-color: #0098FF;

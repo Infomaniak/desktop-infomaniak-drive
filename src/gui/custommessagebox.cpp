@@ -61,7 +61,7 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
     messageVBox->addStretch();
 
     QLabel *textLabel = new QLabel(this);
-    textLabel->setObjectName("largeNormalTextLabel");
+    textLabel->setObjectName("textlabel");
     textLabel->setText(text);
     textLabel->setWordWrap(true);
     textLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
