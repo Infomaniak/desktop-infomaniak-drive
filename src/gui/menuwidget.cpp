@@ -62,6 +62,12 @@ MenuWidget::MenuWidget(Type type, const QString &title, QWidget *parent)
 
 void MenuWidget::paintEvent(QPaintEvent *event)
 {
+    // Update shadow color
+    QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
+    if (effect) {
+        effect->setColor(OCC::Utility::getShadowColor(true));
+    }
+
     QRect intRect = rect().marginsRemoved(QMargins(contentMargin, contentMargin, contentMargin - 1, contentMargin - 1));
 
     QPainterPath painterPath;

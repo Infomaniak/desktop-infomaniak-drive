@@ -44,7 +44,7 @@ public:
     QBoxLayout *addLayout(QBoxLayout::Direction direction, bool noMargins = false);
     QWidget *addScrollArea(QBoxLayout::Direction direction, bool noMargins = false);
     ClickableWidget *addActionWidget(QVBoxLayout **vLayout, bool noMargins = false);
-    void addSeparator();
+    QFrame *addSeparator();
 
 signals:
     void actionIconColorChanged();

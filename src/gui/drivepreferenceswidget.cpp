@@ -484,7 +484,8 @@ void DrivePreferencesWidget::updateFoldersBlocs()
                 FolderItemWidget *folderItemWidget = new FolderItemWidget(folderInfoElt.first, folderInfoElt.second.get(), this);
                 folderBox->addWidget(folderItemWidget);
 
-                folderBloc->addSeparator();
+                QFrame *line = folderBloc->addSeparator();
+                line->setVisible(false);
 
                 // Folder tree
                 QBoxLayout *folderTreeBox = folderBloc->addLayout(QBoxLayout::Direction::LeftToRight, true);

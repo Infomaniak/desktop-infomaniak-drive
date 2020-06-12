@@ -500,7 +500,7 @@ void SynthesisPopover::initUI()
     QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
-    effect->setColor(OCC::Utility::getShadowColor());
+    effect->setColor(OCC::Utility::getShadowColor(true));
     setGraphicsEffect(effect);
 
     connect(_errorsButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenErrorsMenu);

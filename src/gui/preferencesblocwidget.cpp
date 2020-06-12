@@ -134,13 +134,15 @@ ClickableWidget *PreferencesBlocWidget::addActionWidget(QVBoxLayout **vLayout, b
     return widget;
 }
 
-void PreferencesBlocWidget::addSeparator()
+QFrame *PreferencesBlocWidget::addSeparator()
 {
     QFrame *line = new QFrame(this);
     line->setObjectName("line");
     line->setFrameShape(QFrame::HLine);
     line->setFrameShadow(QFrame::Plain);
     _layout->addWidget(line);
+
+    return line;
 }
 
 void PreferencesBlocWidget::paintEvent(QPaintEvent *event)

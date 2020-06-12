@@ -44,8 +44,10 @@ using namespace OCC;
 
 static const QString styleSheetWhiteFile(":/client/resources/styles/stylesheetwhite.qss");
 static const QString styleSheetBlackFile(":/client/resources/styles/stylesheetblack.qss");
-static const QColor styleSheetWhiteShadowColor = QColor(200, 200, 200, 180);
-static const QColor styleSheetBlackShadowColor = QColor(20, 20, 20, 180);
+static const QColor styleSheetWhiteWidgetShadowColor = QColor(200, 200, 200, 180);
+static const QColor styleSheetWhiteDialogShadowColor = QColor(0, 0, 0, 180);
+static const QColor styleSheetBlackWidgetShadowColor = QColor(20, 20, 20, 180);
+static const QColor styleSheetBlackDialogShadowColor = QColor(20, 20, 20, 180);
 
 static bool darkTheme = false;
 
@@ -458,9 +460,11 @@ QPixmap Utility::getPixmapFromImage(const QImage &image, const QSize &size)
     return QPixmap::fromImage(image.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
-QColor Utility::getShadowColor()
+QColor Utility::getShadowColor(bool dialog)
 {
-    return darkTheme ? styleSheetBlackShadowColor : styleSheetWhiteShadowColor;
+    return darkTheme
+            ? (dialog ? styleSheetBlackDialogShadowColor : styleSheetBlackWidgetShadowColor)
+            : (dialog ? styleSheetWhiteDialogShadowColor : styleSheetWhiteWidgetShadowColor);
 }
 
 bool Utility::isDarkTheme()

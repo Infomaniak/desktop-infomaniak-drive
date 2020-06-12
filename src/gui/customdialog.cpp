@@ -99,7 +99,7 @@ void CustomDialog::paintEvent(QPaintEvent *event)
     // Update shadow color
     QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
     if (effect) {
-        effect->setColor(OCC::Utility::getShadowColor());
+        effect->setColor(OCC::Utility::getShadowColor(true));
     }
 
     // Draw round rectangle

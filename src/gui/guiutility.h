@@ -93,7 +93,7 @@ namespace Utility {
     bool getSyncActionAvailable(bool paused, OCC::SyncResult::Status status);
     void pauseSync(const QString &accountId, const QString &folderId, bool pause);
     void runSync(const QString &accountId, const QString &folderId);
-    QColor getShadowColor();
+    QColor getShadowColor(bool dialog = false);
     QUrl getUrlFromLocalPath(const QString &path);
     int getQFontWeightFromQSSFontWeight(int weight);
     qint64 folderSize(const QString &dirPath);
