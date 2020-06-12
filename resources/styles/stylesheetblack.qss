@@ -883,7 +883,7 @@ KDC--PreferencesMenuBarWidget
 
 KDC--PreferencesMenuBarWidget QLabel#titleLabel
 {
-    color: #444444;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 18px;
