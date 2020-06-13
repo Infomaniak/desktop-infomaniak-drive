@@ -1223,6 +1223,8 @@ KDC--ErrorsPopup
     qproperty-background_color: #FFFFFF;
     qproperty-warning_icon_size: 16px;
     qproperty-warning_icon_color: #E9563D;
+    qproperty-arrow_icon_size: 18px;
+    qproperty-arrow_icon_color: #666666;
 }
 
 KDC--ErrorsPopup QLabel

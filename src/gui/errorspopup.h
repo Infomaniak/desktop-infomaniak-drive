@@ -32,6 +32,8 @@ class ErrorsPopup : public QDialog
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
     Q_PROPERTY(QSize warning_icon_size READ warningIconSize WRITE setWarningIconSize)
     Q_PROPERTY(QColor warning_icon_color READ warningIconColor WRITE setWarningIconColor)
+    Q_PROPERTY(QSize arrow_icon_size READ arrowIconSize WRITE setArrowIconSize)
+    Q_PROPERTY(QColor arrow_icon_color READ arrowIconColor WRITE setArrowIconColor)
 
 public:
     struct DriveError
@@ -50,6 +52,8 @@ private:
     QColor _backgroundColor;
     QSize _warningIconSize;
     QColor _warningIconColor;
+    QSize _arrowIconSize;
+    QColor _arrowIconColor;
 
     void paintEvent(QPaintEvent *event) override;
 
@@ -68,10 +72,23 @@ private:
         setWarningIcon();
     }
 
+    inline QSize arrowIconSize() const { return _arrowIconSize; }
+    inline void setArrowIconSize(const QSize &size) {
+        _arrowIconSize = size;
+        setArrowIcon();
+    }
+
+    inline QColor arrowIconColor() const { return _arrowIconColor; }
+    inline void setArrowIconColor(const QColor &value) {
+        _arrowIconColor = value;
+        setArrowIcon();
+    }
+
     void setWarningIcon();
+    void setArrowIcon();
 
 private slots:
-    void onActionButtonClicked(bool checked = false);
+    void onActionButtonClicked();
 };
 
 }
