@@ -24,10 +24,7 @@ namespace KDC {
 CustomSwitch::CustomSwitch(QWidget *parent)
     : CustomCheckBox(parent)
 {
-    setStyleSheet("QCheckBox::indicator:checked { image: url(:/client/resources/icons/actions/switch-on.svg); }"
-                  "QCheckBox::indicator:unchecked { image: url(:/client/resources/icons/actions/switch-off.svg); }"
-                  "QCheckBox::indicator:checked:disabled { image: url(:/client/resources/icons/actions/switch-disable.svg); }"
-                  "QCheckBox::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/switch-disable.svg); }");
+    setProperty("type", "switch");
 }
 
 }

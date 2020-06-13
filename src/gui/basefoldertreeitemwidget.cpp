@@ -110,12 +110,6 @@ void BaseFolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList p
 
 void BaseFolderTreeItemWidget::initUI()
 {
-    setStyleSheet("QTreeWidget::branch:!has-children:adjoins-item { image: none; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg);"
-                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg);"
-                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }");
-
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSortingEnabled(true);
     sortByColumn(TreeWidgetColumn::Folder, Qt::AscendingOrder);

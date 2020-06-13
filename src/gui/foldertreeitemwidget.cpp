@@ -221,18 +221,6 @@ qint64 FolderTreeItemWidget::nodeSize(QTreeWidgetItem *item) const
 
 void FolderTreeItemWidget::initUI()
 {
-    setStyleSheet("QTreeWidget::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QTreeWidget::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
-                  "QTreeWidget::indicator:indeterminate { image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg); }"
-                  "QTreeWidget::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QTreeWidget::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
-                  "QTreeWidget::indicator:indeterminate:disabled { image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg); }"
-                  "QTreeWidget::branch:!has-children:adjoins-item { image: none; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:open { image: url(:/client/resources/icons/actions/branch-open.svg);"
-                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }"
-                  "QTreeWidget::branch:has-children:adjoins-item:closed { image: url(:/client/resources/icons/actions/branch-close.svg);"
-                  "background-color: transparent; margin-left: 15px; margin-right: 5px; }");
-
     setSelectionMode(QAbstractItemView::NoSelection);
     setSortingEnabled(true);
     sortByColumn(TreeWidgetColumn::Folder, Qt::AscendingOrder);

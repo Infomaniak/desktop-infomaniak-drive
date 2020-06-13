@@ -31,11 +31,6 @@ CustomRadioButton::CustomRadioButton(QWidget *parent)
     , _toolTipDuration(defaultToolTipDuration)
     , _customToolTip(nullptr)
 {
-    setStyleSheet("QRadioButton::indicator:checked { image: url(:/client/resources/icons/actions/radio-checked.svg); }"
-                  "QRadioButton::indicator:unchecked { image: url(:/client/resources/icons/actions/radio-unchecked.svg); }"
-                  "QRadioButton::indicator:checked:disabled { image: url(:/client/resources/icons/actions/radio-checked.svg); }"
-                  "QRadioButton::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/radio-unchecked.svg); }");
-
     connect(this, &QRadioButton::clicked, this, &CustomRadioButton::onClicked);
 }
 

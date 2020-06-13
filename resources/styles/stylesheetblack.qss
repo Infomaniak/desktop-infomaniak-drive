@@ -185,6 +185,85 @@ KDC--CustomPushButton#addFileButton QLabel#textLabel
     font-size: 14px;
 }
 
+/***********************/
+/* KDC--CustomCheckBox */
+/***********************/
+
+KDC--CustomCheckBox::indicator:checked
+{
+    image: url(:/client/resources/icons/actions/checkbox-checked.svg);
+}
+
+KDC--CustomCheckBox::indicator:unchecked
+{
+    image: url(:/client/resources/icons/actions/checkbox-unchecked.svg);
+}
+
+KDC--CustomCheckBox::indicator:checked:disabled
+{
+    image: url(:/client/resources/icons/actions/checkbox-checked.svg);
+}
+
+KDC--CustomCheckBox::indicator:unchecked:disabled
+{
+    image: url(:/client/resources/icons/actions/checkbox-unchecked.svg);
+}
+
+KDC--CustomCheckBox[type="switch"]::indicator:checked
+{
+    image: url(:/client/resources/icons/actions/switch-on.svg);
+}
+
+KDC--CustomCheckBox[type="switch"]::indicator:unchecked
+{
+    image: url(:/client/resources/icons/actions/switch-off.svg);
+}
+
+KDC--CustomCheckBox[type="switch"]::indicator:checked:disabled
+{
+    image: url(:/client/resources/icons/actions/switch-disable.svg);
+}
+
+KDC--CustomCheckBox[type="switch"]::indicator:unchecked:disabled
+{
+    image: url(:/client/resources/icons/actions/switch-disable.svg);
+}
+
+/***********************/
+/* KDC--CustomComboBox */
+/***********************/
+
+KDC--CustomComboBox::down-arrow
+{
+    image: url(:/client/resources/icons/actions/down-arrow.svg);
+    width: 10px;
+    height: 10px;
+}
+
+/**************************/
+/* KDC--CustomRadioButton */
+/**************************/
+
+KDC--CustomRadioButton::indicator:checked
+{
+    image: url(:/client/resources/icons/actions/radio-checked.svg);
+}
+
+KDC--CustomRadioButton::indicator:unchecked
+{
+    image: url(:/client/resources/icons/actions/radio-unchecked.svg);
+}
+
+KDC--CustomRadioButton::indicator:checked:disabled
+{
+    image: url(:/client/resources/icons/actions/radio-checked.svg);
+}
+
+KDC--CustomRadioButton::indicator:unchecked:disabled
+{
+    image: url(:/client/resources/icons/actions/radio-unchecked.svg);
+}
+
 /************************/
 /* KDC--CustomSystemBar */
 /************************/
@@ -219,7 +298,7 @@ KDC--CustomDialog QLabel#titleLabel
 
 KDC--CustomDialog QLabel#subtitleLabel
 {
-    color: #333333;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 12px;
@@ -409,6 +488,26 @@ KDC--CustomDialog QTableView::item
     padding-right: 10px;
     padding-top: 6px;
     padding-bottom: 6px;
+}
+
+KDC--CustomDialog QTableView::indicator:checked
+{
+    image: url(:/client/resources/icons/actions/checkbox-checked.svg);
+}
+
+KDC--CustomDialog QTableView::indicator:unchecked
+{
+    image: url(:/client/resources/icons/actions/checkbox-unchecked.svg);
+}
+
+KDC--CustomDialog QTableView::indicator:checked:disabled
+{
+    image: url(:/client/resources/icons/actions/checkbox-checked.svg);
+}
+
+KDC--CustomDialog QTableView::indicator:unchecked:disabled
+{
+    image: url(:/client/resources/icons/actions/checkbox-unchecked.svg);
 }
 
 KDC--CustomDialog QLineEdit
@@ -1304,6 +1403,57 @@ KDC--FolderTreeItemWidget::item
     padding-bottom: 0px;
 }
 
+KDC--FolderTreeItemWidget::branch:!has-children:adjoins-item
+{
+    image: none;
+}
+
+KDC--FolderTreeItemWidget::branch:has-children:adjoins-item:open
+{
+    image: url(:/client/resources/icons/actions/branch-open.svg);
+    background-color: transparent;
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+KDC--FolderTreeItemWidget::branch:has-children:adjoins-item:closed
+{
+    image: url(:/client/resources/icons/actions/branch-close.svg);
+    background-color: transparent;
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+KDC--FolderTreeItemWidget::indicator:checked
+{
+    image: url(:/client/resources/icons/actions/checkbox-checked.svg);
+}
+
+KDC--FolderTreeItemWidget::indicator:unchecked
+{
+    image: url(:/client/resources/icons/actions/checkbox-unchecked.svg);
+}
+
+KDC--FolderTreeItemWidget::indicator:indeterminate
+{
+    image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg);
+}
+
+KDC--FolderTreeItemWidget::indicator:checked:disabled
+{
+    image: url(:/client/resources/icons/actions/checkbox-checked.svg);
+}
+
+KDC--FolderTreeItemWidget::indicator:unchecked:disabled
+{
+    image: url(:/client/resources/icons/actions/checkbox-unchecked.svg);
+}
+
+KDC--FolderTreeItemWidget::indicator:indeterminate:disabled
+{
+    image: url(:/client/resources/icons/actions/checkbox-indeterminate.svg);
+}
+
 KDC--FolderTreeItemWidget QScrollBar:vertical
 {
     background-color: #1B1B1D;
@@ -1380,6 +1530,27 @@ KDC--BaseFolderTreeItemWidget::item
 KDC--BaseFolderTreeItemWidget QLineEdit
 {
     background-color: #F5F5F5;
+}
+
+KDC--BaseFolderTreeItemWidget::branch:!has-children:adjoins-item
+{
+    image: none;
+}
+
+KDC--BaseFolderTreeItemWidget::branch:has-children:adjoins-item:open
+{
+    image: url(:/client/resources/icons/actions/branch-open.svg);
+    background-color: transparent;
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+KDC--BaseFolderTreeItemWidget::branch:has-children:adjoins-item:closed
+{
+    image: url(:/client/resources/icons/actions/branch-close.svg);
+    background-color: transparent;
+    margin-left: 15px;
+    margin-right: 5px;
 }
 
 /**************************/

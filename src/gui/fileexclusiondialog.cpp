@@ -65,11 +65,6 @@ FileExclusionDialog::FileExclusionDialog(QWidget *parent)
     , _actionIconSize(QSize())
     , _needToSave(false)
 {
-    setStyleSheet("QTableView::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QTableView::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
-                  "QTableView::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QTableView::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }");
-
     initUI();
     updateUI();
 }
