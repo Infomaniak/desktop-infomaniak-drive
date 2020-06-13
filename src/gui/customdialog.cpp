@@ -83,6 +83,17 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
     connect(systemBar, &CustomSystemBar::exit, this, &CustomDialog::onExit);
 }
 
+int CustomDialog::exec()
+{
+    return QDialog::exec();
+}
+
+int CustomDialog::exec(QPoint position)
+{
+    move(position);
+    return exec();
+}
+
 void CustomDialog::forceRedraw()
 {
 #ifdef Q_OS_WINDOWS

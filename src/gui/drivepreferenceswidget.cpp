@@ -722,7 +722,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
         if (nextStep == SelectLocalFolder) {
             LocalFolderDialog *localFolderDialog = new LocalFolderDialog(localFolderPath, this);
             connect(localFolderDialog, &LocalFolderDialog::openFolder, this, &DrivePreferencesWidget::onOpenFolder);
-            if (localFolderDialog->exec() == QDialog::Rejected) {
+            if (localFolderDialog->exec(OCC::Utility::getTopLevelWidget(this)->pos()) == QDialog::Rejected) {
                 break;
             }
 
@@ -736,7 +736,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
 
         if (nextStep == SelectServerBaseFolder) {
             ServerBaseFolderDialog *serverBaseFolderDialog = new ServerBaseFolderDialog(_accountId, localFolderName, this);
-            int ret = serverBaseFolderDialog->exec();
+            int ret = serverBaseFolderDialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
             if (ret == QDialog::Rejected) {
                 qCDebug(lcDrivePreferencesWidget) << "Cancel: " << nextStep;
                 break;
@@ -775,7 +775,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
 
             if (folderHasSubfoldersJobResult == JobResult::Yes) {
                 ServerFoldersDialog *serverFoldersDialog = new ServerFoldersDialog(_accountId, serverFolderName, serverFolderPath, this);
-                int ret = serverFoldersDialog->exec();
+                int ret = serverFoldersDialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
                 if (ret == QDialog::Rejected) {
                     qCDebug(lcDrivePreferencesWidget) << "Cancel: " << nextStep;
                     break;
@@ -796,7 +796,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
         if (nextStep == Confirm) {
             ConfirmSynchronizationDialog *confirmSynchronizationDialog = new ConfirmSynchronizationDialog(
                         localFolderName, localFolderSize, serverFolderName, serverFolderSize, this);
-            int ret = confirmSynchronizationDialog->exec();
+            int ret = confirmSynchronizationDialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
             if (ret == QDialog::Rejected) {
                 qCDebug(lcDrivePreferencesWidget) << "Cancel: " << nextStep;
                 break;

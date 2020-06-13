@@ -37,6 +37,8 @@ class CustomDialog : public QDialog
 public:
     explicit CustomDialog(bool popup, QWidget *parent = nullptr);
 
+    int exec() override;
+    int exec(QPoint position);
     inline QVBoxLayout *mainLayout() const { return _layout; }
     void forceRedraw();
 

@@ -98,6 +98,7 @@ namespace Utility {
     int getQFontWeightFromQSSFontWeight(int weight);
     qint64 folderSize(const QString &dirPath);
     bool openFolder(const QString &path);
+    QWidget *getTopLevelWidget(QWidget *widget);
 
 } // namespace Utility
 } // namespace OCC

@@ -542,3 +542,12 @@ bool Utility::openFolder(const QString &dirPath)
     }
     return true;
 }
+
+QWidget *Utility::getTopLevelWidget(QWidget *widget)
+{
+    QWidget *topLevelWidget = widget;
+    while (topLevelWidget->parentWidget() != nullptr) {
+        topLevelWidget = topLevelWidget->parentWidget();
+    }
+    return topLevelWidget ;
+}

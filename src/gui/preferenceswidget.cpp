@@ -359,7 +359,7 @@ void PreferencesWidget::onLaunchAtStartupSwitchClicked(bool checked)
 void PreferencesWidget::onDebuggingWidgetClicked()
 {
     DebuggingDialog *dialog = new DebuggingDialog(this);
-    dialog->exec();
+    dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
     OCC::ConfigFile cfg;
     _debuggingFolderLabel->setVisible(cfg.automaticLogDir());
     repaint();
@@ -368,19 +368,19 @@ void PreferencesWidget::onDebuggingWidgetClicked()
 void PreferencesWidget::onFilesToExcludeWidgetClicked()
 {
     FileExclusionDialog *dialog = new FileExclusionDialog(this);
-    dialog->exec();
+    dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
 }
 
 void PreferencesWidget::onProxyServerWidgetClicked()
 {
     ProxyServerDialog *dialog = new ProxyServerDialog(this);
-    dialog->exec();
+    dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
 }
 
 void PreferencesWidget::onBandwidthWidgetClicked()
 {
     BandwidthDialog *dialog = new BandwidthDialog(this);
-    dialog->exec();
+    dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
 }
 
 void PreferencesWidget::onLinkActivated(const QString &link)
@@ -401,7 +401,7 @@ void PreferencesWidget::onLinkActivated(const QString &link)
     }
     else if (link == versionLink) {
         AboutDialog *dialog = new AboutDialog(this);
-        dialog->exec();
+        dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
     }
 }
 
