@@ -42,7 +42,6 @@ class DriveSelectionWidget : public QPushButton
     Q_PROPERTY(QSize down_icon_size READ downIconSize WRITE setDownIconSize)
     Q_PROPERTY(QColor down_icon_color READ downIconColor WRITE setDownIconColor)
     Q_PROPERTY(QSize menu_right_icon_size READ menuRightIconSize WRITE setMenuRightIconSize)
-    Q_PROPERTY(QColor add_icon_color READ addIconColor WRITE setAddIconColor)
 
 public:
     explicit DriveSelectionWidget(QWidget *parent = nullptr);
@@ -57,7 +56,6 @@ signals:
     void driveIconSizeChanged();
     void downIconSizeChanged();
     void downIconColorChanged();
-    void addIconColorChanged();
     void driveSelected(QString id);
     void addDrive();
 
@@ -66,7 +64,6 @@ private:
     QSize _downIconSize;
     QColor _downIconColor;
     QSize _menuRightIconSize;
-    QColor _addIconColor;
     std::map<QString, AccountInfo> _driveMap;
     QString _currentDriveId;
     QLabel *_driveIconLabel;
@@ -94,21 +91,13 @@ private:
     inline QSize menuRightIconSize() const { return _menuRightIconSize; }
     inline void setMenuRightIconSize(QSize size) { _menuRightIconSize = size; }
 
-    inline QColor addIconColor() const { return _addIconColor; }
-    inline void setAddIconColor(QColor color) {
-        _addIconColor = color;
-        emit addIconColorChanged();
-    }
-
     void setDriveIcon(const QColor &color);
-    void setAddDriveIcon();
     void setDownIcon();
 
 private slots:
     void onDriveIconSizeChanged();
     void onDownIconSizeChanged();
     void onDownIconColorChanged();
-    void onAddIconColorChanged();
     void onClick(bool checked);
     void onSelectDriveActionTriggered(bool checked = false);
     void onAddDriveActionTriggered(bool checked = false);
