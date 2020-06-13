@@ -131,6 +131,7 @@ void ServerBaseFolderDialog::initUI()
 
     connect(_folderTreeItemWidget, &BaseFolderTreeItemWidget::message, this, &ServerBaseFolderDialog::onDisplayMessage);
     connect(_folderTreeItemWidget, &BaseFolderTreeItemWidget::folderSelected, this, &ServerBaseFolderDialog::onFolderSelected);
+    connect(_folderTreeItemWidget, &BaseFolderTreeItemWidget::noFolderSelected, this, &ServerBaseFolderDialog::onNoFolderSelected);
     connect(backButton, &QPushButton::clicked, this, &ServerBaseFolderDialog::onBackButtonTriggered);
     connect(_continueButton, &QPushButton::clicked, this, &ServerBaseFolderDialog::onContinueButtonTriggered);
     connect(this, &CustomDialog::exit, this, &ServerBaseFolderDialog::onExit);
@@ -238,6 +239,11 @@ void ServerBaseFolderDialog::onFolderSelected(const QString &folderPath, const Q
     _serverFolderBasePath = folderBasePath;
     _serverFolderSize = folderSize;
     setOkToContinue(true);
+}
+
+void ServerBaseFolderDialog::onNoFolderSelected()
+{
+    setOkToContinue(false);
 }
 
 }

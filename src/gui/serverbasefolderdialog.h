@@ -87,6 +87,7 @@ private slots:
     void onContinueButtonTriggered(bool checked = false);
     void onDisplayMessage(const QString &text);
     void onFolderSelected(const QString &folderPath, const QString &folderBasePath, qint64 folderSize);
+    void onNoFolderSelected();
 };
 
 }

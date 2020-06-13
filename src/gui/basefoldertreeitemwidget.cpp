@@ -324,11 +324,6 @@ void BaseFolderTreeItemWidget::onItemExpanded(QTreeWidgetItem *item)
 
 void BaseFolderTreeItemWidget::onCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
-    if (previous) {
-        // Remove action icon
-        previous->setIcon(TreeWidgetColumn::Action, QIcon());
-    }
-
     if (current && !current->text(TreeWidgetColumn::Folder).isEmpty()) {
         // Add action icon
         current->setIcon(TreeWidgetColumn::Action, OCC::Utility::getIconWithColor(":/client/resources/icons/actions/folder-add.svg"));
@@ -337,6 +332,18 @@ void BaseFolderTreeItemWidget::onCurrentItemChanged(QTreeWidgetItem *current, QT
         QString currentFolderBasePath = current->data(TreeWidgetColumn::Folder, baseDirRole).toString();
         qint64 currentFolderSize = current->data(TreeWidgetColumn::Folder, sizeRole).toLongLong();
         emit folderSelected(_currentFolderPath, currentFolderBasePath, currentFolderSize);
+    }
+
+    if (previous) {
+        if (previous->text(TreeWidgetColumn::Folder).isEmpty()) {
+            // Remove item
+            QTreeWidgetItem *parent = previous->parent();
+            QTimer::singleShot(0, this, [=](){ parent->removeChild(previous); });
+        }
+        else {
+            // Remove action icon
+            previous->setIcon(TreeWidgetColumn::Action, QIcon());
+        }
     }
 }
 
@@ -384,6 +391,13 @@ void BaseFolderTreeItemWidget::onItemChanged(QTreeWidgetItem *item, int column)
         item->setData(TreeWidgetColumn::Folder, sizeRole, 0);
         onCurrentItemChanged(item, nullptr);
         scrollToItem(item);
+
+        if (item->text(TreeWidgetColumn::Folder).isEmpty()) {
+            emit noFolderSelected();
+        }
+        else {
+            emit folderSelected(path, parentBasePath, 0);
+        }
     }
 }
 
