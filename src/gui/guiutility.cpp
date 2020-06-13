@@ -15,6 +15,7 @@
 #include "guiutility.h"
 
 #include <QApplication>
+#include <QBitmap>
 #include <QClipboard>
 #include <QDesktopServices>
 #include <QDir>
@@ -455,9 +456,22 @@ void Utility::runSync(const QString &accountId, const QString &folderId)
     }
 }
 
-QPixmap Utility::getPixmapFromImage(const QImage &image, const QSize &size)
+QPixmap Utility::getAvatarFromImage(const QImage &image)
 {
-    return QPixmap::fromImage(image.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QPixmap originalPixmap = QPixmap::fromImage(image);
+
+    // Draw mask
+    QBitmap mask(originalPixmap.size());
+    QPainter painter(&mask);
+    painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform, true);
+    mask.fill(Qt::white);
+    painter.setBrush(Qt::black);
+    painter.drawEllipse(QPoint(mask.width() / 2, mask.height() / 2), 100, 100);
+
+    // Draw the final image.
+    originalPixmap.setMask(mask);
+
+    return originalPixmap;
 }
 
 QColor Utility::getShadowColor(bool dialog)

@@ -224,6 +224,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     QBoxLayout *connectedWithBox = connectedWithBloc->addLayout(QBoxLayout::Direction::LeftToRight);
 
     _accountAvatarLabel = new QLabel(this);
+    _accountAvatarLabel->setObjectName("accountAvatarLabel");
     connectedWithBox->addWidget(_accountAvatarLabel);
 
     QVBoxLayout *connectedWithVBox = new QVBoxLayout();
@@ -315,8 +316,8 @@ void DrivePreferencesWidget::updateAccountInfo()
 {
     OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
     if (!accountPtr.isNull()) {
-        _accountAvatarLabel->setPixmap(OCC::Utility::getPixmapFromImage(accountPtr->avatar(),
-                                                                        QSize(avatarSize, avatarSize)));
+        _accountAvatarLabel->setPixmap(OCC::Utility::getAvatarFromImage(accountPtr->avatar())
+                                       .scaled(avatarSize, avatarSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
         _accountNameLabel->setText(accountPtr->davDisplayName());
 
