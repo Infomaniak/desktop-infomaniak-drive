@@ -142,6 +142,7 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     connect(cancelButton, &QPushButton::clicked, this, &FolderItemWidget::onCancelButtonClicked);
     connect(validateButton, &QPushButton::clicked, this, &FolderItemWidget::onValidateButtonClicked);
     connect(synchroLabel, &QLabel::linkActivated, this, &FolderItemWidget::onDisplaySmartSyncInfo);
+    connect(this, &FolderItemWidget::displayFolderDetailCanceled, this, &FolderItemWidget::onDisplayFolderDetailCanceled);
 }
 
 void FolderItemWidget::updateItem(const FolderInfo *folderInfo)
@@ -260,6 +261,12 @@ void FolderItemWidget::onResumeTriggered()
 void FolderItemWidget::onUnsyncTriggered()
 {
     emit unSync(_folderId);
+}
+
+void FolderItemWidget::onDisplayFolderDetailCanceled()
+{
+    _isExpanded = false;
+    setExpandButton();
 }
 
 }

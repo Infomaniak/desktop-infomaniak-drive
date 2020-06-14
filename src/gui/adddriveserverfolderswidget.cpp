@@ -163,7 +163,7 @@ void AddDriveServerFoldersWidget::initUI()
     _continueButton->setText(tr("CONTINUE"));
     buttonsHBox->addWidget(_continueButton);
 
-    connect(_folderTreeItemWidget, &FolderTreeItemWidget::message, this, &AddDriveServerFoldersWidget::onDisplayMessage);
+    connect(_folderTreeItemWidget, &FolderTreeItemWidget::terminated, this, &AddDriveServerFoldersWidget::onSubfoldersLoaded);
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::needToSave, this, &AddDriveServerFoldersWidget::onNeedToSave);
     connect(backButton, &QPushButton::clicked, this, &AddDriveServerFoldersWidget::onBackButtonTriggered);
     connect(_continueButton, &QPushButton::clicked, this, &AddDriveServerFoldersWidget::onContinueButtonTriggered);
@@ -193,14 +193,25 @@ void AddDriveServerFoldersWidget::setLogoColor(const QColor &color)
                 .pixmap(logoTextIconSize));
 }
 
-void AddDriveServerFoldersWidget::onDisplayMessage(const QString &text)
+void AddDriveServerFoldersWidget::onSubfoldersLoaded(bool error, bool empty)
 {
-    CustomMessageBox *msgBox = new CustomMessageBox(
-                QMessageBox::Warning,
-                text,
-                QMessageBox::Ok, this);
-    msgBox->setDefaultButton(QMessageBox::Ok);
-    msgBox->exec();
+    if (error) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
+                    tr("An error occurred while loading the list of sub folders."),
+                    QMessageBox::Ok, this);
+        msgBox->setDefaultButton(QMessageBox::Ok);
+        msgBox->exec();
+        emit terminated(false);
+    }
+    else if (empty) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
+                    tr("No subfolders currently on the server."),
+                    QMessageBox::Ok, this);
+        msgBox->setDefaultButton(QMessageBox::Ok);
+        msgBox->exec();
+    }
 }
 
 void AddDriveServerFoldersWidget::onNeedToSave()

@@ -103,7 +103,7 @@ void ServerFoldersDialog::initUI()
     _continueButton->setText(tr("CONTINUE"));
     buttonsHBox->addWidget(_continueButton);
 
-    connect(_folderTreeItemWidget, &FolderTreeItemWidget::message, this, &ServerFoldersDialog::onDisplayMessage);
+    connect(_folderTreeItemWidget, &FolderTreeItemWidget::terminated, this, &ServerFoldersDialog::onSubfoldersLoaded);
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::needToSave, this, &ServerFoldersDialog::onNeedToSave);
     connect(backButton, &QPushButton::clicked, this, &ServerFoldersDialog::onBackButtonTriggered);
     connect(_continueButton, &QPushButton::clicked, this, &ServerFoldersDialog::onContinueButtonTriggered);
@@ -134,14 +134,27 @@ void ServerFoldersDialog::onContinueButtonTriggered(bool checked)
     accept();
 }
 
-void ServerFoldersDialog::onDisplayMessage(const QString &text)
+void ServerFoldersDialog::onSubfoldersLoaded(bool error, bool empty)
 {
-    CustomMessageBox *msgBox = new CustomMessageBox(
-                QMessageBox::Warning,
-                text,
-                QMessageBox::Ok, this);
-    msgBox->setDefaultButton(QMessageBox::Ok);
-    msgBox->exec();
+    FolderTreeItemWidget *folderTreeItemWidget = qobject_cast<FolderTreeItemWidget *>(sender());
+    folderTreeItemWidget->setVisible(!error && !empty);
+    if (error) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
+                    tr("An error occurred while loading the list of sub folders."),
+                    QMessageBox::Ok, this);
+        msgBox->setDefaultButton(QMessageBox::Ok);
+        msgBox->exec();
+        reject();
+    }
+    else if (empty) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
+                    tr("No subfolders currently on the server."),
+                    QMessageBox::Ok, this);
+        msgBox->setDefaultButton(QMessageBox::Ok);
+        msgBox->exec();
+    }
 }
 
 void ServerFoldersDialog::onNeedToSave()

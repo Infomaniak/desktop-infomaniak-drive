@@ -46,6 +46,7 @@ signals:
     void resumeSync(const QString &folderId);
     void unSync(const QString &folderId);
     void displayFolderDetail(const QString &folderId, bool display);
+    void displayFolderDetailCanceled();
     void openFolder(const QString &filePath);
     void cancelUpdate(const QString &folderId);
     void validateUpdate(const QString &folderId);
@@ -72,6 +73,7 @@ private slots:
     void onPauseTriggered();
     void onResumeTriggered();
     void onUnsyncTriggered();
+    void onDisplayFolderDetailCanceled();
 };
 
 }

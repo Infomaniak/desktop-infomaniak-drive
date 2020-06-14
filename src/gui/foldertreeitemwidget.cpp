@@ -397,10 +397,11 @@ void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
 
     CustomTreeWidgetItem *root = static_cast<CustomTreeWidgetItem *>(topLevelItem(0));
     if (!root && list.size() <= 1) {
-        emit message(tr("No subfolders currently on the server."));
+        // No sub folders
+        emit terminated(false, true);
         return;
     } else {
-        emit showMessage(false);
+        emit terminated(false, false);
     }
 
     if (!root) {
@@ -467,9 +468,10 @@ void FolderTreeItemWidget::onUpdateDirectories(QStringList list)
 void FolderTreeItemWidget::onLoadSubFoldersError(QNetworkReply *reply)
 {
     if (reply->error() == QNetworkReply::ContentNotFoundError) {
-        emit message(tr("No subfolders currently on the server."));
+        // No sub folders
+        emit terminated(false, true);
     } else {
-        emit message(tr("An error occurred while loading the list of sub folders."));
+        emit terminated(true);
     }
 }
 

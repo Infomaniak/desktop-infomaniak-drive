@@ -49,8 +49,7 @@ public:
     qint64 nodeSize(QTreeWidgetItem *item) const;
 
 signals:
-    void message(const QString &text);
-    void showMessage(bool show);
+    void terminated(bool error, bool empty = false);
     void needToSave();
 
 private:

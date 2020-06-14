@@ -504,7 +504,7 @@ void DrivePreferencesWidget::updateFoldersBlocs()
                 connect(folderItemWidget, &FolderItemWidget::openFolder, this, &DrivePreferencesWidget::onOpenFolder);
                 connect(folderItemWidget, &FolderItemWidget::cancelUpdate, this, &DrivePreferencesWidget::onCancelUpdate);
                 connect(folderItemWidget, &FolderItemWidget::validateUpdate, this, &DrivePreferencesWidget::onValidateUpdate);
-                connect(folderTreeItemWidget, &FolderTreeItemWidget::message, this, &DrivePreferencesWidget::onDisplayMessage);
+                connect(folderTreeItemWidget, &FolderTreeItemWidget::terminated, this, &DrivePreferencesWidget:: onSubfoldersLoaded);
                 connect(folderTreeItemWidget, &FolderTreeItemWidget::needToSave, this, &DrivePreferencesWidget::onNeedToSave);
             }
         }
@@ -594,42 +594,43 @@ DrivePreferencesWidget::JobResult DrivePreferencesWidget::createFolder(const QSt
     return jobResult;
 }
 
-FolderTreeItemWidget *DrivePreferencesWidget::folderTreeItemWidget(QObject *folderItemWidget)
+FolderTreeItemWidget *DrivePreferencesWidget::blocTreeItemWidget(PreferencesBlocWidget *folderBloc)
 {
-    PreferencesBlocWidget *folderBloc = (PreferencesBlocWidget *) folderItemWidget->parent();
-    if (!folderBloc) {
-        qCDebug(lcDrivePreferencesWidget) << "Bad function sender!";
-        Q_ASSERT(false);
-        return nullptr;
-    }
-
+    ASSERT(folderBloc)
     FolderTreeItemWidget *folderTreeItemWidget = folderBloc->findChild<FolderTreeItemWidget *>();
     if (!folderTreeItemWidget) {
         qCDebug(lcDrivePreferencesWidget) << "Bad folder bloc!";
-        Q_ASSERT(false);
+        ASSERT(false);
         return nullptr;
     }
 
     return folderTreeItemWidget;
 }
 
-FolderItemWidget *DrivePreferencesWidget::folderItemWidget(QObject *folderTreeItemWidget)
+FolderItemWidget *DrivePreferencesWidget::blocItemWidget(PreferencesBlocWidget *folderBloc)
 {
-    PreferencesBlocWidget *folderBloc = (PreferencesBlocWidget *) folderTreeItemWidget->parent();
-    if (!folderBloc) {
-        qCDebug(lcDrivePreferencesWidget) << "Bad function sender!";
-        Q_ASSERT(false);
-        return nullptr;
-    }
-
+    ASSERT(folderBloc)
     FolderItemWidget *folderItemWidget = folderBloc->findChild<FolderItemWidget *>();
     if (!folderItemWidget) {
         qCDebug(lcDrivePreferencesWidget) << "Bad folder bloc!";
-        Q_ASSERT(false);
+        ASSERT(false);
         return nullptr;
     }
 
     return folderItemWidget;
+}
+
+QFrame *DrivePreferencesWidget::blocSeparatorFrame(PreferencesBlocWidget *folderBloc)
+{
+    ASSERT(folderBloc)
+    QFrame *separatorFrame = folderBloc->findChild<QFrame *>();
+    if (!separatorFrame) {
+        qCDebug(lcDrivePreferencesWidget) << "Bad folder bloc!";
+        ASSERT(false);
+        return nullptr;
+    }
+
+    return separatorFrame;
 }
 
 bool DrivePreferencesWidget::createMissingFolders(const QString &folderBasePath, const QString &folderPath)
@@ -972,7 +973,7 @@ void DrivePreferencesWidget::onUnsyncTriggered(const QString &folderId)
 
             // Remove folder
             folderBloc->setEnabled(false);
-            FolderItemWidget *itemWidget = folderItemWidget(sender());
+            FolderItemWidget *itemWidget = blocItemWidget((PreferencesBlocWidget *) sender()->parent());
             if (itemWidget) {
                 itemWidget->setDeleting();
             }
@@ -984,21 +985,20 @@ void DrivePreferencesWidget::onUnsyncTriggered(const QString &folderId)
 void DrivePreferencesWidget::onDisplayFolderDetail(const QString &folderId, bool display)
 {
     if (_accountInfo) {
-        FolderTreeItemWidget *treeItemWidget = folderTreeItemWidget(sender());
-        if (treeItemWidget) {
-            ASSERT(treeItemWidget->folderId() == folderId);
+        FolderTreeItemWidget *treeItemWidget = blocTreeItemWidget((PreferencesBlocWidget *) sender()->parent());
+        ASSERT(treeItemWidget)
+        ASSERT(treeItemWidget->folderId() == folderId)
 
-            PreferencesBlocWidget *folderBloc = (PreferencesBlocWidget *) sender()->parent();
-            ASSERT(folderBloc)
-
-            QFrame *separatorFrame = folderBloc->findChild<QFrame *>();
+        if (display) {
+            setCursor(Qt::WaitCursor);
+            treeItemWidget->loadSubFolders();
+        }
+        else {
+            QFrame *separatorFrame = blocSeparatorFrame((PreferencesBlocWidget *) sender()->parent());
             ASSERT(separatorFrame)
 
-            if (display) {
-                treeItemWidget->loadSubFolders();
-            }
-            treeItemWidget->setVisible(display);
-            separatorFrame->setVisible(display);
+            treeItemWidget->setVisible(false);
+            separatorFrame->setVisible(false);
         }
     }
 }
@@ -1008,20 +1008,48 @@ void DrivePreferencesWidget::onOpenFolder(const QString &filePath)
     emit openFolder(filePath);
 }
 
-void DrivePreferencesWidget::onDisplayMessage(const QString &text)
+void DrivePreferencesWidget::onSubfoldersLoaded(bool error, bool empty)
 {
-    CustomMessageBox *msgBox = new CustomMessageBox(
-                QMessageBox::Information,
-                text,
-                QMessageBox::Ok, this);
-    msgBox->setDefaultButton(QMessageBox::Ok);
-    msgBox->exec();
+    setCursor(Qt::ArrowCursor);
+    if (error || empty) {
+        FolderItemWidget *itemWidget = blocItemWidget((PreferencesBlocWidget *) sender()->parent());
+        ASSERT(itemWidget)
+        emit itemWidget->displayFolderDetailCanceled();
+
+        if (error) {
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("An error occurred while loading the list of sub folders."),
+                        QMessageBox::Ok, this);
+            msgBox->setDefaultButton(QMessageBox::Ok);
+            msgBox->exec();
+        }
+        else if (empty) {
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("No subfolders currently on the server."),
+                        QMessageBox::Ok, this);
+            msgBox->setDefaultButton(QMessageBox::Ok);
+            msgBox->exec();
+        }
+        emit
+    }
+    else {
+        FolderTreeItemWidget *treeItemWidget = (FolderTreeItemWidget *) sender();
+        ASSERT(treeItemWidget)
+
+        QFrame *separatorFrame = blocSeparatorFrame((PreferencesBlocWidget *) sender()->parent());
+        ASSERT(separatorFrame)
+
+        treeItemWidget->setVisible(true);
+        separatorFrame->setVisible(true);
+    }
 }
 
 void DrivePreferencesWidget::onNeedToSave()
 {
     // Show update widget
-    FolderItemWidget *itemWidget = folderItemWidget(sender());
+    FolderItemWidget *itemWidget = blocItemWidget((PreferencesBlocWidget *) sender()->parent());
     if (itemWidget) {
         itemWidget->setUpdateWidgetVisible(true);
     }
@@ -1029,7 +1057,7 @@ void DrivePreferencesWidget::onNeedToSave()
 
 void DrivePreferencesWidget::onCancelUpdate(const QString &folderId)
 {
-    FolderTreeItemWidget *treeItemWidget = folderTreeItemWidget(sender());
+    FolderTreeItemWidget *treeItemWidget = blocTreeItemWidget((PreferencesBlocWidget *) sender()->parent());
     if (treeItemWidget) {
         ASSERT(treeItemWidget->folderId() == folderId);
         treeItemWidget->loadSubFolders();
@@ -1044,7 +1072,7 @@ void DrivePreferencesWidget::onCancelUpdate(const QString &folderId)
 
 void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
 {
-    FolderTreeItemWidget *treeItemWidget = folderTreeItemWidget(sender());
+    FolderTreeItemWidget *treeItemWidget = blocTreeItemWidget((PreferencesBlocWidget *) sender()->parent());
     if (treeItemWidget) {
         ASSERT(treeItemWidget->folderId() == folderId);
         OCC::Folder *folder = OCC::FolderMan::instance()->folder(treeItemWidget->folderId());

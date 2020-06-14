@@ -62,7 +62,7 @@ private slots:
     void onExit();
     void onBackButtonTriggered(bool checked = false);
     void onContinueButtonTriggered(bool checked = false);
-    void onDisplayMessage(const QString &text);
+    void onSubfoldersLoaded(bool error, bool empty);
     void onNeedToSave();
 };
 

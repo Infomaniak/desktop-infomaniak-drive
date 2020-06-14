@@ -84,7 +84,7 @@ private:
     void setInfoIcon();
 
 private slots:
-    void onDisplayMessage(const QString &text);
+    void onSubfoldersLoaded(bool error, bool empty = false);
     void onNeedToSave();
     void onBackButtonTriggered(bool checked = false);
     void onContinueButtonTriggered(bool checked = false);

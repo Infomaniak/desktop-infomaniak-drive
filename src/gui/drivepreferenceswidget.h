@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <QBoxLayout>
 #include <QColor>
+#include <QFrame>
 #include <QLabel>
 #include <QMetaObject>
 #include <QProgressBar>
@@ -91,8 +92,9 @@ private:
     void updateFoldersBlocs();
     JobResult folderHasSubfolders(const QString &folderPath);
     JobResult createFolder(const QString &folderPath);
-    FolderTreeItemWidget *folderTreeItemWidget(QObject *folderItemWidget);
-    FolderItemWidget *folderItemWidget(QObject *folderTreeItemWidget);
+    FolderTreeItemWidget *blocTreeItemWidget(PreferencesBlocWidget *folderBloc);
+    FolderItemWidget *blocItemWidget(PreferencesBlocWidget *folderBloc);
+    QFrame *blocSeparatorFrame(PreferencesBlocWidget *folderBloc);
     bool createMissingFolders(const QString &folderBasePath, const QString &folderPath);
     bool addSynchronization(const QString &localFolderPath, const QString &serverFolderPath, QStringList blackList);
 
@@ -110,7 +112,7 @@ private slots:
     void onUnsyncTriggered(const QString &folderId);
     void onDisplayFolderDetail(const QString &folderId, bool display);
     void onOpenFolder(const QString &filePath);
-    void onDisplayMessage(const QString &text);
+    void onSubfoldersLoaded(bool error, bool empty = false);
     void onNeedToSave();
     void onCancelUpdate(const QString &folderId);
     void onValidateUpdate(const QString &folderId);
