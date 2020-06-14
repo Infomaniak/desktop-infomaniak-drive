@@ -85,6 +85,11 @@ ParametersDialog::ParametersDialog(QWidget *parent)
             this, &ParametersDialog::onItemCompleted);
 }
 
+void ParametersDialog::openPreferencesPage()
+{
+    onDisplayPreferences();
+}
+
 void ParametersDialog::openDriveErrorsPage(const QString &accountId)
 {
     openDriveParametersPage(accountId);
@@ -93,6 +98,7 @@ void ParametersDialog::openDriveErrorsPage(const QString &accountId)
 
 void ParametersDialog::openDriveParametersPage(const QString &accountId)
 {
+    onDisplayDriveParameters();
     _driveMenuBarWidget->driveSelectionWidget()->selectDrive(accountId);
 }
 
@@ -228,8 +234,8 @@ void ParametersDialog::initUI()
     connect(_drivePreferencesWidget, &DrivePreferencesWidget::displayErrors, this, &ParametersDialog::onDisplayDriveErrors);
     connect(_drivePreferencesWidget, &DrivePreferencesWidget::openFolder, this, &ParametersDialog::onOpenFolderItem);
     connect(_drivePreferencesWidget, &DrivePreferencesWidget::removeDrive, this, &ParametersDialog::onRemoveDrive);
-    connect(_preferencesMenuBarWidget, &PreferencesMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivePreferences);
-    connect(_errorsMenuBarWidget, &ErrorsMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivePreferences);
+    connect(_preferencesMenuBarWidget, &PreferencesMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDriveParameters);
+    connect(_errorsMenuBarWidget, &ErrorsMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDriveParameters);
     connect(_preferencesWidget, &PreferencesWidget::setStyle, this, &ParametersDialog::onSetStyle);
     connect(sendLogsWidget, &ActionWidget::clicked, this, &ParametersDialog::onSendLogs);
 }
@@ -572,7 +578,7 @@ void ParametersDialog::onDisplayDriveErrors(const QString &accountId)
     }
 }
 
-void ParametersDialog::onDisplayDrivePreferences()
+void ParametersDialog::onDisplayDriveParameters()
 {
     _pageStackedWidget->setCurrentIndex(Page::Drive);
 }

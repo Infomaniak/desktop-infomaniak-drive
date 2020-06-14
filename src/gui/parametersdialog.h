@@ -47,6 +47,7 @@ class ParametersDialog : public CustomDialog
 public:
     explicit ParametersDialog(QWidget *parent = nullptr);
 
+    void openPreferencesPage();
     void openDriveErrorsPage(const QString &accountId);
     void openDriveParametersPage(const QString &accountId);
 
@@ -95,7 +96,7 @@ private slots:
     void onAddDrive();
     void onRemoveDrive(const QString &accountId);
     void onDisplayDriveErrors(const QString &accountId);
-    void onDisplayDrivePreferences();
+    void onDisplayDriveParameters();
     void onDisplayPreferences();
     void onSetStyle(bool darkTheme);
     void onSendLogs();

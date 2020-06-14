@@ -1096,13 +1096,13 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
 
     MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
-    // Parameters
-    QWidgetAction *parametersAction = new QWidgetAction(this);
-    MenuItemWidget *parametersMenuItemWidget = new MenuItemWidget(tr("Parameters"));
-    parametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
-    parametersAction->setDefaultWidget(parametersMenuItemWidget);
-    connect(parametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenParameters);
-    menu->addAction(parametersAction);
+    // Application preferences
+    QWidgetAction *preferencesAction = new QWidgetAction(this);
+    MenuItemWidget *preferencesMenuItemWidget = new MenuItemWidget(tr("Application preferences"));
+    preferencesMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
+    preferencesAction->setDefaultWidget(preferencesMenuItemWidget);
+    connect(preferencesAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenPreferences);
+    menu->addAction(preferencesAction);
 
     // Disable Notifications
     QWidgetAction *notificationsAction = new QWidgetAction(this);
@@ -1116,6 +1116,14 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
     notificationsMenuItemWidget->setHasSubmenu(true);
     notificationsAction->setDefaultWidget(notificationsMenuItemWidget);
     menu->addAction(notificationsAction);
+
+    // Drive parameters
+    QWidgetAction *driveParametersAction = new QWidgetAction(this);
+    MenuItemWidget *driveParametersMenuItemWidget = new MenuItemWidget(tr("Drive parameters"));
+    driveParametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
+    driveParametersAction->setDefaultWidget(driveParametersMenuItemWidget);
+    connect(driveParametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenDriveParameters);
+    menu->addAction(driveParametersAction);
 
     // Disable Notifications submenu
     MenuWidget *submenu = new MenuWidget(MenuWidget::Submenu, menu);
@@ -1185,11 +1193,11 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
     menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()));
 }
 
-void SynthesisPopover::onOpenParameters(bool checked)
+void SynthesisPopover::onOpenPreferences(bool checked)
 {
     Q_UNUSED(checked)
 
-    emit openParametersDialog(_currentAccountId);
+    emit openParametersDialog();
 }
 
 void SynthesisPopover::onDisplayHelp(bool checked)
@@ -1263,6 +1271,13 @@ void SynthesisPopover::onNotificationActionTriggered(bool checked)
     }
 
     emit disableNotifications(_notificationsDisabled, _notificationsDisabledUntilDateTime);
+}
+
+void SynthesisPopover::onOpenDriveParameters(bool checked)
+{
+    Q_UNUSED(checked)
+
+    emit openParametersDialog(_currentAccountId);
 }
 
 void SynthesisPopover::onAccountSelected(QString id)

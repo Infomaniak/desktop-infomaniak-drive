@@ -598,7 +598,10 @@ void ownCloudGui::slotShowParametersDialog(const QString &accountId, bool errorP
     if (_parametersDialog.isNull()) {
         setupParametersDialog();
     }
-    if (!accountId.isEmpty()) {
+    if (accountId.isEmpty()) {
+        _parametersDialog->openPreferencesPage();
+    }
+    else {
         if (errorPage) {
             _parametersDialog->openDriveErrorsPage(accountId);
         }
