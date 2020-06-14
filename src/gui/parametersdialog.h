@@ -54,6 +54,7 @@ public:
 signals:
     void addDrive();
     void setStyle(bool darkTheme);
+    void newBigFolderDiscovered();
 
 private:
     enum Page {
@@ -102,6 +103,7 @@ private slots:
     void onSendLogs();
     void onOpenFolderItem(const QString &filePath);
     void onDebugReporterDone(bool retCode, const QString &debugId = QString());
+    void onNewBigFolderDiscovered(const QString &path);
 };
 
 }

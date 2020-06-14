@@ -303,6 +303,8 @@ void ParametersDialog::onRefreshAccountList()
                                     accountInfoIt->second._folderMap[folderIt.key()] = std::unique_ptr<FolderInfo>(
                                             new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path()));
                                     folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
+
+                                    connect(folderIt.value(), &OCC::Folder::newBigFolderDiscovered, this, &ParametersDialog::onNewBigFolderDiscovered);
                                 }
 
                                 folderInfoIt->second->_paused = folderIt.value()->syncPaused();
@@ -684,6 +686,16 @@ void ParametersDialog::onDebugReporterDone(bool retCode, const QString &debugId)
                 : tr("Transmission failed!"),
                 QMessageBox::Ok, this);
     msgBox->exec();
+}
+
+void ParametersDialog::onNewBigFolderDiscovered(const QString &path)
+{
+    Q_UNUSED(path)
+
+    OCC::Folder *folder = (OCC::Folder *) sender();
+    if (folder->accountState()->account()->id() == _currentAccountId) {
+        emit _drivePreferencesWidget->newBigFolderDiscovered(path);
+    }
 }
 
 ParametersDialog::AccountInfoParameters::AccountInfoParameters()

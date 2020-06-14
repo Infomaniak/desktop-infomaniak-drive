@@ -133,6 +133,7 @@ set(client_SRCS
     adddrivewizard.cpp
     bandwidthdialog.cpp
     basefoldertreeitemwidget.cpp
+    bigfoldersdialog.cpp
     bottomwidget.cpp
     buttonsbarwidget.cpp
     clickablewidget.cpp

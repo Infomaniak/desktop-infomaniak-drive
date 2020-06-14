@@ -61,6 +61,7 @@ signals:
     void openFolder(const QString &filePath);
     void removeDrive(QString accountId);
     void jobTerminated(JobResult result);
+    void newBigFolderDiscovered(const QString &path);
 
 private:
     enum AddFolderStep {
@@ -74,6 +75,7 @@ private:
     const AccountInfo *_accountInfo;
     QVBoxLayout *_mainVBox;
     ActionWidget *_displayErrorsWidget;
+    ActionWidget *_displayBigFoldersWarningWidget;
     CustomSwitch *_smartSyncSwitch;
     QLabel *_smartSyncDescriptionLabel;
     QLabel *_accountAvatarLabel;
@@ -83,6 +85,7 @@ private:
     int _foldersBeginIndex;
 
     void updateSmartSyncSwitchState();
+    bool existUndecidedList();
     void updateAccountInfo();
     void askEnableSmartSync(const std::function<void(bool enable)> &callback);
     void askDisableSmartSync(const std::function<void(bool enable)> &callback);
@@ -101,6 +104,7 @@ private:
 private slots:
     void onDisplaySmartSyncInfo(const QString &link);
     void onErrorsWidgetClicked();
+    void onBigFoldersWarningWidgetClicked();
     void onAddFolder(bool checked = false);
     void onSmartSyncSwitchClicked(bool checked = false);
     void onNotificationsSwitchClicked(bool checked = false);
@@ -116,6 +120,7 @@ private slots:
     void onNeedToSave();
     void onCancelUpdate(const QString &folderId);
     void onValidateUpdate(const QString &folderId);
+    void onNewBigFolderDiscovered(const QString &path);
 };
 
 }

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "serverbasefolderdialog.h"
 #include "serverfoldersdialog.h"
 #include "confirmsynchronizationdialog.h"
+#include "bigfoldersdialog.h"
 #include "custommessagebox.h"
 #include "custompushbutton.h"
 #include "accountmanager.h"
@@ -35,7 +36,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QDir>
 #include <QIcon>
 #include <QLabel>
-#include <QScrollArea>
 #include <QStandardPaths>
 #include <QStyle>
 
@@ -57,6 +57,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     , _accountInfo(nullptr)
     , _mainVBox(nullptr)
     , _displayErrorsWidget(nullptr)
+    , _displayBigFoldersWarningWidget(nullptr)
     , _smartSyncSwitch(nullptr)
     , _smartSyncDescriptionLabel(nullptr)
     , _accountAvatarLabel(nullptr)
@@ -71,8 +72,11 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
 
     /*
      *  _mainVBox
-     *      errorsWidget
-     *      foldersLabel
+     *      _displayErrorsWidget
+     *      _displayBigFoldersWarningWidget
+     *      foldersHeaderHBox
+     *          foldersLabel
+     *          addFolderButton
      *      folderBloc[]
      *      synchronizationLabel
      *      synchronizationBloc
@@ -118,6 +122,15 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
                                             tr("Some files couldn't be synchronized"), this);
     _displayErrorsWidget->setObjectName("displayErrorsWidget");
     _mainVBox->addWidget(_displayErrorsWidget);
+
+    //
+    // Big folders warning
+    //
+    _displayBigFoldersWarningWidget = new ActionWidget(":/client/resources/icons/actions/warning.svg",
+                                                       tr("Some folders were not synchronized because they are too large."), this);
+    _displayBigFoldersWarningWidget->setObjectName("displayBigFoldersWarningWidget");
+    _displayBigFoldersWarningWidget->setVisible(false);
+    _mainVBox->addWidget(_displayBigFoldersWarningWidget);
 
     //
     // Folders blocs
@@ -250,6 +263,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     _mainVBox->addStretch();
 
     connect(_displayErrorsWidget, &ActionWidget::clicked, this, &DrivePreferencesWidget::onErrorsWidgetClicked);
+    connect(_displayBigFoldersWarningWidget, &ActionWidget::clicked, this, &DrivePreferencesWidget::onBigFoldersWarningWidgetClicked);
     connect(addFolderButton, &CustomPushButton::clicked, this, &DrivePreferencesWidget::onAddFolder);
     if (_smartSyncSwitch && _smartSyncDescriptionLabel) {
         connect(_smartSyncSwitch, &CustomSwitch::clicked, this, &DrivePreferencesWidget::onSmartSyncSwitchClicked);
@@ -258,6 +272,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     connect(_notificationsSwitch, &CustomSwitch::clicked, this, &DrivePreferencesWidget::onNotificationsSwitchClicked);
     connect(this, &DrivePreferencesWidget::errorAdded, this, &DrivePreferencesWidget::onErrorAdded);
     connect(removeDriveButton, &CustomToolButton::clicked, this, &DrivePreferencesWidget::onRemoveDrive);
+    connect(this, &DrivePreferencesWidget::newBigFolderDiscovered, this, &DrivePreferencesWidget::onNewBigFolderDiscovered);
 }
 
 void DrivePreferencesWidget::setAccount(const QString &accountId, const AccountInfo *accountInfo, bool errors)
@@ -269,6 +284,7 @@ void DrivePreferencesWidget::setAccount(const QString &accountId, const AccountI
     _accountId = accountId;
     _accountInfo = accountInfo;
     _displayErrorsWidget->setVisible(errors);
+    _displayBigFoldersWarningWidget->setVisible(existUndecidedList());
     updateFoldersBlocs();
     updateSmartSyncSwitchState();
     _notificationsSwitch->setChecked(OCC::FolderMan::instance()->notificationsDisabled(_accountId));
@@ -280,6 +296,7 @@ void DrivePreferencesWidget::reset()
     _accountId = QString();
     _accountInfo = nullptr;
     _displayErrorsWidget->setVisible(false);
+    _displayBigFoldersWarningWidget->setVisible(false);
     resetFoldersBlocs();
     if (_smartSyncSwitch) {
         _smartSyncSwitch->setChecked(false);
@@ -310,6 +327,30 @@ void DrivePreferencesWidget::updateSmartSyncSwitchState()
             _smartSyncSwitch->setToolTip("");
         }
     }
+}
+
+bool DrivePreferencesWidget::existUndecidedList()
+{
+    bool ret = false;
+    if (_accountInfo) {
+        for (auto folderInfoElt : _accountInfo->_folderMap) {
+            OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
+            if (folder) {
+                bool ok;
+                QStringList undecidedList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncUndecidedList, &ok);
+                if (!ok) {
+                    qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
+                    break;
+                }
+                if (undecidedList.size() > 0) {
+                    ret = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return ret;
 }
 
 void DrivePreferencesWidget::updateAccountInfo()
@@ -702,6 +743,81 @@ void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
 void DrivePreferencesWidget::onErrorsWidgetClicked()
 {
     emit displayErrors(_accountId);
+}
+
+void DrivePreferencesWidget::onBigFoldersWarningWidgetClicked()
+{
+    QStringList accountUndecidedList;
+    if (_accountInfo) {
+        for (auto folderInfoElt : _accountInfo->_folderMap) {
+            OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
+            if (folder) {
+                bool ok;
+                accountUndecidedList << folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncUndecidedList, &ok);
+            }
+        }
+    }
+
+    BigFoldersDialog *dialog = new BigFoldersDialog(accountUndecidedList, _accountInfo, this);
+    if (dialog->exec() == QDialog::Accepted) {
+        for (auto folderInfoElt : _accountInfo->_folderMap) {
+            OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
+            if (folder) {
+                bool ok;
+                QStringList undecidedList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncUndecidedList, &ok);
+                if (!ok) {
+                    qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
+                    break;
+                }
+
+                // If this folder had no undecided entries, skip it.
+                if (undecidedList.isEmpty()) {
+                    continue;
+                }
+
+                // Remove all undecided folders from the blacklist
+                QStringList blackList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
+                if (!ok) {
+                    qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
+                    break;
+                }
+                foreach (const auto &undecidedFolder, undecidedList) {
+                    blackList.removeAll(undecidedFolder);
+                }
+                folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);
+
+                // Add all undecided folders to the white list
+                QStringList whiteList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, &ok);
+                if (!ok) {
+                    qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
+                    break;
+                }
+                whiteList += undecidedList;
+                folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, whiteList);
+
+                // Clear the undecided list
+                folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncUndecidedList, QStringList());
+
+                // Trigger a sync
+                if (folder->isBusy()) {
+                    folder->slotTerminateSync();
+                }
+
+                // The part that changed should not be read from the DB on next sync because there might be new folders
+                // (the ones that are no longer in the blacklist)
+                foreach (const auto &it, undecidedList) {
+                    folder->journalDb()->schedulePathForRemoteDiscovery(it);
+                    folder->schedulePathForLocalDiscovery(it);
+                }
+
+                // Also make sure we see the local file that had been ignored before
+                folder->slotNextSyncFullLocalDiscovery();
+                OCC::FolderMan::instance()->scheduleFolder(folder);
+            }
+        }
+
+        _displayBigFoldersWarningWidget->setVisible(existUndecidedList());
+    }
 }
 
 void DrivePreferencesWidget::onAddFolder(bool checked)
@@ -1110,6 +1226,13 @@ void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
             }
         }
     }
+}
+
+void DrivePreferencesWidget::onNewBigFolderDiscovered(const QString &path)
+{
+    Q_UNUSED(path)
+
+    _displayBigFoldersWarningWidget->setVisible(existUndecidedList());
 }
 
 }
