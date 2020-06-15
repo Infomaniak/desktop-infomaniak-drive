@@ -55,6 +55,9 @@ private:
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(const QColor &color) { _backgroundColor = color; }
+
+private slots:
+    void onAboutToShow();
 };
 
 }

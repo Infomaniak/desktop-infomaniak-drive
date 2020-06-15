@@ -51,6 +51,8 @@ MenuWidget::MenuWidget(Type type, QWidget *parent)
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
     setGraphicsEffect(effect);
+
+    connect(this, &MenuWidget::aboutToShow, this, &MenuWidget::onAboutToShow);
 }
 
 MenuWidget::MenuWidget(Type type, const QString &title, QWidget *parent)
@@ -99,6 +101,11 @@ void MenuWidget::paintEvent(QPaintEvent *event)
     painter.drawPath(painterPath);
 
     QMenu::paintEvent(event);
+}
+
+void MenuWidget::onAboutToShow()
+{
+    _painted = false;
 }
 
 }
