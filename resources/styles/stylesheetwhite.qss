@@ -1378,7 +1378,7 @@ KDC--CustomMessageBox {
     qproperty-icon_size: 24px;
 }
 
-KDC--CustomMessageBox QLabel#textlabel
+KDC--CustomMessageBox QLabel#textLabel
 {
     color: #666666;
     font-family: "Suisse Int'l";

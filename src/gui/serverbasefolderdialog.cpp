@@ -206,8 +206,8 @@ void ServerBaseFolderDialog::onContinueButtonTriggered(bool checked)
                     QMessageBox::Warning,
                     text,
                     QMessageBox::NoButton, this);
-        msgBox->addButton(tr("Confirm"), QMessageBox::Yes);
-        msgBox->addButton(tr("Cancel"), QMessageBox::No);
+        msgBox->addButton(tr("CONFIRM"), QMessageBox::Yes);
+        msgBox->addButton(tr("CANCEL"), QMessageBox::No);
         msgBox->setDefaultButton(QMessageBox::No);
         int ret = msgBox->exec();
         if (ret != QDialog::Rejected) {

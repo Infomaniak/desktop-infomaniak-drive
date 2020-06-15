@@ -386,8 +386,8 @@ void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)>
                        "Currently unselected folders will be translated to online-only folders "
                        "and your selective sync settings will be reset."),
                      QMessageBox::NoButton, this);
-        msgBox->addButton(tr("Enable virtual files"), QMessageBox::Yes);
-        msgBox->addButton(tr("Continue to use selective sync"), QMessageBox::No);
+        msgBox->addButton(tr("ENABLE VIRTUAL FILES"), QMessageBox::Yes);
+        msgBox->addButton(tr("CONTINUE TO USE SELECTIVE SYNC"), QMessageBox::No);
     } else {
         ASSERT(bestVfsMode == OCC::Vfs::WithSuffix)
         msgBox = new CustomMessageBox(
@@ -402,8 +402,8 @@ void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)>
                        "This is a new, experimental mode. If you decide to use it, please report any "
                        "issues that come up.").arg(APPLICATION_DOTVIRTUALFILE_SUFFIX),
                     QMessageBox::NoButton, this);
-        msgBox->addButton(tr("Enable experimental placeholder mode"), QMessageBox::Yes);
-        msgBox->addButton(tr("Stay safe"), QMessageBox::No);
+        msgBox->addButton(tr("ENABLE EXPERIMENTAL PLACEHOLDER MODE"), QMessageBox::Yes);
+        msgBox->addButton(tr("STAY SAFE"), QMessageBox::No);
     }
     int result = msgBox->exec();
     callback(result == QMessageBox::Yes);
@@ -417,8 +417,8 @@ void DrivePreferencesWidget::askDisableSmartSync(const std::function<void (bool)
                    "are currently marked as 'available online only' will be downloaded.\n\n"
                    "This action will abort any currently running synchronization."),
                 QMessageBox::NoButton, this);
-    msgBox->addButton(tr("Disable support"), QMessageBox::Yes);
-    msgBox->addButton(tr("Cancel"), QMessageBox::No);
+    msgBox->addButton(tr("DISABLE SUPPORT"), QMessageBox::Yes);
+    msgBox->addButton(tr("CANCEL"), QMessageBox::No);
     int result = msgBox->exec();
     callback(result == QMessageBox::Yes);
 }
@@ -1078,8 +1078,8 @@ void DrivePreferencesWidget::onUnsyncTriggered(const QString &folderId)
                    "<b>Note:</b> This will <b>not</b> delete any files.")
                 .arg(folder->path()),
                 QMessageBox::NoButton, this);
-    msgBox->addButton(tr("Remove Folder Sync Connection"), QMessageBox::Yes);
-    msgBox->addButton(tr("Cancel"), QMessageBox::No);
+    msgBox->addButton(tr("REMOVE FOLDER SYNC CONNECTION"), QMessageBox::Yes);
+    msgBox->addButton(tr("CANCEL"), QMessageBox::No);
     msgBox->setDefaultButton(QMessageBox::No);
     int ret = msgBox->exec();
     if (ret != QDialog::Rejected) {
@@ -1142,7 +1142,7 @@ void DrivePreferencesWidget::onSubfoldersLoaded(bool error, bool empty)
         }
         else if (empty) {
             CustomMessageBox *msgBox = new CustomMessageBox(
-                        QMessageBox::Warning,
+                        QMessageBox::Information,
                         tr("No subfolders currently on the server."),
                         QMessageBox::Ok, this);
             msgBox->setDefaultButton(QMessageBox::Ok);

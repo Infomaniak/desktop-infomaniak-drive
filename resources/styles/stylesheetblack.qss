@@ -307,7 +307,7 @@ KDC--CustomDialog QLabel#subtitleLabel
 
 KDC--CustomDialog QLabel#textLabel
 {
-    color: #666666;
+    color: #C0C0C0;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 13px;
@@ -1378,7 +1378,7 @@ KDC--CustomMessageBox {
     qproperty-icon_size: 24px;
 }
 
-KDC--CustomMessageBox QLabel#textlabel
+KDC--CustomMessageBox QLabel#textLabel
 {
     color: #C0C0C0;
     font-family: "Suisse Int'l";

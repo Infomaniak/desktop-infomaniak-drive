@@ -73,7 +73,6 @@ AddDriveStartWidget::AddDriveStartWidget(bool autoNext, QWidget *parent)
 void AddDriveStartWidget::setServerUrl(const QString &url)
 {
     _serverUrlLineEdit->setText(url);
-    qCDebug(lcAddDriveStartWidget) << "autonext: " << _autoNext;
     if (_autoNext) {
         onNextButtonTriggered();
     }
@@ -123,15 +122,10 @@ void AddDriveStartWidget::onNextButtonTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    qCDebug(lcAddDriveStartWidget) << "onNextButtonTriggered";
-
     onUrlEditFinished();
-
-    qCDebug(lcAddDriveStartWidget) << "onUrlEditFinished";
 
     QUrl url(_serverUrlLineEdit->text());
     if (!url.isValid() || url.host().isEmpty()) {
-        qCDebug(lcAddDriveStartWidget) << "invalid url";
         CustomMessageBox *msgBox = new CustomMessageBox(
                     QMessageBox::Warning,
                     tr("Invalid server URL"),
@@ -139,8 +133,6 @@ void AddDriveStartWidget::onNextButtonTriggered(bool checked)
         msgBox->exec();
         return;
     }
-
-    qCDebug(lcAddDriveStartWidget) << "terminated";
 
     emit terminated();
 }

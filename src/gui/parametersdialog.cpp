@@ -557,8 +557,8 @@ void ParametersDialog::onRemoveDrive(const QString &accountId)
                        "<b>Note:</b> This will <b>not</b> delete any files.")
                     .arg(accountStatePtr->account()->driveName()),
                     QMessageBox::NoButton, this);
-        msgBox->addButton(tr("Remove synchronization"), QMessageBox::Yes);
-        msgBox->addButton(tr("Cancel"), QMessageBox::No);
+        msgBox->addButton(tr("REMOVE SYNCHRONIZATION"), QMessageBox::Yes);
+        msgBox->addButton(tr("CANCEL"), QMessageBox::No);
         msgBox->setDefaultButton(QMessageBox::No);
         int ret = msgBox->exec();
         if (ret != QDialog::Rejected) {

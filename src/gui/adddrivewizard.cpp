@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "creds/dummycredentials.h"
 #include "clientproxy.h"
 #include "configfile.h"
+#include "filesystem.h"
 
 #include <QBoxLayout>
 #include <QDir>
@@ -55,6 +56,7 @@ AddDriveWizard::AddDriveWizard(QWidget *parent)
     , _blackList(QStringList())
     , _serverUrl(QString())
     , _localFolderPath(QString())
+    , _accountId(QString())
     , _action(OCC::Utility::WizardAction::OpenFolder)
 {
     initUI();
@@ -112,6 +114,7 @@ void AddDriveWizard::start()
     _accountPtr = OCC::AccountManager::createAccount();
     _accountPtr->setCredentials(new OCC::DummyCredentials);
     _accountPtr->setUrl(OCC::Theme::instance()->overrideServerUrl());
+    _accountId = _accountPtr->id();
 
     startNextStep();
 }
@@ -178,7 +181,7 @@ void AddDriveWizard::checkServer(const QString &urlString)
         // We want to reset the QNAM proxy so that the global proxy settings are used (via ClientProxy settings)
         _accountPtr->networkAccessManager()->setProxy(QNetworkProxy(QNetworkProxy::DefaultProxy));
         // use a queued invocation so we're as asynchronous as with the other code path
-        QMetaObject::invokeMethod(this, "slotFindServer", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(this, "onFindServer", Qt::QueuedConnection);
     }
 }
 
@@ -256,7 +259,7 @@ OCC::AccountState *AddDriveWizard::applyAccountChanges()
     return newAccountState;
 }
 
-void AddDriveWizard::addDrive()
+bool AddDriveWizard::addDrive()
 {
     bool useVirtualFileSync = false;
     bool startFromScratch = false;
@@ -264,6 +267,25 @@ void AddDriveWizard::addDrive()
     auto accountState = applyAccountChanges();
 
     QString localFolderPath = OCC::FolderDefinition::prepareLocalPath(_localFolderPath);
+    const QDir localFolderDir(localFolderPath);
+    if (localFolderDir.exists()) {
+        OCC::FileSystem::setFolderMinimumPermissions(localFolderPath);
+        OCC::Utility::setupFavLink(localFolderPath);
+    } else {
+        QString res = tr("Creating local sync folder %1...").arg(localFolderPath);
+        if (localFolderDir.mkpath(localFolderPath)) {
+            OCC::FileSystem::setFolderMinimumPermissions(localFolderPath);
+            OCC::Utility::setupFavLink(localFolderPath);
+        } else {
+            qCWarning(lcAddDriveWizard) << "Failed to create " << localFolderDir.path();
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Failed to create local folder %1").arg(localFolderDir.path()),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
+            return false;
+        }
+    }
 
     if (!startFromScratch) {
         qCInfo(lcAddDriveWizard) << "Adding folder definition for" << localFolderPath << _serverFolderPath;
@@ -292,6 +314,7 @@ void AddDriveWizard::addDrive()
             }
         }
     }
+    return true;
 }
 
 void AddDriveWizard::onSystemProxyLookupDone(const QNetworkProxy &proxy)
@@ -518,7 +541,9 @@ void AddDriveWizard::onStepTerminated(bool next)
     else if (_currentStep == LocalFolder) {
         if (next) {
             _localFolderPath = _addDriveLocalFolderWidget->localFolderPath();
-            addDrive();
+            if (!addDrive()) {
+                reject();
+            }
         }
         else {
             _currentStep = Login;

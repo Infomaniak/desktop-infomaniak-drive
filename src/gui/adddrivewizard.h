@@ -40,7 +40,7 @@ public:
 
     inline OCC::Utility::WizardAction nextAction() { return _action; }
     inline QString localFolderPath() { return _localFolderPath; }
-    inline QString accountId() { return _accountPtr->id(); }
+    inline QString accountId() { return _accountId; }
 
 private:
     enum Step {
@@ -66,6 +66,7 @@ private:
     QStringList _blackList;
     QString _serverUrl;
     QString _localFolderPath;
+    QString _accountId;
     OCC::Utility::WizardAction _action;
 
     void setButtonIcon(const QColor &value) override;
@@ -80,7 +81,7 @@ private:
     bool checkDowngradeAdvised(QNetworkReply *reply);
     void testConnection();
     OCC::AccountState *applyAccountChanges();
-    void addDrive();
+    bool addDrive();
 
 private slots:
     void onStepTerminated(bool next = true);

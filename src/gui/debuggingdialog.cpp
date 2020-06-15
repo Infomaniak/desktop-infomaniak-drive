@@ -53,6 +53,7 @@ DebuggingDialog::DebuggingDialog(QWidget *parent)
     , _recordDebugging(false)
     , _minLogLevel(DebugLevel::Info)
     , _deleteLogs(false)
+    , _needToSave(false)
 {
     initUI();
 
