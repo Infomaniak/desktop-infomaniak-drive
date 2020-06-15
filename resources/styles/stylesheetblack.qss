@@ -216,17 +216,17 @@ KDC--CustomCheckBox[type="switch"]::indicator:checked
 
 KDC--CustomCheckBox[type="switch"]::indicator:unchecked
 {
-    image: url(:/client/resources/icons/actions/switch-off.svg);
+    image: url(:/client/resources/icons/actions/dark-switch-off.svg);
 }
 
 KDC--CustomCheckBox[type="switch"]::indicator:checked:disabled
 {
-    image: url(:/client/resources/icons/actions/switch-disable.svg);
+    image: url(:/client/resources/icons/actions/dark-switch-disable.svg);
 }
 
 KDC--CustomCheckBox[type="switch"]::indicator:unchecked:disabled
 {
-    image: url(:/client/resources/icons/actions/switch-disable.svg);
+    image: url(:/client/resources/icons/actions/dark-switch-disable.svg);
 }
 
 /***********************/
