@@ -609,8 +609,8 @@ void SynthesisPopover::refreshStatusBar(std::map<QString, AccountInfoSynthesis>:
 {
     if (accountInfoIt != _accountInfoMap.end()) {
         const FolderInfo *folderInfo = getFirstFolderByPriority(accountInfoIt->second._folderMap);
-        refreshStatusBar(folderInfo);
         _statusBarWidget->setCurrentAccount(&accountInfoIt->second);
+        refreshStatusBar(folderInfo);
     }
 }
 
@@ -1096,13 +1096,13 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
 
     MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
-    // Application preferences
-    QWidgetAction *preferencesAction = new QWidgetAction(this);
-    MenuItemWidget *preferencesMenuItemWidget = new MenuItemWidget(tr("Application preferences"));
-    preferencesMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
-    preferencesAction->setDefaultWidget(preferencesMenuItemWidget);
-    connect(preferencesAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenPreferences);
-    menu->addAction(preferencesAction);
+    // Drive parameters
+    QWidgetAction *driveParametersAction = new QWidgetAction(this);
+    MenuItemWidget *driveParametersMenuItemWidget = new MenuItemWidget(tr("Drive parameters"));
+    driveParametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg");
+    driveParametersAction->setDefaultWidget(driveParametersMenuItemWidget);
+    connect(driveParametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenDriveParameters);
+    menu->addAction(driveParametersAction);
 
     // Disable Notifications
     QWidgetAction *notificationsAction = new QWidgetAction(this);
@@ -1117,13 +1117,13 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
     notificationsAction->setDefaultWidget(notificationsMenuItemWidget);
     menu->addAction(notificationsAction);
 
-    // Drive parameters
-    QWidgetAction *driveParametersAction = new QWidgetAction(this);
-    MenuItemWidget *driveParametersMenuItemWidget = new MenuItemWidget(tr("Drive parameters"));
-    driveParametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
-    driveParametersAction->setDefaultWidget(driveParametersMenuItemWidget);
-    connect(driveParametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenDriveParameters);
-    menu->addAction(driveParametersAction);
+    // Application preferences
+    QWidgetAction *preferencesAction = new QWidgetAction(this);
+    MenuItemWidget *preferencesMenuItemWidget = new MenuItemWidget(tr("Application preferences"));
+    preferencesMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
+    preferencesAction->setDefaultWidget(preferencesMenuItemWidget);
+    connect(preferencesAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenPreferences);
+    menu->addAction(preferencesAction);
 
     // Disable Notifications submenu
     MenuWidget *submenu = new MenuWidget(MenuWidget::Submenu, menu);
