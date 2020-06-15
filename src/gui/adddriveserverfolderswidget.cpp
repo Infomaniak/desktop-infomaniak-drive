@@ -49,6 +49,7 @@ AddDriveServerFoldersWidget::AddDriveServerFoldersWidget(QWidget *parent)
     , _infoIconLabel(nullptr)
     , _availableSpaceTextLabel(nullptr)
     , _folderTreeItemWidget(nullptr)
+    , _backButton(nullptr)
     , _continueButton(nullptr)
     , _infoIconColor(QColor())
     , _infoIconSize(QSize())
@@ -77,6 +78,13 @@ qint64 AddDriveServerFoldersWidget::selectionSize() const
 QStringList AddDriveServerFoldersWidget::createBlackList() const
 {
     return _folderTreeItemWidget->createBlackList();
+}
+
+void AddDriveServerFoldersWidget::setButtonIcon(const QColor &value)
+{
+    if (_backButton) {
+        _backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg", value));
+    }
 }
 
 void AddDriveServerFoldersWidget::initUI()
@@ -150,11 +158,10 @@ void AddDriveServerFoldersWidget::initUI()
     buttonsHBox->setSpacing(boxHSpacing);
     mainLayout->addLayout(buttonsHBox);
 
-    QPushButton *backButton = new QPushButton(this);
-    backButton->setObjectName("nondefaultbutton");
-    backButton->setFlat(true);
-    backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg"));
-    buttonsHBox->addWidget(backButton);
+    _backButton = new QPushButton(this);
+    _backButton->setObjectName("nondefaultbutton");
+    _backButton->setFlat(true);
+    buttonsHBox->addWidget(_backButton);
     buttonsHBox->addStretch();
 
     _continueButton = new QPushButton(this);
@@ -165,7 +172,7 @@ void AddDriveServerFoldersWidget::initUI()
 
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::terminated, this, &AddDriveServerFoldersWidget::onSubfoldersLoaded);
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::needToSave, this, &AddDriveServerFoldersWidget::onNeedToSave);
-    connect(backButton, &QPushButton::clicked, this, &AddDriveServerFoldersWidget::onBackButtonTriggered);
+    connect(_backButton, &QPushButton::clicked, this, &AddDriveServerFoldersWidget::onBackButtonTriggered);
     connect(_continueButton, &QPushButton::clicked, this, &AddDriveServerFoldersWidget::onContinueButtonTriggered);
 }
 

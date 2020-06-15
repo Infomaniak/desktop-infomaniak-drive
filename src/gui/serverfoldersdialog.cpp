@@ -40,6 +40,7 @@ ServerFoldersDialog::ServerFoldersDialog(const QString &accountId, const QString
     , _serverFolderName(serverFolderName)
     , _serverFolderPath(serverFolderPath)
     , _folderTreeItemWidget(nullptr)
+    , _backButton(nullptr)
     , _continueButton(nullptr)
     , _needToSave(false)
 {
@@ -59,6 +60,11 @@ qint64 ServerFoldersDialog::selectionSize() const
 QStringList ServerFoldersDialog::createBlackList() const
 {
     return _folderTreeItemWidget->createBlackList();
+}
+
+void ServerFoldersDialog::setButtonIcon(const QColor &value)
+{
+    _backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg", value));
 }
 
 void ServerFoldersDialog::initUI()
@@ -90,11 +96,10 @@ void ServerFoldersDialog::initUI()
     buttonsHBox->setSpacing(boxHSpacing);
     mainLayout->addLayout(buttonsHBox);
 
-    QPushButton *backButton = new QPushButton(this);
-    backButton->setObjectName("nondefaultbutton");
-    backButton->setFlat(true);
-    backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg"));
-    buttonsHBox->addWidget(backButton);
+    _backButton = new QPushButton(this);
+    _backButton->setObjectName("nondefaultbutton");
+    _backButton->setFlat(true);
+    buttonsHBox->addWidget(_backButton);
     buttonsHBox->addStretch();
 
     _continueButton = new QPushButton(this);
@@ -105,7 +110,7 @@ void ServerFoldersDialog::initUI()
 
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::terminated, this, &ServerFoldersDialog::onSubfoldersLoaded);
     connect(_folderTreeItemWidget, &FolderTreeItemWidget::needToSave, this, &ServerFoldersDialog::onNeedToSave);
-    connect(backButton, &QPushButton::clicked, this, &ServerFoldersDialog::onBackButtonTriggered);
+    connect(_backButton, &QPushButton::clicked, this, &ServerFoldersDialog::onBackButtonTriggered);
     connect(_continueButton, &QPushButton::clicked, this, &ServerFoldersDialog::onContinueButtonTriggered);
     connect(this, &CustomDialog::exit, this, &ServerFoldersDialog::onExit);
 }

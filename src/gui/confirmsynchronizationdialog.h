@@ -44,8 +44,11 @@ private:
     qint64 _serverFolderSize;
     QLabel *_leftArrowIconLabel;
     QLabel *_rightArrowIconLabel;
+    QPushButton *_backButton;
     QPushButton *_continueButton;
     QColor _arrowIconColor;
+
+    void setButtonIcon(const QColor &value) override;
 
     inline QColor arrowIconColor() const { return _arrowIconColor; }
     inline void setArrowIconColor(QColor color) {

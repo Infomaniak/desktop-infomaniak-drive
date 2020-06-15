@@ -35,6 +35,9 @@ class BaseFolderTreeItemWidget : public QTreeWidget
     Q_PROPERTY(QColor folder_icon_color READ folderIconColor WRITE setFolderIconColor)
     Q_PROPERTY(QSize folder_icon_size READ folderIconSize WRITE setFolderIconSize)
 
+    Q_PROPERTY(QColor add_icon_color READ addIconColor WRITE setAddIconColor)
+    Q_PROPERTY(QSize add_icon_size READ addIconSize WRITE setAddIconSize)
+
 public:
     explicit BaseFolderTreeItemWidget(const QString &accountId, bool displayRoot, QWidget *parent = nullptr);
 
@@ -57,6 +60,8 @@ private:
     ExcludedFiles _excludedFiles;
     QColor _folderIconColor;
     QSize _folderIconSize;
+    QColor _addIconColor;
+    QSize _addIconSize;
     bool _inserting;
     QString _currentFolderPath;
 
@@ -71,6 +76,12 @@ private:
         _folderIconSize = size;
         setFolderIcon();
     }
+
+    inline QColor addIconColor() const { return _addIconColor; }
+    inline void setAddIconColor(QColor color) { _addIconColor = color; }
+
+    inline QSize addIconSize() const { return _addIconSize; }
+    inline void setAddIconSize(QSize size) { _addIconSize = size; }
 
     void initUI();
     QString iconPath(const QString &folderName);

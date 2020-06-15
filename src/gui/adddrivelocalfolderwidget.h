@@ -43,6 +43,7 @@ public:
     void setAccountPtr(OCC::AccountPtr accountPtr);
     void setLocalFolderPath(const QString &path);
     inline QString localFolderPath() const { return _localFolderPath; }
+    void setButtonIcon(const QColor &value);
 
 signals:
     void terminated(bool next = true);
@@ -54,6 +55,7 @@ private:
     QLabel *_folderIconLabel;
     QLabel *_folderNameLabel;
     QLabel *_folderPathLabel;
+    QPushButton *_backButton;
     QPushButton *_endButton;
     QColor _folderIconColor;
     QSize _folderIconSize;

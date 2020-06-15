@@ -47,9 +47,17 @@ ConfirmSynchronizationDialog::ConfirmSynchronizationDialog(const QString &localF
     , _serverFolderSize(serverFolderSize)
     , _leftArrowIconLabel(nullptr)
     , _rightArrowIconLabel(nullptr)
+    , _backButton(nullptr)
     , _continueButton(nullptr)
 {
     initUI();
+}
+
+void ConfirmSynchronizationDialog::setButtonIcon(const QColor &value)
+{
+    if (_backButton) {
+        _backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg", value));
+    }
 }
 
 void ConfirmSynchronizationDialog::initUI()
@@ -148,11 +156,10 @@ void ConfirmSynchronizationDialog::initUI()
     buttonsHBox->setSpacing(boxHSpacing);
     mainLayout->addLayout(buttonsHBox);
 
-    QPushButton *backButton = new QPushButton(this);
-    backButton->setObjectName("nondefaultbutton");
-    backButton->setFlat(true);
-    backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg"));
-    buttonsHBox->addWidget(backButton);
+    _backButton = new QPushButton(this);
+    _backButton->setObjectName("nondefaultbutton");
+    _backButton->setFlat(true);
+    buttonsHBox->addWidget(_backButton);
 
     QPushButton *cancelButton = new QPushButton(this);
     cancelButton->setObjectName("nondefaultbutton");
@@ -167,7 +174,7 @@ void ConfirmSynchronizationDialog::initUI()
     _continueButton->setText(tr("SYNCHRONIZE"));
     buttonsHBox->addWidget(_continueButton);
 
-    connect(backButton, &QPushButton::clicked, this, &ConfirmSynchronizationDialog::onBackButtonTriggered);
+    connect(_backButton, &QPushButton::clicked, this, &ConfirmSynchronizationDialog::onBackButtonTriggered);
     connect(cancelButton, &QPushButton::clicked, this, &ConfirmSynchronizationDialog::onExit);
     connect(_continueButton, &QPushButton::clicked, this, &ConfirmSynchronizationDialog::onContinueButtonTriggered);
     connect(this, &CustomDialog::exit, this, &ConfirmSynchronizationDialog::onExit);

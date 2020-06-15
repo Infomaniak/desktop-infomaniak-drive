@@ -68,6 +68,8 @@ private:
     QString _localFolderPath;
     OCC::Utility::WizardAction _action;
 
+    void setButtonIcon(const QColor &value) override;
+
     void initUI();
     void start();
     void startNextStep();

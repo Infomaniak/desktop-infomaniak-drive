@@ -326,7 +326,9 @@ void BaseFolderTreeItemWidget::onCurrentItemChanged(QTreeWidgetItem *current, QT
 {
     if (current && !current->text(TreeWidgetColumn::Folder).isEmpty()) {
         // Add action icon
-        current->setIcon(TreeWidgetColumn::Action, OCC::Utility::getIconWithColor(":/client/resources/icons/actions/folder-add.svg"));
+        current->setIcon(TreeWidgetColumn::Action,
+                         OCC::Utility::getIconWithColor(":/client/resources/icons/actions/folder-add.svg", _addIconColor)
+                         .pixmap(_addIconSize));
 
         _currentFolderPath = current->data(TreeWidgetColumn::Folder, dirRole).toString();
         QString currentFolderBasePath = current->data(TreeWidgetColumn::Folder, baseDirRole).toString();

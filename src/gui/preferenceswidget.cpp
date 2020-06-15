@@ -296,7 +296,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     versionVBox->addWidget(versionNumberLabel);
 
     QLabel *copyrightLabel = new QLabel(QString("Copyright %1").arg(APPLICATION_VENDOR), this);
-    copyrightLabel->setObjectName("textLabel");
+    copyrightLabel->setObjectName("description");
     versionVBox->addWidget(copyrightLabel);
 
     _updateButton = new QPushButton(this);

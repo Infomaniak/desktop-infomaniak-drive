@@ -55,6 +55,7 @@ AddDriveLocalFolderWidget::AddDriveLocalFolderWidget(QWidget *parent)
     , _folderIconLabel(nullptr)
     , _folderNameLabel(nullptr)
     , _folderPathLabel(nullptr)
+    , _backButton(nullptr)
     , _endButton(nullptr)
     , _folderIconColor(QColor())
     , _folderIconSize(QSize())
@@ -80,6 +81,13 @@ void AddDriveLocalFolderWidget::setLocalFolderPath(const QString &path)
         _folderPathLabel->setText(QString("<a style=\"%1\" href=\"ref\">%2</a>")
                                   .arg(OCC::Utility::linkStyle)
                                   .arg(_localFolderPath));
+    }
+}
+
+void AddDriveLocalFolderWidget::setButtonIcon(const QColor &value)
+{
+    if (_backButton) {
+        _backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg", value));
     }
 }
 
@@ -175,11 +183,10 @@ void AddDriveLocalFolderWidget::initUI()
     buttonsHBox->setSpacing(boxHSpacing);
     mainLayout->addLayout(buttonsHBox);
 
-    QPushButton *backButton = new QPushButton(this);
-    backButton->setObjectName("nondefaultbutton");
-    backButton->setFlat(true);
-    backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg"));
-    buttonsHBox->addWidget(backButton);
+    _backButton = new QPushButton(this);
+    _backButton->setObjectName("nondefaultbutton");
+    _backButton->setFlat(true);
+    buttonsHBox->addWidget(_backButton);
     buttonsHBox->addStretch();
 
     _endButton = new QPushButton(this);
@@ -190,7 +197,7 @@ void AddDriveLocalFolderWidget::initUI()
 
     connect(updateButton, &CustomToolButton::clicked, this, &AddDriveLocalFolderWidget::onUpdateFolderButtonTriggered);
     connect(_folderPathLabel, &QLabel::linkActivated, this, &AddDriveLocalFolderWidget::onLinkActivated);
-    connect(backButton, &QPushButton::clicked, this, &AddDriveLocalFolderWidget::onBackButtonTriggered);
+    connect(_backButton, &QPushButton::clicked, this, &AddDriveLocalFolderWidget::onBackButtonTriggered);
     connect(_endButton, &QPushButton::clicked, this, &AddDriveLocalFolderWidget::onContinueButtonTriggered);
 }
 

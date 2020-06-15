@@ -44,6 +44,7 @@ static const int shadowBlurRadius = 20;
 CustomDialog::CustomDialog(bool popup, QWidget *parent)
     : QDialog(parent)
     , _backgroundColor(QColor())
+    , _buttonIconColor(QColor())
     , _layout(nullptr)
 {
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);

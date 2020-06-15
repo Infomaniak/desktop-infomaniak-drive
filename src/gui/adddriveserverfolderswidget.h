@@ -48,6 +48,7 @@ public:
     void setAccountPtr(OCC::AccountPtr accountPtr);
     qint64 selectionSize() const;
     QStringList createBlackList() const;
+    void setButtonIcon(const QColor &value);
 
 signals:
     void terminated(bool next = true);
@@ -58,6 +59,7 @@ private:
     QLabel *_infoIconLabel;
     QLabel *_availableSpaceTextLabel;
     FolderTreeItemWidget *_folderTreeItemWidget;
+    QPushButton *_backButton;
     QPushButton *_continueButton;
     QColor _infoIconColor;
     QSize _infoIconSize;

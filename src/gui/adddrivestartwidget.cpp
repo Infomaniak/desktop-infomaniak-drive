@@ -26,6 +26,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
+Q_LOGGING_CATEGORY(lcAddDriveStartWidget, "adddrivestartwidget", QtInfoMsg)
+
 AddDriveStartWidget::AddDriveStartWidget(bool autoNext, QWidget *parent)
     : QWidget(parent)
     , _autoNext(autoNext)
@@ -60,7 +62,6 @@ AddDriveStartWidget::AddDriveStartWidget(bool autoNext, QWidget *parent)
     _nextButton->setObjectName("defaultbutton");
     _nextButton->setFlat(true);
     _nextButton->setText(tr("NEXT"));
-    _nextButton->setEnabled(false);
     buttonsHBox->addStretch();
     buttonsHBox->addWidget(_nextButton);
 
@@ -72,6 +73,7 @@ AddDriveStartWidget::AddDriveStartWidget(bool autoNext, QWidget *parent)
 void AddDriveStartWidget::setServerUrl(const QString &url)
 {
     _serverUrlLineEdit->setText(url);
+    qCDebug(lcAddDriveStartWidget) << "autonext: " << _autoNext;
     if (_autoNext) {
         onNextButtonTriggered();
     }
@@ -121,9 +123,15 @@ void AddDriveStartWidget::onNextButtonTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
+    qCDebug(lcAddDriveStartWidget) << "onNextButtonTriggered";
+
     onUrlEditFinished();
+
+    qCDebug(lcAddDriveStartWidget) << "onUrlEditFinished";
+
     QUrl url(_serverUrlLineEdit->text());
     if (!url.isValid() || url.host().isEmpty()) {
+        qCDebug(lcAddDriveStartWidget) << "invalid url";
         CustomMessageBox *msgBox = new CustomMessageBox(
                     QMessageBox::Warning,
                     tr("Invalid server URL"),
@@ -131,6 +139,8 @@ void AddDriveStartWidget::onNextButtonTriggered(bool checked)
         msgBox->exec();
         return;
     }
+
+    qCDebug(lcAddDriveStartWidget) << "terminated";
 
     emit terminated();
 }

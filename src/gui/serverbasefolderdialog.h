@@ -56,6 +56,7 @@ private:
     QLabel *_infoIconLabel;
     QLabel *_availableSpaceTextLabel;
     BaseFolderTreeItemWidget *_folderTreeItemWidget;
+    QPushButton *_backButton;
     QPushButton *_continueButton;
     QColor _infoIconColor;
     QSize _infoIconSize;
@@ -63,6 +64,8 @@ private:
     QString _serverFolderPath;
     QString _serverFolderBasePath;
     qint64 _serverFolderSize;
+
+    void setButtonIcon(const QColor &value) override;
 
     inline QColor infoIconColor() const { return _infoIconColor; }
     inline void setInfoIconColor(QColor color) {

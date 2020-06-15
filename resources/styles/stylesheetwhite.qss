@@ -286,6 +286,7 @@ KDC--CustomSystemBar QToolButton
 KDC--CustomDialog
 {
     qproperty-background_color: #FFFFFF;
+    qproperty-button_icon_color: #000000;
 }
 
 KDC--CustomDialog QLabel#titleLabel
@@ -1537,6 +1538,8 @@ KDC--BaseFolderTreeItemWidget
     selection-color: #333333;
     qproperty-folder_icon_color: #9F9F9F;
     qproperty-folder_icon_size: 20px;
+    qproperty-add_icon_color: #000000;
+    qproperty-add_icon_size: 20px;
 }
 
 KDC--BaseFolderTreeItemWidget::item

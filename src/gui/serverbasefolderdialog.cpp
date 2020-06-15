@@ -43,6 +43,7 @@ ServerBaseFolderDialog::ServerBaseFolderDialog(const QString &accountId, const Q
     , _infoIconLabel(nullptr)
     , _availableSpaceTextLabel(nullptr)
     , _folderTreeItemWidget(nullptr)
+    , _backButton(nullptr)
     , _continueButton(nullptr)
     , _infoIconColor(QColor())
     , _infoIconSize(QSize())
@@ -53,6 +54,11 @@ ServerBaseFolderDialog::ServerBaseFolderDialog(const QString &accountId, const Q
 {
     initUI();
     updateUI();
+}
+
+void ServerBaseFolderDialog::setButtonIcon(const QColor &value)
+{
+    _backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg", value));
 }
 
 void ServerBaseFolderDialog::setInfoIcon()
@@ -115,11 +121,10 @@ void ServerBaseFolderDialog::initUI()
     buttonsHBox->setSpacing(boxHSpacing);
     mainLayout->addLayout(buttonsHBox);
 
-    QPushButton *backButton = new QPushButton(this);
-    backButton->setObjectName("nondefaultbutton");
-    backButton->setFlat(true);
-    backButton->setIcon(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/chevron-left.svg"));
-    buttonsHBox->addWidget(backButton);
+    _backButton = new QPushButton(this);
+    _backButton->setObjectName("nondefaultbutton");
+    _backButton->setFlat(true);
+    buttonsHBox->addWidget(_backButton);
     buttonsHBox->addStretch();
 
     _continueButton = new QPushButton(this);
@@ -132,7 +137,7 @@ void ServerBaseFolderDialog::initUI()
     connect(_folderTreeItemWidget, &BaseFolderTreeItemWidget::message, this, &ServerBaseFolderDialog::onDisplayMessage);
     connect(_folderTreeItemWidget, &BaseFolderTreeItemWidget::folderSelected, this, &ServerBaseFolderDialog::onFolderSelected);
     connect(_folderTreeItemWidget, &BaseFolderTreeItemWidget::noFolderSelected, this, &ServerBaseFolderDialog::onNoFolderSelected);
-    connect(backButton, &QPushButton::clicked, this, &ServerBaseFolderDialog::onBackButtonTriggered);
+    connect(_backButton, &QPushButton::clicked, this, &ServerBaseFolderDialog::onBackButtonTriggered);
     connect(_continueButton, &QPushButton::clicked, this, &ServerBaseFolderDialog::onContinueButtonTriggered);
     connect(this, &CustomDialog::exit, this, &ServerBaseFolderDialog::onExit);
 }

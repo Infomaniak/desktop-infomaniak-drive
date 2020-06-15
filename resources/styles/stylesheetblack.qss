@@ -286,6 +286,7 @@ KDC--CustomSystemBar QToolButton
 KDC--CustomDialog
 {
     qproperty-background_color: #2D3034;
+    qproperty-button_icon_color: #FFFFFF;
 }
 
 KDC--CustomDialog QLabel#titleLabel
@@ -314,7 +315,7 @@ KDC--CustomDialog QLabel#textLabel
 
 KDC--CustomDialog QLabel#largeNormalTextLabel
 {
-    color: #666666;
+    color: #B7B7B7;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 14px;
@@ -322,7 +323,7 @@ KDC--CustomDialog QLabel#largeNormalTextLabel
 
 KDC--CustomDialog QLabel#largeMediumTextLabel
 {
-    color: #666666;
+    color: #B7B7B7;
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 14px;
@@ -354,7 +355,7 @@ KDC--CustomDialog QLabel#boldTextLabel
 
 KDC--CustomDialog QLabel#descriptionLabel
 {
-    color: #C0C0C0;
+    color: #B7B7B7;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 12px;
@@ -390,14 +391,14 @@ KDC--CustomDialog QRadioButton
 
 KDC--CustomDialog QPushButton#nondefaultbutton
 {
-    background-color: #F5F5F5;
+    background-color: #424242;
     border: 0px;
     border-radius: 3px;
     min-height: 40px;
     max-height: 40px;
     padding-left: 16px;
     padding-right: 16px;
-    color: #1B1B1D;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 14px;
@@ -1285,14 +1286,14 @@ KDC--ActionWidget#displayErrorsWidget QLabel#textLabel
 
 KDC--ActionWidget#displayBigFoldersWarningWidget
 {
-    qproperty-background_color: #FFFFFF;
+    qproperty-background_color: #35393D;
     qproperty-left_icon_color: #FF8500;
     qproperty-action_icon_color: #FFFFFF;
 }
 
 KDC--ActionWidget#displayBigFoldersWarningWidget QLabel#textLabel
 {
-    color: #333333;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 450; /* medium */
     font-size: 12px;
@@ -1397,14 +1398,14 @@ KDC--CustomMessageBox QPushButton:default
 
 KDC--FolderTreeItemWidget
 {
-    background-color: #F5F5F5;
+    background-color: #1B1B1D;
     border: 0px;
     padding-left: 0px;
     padding-right: 0px;
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 10px;
-    color: #C0C0C0;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 14px;
@@ -1432,7 +1433,7 @@ KDC--FolderTreeItemWidget::branch:!has-children:adjoins-item
 
 KDC--FolderTreeItemWidget::branch:has-children:adjoins-item:open
 {
-    image: url(:/client/resources/icons/actions/branch-open.svg);
+    image: url(:/client/resources/icons/actions/dark-branch-open.svg);
     background-color: transparent;
     margin-left: 15px;
     margin-right: 5px;
@@ -1440,7 +1441,7 @@ KDC--FolderTreeItemWidget::branch:has-children:adjoins-item:open
 
 KDC--FolderTreeItemWidget::branch:has-children:adjoins-item:closed
 {
-    image: url(:/client/resources/icons/actions/branch-close.svg);
+    image: url(:/client/resources/icons/actions/dark-branch-close.svg);
     background-color: transparent;
     margin-left: 15px;
     margin-right: 5px;
@@ -1520,23 +1521,25 @@ KDC--FolderTreeItemWidget#updateFolderTreeItemWidget::item
 
 KDC--BaseFolderTreeItemWidget
 {
-    background-color: #F5F5F5;
+    background-color: #1B1B1D;
     border: 0px;
     padding-left: 0px;
     padding-right: 0px;
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 10px;
-    color: #333333;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 14px;
     gridline-color: transparent;
     outline: none;
-    selection-background-color: #E0E0E0;
-    selection-color: #333333;
+    selection-background-color: #35393D;
+    selection-color: #FFFFFF;
     qproperty-folder_icon_color: #9F9F9F;
     qproperty-folder_icon_size: 20px;
+    qproperty-add_icon_color: #FFFFFF;
+    qproperty-add_icon_size: 20px;
 }
 
 KDC--BaseFolderTreeItemWidget::item
@@ -1561,7 +1564,7 @@ KDC--BaseFolderTreeItemWidget::branch:!has-children:adjoins-item
 
 KDC--BaseFolderTreeItemWidget::branch:has-children:adjoins-item:open
 {
-    image: url(:/client/resources/icons/actions/branch-open.svg);
+    image: url(:/client/resources/icons/actions/dark-branch-open.svg);
     background-color: transparent;
     margin-left: 15px;
     margin-right: 5px;
@@ -1569,7 +1572,7 @@ KDC--BaseFolderTreeItemWidget::branch:has-children:adjoins-item:open
 
 KDC--BaseFolderTreeItemWidget::branch:has-children:adjoins-item:closed
 {
-    image: url(:/client/resources/icons/actions/branch-close.svg);
+    image: url(:/client/resources/icons/actions/dark-branch-close.svg);
     background-color: transparent;
     margin-left: 15px;
     margin-right: 5px;
@@ -1587,7 +1590,7 @@ KDC--LocalFolderDialog
 
 KDC--LocalFolderDialog QWidget#folderSelectionWidget
 {
-    background-color: #F5F5F5;
+    background-color: #35393D;
     border: 0px;
     border-radius: 10px;
     min-height: 80px;
@@ -1608,7 +1611,7 @@ KDC--LocalFolderDialog QPushButton#selectButton
 
 KDC--LocalFolderDialog QLabel#foldernamelabel
 {
-    color: #1B1B1B;
+    color: #FFFFFF;
     font-family: "Suisse Int'l";
     font-weight: 650; /* bold */
     font-size: 16px;
@@ -1690,7 +1693,7 @@ KDC--AddDriveLocalFolderWidget
 
 KDC--AddDriveLocalFolderWidget QWidget#folderSelectionWidget
 {
-    background-color: #F5F5F5;
+    background-color: #35393D;
     border: 0px;
     border-radius: 10px;
     min-height: 80px;
@@ -1743,7 +1746,7 @@ KDC--BigFoldersDialog QWidget#undecidedListWidget
 
 KDC--BigFoldersDialog QScrollArea
 {
-    background-color: #F5F5F5;
+    background-color: #1B1B1D;
     border: 0px;
     border-radius: 10px;
 }

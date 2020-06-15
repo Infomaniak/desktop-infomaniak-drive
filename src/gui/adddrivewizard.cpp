@@ -61,6 +61,16 @@ AddDriveWizard::AddDriveWizard(QWidget *parent)
     start();
 }
 
+void AddDriveWizard::setButtonIcon(const QColor &value)
+{
+    if (_addDriveServerFoldersWidget) {
+        _addDriveServerFoldersWidget->setButtonIcon(value);
+    }
+    if (_addDriveLocalFolderWidget) {
+        _addDriveLocalFolderWidget->setButtonIcon(value);
+    }
+}
+
 void AddDriveWizard::initUI()
 {
     setMinimumSize(windowSize);

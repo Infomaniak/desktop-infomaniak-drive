@@ -52,8 +52,11 @@ private:
     const QString _serverFolderPath;
     OCC::Folder *_currentFolder;
     FolderTreeItemWidget *_folderTreeItemWidget;
+    QPushButton *_backButton;
     QPushButton *_continueButton;
     bool _needToSave;
+
+    void setButtonIcon(const QColor &value) override;
 
     void initUI();
     void updateUI();
