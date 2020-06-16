@@ -88,18 +88,21 @@ ParametersDialog::ParametersDialog(QWidget *parent)
 void ParametersDialog::openPreferencesPage()
 {
     onDisplayPreferences();
+    forceRedraw();
 }
 
 void ParametersDialog::openDriveErrorsPage(const QString &accountId)
 {
     openDriveParametersPage(accountId);
     onDisplayDriveErrors(accountId);
+    forceRedraw();
 }
 
 void ParametersDialog::openDriveParametersPage(const QString &accountId)
 {
     onDisplayDriveParameters();
     _driveMenuBarWidget->driveSelectionWidget()->selectDrive(accountId);
+    forceRedraw();
 }
 
 void ParametersDialog::initUI()
@@ -157,6 +160,7 @@ void ParametersDialog::initUI()
     QScrollArea *drivePreferencesScrollArea = new QScrollArea(this);
     drivePreferencesScrollArea->setWidget(_drivePreferencesWidget);
     drivePreferencesScrollArea->setWidgetResizable(true);
+    drivePreferencesScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     driveVBox->addWidget(drivePreferencesScrollArea);
     driveVBox->setStretchFactor(drivePreferencesScrollArea, 1);
 
@@ -182,6 +186,7 @@ void ParametersDialog::initUI()
     QScrollArea *preferencesScrollArea = new QScrollArea(this);
     preferencesScrollArea->setWidget(_preferencesWidget);
     preferencesScrollArea->setWidgetResizable(true);
+    preferencesScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     preferencesVBox->addWidget(preferencesScrollArea);
     preferencesVBox->setStretchFactor(preferencesScrollArea, 1);
 

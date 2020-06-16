@@ -76,38 +76,6 @@ QBoxLayout *PreferencesBlocWidget::addLayout(QBoxLayout::Direction direction, bo
     return layout;
 }
 
-QWidget *PreferencesBlocWidget::addScrollArea(QBoxLayout::Direction direction, bool noMargins)
-{
-    QBoxLayout *hLayout = new QBoxLayout(direction);
-    if (!noMargins) {
-        hLayout->setContentsMargins(boxHMargin, boxVMargin, boxHMargin, boxVMargin);
-    }
-    _layout->addLayout(hLayout);
-
-    QScrollArea *preferencesScrollArea = new QScrollArea(this);
-    preferencesScrollArea->setContentsMargins(0, 0, 0, 0);
-    preferencesScrollArea->setWidgetResizable(true);
-    preferencesScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    hLayout->addWidget(preferencesScrollArea);
-
-    QWidget *widget = new QWidget(this);
-    widget->setContentsMargins(0, 0, 0, 0);
-    preferencesScrollArea->setWidget(widget);
-
-    QBoxLayout *layout = new QBoxLayout(direction);
-    layout->setContentsMargins(0, 0, 0, 0);
-    if (direction == QBoxLayout::Direction::TopToBottom ||
-            direction == QBoxLayout::Direction::BottomToTop) {
-        layout->setSpacing(textVSpacing);
-    }
-    else {
-        layout->setSpacing(textHSpacing);
-    }
-    widget->setLayout(layout);
-
-    return widget;
-}
-
 ClickableWidget *PreferencesBlocWidget::addActionWidget(QVBoxLayout **vLayout, bool noMargins)
 {
     ClickableWidget *widget = new ClickableWidget(this);

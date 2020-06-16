@@ -46,7 +46,11 @@ using namespace OCC;
 static const QString styleSheetWhiteFile(":/client/resources/styles/stylesheetwhite.qss");
 static const QString styleSheetBlackFile(":/client/resources/styles/stylesheetblack.qss");
 static const QColor styleSheetWhiteWidgetShadowColor = QColor(200, 200, 200, 180);
+#ifdef Q_OS_WIN
+static const QColor styleSheetWhiteDialogShadowColor = QColor(150, 150, 150, 180);
+#else
 static const QColor styleSheetWhiteDialogShadowColor = QColor(0, 0, 0, 180);
+#endif
 static const QColor styleSheetBlackWidgetShadowColor = QColor(20, 20, 20, 180);
 static const QColor styleSheetBlackDialogShadowColor = QColor(20, 20, 20, 180);
 

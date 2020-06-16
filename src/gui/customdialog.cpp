@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QPainterPath>
 #include <QStylePainter>
 #include <QTableView>
+#include <QTimer>
 #include <QVariant>
 
 namespace KDC {
@@ -99,8 +100,11 @@ void CustomDialog::forceRedraw()
 {
 #ifdef Q_OS_WINDOWS
     // Windows hack
-    setMinimumHeight(minimumHeight() + 1);
-    setMinimumHeight(minimumHeight());
+    QTimer::singleShot(0, this, [=]()
+    {
+        setMinimumHeight(minimumHeight() + 1);
+        setMinimumHeight(minimumHeight());
+    });
 #endif
 }
 
