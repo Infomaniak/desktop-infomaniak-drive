@@ -256,6 +256,13 @@ void Utility::setStyle(QApplication *app, bool isDarkTheme)
     if (ssFile.exists()) {
         ssFile.open(QFile::ReadOnly);
         QString StyleSheet = QLatin1String(ssFile.readAll());
+#ifdef Q_OS_WIN
+        // Update font weight
+        StyleSheet.replace("font-weight: 650;", "font-weight: 700;");
+        StyleSheet.replace("font-weight: 550;", "font-weight: 600;");
+        StyleSheet.replace("font-weight: 450;", "font-weight: 500;");
+        StyleSheet.replace("font-weight: 350;", "font-weight: 400;");
+#endif
         app->setStyleSheet(StyleSheet);
     }
     else {
