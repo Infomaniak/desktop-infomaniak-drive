@@ -140,7 +140,7 @@ void AddDriveWizard::startNextStep()
         _addDriveLocalFolderWidget->setAccountPtr(_accountPtr);
         QString localFolderPath = OCC::Theme::instance()->defaultClientFolder();
         if (!QDir(localFolderPath).isAbsolute()) {
-            localFolderPath = QDir::homePath() + QDir::separator() + localFolderPath;
+            localFolderPath = QDir::homePath() + dirSeparator + localFolderPath;
         }
         QString goodLocalFolderPath = OCC::FolderMan::instance()->findGoodPathForNewSyncFolder(localFolderPath, _serverUrl);
         _addDriveLocalFolderWidget->setLocalFolderPath(goodLocalFolderPath);
@@ -310,7 +310,7 @@ bool AddDriveWizard::addDrive()
             folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, _blackList);
             OCC::ConfigFile cfg;
             if (!cfg.newBigFolderSizeLimit().first) {
-                folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, QStringList() << QDir::separator());
+                folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, QStringList() << dirSeparator);
             }
         }
     }
@@ -476,7 +476,7 @@ void AddDriveWizard::onAuthTestError()
 
         // strip the expected path
         QString path = redirectUrl.path();
-        static QString expectedPath = QDir::separator() + _accountPtr->davPath();
+        static QString expectedPath = dirSeparator + _accountPtr->davPath();
         if (path.endsWith(expectedPath)) {
             path.chop(expectedPath.size());
             redirectUrl.setPath(path);

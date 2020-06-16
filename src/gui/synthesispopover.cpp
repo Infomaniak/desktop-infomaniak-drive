@@ -1397,7 +1397,7 @@ void SynthesisPopover::onManageRightAndSharingItem(const SynchronizedItem &item)
     QString folderRelativePath;
     QString fullFilePath = folderPath(item.folderId(), item.filePath());
     OCC::FolderMan::instance()->folderForPath(fullFilePath, &folderRelativePath);
-    if (folderRelativePath == QDir::separator()) {
+    if (folderRelativePath == dirSeparator) {
         qCDebug(lcSynthesisPopover) << "Cannot share root directory!";
         CustomMessageBox *msgBox = new CustomMessageBox(
                     QMessageBox::Information,

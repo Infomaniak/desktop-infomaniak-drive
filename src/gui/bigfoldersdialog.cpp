@@ -82,9 +82,9 @@ BigFoldersDialog::BigFoldersDialog(const QStringList &undecidedList, const Accou
     for (QString undecidedItem : undecidedList) {
         QDir undecidedItemDir(undecidedItem);
         QString name = undecidedItemDir.dirName();
-        QString path = accountInfo->_name + QDir::separator() + undecidedItemDir.path();
+        QString path = accountInfo->_name + dirSeparator + undecidedItemDir.path();
         path.chop(name.size());
-        if (path.endsWith(QDir::separator())) {
+        if (path.endsWith(dirSeparator)) {
             path.chop(1);
         }
 

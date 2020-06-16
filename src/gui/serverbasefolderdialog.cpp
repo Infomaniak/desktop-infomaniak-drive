@@ -145,7 +145,7 @@ void ServerBaseFolderDialog::initUI()
 void ServerBaseFolderDialog::updateUI()
 {
     // Available space
-    qint64 freeBytes = OCC::Utility::freeDiskSpace(QDir::separator());
+    qint64 freeBytes = OCC::Utility::freeDiskSpace(dirSeparator);
     _availableSpaceTextLabel->setText(tr("Space available on your computer for the current folder : %1")
                                       .arg(OCC::Utility::octetsToString(freeBytes)));
 
@@ -169,8 +169,8 @@ void ServerBaseFolderDialog::onContinueButtonTriggered(bool checked)
 
     QStringList warnStrings;
     QString folderPath = _serverFolderPath;
-    if (!folderPath.startsWith(QDir::separator())) {
-        folderPath.prepend(QDir::separator());
+    if (!folderPath.startsWith(dirSeparator)) {
+        folderPath.prepend(dirSeparator);
     }
 
     OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
