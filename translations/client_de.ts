@@ -180,6 +180,125 @@
     </message>
 </context>
 <context>
+    <name>KDC::AddDriveConfirmationWidget</name>
+    <message>
+        <source>Synchronization will start and you will be able to add files to your %1 folder.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your kDrive is ready!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OPEN FOLDER</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PARAMETERS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronize another drive</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AddDriveLocalFolderWidget</name>
+    <message>
+        <source>Location of your %1 kDrive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You will find all your files in this folder when the configuration is complete.&lt;br&gt;You can drop new files there to sync them to your kDrive.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>END</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AddDriveServerFoldersWidget</name>
+    <message>
+        <source>Select kDrive folders to synchronize on your desktop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CONTINUE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Space available on your computer : %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while loading the list of sub folders.</source>
+        <translation type="unfinished">Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+    </message>
+    <message>
+        <source>No subfolders currently on the server.</source>
+        <translation type="unfinished">Aktuell befinden sich keine Unterordner auf dem Server.</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AddDriveStartWidget</name>
+    <message>
+        <source>Server :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NEXT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid server URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AddDriveWizard</name>
+    <message>
+        <source>Creating local sync folder %1...</source>
+        <translation type="unfinished">Lokaler Synchronisations-Ordner %1 wird erstellt ...</translation>
+    </message>
+    <message>
+        <source>Failed to create local folder %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid URL</source>
+        <translation type="unfinished">Ungültige URL</translation>
+    </message>
+    <message>
+        <source>Failed to connect to %1 at %2:&lt;br/&gt;%3</source>
+        <translation type="unfinished">Die Verbindung zu %1 auf %2:&lt;br/&gt;%3 konnte nicht hergestellt werden</translation>
+    </message>
+    <message>
+        <source>Timeout while trying to connect to %1 at %2.</source>
+        <translation type="unfinished">Zeitüberschreitung beim Verbindungsversuch mit %1 unter %2.</translation>
+    </message>
+    <message>
+        <source>The authenticated request to the server was redirected to &apos;%1&apos;. The URL is bad, the server is misconfigured.</source>
+        <translation type="unfinished">Die Authentifizierungs-Anfrage an den Server wurde weitergeleitet an &apos;%1&apos;. Diese Adresse ist ungültig, der Server ist falsch konfiguriert.</translation>
+    </message>
+    <message>
+        <source>Access forbidden by server. To verify that you have proper access, &lt;a href=&quot;%1&quot;&gt;click here&lt;/a&gt; to access the service with your browser.</source>
+        <translation type="unfinished">Zugang vom Server nicht erlaubt. &lt;a href=&quot;%1&quot;&gt;Klicken Sie hier&lt;/a&gt; zum Zugriff auf den Dienst mithilfe Ihres Browsers, so dass Sie sicherstellen können, dass Ihr Zugang ordnungsgemäß funktioniert.</translation>
+    </message>
+    <message>
+        <source>There was an invalid response to an authenticated webdav request</source>
+        <translation type="unfinished">Es gab eine ungültige Reaktion auf eine WebDav-Authentifizierungs-Anfrage</translation>
+    </message>
+</context>
+<context>
     <name>KDC::BandwidthDialog</name>
     <message>
         <source>Bandwidth</source>
@@ -227,6 +346,25 @@
     <message>
         <source>An error occurred while loading the list of sub folders.</source>
         <translation type="unfinished">Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::BigFoldersDialog</name>
+    <message>
+        <source>Some folders were not synchronized because they are too large :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SYNCHRONIZE ALL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DO NOT SYNCHRONIZE</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -356,10 +494,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Disable the notifications</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>A notification will be displayed as soon as a new folder has been synchronized or modified</source>
         <translation type="unfinished"></translation>
     </message>
@@ -380,14 +514,6 @@ The virtual files mode is mutually exclusive with selective sync. Currently unse
 Der Modus &quot;Virtuelle Dateien&quot; schließt sich mit dem Modus &quot;Selective Sync&quot; gegenseitig aus. Aktuell abgewählte Ordner werden zu nur online verfügbaren Ordnern umgesetzt und die Einstellungen im &quot;Selective Sync&quot; werden verworfen.</translation>
     </message>
     <message>
-        <source>Enable virtual files</source>
-        <translation type="unfinished"> Virtuelle Dateien freischalten</translation>
-    </message>
-    <message>
-        <source>Continue to use selective sync</source>
-        <translation type="unfinished">Selective Sync&quot; weiterbenutzen</translation>
-    </message>
-    <message>
         <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead, a tiny &quot;%1&quot; file will be created for each file that exists on the server. The contents can be downloaded by running these files or by using their context menu.
 
 The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.
@@ -402,26 +528,10 @@ Der Modus virtuelle Dateien schließt sich mit dem Modus &quot;Selective Sync&qu
 Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, berichten sie bitte alle Probleme, die auftreten.</translation>
     </message>
     <message>
-        <source>Enable experimental placeholder mode</source>
-        <translation type="unfinished">Experimentellen Platzhalter Modus freischalten</translation>
-    </message>
-    <message>
-        <source>Stay safe</source>
-        <translation type="unfinished">Sicher bleiben</translation>
-    </message>
-    <message>
         <source>This action will disable virtual file support. As a consequence contents of folders that are currently marked as &apos;available online only&apos; will be downloaded.
 
 This action will abort any currently running synchronization.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Disable support</source>
-        <translation type="unfinished">Unterstützung abschalten</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message>
         <source>New folder synchronization failed!</source>
@@ -444,8 +554,48 @@ This action will abort any currently running synchronization.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remove Folder Sync Connection</source>
-        <translation type="unfinished">Ordner-Synchronisation entfernen</translation>
+        <source>Some folders were not synchronized because they are too large.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable the notifications for this kDrive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ENABLE VIRTUAL FILES</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CONTINUE TO USE SELECTIVE SYNC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ENABLE EXPERIMENTAL PLACEHOLDER MODE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>STAY SAFE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DISABLE SUPPORT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>REMOVE FOLDER SYNC CONNECTION</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while loading the list of sub folders.</source>
+        <translation type="unfinished">Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+    </message>
+    <message>
+        <source>No subfolders currently on the server.</source>
+        <translation type="unfinished">Aktuell befinden sich keine Unterordner auf dem Server.</translation>
     </message>
 </context>
 <context>
@@ -477,8 +627,8 @@ This action will abort any currently running synchronization.</source>
         </translation>
     </message>
     <message numerus="yes">
-        <source> (%n error(s))</source>
-        <comment>Number of errors</comment>
+        <source> (%n warning(s) or error(s))</source>
+        <comment>Number of warnings or errors</comment>
         <translation type="unfinished">
             <numerusform></numerusform>
             <numerusform></numerusform>
@@ -594,17 +744,6 @@ This action will abort any currently running synchronization.</source>
     </message>
 </context>
 <context>
-    <name>KDC::FolderTreeItemWidget</name>
-    <message>
-        <source>No subfolders currently on the server.</source>
-        <translation type="unfinished">Aktuell befinden sich keine Unterordner auf dem Server.</translation>
-    </message>
-    <message>
-        <source>An error occurred while loading the list of sub folders.</source>
-        <translation type="unfinished">Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
-    </message>
-</context>
-<context>
     <name>KDC::LocalFolderDialog</name>
     <message>
         <source>Which folder on your computer would you like to&lt;br&gt;synchronize ?</source>
@@ -657,14 +796,6 @@ This action will abort any currently running synchronization.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remove synchronization</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
-    </message>
-    <message>
         <source>Please confirm the transmission of debugging information to our support.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -682,6 +813,14 @@ This action will abort any currently running synchronization.</source>
     </message>
     <message>
         <source>Need help ? Generate an archive of the application logs to send it to our support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>REMOVE SYNCHRONIZATION</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -829,7 +968,7 @@ This action will abort any currently running synchronization.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Proxy not found!</source>
+        <source>Proxy not found, save anyway?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -867,12 +1006,12 @@ This action will abort any currently running synchronization.</source>
         <translation type="unfinished">Sie synchronisieren bereits &lt;i&gt;%1&lt;/i&gt;, das ein übergeordneten Ordner von &lt;i&gt;%2&lt;/i&gt; ist.</translation>
     </message>
     <message>
-        <source>Confirm</source>
+        <source>CONFIRM</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -884,6 +1023,14 @@ This action will abort any currently running synchronization.</source>
     <message>
         <source>CONTINUE</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while loading the list of sub folders.</source>
+        <translation type="unfinished">Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+    </message>
+    <message>
+        <source>No subfolders currently on the server.</source>
+        <translation type="unfinished">Aktuell befinden sich keine Unterordner auf dem Server.</translation>
     </message>
 </context>
 <context>
@@ -1039,10 +1186,6 @@ This action will abort any currently running synchronization.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unable to open folder path %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No recently synchronized files</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1063,10 +1206,6 @@ This action will abort any currently running synchronization.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Parameters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Notifications disabled until %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1083,14 +1222,6 @@ This action will abort any currently running synchronization.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Notifications enabled!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Notifications disabled!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>You cannot share the root directory of your Drive!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1104,6 +1235,18 @@ This action will abort any currently running synchronization.</source>
     </message>
     <message>
         <source>Invalid link %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open folder url %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Drive parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Application preferences</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4242,12 +4385,12 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
 <context>
     <name>OCC::WebFlowCredentials</name>
     <message>
-        <source>You have been logged out of %1 as user %2. Please login again</source>
-        <translation>Sie wurden von %1 als Benutzer %2 abgemeldet. Bitte melden Sie sich erneut an</translation>
-    </message>
-    <message>
         <source>Please login with the user: %1</source>
         <translation>Mit folgendem Benutzer anmelden: %1</translation>
+    </message>
+    <message>
+        <source>You have been logged out of %1 as user %2. Please login again.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4321,6 +4464,10 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     <message>
         <source>About %1</source>
         <translation>Über %1</translation>
+    </message>
+    <message>
+        <source>Unable to open folder path %1.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
