@@ -64,10 +64,12 @@ private:
     CustomRadioButton *_noProxyButton;
     CustomRadioButton *_systemProxyButton;
     CustomRadioButton *_manualProxyButton;
+    QWidget *_manualProxyWidget;
     CustomComboBox *_proxyTypeComboBox;
     QLineEdit *_portLineEdit;
     QLineEdit *_addressLineEdit;
     CustomCheckBox *_authenticationCheckBox;
+    QWidget *_authenticationWidget;
     QLineEdit *_loginLineEdit;
     QLineEdit *_pwdLineEdit;
     QPushButton *_saveButton;
@@ -78,17 +80,18 @@ private:
     void updateUI();
     void setNeedToSave(bool value);
     bool isSaveEnabled();
+    void resetManualProxy();
+    void resetAuthentication();
 
 private slots:
     void onExit();
     void onSaveButtonTriggered(bool checked = false);
-    void onNoProxyButtonToggled(bool checked);
-    void onSystemProxyButtonToggled(bool checked);
-    void onManualProxyButtonToggled(bool checked);
+    void onNoProxyButtonClicked(bool checked = false);
+    void onSystemProxyButtonClicked(bool checked = false);
+    void onManualProxyButtonClicked(bool checked = false);
     void onProxyTypeComboBoxActivated(int index);
     void onPortTextEdited(const QString &text);
     void onAddressTextEdited(const QString &text);
-    void onAddressEditingFinished();
     void onAuthenticationCheckBoxClicked(bool checked = false);
     void onLoginTextEdited(const QString &text);
     void onPwdTextEdited(const QString &text);

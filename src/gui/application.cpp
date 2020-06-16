@@ -38,11 +38,12 @@
 #include "accountmanager.h"
 #include "creds/abstractcredentials.h"
 #include "updater/ocupdater.h"
-#include "owncloudsetupwizard.h"
+#include "adddrivewizard.h"
 #include "version.h"
 #include "csync_exclude.h"
 #include "common/vfs.h"
 #include "libcommon/commonutility.h"
+#include "customproxystyle.h"
 
 #include "config.h"
 
@@ -188,6 +189,7 @@ Application::Application(int &argc, char **argv)
     setWindowIcon(_theme->applicationIcon());
     setApplicationVersion(_theme->version());
     setAttribute(Qt::AA_UseHighDpiPixmaps, true);
+    setStyle(new KDC::CustomProxyStyle);
 
     if (!ConfigFile().exists()) {
         // Migrate from version <= 2.4
@@ -395,7 +397,10 @@ void Application::slotAccountStateRemoved(AccountState *accountState)
     if (AccountManager::instance()->accounts().isEmpty()) {
         // allow to add a new account if there is non any more. Always think
         // about single account theming!
-        OwncloudSetupWizard::runWizard(this, SLOT(slotownCloudWizardDone(int)));
+        //OwncloudSetupWizard::runWizard(this, SLOT(slotownCloudWizardDone(int)));
+        /*KDC::AddDriveWizard *wizard = new KDC::AddDriveWizard();
+        Application *app = qobject_cast<Application *>(qApp);
+        app->slotownCloudWizardDone(wizard->exec());*/
     }
 }
 
@@ -495,8 +500,6 @@ void Application::slotownCloudWizardDone(int res)
         if (shouldSetAutoStart) {
             Utility::setLaunchOnStartup(_theme->appName(), _theme->appNameGUI(), true);
         }
-
-        _gui->slotShowParametersDialog();
     }
 }
 
@@ -721,10 +724,7 @@ void Application::openVirtualFile(const QString &filename)
 void Application::tryTrayAgain()
 {
     qCInfo(lcApplication) << "Trying tray icon, tray available:" << QSystemTrayIcon::isSystemTrayAvailable();
-#ifndef KDRIVE_V2
-    if (!_gui->popoverVisible())
-#endif
-        _gui->hideAndShowTray();
+    _gui->hideAndShowTray();
 }
 
 bool Application::event(QEvent *event)

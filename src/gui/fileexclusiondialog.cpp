@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "fileexclusiondialog.h"
 #include "fileexclusionnamedialog.h"
 #include "custompushbutton.h"
+#include "custommessagebox.h"
 #include "configfile.h"
 #include "folderman.h"
 #include "guiutility.h"
@@ -27,7 +28,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QFile>
 #include <QHeaderView>
 #include <QLabel>
-#include <QMessageBox>
 #include <QStandardItem>
 #include <QStringList>
 #include <QVector>
@@ -65,11 +65,6 @@ FileExclusionDialog::FileExclusionDialog(QWidget *parent)
     , _actionIconSize(QSize())
     , _needToSave(false)
 {
-    setStyleSheet("QTableView::indicator:checked { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QTableView::indicator:unchecked { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }"
-                  "QTableView::indicator:checked:disabled { image: url(:/client/resources/icons/actions/checkbox-checked.svg); }"
-                  "QTableView::indicator:unchecked:disabled { image: url(:/client/resources/icons/actions/checkbox-unchecked.svg); }");
-
     initUI();
     updateUI();
 }
@@ -81,21 +76,24 @@ void FileExclusionDialog::initUI()
     // Title
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
-    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, titleBoxVMargin);
+    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     titleLabel->setText(tr("Excluded files"));
     mainLayout->addWidget(titleLabel);
+    mainLayout->addSpacing(titleBoxVMargin);
 
     // Description
     QLabel *descriptionLabel = new QLabel(this);
     descriptionLabel->setObjectName("descriptionLabel");
-    descriptionLabel->setContentsMargins(boxHMargin, 0, boxHMargin, descriptionBoxVMargin);
+    descriptionLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     descriptionLabel->setText(tr("Add files or folders that will not be synchronized on your computer."));
     mainLayout->addWidget(descriptionLabel);
+    mainLayout->addSpacing(descriptionBoxVMargin);
 
     // Synchronize hidden files
     QHBoxLayout *hiddenFilesHBox = new QHBoxLayout();
-    hiddenFilesHBox->setContentsMargins(boxHMargin, 0, boxHMargin, hiddenFilesBoxVMargin);
+    hiddenFilesHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(hiddenFilesHBox);
+    mainLayout->addSpacing(hiddenFilesBoxVMargin);
 
     _hiddenFilesCheckBox = new CustomCheckBox(this);
     _hiddenFilesCheckBox->setObjectName("hiddenFilesCheckBox");
@@ -104,8 +102,9 @@ void FileExclusionDialog::initUI()
 
     // Add file button
     QHBoxLayout *addFileHBox = new QHBoxLayout();
-    addFileHBox->setContentsMargins(addFileBoxHMargin, 0, addFileBoxHMargin, addFileBoxVMargin);
+    addFileHBox->setContentsMargins(addFileBoxHMargin, 0, addFileBoxHMargin, 0);
     mainLayout->addLayout(addFileHBox);
+    mainLayout->addSpacing(addFileBoxVMargin);
 
     CustomPushButton *addFileButton = new CustomPushButton(":/client/resources/icons/actions/add.svg", tr("Add"), this);
     addFileButton->setObjectName("addFileButton");
@@ -114,9 +113,10 @@ void FileExclusionDialog::initUI()
 
     // Files table header
     QHBoxLayout *filesTableHeaderHBox = new QHBoxLayout();
-    filesTableHeaderHBox->setContentsMargins(boxHMargin, 0, boxHMargin, filesTableHeaderBoxVMargin);
+    filesTableHeaderHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     filesTableHeaderHBox->setSpacing(0);
     mainLayout->addLayout(filesTableHeaderHBox);
+    mainLayout->addSpacing(filesTableHeaderBoxVMargin);
 
     QLabel *header1Label = new QLabel(tr("NAME"), this);
     header1Label->setObjectName("header");
@@ -132,8 +132,9 @@ void FileExclusionDialog::initUI()
 
     // Files table view
     QHBoxLayout *filesTableHBox = new QHBoxLayout();
-    filesTableHBox->setContentsMargins(boxHMargin, 0, boxHMargin, filesTableBoxVMargin);
+    filesTableHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(filesTableHBox);
+    mainLayout->addSpacing(filesTableBoxVMargin);
 
     _filesTableModel = new QStandardItemModel();
     _filesTableView = new QTableView(this);
@@ -161,6 +162,7 @@ void FileExclusionDialog::initUI()
     buttonsHBox->addWidget(_saveButton);
 
     QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setObjectName("nondefaultbutton");
     cancelButton->setFlat(true);
     cancelButton->setText(tr("CANCEL"));
     buttonsHBox->addWidget(cancelButton);
@@ -321,16 +323,19 @@ void FileExclusionDialog::setNeedToSave(bool value)
 void FileExclusionDialog::onExit()
 {
     if (_needToSave) {
-        QMessageBox msgBox(QMessageBox::Question, QString(),
-                           tr("Do you want to save your modifications?"),
-                           QMessageBox::Yes | QMessageBox::No, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.setDefaultButton(QMessageBox::Yes);
-        if (msgBox.exec() == QMessageBox::Yes) {
-            onSaveButtonTriggered();
-        }
-        else {
-            reject();
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Question,
+                    tr("Do you want to save your modifications?"),
+                    QMessageBox::Yes | QMessageBox::No, this);
+        msgBox->setDefaultButton(QMessageBox::Yes);
+        int ret = msgBox->exec();
+        if (ret != QDialog::Rejected) {
+            if (ret == QMessageBox::Yes) {
+                onSaveButtonTriggered();
+            }
+            else {
+                reject();
+            }
         }
     }
     else {
@@ -366,15 +371,18 @@ void FileExclusionDialog::onTableViewClicked(const QModelIndex &index)
             QStandardItem *item = _filesTableModel->item(index.row(), tableColumn::Deletable);
             if (item && item->flags() & Qt::ItemIsEnabled) {
                 // Delete
-                QMessageBox msgBox(QMessageBox::Question, QString(),
-                                   tr("Do you really want to delete?"),
-                                   QMessageBox::Yes | QMessageBox::No, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.setDefaultButton(QMessageBox::No);
-                if(msgBox.exec() == QMessageBox::Yes) {
-                    _filesTableModel->removeRow(index.row());
-                    _filesTableView->repaint();
-                    setNeedToSave(true);
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Question,
+                            tr("Do you really want to delete?"),
+                            QMessageBox::Yes | QMessageBox::No, this);
+                msgBox->setDefaultButton(QMessageBox::No);
+                int ret = msgBox->exec();
+                if (ret != QDialog::Rejected) {
+                    if (ret == QMessageBox::Yes) {
+                        _filesTableModel->removeRow(index.row());
+                        _filesTableView->repaint();
+                        setNeedToSave(true);
+                    }
                 }
             }
         }
@@ -427,11 +435,11 @@ void FileExclusionDialog::onSaveButtonTriggered(bool checked)
             ignoreFile.write(prepend + patternItem->text().toUtf8() + '\n');
         }
     } else {
-        QMessageBox msgBox(QMessageBox::Warning, tr("Could not open file"),
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
                     tr("Cannot write changes to '%1'.").arg(ignoreFilePath),
                     QMessageBox::Ok, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.exec();
+        msgBox->exec();
     }
     ignoreFile.close();
 

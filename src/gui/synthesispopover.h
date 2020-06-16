@@ -65,7 +65,7 @@ public:
 signals:
     void updateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
     void itemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &syncFileItemPtr);
-    void openParametersDialog(const QString &accountId = QString());
+    void openParametersDialog(const QString &accountId = QString(), bool errorPage = false);
     void openShareDialogPublicLinks(const QString &sharePath, const QString &localPath);
     void exit();
     void addDrive();
@@ -141,8 +141,9 @@ private slots:
     void onOpenFolder(bool checked);
     void onOpenWebview(bool checked);
     void onOpenMiscellaneousMenu(bool checked);
-    void onOpenParameters(bool checked = false);
+    void onOpenPreferences(bool checked = false);
     void onNotificationActionTriggered(bool checked = false);
+    void onOpenDriveParameters(bool checked = false);
     void onDisplayHelp(bool checked = false);
     void onExit(bool checked = false);
     void onCrash(bool checked = false);

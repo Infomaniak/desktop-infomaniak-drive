@@ -40,6 +40,12 @@ namespace Utility {
         Right
     };
 
+    enum WizardAction {
+        OpenFolder = 0,
+        OpenParameters,
+        AddDrive
+    };
+
     /** Open an url in the browser.
      *
      * If launching the browser fails, display a message.
@@ -65,7 +71,7 @@ namespace Utility {
     /** Translated text for "free up local space" (and unpinning the item) */
     QString vfsFreeSpaceActionText();
 
-    QPixmap getPixmapFromImage(const QImage &image, const QSize &size = QSize());
+    QPixmap getAvatarFromImage(const QImage &image);
     QIcon getIconWithColor(const QString &path, const QColor &color = QColor());
     QIcon getIconMenuWithColor(const QString &path, const QColor &color = QColor());
 
@@ -87,9 +93,12 @@ namespace Utility {
     bool getSyncActionAvailable(bool paused, OCC::SyncResult::Status status);
     void pauseSync(const QString &accountId, const QString &folderId, bool pause);
     void runSync(const QString &accountId, const QString &folderId);
-    QColor getShadowColor();
+    QColor getShadowColor(bool dialog = false);
     QUrl getUrlFromLocalPath(const QString &path);
     int getQFontWeightFromQSSFontWeight(int weight);
+    qint64 folderSize(const QString &dirPath);
+    bool openFolder(const QString &path);
+    QWidget *getTopLevelWidget(QWidget *widget);
 
 } // namespace Utility
 } // namespace OCC

@@ -33,10 +33,13 @@ class CustomDialog : public QDialog
     Q_OBJECT
 
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
+    Q_PROPERTY(QColor button_icon_color READ buttonIconColor WRITE setButtonIconColor)
 
 public:
     explicit CustomDialog(bool popup, QWidget *parent = nullptr);
 
+    int exec() override;
+    int exec(QPoint position);
     inline QVBoxLayout *mainLayout() const { return _layout; }
     void forceRedraw();
 
@@ -46,6 +49,7 @@ signals:
 
 private:
     QColor _backgroundColor;
+    QColor _buttonIconColor;
     QVBoxLayout *_layout;
 
     void paintEvent(QPaintEvent *event) override;
@@ -55,6 +59,14 @@ private:
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
+
+    inline QColor buttonIconColor() const { return _buttonIconColor; }
+    inline void setButtonIconColor(const QColor &value) {
+        _buttonIconColor = value;
+        setButtonIcon(value);
+    }
+
+    virtual void setButtonIcon(const QColor &value) { Q_UNUSED(value); };
 
 private slots:
     void onDrag(const QPoint &move);

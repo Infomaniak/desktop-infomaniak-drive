@@ -41,10 +41,10 @@ class PreferencesBlocWidget : public QWidget
 public:
     explicit PreferencesBlocWidget(QWidget *parent = nullptr);
 
-    QBoxLayout *addLayout(QBoxLayout::Direction direction);
-    QWidget *addScrollArea(QBoxLayout::Direction direction);
-    ClickableWidget *addActionWidget(QVBoxLayout **vLayout);
-    void addSeparator();
+    QBoxLayout *addLayout(QBoxLayout::Direction direction, bool noMargins = false);
+    QWidget *addScrollArea(QBoxLayout::Direction direction, bool noMargins = false);
+    ClickableWidget *addActionWidget(QVBoxLayout **vLayout, bool noMargins = false);
+    QFrame *addSeparator();
 
 signals:
     void actionIconColorChanged();

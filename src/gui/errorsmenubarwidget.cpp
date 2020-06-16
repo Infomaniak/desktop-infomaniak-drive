@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 namespace KDC {
 
 static const int hMargin = 15;
-static const int vMargin = 10;
+static const int vMargin = 15;
 static const int hButtonsSpacing = 10;
 static const int driveLogoIconSize = 24;
 
@@ -35,12 +35,12 @@ ErrorsMenuBarWidget::ErrorsMenuBarWidget(QWidget *parent)
     , _accountIconLabel(nullptr)
     , _titleLabel(nullptr)
 {
-    setContentsMargins(hMargin, vMargin, hMargin, vMargin);
+    setContentsMargins(hMargin, 0, hMargin, vMargin);
     setSpacing(0);
 
     CustomToolButton *backButton = new CustomToolButton(this);
     backButton->setIconPath(":/client/resources/icons/actions/arrow-left.svg");
-    backButton->setToolTip(tr("Back to drive list"));
+    backButton->setToolTip(tr("Back to drive preferences"));
     addWidget(backButton);
 
     addSpacing(hButtonsSpacing);

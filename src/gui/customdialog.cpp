@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "customdialog.h"
 #include "customsystembar.h"
-#include "bottomwidget.h"
 #include "guiutility.h"
 
 #include <QBoxLayout>
@@ -45,6 +44,7 @@ static const int shadowBlurRadius = 20;
 CustomDialog::CustomDialog(bool popup, QWidget *parent)
     : QDialog(parent)
     , _backgroundColor(QColor())
+    , _buttonIconColor(QColor())
     , _layout(nullptr)
 {
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
@@ -61,7 +61,8 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
     setLayout(mainVBox);
 
     // System bar
-    CustomSystemBar *systemBar = new CustomSystemBar(popup, this);
+    CustomSystemBar *systemBar = nullptr;
+    systemBar = new CustomSystemBar(popup, this);
     mainVBox->addWidget(systemBar);
 
     _layout = new QVBoxLayout();
@@ -73,10 +74,6 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
     mainVBox->addLayout(_layout);
     mainVBox->setStretchFactor(_layout, 1);
 
-    // Bottom
-    BottomWidget *bottomWidget = new BottomWidget(this);
-    mainVBox->addWidget(bottomWidget);
-
     // Shadow
     QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
     effect->setBlurRadius(shadowBlurRadius);
@@ -85,6 +82,17 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
 
     connect(systemBar, &CustomSystemBar::drag, this, &CustomDialog::onDrag);
     connect(systemBar, &CustomSystemBar::exit, this, &CustomDialog::onExit);
+}
+
+int CustomDialog::exec()
+{
+    return QDialog::exec();
+}
+
+int CustomDialog::exec(QPoint position)
+{
+    move(position);
+    return exec();
 }
 
 void CustomDialog::forceRedraw()
@@ -103,7 +111,7 @@ void CustomDialog::paintEvent(QPaintEvent *event)
     // Update shadow color
     QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
     if (effect) {
-        effect->setColor(OCC::Utility::getShadowColor());
+        effect->setColor(OCC::Utility::getShadowColor(true));
     }
 
     // Draw round rectangle

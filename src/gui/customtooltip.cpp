@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "customtooltip.h"
+#include "guiutility.h"
 
 #include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
@@ -72,6 +73,12 @@ CustomToolTip::CustomToolTip(const QString &text, const QPoint &position, int to
 void CustomToolTip::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
+
+    // Update shadow color
+    QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
+    if (effect) {
+        effect->setColor(OCC::Utility::getShadowColor(true));
+    }
 
     // Calculate position
     QPoint tooltipPosition = QPoint(_cursorPosition.x() - rect().width() / 2.0 + offsetX,

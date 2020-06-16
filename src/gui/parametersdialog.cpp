@@ -23,8 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 #include "parametersdialog.h"
+#include "bottomwidget.h"
 #include "erroritemwidget.h"
 #include "actionwidget.h"
+#include "custommessagebox.h"
 #include "accountmanager.h"
 #include "folderman.h"
 #include "openfilemanager.h"
@@ -40,7 +42,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
 #include <QLoggingCategory>
-#include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QUrl>
@@ -62,11 +63,9 @@ ParametersDialog::ParametersDialog(QWidget *parent)
     , _currentAccountId(QString())
     , _backgroundMainColor(QColor())
     , _pageStackedWidget(nullptr)
-    , _mainMenuBarWidget(nullptr)
     , _driveMenuBarWidget(nullptr)
+    , _preferencesMenuBarWidget(nullptr)
     , _errorsMenuBarWidget(nullptr)
-    , _mainStackedWidget(nullptr)
-    , _drivesWidget(nullptr)
     , _preferencesWidget(nullptr)
     , _drivePreferencesWidget(nullptr)
     , _errorsStackedWidget(nullptr)
@@ -86,27 +85,37 @@ ParametersDialog::ParametersDialog(QWidget *parent)
             this, &ParametersDialog::onItemCompleted);
 }
 
-void ParametersDialog::openErrorPage(const QString &accountId)
+void ParametersDialog::openPreferencesPage()
 {
+    onDisplayPreferences();
+}
+
+void ParametersDialog::openDriveErrorsPage(const QString &accountId)
+{
+    openDriveParametersPage(accountId);
     onDisplayDriveErrors(accountId);
+}
+
+void ParametersDialog::openDriveParametersPage(const QString &accountId)
+{
+    onDisplayDriveParameters();
+    _driveMenuBarWidget->driveSelectionWidget()->selectDrive(accountId);
 }
 
 void ParametersDialog::initUI()
 {
     /*
      *  _pageStackedWidget
-     *      mainPageWidget
-     *          mainVBox
-     *              _mainMenuBarWidget
-     *              _mainStackedWidget
-     *                  _drivesWidget
-     *                  preferencesScrollArea
-     *                      _preferencesWidget
      *      drivePageWidget
-     *          driveVBox
+     *          driveBox
      *              _driveMenuBarWidget
      *              drivePreferencesScrollArea
      *                  _drivePreferencesWidget
+     *      preferencesPageWidget
+     *          preferencesVBox
+     *              _preferencesMenuBarWidget
+     *              preferencesScrollArea
+     *                  _preferencesWidget
      *      errorsPageWidget
      *          errorsVBox
      *              _errorsMenuBarWidget
@@ -115,49 +124,19 @@ void ParametersDialog::initUI()
      *                  historyLabel
      *              _errorsStackedWidget
      *                  errorsListWidget[]
+     *  bottomWidget
      */
 
     // Page stacked widget
     _pageStackedWidget = new QStackedWidget(this);
     mainLayout()->addWidget(_pageStackedWidget);
 
-    //
-    // Main widget
-    //
-    QWidget *mainPageWidget = new QWidget(this);
-    mainPageWidget->setContentsMargins(0, 0, 0, 0);
-    _pageStackedWidget->insertWidget(Page::Main, mainPageWidget);
-
-    QVBoxLayout *mainVBox = new QVBoxLayout();
-    mainVBox->setContentsMargins(0, 0, 0, 0);
-    mainVBox->setSpacing(0);
-    mainPageWidget->setLayout(mainVBox);
-
-    // Main menu bar
-    _mainMenuBarWidget = new MainMenuBarWidget(this);
-    mainVBox->addWidget(_mainMenuBarWidget);
-
-    // Main stacked widget
-    _mainStackedWidget = new QStackedWidget(this);
-    _mainStackedWidget->setObjectName("mainStackedWidget");
-    mainVBox->addWidget(_mainStackedWidget);
-    mainVBox->setStretchFactor(_mainStackedWidget, 1);
-
-    // Drives list
-    _drivesWidget = new DrivesWidget(this);
-    _mainStackedWidget->insertWidget(MainStackedWidget::Drives, _drivesWidget);
-
-    // Preferences
-    _preferencesWidget = new PreferencesWidget(this);
-
-    QScrollArea *preferencesScrollArea = new QScrollArea(this);
-    preferencesScrollArea->setWidget(_preferencesWidget);
-    preferencesScrollArea->setWidgetResizable(true);
-
-    _mainStackedWidget->insertWidget(MainStackedWidget::Preferences, preferencesScrollArea);
+    // Bottom
+    BottomWidget *bottomWidget = new BottomWidget(this);
+    mainLayout()->addWidget(bottomWidget);
 
     //
-    // Drive preferences page widget
+    // Drive page widget
     //
     QWidget *drivePageWidget = new QWidget(this);
     drivePageWidget->setContentsMargins(0, 0, 0, 0);
@@ -169,7 +148,7 @@ void ParametersDialog::initUI()
     drivePageWidget->setLayout(driveVBox);
 
     // Drive menu bar
-    _driveMenuBarWidget = new DriveMenuBarWidget(this);
+    _driveMenuBarWidget = new MainMenuBarWidget(this);
     driveVBox->addWidget(_driveMenuBarWidget);
 
     // Drive preferences
@@ -178,9 +157,33 @@ void ParametersDialog::initUI()
     QScrollArea *drivePreferencesScrollArea = new QScrollArea(this);
     drivePreferencesScrollArea->setWidget(_drivePreferencesWidget);
     drivePreferencesScrollArea->setWidgetResizable(true);
-
     driveVBox->addWidget(drivePreferencesScrollArea);
     driveVBox->setStretchFactor(drivePreferencesScrollArea, 1);
+
+    //
+    // Preferences page widget
+    //
+    QWidget *preferencesPageWidget = new QWidget(this);
+    preferencesPageWidget->setContentsMargins(0, 0, 0, 0);
+    _pageStackedWidget->insertWidget(Page::Preferences, preferencesPageWidget);
+
+    QVBoxLayout *preferencesVBox = new QVBoxLayout();
+    preferencesVBox->setContentsMargins(0, 0, 0, 0);
+    preferencesVBox->setSpacing(0);
+    preferencesPageWidget->setLayout(preferencesVBox);
+
+    // Preferences menu bar
+    _preferencesMenuBarWidget = new PreferencesMenuBarWidget(this);
+    preferencesVBox->addWidget(_preferencesMenuBarWidget);
+
+    // Preferences
+    _preferencesWidget = new PreferencesWidget(this);
+
+    QScrollArea *preferencesScrollArea = new QScrollArea(this);
+    preferencesScrollArea->setWidget(_preferencesWidget);
+    preferencesScrollArea->setWidgetResizable(true);
+    preferencesVBox->addWidget(preferencesScrollArea);
+    preferencesVBox->setStretchFactor(preferencesScrollArea, 1);
 
     //
     // Errors page widget
@@ -210,7 +213,7 @@ void ParametersDialog::initUI()
     errorsHeaderWidget->setLayout(errorsHeaderVBox);
 
     ActionWidget *sendLogsWidget = new ActionWidget(":/client/resources/icons/actions/help.svg",
-                                                    tr("Need help? Generate an archive of the application logs to send it to our support"), this);
+                                                    tr("Need help ? Generate an archive of the application logs to send it to our support"), this);
     sendLogsWidget->setObjectName("sendLogsWidget");
     errorsHeaderVBox->addWidget(sendLogsWidget);
 
@@ -224,26 +227,16 @@ void ParametersDialog::initUI()
     errorsVBox->addWidget(_errorsStackedWidget);
     errorsVBox->setStretchFactor(_errorsStackedWidget, 1);
 
-    connect(_mainMenuBarWidget, &MainMenuBarWidget::drivesButtonClicked, this, &ParametersDialog::onDrivesButtonClicked);
-    connect(_mainMenuBarWidget, &MainMenuBarWidget::preferencesButtonClicked, this, &ParametersDialog::onPreferencesButtonClicked);
-    connect(_mainMenuBarWidget, &MainMenuBarWidget::openHelp, this, &ParametersDialog::onOpenHelp);
-    connect(_drivesWidget, &DrivesWidget::addDrive, this, &ParametersDialog::onAddDrive);
-    connect(_drivesWidget, &DrivesWidget::runSync, this, &ParametersDialog::onRunSync);
-    connect(_drivesWidget, &DrivesWidget::pauseSync, this, &ParametersDialog::onPauseSync);
-    connect(_drivesWidget, &DrivesWidget::resumeSync, this, &ParametersDialog::onResumeSync);
-    connect(_drivesWidget, &DrivesWidget::manageOffer, this, &ParametersDialog::onManageOffer);
-    connect(_drivesWidget, &DrivesWidget::remove, this, &ParametersDialog::onRemove);
-    connect(_drivesWidget, &DrivesWidget::displayDriveParameters, this, &ParametersDialog::onDisplayDriveParameters);
-    connect(_drivesWidget, &DrivesWidget::displayDriveErrors, this, &ParametersDialog::onDisplayDriveErrors);
-    connect(_preferencesWidget, &PreferencesWidget::setStyle, this, &ParametersDialog::onSetStyle);
-    connect(_driveMenuBarWidget, &DriveMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivesList);
-    connect(_driveMenuBarWidget, &DriveMenuBarWidget::runSync, this, &ParametersDialog::onRunSync);
-    connect(_driveMenuBarWidget, &DriveMenuBarWidget::pauseSync, this, &ParametersDialog::onPauseSync);
-    connect(_driveMenuBarWidget, &DriveMenuBarWidget::resumeSync, this, &ParametersDialog::onResumeSync);
-    connect(_driveMenuBarWidget, &DriveMenuBarWidget::manageOffer, this, &ParametersDialog::onManageOffer);
-    connect(_driveMenuBarWidget, &DriveMenuBarWidget::remove, this, &ParametersDialog::onRemove);
+    connect(_driveMenuBarWidget, &MainMenuBarWidget::preferencesButtonClicked, this, &ParametersDialog::onPreferencesButtonClicked);
+    connect(_driveMenuBarWidget, &MainMenuBarWidget::openHelp, this, &ParametersDialog::onOpenHelp);
+    connect(_driveMenuBarWidget, &MainMenuBarWidget::accountSelected, this, &ParametersDialog::onAccountSelected);
+    connect(_driveMenuBarWidget, &MainMenuBarWidget::addDrive, this, &ParametersDialog::onAddDrive);
     connect(_drivePreferencesWidget, &DrivePreferencesWidget::displayErrors, this, &ParametersDialog::onDisplayDriveErrors);
-    connect(_errorsMenuBarWidget, &ErrorsMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDrivesList);
+    connect(_drivePreferencesWidget, &DrivePreferencesWidget::openFolder, this, &ParametersDialog::onOpenFolderItem);
+    connect(_drivePreferencesWidget, &DrivePreferencesWidget::removeDrive, this, &ParametersDialog::onRemoveDrive);
+    connect(_preferencesMenuBarWidget, &PreferencesMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDriveParameters);
+    connect(_errorsMenuBarWidget, &ErrorsMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDriveParameters);
+    connect(_preferencesWidget, &PreferencesWidget::setStyle, this, &ParametersDialog::onSetStyle);
     connect(sendLogsWidget, &ActionWidget::clicked, this, &ParametersDialog::onSendLogs);
 }
 
@@ -272,9 +265,13 @@ void ParametersDialog::onRefreshAccountList()
 
     if (OCC::AccountManager::instance()->accounts().isEmpty()) {
         _accountInfoMap.clear();
-        _drivesWidget->clear();
+        _driveMenuBarWidget->driveSelectionWidget()->clear();
+        _driveMenuBarWidget->progressBarWidget()->reset();
     }
     else {
+        bool currentAccountStillExists = !_currentAccountId.isEmpty()
+                && OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
+
         for (OCC::AccountStatePtr accountStatePtr : OCC::AccountManager::instance()->accounts()) {
             if (accountStatePtr && !accountStatePtr->account().isNull()) {
                 QString accountId = accountStatePtr->account()->id();
@@ -306,6 +303,8 @@ void ParametersDialog::onRefreshAccountList()
                                     accountInfoIt->second._folderMap[folderIt.key()] = std::unique_ptr<FolderInfo>(
                                             new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path()));
                                     folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
+
+                                    connect(folderIt.value(), &OCC::Folder::newBigFolderDiscovered, this, &ParametersDialog::onNewBigFolderDiscovered);
                                 }
 
                                 folderInfoIt->second->_paused = folderIt.value()->syncPaused();
@@ -338,7 +337,11 @@ void ParametersDialog::onRefreshAccountList()
                 // Compute account status
                 accountInfoIt->second.updateStatus();
 
-                _drivesWidget->addOrUpdateDrive(accountInfoIt->first, accountInfoIt->second);
+                _driveMenuBarWidget->driveSelectionWidget()->addOrUpdateDrive(accountInfoIt->first, accountInfoIt->second);
+
+                if (_currentAccountId.isEmpty() || !currentAccountStillExists) {
+                    _currentAccountId = accountId;
+                }
             }
             else {
                 qCDebug(lcParametersDialog) << "Null pointer!";
@@ -347,25 +350,18 @@ void ParametersDialog::onRefreshAccountList()
         }
 
         // Manage removed accounts
-        auto accountStatusIt = _accountInfoMap.begin();
-        while (accountStatusIt != _accountInfoMap.end()) {
-            if (!OCC::AccountManager::instance()->getAccountFromId(accountStatusIt->first)) {
-                _drivesWidget->removeDrive(accountStatusIt->first);
-                if (accountStatusIt->first == _currentAccountId) {
-                    // The current account is removed
-                    _currentAccountId = QString();
-                    _driveMenuBarWidget->reset();
-                    _drivePreferencesWidget->reset();
-                    if (_pageStackedWidget->currentIndex() == Page::Drive) {
-                        _pageStackedWidget->setCurrentIndex(Page::Main);
-                    }
-                }
-                accountStatusIt = _accountInfoMap.erase(accountStatusIt);
+        auto accountInfoIt = _accountInfoMap.begin();
+        while (accountInfoIt != _accountInfoMap.end()) {
+            if (!OCC::AccountManager::instance()->getAccountFromId(accountInfoIt->first)) {
+                _driveMenuBarWidget->driveSelectionWidget()->removeDrive(accountInfoIt->first);
+                accountInfoIt = _accountInfoMap.erase(accountInfoIt);
             }
             else {
-                accountStatusIt++;
+                accountInfoIt++;
             }
         }
+
+        _driveMenuBarWidget->driveSelectionWidget()->selectDrive(_currentAccountId);
     }
 }
 
@@ -404,7 +400,7 @@ void ParametersDialog::onUpdateProgress(const QString &folderId, const OCC::Prog
                     // Compute account status
                     accountInfoIt->second.updateStatus();
 
-                    _drivesWidget->addOrUpdateDrive(account->id(), accountInfoIt->second);
+                    _driveMenuBarWidget->driveSelectionWidget()->addOrUpdateDrive(account->id(), accountInfoIt->second);
                 }
             }
             else {
@@ -434,7 +430,7 @@ void ParametersDialog::onUpdateQuota(qint64 total, qint64 used)
         accountInfoIt->second._used = used;
 
         if (accountId == _currentAccountId) {
-            _drivePreferencesWidget->setUsedSize(total, used);
+            _driveMenuBarWidget->progressBarWidget()->setUsedSize(total, used);
         }
     }
 }
@@ -481,6 +477,7 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                                                           item.data()->_fileId,
                                                           item.data()->_status,
                                                           item.data()->_direction,
+                                                          item.data()->_type,
                                                           accountInfoIt->second.folderPath(folderId, item.data()->_file),
                                                           QDateTime::currentDateTime(),
                                                           item.data()->_errorString);
@@ -523,14 +520,9 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
     }
 }
 
-void ParametersDialog::onDrivesButtonClicked()
-{
-    _mainStackedWidget->setCurrentIndex(MainStackedWidget::Drives);
-}
-
 void ParametersDialog::onPreferencesButtonClicked()
 {
-    _mainStackedWidget->setCurrentIndex(MainStackedWidget::Preferences);
+    _pageStackedWidget->setCurrentIndex(Page::Preferences);
 }
 
 void ParametersDialog::onOpenHelp()
@@ -538,85 +530,69 @@ void ParametersDialog::onOpenHelp()
     QDesktopServices::openUrl(QUrl(OCC::Theme::instance()->helpUrl()));
 }
 
+void ParametersDialog::onAccountSelected(QString id)
+{
+    const auto accountInfoIt = _accountInfoMap.find(id);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        _currentAccountId = id;
+        _driveMenuBarWidget->progressBarWidget()->setUsedSize(accountInfoIt->second._totalSize, accountInfoIt->second._used);
+        _drivePreferencesWidget->setAccount(accountInfoIt->first, &accountInfoIt->second,
+                                            accountInfoIt->second._errorsListWidget != nullptr);
+    }
+}
+
 void ParametersDialog::onAddDrive()
 {
     emit addDrive();
 }
 
-void ParametersDialog::onRunSync(const QString &accountId)
-{
-    OCC::Utility::runSync(accountId, QString());
-}
-
-void ParametersDialog::onPauseSync(const QString &accountId)
-{
-    OCC::Utility::pauseSync(accountId, QString(), true);
-}
-
-void ParametersDialog::onResumeSync(const QString &accountId)
-{
-    OCC::Utility::pauseSync(accountId, QString(), false);
-}
-
-void ParametersDialog::onManageOffer(const QString &accountId)
-{
-
-}
-
-void ParametersDialog::onRemove(const QString &accountId)
+void ParametersDialog::onRemoveDrive(const QString &accountId)
 {
     OCC::AccountManager *accountManager = OCC::AccountManager::instance();
     OCC::AccountStatePtr accountStatePtr = accountManager->getAccountStateFromId(accountId);
     if (accountStatePtr.data()) {
-        QMessageBox msgBox(
-                    QMessageBox::Question, tr("Confirm Account Removal"),
-                    tr("<p>Do you really want to remove the connection to the account <i>%1</i>?</p>"
-                       "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
-                        .arg(accountStatePtr->account()->driveName()),
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Question,
+                    tr("Do you really want to remove the synchronization of the account <i>%1</i> ?<br>"
+                       "<b>Note:</b> This will <b>not</b> delete any files.")
+                    .arg(accountStatePtr->account()->driveName()),
                     QMessageBox::NoButton, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        QPushButton *yesButton = msgBox.addButton(tr("Remove connection"), QMessageBox::YesRole);
-        msgBox.addButton(tr("Cancel"), QMessageBox::NoRole);
-        msgBox.exec();
-        if (msgBox.clickedButton() != yesButton) {
-            return;
+        msgBox->addButton(tr("REMOVE SYNCHRONIZATION"), QMessageBox::Yes);
+        msgBox->addButton(tr("CANCEL"), QMessageBox::No);
+        msgBox->setDefaultButton(QMessageBox::No);
+        int ret = msgBox->exec();
+        if (ret != QDialog::Rejected) {
+            if (ret == QMessageBox::Yes) {
+                accountManager->deleteAccount(accountStatePtr.data());
+                accountManager->save();
+            }
         }
-
-        accountManager->deleteAccount(accountStatePtr.data());
-        accountManager->save();
-    }
-}
-
-void ParametersDialog::onDisplayDriveParameters(const QString &accountId)
-{
-    auto accountInfoIt = _accountInfoMap.find(accountId);
-    if (accountInfoIt != _accountInfoMap.end()) {
-        _currentAccountId = accountInfoIt->first;
-        _driveMenuBarWidget->setAccount(accountInfoIt->first, &accountInfoIt->second);
-        _drivePreferencesWidget->setAccount(accountInfoIt->first, &accountInfoIt->second,
-                                            accountInfoIt->second._errorsListWidget != nullptr);
-        _pageStackedWidget->setCurrentIndex(Page::Drive);
     }
 }
 
 void ParametersDialog::onDisplayDriveErrors(const QString &accountId)
 {
+    _pageStackedWidget->setCurrentIndex(Page::Errors);
     auto accountInfoIt = _accountInfoMap.find(accountId);
     if (accountInfoIt != _accountInfoMap.end()) {
         _errorsMenuBarWidget->setAccount(accountInfoIt->first, &accountInfoIt->second);
         _errorsStackedWidget->setCurrentIndex(accountInfoIt->second._errorsListStackPosition);
-        _pageStackedWidget->setCurrentIndex(Page::Errors);
     }
+}
+
+void ParametersDialog::onDisplayDriveParameters()
+{
+    _pageStackedWidget->setCurrentIndex(Page::Drive);
+}
+
+void ParametersDialog::onDisplayPreferences()
+{
+    _pageStackedWidget->setCurrentIndex(Page::Preferences);
 }
 
 void ParametersDialog::onSetStyle(bool darkTheme)
 {
     emit setStyle(darkTheme);
-}
-
-void ParametersDialog::onDisplayDrivesList()
-{
-    _pageStackedWidget->setCurrentIndex(Page::Main);
 }
 
 void ParametersDialog::onSendLogs()
@@ -626,12 +602,18 @@ void ParametersDialog::onSendLogs()
         return;
     }
 
-    QMessageBox msgBox(QMessageBox::Information, QString(),
-                       tr("Please confirm the transmission of debugging information to our support."),
-                       QMessageBox::Yes | QMessageBox::No, this);
-    msgBox.setWindowModality(Qt::WindowModal);
-    msgBox.setDefaultButton(QMessageBox::Yes);
-    if (msgBox.exec() == QMessageBox::No) {
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Information,
+                tr("Please confirm the transmission of debugging information to our support."),
+                QMessageBox::Yes | QMessageBox::No, this);
+    msgBox->setDefaultButton(QMessageBox::Yes);
+    int ret = msgBox->exec();
+    if (ret != QDialog::Rejected) {
+        if (ret == QMessageBox::No) {
+            return;
+        }
+    }
+    else {
         return;
     }
 
@@ -665,7 +647,7 @@ void ParametersDialog::onSendLogs()
                 break;
             }
             debugReporter->setReportData(OCC::DebugReporter::MapKeyType::LogName, num,
-                contents(temporaryFolderLogDirPath + "/" + file),
+                contents(temporaryFolderLogDirPath + QDir::separator() + file),
                 "application/octet-stream",
                 QFileInfo(file).fileName().toUtf8());
         }
@@ -686,37 +668,34 @@ void ParametersDialog::onSendLogs()
 
 void ParametersDialog::onOpenFolderItem(const QString &filePath)
 {
-    if (!filePath.isEmpty()) {
-        QFileInfo fileInfo(filePath);
-        if (fileInfo.exists()) {
-            OCC::showInFileManager(fileInfo.filePath());
-        }
-        else if (fileInfo.dir().exists()) {
-            QUrl url = OCC::Utility::getUrlFromLocalPath(fileInfo.dir().path());
-            if (url.isValid()) {
-                if (!QDesktopServices::openUrl(url)) {
-                    qCWarning(lcParametersDialog) << "QDesktopServices::openUrl failed for " << url.toString();
-                    QMessageBox msgBox(QMessageBox::Warning, QString(),
-                                tr("Unable to open folder path %1.").arg(url.toString()),
-                                QMessageBox::Ok, this);
-                    msgBox.setWindowModality(Qt::WindowModal);
-                    msgBox.exec();
-                }
-            }
-        }
+    if (!OCC::Utility::openFolder(filePath)) {
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Warning,
+                    tr("Unable to open folder path %1.").arg(filePath),
+                    QMessageBox::Ok, this);
+        msgBox->exec();
     }
 }
 
 void ParametersDialog::onDebugReporterDone(bool retCode, const QString &debugId)
 {
-    QMessageBox msgBox(QMessageBox::Information, QString(),
-                       retCode
-                        ? tr("Transmission done!<br>Please refer to identifier <b>%1</b> in bug reports.").arg(debugId)
-                        : tr("Transmission failed!"),
-                       QMessageBox::Ok, this);
-    msgBox.setWindowModality(Qt::WindowModal);
-    msgBox.setTextInteractionFlags(Qt::TextSelectableByMouse);
-    msgBox.exec();
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Information,
+                retCode
+                ? tr("Transmission done!<br>Please refer to identifier <b>%1</b> in bug reports.").arg(debugId)
+                : tr("Transmission failed!"),
+                QMessageBox::Ok, this);
+    msgBox->exec();
+}
+
+void ParametersDialog::onNewBigFolderDiscovered(const QString &path)
+{
+    Q_UNUSED(path)
+
+    OCC::Folder *folder = (OCC::Folder *) sender();
+    if (folder->accountState()->account()->id() == _currentAccountId) {
+        emit _drivePreferencesWidget->newBigFolderDiscovered(path);
+    }
 }
 
 ParametersDialog::AccountInfoParameters::AccountInfoParameters()

@@ -30,16 +30,16 @@ namespace KDC {
 
 static const int popupBarHeight = 38;
 static const int popupBoxHMargin = 20;
-static const int popupBoxVTMargin = 20;
+static const int popupBoxVTMargin = 18;
 static const int popupBoxVBMargin = 2;
 
-static const int macDialogBarHeight = 22;
-static const int macDialogBoxHMargin = 5;
-static const int macDialogBoxVMargin = 3;
-static const int macDialogBoxSpacing = 3;
+static const int macDialogBarHeight = 30;
+static const int macDialogBoxHMargin = 8;
+static const int macDialogBoxVMargin = 8;
+static const int macDialogBoxSpacing = 5;
 static const QSize macIconSize = QSize(12, 12);
 
-static const int winDialogBarHeight = 22;
+static const int winDialogBarHeight = 30;
 static const int winDialogBoxHMargin = 12;
 static const int winDialogBoxVTMargin = 10;
 static const int winDialogBoxVBMargin = 0;

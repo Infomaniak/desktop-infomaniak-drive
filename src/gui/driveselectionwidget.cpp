@@ -71,7 +71,6 @@ DriveSelectionWidget::DriveSelectionWidget(QWidget *parent)
     connect(this, &DriveSelectionWidget::downIconSizeChanged, this, &DriveSelectionWidget::onDownIconSizeChanged);
     connect(this, &DriveSelectionWidget::downIconColorChanged, this, &DriveSelectionWidget::onDownIconColorChanged);
     connect(this, &DriveSelectionWidget::clicked, this, &DriveSelectionWidget::onClick);
-    connect(this, &DriveSelectionWidget::addIconColorChanged, this, &DriveSelectionWidget::onAddIconColorChanged);
 }
 
 QSize DriveSelectionWidget::sizeHint() const
@@ -88,7 +87,6 @@ void DriveSelectionWidget::clear()
 {
     _currentDriveId.clear();
     _driveMap.clear();
-    setAddDriveIcon();
     _driveTextLabel->setText(tr("Add a kDrive"));
     _downIconLabel->setVisible(false);
 }
@@ -125,10 +123,8 @@ void DriveSelectionWidget::selectDrive(QString id)
         _driveTextLabel->setText(driveName);
         _downIconLabel->setVisible(true);
         setDriveIcon(_driveMap[id]._color);
-        if (_currentDriveId != id) {
-            _currentDriveId = id;
-            emit driveSelected(id);
-        }
+        _currentDriveId = id;
+        emit driveSelected(id);
     }
 }
 
@@ -147,11 +143,6 @@ void DriveSelectionWidget::onDownIconSizeChanged()
 void DriveSelectionWidget::onDownIconColorChanged()
 {
     setDownIcon();
-}
-
-void DriveSelectionWidget::onAddIconColorChanged()
-{
-    setAddDriveIcon();
 }
 
 void DriveSelectionWidget::onClick(bool checked)
@@ -213,14 +204,6 @@ void DriveSelectionWidget::setDriveIcon(const QColor &color)
 {
     if (_driveIconLabel) {
         _driveIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/drive.svg", color).
-                                   pixmap(_driveIconSize));
-    }
-}
-
-void DriveSelectionWidget::setAddDriveIcon()
-{
-    if (_driveIconLabel && _driveIconSize != QSize() && _addIconColor != QColor()) {
-        _driveIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/add.svg", _addIconColor).
                                    pixmap(_driveIconSize));
     }
 }

@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customtogglepushbutton.h"
 #include "synchronizeditem.h"
 #include "errorspopup.h"
+#include "custommessagebox.h"
 #include "accountmanager.h"
 #include "folderman.h"
 #include "account.h"
@@ -51,7 +52,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QLoggingCategory>
-#include <QMessageBox>
 #include <QPainter>
 #include <QPainterPath>
 #include <QScreen>
@@ -68,9 +68,8 @@ static const int shadowBlurRadius = 20;
 static const int toolBarHMargin = 10;
 static const int toolBarVMargin = 10;
 static const int toolBarSpacing = 10;
-static const int driveBarHMargin = 10;
-static const int driveBarVMargin = 10;
-static const int driveBarSpacing = 15;
+static const int driveBoxHMargin = 10;
+static const int driveBoxVMargin = 10;
 static const int logoIconSize = 30;
 static const int defaultLogoIconSize = 50;
 static const int maxSynchronizedItems = 1000;
@@ -442,8 +441,7 @@ void SynthesisPopover::initUI()
 
     // Drive selection
     QHBoxLayout *hBoxDriveBar = new QHBoxLayout();
-    hBoxDriveBar->setContentsMargins(driveBarHMargin, driveBarVMargin, driveBarHMargin, driveBarVMargin);
-    hBoxDriveBar->setSpacing(driveBarSpacing);
+    hBoxDriveBar->setContentsMargins(driveBoxHMargin, driveBoxVMargin, driveBoxHMargin, driveBoxVMargin);
 
     _driveSelectionWidget = new DriveSelectionWidget(this);
     hBoxDriveBar->addWidget(_driveSelectionWidget);
@@ -461,6 +459,7 @@ void SynthesisPopover::initUI()
 
     // Buttons bar
     _buttonsBarWidget = new ButtonsBarWidget(this);
+    _buttonsBarWidget->hide();
     mainVBox->addWidget(_buttonsBarWidget);
 
     CustomTogglePushButton *synchronizedButton = new CustomTogglePushButton(tr("Synchronized"), _buttonsBarWidget);
@@ -501,7 +500,7 @@ void SynthesisPopover::initUI()
     QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
-    effect->setColor(OCC::Utility::getShadowColor());
+    effect->setColor(OCC::Utility::getShadowColor(true));
     setGraphicsEffect(effect);
 
     connect(_errorsButton, &CustomToolButton::clicked, this, &SynthesisPopover::onOpenErrorsMenu);
@@ -540,12 +539,11 @@ void SynthesisPopover::openUrl(const QString &folderId, const QString &filePath)
         QUrl url = folderUrl(folderId, filePath);
         if (url.isValid()) {
             if (!QDesktopServices::openUrl(url)) {
-                qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << url.toString();
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
-                            tr("Unable to open folder path %1.").arg(url.toString()),
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
+                            tr("Unable to open folder url %1.").arg(url.toString()),
                             QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                msgBox->exec();
             }
         }
     }
@@ -611,8 +609,8 @@ void SynthesisPopover::refreshStatusBar(std::map<QString, AccountInfoSynthesis>:
 {
     if (accountInfoIt != _accountInfoMap.end()) {
         const FolderInfo *folderInfo = getFirstFolderByPriority(accountInfoIt->second._folderMap);
-        refreshStatusBar(folderInfo);
         _statusBarWidget->setCurrentAccount(&accountInfoIt->second);
+        refreshStatusBar(folderInfo);
     }
 }
 
@@ -966,6 +964,7 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                                                           item.data()->_fileId,
                                                           item.data()->_status,
                                                           item.data()->_direction,
+                                                          item.data()->_type,
                                                           folderPath(folderId, item.data()->_file),
                                                           QDateTime::currentDateTime());
                         accountInfoIt->second._synchronizedListWidget->insertItem(0, widgetItem);
@@ -1035,7 +1034,7 @@ void SynthesisPopover::onDisplayErrors(const QString &accountId)
 
 void SynthesisPopover::displayErrors(const QString &accountId)
 {
-    emit openParametersDialog(accountId);
+    emit openParametersDialog(accountId, true);
 }
 
 void SynthesisPopover::onOpenFolderMenu(bool checked)
@@ -1082,11 +1081,11 @@ void SynthesisPopover::onOpenWebview(bool checked)
     if (accountPtr) {
         if (!QDesktopServices::openUrl(accountPtr->url())) {
             qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << accountPtr->url().toString();
-            QMessageBox msgBox(QMessageBox::Warning, QString(),
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
                         tr("Unable to access web site %1.").arg(accountPtr->url().toString()),
                         QMessageBox::Ok, this);
-            msgBox.setWindowModality(Qt::WindowModal);
-            msgBox.exec();
+            msgBox->exec();
         }
     }
 }
@@ -1097,13 +1096,13 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
 
     MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
-    // Parameters
-    QWidgetAction *parametersAction = new QWidgetAction(this);
-    MenuItemWidget *parametersMenuItemWidget = new MenuItemWidget(tr("Parameters"));
-    parametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
-    parametersAction->setDefaultWidget(parametersMenuItemWidget);
-    connect(parametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenParameters);
-    menu->addAction(parametersAction);
+    // Drive parameters
+    QWidgetAction *driveParametersAction = new QWidgetAction(this);
+    MenuItemWidget *driveParametersMenuItemWidget = new MenuItemWidget(tr("Drive parameters"));
+    driveParametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg");
+    driveParametersAction->setDefaultWidget(driveParametersMenuItemWidget);
+    connect(driveParametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenDriveParameters);
+    menu->addAction(driveParametersAction);
 
     // Disable Notifications
     QWidgetAction *notificationsAction = new QWidgetAction(this);
@@ -1117,6 +1116,14 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
     notificationsMenuItemWidget->setHasSubmenu(true);
     notificationsAction->setDefaultWidget(notificationsMenuItemWidget);
     menu->addAction(notificationsAction);
+
+    // Application preferences
+    QWidgetAction *preferencesAction = new QWidgetAction(this);
+    MenuItemWidget *preferencesMenuItemWidget = new MenuItemWidget(tr("Application preferences"));
+    preferencesMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/parameters.svg");
+    preferencesAction->setDefaultWidget(preferencesMenuItemWidget);
+    connect(preferencesAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenPreferences);
+    menu->addAction(preferencesAction);
 
     // Disable Notifications submenu
     MenuWidget *submenu = new MenuWidget(MenuWidget::Submenu, menu);
@@ -1186,7 +1193,7 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
     menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()));
 }
 
-void SynthesisPopover::onOpenParameters(bool checked)
+void SynthesisPopover::onOpenPreferences(bool checked)
 {
     Q_UNUSED(checked)
 
@@ -1232,7 +1239,6 @@ void SynthesisPopover::onNotificationActionTriggered(bool checked)
 {
     Q_UNUSED(checked)
 
-    QString message;
     bool notificationAlreadyDisabledForPeriod = _notificationsDisabled != NotificationsDisabled::Never
             && _notificationsDisabled != NotificationsDisabled::Always;
 
@@ -1240,41 +1246,38 @@ void SynthesisPopover::onNotificationActionTriggered(bool checked)
     switch (_notificationsDisabled) {
     case NotificationsDisabled::Never:
         _notificationsDisabledUntilDateTime = QDateTime();
-        message = QString(tr("Notifications enabled!"));
         break;
     case NotificationsDisabled::OneHour:
         _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
                 ? _notificationsDisabledUntilDateTime.addSecs(60 * 60)
                 : QDateTime::currentDateTime().addSecs(60 * 60);
-        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
     case NotificationsDisabled::UntilTomorrow:
         _notificationsDisabledUntilDateTime = QDateTime(QDateTime::currentDateTime().addDays(1).date(), QTime(8, 0));
-        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
     case NotificationsDisabled::TreeDays:
         _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
                 ? _notificationsDisabledUntilDateTime.addDays(3)
                 : QDateTime::currentDateTime().addDays(3);
-        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
     case NotificationsDisabled::OneWeek:
         _notificationsDisabledUntilDateTime = notificationAlreadyDisabledForPeriod
                 ? _notificationsDisabledUntilDateTime.addDays(7)
                 : QDateTime::currentDateTime().addDays(7);
-        message = QString(tr("Notifications disabled until %1").arg(_notificationsDisabledUntilDateTime.toString()));
         break;
     case NotificationsDisabled::Always:
         _notificationsDisabledUntilDateTime = QDateTime();
-        message = QString(tr("Notifications disabled!"));
         break;
     }
 
     emit disableNotifications(_notificationsDisabled, _notificationsDisabledUntilDateTime);
+}
 
-    QMessageBox msgBox(QMessageBox::Information, QString(), message, QMessageBox::Ok, this);
-    msgBox.setWindowModality(Qt::WindowModal);
-    msgBox.exec();
+void SynthesisPopover::onOpenDriveParameters(bool checked)
+{
+    Q_UNUSED(checked)
+
+    emit openParametersDialog(_currentAccountId);
 }
 
 void SynthesisPopover::onAccountSelected(QString id)
@@ -1382,9 +1385,11 @@ void SynthesisPopover::onAddToFavouriteItem(const SynchronizedItem &item)
 {
     Q_UNUSED(item)
 
-    QMessageBox msgBox(QMessageBox::Information, QString(), tr("Not implemented!"), QMessageBox::Ok, this);
-    msgBox.setWindowModality(Qt::WindowModal);
-    msgBox.exec();
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Information,
+                tr("Not implemented!"),
+                QMessageBox::Ok, this);
+    msgBox->exec();
 }
 
 void SynthesisPopover::onManageRightAndSharingItem(const SynchronizedItem &item)
@@ -1392,13 +1397,13 @@ void SynthesisPopover::onManageRightAndSharingItem(const SynchronizedItem &item)
     QString folderRelativePath;
     QString fullFilePath = folderPath(item.folderId(), item.filePath());
     OCC::FolderMan::instance()->folderForPath(fullFilePath, &folderRelativePath);
-    if (folderRelativePath == "/") {
+    if (folderRelativePath == QDir::separator()) {
         qCDebug(lcSynthesisPopover) << "Cannot share root directory!";
-        QMessageBox msgBox(QMessageBox::Information, QString(),
-                           tr("You cannot share the root directory of your Drive!"),
-                           QMessageBox::Ok, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.exec();
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Information,
+                    tr("You cannot share the root directory of your Drive!"),
+                    QMessageBox::Ok, this);
+        msgBox->exec();
     }
     else {
         emit openShareDialogPublicLinks(folderRelativePath, fullFilePath);
@@ -1441,11 +1446,11 @@ void SynthesisPopover::onOpenWebviewItem(const SynchronizedItem &item)
 void SynthesisPopover::onCopyUrlToClipboard(const QString &url)
 {
     QApplication::clipboard()->setText(url);
-    QMessageBox msgBox(QMessageBox::Information, QString(),
-                       tr("The shared link has been copied to the clipboard."),
-                       QMessageBox::Ok, this);
-    msgBox.setWindowModality(Qt::WindowModal);
-    msgBox.exec();
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Information,
+                tr("The shared link has been copied to the clipboard."),
+                QMessageBox::Ok, this);
+    msgBox->exec();
 }
 
 void SynthesisPopover::onLinkActivated(const QString &link)
@@ -1459,20 +1464,20 @@ void SynthesisPopover::onLinkActivated(const QString &link)
         if (url.isValid()) {
             if (!QDesktopServices::openUrl(url)) {
                 qCWarning(lcSynthesisPopover) << "QDesktopServices::openUrl failed for " << link;
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
-                                   tr("Unable to open link %1.").arg(link),
-                                   QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
+                            tr("Unable to open link %1.").arg(link),
+                            QMessageBox::Ok, this);
+                msgBox->exec();
             }
         }
         else {
             qCWarning(lcSynthesisPopover) << "Invalid link " << link;
-            QMessageBox msgBox(QMessageBox::Warning, QString(),
-                               tr("Invalid link %1.").arg(link),
-                               QMessageBox::Ok, this);
-            msgBox.setWindowModality(Qt::WindowModal);
-            msgBox.exec();
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Invalid link %1.").arg(link),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
         }
     }
 }

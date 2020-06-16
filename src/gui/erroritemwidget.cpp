@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "guiutility.h"
 
 #include <QBoxLayout>
+#include <QDir>
 #include <QFileInfo>
 #include <QGraphicsDropShadowEffect>
 #include <QPainter>
@@ -42,7 +43,9 @@ static const QString dateFormat = "d MMM yyyy - HH:mm";
 ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo &accountInfo, QWidget *parent)
     : QWidget(parent)
     , _item(item)
+    , _fileErrorLabel(nullptr)
     , _backgroundColor(QColor())
+    , _painted(false)
 {
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
 
@@ -81,12 +84,13 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     fileNameLabel->setWordWrap(true);
     vBoxMiddle->addWidget(fileNameLabel);
 
-    QLabel *fileErrorLabel = new QLabel(this);
-    fileErrorLabel->setObjectName("fileErrorLabel");
-    fileErrorLabel->setText(_item.error());
-    fileErrorLabel->setWordWrap(true);
-    vBoxMiddle->addWidget(fileErrorLabel);
-    vBoxMiddle->setStretchFactor(fileErrorLabel, 1);
+    _fileErrorLabel = new QLabel(this);
+    _fileErrorLabel->setObjectName("fileErrorLabel");
+    _fileErrorLabel->setText(_item.error());
+    _fileErrorLabel->setWordWrap(true);
+    _fileErrorLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    vBoxMiddle->addWidget(_fileErrorLabel);
+    vBoxMiddle->setStretchFactor(_fileErrorLabel, 1);
 
     QHBoxLayout *hBoxFilePath = new QHBoxLayout();
     hBoxFilePath->setContentsMargins(0, 0, 0, 0);
@@ -100,7 +104,7 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
 
     QLabel *filePathLabel = new QLabel(this);
     filePathLabel->setObjectName("filePathLabel");
-    QString filePath = accountInfo._name + "/" + fileInfo.path();
+    QString filePath = accountInfo._name + QDir::separator() + fileInfo.path();
     /*if (filePath.size() > fileNameMaxSize) {
         filePath = filePath.left(fileNameMaxSize) + "...";
     }*/
@@ -135,6 +139,18 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
 void ErrorItemWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
+
+    if (!_painted) {
+        _painted = true;
+        // Adjust height (Qt bug)
+        QRect textRect = _fileErrorLabel->fontMetrics().boundingRect(_fileErrorLabel->text());
+        QRect labelRect = _fileErrorLabel->rect();
+        Q_ASSERT(labelRect.width() > 0);
+        int nbLines = textRect.width() / labelRect.width() + 1;
+        int deltaHeight = labelRect.height() - nbLines * textRect.height();
+        _fileErrorLabel->setFixedHeight(labelRect.height() - deltaHeight);
+        setFixedHeight(height() - deltaHeight);
+    }
 
     // Update shadow color
     QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());

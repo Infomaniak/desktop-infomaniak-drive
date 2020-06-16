@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "halfroundrectwidget.h"
 #include "customtoolbutton.h"
+#include "driveselectionwidget.h"
+#include "progressbarwidget.h"
 
 #include <QLabel>
 #include <QWidget>
@@ -31,25 +33,25 @@ class MainMenuBarWidget : public HalfRoundRectWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY(QColor logo_color READ logoColor WRITE setLogoColor)
-
 public:
     explicit MainMenuBarWidget(QWidget *parent = nullptr);
 
+    inline DriveSelectionWidget *driveSelectionWidget() const { return _driveSelectionWidget; }
+    inline ProgressBarWidget *progressBarWidget() const { return _progressBarWidget; }
+
 signals:
-    void drivesButtonClicked();
+    void accountSelected(const QString &accountId);
+    void addDrive();
     void preferencesButtonClicked();
     void openHelp();
 
 private:
-    QColor _logoColor;
-    QLabel *_logoTextIconLabel;
-
-    inline QColor logoColor() const { return _logoColor; }
-    void setLogoColor(const QColor& color);
+    DriveSelectionWidget *_driveSelectionWidget;
+    ProgressBarWidget *_progressBarWidget;
 
 private slots:
-    void onDrivesButtonClicked(bool checked = false);
+    void onAccountSelected(QString id);
+    void onAddDrive();
     void onPreferencesButtonClicked(bool checked = false);
     void onHelpButtonClicked(bool checked = false);
 };

@@ -141,5 +141,12 @@
         <file>resources/icons/actions/branch-close.svg</file>
         <file>resources/icons/actions/branch-open.svg</file>
         <file>resources/icons/actions/arrow-right.svg</file>
+        <file>resources/icons/actions/chevron-up.svg</file>
+        <file>resources/icons/actions/folder-computer.svg</file>
+        <file>resources/icons/actions/folder-folder-drive.svg</file>
+        <file>resources/icons/actions/dark-switch-disable.svg</file>
+        <file>resources/icons/actions/dark-switch-off.svg</file>
+        <file>resources/icons/actions/dark-branch-close.svg</file>
+        <file>resources/icons/actions/dark-branch-open.svg</file>
     </qresource>
 </RCC>

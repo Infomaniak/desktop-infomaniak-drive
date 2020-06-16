@@ -9,33 +9,44 @@
 
 namespace OCC {
 
+static const QSize windowSize(625, 630);
+
+static const int infoHMargin = 40;
+static const int infoVMargin = 10;
+
 WebFlowCredentialsDialog::WebFlowCredentialsDialog(Account *account, QWidget *parent)
-    : QDialog(parent),
-      _webView(nullptr)
+    : KDC::CustomDialog(parent)
+    , _webView(nullptr)
 {
     Q_UNUSED(account)
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-    _layout = new QVBoxLayout(this);
+    setMinimumSize(windowSize);
+    setMaximumSize(windowSize);
+
+    QVBoxLayout *mainLayout = this->mainLayout();
 
     //QString msg = tr("You have been logged out of %1 as user %2, please login again")
     //        .arg(_account->displayName(), _user);
     _infoLabel = new QLabel();
-    _layout->addWidget(_infoLabel);
+    _infoLabel->setObjectName("largeMediumBoldTextLabel");
+    _infoLabel->setContentsMargins(infoHMargin, infoVMargin, infoHMargin, infoVMargin);
+    _infoLabel->setWordWrap(true);
+    mainLayout->addWidget(_infoLabel);
 
     _webView = new WebView();
-    _layout->addWidget(_webView);
+    mainLayout->addWidget(_webView);
 
     connect(_webView, &WebView::urlCatched, this, &WebFlowCredentialsDialog::urlCatched);
 
     _errorLabel = new QLabel();
     _errorLabel->hide();
-    _layout->addWidget(_errorLabel);
+    mainLayout->addWidget(_errorLabel);
 
     WizardCommon::initErrorLabel(_errorLabel);
 
-    setLayout(_layout);
+    connect(this, &CustomDialog::exit, this, &WebFlowCredentialsDialog::onExit);
 }
 
 void WebFlowCredentialsDialog::closeEvent(QCloseEvent* e) {
@@ -64,6 +75,11 @@ void WebFlowCredentialsDialog::setError(const QString &error) {
         _errorLabel->setText(error);
         _errorLabel->show();
     }
+}
+
+void WebFlowCredentialsDialog::onExit()
+{
+    reject();
 }
 
 }

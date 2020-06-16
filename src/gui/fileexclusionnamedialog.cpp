@@ -58,6 +58,7 @@ FileExclusionNameDialog::FileExclusionNameDialog(QWidget *parent)
     buttonsHBox->addWidget(_validateButton);
 
     QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setObjectName("nondefaultbutton");
     cancelButton->setFlat(true);
     cancelButton->setText(tr("CANCEL"));
     buttonsHBox->addWidget(cancelButton);

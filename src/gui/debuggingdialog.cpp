@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "debuggingdialog.h"
+#include "custommessagebox.h"
 #include "configfile.h"
 #include "logger.h"
 
@@ -25,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <QBoxLayout>
 #include <QLabel>
-#include <QMessageBox>
 
 namespace KDC {
 
@@ -53,6 +53,7 @@ DebuggingDialog::DebuggingDialog(QWidget *parent)
     , _recordDebugging(false)
     , _minLogLevel(DebugLevel::Info)
     , _deleteLogs(false)
+    , _needToSave(false)
 {
     initUI();
 
@@ -71,14 +72,16 @@ void DebuggingDialog::initUI()
     // Title
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
-    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, titleBoxVMargin);
+    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     titleLabel->setText(tr("Record debugging information"));
     mainLayout->addWidget(titleLabel);
+    mainLayout->addSpacing(titleBoxVMargin);
 
     // Record debugging information
     QHBoxLayout *recordDebuggingHBox = new QHBoxLayout();
-    recordDebuggingHBox->setContentsMargins(boxHMargin, 0, boxHMargin, recordDebuggingBoxVMargin);
+    recordDebuggingHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(recordDebuggingHBox);
+    mainLayout->addSpacing(recordDebuggingBoxVMargin);
 
     QLabel *recordDebuggingLabel = new QLabel(this);
     recordDebuggingLabel->setObjectName("boldTextLabel");
@@ -93,14 +96,16 @@ void DebuggingDialog::initUI()
 
     // Minimum debug level
     QLabel *debugLevelLabel = new QLabel(this);
-    debugLevelLabel->setObjectName("boldtextLabel");
-    debugLevelLabel->setContentsMargins(boxHMargin, 0, boxHMargin, debugLevelLabelBoxVMargin);
+    debugLevelLabel->setObjectName("boldTextLabel");
+    debugLevelLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     debugLevelLabel->setText(tr("Minimum trace level"));
     mainLayout->addWidget(debugLevelLabel);
+    mainLayout->addSpacing(debugLevelLabelBoxVMargin);
 
     QHBoxLayout *debugLevelHBox = new QHBoxLayout();
-    debugLevelHBox->setContentsMargins(boxHMargin, 0, boxHMargin, debugLevelSelectBoxVMargin);
+    debugLevelHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(debugLevelHBox);
+    mainLayout->addSpacing(debugLevelSelectBoxVMargin);
 
     _debugLevelComboBox = new CustomComboBox(this);
     _debugLevelComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
@@ -138,6 +143,7 @@ void DebuggingDialog::initUI()
     buttonsHBox->addWidget(_saveButton);
 
     QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setObjectName("nondefaultbutton");
     cancelButton->setFlat(true);
     cancelButton->setText(tr("CANCEL"));
     buttonsHBox->addWidget(cancelButton);
@@ -190,16 +196,19 @@ void DebuggingDialog::onDeleteLogsCheckBoxClicked(bool checked)
 void DebuggingDialog::onExit()
 {
     if (_needToSave) {
-        QMessageBox msgBox(QMessageBox::Question, QString(),
-                           tr("Do you want to save your modifications?"),
-                           QMessageBox::Yes | QMessageBox::No, this);
-        msgBox.setWindowModality(Qt::WindowModal);
-        msgBox.setDefaultButton(QMessageBox::Yes);
-        if (msgBox.exec() == QMessageBox::Yes) {
-            onSaveButtonTriggered();
-        }
-        else {
-            reject();
+        CustomMessageBox *msgBox = new CustomMessageBox(
+                    QMessageBox::Question,
+                    tr("Do you want to save your modifications?"),
+                    QMessageBox::Yes | QMessageBox::No, this);
+        msgBox->setDefaultButton(QMessageBox::Yes);
+        int ret = msgBox->exec();
+        if (ret != QDialog::Rejected) {
+            if (ret == QMessageBox::Yes) {
+                onSaveButtonTriggered();
+            }
+            else {
+                reject();
+            }
         }
     }
     else {

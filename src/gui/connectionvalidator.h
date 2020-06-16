@@ -99,6 +99,8 @@ public:
     // How often should the Application ask this object to check for the connection?
     enum { DefaultCallingIntervalMsec = 62 * 1000 };
 
+    void fetchUser();
+
 public slots:
     /// Checks the server and the authentication.
     void checkServerAndAuth();
@@ -129,7 +131,6 @@ protected slots:
 private:
     void reportResult(Status status);
     void checkServerCapabilities();
-    void fetchUser();
     static void ocsConfigReceived(const QJsonDocument &json, AccountPtr account);
 
     /** Sets the account's server version

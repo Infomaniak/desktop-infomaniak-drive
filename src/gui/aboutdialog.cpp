@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "aboutdialog.h"
+#include "custommessagebox.h"
 #include "guiutility.h"
 #include "common/utility.h"
 #include "common/vfs.h"
@@ -27,7 +28,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QBoxLayout>
 #include <QDesktopServices>
 #include <QLabel>
-#include <QMessageBox>
 #include <QPushButton>
 #include <QSslSocket>
 
@@ -71,14 +71,16 @@ void AboutDialog::initUI()
     // Title
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
-    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, titleBoxVMargin);
+    titleLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     titleLabel->setText(tr("About"));
     mainLayout->addWidget(titleLabel);
+    mainLayout->addSpacing(titleBoxVMargin);
 
     // Logo
     QHBoxLayout *logoHBox = new QHBoxLayout();
-    logoHBox->setContentsMargins(boxHMargin, 0, boxHMargin, logoBoxVMargin);
+    logoHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(logoHBox);
+    mainLayout->addSpacing(logoBoxVMargin);
 
     QLabel *logoIconLabel = new QLabel(this);
     logoIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/logos/kdrive-without-text.svg")
@@ -106,6 +108,7 @@ void AboutDialog::initUI()
     mainLayout->addLayout(buttonsHBox);
 
     QPushButton *closeButton = new QPushButton(this);
+    closeButton->setObjectName("defaultbutton");
     closeButton->setFlat(true);
     closeButton->setText(tr("CLOSE"));
     buttonsHBox->addWidget(closeButton);
@@ -165,11 +168,11 @@ void AboutDialog::onLinkActivated(const QString &link)
         if (domainUrl.isValid()) {
             if (!QDesktopServices::openUrl(domainUrl)) {
                 qCWarning(lcAboutDialog) << "QDesktopServices::openUrl failed for " << domainUrl.toString();
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
                             tr("Unable to open debugging folder %1.").arg(domainUrl.toString()),
                             QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                msgBox->exec();
             }
         }
     }
@@ -179,11 +182,11 @@ void AboutDialog::onLinkActivated(const QString &link)
         if (gitUrl.isValid()) {
             if (!QDesktopServices::openUrl(gitUrl)) {
                 qCWarning(lcAboutDialog) << "QDesktopServices::openUrl failed for " << gitUrl.toString();
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
                             tr("Unable to open debugging folder %1.").arg(gitUrl.toString()),
                             QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                msgBox->exec();
             }
         }
     }

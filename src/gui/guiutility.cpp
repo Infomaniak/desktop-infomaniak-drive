@@ -15,9 +15,11 @@
 #include "guiutility.h"
 
 #include <QApplication>
+#include <QBitmap>
 #include <QClipboard>
 #include <QDesktopServices>
 #include <QDir>
+#include <QDirIterator>
 #include <QFile>
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsSvgItem>
@@ -37,13 +39,16 @@
 #include "accountmanager.h"
 #include "folderman.h"
 #include "configfile.h"
+#include "openfilemanager.h"
 
 using namespace OCC;
 
 static const QString styleSheetWhiteFile(":/client/resources/styles/stylesheetwhite.qss");
 static const QString styleSheetBlackFile(":/client/resources/styles/stylesheetblack.qss");
-static const QColor styleSheetWhiteShadowColor = QColor(200, 200, 200, 180);
-static const QColor styleSheetBlackShadowColor = QColor(20, 20, 20, 180);
+static const QColor styleSheetWhiteWidgetShadowColor = QColor(200, 200, 200, 180);
+static const QColor styleSheetWhiteDialogShadowColor = QColor(0, 0, 0, 180);
+static const QColor styleSheetBlackWidgetShadowColor = QColor(20, 20, 20, 180);
+static const QColor styleSheetBlackDialogShadowColor = QColor(20, 20, 20, 180);
 
 static bool darkTheme = false;
 
@@ -132,7 +137,7 @@ QIcon Utility::getIconWithColor(const QString &path, const QColor &color)
     QGraphicsScene scene;
     scene.addItem(item);
 
-    qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+    int ratio = 3;
     QPixmap pixmap(QSize(scene.width() * ratio, scene.height() * ratio));
     pixmap.fill(Qt::transparent);
 
@@ -451,14 +456,29 @@ void Utility::runSync(const QString &accountId, const QString &folderId)
     }
 }
 
-QPixmap Utility::getPixmapFromImage(const QImage &image, const QSize &size)
+QPixmap Utility::getAvatarFromImage(const QImage &image)
 {
-    return QPixmap::fromImage(image.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QPixmap originalPixmap = QPixmap::fromImage(image);
+
+    // Draw mask
+    QBitmap mask(originalPixmap.size());
+    QPainter painter(&mask);
+    painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform, true);
+    mask.fill(Qt::white);
+    painter.setBrush(Qt::black);
+    painter.drawEllipse(QPoint(mask.width() / 2, mask.height() / 2), 100, 100);
+
+    // Draw the final image.
+    originalPixmap.setMask(mask);
+
+    return originalPixmap;
 }
 
-QColor Utility::getShadowColor()
+QColor Utility::getShadowColor(bool dialog)
 {
-    return darkTheme ? styleSheetBlackShadowColor : styleSheetWhiteShadowColor;
+    return darkTheme
+            ? (dialog ? styleSheetBlackDialogShadowColor : styleSheetBlackWidgetShadowColor)
+            : (dialog ? styleSheetWhiteDialogShadowColor : styleSheetWhiteWidgetShadowColor);
 }
 
 bool Utility::isDarkTheme()
@@ -498,4 +518,50 @@ int Utility::getQFontWeightFromQSSFontWeight(int weight)
 {
     // QFont::Weight[0, 99] = font-weight[100, 900] / 9
     return weight / 9;
+}
+
+qint64 Utility::folderSize(const QString &dirPath)
+{
+    QDirIterator it(dirPath, QDirIterator::Subdirectories);
+    qint64 total = 0;
+    while (it.hasNext()) {
+        QFileInfo fileInfo(it.next());
+        total += fileInfo.size();
+    }
+
+    return total;
+}
+
+bool Utility::openFolder(const QString &dirPath)
+{
+    if (!dirPath.isEmpty()) {
+        QFileInfo fileInfo(dirPath);
+        if (fileInfo.exists()) {
+            showInFileManager(fileInfo.filePath());
+        }
+        else if (fileInfo.dir().exists()) {
+            QUrl url = getUrlFromLocalPath(fileInfo.dir().path());
+            if (url.isValid()) {
+                if (!QDesktopServices::openUrl(url)) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    return true;
+}
+
+QWidget *Utility::getTopLevelWidget(QWidget *widget)
+{
+    QWidget *topLevelWidget = widget;
+    while (topLevelWidget->parentWidget() != nullptr) {
+        topLevelWidget = topLevelWidget->parentWidget();
+    }
+    return topLevelWidget ;
 }

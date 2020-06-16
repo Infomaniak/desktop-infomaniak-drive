@@ -41,7 +41,9 @@ signals:
 
 private:
     const SynchronizedItem _item;
+    QLabel *_fileErrorLabel;
     QColor _backgroundColor;
+    bool _painted;
 
     void paintEvent(QPaintEvent* event) override;
 

@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "actionwidget.h"
 #include "guiutility.h"
 
+#include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
 #include <QPainterPath>
 #include <QPainter>
@@ -29,6 +30,7 @@ namespace KDC {
 static const int boxHMargin= 15;
 static const int boxVMargin = 5;
 static const int boxSpacing = 10;
+static const int shadowBlurRadius = 20;
 
 ActionWidget::ActionWidget(const QString &path, const QString &text, QWidget *parent)
     : ClickableWidget(parent)
@@ -60,6 +62,12 @@ ActionWidget::ActionWidget(const QString &path, const QString &text, QWidget *pa
     _actionIconLabel = new QLabel(this);
     hbox->addWidget(_actionIconLabel);
 
+    // Shadow
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
+    effect->setBlurRadius(shadowBlurRadius);
+    effect->setOffset(0);
+    setGraphicsEffect(effect);
+
     connect(this, &ActionWidget::leftIconSizeChanged, this, &ActionWidget::onLeftIconSizeChanged);
     connect(this, &ActionWidget::leftIconColorChanged, this, &ActionWidget::onLeftIconColorChanged);
     connect(this, &ActionWidget::actionIconColorChanged, this, &ActionWidget::onActionIconColorChanged);
@@ -69,6 +77,12 @@ ActionWidget::ActionWidget(const QString &path, const QString &text, QWidget *pa
 void ActionWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
+
+    // Update shadow color
+    QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
+    if (effect) {
+        effect->setColor(OCC::Utility::getShadowColor());
+    }
 
     // Draw round rectangle
     QPainterPath painterPath;

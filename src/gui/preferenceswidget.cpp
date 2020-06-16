@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "proxyserverdialog.h"
 #include "bandwidthdialog.h"
 #include "aboutdialog.h"
+#include "custommessagebox.h"
 #include "configfile.h"
 #include "guiutility.h"
 #include "common/utility.h"
@@ -40,7 +41,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QDesktopServices>
 #include <QIntValidator>
 #include <QLabel>
-#include <QMessageBox>
 
 namespace KDC {
 
@@ -156,7 +156,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     _folderConfirmationAmountLineEdit->setMaximumWidth(amountLineEditWidth);
     folderConfirmation2HBox->addWidget(_folderConfirmationAmountLineEdit);
 
-    QLabel *folderConfirmationAmountLabel = new QLabel("Mo", this);
+    QLabel *folderConfirmationAmountLabel = new QLabel("Mb", this);
     folderConfirmationAmountLabel->setObjectName("folderConfirmationAmountLabel");
     folderConfirmation2HBox->addWidget(folderConfirmationAmountLabel);
     folderConfirmation2HBox->addStretch();
@@ -296,7 +296,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     versionVBox->addWidget(versionNumberLabel);
 
     QLabel *copyrightLabel = new QLabel(QString("Copyright %1").arg(APPLICATION_VENDOR), this);
-    copyrightLabel->setObjectName("textLabel");
+    copyrightLabel->setObjectName("description");
     versionVBox->addWidget(copyrightLabel);
 
     _updateButton = new QPushButton(this);
@@ -359,7 +359,7 @@ void PreferencesWidget::onLaunchAtStartupSwitchClicked(bool checked)
 void PreferencesWidget::onDebuggingWidgetClicked()
 {
     DebuggingDialog *dialog = new DebuggingDialog(this);
-    dialog->exec();
+    dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
     OCC::ConfigFile cfg;
     _debuggingFolderLabel->setVisible(cfg.automaticLogDir());
     repaint();
@@ -368,19 +368,19 @@ void PreferencesWidget::onDebuggingWidgetClicked()
 void PreferencesWidget::onFilesToExcludeWidgetClicked()
 {
     FileExclusionDialog *dialog = new FileExclusionDialog(this);
-    dialog->exec();
+    dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
 }
 
 void PreferencesWidget::onProxyServerWidgetClicked()
 {
     ProxyServerDialog *dialog = new ProxyServerDialog(this);
-    dialog->exec();
+    dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
 }
 
 void PreferencesWidget::onBandwidthWidgetClicked()
 {
     BandwidthDialog *dialog = new BandwidthDialog(this);
-    dialog->exec();
+    dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
 }
 
 void PreferencesWidget::onLinkActivated(const QString &link)
@@ -391,17 +391,17 @@ void PreferencesWidget::onLinkActivated(const QString &link)
         if (debuggingFolderUrl.isValid()) {
             if (!QDesktopServices::openUrl(debuggingFolderUrl)) {
                 qCWarning(lcPerformancesWidget) << "QDesktopServices::openUrl failed for " << debuggingFolderUrl.toString();
-                QMessageBox msgBox(QMessageBox::Warning, QString(),
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
                             tr("Unable to open debugging folder %1.").arg(debuggingFolderUrl.toString()),
                             QMessageBox::Ok, this);
-                msgBox.setWindowModality(Qt::WindowModal);
-                msgBox.exec();
+                msgBox->exec();
             }
         }
     }
     else if (link == versionLink) {
         AboutDialog *dialog = new AboutDialog(this);
-        dialog->exec();
+        dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
     }
 }
 

@@ -20,6 +20,8 @@
 
 namespace OCC {
 
+//static const qreal zoomFactor = 1;
+
 Q_LOGGING_CATEGORY(lcWizardWebiew, "gui.wizard.webview", QtInfoMsg)
 
 
@@ -101,6 +103,8 @@ WebView::WebView(QWidget *parent)
         _profile->setHttpAcceptLanguage(acceptLanguage);
     }
 
+    //_page->setZoomFactor(zoomFactor);
+    _page->setBackgroundColor(Qt::transparent);
     _webview->setPage(_page);
     _ui.verticalLayout->addWidget(_webview);
 

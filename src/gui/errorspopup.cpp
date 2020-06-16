@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "errorspopup.h"
 #include "bottomwidget.h"
-#include "customtoolbutton.h"
+#include "clickablewidget.h"
 #include "guiutility.h"
 
 #include <QBoxLayout>
@@ -73,27 +73,31 @@ ErrorsPopup::ErrorsPopup(const QList<DriveError> &driveErrorList, QPoint positio
 
     // Errors
     for (auto const &driveError : driveErrorList) {
+        ClickableWidget *driveWidget = new ClickableWidget(this);
+        driveWidget->setProperty(actionTypeProperty.c_str(), driveError.accountId);
+        mainVBox->addWidget(driveWidget);
+
         QHBoxLayout *driveErrorHBox = new QHBoxLayout(this);
         driveErrorHBox->setContentsMargins(0, 0, 0, 0);
         driveErrorHBox->addSpacing(hSpacing);
-        mainVBox->addLayout(driveErrorHBox);
+        driveWidget->setLayout(driveErrorHBox);
 
         QLabel *warningIconLabel = new QLabel(this);
         warningIconLabel->setObjectName("warningIconLabel");
         driveErrorHBox->addWidget(warningIconLabel);
 
         QLabel *driveNameLabel = new QLabel(this);
-        QString text = driveError.accountName + QString(tr(" (%n error(s))", "Number of errors", driveError.errorsCount));
+        QString text = driveError.accountName + QString(tr(" (%n warning(s) or error(s))", "Number of warnings or errors", driveError.errorsCount));
         driveNameLabel->setText(text);
+        driveNameLabel->setWordWrap(true);
         driveErrorHBox->addWidget(driveNameLabel);
         driveErrorHBox->addStretch();
 
-        CustomToolButton *actionButton = new CustomToolButton(this);
-        actionButton->setIconPath(":/client/resources/icons/actions/arrow-right.svg");
-        actionButton->setProperty(actionTypeProperty.c_str(), driveError.accountId);
-        driveErrorHBox->addWidget(actionButton);
+        QLabel *arrowIconLabel = new QLabel(this);
+        arrowIconLabel->setObjectName("arrowIconLabel");
+        driveErrorHBox->addWidget(arrowIconLabel);
 
-        connect(actionButton, &CustomToolButton::clicked, this, &ErrorsPopup::onActionButtonClicked);
+        connect(driveWidget, &ClickableWidget::clicked, this, &ErrorsPopup::onActionButtonClicked);
     }
 
     // Shadow
@@ -112,7 +116,7 @@ void ErrorsPopup::paintEvent(QPaintEvent *event)
     // Update shadow color
     QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
     if (effect) {
-        effect->setColor(OCC::Utility::getShadowColor());
+        effect->setColor(OCC::Utility::getShadowColor(true));
     }
 
     // Draw round rectangle
@@ -138,10 +142,19 @@ void ErrorsPopup::setWarningIcon()
     }
 }
 
-void ErrorsPopup::onActionButtonClicked(bool checked)
+void ErrorsPopup::setArrowIcon()
 {
-    Q_UNUSED(checked)
+    if (_arrowIconSize != QSize() && _arrowIconColor != QColor()) {
+        QList<QLabel *> labelList = findChildren<QLabel *>("arrowIconLabel");
+        for (QLabel *label : labelList) {
+            label->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/arrow-right.svg", _arrowIconColor)
+                             .pixmap(_arrowIconSize));
+        }
+    }
+}
 
+void ErrorsPopup::onActionButtonClicked()
+{
     QString accountId = qvariant_cast<QString>(sender()->property(actionTypeProperty.c_str()));
     emit accountSelected(accountId);
     done(QDialog::Accepted);

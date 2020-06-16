@@ -124,13 +124,23 @@ set(client_SRCS
     aboutdialog.cpp
     accountinfo.cpp
     accountitem.cpp
-    accountitemwidget.cpp
     actionwidget.cpp
+    adddriveconfirmationwidget.cpp
+    adddrivelocalfolderwidget.cpp
+    adddriveloginwidget.cpp
+    adddriveserverfolderswidget.cpp
+    adddrivestartwidget.cpp
+    adddrivewizard.cpp
     bandwidthdialog.cpp
+    basefoldertreeitemwidget.cpp
+    bigfoldersdialog.cpp
     bottomwidget.cpp
     buttonsbarwidget.cpp
     clickablewidget.cpp
+    confirmsynchronizationdialog.cpp
     customdialog.cpp
+    custommessagebox.cpp
+    customproxystyle.cpp
     custompushbutton.cpp
     customtogglepushbutton.cpp
     customtoolbutton.cpp
@@ -139,11 +149,10 @@ set(client_SRCS
     customradiobutton.cpp
     customswitch.cpp
     customtooltip.cpp
+    customtreewidgetitem.cpp
     customsystembar.cpp
     debuggingdialog.cpp
-    drivemenubarwidget.cpp
     drivepreferenceswidget.cpp
-    driveswidget.cpp
     driveselectionwidget.cpp
     erroritemwidget.cpp
     errorsmenubarwidget.cpp
@@ -151,15 +160,20 @@ set(client_SRCS
     fileexclusiondialog.cpp
     fileexclusionnamedialog.cpp
     folderinfo.cpp
+    folderitemwidget.cpp
+    foldertreeitemwidget.cpp
     halfroundrectwidget.cpp
+    localfolderdialog.cpp
     mainmenubarwidget.cpp
     menuitemwidget.cpp
     menuwidget.cpp
     parametersdialog.cpp
     preferencesblocwidget.cpp
+    preferencesmenubarwidget.cpp
     preferenceswidget.cpp
     progressbarwidget.cpp
     proxyserverdialog.cpp
+    serverbasefolderdialog.cpp
     serverfoldersdialog.cpp
     statusbarwidget.cpp
     synchronizeditem.cpp
