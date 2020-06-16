@@ -28,6 +28,8 @@
 #include "syncfileitem.h"
 #include "syncresult.h"
 
+static const QString dirSeparator = "/";
+
 namespace OCC {
 namespace Utility {
     static const QString linkStyle = QString("color:#0098FF; font-weight:450; text-decoration:none;");

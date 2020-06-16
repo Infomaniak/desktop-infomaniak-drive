@@ -179,7 +179,7 @@ void AddDriveServerFoldersWidget::initUI()
 void AddDriveServerFoldersWidget::updateUI()
 {
     // Available space
-    qint64 freeBytes = OCC::Utility::freeDiskSpace(QDir::separator());
+    qint64 freeBytes = OCC::Utility::freeDiskSpace(dirSeparator);
     _availableSpaceTextLabel->setText(tr("Space available on your computer : %1")
                                       .arg(OCC::Utility::octetsToString(freeBytes)));
 }

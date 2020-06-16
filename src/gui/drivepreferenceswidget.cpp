@@ -682,13 +682,13 @@ bool DrivePreferencesWidget::createMissingFolders(const QString &folderBasePath,
     }
 
     // Create server folders
-    QStringList folderBasePaths = folderBasePath.split(QDir::separator());
+    QStringList folderBasePaths = folderBasePath.split(dirSeparator);
     int folderBasePathsCount = folderBasePaths.size();
-    QStringList folderPaths = folderPath.split(QDir::separator());
+    QStringList folderPaths = folderPath.split(dirSeparator);
     int folderPathsCount = folderPaths.size();
     QString folderToCreate(folderBasePath);
     for (int i = folderBasePathsCount; i < folderPathsCount; i++) {
-        folderToCreate += QDir::separator() + folderPaths[i];
+        folderToCreate += dirSeparator + folderPaths[i];
         if (createFolder(folderToCreate) == JobResult::Yes) {
             qCDebug(lcDrivePreferencesWidget) << "Folder created: " << folderToCreate;
         }
@@ -726,7 +726,7 @@ bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, 
         folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);
         OCC::ConfigFile cfg;
         if (!cfg.newBigFolderSizeLimit().first) {
-            folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, QStringList() << QDir::separator());
+            folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, QStringList() << dirSeparator);
         }
     }
 

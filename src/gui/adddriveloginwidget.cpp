@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "adddriveloginwidget.h"
 #include "creds/webflowcredentials.h"
+#include "guiutility.h"
 
 #include <QBoxLayout>
 #include <QDir>
@@ -50,8 +51,8 @@ AddDriveLoginWidget::AddDriveLoginWidget(QWidget *parent)
 void AddDriveLoginWidget::login(const QString &serverUrl)
 {
     _loginUrl = serverUrl;
-    if (!_loginUrl.endsWith(QDir::separator())) {
-        _loginUrl += QDir::separator();
+    if (!_loginUrl.endsWith(dirSeparator)) {
+        _loginUrl += dirSeparator;
     }
     _loginUrl += "index.php/login/flow";
 

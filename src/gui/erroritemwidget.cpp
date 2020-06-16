@@ -104,7 +104,7 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
 
     QLabel *filePathLabel = new QLabel(this);
     filePathLabel->setObjectName("filePathLabel");
-    QString filePath = accountInfo._name + QDir::separator() + fileInfo.path();
+    QString filePath = accountInfo._name + dirSeparator + fileInfo.path();
     /*if (filePath.size() > fileNameMaxSize) {
         filePath = filePath.left(fileNameMaxSize) + "...";
     }*/

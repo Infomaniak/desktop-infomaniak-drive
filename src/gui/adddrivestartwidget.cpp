@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "adddrivestartwidget.h"
 #include "custommessagebox.h"
+#include "guiutility.h"
 
 #include <QBoxLayout>
 #include <QDir>
@@ -94,7 +95,7 @@ void AddDriveStartWidget::onUrlChanged(const QString &text)
         if (text.endsWith(webDavPath)) {
             newUrl.chop(webDavPath.length());
         }
-        if (webDavPath.endsWith(QDir::separator())) {
+        if (webDavPath.endsWith(dirSeparator)) {
             webDavPath.chop(1); // cut off the slash
             if (text.endsWith(webDavPath)) {
                 newUrl.chop(webDavPath.length());

@@ -77,7 +77,7 @@ void BaseFolderTreeItemWidget::loadSubFolders()
 void BaseFolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size)
 {
     if (pathTrail.size() == 0) {
-        if (path.endsWith(QDir::separator())) {
+        if (path.endsWith(dirSeparator)) {
             path.chop(1);
         }
         parent->setData(TreeWidgetColumn::Folder, dirRole, path);
@@ -215,7 +215,7 @@ OCC::AccountPtr BaseFolderTreeItemWidget::getAccountPtr()
 QString BaseFolderTreeItemWidget::getFolderPath()
 {
     QString folderPath = OCC::Theme::instance()->defaultServerFolder();
-    return folderPath.startsWith(QDir::separator()) ? folderPath.mid(1) : folderPath;
+    return folderPath.startsWith(dirSeparator) ? folderPath.mid(1) : folderPath;
 }
 
 void BaseFolderTreeItemWidget::onUpdateDirectories(QStringList list)
@@ -226,12 +226,12 @@ void BaseFolderTreeItemWidget::onUpdateDirectories(QStringList list)
 
     QUrl url = getAccountPtr() ? getAccountPtr()->davUrl() : QUrl();
     QString pathToRemove = url.path();
-    if (!pathToRemove.endsWith(QDir::separator())) {
-        pathToRemove.append(QDir::separator());
+    if (!pathToRemove.endsWith(dirSeparator)) {
+        pathToRemove.append(dirSeparator);
     }
     pathToRemove.append(getFolderPath());
-    if (!pathToRemove.endsWith(QDir::separator())) {
-        pathToRemove.append(QDir::separator());
+    if (!pathToRemove.endsWith(dirSeparator)) {
+        pathToRemove.append(dirSeparator);
     }
 
     // Check for excludes.
@@ -272,15 +272,15 @@ void BaseFolderTreeItemWidget::onUpdateDirectories(QStringList list)
     foreach (QString path, list) {
         auto size = job ? job->_sizes.value(path) : 0;
         path.remove(pathToRemove);
-        QStringList paths = path.split(QDir::separator());
+        QStringList paths = path.split(dirSeparator);
         if (paths.last().isEmpty()) {
             paths.removeLast();
         }
         if (paths.isEmpty()) {
             continue;
         }
-        if (!path.endsWith(QDir::separator())) {
-            path.append(QDir::separator());
+        if (!path.endsWith(dirSeparator)) {
+            path.append(dirSeparator);
         }
         insertPath(root, paths, path, size);
     }
@@ -311,7 +311,7 @@ void BaseFolderTreeItemWidget::onItemExpanded(QTreeWidgetItem *item)
 
     QString folderPath = getFolderPath();
     if (!folderPath.isEmpty()) {
-        folderPath.append(QDir::separator());
+        folderPath.append(dirSeparator);
     }
     folderPath.append(dir);
 
@@ -386,7 +386,7 @@ void BaseFolderTreeItemWidget::onItemChanged(QTreeWidgetItem *item, int column)
     if (column == TreeWidgetColumn::Folder && item->flags() & Qt::ItemIsEditable) {
         // Set path
         QString parentPath = item->parent()->data(TreeWidgetColumn::Folder, dirRole).toString();
-        QString path = parentPath + QDir::separator() + item->text(TreeWidgetColumn::Folder);
+        QString path = parentPath + dirSeparator + item->text(TreeWidgetColumn::Folder);
         item->setData(TreeWidgetColumn::Folder, dirRole, path);
         QString parentBasePath = item->parent()->data(TreeWidgetColumn::Folder, baseDirRole).toString();
         item->setData(TreeWidgetColumn::Folder, baseDirRole, parentBasePath);
