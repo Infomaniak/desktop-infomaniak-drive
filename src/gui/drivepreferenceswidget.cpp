@@ -1088,11 +1088,7 @@ void DrivePreferencesWidget::onUnsyncTriggered(const QString &folderId)
             ASSERT(folderBloc)
 
             // Remove folder
-            folderBloc->setEnabled(false);
-            FolderItemWidget *itemWidget = blocItemWidget((PreferencesBlocWidget *) sender()->parent());
-            if (itemWidget) {
-                itemWidget->setDeleting();
-            }
+            folderBloc->setVisible(false);
             folderMan->removeFolder(folder);
         }
     }
