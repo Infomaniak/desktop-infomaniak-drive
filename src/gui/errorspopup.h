@@ -49,11 +49,13 @@ signals:
     void accountSelected(const QString &accountId);
 
 private:
+    QPoint _position;
     QColor _backgroundColor;
     QSize _warningIconSize;
     QColor _warningIconColor;
     QSize _arrowIconSize;
     QColor _arrowIconColor;
+    bool _painted;
 
     void paintEvent(QPaintEvent *event) override;
 

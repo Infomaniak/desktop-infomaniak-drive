@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QLabel>
 #include <QPainter>
 #include <QPainterPath>
+#include <QScreen>
 
 namespace KDC {
 
@@ -46,9 +47,11 @@ const std::string actionTypeProperty = "actionType";
 
 ErrorsPopup::ErrorsPopup(const QList<DriveError> &driveErrorList, QPoint position, QWidget *parent)
     : QDialog(parent)
+    , _position(position)
     , _backgroundColor(QColor())
     , _warningIconSize(QSize())
     , _warningIconColor(QColor())
+    , _painted(false)
 {
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -105,13 +108,22 @@ ErrorsPopup::ErrorsPopup(const QList<DriveError> &driveErrorList, QPoint positio
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
     setGraphicsEffect(effect);
-
-    move(position + QPoint(menuOffsetX, menuOffsetY));
 }
 
 void ErrorsPopup::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
+
+    if (!_painted) {
+        // Move menu
+        _painted = true;
+        QScreen *screen = QGuiApplication::screenAt(_position);
+        Q_CHECK_PTR(screen);
+        QRect displayRect = screen->geometry();
+        int delta = displayRect.right() - (_position.x() + menuOffsetX + geometry().width());
+        QPoint offset = QPoint(menuOffsetX + (delta > 0 ? 0 : delta), menuOffsetY);
+        move(_position + offset);
+    }
 
     // Update shadow color
     QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
