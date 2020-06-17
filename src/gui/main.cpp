@@ -129,12 +129,16 @@ int main(int argc, char **argv)
         }
 
         QStringList args = app.arguments();
-        if (args.size() == 2 && args[1] == "settings") {
+        qCInfo(lcApplication) << "args size:" << args.size();
+        for (int i = 0; i < args.size(); i++) {
+            qCInfo(lcApplication) << "args " << i << ": " << args[i];
+        }
+        if (args.size() == 2 && args[1] == "--settings") {
             if (!app.sendMessage(QLatin1String("MSG_SHOWSETTINGS"))) {
                 return -1;
             }
         }
-        else if (args.size() == 2 && args[1] == "synthesis") {
+        else if (args.size() == 2 && args[1] == "--synthesis") {
             if (!app.sendMessage(QLatin1String("MSG_SHOWSYNTHESIS"))) {
                 return -1;
             }

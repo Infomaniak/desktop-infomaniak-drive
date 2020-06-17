@@ -72,6 +72,8 @@ namespace {
     static const char optionsC[] =
         "Options:\n"
         "  -h --help            : show this help screen.\n"
+        "  --settings           : show the Settings window (if the application is running).\n"
+        "  --synthesis          : show the Synthesis window (if the application is running).\n"
         "  --logwindow          : open a window to show log output.\n"
         "  --logfile <filename> : write log output to file <filename>.\n"
         "  --logfile -          : write log output to stdout.\n"
@@ -616,6 +618,8 @@ void Application::parseOptions(const QStringList &options)
         } else if (option.endsWith(QStringLiteral(APPLICATION_DOTVIRTUALFILE_SUFFIX))) {
             // virtual file, open it after the Folder were created (if the app is not terminated)
             QTimer::singleShot(0, this, [this, option] { openVirtualFile(option); });
+        } else if (option == QLatin1String("--settings")) {
+        } else if (option == QLatin1String("--synthesis")) {
         } else {
             showHint("Unrecognized option '" + option.toStdString() + "'");
         }
