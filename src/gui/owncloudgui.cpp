@@ -130,10 +130,7 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
                 raiseDialog(shareDialog);
             }
         } else {
-            if (_synthesisPopover) {
-                _synthesisPopover->setPosition(_tray->geometry());
-                raiseDialog(_synthesisPopover.get());
-            }
+            showSynthesisDialog();
         }
     }
     // FIXME: Also make sure that any auto updater dialogue https://github.com/owncloud/client/issues/5613
@@ -305,6 +302,14 @@ void ownCloudGui::hideAndShowTray()
 {
     _tray->hide();
     _tray->show();
+}
+
+void ownCloudGui::showSynthesisDialog()
+{
+    if (_synthesisPopover) {
+        _synthesisPopover->setPosition(_tray->geometry());
+        raiseDialog(_synthesisPopover.get());
+    }
 }
 
 static QByteArray envForceQDBusTrayWorkaround()

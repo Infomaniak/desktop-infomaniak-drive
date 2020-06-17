@@ -80,7 +80,7 @@ ErrorsPopup::ErrorsPopup(const QList<DriveError> &driveErrorList, QPoint positio
         driveWidget->setProperty(actionTypeProperty.c_str(), driveError.accountId);
         mainVBox->addWidget(driveWidget);
 
-        QHBoxLayout *driveErrorHBox = new QHBoxLayout(this);
+        QHBoxLayout *driveErrorHBox = new QHBoxLayout();
         driveErrorHBox->setContentsMargins(0, 0, 0, 0);
         driveErrorHBox->addSpacing(hSpacing);
         driveWidget->setLayout(driveErrorHBox);

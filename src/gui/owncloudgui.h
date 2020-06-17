@@ -59,6 +59,7 @@ public:
     static QSize settingsDialogSize() { return QSize(800, 500); }
     void setupOverlayIcons();
     void hideAndShowTray();
+    void showSynthesisDialog();
 
 signals:
     void setupProxy();

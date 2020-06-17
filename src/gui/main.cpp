@@ -129,12 +129,20 @@ int main(int argc, char **argv)
         }
 
         QStringList args = app.arguments();
-        if (args.size() > 1) {
+        if (args.size() == 2 && args[1] == "settings") {
+            if (!app.sendMessage(QLatin1String("MSG_SHOWSETTINGS"))) {
+                return -1;
+            }
+        }
+        else if (args.size() == 2 && args[1] == "synthesis") {
+            if (!app.sendMessage(QLatin1String("MSG_SHOWSYNTHESIS"))) {
+                return -1;
+            }
+        }
+        else if (args.size() > 1) {
             QString msg = args.join(QLatin1String("|"));
             if (!app.sendMessage(QLatin1String("MSG_PARSEOPTIONS:") + msg))
                 return -1;
-        } else if (!app.sendMessage(QLatin1String("MSG_SHOWSETTINGS"))) {
-            return -1;
         }
         return 0;
     }

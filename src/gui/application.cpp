@@ -378,6 +378,11 @@ Application::~Application()
     AccountManager::instance()->shutdown();
 }
 
+void Application::showSynthesisDialog()
+{
+    _gui->showSynthesisDialog();
+}
+
 void Application::slotAccountStateRemoved(AccountState *accountState)
 {
     if (_gui) {
@@ -544,6 +549,16 @@ void Application::slotParseMessage(const QString &msg, QObject *)
             return;
         }
         showSettingsDialog();
+    }
+    else if (msg.startsWith(QLatin1String("MSG_SHOWSYNTHESIS"))) {
+        qCInfo(lcApplication) << "Running for" << _startedAt.elapsed() / 1000.0 << "sec";
+        if (_startedAt.elapsed() < 10 * 1000) {
+            // This call is mirrored with the one in int main()
+            qCWarning(lcApplication) << "Ignoring MSG_SHOWSETTINGS, possibly double-invocation of client via session restore and auto start";
+            return;
+        }
+
+        showSynthesisDialog();
     }
 }
 

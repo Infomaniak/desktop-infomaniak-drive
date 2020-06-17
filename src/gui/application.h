@@ -67,6 +67,7 @@ public:
     void showVersion();
 
     void showSettingsDialog();
+    void showSynthesisDialog();
     void setAlert(bool alert);
     bool getAlert();
 
