@@ -151,6 +151,7 @@ set(client_SRCS
     customtooltip.cpp
     customtreewidgetitem.cpp
     customsystembar.cpp
+    customwordwraplabel.cpp
     debuggingdialog.cpp
     drivepreferenceswidget.cpp
     driveselectionwidget.cpp

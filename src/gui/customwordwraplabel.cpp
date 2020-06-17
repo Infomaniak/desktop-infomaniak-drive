@@ -17,43 +17,33 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#pragma once
-
-#include "synchronizeditem.h"
 #include "customwordwraplabel.h"
-#include "accountinfo.h"
 
-#include <QLabel>
-#include <QWidget>
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QRect>
+#include <QString>
 
 namespace KDC {
 
-class ErrorItemWidget : public QWidget
+CustomWordWrapLabel::CustomWordWrapLabel(QWidget *parent, Qt::WindowFlags f)
+    : QLabel(parent, f)
 {
-    Q_OBJECT
-
-    Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
-
-public:
-    explicit ErrorItemWidget(const SynchronizedItem &item, const AccountInfo &accountInfo, QWidget *parent = nullptr);
-
-signals:
-    void openFolder(const QString &filePath);
-
-private:
-    const SynchronizedItem _item;
-    CustomWordWrapLabel *_fileErrorLabel;
-    QColor _backgroundColor;
-    bool _painted;
-
-    void paintEvent(QPaintEvent* event) override;
-
-    inline QColor backgroundColor() const { return _backgroundColor; }
-    inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
-
-private slots:
-    void onLinkActivated(const QString &link);
-};
-
+    setWordWrap(true);
 }
 
+CustomWordWrapLabel::CustomWordWrapLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)
+    : QLabel(text, parent, f)
+{
+    setWordWrap(true);
+}
+
+QSize CustomWordWrapLabel::sizeHint() const
+{
+    QFontMetrics metrics(font());
+    QRect textRect = metrics.boundingRect(QApplication::desktop()->geometry(), alignment() | Qt::TextWordWrap, text());
+    return QSize(textRect.width() + contentsMargins().left() + contentsMargins().right(),
+                 textRect.height() + contentsMargins().top() + contentsMargins().bottom());
+}
+
+}

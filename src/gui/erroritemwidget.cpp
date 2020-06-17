@@ -84,10 +84,9 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     fileNameLabel->setWordWrap(true);
     vBoxMiddle->addWidget(fileNameLabel);
 
-    _fileErrorLabel = new QLabel(this);
+    _fileErrorLabel = new CustomWordWrapLabel(this);
     _fileErrorLabel->setObjectName("fileErrorLabel");
     _fileErrorLabel->setText(_item.error());
-    _fileErrorLabel->setWordWrap(true);
     _fileErrorLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
     vBoxMiddle->addWidget(_fileErrorLabel);
     vBoxMiddle->setStretchFactor(_fileErrorLabel, 1);
@@ -143,13 +142,13 @@ void ErrorItemWidget::paintEvent(QPaintEvent *event)
     if (!_painted) {
         _painted = true;
         // Adjust height (Qt bug)
-        QRect textRect = _fileErrorLabel->fontMetrics().boundingRect(_fileErrorLabel->text());
+        /*QRect textRect = _fileErrorLabel->fontMetrics().boundingRect(_fileErrorLabel->text());
         QRect labelRect = _fileErrorLabel->rect();
         Q_ASSERT(labelRect.width() > 0);
         int nbLines = textRect.width() / labelRect.width() + 1;
         int deltaHeight = labelRect.height() - nbLines * textRect.height();
         _fileErrorLabel->setFixedHeight(labelRect.height() - deltaHeight);
-        setFixedHeight(height() - deltaHeight);
+        setFixedHeight(height() - deltaHeight);*/
     }
 
     // Update shadow color

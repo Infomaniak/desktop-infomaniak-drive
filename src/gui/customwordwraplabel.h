@@ -19,40 +19,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #pragma once
 
-#include "synchronizeditem.h"
-#include "customwordwraplabel.h"
-#include "accountinfo.h"
-
 #include <QLabel>
-#include <QWidget>
+#include <QSize>
 
 namespace KDC {
 
-class ErrorItemWidget : public QWidget
+class CustomWordWrapLabel : public QLabel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor)
-
 public:
-    explicit ErrorItemWidget(const SynchronizedItem &item, const AccountInfo &accountInfo, QWidget *parent = nullptr);
-
-signals:
-    void openFolder(const QString &filePath);
-
-private:
-    const SynchronizedItem _item;
-    CustomWordWrapLabel *_fileErrorLabel;
-    QColor _backgroundColor;
-    bool _painted;
-
-    void paintEvent(QPaintEvent* event) override;
-
-    inline QColor backgroundColor() const { return _backgroundColor; }
-    inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
-
-private slots:
-    void onLinkActivated(const QString &link);
+    explicit CustomWordWrapLabel(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+    explicit CustomWordWrapLabel(const QString &text, QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+    QSize sizeHint() const override;
 };
 
 }
