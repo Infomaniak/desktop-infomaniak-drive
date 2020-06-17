@@ -159,11 +159,6 @@ void FolderItemWidget::setUpdateWidgetVisible(bool visible)
     _updateWidget->setVisible(visible);
 }
 
-void FolderItemWidget::setDeleting()
-{
-    _nameLabel->setText(_folderInfo->_name + tr(" (Deleting...)"));
-}
-
 void FolderItemWidget::setExpandButton()
 {
     _expandButton->hide();

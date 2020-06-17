@@ -38,7 +38,6 @@ public:
     inline QString folderId() const { return _folderId; };
     void updateItem(const FolderInfo *folderInfo);
     void setUpdateWidgetVisible(bool visible);
-    void setDeleting();
 
 signals:
     void runSync(const QString &folderId);
