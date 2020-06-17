@@ -36,15 +36,17 @@ class ErrorItemWidget : public QWidget
 
 public:
     explicit ErrorItemWidget(const SynchronizedItem &item, const AccountInfo &accountInfo, QWidget *parent = nullptr);
+    QSize sizeHint() const override;
 
 signals:
     void openFolder(const QString &filePath);
 
 private:
     const SynchronizedItem _item;
+    QLabel *_fileNameLabel;
     CustomWordWrapLabel *_fileErrorLabel;
+    QLabel *_filePathLabel;
     QColor _backgroundColor;
-    bool _painted;
 
     void paintEvent(QPaintEvent* event) override;
 

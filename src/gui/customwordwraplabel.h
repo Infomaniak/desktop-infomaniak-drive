@@ -32,6 +32,10 @@ public:
     explicit CustomWordWrapLabel(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     explicit CustomWordWrapLabel(const QString &text, QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     QSize sizeHint() const override;
+    inline void setMaxWidth(int width) { _maxWidth = width; };
+
+private:
+    int _maxWidth;
 };
 
 }

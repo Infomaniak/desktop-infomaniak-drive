@@ -28,22 +28,29 @@ namespace KDC {
 
 CustomWordWrapLabel::CustomWordWrapLabel(QWidget *parent, Qt::WindowFlags f)
     : QLabel(parent, f)
+    , _maxWidth(0)
 {
     setWordWrap(true);
 }
 
 CustomWordWrapLabel::CustomWordWrapLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)
     : QLabel(text, parent, f)
+    , _maxWidth(0)
 {
     setWordWrap(true);
 }
 
 QSize CustomWordWrapLabel::sizeHint() const
 {
-    QFontMetrics metrics(font());
-    QRect textRect = metrics.boundingRect(QApplication::desktop()->geometry(), alignment() | Qt::TextWordWrap, text());
-    return QSize(textRect.width() + contentsMargins().left() + contentsMargins().right(),
-                 textRect.height() + contentsMargins().top() + contentsMargins().bottom());
+    if (_maxWidth) {
+        QFontMetrics metrics(font());
+        QRect textRect = metrics.boundingRect(QApplication::desktop()->geometry(), alignment() | Qt::TextWordWrap, text());
+        int nbLines = textRect.width() / _maxWidth + 1;
+        return QSize(QLabel::sizeHint().width(),
+                     nbLines * textRect.height() + contentsMargins().top() + contentsMargins().bottom());
+
+    }
+    return QLabel::sizeHint();
 }
 
 }

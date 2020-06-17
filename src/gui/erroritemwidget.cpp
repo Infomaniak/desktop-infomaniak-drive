@@ -38,14 +38,16 @@ static const int boxHSpacing = 10;
 static const int boxVSpacing = 10;
 static const int shadowBlurRadius = 20;
 static const QSize statusIconSize = QSize(15, 15);
+static const int fileErrorLabelMaxWidth = 375;
 static const QString dateFormat = "d MMM yyyy - HH:mm";
 
 ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo &accountInfo, QWidget *parent)
     : QWidget(parent)
     , _item(item)
+    , _fileNameLabel(nullptr)
     , _fileErrorLabel(nullptr)
+    , _filePathLabel(nullptr)
     , _backgroundColor(QColor())
-    , _painted(false)
 {
     setContentsMargins(hMargin, vMargin, hMargin, vMargin);
 
@@ -73,19 +75,20 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     hBox->addLayout(vBoxMiddle);
     hBox->setStretchFactor(vBoxMiddle, 1);
 
-    QLabel *fileNameLabel = new QLabel(this);
-    fileNameLabel->setObjectName("fileNameLabel");
+    _fileNameLabel = new QLabel(this);
+    _fileNameLabel->setObjectName("fileNameLabel");
     QFileInfo fileInfo(_item.filePath());
     QString fileName = fileInfo.fileName();
     /*if (fileName.size() > fileNameMaxSize) {
         fileName = fileName.left(fileNameMaxSize) + "...";
     }*/
-    fileNameLabel->setText(fileName);
-    fileNameLabel->setWordWrap(true);
-    vBoxMiddle->addWidget(fileNameLabel);
+    _fileNameLabel->setText(fileName);
+    _fileNameLabel->setWordWrap(true);
+    vBoxMiddle->addWidget(_fileNameLabel);
 
     _fileErrorLabel = new CustomWordWrapLabel(this);
     _fileErrorLabel->setObjectName("fileErrorLabel");
+    _fileErrorLabel->setMaxWidth(fileErrorLabelMaxWidth);
     _fileErrorLabel->setText(_item.error());
     _fileErrorLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
     vBoxMiddle->addWidget(_fileErrorLabel);
@@ -101,18 +104,18 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
                               .pixmap(statusIconSize));
     hBoxFilePath->addWidget(driveIconLabel);
 
-    QLabel *filePathLabel = new QLabel(this);
-    filePathLabel->setObjectName("filePathLabel");
+    _filePathLabel = new QLabel(this);
+    _filePathLabel->setObjectName("filePathLabel");
     QString filePath = accountInfo._name + dirSeparator + fileInfo.path();
     /*if (filePath.size() > fileNameMaxSize) {
         filePath = filePath.left(fileNameMaxSize) + "...";
     }*/
-    filePathLabel->setText(QString("<a style=\"%1\" href=\"ref\">%2</a>")
+    _filePathLabel->setText(QString("<a style=\"%1\" href=\"ref\">%2</a>")
                            .arg(OCC::Utility::linkStyle)
                            .arg(filePath));
-    filePathLabel->setWordWrap(true);
-    hBoxFilePath->addWidget(filePathLabel);
-    hBoxFilePath->setStretchFactor(filePathLabel, 1);
+    _filePathLabel->setWordWrap(true);
+    hBoxFilePath->addWidget(_filePathLabel);
+    hBoxFilePath->setStretchFactor(_filePathLabel, 1);
 
     // Right box
     QVBoxLayout *vBoxRight = new QVBoxLayout();
@@ -132,24 +135,21 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     effect->setOffset(0);
     setGraphicsEffect(effect);
 
-    connect(filePathLabel, &QLabel::linkActivated, this, &ErrorItemWidget::onLinkActivated);
+    connect(_filePathLabel, &QLabel::linkActivated, this, &ErrorItemWidget::onLinkActivated);
+}
+
+QSize ErrorItemWidget::sizeHint() const
+{
+    int height = 2 * vMargin + 2 * boxVMargin + 2 * boxVSpacing
+            + _fileNameLabel->sizeHint().height()
+            + _fileErrorLabel->sizeHint().height()
+            + qMax(statusIconSize.height(), _filePathLabel->sizeHint().height());
+    return QSize(width(), height);
 }
 
 void ErrorItemWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-
-    if (!_painted) {
-        _painted = true;
-        // Adjust height (Qt bug)
-        /*QRect textRect = _fileErrorLabel->fontMetrics().boundingRect(_fileErrorLabel->text());
-        QRect labelRect = _fileErrorLabel->rect();
-        Q_ASSERT(labelRect.width() > 0);
-        int nbLines = textRect.width() / labelRect.width() + 1;
-        int deltaHeight = labelRect.height() - nbLines * textRect.height();
-        _fileErrorLabel->setFixedHeight(labelRect.height() - deltaHeight);
-        setFixedHeight(height() - deltaHeight);*/
-    }
 
     // Update shadow color
     QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect *>(graphicsEffect());
