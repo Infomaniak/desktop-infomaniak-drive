@@ -53,9 +53,6 @@ private:
     QVBoxLayout *_layout;
 
     void paintEvent(QPaintEvent *event) override;
-#ifdef Q_OS_LINUX
-    bool event(QEvent *event) override;
-#endif
 
     inline QColor backgroundColor() const { return _backgroundColor; }
     inline void setBackgroundColor(const QColor &value) { _backgroundColor = value; }
