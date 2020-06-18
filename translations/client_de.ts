@@ -738,10 +738,6 @@ This action will abort any currently running synchronization.</source>
         <source>Remove advanced synchronization</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source> (Deleting...)</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>KDC::LocalFolderDialog</name>

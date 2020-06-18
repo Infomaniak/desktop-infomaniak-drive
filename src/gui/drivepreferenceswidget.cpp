@@ -1191,7 +1191,8 @@ void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
         if (folder) {
             bool ok;
             QStringList oldBlackList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
-            QSet<QString> oldBlackListSet(oldBlackList.begin(), oldBlackList.end());
+            //QSet<QString> oldBlackListSet(oldBlackList.begin(), oldBlackList.end());
+            QSet<QString> oldBlackListSet = oldBlackList.toSet();
             if (!ok) {
                 return;
             }
@@ -1205,7 +1206,8 @@ void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
 
             // The part that changed should not be read from the DB on next sync because there might be new folders
             // (the ones that are no longer in the blacklist)
-            QSet<QString> blackListSet(blackList.begin(), blackList.end());
+            //QSet<QString> blackListSet(blackList.begin(), blackList.end());
+            QSet<QString> blackListSet = blackList.toSet();
             QSet<QString> changes = (oldBlackListSet - blackListSet) + (blackListSet - oldBlackListSet);
             foreach (const auto &it, changes) {
                 folder->journalDb()->schedulePathForRemoteDiscovery(it);

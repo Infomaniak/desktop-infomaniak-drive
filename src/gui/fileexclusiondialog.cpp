@@ -202,10 +202,10 @@ void FileExclusionDialog::readIgnoreFile(const QString &file, bool global)
         QString line = QString::fromUtf8(ignores.readLine());
 
         // Remove end of line
-        if (line[line.count() - 1] == '\n') {
+        if (line.count() > 0 && line[line.count() - 1] == '\n') {
             line.chop(1);
         }
-        if (line[line.count() - 1] == '\r') {
+        if (line.count() > 0 && line[line.count() - 1] == '\r') {
             line.chop(1);
         }
 
