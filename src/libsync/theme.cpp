@@ -127,7 +127,7 @@ QIcon Theme::applicationIcon() const
 QIcon Theme::svgThemeIcon(const QString &name) const
 {
     QColor bg(qApp->palette().base().color());
-    QString flavor = CommonUtility::colorThresholdCheck(bg.red(), bg.green(), bg.blue()) > 0.5
+    QString flavor = CommonUtility::colorThresholdCheck(bg.red(), bg.green(), bg.blue())
             ? QLatin1String("white")
             : QLatin1String("black");
 

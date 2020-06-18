@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "fileexclusionnamedialog.h"
+#include "customproxystyle.h"
 
 #include <QBoxLayout>
 
@@ -42,6 +43,8 @@ FileExclusionNameDialog::FileExclusionNameDialog(QWidget *parent)
     mainLayout->addStretch();
 
     _fileNameLineEdit = new QLineEdit(this);
+    _fileNameLineEdit->setProperty(CustomProxyStyle::focusRectangleProperty, true);
+    _fileNameLineEdit->setFocus();
     fileNameHBox->addWidget(_fileNameLineEdit);
 
     // Add dialog buttons

@@ -167,6 +167,7 @@ void LocalFolderDialog::updateUI()
     _folderSelectionWidget->setVisible(!ok);
     _folderSelectedWidget->setVisible(ok);
     setOkToContinue(ok);
+    forceRedraw();
 }
 
 void LocalFolderDialog::setOkToContinue(bool value)

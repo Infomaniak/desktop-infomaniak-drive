@@ -19,9 +19,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "customproxystyle.h"
 
+#include <QVariant>
+
 namespace KDC {
 
 static const int tooltipWakeUpDelay = 200; // ms
+
+const char CustomProxyStyle::focusRectangleProperty[] = "focusRectangle";
 
 int CustomProxyStyle::styleHint(QStyle::StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const
 {
@@ -29,6 +33,16 @@ int CustomProxyStyle::styleHint(QStyle::StyleHint hint, const QStyleOption *opti
         return tooltipWakeUpDelay;
     }
     return QProxyStyle::styleHint(hint, option, widget, returnData);
+}
+
+void CustomProxyStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+{
+    // No focus rectangle
+    if (element == QStyle::PE_FrameFocusRect && !widget->property(focusRectangleProperty).toBool()) {
+        return;
+    }
+
+    QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
 }

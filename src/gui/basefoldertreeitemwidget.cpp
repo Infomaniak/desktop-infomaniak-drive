@@ -360,6 +360,7 @@ void BaseFolderTreeItemWidget::onItemClicked(QTreeWidgetItem *item, int column)
 
         // Set name
         newItem->setText(TreeWidgetColumn::Folder, QString());
+        newItem->setTextAlignment(TreeWidgetColumn::Folder, Qt::AlignVCenter);
 
         // Expand item
         item->setExpanded(true);

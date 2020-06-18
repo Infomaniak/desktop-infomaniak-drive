@@ -29,8 +29,13 @@ class CustomProxyStyle : public QProxyStyle
     Q_OBJECT
 
 public:
+    static const char focusRectangleProperty[];
+
     int styleHint(StyleHint hint, const QStyleOption *option = nullptr,
                   const QWidget *widget = nullptr, QStyleHintReturn *returnData = nullptr) const override;
+
+    void drawPrimitive(PrimitiveElement element, const QStyleOption *option,
+                       QPainter *painter, const QWidget *widget) const override;
 };
 
 }

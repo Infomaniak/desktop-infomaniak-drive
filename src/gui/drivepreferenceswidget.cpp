@@ -959,7 +959,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             // Add folder to synchronization
             if (addSynchronization(localFolderPath, serverFolderPath, blackList)) {
                 CustomMessageBox *msgBox = new CustomMessageBox(
-                            QMessageBox::Warning,
+                            QMessageBox::Information,
                             tr("New folder successfully added!"),
                             QMessageBox::Ok, this);
                 msgBox->setDefaultButton(QMessageBox::Ok);
@@ -1190,7 +1190,8 @@ void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
         OCC::Folder *folder = OCC::FolderMan::instance()->folder(treeItemWidget->folderId());
         if (folder) {
             bool ok;
-            auto oldBlackListSet = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok).toSet();
+            QStringList oldBlackList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
+            QSet<QString> oldBlackListSet(oldBlackList.begin(), oldBlackList.end());
             if (!ok) {
                 return;
             }
@@ -1204,8 +1205,8 @@ void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
 
             // The part that changed should not be read from the DB on next sync because there might be new folders
             // (the ones that are no longer in the blacklist)
-            auto blackListSet = blackList.toSet();
-            auto changes = (oldBlackListSet - blackListSet) + (blackListSet - oldBlackListSet);
+            QSet<QString> blackListSet(blackList.begin(), blackList.end());
+            QSet<QString> changes = (oldBlackListSet - blackListSet) + (blackListSet - oldBlackListSet);
             foreach (const auto &it, changes) {
                 folder->journalDb()->schedulePathForRemoteDiscovery(it);
                 folder->schedulePathForLocalDiscovery(it);
