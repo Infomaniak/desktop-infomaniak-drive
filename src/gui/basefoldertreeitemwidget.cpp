@@ -35,6 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 namespace KDC {
 
 static const int treeWidgetIndentation = 30;
+static const int treeWidgetEditorMargin = 2;
 
 static const QString commonDocumentsFolderName("Common documents");
 static const QString sharedFolderName("Shared");
@@ -113,6 +114,7 @@ void BaseFolderTreeItemWidget::initUI()
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSortingEnabled(true);
     sortByColumn(TreeWidgetColumn::Folder, Qt::AscendingOrder);
+    setItemDelegate(new CustomDelegate(this));
     setColumnCount(2);
     header()->hide();
     header()->setSectionResizeMode(TreeWidgetColumn::Folder, QHeaderView::Stretch);
@@ -360,7 +362,6 @@ void BaseFolderTreeItemWidget::onItemClicked(QTreeWidgetItem *item, int column)
 
         // Set name
         newItem->setText(TreeWidgetColumn::Folder, QString());
-        newItem->setTextAlignment(TreeWidgetColumn::Folder, Qt::AlignVCenter);
 
         // Expand item
         item->setExpanded(true);
@@ -402,6 +403,25 @@ void BaseFolderTreeItemWidget::onItemChanged(QTreeWidgetItem *item, int column)
             emit folderSelected(path, parentBasePath, 0);
         }
     }
+}
+
+BaseFolderTreeItemWidget::CustomDelegate::CustomDelegate(BaseFolderTreeItemWidget *treeWidget, QObject *parent)
+    : QStyledItemDelegate(parent)
+    , _treeWidget(treeWidget)
+{
+}
+
+void BaseFolderTreeItemWidget::CustomDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    // Center editor into tree widget item
+    QTreeWidgetItem *item = _treeWidget->itemFromIndex(index);
+    QRect itemRect = _treeWidget->visualItemRect(item);
+
+    QStyleOptionViewItem itemOption = option;
+    initStyleOption(&itemOption, index);
+    QRect lineEditRect = QApplication::style()->subElementRect(QStyle::SE_ItemViewItemText, &itemOption, editor);
+    lineEditRect.setTop(itemRect.top() + treeWidgetEditorMargin);
+    editor->setGeometry(lineEditRect);
 }
 
 }

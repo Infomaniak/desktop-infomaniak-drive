@@ -22,7 +22,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "folderman.h"
 #include "csync_exclude.h"
 
+#include <QApplication>
 #include <QColor>
+#include <QLineEdit>
+#include <QStyledItemDelegate>
 #include <QTreeWidget>
 #include <QSize>
 
@@ -50,6 +53,16 @@ signals:
     void noFolderSelected();
 
 private:
+    class CustomDelegate : public QStyledItemDelegate
+    {
+    public:
+        CustomDelegate(BaseFolderTreeItemWidget *treeWidget, QObject *parent = nullptr);
+        void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+
+    private:
+        BaseFolderTreeItemWidget *_treeWidget;
+    };
+
     enum TreeWidgetColumn {
         Folder = 0,
         Action
