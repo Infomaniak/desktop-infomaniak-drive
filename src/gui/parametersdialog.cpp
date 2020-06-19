@@ -80,6 +80,8 @@ ParametersDialog::ParametersDialog(QWidget *parent)
     connect(this, &ParametersDialog::exit, this, &ParametersDialog::onExit);
     connect(OCC::FolderMan::instance(), &OCC::FolderMan::folderSyncStateChange,
             this, &ParametersDialog::onRefreshAccountList);
+    connect(OCC::FolderMan::instance(), &OCC::FolderMan::folderListChanged,
+            this, &ParametersDialog::onRefreshAccountList);
     connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountAdded,
             this, &ParametersDialog::onRefreshAccountList);
     connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountRemoved,

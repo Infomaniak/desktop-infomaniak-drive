@@ -130,6 +130,8 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
 
     connect(OCC::FolderMan::instance(), &OCC::FolderMan::folderSyncStateChange,
             this, &SynthesisPopover::onRefreshAccountList);
+    connect(OCC::FolderMan::instance(), &OCC::FolderMan::folderListChanged,
+            this, &SynthesisPopover::onRefreshAccountList);
     connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountAdded,
             this, &SynthesisPopover::onRefreshAccountList);
     connect(OCC::AccountManager::instance(), &OCC::AccountManager::accountRemoved,
