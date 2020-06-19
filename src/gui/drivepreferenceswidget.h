@@ -93,6 +93,7 @@ private:
     void switchVfsOff(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection);
     void resetFoldersBlocs();
     void updateFoldersBlocs();
+    void refreshFoldersBlocs();
     JobResult folderHasSubfolders(const QString &folderPath);
     JobResult createFolder(const QString &folderPath);
     FolderTreeItemWidget *blocTreeItemWidget(PreferencesBlocWidget *folderBloc);

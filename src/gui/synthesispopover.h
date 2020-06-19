@@ -83,7 +83,7 @@ private:
     };
 
     struct AccountInfoSynthesis : public AccountInfo {
-        StackedWidget _stackedWidgetPosition;
+        StackedWidget _stackedWidget;
         QListWidget *_synchronizedListWidget;
         int _synchronizedListStackPosition;
         int _favoritesListStackPosition;
@@ -91,6 +91,7 @@ private:
 
         AccountInfoSynthesis();
         AccountInfoSynthesis(OCC::AccountState *accountState);
+        ~AccountInfoSynthesis();
     };
 
     bool _debugMode;
@@ -129,6 +130,7 @@ private:
     void refreshStatusBar(QString accountId);
     void setSynchronizedDefaultPage(QWidget **widget, QWidget *parent);
     void displayErrors(const QString &accountId);
+    void reset();
 
 private slots:
     void onRefreshAccountList();

@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "configfile.h"
 #include "theme.h"
 
-#undef CONSOLE_DEBUG
+#define CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
 #include <iostream>
 #endif
@@ -70,6 +70,7 @@ static const int toolBarVMargin = 10;
 static const int toolBarSpacing = 10;
 static const int driveBoxHMargin = 10;
 static const int driveBoxVMargin = 10;
+static const int defaultPageSpacing = 20;
 static const int logoIconSize = 30;
 static const int defaultLogoIconSize = 50;
 static const int maxSynchronizedItems = 1000;
@@ -125,6 +126,7 @@ SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
             : NotificationsDisabled::Always;
 
     initUI();
+    onRefreshAccountList();
 
     connect(OCC::FolderMan::instance(), &OCC::FolderMan::folderSyncStateChange,
             this, &SynthesisPopover::onRefreshAccountList);
@@ -630,7 +632,7 @@ void SynthesisPopover::setSynchronizedDefaultPage(QWidget **widget, QWidget *par
         *widget = new QWidget(parent);
 
         QVBoxLayout *vboxLayout = new QVBoxLayout();
-        vboxLayout->setSpacing(20);
+        vboxLayout->setSpacing(defaultPageSpacing);
         vboxLayout->addStretch();
 
         QLabel *iconLabel = new QLabel(parent);
@@ -716,16 +718,8 @@ void SynthesisPopover::onRefreshAccountList()
               << " - SynthesisPopover::onRefreshAccountList" << std::endl;
 #endif
 
-    if (OCC::AccountManager::instance()->accounts().isEmpty()) {
-        _currentAccountId.clear();
-        _accountInfoMap.clear();
-        _errorsButton->setVisible(false);
-        _folderButton->setVisible(false);
-        _folderButton->setWithMenu(false);
-        _webviewButton->setVisible(false);
-        _driveSelectionWidget->clear();
-        _progressBarWidget->reset();
-        _statusBarWidget->reset();
+    if (OCC::AccountManager::instance()->accounts().isEmpty() && _accountInfoMap.size() == 0) {
+        reset();
     }
     else {
         bool currentAccountStillExists = !_currentAccountId.isEmpty()
@@ -792,6 +786,10 @@ void SynthesisPopover::onRefreshAccountList()
                     }
                 }
 
+                if (accountInfoIt->second._folderMap.size() == 0) {
+                    _statusBarWidget->reset();
+                }
+
                 // Compute account status
                 accountInfoIt->second.updateStatus();
 
@@ -815,6 +813,9 @@ void SynthesisPopover::onRefreshAccountList()
         auto accountInfoIt = _accountInfoMap.begin();
         while (accountInfoIt != _accountInfoMap.end()) {
             if (!OCC::AccountManager::instance()->getAccountFromId(accountInfoIt->first)) {
+                if (accountInfoIt->second._synchronizedListStackPosition) {
+                    _stackedWidget->removeWidget(_stackedWidget->widget(accountInfoIt->second._synchronizedListStackPosition));
+                }
                 _driveSelectionWidget->removeDrive(accountInfoIt->first);
                 accountInfoIt = _accountInfoMap.erase(accountInfoIt);
             }
@@ -823,22 +824,27 @@ void SynthesisPopover::onRefreshAccountList()
             }
         }
 
-        // Count drives with warning/errors
-        bool drivesWithErrors = false;
-        for (auto const &accountInfo : _accountInfoMap) {
-            if (accountInfo.second.hasWarningOrError()) {
-                drivesWithErrors = true;
-                break;
+        if (_accountInfoMap.size() > 0) {
+            // Count drives with warning/errors
+            bool drivesWithErrors = false;
+            for (auto const &accountInfo : _accountInfoMap) {
+                if (accountInfo.second.hasWarningOrError()) {
+                    drivesWithErrors = true;
+                    break;
+                }
             }
-        }
 
-        _errorsButton->setVisible(drivesWithErrors);
-        _folderButton->setVisible(currentFolderMapSize > 0);
-        _folderButton->setWithMenu(currentFolderMapSize > 1);
-        _webviewButton->setVisible(currentFolderMapSize > 0);
-        _statusBarWidget->setSeveralDrives(_accountInfoMap.size() > 1);
-        _driveSelectionWidget->selectDrive(_currentAccountId);
-        refreshStatusBar(_currentAccountId);
+            _errorsButton->setVisible(drivesWithErrors);
+            _folderButton->setVisible(currentFolderMapSize > 0);
+            _folderButton->setWithMenu(currentFolderMapSize > 1);
+            _webviewButton->setVisible(currentFolderMapSize > 0);
+            _statusBarWidget->setSeveralDrives(_accountInfoMap.size() > 1);
+            _driveSelectionWidget->selectDrive(_currentAccountId);
+            refreshStatusBar(_currentAccountId);
+        }
+        else {
+            reset();
+        }
     }
 
     setSynchronizedDefaultPage(&_defaultSynchronizedPageWidget, this);
@@ -1037,6 +1043,20 @@ void SynthesisPopover::displayErrors(const QString &accountId)
     emit openParametersDialog(accountId, true);
 }
 
+void SynthesisPopover::reset()
+{
+    _currentAccountId.clear();
+    _accountInfoMap.clear();
+    _errorsButton->setVisible(false);
+    _folderButton->setVisible(false);
+    _folderButton->setWithMenu(false);
+    _webviewButton->setVisible(false);
+    _driveSelectionWidget->clear();
+    _progressBarWidget->reset();
+    _statusBarWidget->reset();
+    _stackedWidget->setCurrentIndex(StackedWidget::Synchronized);
+}
+
 void SynthesisPopover::onOpenFolderMenu(bool checked)
 {
     Q_UNUSED(checked)
@@ -1097,12 +1117,14 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
     MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
     // Drive parameters
-    QWidgetAction *driveParametersAction = new QWidgetAction(this);
-    MenuItemWidget *driveParametersMenuItemWidget = new MenuItemWidget(tr("Drive parameters"));
-    driveParametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg");
-    driveParametersAction->setDefaultWidget(driveParametersMenuItemWidget);
-    connect(driveParametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenDriveParameters);
-    menu->addAction(driveParametersAction);
+    if (_accountInfoMap.size()) {
+        QWidgetAction *driveParametersAction = new QWidgetAction(this);
+        MenuItemWidget *driveParametersMenuItemWidget = new MenuItemWidget(tr("Drive parameters"));
+        driveParametersMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/drive.svg");
+        driveParametersAction->setDefaultWidget(driveParametersMenuItemWidget);
+        connect(driveParametersAction, &QWidgetAction::triggered, this, &SynthesisPopover::onOpenDriveParameters);
+        menu->addAction(driveParametersAction);
+    }
 
     // Disable Notifications
     QWidgetAction *notificationsAction = new QWidgetAction(this);
@@ -1292,7 +1314,7 @@ void SynthesisPopover::onAccountSelected(QString id)
         _progressBarWidget->setUsedSize(accountInfoIt->second._totalSize, accountInfoIt->second._used);
         refreshStatusBar(accountInfoIt);
         setSynchronizedDefaultPage(&_defaultSynchronizedPageWidget, this);
-        _buttonsBarWidget->selectButton(int(accountInfoIt->second._stackedWidgetPosition));
+        _buttonsBarWidget->selectButton(int(accountInfoIt->second._stackedWidget));
     }
 }
 
@@ -1334,7 +1356,7 @@ void SynthesisPopover::onButtonBarToggled(int position)
 {
     const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
     if (accountInfoIt != _accountInfoMap.end()) {
-        accountInfoIt->second._stackedWidgetPosition = StackedWidget(position);
+        accountInfoIt->second._stackedWidget = StackedWidget(position);
     }
 
     switch (position) {
@@ -1484,7 +1506,7 @@ void SynthesisPopover::onLinkActivated(const QString &link)
 
 SynthesisPopover::AccountInfoSynthesis::AccountInfoSynthesis()
     : AccountInfo()
-    , _stackedWidgetPosition(StackedWidget::Synchronized)
+    , _stackedWidget(StackedWidget::Synchronized)
     , _synchronizedListWidget(nullptr)
     , _synchronizedListStackPosition(StackedWidget::Synchronized)
     , _favoritesListStackPosition(StackedWidget::Favorites)
@@ -1496,6 +1518,11 @@ SynthesisPopover::AccountInfoSynthesis::AccountInfoSynthesis(OCC::AccountState *
     : AccountInfoSynthesis()
 {
     initQuotaInfo(accountState);
+}
+
+SynthesisPopover::AccountInfoSynthesis::~AccountInfoSynthesis()
+{
+    delete _synchronizedListWidget;
 }
 
 }

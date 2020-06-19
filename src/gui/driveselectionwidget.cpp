@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "menuitemwidget.h"
 #include "menuwidget.h"
 #include "guiutility.h"
+#include "account.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -67,9 +68,6 @@ DriveSelectionWidget::DriveSelectionWidget(QWidget *parent)
     _downIconLabel = new QLabel(this);
     hbox->addWidget(_downIconLabel);
 
-    connect(this, &DriveSelectionWidget::driveIconSizeChanged, this, &DriveSelectionWidget::onDriveIconSizeChanged);
-    connect(this, &DriveSelectionWidget::downIconSizeChanged, this, &DriveSelectionWidget::onDownIconSizeChanged);
-    connect(this, &DriveSelectionWidget::downIconColorChanged, this, &DriveSelectionWidget::onDownIconColorChanged);
     connect(this, &DriveSelectionWidget::clicked, this, &DriveSelectionWidget::onClick);
 }
 
@@ -128,23 +126,6 @@ void DriveSelectionWidget::selectDrive(QString id)
     }
 }
 
-void DriveSelectionWidget::onDriveIconSizeChanged()
-{
-    if (_driveMap.find(_currentDriveId) != _driveMap.end()) {
-        setDriveIcon(_driveMap[_currentDriveId]._color);
-    }
-}
-
-void DriveSelectionWidget::onDownIconSizeChanged()
-{
-    setDownIcon();
-}
-
-void DriveSelectionWidget::onDownIconColorChanged()
-{
-    setDownIcon();
-}
-
 void DriveSelectionWidget::onClick(bool checked)
 {
     Q_UNUSED(checked)
@@ -198,6 +179,16 @@ void DriveSelectionWidget::onAddDriveActionTriggered(bool checked)
     Q_UNUSED(checked)
 
     emit addDrive();
+}
+
+void DriveSelectionWidget::setDriveIcon()
+{
+    if (_driveMap.find(_currentDriveId) != _driveMap.end()) {
+        setDriveIcon(_driveMap[_currentDriveId]._color);
+    }
+    else {
+        setDriveIcon(OCC::Account::defaultDriveColor);
+    }
 }
 
 void DriveSelectionWidget::setDriveIcon(const QColor &color)

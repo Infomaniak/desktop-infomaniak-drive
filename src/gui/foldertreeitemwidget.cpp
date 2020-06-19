@@ -71,12 +71,6 @@ FolderTreeItemWidget::FolderTreeItemWidget(const QString &folderId, bool display
 
     // Make sure we don't get crashes if the folder is destroyed while the dialog is still opened
     connect(_currentFolder, &QObject::destroyed, this, &QObject::deleteLater);
-
-    bool ok;
-    _oldBlackList = _currentFolder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
-
-    OCC::ConfigFile::setupDefaultExcludeFilePaths(_excludedFiles);
-    _excludedFiles.reloadExcludeFiles();
 }
 
 FolderTreeItemWidget::FolderTreeItemWidget(const QString &accountId, const QString &serverFolderPath, bool displayRoot, QWidget *parent)
@@ -94,13 +88,18 @@ FolderTreeItemWidget::FolderTreeItemWidget(const QString &accountId, const QStri
     , _inserting(false)
 {
     initUI();
-
-    OCC::ConfigFile::setupDefaultExcludeFilePaths(_excludedFiles);
-    _excludedFiles.reloadExcludeFiles();
 }
 
 void FolderTreeItemWidget::loadSubFolders()
 {
+    if (_currentFolder) {
+        bool ok;
+        _oldBlackList = _currentFolder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
+    }
+
+    OCC::ConfigFile::setupDefaultExcludeFilePaths(_excludedFiles);
+    _excludedFiles.reloadExcludeFiles();
+
     clear();
     OCC::LsColJob *job = new OCC::LsColJob(getAccountPtr(), getFolderPath(), this);
     job->setProperties(QList<QByteArray>()

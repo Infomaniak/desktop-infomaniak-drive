@@ -110,6 +110,11 @@ void StatusBarWidget::setStatus(bool paused, bool unresolvedConflicts, OCC::Sync
         _resumeButton->setVisible(OCC::Utility::getResumeActionAvailable(_accountInfo->_paused, _accountInfo->_status));
         _syncButton->setVisible(OCC::Utility::getSyncActionAvailable(_accountInfo->_paused, _accountInfo->_status));
     }
+    else {
+        _pauseButton->setVisible(false);
+        _resumeButton->setVisible(false);
+        _syncButton->setVisible(false);
+    }
 
     connect(_statusLinkLabel, &QLabel::linkActivated, this, &StatusBarWidget::onLinkActivated);
 }
@@ -129,6 +134,7 @@ void StatusBarWidget::setSeveralDrives(bool severalDrives)
 
 void StatusBarWidget::reset()
 {
+    _accountInfo = nullptr;
     setStatus(false, false, OCC::SyncResult::Undefined);
 }
 

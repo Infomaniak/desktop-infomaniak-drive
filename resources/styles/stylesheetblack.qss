@@ -832,6 +832,11 @@ KDC--ParametersDialog QLabel#defaultTextLabel
     font-size: 14px;
 }
 
+KDC--ParametersDialog QWidget#noDrivePagewidget
+{
+    background-color: #1B1B1D;
+}
+
 /*********************/
 /* KDC--DrivesWidget */
 /*********************/

@@ -53,9 +53,6 @@ public:
     void selectDrive(QString id);
 
 signals:
-    void driveIconSizeChanged();
-    void downIconSizeChanged();
-    void downIconColorChanged();
     void driveSelected(QString id);
     void addDrive();
 
@@ -73,31 +70,29 @@ private:
     inline QSize driveIconSize() const { return _driveIconSize; }
     inline void setDriveIconSize(QSize size) {
         _driveIconSize = size;
-        emit driveIconSizeChanged();
+        setDriveIcon();
     }
 
     inline QSize downIconSize() const { return _downIconSize; }
     inline void setDownIconSize(QSize size) {
         _downIconSize = size;
-        emit downIconSizeChanged();
+        setDownIcon();
     }
 
     inline QColor downIconColor() const { return _downIconColor; }
     inline void setDownIconColor(QColor color) {
         _downIconColor = color;
-        emit downIconColorChanged();
+        setDownIcon();
     }
 
     inline QSize menuRightIconSize() const { return _menuRightIconSize; }
     inline void setMenuRightIconSize(QSize size) { _menuRightIconSize = size; }
 
+    void setDriveIcon();
     void setDriveIcon(const QColor &color);
     void setDownIcon();
 
 private slots:
-    void onDriveIconSizeChanged();
-    void onDownIconSizeChanged();
-    void onDownIconColorChanged();
     void onClick(bool checked);
     void onSelectDriveActionTriggered(bool checked = false);
     void onAddDriveActionTriggered(bool checked = false);

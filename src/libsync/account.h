@@ -77,7 +77,10 @@ public:
 class OWNCLOUDSYNC_EXPORT Account : public QObject
 {
     Q_OBJECT
+
 public:
+    static const QColor defaultDriveColor;
+
     static AccountPtr create();
     ~Account();
 

@@ -53,7 +53,9 @@ static const int boxHMargin= 20;
 static const int boxVTMargin = 15;
 static const int boxVBMargin = 5;
 static const int boxVSpacing = 20;
-static const int maxSynchronizedItems = 1000;
+static const int defaultPageSpacing = 20;
+static const int defaultLogoIconSize = 50;
+static const int maxErrorItems = 1000;
 static const int maxLogFilesToSend = 25;
 
 Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
@@ -68,9 +70,12 @@ ParametersDialog::ParametersDialog(QWidget *parent)
     , _errorsMenuBarWidget(nullptr)
     , _preferencesWidget(nullptr)
     , _drivePreferencesWidget(nullptr)
+    , _drivePreferencesScrollArea(nullptr)
+    , _noDrivePagewidget(nullptr)
     , _errorsStackedWidget(nullptr)
 {
     initUI();
+    onRefreshAccountList();
 
     connect(this, &ParametersDialog::exit, this, &ParametersDialog::onExit);
     connect(OCC::FolderMan::instance(), &OCC::FolderMan::folderSyncStateChange,
@@ -112,7 +117,7 @@ void ParametersDialog::initUI()
      *      drivePageWidget
      *          driveBox
      *              _driveMenuBarWidget
-     *              drivePreferencesScrollArea
+     *              _drivePreferencesScrollArea
      *                  _drivePreferencesWidget
      *      preferencesPageWidget
      *          preferencesVBox
@@ -157,12 +162,39 @@ void ParametersDialog::initUI()
     // Drive preferences
     _drivePreferencesWidget = new DrivePreferencesWidget(this);
 
-    QScrollArea *drivePreferencesScrollArea = new QScrollArea(this);
-    drivePreferencesScrollArea->setWidget(_drivePreferencesWidget);
-    drivePreferencesScrollArea->setWidgetResizable(true);
-    drivePreferencesScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    driveVBox->addWidget(drivePreferencesScrollArea);
-    driveVBox->setStretchFactor(drivePreferencesScrollArea, 1);
+    _drivePreferencesScrollArea = new QScrollArea(this);
+    _drivePreferencesScrollArea->setWidget(_drivePreferencesWidget);
+    _drivePreferencesScrollArea->setWidgetResizable(true);
+    _drivePreferencesScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    _drivePreferencesScrollArea->setVisible(false);
+    driveVBox->addWidget(_drivePreferencesScrollArea);
+    driveVBox->setStretchFactor(_drivePreferencesScrollArea, 1);
+
+    // No drive page
+    _noDrivePagewidget = new QWidget(this);
+    _noDrivePagewidget->setObjectName("noDrivePagewidget");
+    driveVBox->addWidget(_noDrivePagewidget);
+    driveVBox->setStretchFactor(_noDrivePagewidget, 1);
+
+    QVBoxLayout *vboxLayout = new QVBoxLayout();
+    vboxLayout->setSpacing(defaultPageSpacing);
+    _noDrivePagewidget->setLayout(vboxLayout);
+
+    vboxLayout->addStretch();
+
+    QLabel *iconLabel = new QLabel(this);
+    iconLabel->setAlignment(Qt::AlignHCenter);
+    iconLabel->setPixmap(QIcon(":/client/resources/icons/document types/file-default.svg")
+                         .pixmap(QSize(defaultLogoIconSize, defaultLogoIconSize)));
+    vboxLayout->addWidget(iconLabel);
+
+    QLabel *defaultTextLabel = new QLabel(this);
+    defaultTextLabel->setObjectName("defaultTextLabel");
+    defaultTextLabel->setText("No kDrive configured!");
+    defaultTextLabel->setAlignment(Qt::AlignHCenter);
+    defaultTextLabel->setWordWrap(true);
+    vboxLayout->addWidget(defaultTextLabel);
+    vboxLayout->addStretch();
 
     //
     // Preferences page widget
@@ -256,6 +288,17 @@ QByteArray ParametersDialog::contents(const QString &path)
     }
 }
 
+void ParametersDialog::reset()
+{
+    _currentAccountId.clear();
+    _accountInfoMap.clear();
+    _driveMenuBarWidget->driveSelectionWidget()->clear();
+    _driveMenuBarWidget->progressBarWidget()->reset();
+    _drivePreferencesWidget->reset();
+    _drivePreferencesScrollArea->setVisible(false);
+    _noDrivePagewidget->setVisible(true);
+}
+
 void ParametersDialog::onExit()
 {
     accept();
@@ -269,9 +312,7 @@ void ParametersDialog::onRefreshAccountList()
 #endif
 
     if (OCC::AccountManager::instance()->accounts().isEmpty()) {
-        _accountInfoMap.clear();
-        _driveMenuBarWidget->driveSelectionWidget()->clear();
-        _driveMenuBarWidget->progressBarWidget()->reset();
+        reset();
     }
     else {
         bool currentAccountStillExists = !_currentAccountId.isEmpty()
@@ -495,7 +536,7 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                         widgetItem->setSizeHint(widget->size());
                         connect(widget, &ErrorItemWidget::openFolder, this, &ParametersDialog::onOpenFolderItem);
 
-                        if (accountInfoIt->second._errorsListWidget->count() > maxSynchronizedItems) {
+                        if (accountInfoIt->second._errorsListWidget->count() > maxErrorItems) {
                             // Remove last row
                             QListWidgetItem *lastWidgetItem = accountInfoIt->second._errorsListWidget->takeItem(
                                         accountInfoIt->second._errorsListWidget->count() - 1);
@@ -543,6 +584,8 @@ void ParametersDialog::onAccountSelected(QString id)
         _driveMenuBarWidget->progressBarWidget()->setUsedSize(accountInfoIt->second._totalSize, accountInfoIt->second._used);
         _drivePreferencesWidget->setAccount(accountInfoIt->first, &accountInfoIt->second,
                                             accountInfoIt->second._errorsListWidget != nullptr);
+        _drivePreferencesScrollArea->setVisible(true);
+        _noDrivePagewidget->setVisible(false);
     }
 }
 

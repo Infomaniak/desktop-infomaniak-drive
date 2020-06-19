@@ -79,11 +79,14 @@ private:
     ErrorsMenuBarWidget *_errorsMenuBarWidget;
     PreferencesWidget *_preferencesWidget;
     DrivePreferencesWidget *_drivePreferencesWidget;
+    QScrollArea *_drivePreferencesScrollArea;
+    QWidget *_noDrivePagewidget;
     QStackedWidget *_errorsStackedWidget;
     std::map<QString, AccountInfoParameters> _accountInfoMap;
 
     void initUI();
     QByteArray contents(const QString& path);
+    void reset();
 
 private slots:
     void onExit();

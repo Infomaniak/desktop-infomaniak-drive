@@ -554,6 +554,17 @@ void DrivePreferencesWidget::updateFoldersBlocs()
     }
 }
 
+void DrivePreferencesWidget::refreshFoldersBlocs()
+{
+    QList<PreferencesBlocWidget *> folderBlocList = findChildren<PreferencesBlocWidget *>(folderBlocName);
+    for (PreferencesBlocWidget *folderBloc : folderBlocList) {
+        FolderTreeItemWidget *treeItemWidget = blocTreeItemWidget(folderBloc);
+        if (treeItemWidget && treeItemWidget->isVisible()) {
+            treeItemWidget->loadSubFolders();
+        }
+    }
+}
+
 DrivePreferencesWidget::JobResult DrivePreferencesWidget::folderHasSubfolders(const QString &folderPath)
 {
     JobResult jobResult;
@@ -817,6 +828,7 @@ void DrivePreferencesWidget::onBigFoldersWarningWidgetClicked()
         }
 
         _displayBigFoldersWarningWidget->setVisible(existUndecidedList());
+        refreshFoldersBlocs();
     }
 }
 
