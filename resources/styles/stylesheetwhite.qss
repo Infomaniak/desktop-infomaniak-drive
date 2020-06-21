@@ -1696,6 +1696,23 @@ KDC--AddDriveLocalFolderWidget
     qproperty-logo_color: #000000;
 }
 
+KDC--AddDriveLocalFolderWidget QProgressBar
+{
+    background-color: #E0E0E0;
+    min-height: 5px;
+    max-height: 5px;
+    border: 0px;
+    border-radius: 2px;
+    padding: 0px;
+}
+
+KDC--AddDriveLocalFolderWidget QProgressBar::chunk
+{
+    background-color: #0098FF;
+    border: 0px;
+    border-radius: 2px;
+}
+
 KDC--AddDriveLocalFolderWidget QWidget#folderSelectionWidget
 {
     background-color: #F5F5F5;
@@ -1728,6 +1745,23 @@ KDC--AddDriveLocalFolderWidget QLabel#folderPathLabel
 KDC--AddDriveConfirmationWidget
 {
     qproperty-logo_color: #000000;
+}
+
+KDC--AddDriveConfirmationWidget QProgressBar
+{
+    background-color: #E0E0E0;
+    min-height: 5px;
+    max-height: 5px;
+    border: 0px;
+    border-radius: 2px;
+    padding: 0px;
+}
+
+KDC--AddDriveConfirmationWidget QProgressBar::chunk
+{
+    background-color: #0098FF;
+    border: 0px;
+    border-radius: 2px;
 }
 
 /*************************/

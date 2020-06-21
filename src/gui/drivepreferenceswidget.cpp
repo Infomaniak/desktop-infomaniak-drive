@@ -496,7 +496,7 @@ void DrivePreferencesWidget::updateFoldersBlocs()
                 auto folderInfoIt = _accountInfo->_folderMap.find(folderItemWidget->folderId());
                 if (folderInfoIt == _accountInfo->_folderMap.end()) {
                     // Delete bloc when folder doesn't exist anymore
-                    delete folderBloc;
+                    folderBloc->deleteLater();
                 }
                 else {
                     // Update folder widget

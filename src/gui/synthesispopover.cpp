@@ -756,7 +756,7 @@ void SynthesisPopover::onRefreshAccountList()
                                 auto folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
                                 if (folderInfoIt == accountInfoIt->second._folderMap.end()) {
                                     // New folder
-                                    accountInfoIt->second._folderMap[folderIt.key()] = std::unique_ptr<FolderInfo>(
+                                    accountInfoIt->second._folderMap[folderIt.key()] = std::shared_ptr<FolderInfo>(
                                             new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path()));
                                     folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
                                 }
@@ -850,6 +850,7 @@ void SynthesisPopover::onRefreshAccountList()
     }
 
     setSynchronizedDefaultPage(&_defaultSynchronizedPageWidget, this);
+    forceRedraw();
 }
 
 void SynthesisPopover::onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress)

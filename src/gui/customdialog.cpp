@@ -36,7 +36,7 @@ namespace KDC {
 static const QSize windowSize(625, 510);
 static const int cornerRadius = 5;
 static const int hMargin= 20;
-static const int vMargin = 5;
+static const int vMargin = 20;
 static const int mainBoxHMargin= 0;
 static const int mainBoxVTMargin = 0;
 static const int mainBoxVBMargin = 40;

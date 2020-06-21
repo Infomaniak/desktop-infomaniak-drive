@@ -17,7 +17,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#undef CONSOLE_DEBUG
+#define CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
 #include <iostream>
 #endif
@@ -313,7 +313,7 @@ void ParametersDialog::onRefreshAccountList()
               << " - ParametersDialog::onRefreshAccountList" << std::endl;
 #endif
 
-    if (OCC::AccountManager::instance()->accounts().isEmpty()) {
+    if (OCC::AccountManager::instance()->accounts().isEmpty() && _accountInfoMap.size() == 0) {
         reset();
     }
     else {
@@ -348,7 +348,7 @@ void ParametersDialog::onRefreshAccountList()
                                 auto folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
                                 if (folderInfoIt == accountInfoIt->second._folderMap.end()) {
                                     // New folder
-                                    accountInfoIt->second._folderMap[folderIt.key()] = std::unique_ptr<FolderInfo>(
+                                    accountInfoIt->second._folderMap[folderIt.key()] = std::shared_ptr<FolderInfo>(
                                             new FolderInfo(folderIt.value()->shortGuiLocalPath(), folderIt.value()->path()));
                                     folderInfoIt = accountInfoIt->second._folderMap.find(folderIt.key());
 
@@ -409,8 +409,14 @@ void ParametersDialog::onRefreshAccountList()
             }
         }
 
-        _driveMenuBarWidget->driveSelectionWidget()->selectDrive(_currentAccountId);
+        if (_accountInfoMap.size() > 0) {
+            _driveMenuBarWidget->driveSelectionWidget()->selectDrive(_currentAccountId);
+        }
+        else {
+            reset();
+        }
     }
+    forceRedraw();
 }
 
 void ParametersDialog::onUpdateProgress(const QString &folderId, const OCC::ProgressInfo &progress)
