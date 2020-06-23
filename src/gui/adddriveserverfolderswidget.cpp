@@ -124,6 +124,7 @@ void AddDriveServerFoldersWidget::initUI()
     titleLabel->setObjectName("titleLabel");
     titleLabel->setContentsMargins(0, 0, 0, 0);
     titleLabel->setText(tr("Select kDrive folders to synchronize on your desktop"));
+    titleLabel->setWordWrap(true);
     mainLayout->addWidget(titleLabel);
     mainLayout->addSpacing(titleBoxVMargin);
 

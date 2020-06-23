@@ -460,10 +460,10 @@ void Application::slotCheckConnection()
     }
 
     if (list.isEmpty()) {
+        _checkConnectionTimer.stop(); // don't popup the wizard on interval;
+
         // let gui open the setup wizard
         _gui->slotOpenParametersDialog();
-
-        _checkConnectionTimer.stop(); // don't popup the wizard on interval;
     }
 }
 

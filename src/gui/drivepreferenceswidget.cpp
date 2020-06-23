@@ -367,7 +367,6 @@ void DrivePreferencesWidget::updateAccountInfo()
     }
     else {
         qCDebug(lcDrivePreferencesWidget) << "Null pointer!";
-        Q_ASSERT(false);
     }
 }
 
@@ -969,15 +968,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             }
 
             // Add folder to synchronization
-            if (addSynchronization(localFolderPath, serverFolderPath, blackList)) {
-                CustomMessageBox *msgBox = new CustomMessageBox(
-                            QMessageBox::Information,
-                            tr("New folder successfully added!"),
-                            QMessageBox::Ok, this);
-                msgBox->setDefaultButton(QMessageBox::Ok);
-                msgBox->exec();
-            }
-            else {
+            if (!addSynchronization(localFolderPath, serverFolderPath, blackList)) {
                 CustomMessageBox *msgBox = new CustomMessageBox(
                             QMessageBox::Warning,
                             addFolderError,

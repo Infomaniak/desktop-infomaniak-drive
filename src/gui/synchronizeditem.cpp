@@ -30,9 +30,9 @@ SynchronizedItem::SynchronizedItem(const QString &folderId, const QString &fileP
     , _fileId(fileId)
     , _status(status)
     , _direction(direction)
+    , _type(type)
     , _fullFilePath(fullFilePath)
     , _dateTime(dateTime)
-    , _type(type)
     , _error(error)
 {
 }

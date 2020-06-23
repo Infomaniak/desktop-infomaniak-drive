@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-static const QSize windowSize(625, 510);
+static const QSize windowSize(625, 530);
 static const int cornerRadius = 5;
 static const int hMargin= 20;
 static const int vMargin = 20;

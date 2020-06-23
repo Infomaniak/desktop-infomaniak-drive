@@ -1337,8 +1337,8 @@ KDC--FileExclusionNameDialog
 {
     min-width: 410px;
     max-width: 410px;
-    min-height: 195px;
-    max-height: 195px;
+    min-height: 220px;
+    max-height: 220px;
 }
 
 /********************/
@@ -1772,8 +1772,8 @@ KDC--BigFoldersDialog
 {
     min-width: 625px;
     max-width: 625px;
-    min-height: 275px;
-    max-height: 405px;
+    min-height: 295px;
+    max-height: 425px;
     qproperty-folder_icon_color: #9F9F9F;
     qproperty-folder_icon_size: 18px;
 }

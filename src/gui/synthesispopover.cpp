@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "configfile.h"
 #include "theme.h"
 
-#define CONSOLE_DEBUG
+#undef CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
 #include <iostream>
 #endif
@@ -1166,7 +1166,8 @@ void SynthesisPopover::onOpenMiscellaneousMenu(bool checked)
     for (auto const &notificationMapElt : notificationMap) {
         notificationAction = new QWidgetAction(this);
         notificationAction->setProperty(MenuWidget::actionTypeProperty.c_str(), notificationMapElt.first);
-        MenuItemWidget *notificationMenuItemWidget = new MenuItemWidget(notificationMapElt.second);
+        QString text = QCoreApplication::translate("KDC::SynthesisPopover", notificationMapElt.second.toStdString().c_str());
+        MenuItemWidget *notificationMenuItemWidget = new MenuItemWidget(text);
         notificationMenuItemWidget->setChecked(notificationMapElt.first == _notificationsDisabled);
         notificationAction->setDefaultWidget(notificationMenuItemWidget);
         connect(notificationAction, &QWidgetAction::triggered, this, &SynthesisPopover::onNotificationActionTriggered);

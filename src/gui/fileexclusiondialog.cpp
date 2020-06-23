@@ -39,7 +39,7 @@ static const int boxHSpacing = 10;
 static const int titleBoxVMargin = 14;
 static const int descriptionBoxVMargin = 20;
 static const int hiddenFilesBoxVMargin = 15;
-static const int addFileBoxHMargin = 30;
+static const int addFileBoxHMargin = 35;
 static const int addFileBoxVMargin = 12;
 static const int filesTableHeaderBoxVMargin = 15;
 static const int filesTableBoxVMargin = 20;
@@ -123,7 +123,7 @@ void FileExclusionDialog::initUI()
     header1Label->setFixedWidth(tableColumnWidth[tableColumn::Pattern]);
     filesTableHeaderHBox->addWidget(header1Label);
 
-    QLabel *header2Label = new QLabel(tr("ALLOW DELETION"), this);
+    QLabel *header2Label = new QLabel(tr("NO WARNING"), this);
     header2Label->setObjectName("header");
     header2Label->setFixedWidth(tableColumnWidth[tableColumn::Deletable]);
     header2Label->setAlignment(Qt::AlignCenter);
