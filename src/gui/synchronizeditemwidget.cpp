@@ -141,12 +141,12 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
 void SynchronizedItemWidget::setSelected(bool isSelected)
 {
     _isSelected = isSelected;
-    bool fileExists = QFile(_item.fullFilePath()).exists();
-    _folderButton->setVisible(_isSelected && fileExists);
-    _menuButton->setVisible(_isSelected && fileExists);
-    _fileDirectionLabel->setVisible(_isSelected);
+    if (_isSelected) {
+        bool fileExists = QFile(_item.fullFilePath()).exists();
+        _folderButton->setVisible(fileExists);
+        _menuButton->setVisible(fileExists);
+        _fileDirectionLabel->setVisible(true);
 
-    if (isSelected) {
         // Shadow
         QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
         effect->setBlurRadius(shadowBlurRadius);
@@ -155,6 +155,10 @@ void SynchronizedItemWidget::setSelected(bool isSelected)
         setGraphicsEffect(effect);
     }
     else {
+        _folderButton->setVisible(false);
+        _menuButton->setVisible(false);
+        _fileDirectionLabel->setVisible(false);
+
         setGraphicsEffect(nullptr);
     }
 

@@ -86,10 +86,10 @@ namespace Utility {
 
     QString getFileStatusIconPath(SyncFileItem::Status status);
     QString getFolderStatusIconPath(bool paused, OCC::SyncResult::Status status);
-    QStringList getFolderStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status,
+    QString getFolderStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status,
                                     qint64 currentFile, qint64 totalFiles, qint64 estimatedRemainingTime);
     QString getAccountStatusIconPath(bool paused, OCC::SyncResult::Status status);
-    QStringList getAccountStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status);
+    QString getAccountStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status);
     bool getPauseActionAvailable(bool paused, OCC::SyncResult::Status status);
     bool getResumeActionAvailable(bool paused, OCC::SyncResult::Status status);
     bool getSyncActionAvailable(bool paused, OCC::SyncResult::Status status);
