@@ -32,6 +32,8 @@ static const int hSpacing = 10;
 static const int vSpacing = 10;
 static const int expandButtonVMargin = 5;
 static const int statusIconSize = 20;
+static const int folderNameMaxSize = 50;
+static const int folderPathMaxSize = 50;
 
 FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *folderInfo, QWidget *parent)
     : QWidget(parent)
@@ -102,10 +104,19 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     if (_folderInfo) {
         updateItem(_folderInfo);
         setExpandButton();
-        _nameLabel->setText(_folderInfo->_name);
+        QString name = _folderInfo->_name;
+        if (name.size() > folderNameMaxSize) {
+            name = name.left(folderNameMaxSize) + "...";
+        }
+        _nameLabel->setText(name);
+
+        QString path = _folderInfo->_path;
+        if (path.size() > folderPathMaxSize) {
+            path = path.left(folderPathMaxSize) + "...";
+        }
         synchroLabel->setText(tr("Synchronized into <a style=\"%1\" href=\"ref\">%2</a>")
                               .arg(OCC::Utility::linkStyle)
-                              .arg(_folderInfo->_path));
+                              .arg(path));
     }
 
     // Update widget

@@ -39,6 +39,8 @@ static const int boxVSpacing = 10;
 static const int shadowBlurRadius = 20;
 static const QSize statusIconSize = QSize(15, 15);
 static const int fileErrorLabelMaxWidth = 375;
+static const int fileNameMaxSize = 40;
+static const int filePathMaxSize = 50;
 static const QString dateFormat = "d MMM yyyy - HH:mm";
 
 ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo &accountInfo, QWidget *parent)
@@ -79,9 +81,9 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     _fileNameLabel->setObjectName("fileNameLabel");
     QFileInfo fileInfo(_item.filePath());
     QString fileName = fileInfo.fileName();
-    /*if (fileName.size() > fileNameMaxSize) {
+    if (fileName.size() > fileNameMaxSize) {
         fileName = fileName.left(fileNameMaxSize) + "...";
-    }*/
+    }
     _fileNameLabel->setText(fileName);
     _fileNameLabel->setWordWrap(true);
     vBoxMiddle->addWidget(_fileNameLabel);
@@ -107,9 +109,9 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     _filePathLabel = new QLabel(this);
     _filePathLabel->setObjectName("filePathLabel");
     QString filePath = accountInfo._name + dirSeparator + fileInfo.path();
-    /*if (filePath.size() > fileNameMaxSize) {
-        filePath = filePath.left(fileNameMaxSize) + "...";
-    }*/
+    if (filePath.size() > filePathMaxSize) {
+        filePath = filePath.left(filePathMaxSize) + "...";
+    }
     _filePathLabel->setText(QString("<a style=\"%1\" href=\"ref\">%2</a>")
                            .arg(OCC::Utility::linkStyle)
                            .arg(filePath));

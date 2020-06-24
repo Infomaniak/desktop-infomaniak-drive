@@ -86,6 +86,7 @@ void FileExclusionDialog::initUI()
     descriptionLabel->setObjectName("descriptionLabel");
     descriptionLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     descriptionLabel->setText(tr("Add files or folders that will not be synchronized on your computer."));
+    descriptionLabel->setWordWrap(true);
     mainLayout->addWidget(descriptionLabel);
     mainLayout->addSpacing(descriptionBoxVMargin);
 
@@ -178,7 +179,7 @@ void FileExclusionDialog::initUI()
 
 void FileExclusionDialog::updateUI()
 {
-    _hiddenFilesCheckBox->setChecked(OCC::FolderMan::instance()->ignoreHiddenFiles());
+    _hiddenFilesCheckBox->setChecked(!OCC::FolderMan::instance()->ignoreHiddenFiles());
 
     OCC::ConfigFile cfgFile;
     addPattern(".csync_journal.db*", /*deletable=*/false, /*readonly=*/true, /*global=*/true);
@@ -451,7 +452,7 @@ void FileExclusionDialog::onSaveButtonTriggered(bool checked)
      * The ignoreHiddenFiles flag is a folder specific setting, but for now, it is
      * handled globally. Save it to every folder that is defined.
      */
-    folderMan->setIgnoreHiddenFiles(_hiddenFilesCheckBox->isChecked());
+    folderMan->setIgnoreHiddenFiles(!_hiddenFilesCheckBox->isChecked());
 
     /*
      * We need to force a remote discovery after a change of the ignore list.

@@ -336,6 +336,10 @@
         <source>Do you want to save your modifications?</source>
         <translation>Salvare le modifiche?</translation>
     </message>
+    <message>
+        <source>Kb/s</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>KDC::BaseFolderTreeItemWidget</name>

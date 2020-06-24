@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "configfile.h"
 #include "theme.h"
 
-#undef CONSOLE_DEBUG
+#define CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
 #include <iostream>
 #endif

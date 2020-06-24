@@ -334,20 +334,10 @@ void StatusBarWidget::onSyncClicked()
         menu->addSeparator();
         menu->addAction(runAllAction);
 
-        if (menu->exec(QWidget::mapToGlobal(_syncButton->geometry().center()))) {
-            resetButtons = true;
-        }
+        menu->exec(QWidget::mapToGlobal(_syncButton->geometry().center()));
     }
     else {
         emit runSync(ActionType::Drive);
-        resetButtons = true;
-    }
-
-    if (resetButtons) {
-        // Status is updated after a sync run
-        _pauseButton->setVisible(false);
-        _resumeButton->setVisible(false);
-        _syncButton->setVisible(false);
     }
 }
 

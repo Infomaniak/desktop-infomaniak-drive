@@ -56,8 +56,9 @@ ActionWidget::ActionWidget(const QString &path, const QString &text, QWidget *pa
 
     QLabel *leftTextLabel = new QLabel(_text, this);
     leftTextLabel->setObjectName("textLabel");
+    leftTextLabel->setWordWrap(true);
     hbox->addWidget(leftTextLabel);
-    hbox->addStretch();
+    hbox->setStretchFactor(leftTextLabel, 1);
 
     _actionIconLabel = new QLabel(this);
     hbox->addWidget(_actionIconLabel);
