@@ -193,7 +193,8 @@ bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &loc
         }
     }
     if (excluded == CSYNC_NOT_EXCLUDED && _discoveryData->_ignoreHiddenFiles && isHidden) {
-        excluded = CSYNC_FILE_EXCLUDE_HIDDEN;
+        //excluded = CSYNC_FILE_EXCLUDE_HIDDEN;
+        excluded = CSYNC_FILE_SILENTLY_EXCLUDED;
     }
     if (excluded == CSYNC_NOT_EXCLUDED && !localName.isEmpty()
             && _discoveryData->_serverBlacklistedFiles.contains(localName)) {

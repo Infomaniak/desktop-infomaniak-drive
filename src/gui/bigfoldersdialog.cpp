@@ -40,6 +40,8 @@ static const int undecidedItemBoxVSpacing = 0;
 static const int undecidedItemPathSpacing = 6;
 static const int undecidedItemPathDriveSpacing = 2;
 static const int driveIconSize = 14;
+static const int folderNameMaxSize = 50;
+static const int locationPathMaxSize = 50;
 
 BigFoldersDialog::BigFoldersDialog(const QStringList &undecidedList, const AccountInfo *accountInfo, QWidget *parent)
     : CustomDialog(true, parent)
@@ -105,8 +107,10 @@ BigFoldersDialog::BigFoldersDialog(const QStringList &undecidedList, const Accou
 
         QLabel *folderName = new QLabel(this);
         folderName->setObjectName("largeNormalBoldTextLabel");
+        if (name.size() > folderNameMaxSize) {
+            name = name.left(folderNameMaxSize) + "...";
+        }
         folderName->setText(name);
-        folderName->setWordWrap(true);
         folderName->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
         undecidedItemVBox->addWidget(folderName);
 
@@ -128,8 +132,10 @@ BigFoldersDialog::BigFoldersDialog(const QStringList &undecidedList, const Accou
 
         QLabel *locationPathLabel = new QLabel(this);
         locationPathLabel->setObjectName("folderPathLabel");
+        if (path.size() > locationPathMaxSize) {
+            path = path.left(locationPathMaxSize) + "...";
+        }
         locationPathLabel->setText(path);
-        locationPathLabel->setWordWrap(true);
         locationPathLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
         undecidedItemPathHBox->addWidget(locationPathLabel);
         undecidedItemPathHBox->setStretchFactor(locationPathLabel, 1);
