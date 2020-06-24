@@ -39,7 +39,6 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
     , _accountInfo(nullptr)
     , _statusIconLabel(nullptr)
     , _statusLabel(nullptr)
-    , _statusLinkLabel(nullptr)
     , _pauseButton(nullptr)
     , _resumeButton(nullptr)
     , _syncButton(nullptr)
@@ -52,6 +51,7 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
 
     QVBoxLayout *vBoxLayout = new QVBoxLayout();
     vBoxLayout->setContentsMargins(0, 0, 0, 0);
+    vBoxLayout->setSpacing(0);
     addLayout(vBoxLayout);
     setStretchFactor(vBoxLayout, 1);
 
@@ -59,11 +59,6 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
     _statusLabel->setObjectName("statusLabel");
     _statusLabel->setWordWrap(true);
     vBoxLayout->addWidget(_statusLabel);
-
-    _statusLinkLabel = new QLabel(this);
-    _statusLinkLabel->setObjectName("statusLabel");
-    _statusLinkLabel->setWordWrap(true);
-    vBoxLayout->addWidget(_statusLinkLabel);
 
     addStretch();
 
@@ -96,14 +91,9 @@ void StatusBarWidget::setStatus(bool paused, bool unresolvedConflicts, OCC::Sync
     _statusIconLabel->setPixmap(QIcon(OCC::Utility::getFolderStatusIconPath(paused, status))
                                 .pixmap(QSize(statusIconSize, statusIconSize)));
 
-    QStringList statusTextList = OCC::Utility::getFolderStatusText(paused, unresolvedConflicts, status,
-                                                                   currentFile, totalFiles, estimatedRemainingTime);
-    _statusLabel->setText(statusTextList[0]);
-    _statusLinkLabel->setVisible(statusTextList.count() > 1);
-    if (statusTextList.count() > 1) {
-        _statusLinkLabel->setText(statusTextList[1]);
-    }
-
+    QString statusText = OCC::Utility::getFolderStatusText(paused, unresolvedConflicts, status,
+                                                           currentFile, totalFiles, estimatedRemainingTime);
+    _statusLabel->setText(statusText);
     _statusIconLabel->setVisible(true);
     if (_accountInfo) {
         _pauseButton->setVisible(OCC::Utility::getPauseActionAvailable(_accountInfo->_paused, _accountInfo->_status));
@@ -116,7 +106,9 @@ void StatusBarWidget::setStatus(bool paused, bool unresolvedConflicts, OCC::Sync
         _syncButton->setVisible(false);
     }
 
-    connect(_statusLinkLabel, &QLabel::linkActivated, this, &StatusBarWidget::onLinkActivated);
+    repaint();
+
+    connect(_statusLabel, &QLabel::linkActivated, this, &StatusBarWidget::onLinkActivated);
 }
 
 void StatusBarWidget::setCurrentAccount(const AccountInfo *accountInfo)
