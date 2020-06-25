@@ -102,8 +102,10 @@ void CustomDialog::forceRedraw()
     // Windows hack
     QTimer::singleShot(0, this, [=]()
     {
+        setMaximumHeight(windowSize.height() + 1);
         setMinimumHeight(windowSize.height() + 1);
         setMinimumHeight(windowSize.height());
+        setMaximumHeight(windowSize.height());
     });
 #endif
 }

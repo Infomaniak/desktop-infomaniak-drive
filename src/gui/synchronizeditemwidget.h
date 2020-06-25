@@ -58,6 +58,7 @@ signals:
 
 private:
     const SynchronizedItem _item;
+    bool _isWaitingTimer;
     bool _isSelected;
     QSize _fileIconSize;
     QSize _directionIconSize;
