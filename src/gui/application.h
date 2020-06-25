@@ -70,6 +70,7 @@ public:
     void showSynthesisDialog();
     void setAlert(bool alert);
     bool getAlert();
+    void updateSystrayIcon();
 
 public slots:
     // TODO: this should not be public

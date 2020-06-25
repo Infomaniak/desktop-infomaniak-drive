@@ -13,6 +13,14 @@
  */
 
 #include "guiutility.h"
+#include "common/asserts.h"
+#include "common/utility.h"
+#include "libcommon/commonutility.h"
+#include "accountmanager.h"
+#include "folderman.h"
+#include "configfile.h"
+#include "openfilemanager.h"
+#include "application.h"
 
 #include <QApplication>
 #include <QBitmap>
@@ -32,14 +40,6 @@
 #include <QPixmap>
 #include <QScreen>
 #include <QUrlQuery>
-
-#include "common/asserts.h"
-#include "common/utility.h"
-#include "libcommon/commonutility.h"
-#include "accountmanager.h"
-#include "folderman.h"
-#include "configfile.h"
-#include "openfilemanager.h"
 
 using namespace OCC;
 
@@ -264,6 +264,8 @@ void Utility::setStyle(QApplication *app, bool isDarkTheme)
         StyleSheet.replace("font-weight: 350;", "font-weight: 400;");
 #endif
         app->setStyleSheet(StyleSheet);
+        Application *kDriveApp = qobject_cast<Application *>(app);
+        kDriveApp->updateSystrayIcon();
     }
     else {
         qCWarning(lcGuiUtility) << "Style sheet file not found!";

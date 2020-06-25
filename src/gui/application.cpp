@@ -715,6 +715,13 @@ bool Application::getAlert()
     return _alert;
 }
 
+void Application::updateSystrayIcon()
+{
+    if (_theme && _theme->systrayUseMonoIcons()) {
+        slotUseMonoIconsChanged(_theme->systrayUseMonoIcons());
+    }
+}
+
 void Application::openVirtualFile(const QString &filename)
 {
     QString virtualFileExt = QStringLiteral(APPLICATION_DOTVIRTUALFILE_SUFFIX);
