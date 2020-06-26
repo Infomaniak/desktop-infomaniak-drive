@@ -509,7 +509,7 @@ chrono::milliseconds ConfigFile::updateCheckInterval(const QString &connection) 
     QSettings settings(configFile(), QSettings::IniFormat);
     settings.beginGroup(con);
 
-    auto defaultInterval = chrono::hours(10);
+    auto defaultInterval = chrono::hours(1);
     auto interval = millisecondsValue(settings, updateCheckIntervalC, defaultInterval);
 
     auto minInterval = chrono::minutes(5);

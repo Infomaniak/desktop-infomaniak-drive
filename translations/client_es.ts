@@ -4973,7 +4973,7 @@ El modo de archivos virtuales se excluye mutuamente con una sincronización sele
     </message>
     <message>
         <source>You are up to date!</source>
-        <translation>Estas actualizado!</translation>
+        <translation>Estas actualizado !</translation>
     </message>
     <message>
         <source>Some files couldn&apos;t be synchronized.</source>

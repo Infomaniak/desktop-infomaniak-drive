@@ -4969,7 +4969,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
     <message>
         <source>You are up to date!</source>
-        <translation>Sie sind up to date! </translation>
+        <translation>Sie sind up to date ! </translation>
     </message>
     <message>
         <source>Some files couldn&apos;t be synchronized.</source>

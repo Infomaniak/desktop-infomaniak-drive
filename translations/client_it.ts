@@ -4971,7 +4971,7 @@ Questa è una nuova modalità sperimentale. Se decidi di usarla, ti preghiamo di
     </message>
     <message>
         <source>You are up to date!</source>
-        <translation>Sistema aggiornato!</translation>
+        <translation>Sistema aggiornato !</translation>
     </message>
     <message>
         <source>Some files couldn&apos;t be synchronized.</source>

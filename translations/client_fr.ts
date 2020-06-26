@@ -4974,7 +4974,7 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
     </message>
     <message>
         <source>You are up to date!</source>
-        <translation>Vous êtes à jour!</translation>
+        <translation>Vous êtes à jour !</translation>
     </message>
     <message>
         <source>Some files couldn&apos;t be synchronized.</source>
