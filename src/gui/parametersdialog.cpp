@@ -192,7 +192,7 @@ void ParametersDialog::initUI()
 
     QLabel *defaultTextLabel = new QLabel(this);
     defaultTextLabel->setObjectName("defaultTextLabel");
-    defaultTextLabel->setText("No kDrive configured!");
+    defaultTextLabel->setText(tr("No kDrive configured!"));
     defaultTextLabel->setAlignment(Qt::AlignHCenter);
     defaultTextLabel->setWordWrap(true);
     vboxLayout->addWidget(defaultTextLabel);

@@ -178,6 +178,10 @@
         <source>Unable to open debugging folder %1.</source>
         <translation>Impossibile aprire la cartella di debug %1.</translation>
     </message>
+    <message>
+        <source>Using virtual files plugin: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>KDC::AddDriveConfirmationWidget</name>
@@ -822,6 +826,10 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
     <message>
         <source>CANCEL</source>
         <translation>ANNULLA</translation>
+    </message>
+    <message>
+        <source>No kDrive configured!</source>
+        <translation type="unfinished">Nessun kDrive configurato!</translation>
     </message>
 </context>
 <context>

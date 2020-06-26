@@ -178,6 +178,10 @@
         <source>Unable to open debugging folder %1.</source>
         <translation>No es posible abrir la carpeta de depuración %1.</translation>
     </message>
+    <message>
+        <source>Using virtual files plugin: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>KDC::AddDriveConfirmationWidget</name>
@@ -822,6 +826,10 @@ Esta acción interrumpirá cualquier sincronización actualmente en ejecución.<
     <message>
         <source>CANCEL</source>
         <translation>CANCELAR</translation>
+    </message>
+    <message>
+        <source>No kDrive configured!</source>
+        <translation type="unfinished">¡No hay ningún kDrive configurado!</translation>
     </message>
 </context>
 <context>
