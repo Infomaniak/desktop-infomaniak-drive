@@ -151,8 +151,10 @@ void SynthesisPopover::forceRedraw()
 {
 #ifdef Q_OS_WINDOWS
     // Windows hack
-    setMinimumHeight(minimumHeight() + 1);
-    setMinimumHeight(minimumHeight());
+    setMaximumHeight(windowSize.height() + 1);
+    setMinimumHeight(windowSize.height() + 1);
+    setMinimumHeight(windowSize.height());
+    setMaximumHeight(windowSize.height());
 #endif
 }
 

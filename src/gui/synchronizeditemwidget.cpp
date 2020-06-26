@@ -32,6 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QPainter>
 #include <QPainterPath>
 #include <QScreen>
+#include <QTimer>
 #include <QGraphicsScene>
 #include <QGraphicsSvgItem>
 #include <QWidgetAction>
@@ -51,10 +52,12 @@ static const int statusIconWidth = 10;
 static const int shadowBlurRadius = 20;
 static const QString dateFormat = "d MMM - HH:mm";
 static const int fileNameMaxSize = 32;
+static const int hoverStartTimer = 250;
 
 SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWidget *parent)
     : QWidget(parent)
     , _item(item)
+    , _isWaitingTimer(false)
     , _isSelected(false)
     , _fileIconSize(QSize())
     , _directionIconSize(QSize())
@@ -193,14 +196,22 @@ void SynchronizedItemWidget::enterEvent(QEvent *event)
 {
     Q_UNUSED(event)
 
-    setSelected(true);
+    _isWaitingTimer = true;
+    QTimer::singleShot(hoverStartTimer, [=](){
+        if (_isWaitingTimer) {
+            setSelected(true);
+        }
+    });
 }
 
 void SynchronizedItemWidget::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event)
 
-    setSelected(false);
+    _isWaitingTimer = false;
+    if (_isSelected) {
+        setSelected(false);
+    }
 }
 
 QString SynchronizedItemWidget::getFileIconPathFromFileName(const QString &fileName, ItemType type) const
