@@ -178,6 +178,10 @@
         <source>Unable to open debugging folder %1.</source>
         <translation>Impossible d’ouvrir le dossier de débogage %1.</translation>
     </message>
+    <message>
+        <source>Using virtual files plugin: %1</source>
+        <translation>Utilisation du plugin pour les fichiers virtuels: %1</translation>
+    </message>
 </context>
 <context>
     <name>KDC::AddDriveConfirmationWidget</name>
@@ -823,6 +827,10 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <source>CANCEL</source>
         <translation>ANNULER</translation>
     </message>
+    <message>
+        <source>No kDrive configured!</source>
+        <translation type="unfinished">Aucun kDrive configuré !</translation>
+    </message>
 </context>
 <context>
     <name>KDC::PreferencesMenuBarWidget</name>
@@ -973,7 +981,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>Proxy not found, save anyway?</source>
-        <translation>Proxy non trouvé ; enregistrer quand même ?</translation>
+        <translation>Proxy non trouvé, enregistrer quand même ?</translation>
     </message>
 </context>
 <context>

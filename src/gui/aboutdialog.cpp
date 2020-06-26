@@ -133,7 +133,7 @@ QString AboutDialog::aboutText() const
             .arg(OCC::Utility::escape(APPLICATION_VENDOR))
             .arg(OCC::Utility::escape(APPLICATION_NAME));
     about += gitSHA1();
-    about += QString("Using virtual files plugin: %1")
+    about += QString(tr("Using virtual files plugin: %1"))
             .arg(OCC::Vfs::modeToString(OCC::bestAvailableVfsMode()));
 
     return about;

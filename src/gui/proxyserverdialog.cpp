@@ -36,10 +36,10 @@ namespace KDC {
 static const int boxHMargin = 40;
 static const int boxHSpacing = 10;
 static const int titleBoxVMargin = 14;
-static const int proxyBoxVMargin = 13;
-static const int proxyBoxSpacing = 13;
+static const int proxyBoxVMargin = 12;
+static const int proxyBoxSpacing = 12;
 static const int manualProxyBoxHMargin = 60;
-static const int manualProxyBoxVMargin = 13;
+static const int manualProxyBoxVMargin = 12;
 static const int authenticationSpacing = 5;
 static const int portLineEditSize = 80;
 static const int defaultPortNumber = 8080;
@@ -155,6 +155,7 @@ void ProxyServerDialog::initUI()
     manualProxyVBox->addLayout(manualProxyPortHBox);
 
     QLabel *portLabel = new QLabel(this);
+    portLabel->setObjectName("boldTextLabel");
     portLabel->setText(tr("Port"));
     manualProxyPortHBox->addWidget(portLabel);
 
