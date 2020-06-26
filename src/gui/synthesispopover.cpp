@@ -151,10 +151,17 @@ void SynthesisPopover::forceRedraw()
 {
 #ifdef Q_OS_WINDOWS
     // Windows hack
-    setMaximumHeight(windowSize.height() + 1);
-    setMinimumHeight(windowSize.height() + 1);
-    setMinimumHeight(windowSize.height());
-    setMaximumHeight(windowSize.height());
+    QTimer::singleShot(0, this, [=]()
+    {
+        if (geometry().height() > windowSize.height()) {
+            setGeometry(geometry() + QMargins(0, 0, 0, -1));
+            setMaximumHeight(windowSize.height());
+        }
+        else {
+            setMaximumHeight(windowSize.height() + 1);
+            setGeometry(geometry() + QMargins(0, 0, 0, 1));
+        }
+    });
 #endif
 }
 
