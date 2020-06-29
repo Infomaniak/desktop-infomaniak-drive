@@ -78,8 +78,8 @@
         <file>resources/icons/theme/black/state-offline.svg</file>
         <file>resources/icons/theme/black/state-ok.svg</file>
         <file>resources/icons/theme/black/state-pause.svg</file>
-        <file>resources/icons/theme/black/state-sync.svg</file>
         <file>resources/icons/theme/black/state-warning.svg</file>
+        <file>resources/icons/theme/black/state-sync.svg</file>
         <file>resources/icons/theme/colored/state-download.svg</file>
         <file>resources/icons/theme/colored/state-error.svg</file>
         <file>resources/icons/theme/colored/state-information.svg</file>
