@@ -30,7 +30,7 @@ static const int hMargin = 10;
 static const int vMargin = 0;
 static const int driveBoxHMargin = 10;
 static const int driveBoxVMargin = 10;
-static const int hButtonsSpacing = 20;
+static const int hButtonsSpacing = 50;
 
 MainMenuBarWidget::MainMenuBarWidget(QWidget *parent)
     : HalfRoundRectWidget(parent)
