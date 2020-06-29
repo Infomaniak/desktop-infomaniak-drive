@@ -35,6 +35,8 @@ class AddDriveLocalFolderWidget : public QWidget
 
     Q_PROPERTY(QColor folder_icon_color READ folderIconColor WRITE setFolderIconColor)
     Q_PROPERTY(QSize folder_icon_size READ folderIconSize WRITE setFolderIconSize)
+    Q_PROPERTY(QColor info_icon_color READ infoIconColor WRITE setInfoIconColor)
+    Q_PROPERTY(QSize info_icon_size READ infoIconSize WRITE setInfoIconSize)
     Q_PROPERTY(QColor logo_color READ logoColor WRITE setLogoColor)
 
 public:
@@ -50,15 +52,21 @@ signals:
 
 private:
     QString _localFolderPath;
+    QString _defaultLocalFolderPath;
     QLabel *_logoTextIconLabel;
     QLabel *_titleLabel;
     QLabel *_folderIconLabel;
     QLabel *_folderNameLabel;
     QLabel *_folderPathLabel;
+    QWidget *_infoWidget;
+    QLabel *_infoIconLabel;
+    QLabel *_infoLabel;
     QPushButton *_backButton;
     QPushButton *_endButton;
     QColor _folderIconColor;
     QSize _folderIconSize;
+    QColor _infoIconColor;
+    QSize _infoIconSize;
     QColor _logoColor;
     bool _needToSave;
 
@@ -76,6 +84,20 @@ private:
         setFolderIcon();
     }
 
+    inline QColor infoIconColor() const { return _infoIconColor; }
+    inline void setInfoIconColor(QColor color)
+    {
+        _infoIconColor = color;
+        setInfoIcon();
+    }
+
+    inline QSize infoIconSize() const { return _infoIconSize; }
+    inline void setInfoIconSize(QSize size)
+    {
+        _infoIconSize = size;
+        setInfoIcon();
+    }
+
     inline QColor logoColor() const { return _logoColor; }
     void setLogoColor(const QColor& color);
 
@@ -83,6 +105,7 @@ private:
     void updateUI();
     void selectFolder(const QString &startDirPath);
     void setFolderIcon();
+    void setInfoIcon();
 
 private slots:
     void onDisplayMessage(const QString &text);

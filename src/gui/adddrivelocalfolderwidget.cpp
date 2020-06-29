@@ -42,6 +42,8 @@ static const int selectionBoxHMargin = 15;
 static const int selectionBoxVMargin = 20;
 static const int selectionBoxSpacing = 10;
 static const int selectionWidgetVMargin = 30;
+static const int infoBoxSpacing = 10;
+static const int infoWidgetVMargin = 25;
 static const int progressBarMin = 0;
 static const int progressBarMax = 4;
 
@@ -50,11 +52,15 @@ Q_LOGGING_CATEGORY(lcAddDriveLocalFolderWidget, "adddrivelocalfolderwidget", QtI
 AddDriveLocalFolderWidget::AddDriveLocalFolderWidget(QWidget *parent)
     : QWidget(parent)
     , _localFolderPath(QString())
+    , _defaultLocalFolderPath(QString())
     , _logoTextIconLabel(nullptr)
     , _titleLabel(nullptr)
     , _folderIconLabel(nullptr)
     , _folderNameLabel(nullptr)
     , _folderPathLabel(nullptr)
+    , _infoWidget(nullptr)
+    , _infoIconLabel(nullptr)
+    , _infoLabel(nullptr)
     , _backButton(nullptr)
     , _endButton(nullptr)
     , _folderIconColor(QColor())
@@ -74,14 +80,8 @@ void AddDriveLocalFolderWidget::setAccountPtr(OCC::AccountPtr accountPtr)
 void AddDriveLocalFolderWidget::setLocalFolderPath(const QString &path)
 {
     _localFolderPath = path;
-    bool ok = !_localFolderPath.isEmpty();
-    if (ok) {
-        QDir dir(_localFolderPath);
-        _folderNameLabel->setText(dir.dirName());
-        _folderPathLabel->setText(QString("<a style=\"%1\" href=\"ref\">%2</a>")
-                                  .arg(OCC::Utility::linkStyle)
-                                  .arg(_localFolderPath));
-    }
+    _defaultLocalFolderPath = path;
+    updateUI();
 }
 
 void AddDriveLocalFolderWidget::setButtonIcon(const QColor &value)
@@ -168,6 +168,30 @@ void AddDriveLocalFolderWidget::initUI()
     folderSelectedHBox->addWidget(updateButton);
     mainLayout->addSpacing(selectionWidgetVMargin);
 
+    // Info
+    _infoWidget = new QWidget(this);
+    _infoWidget->setVisible(false);
+    mainLayout->addWidget(_infoWidget);
+
+    QVBoxLayout *infoVBox = new QVBoxLayout();
+    infoVBox->setContentsMargins(0, 0, 0, 0);
+    _infoWidget->setLayout(infoVBox);
+
+    QHBoxLayout *infoHBox = new QHBoxLayout();
+    infoHBox->setContentsMargins(0, 0, 0, 0);
+    infoHBox->setSpacing(infoBoxSpacing);
+    infoVBox->addLayout(infoHBox);
+    infoVBox->addSpacing(infoWidgetVMargin);
+
+    _infoIconLabel = new QLabel(this);
+    infoHBox->addWidget(_infoIconLabel);
+
+    _infoLabel = new QLabel(this);
+    _infoLabel->setObjectName("largeMediumTextLabel");
+    _infoLabel->setWordWrap(true);
+    infoHBox->addWidget(_infoLabel);
+    infoHBox->setStretchFactor(_infoLabel, 1);
+
     // Description
     QLabel *descriptionLabel = new QLabel(this);
     descriptionLabel->setObjectName("largeNormalTextLabel");
@@ -210,6 +234,12 @@ void AddDriveLocalFolderWidget::updateUI()
         _folderPathLabel->setText(QString("<a style=\"%1\" href=\"ref\">%2</a>")
                                   .arg(OCC::Utility::linkStyle)
                                   .arg(_localFolderPath));
+
+        if (_localFolderPath != _defaultLocalFolderPath) {
+            _infoLabel->setText(tr("The contents of the <b>%1</b> folder will be synchronized in your kDrive")
+                                .arg(dir.dirName()));
+            _infoWidget->setVisible(true);
+        }
     }
 }
 
@@ -229,6 +259,14 @@ void AddDriveLocalFolderWidget::setFolderIcon()
     if (_folderIconColor != QColor() && _folderIconSize != QSize()) {
         _folderIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/folder.svg", _folderIconColor)
                                    .pixmap(_folderIconSize));
+    }
+}
+
+void AddDriveLocalFolderWidget::setInfoIcon()
+{
+    if (_infoIconColor != QColor() && _infoIconSize != QSize()) {
+        _infoIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/information.svg", _infoIconColor)
+                                   .pixmap(_infoIconSize));
     }
 }
 
@@ -279,8 +317,6 @@ void AddDriveLocalFolderWidget::onUpdateFolderButtonTriggered(bool checked)
 void AddDriveLocalFolderWidget::onLinkActivated(const QString &link)
 {
     Q_UNUSED(link)
-
-    //emit openFolder(_localFolderPath);
 }
 
 }

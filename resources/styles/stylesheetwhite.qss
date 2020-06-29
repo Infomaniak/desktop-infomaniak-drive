@@ -1693,6 +1693,8 @@ KDC--AddDriveLocalFolderWidget
 {
     qproperty-folder_icon_color: #9F9F9F;
     qproperty-folder_icon_size: 20px;
+    qproperty-info_icon_color: #0098FF;
+    qproperty-info_icon_size: 20px;
     qproperty-logo_color: #000000;
 }
 
