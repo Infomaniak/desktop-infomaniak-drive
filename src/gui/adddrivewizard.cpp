@@ -125,18 +125,22 @@ void AddDriveWizard::startNextStep()
     _stepStackedWidget->setCurrentIndex(_currentStep);
 
     if (_currentStep == Begin) {
+        setBackgroundForcedColor(QColor());
         _addDriveStartWidget->setAccountPtr(_accountPtr);
         _addDriveStartWidget->setServerUrl(_accountPtr->url().toString());
     }
     else if (_currentStep == Login) {
+        setBackgroundForcedColor(Qt::white);
         _serverUrl = _addDriveStartWidget->serverUrl();
         _addDriveLoginWidget->setAccountPtr(_accountPtr);
         _addDriveLoginWidget->login(_serverUrl);
     }
     else if (_currentStep == RemoteFoders) {
+        setBackgroundForcedColor(QColor());
         _addDriveServerFoldersWidget->setAccountPtr(_accountPtr);
     }
     else if (_currentStep == LocalFolder) {
+        setBackgroundForcedColor(QColor());
         _addDriveLocalFolderWidget->setAccountPtr(_accountPtr);
         QString localFolderPath = OCC::Theme::instance()->defaultClientFolder();
         if (!QDir(localFolderPath).isAbsolute()) {
@@ -146,6 +150,7 @@ void AddDriveWizard::startNextStep()
         _addDriveLocalFolderWidget->setLocalFolderPath(goodLocalFolderPath);
     }
     else if (_currentStep == Confirmation) {
+        setBackgroundForcedColor(QColor());
         _addDriveConfirmationWidget->setFolderPath(_localFolderPath);
     }
 }

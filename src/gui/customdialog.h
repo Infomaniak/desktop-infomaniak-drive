@@ -42,6 +42,7 @@ public:
     int exec(QPoint position);
     inline QVBoxLayout *mainLayout() const { return _layout; }
     void forceRedraw();
+    void setBackgroundForcedColor(const QColor &value);
 
 signals:
     void exit();
@@ -50,6 +51,7 @@ signals:
 private:
     QColor _backgroundColor;
     QColor _buttonIconColor;
+    QColor _backgroundForcedColor;
     QVBoxLayout *_layout;
 
     void paintEvent(QPaintEvent *event) override;

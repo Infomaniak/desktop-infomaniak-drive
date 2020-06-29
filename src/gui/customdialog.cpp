@@ -46,6 +46,7 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
     : QDialog(parent)
     , _backgroundColor(QColor())
     , _buttonIconColor(QColor())
+    , _backgroundForcedColor(QColor())
     , _layout(nullptr)
 {
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
@@ -114,6 +115,12 @@ void CustomDialog::forceRedraw()
 #endif
 }
 
+void CustomDialog::setBackgroundForcedColor(const QColor &value)
+{
+    _backgroundForcedColor = value;
+    repaint();
+}
+
 void CustomDialog::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
@@ -132,7 +139,7 @@ void CustomDialog::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(backgroundColor());
+    painter.setBrush(_backgroundForcedColor == QColor() ? backgroundColor() : _backgroundForcedColor);
     painter.drawPath(painterPath);
 }
 
