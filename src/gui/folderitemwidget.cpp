@@ -174,10 +174,10 @@ void FolderItemWidget::setExpandButton()
 {
     _expandButton->hide();
     if (_isExpanded) {
-        _expandButton->setIconPath(":/client/resources/icons/actions/chevron-up.svg");
+        _expandButton->setIconPath(":/client/resources/icons/actions/chevron-down.svg");
     }
     else {
-        _expandButton->setIconPath(":/client/resources/icons/actions/chevron-down.svg");
+        _expandButton->setIconPath(":/client/resources/icons/actions/chevron-right.svg");
     }
     _expandButton->show();
 }
