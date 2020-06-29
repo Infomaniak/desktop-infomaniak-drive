@@ -163,25 +163,21 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     generalBloc->addSeparator();
 
     // Dark theme activation
-    QBoxLayout *darkThemeBox = generalBloc->addLayout(QBoxLayout::Direction::LeftToRight);
+    CustomSwitch *darkThemeSwitch = nullptr;
+    if (!OCC::Utility::isMac()) {
+        QBoxLayout *darkThemeBox = generalBloc->addLayout(QBoxLayout::Direction::LeftToRight);
 
-    QLabel *darkThemeLabel = new QLabel(tr("Activate dark theme"), this);
-    darkThemeBox->addWidget(darkThemeLabel);
-    darkThemeBox->addStretch();
+        QLabel *darkThemeLabel = new QLabel(tr("Activate dark theme"), this);
+        darkThemeBox->addWidget(darkThemeLabel);
+        darkThemeBox->addStretch();
 
-    CustomSwitch *darkThemeSwitch = new CustomSwitch(this);
-    darkThemeSwitch->setLayoutDirection(Qt::RightToLeft);
-    darkThemeSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
-    if (OCC::Utility::isMac()) {
-        bool darkSystray = OCC::Utility::hasDarkSystray();
-        darkThemeSwitch->setCheckState(darkSystray ? Qt::Checked : Qt::Unchecked);
-        darkThemeSwitch->setDisabled(true);
-    }
-    else {
+        darkThemeSwitch = new CustomSwitch(this);
+        darkThemeSwitch->setLayoutDirection(Qt::RightToLeft);
+        darkThemeSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
         darkThemeSwitch->setCheckState(cfg.darkTheme() ? Qt::Checked : Qt::Unchecked);
+        darkThemeBox->addWidget(darkThemeSwitch);
+        generalBloc->addSeparator();
     }
-    darkThemeBox->addWidget(darkThemeSwitch);
-    generalBloc->addSeparator();
 
     // Monochrome icons activation
     QBoxLayout *monochromeIconsBox = generalBloc->addLayout(QBoxLayout::Direction::LeftToRight);
@@ -311,7 +307,9 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
 
     connect(folderConfirmationSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onFolderConfirmationSwitchClicked);
     connect(_folderConfirmationAmountLineEdit, &QLineEdit::textEdited, this, &PreferencesWidget::onFolderConfirmationAmountTextEdited);
-    connect(darkThemeSwitch, &CustomSwitch::clicked,this, &PreferencesWidget::onDarkThemeSwitchClicked);
+    if (darkThemeSwitch) {
+        connect(darkThemeSwitch, &CustomSwitch::clicked,this, &PreferencesWidget::onDarkThemeSwitchClicked);
+    }
     connect(monochromeSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onMonochromeSwitchClicked);
     connect(launchAtStartupSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onLaunchAtStartupSwitchClicked);
     connect(debuggingWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onDebuggingWidgetClicked);
