@@ -216,7 +216,7 @@ void FolderItemWidget::onMenuButtonClicked()
     menu->addSeparator();
 
     QWidgetAction *unsyncAction = new QWidgetAction(this);
-    MenuItemWidget *unsyncMenuItemWidget = new MenuItemWidget(tr("Remove advanced synchronization"));
+    MenuItemWidget *unsyncMenuItemWidget = new MenuItemWidget(tr("Remove synchronization"));
     unsyncMenuItemWidget->setLeftIcon(":/client/resources/icons/actions/delete.svg");
     unsyncAction->setDefaultWidget(unsyncMenuItemWidget);
     connect(unsyncAction, &QWidgetAction::triggered, this, &FolderItemWidget::onUnsyncTriggered);
