@@ -151,7 +151,7 @@ void SynchronizedItemWidget::setSelected(bool isSelected)
         _fileDirectionLabel->setVisible(true);
 
         // Shadow
-        QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
+        QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect(this);
         effect->setBlurRadius(shadowBlurRadius);
         effect->setOffset(0);
         effect->setColor(OCC::Utility::getShadowColor());

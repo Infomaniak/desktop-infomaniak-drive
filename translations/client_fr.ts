@@ -228,6 +228,10 @@
         <source>Select folder</source>
         <translation>Sélectionner le dossier</translation>
     </message>
+    <message>
+        <source>The contents of the &lt;b&gt;%1&lt;/b&gt; folder will be synchronized in your kDrive</source>
+        <translation>Le contenu du dossier &lt;b&gt;%1&lt;/b&gt; sera synchronisé sur votre kDrive</translation>
+    </message>
 </context>
 <context>
     <name>KDC::AddDriveServerFoldersWidget</name>
@@ -566,10 +570,6 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <translation>Certains dossiers n&apos;ont pas été synchronisés parce qu’ils sont trop volumineux.</translation>
     </message>
     <message>
-        <source>Disable the notifications for this kDrive</source>
-        <translation>Désactiver les notifications pour ce kDrive</translation>
-    </message>
-    <message>
         <source>ENABLE VIRTUAL FILES</source>
         <translation>ACTIVER LES FICHIERS VIRTUELS</translation>
     </message>
@@ -604,6 +604,10 @@ Cette action stoppera toute synchronisation en cours.</translation>
     <message>
         <source>No subfolders currently on the server.</source>
         <translation>Aucun sous-dossier sur le serveur.</translation>
+    </message>
+    <message>
+        <source>Enable the notifications for this kDrive</source>
+        <translation>Activer les notifications pour ce kDrive</translation>
     </message>
 </context>
 <context>
@@ -743,8 +747,8 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <translation>Reprendre la synchronisation</translation>
     </message>
     <message>
-        <source>Remove advanced synchronization</source>
-        <translation>Supprimer la synchronisation avancée</translation>
+        <source>Remove synchronization</source>
+        <translation>Supprimer la synchronisation</translation>
     </message>
 </context>
 <context>
@@ -829,7 +833,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>No kDrive configured!</source>
-        <translation type="unfinished">Aucun kDrive configuré !</translation>
+        <translation>Aucun kDrive configuré !</translation>
     </message>
 </context>
 <context>

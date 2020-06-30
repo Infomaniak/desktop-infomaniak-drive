@@ -204,13 +204,12 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     notifications1HBox->setSpacing(0);
     notificationsBox->addLayout(notifications1HBox);
 
-    QLabel *notificationsTitleLabel = new QLabel(tr("Disable the notifications for this kDrive"), this);
+    QLabel *notificationsTitleLabel = new QLabel(tr("Enable the notifications for this kDrive"), this);
     notifications1HBox->addWidget(notificationsTitleLabel);
 
     _notificationsSwitch = new CustomSwitch(this);
     _notificationsSwitch->setLayoutDirection(Qt::RightToLeft);
     _notificationsSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
-    _notificationsSwitch->setCheckState(cfg.monoIcons() ? Qt::Checked : Qt::Unchecked);
     notifications1HBox->addWidget(_notificationsSwitch);
 
     QHBoxLayout *notifications2HBox = new QHBoxLayout();
@@ -287,7 +286,7 @@ void DrivePreferencesWidget::setAccount(const QString &accountId, const AccountI
     _displayBigFoldersWarningWidget->setVisible(existUndecidedList());
     updateFoldersBlocs();
     updateSmartSyncSwitchState();
-    _notificationsSwitch->setChecked(OCC::FolderMan::instance()->notificationsDisabled(_accountId));
+    _notificationsSwitch->setChecked(!OCC::FolderMan::instance()->notificationsDisabled(_accountId));
     updateAccountInfo();
 }
 
@@ -301,7 +300,7 @@ void DrivePreferencesWidget::reset()
     if (_smartSyncSwitch) {
         _smartSyncSwitch->setChecked(false);
     }
-    _notificationsSwitch->setChecked(false);
+    _notificationsSwitch->setChecked(true);
     _accountAvatarLabel->setPixmap(QPixmap());
     _accountNameLabel->setText(QString());
     _accountMailLabel->setText(QString());
@@ -1040,7 +1039,7 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
 
 void DrivePreferencesWidget::onNotificationsSwitchClicked(bool checked)
 {
-    OCC::FolderMan::instance()->setNotificationsDisabled(_accountId, checked);
+    OCC::FolderMan::instance()->setNotificationsDisabled(_accountId, !checked);
 }
 
 void DrivePreferencesWidget::onErrorAdded()

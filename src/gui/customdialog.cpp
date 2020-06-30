@@ -77,7 +77,7 @@ CustomDialog::CustomDialog(bool popup, QWidget *parent)
     mainVBox->setStretchFactor(_layout, 1);
 
     // Shadow
-    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect(this);
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
     setGraphicsEffect(effect);

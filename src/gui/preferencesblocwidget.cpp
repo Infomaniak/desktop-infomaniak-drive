@@ -49,7 +49,7 @@ PreferencesBlocWidget::PreferencesBlocWidget(QWidget *parent)
     setLayout(_layout);
 
     // Shadow
-    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect(this);
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
     setGraphicsEffect(effect);

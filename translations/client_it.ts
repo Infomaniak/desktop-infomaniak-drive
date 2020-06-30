@@ -180,7 +180,7 @@
     </message>
     <message>
         <source>Using virtual files plugin: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilizzo del plug-in di file virtuali : %1</translation>
     </message>
 </context>
 <context>
@@ -227,6 +227,10 @@
     <message>
         <source>Select folder</source>
         <translation>Seleziona cartella</translation>
+    </message>
+    <message>
+        <source>The contents of the &lt;b&gt;%1&lt;/b&gt; folder will be synchronized in your kDrive</source>
+        <translation>Il contenuto della cartella &lt;b&gt;%1&lt;/b&gt; verrà sincronizzato in kDrive</translation>
     </message>
 </context>
 <context>
@@ -342,7 +346,7 @@
     </message>
     <message>
         <source>Kb/s</source>
-        <translation type="unfinished"></translation>
+        <translation>Kb/s</translation>
     </message>
 </context>
 <context>
@@ -566,10 +570,6 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
         <translation>Alcune cartelle non sono state sincronizzate perché sono troppo grandi.</translation>
     </message>
     <message>
-        <source>Disable the notifications for this kDrive</source>
-        <translation>Disabilita le notifiche per questo kDrive</translation>
-    </message>
-    <message>
         <source>ENABLE VIRTUAL FILES</source>
         <translation>ABILITA FILE VIRTUALI</translation>
     </message>
@@ -604,6 +604,10 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
     <message>
         <source>No subfolders currently on the server.</source>
         <translation>Attualmente non ci sono sottocartelle sul server.</translation>
+    </message>
+    <message>
+        <source>Enable the notifications for this kDrive</source>
+        <translation>Abilita le notifiche per questo kDrive</translation>
     </message>
 </context>
 <context>
@@ -743,8 +747,8 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
         <translation>Riprendi sincronizzazione</translation>
     </message>
     <message>
-        <source>Remove advanced synchronization</source>
-        <translation>Rimuovi sincronizzazione avanzata</translation>
+        <source>Remove synchronization</source>
+        <translation>Rimuovi sincronizzazione</translation>
     </message>
 </context>
 <context>
@@ -829,7 +833,7 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
     </message>
     <message>
         <source>No kDrive configured!</source>
-        <translation type="unfinished">Nessun kDrive configurato!</translation>
+        <translation>Nessun kDrive configurato!</translation>
     </message>
 </context>
 <context>
@@ -907,7 +911,7 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
     </message>
     <message>
         <source>Mb</source>
-        <translation type="unfinished"></translation>
+        <translation>Mb</translation>
     </message>
 </context>
 <context>

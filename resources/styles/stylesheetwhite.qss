@@ -20,7 +20,7 @@ QProgressDialog QLabel {
 
 QProgressDialog QPushButton
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     border-radius: 3px;
     min-height: 40px;
@@ -110,7 +110,7 @@ KDC--CustomToolButton#errorsButton
 
 KDC--CustomTogglePushButton
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     color: #666666;
     min-height: 30px;
     max-height: 30px;
@@ -391,7 +391,7 @@ KDC--CustomDialog QRadioButton
 
 KDC--CustomDialog QPushButton#nondefaultbutton
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     border-radius: 3px;
     min-height: 40px;
@@ -476,7 +476,7 @@ KDC--CustomDialog QPushButton#defaultsmallbutton:disabled
 
 KDC--CustomDialog QTableView
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     padding-left: 0px;
     padding-right: 0px;
@@ -487,7 +487,7 @@ KDC--CustomDialog QTableView
     font-family: "Suisse Int'l";
     font-weight: 350; /* normal */
     font-size: 14px;
-    gridline-color: #F5F5F5;
+    gridline-color: #F4F6FD;
     outline: none;
 }
 
@@ -605,7 +605,7 @@ KDC--MenuItemWidget
 
 KDC--MenuItemWidget:hover
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
 }
 
 KDC--MenuItemWidget QLabel#menuItemLabel
@@ -652,7 +652,7 @@ KDC--ProgressBarWidget QLabel#progressLabel
 KDC--HalfRoundRectWidget
 {
     background-color: #FFFFFF;
-    qproperty-bottom_corners_color: #F5F5F5;
+    qproperty-bottom_corners_color: #F4F6FD;
 }
 
 /*********************/
@@ -663,7 +663,7 @@ KDC--BottomWidget
 {
     min-height: 5px;
     max-height: 5px;
-    qproperty-background_color: #F5F5F5;
+    qproperty-background_color: #F4F6FD;
 }
 
 /*************************/
@@ -677,7 +677,7 @@ KDC--SynthesisPopover
 
 KDC--SynthesisPopover QScrollBar:vertical
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     width: 3px;
     margin: 0px 0px 0px 0px;
@@ -705,7 +705,7 @@ KDC--SynthesisPopover QScrollBar::sub-line:vertical
 
 KDC--SynthesisPopover QStackedWidget
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
 }
 
@@ -743,7 +743,7 @@ KDC--SynthesisPopover QLabel#defaultTextLabel
 
 KDC--ParametersDialog QScrollBar:vertical
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     width: 3px;
     margin: 0px 0px 0px 0px;
@@ -777,17 +777,17 @@ KDC--ParametersDialog QStackedWidget
 
 KDC--ParametersDialog QStackedWidget#mainStackedWidget
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
 }
 
 KDC--ParametersDialog QStackedWidget#errorsStackedWidget
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
 }
 
 KDC--ParametersDialog QScrollArea
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
 }
 
@@ -804,7 +804,7 @@ KDC--ParametersDialog QListWidget::item
 
 KDC--ParametersDialog QWidget#errorsHeaderWidget
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
 }
 
@@ -834,7 +834,7 @@ KDC--ParametersDialog QLabel#defaultTextLabel
 
 KDC--ParametersDialog QWidget#noDrivePagewidget
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
 }
 
 /*********************/
@@ -884,7 +884,7 @@ KDC--DriveSelectionWidget
 
 KDC--DriveSelectionWidget:hover
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
 }
 
 KDC--DriveSelectionWidget QLabel#driveTextLabel
@@ -1007,7 +1007,7 @@ KDC--PreferencesMenuBarWidget QLabel#titleLabel
 
 KDC--ButtonsBarWidget
 {
-    qproperty-background_color: #F5F5F5;
+    qproperty-background_color: #F4F6FD;
 }
 
 /*******************************/
@@ -1046,7 +1046,7 @@ KDC--SynchronizedItemWidget QLabel#fileDateLabel
 KDC--AccountItemWidget
 {
     qproperty-account_icon_size: 50px;
-    qproperty-account_icon_color: #F5F5F5;
+    qproperty-account_icon_color: #F4F6FD;
     qproperty-drive_icon_size: 24px;
     qproperty-status_icon_size: 15px;
     qproperty-background_color: #FFFFFF;
@@ -1115,7 +1115,7 @@ KDC--ErrorItemWidget QLabel#fileDateLabel
 
 KDC--DrivePreferencesWidget
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
 }
 
@@ -1227,7 +1227,7 @@ KDC--PreferencesBlocWidget QScrollArea
 
 KDC--PreferencesBlocWidget QScrollBar:horizontal
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     height: 3px;
     margin: 0px 0px 0px 0px;
@@ -1403,7 +1403,7 @@ KDC--CustomMessageBox QPushButton:default
 
 KDC--FolderTreeItemWidget
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     padding-left: 0px;
     padding-right: 0px;
@@ -1484,7 +1484,7 @@ KDC--FolderTreeItemWidget::indicator:indeterminate:disabled
 
 KDC--FolderTreeItemWidget QScrollBar:vertical
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     width: 3px;
     margin: 0px 0px 0px 0px;
@@ -1526,7 +1526,7 @@ KDC--FolderTreeItemWidget#updateFolderTreeItemWidget::item
 
 KDC--BaseFolderTreeItemWidget
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     padding-left: 0px;
     padding-right: 0px;
@@ -1559,7 +1559,7 @@ KDC--BaseFolderTreeItemWidget::item
 
 KDC--BaseFolderTreeItemWidget QLineEdit
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
 }
 
 KDC--BaseFolderTreeItemWidget::branch:!has-children:adjoins-item
@@ -1595,7 +1595,7 @@ KDC--LocalFolderDialog
 
 KDC--LocalFolderDialog QWidget#folderSelectionWidget
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     border-radius: 10px;
     min-height: 80px;
@@ -1717,7 +1717,7 @@ KDC--AddDriveLocalFolderWidget QProgressBar::chunk
 
 KDC--AddDriveLocalFolderWidget QWidget#folderSelectionWidget
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     border-radius: 10px;
     min-height: 80px;
@@ -1787,7 +1787,7 @@ KDC--BigFoldersDialog QWidget#undecidedListWidget
 
 KDC--BigFoldersDialog QScrollArea
 {
-    background-color: #F5F5F5;
+    background-color: #F4F6FD;
     border: 0px;
     border-radius: 10px;
 }

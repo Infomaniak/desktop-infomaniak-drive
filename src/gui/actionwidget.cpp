@@ -64,7 +64,7 @@ ActionWidget::ActionWidget(const QString &path, const QString &text, QWidget *pa
     hbox->addWidget(_actionIconLabel);
 
     // Shadow
-    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect(this);
     effect->setBlurRadius(shadowBlurRadius);
     effect->setOffset(0);
     setGraphicsEffect(effect);
