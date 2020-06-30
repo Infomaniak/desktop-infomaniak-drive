@@ -51,7 +51,7 @@ ErrorsPopup::ErrorsPopup(const QList<DriveError> &driveErrorList, QPoint positio
     , _backgroundColor(QColor())
     , _warningIconSize(QSize())
     , _warningIconColor(QColor())
-    , _painted(false)
+    , _moved(false)
 {
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -114,15 +114,16 @@ void ErrorsPopup::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
 
-    if (!_painted) {
+    if (!_moved) {
         // Move menu
-        _painted = true;
+        _moved = true;
         QScreen *screen = QGuiApplication::screenAt(_position);
         Q_CHECK_PTR(screen);
         QRect displayRect = screen->geometry();
         int delta = displayRect.right() - (_position.x() + menuOffsetX + geometry().width());
         QPoint offset = QPoint(menuOffsetX + (delta > 0 ? 0 : delta), menuOffsetY);
         move(_position + offset);
+        return;
     }
 
     // Update shadow color

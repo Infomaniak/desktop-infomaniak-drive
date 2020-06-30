@@ -55,7 +55,7 @@ private:
     QColor _warningIconColor;
     QSize _arrowIconSize;
     QColor _arrowIconColor;
-    bool _painted;
+    bool _moved;
 
     void paintEvent(QPaintEvent *event) override;
 

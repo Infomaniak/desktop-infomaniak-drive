@@ -49,7 +49,7 @@ public:
 private:
     Type _type;
     QColor _backgroundColor;
-    bool _painted;
+    bool _moved;
 
     void paintEvent(QPaintEvent *event) override;
 

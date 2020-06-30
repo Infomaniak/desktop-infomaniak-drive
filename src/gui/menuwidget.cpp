@@ -39,7 +39,7 @@ MenuWidget::MenuWidget(Type type, QWidget *parent)
     : QMenu(parent)
     , _type(type)
     , _backgroundColor(QColor())
-    , _painted(false)
+    , _moved(false)
 {
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -63,9 +63,9 @@ MenuWidget::MenuWidget(Type type, const QString &title, QWidget *parent)
 
 void MenuWidget::paintEvent(QPaintEvent *event)
 {
-    if (!_painted) {
+    if (!_moved) {
         // Move menu
-        _painted = true;
+        _moved = true;
         QPoint offset;
         switch (_type) {
         case Menu:
@@ -81,6 +81,7 @@ void MenuWidget::paintEvent(QPaintEvent *event)
             break;
         }
         move(pos() + offset);
+        return;
     }
 
     // Update shadow color
@@ -105,7 +106,7 @@ void MenuWidget::paintEvent(QPaintEvent *event)
 
 void MenuWidget::onAboutToShow()
 {
-    _painted = false;
+    _moved = false;
 }
 
 }
