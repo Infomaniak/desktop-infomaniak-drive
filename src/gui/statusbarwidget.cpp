@@ -83,6 +83,7 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
     connect(_pauseButton, &CustomToolButton::clicked, this, &StatusBarWidget::onPauseClicked);
     connect(_resumeButton, &CustomToolButton::clicked, this, &StatusBarWidget::onResumeClicked);
     connect(_syncButton, &CustomToolButton::clicked, this, &StatusBarWidget::onSyncClicked);
+    connect(_statusLabel, &QLabel::linkActivated, this, &StatusBarWidget::onLinkActivated);
 }
 
 void StatusBarWidget::setStatus(bool paused, bool unresolvedConflicts, OCC::SyncResult::Status status,
@@ -107,8 +108,6 @@ void StatusBarWidget::setStatus(bool paused, bool unresolvedConflicts, OCC::Sync
     }
 
     repaint();
-
-    connect(_statusLabel, &QLabel::linkActivated, this, &StatusBarWidget::onLinkActivated);
 }
 
 void StatusBarWidget::setCurrentAccount(const AccountInfo *accountInfo)

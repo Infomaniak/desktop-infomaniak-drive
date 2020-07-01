@@ -128,6 +128,7 @@ private:
     QTimer _delayedTrayUpdateTimer;
     QMap<QString, QPointer<ShareDialog>> _shareDialogs;
     QDateTime _notificationEnableDate;
+    bool _addDriveWizardRunning;
 
     QAction *_actionLogin;
     QAction *_actionLogout;

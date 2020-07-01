@@ -57,6 +57,7 @@ ownCloudGui::ownCloudGui(Application *parent)
     , _logBrowser(nullptr)
     , _recentActionsMenu(nullptr)
     , _notificationEnableDate(QDateTime())
+    , _addDriveWizardRunning(false)
     , _app(parent)
 {
     _tray = new Systray();
@@ -508,8 +509,15 @@ void ownCloudGui::slotPauseAllFolders()
 
 void ownCloudGui::slotNewAccountWizard()
 {
+    if (_addDriveWizardRunning) {
+        return;
+    }
+
+    _addDriveWizardRunning = true;
     KDC::AddDriveWizard *wizard = new KDC::AddDriveWizard();
     int res = wizard->exec();
+    _addDriveWizardRunning = false;
+
     Application *app = qobject_cast<Application *>(qApp);
     app->slotownCloudWizardDone(res);
 

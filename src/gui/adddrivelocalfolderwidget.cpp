@@ -240,6 +240,9 @@ void AddDriveLocalFolderWidget::updateUI()
                                 .arg(dir.dirName()));
             _infoWidget->setVisible(true);
         }
+        else {
+            _infoWidget->setVisible(false);
+        }
     }
 }
 
