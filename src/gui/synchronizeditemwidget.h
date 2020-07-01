@@ -72,6 +72,7 @@ private:
     void paintEvent(QPaintEvent* event) override;
     void enterEvent(QEvent *event) override;
     void leaveEvent(QEvent *event) override;
+    bool event(QEvent *event) override;
 
     inline QSize fileIconSize() const { return _fileIconSize; }
     inline void setFileIconSize(const QSize &size) {

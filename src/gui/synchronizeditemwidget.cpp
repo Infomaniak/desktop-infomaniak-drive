@@ -214,6 +214,17 @@ void SynchronizedItemWidget::leaveEvent(QEvent *event)
     }
 }
 
+bool SynchronizedItemWidget::event(QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress) {
+        return true;
+    }
+    else if (event->type() == QEvent::WindowDeactivate) {
+        setSelected(false);
+    }
+    return QWidget::event(event);
+}
+
 QString SynchronizedItemWidget::getFileIconPathFromFileName(const QString &fileName, ItemType type) const
 {
     if (type == ItemType::ItemTypeDirectory) {
