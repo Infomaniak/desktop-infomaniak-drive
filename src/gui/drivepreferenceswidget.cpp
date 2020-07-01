@@ -1193,11 +1193,11 @@ void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
         if (folder) {
             bool ok;
             QStringList oldBlackList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
-            //QSet<QString> oldBlackListSet(oldBlackList.begin(), oldBlackList.end());
-            QSet<QString> oldBlackListSet = oldBlackList.toSet();
             if (!ok) {
                 return;
             }
+            //QSet<QString> oldBlackListSet(oldBlackList.begin(), oldBlackList.end());
+            QSet<QString> oldBlackListSet = oldBlackList.toSet();
 
             QStringList blackList = treeItemWidget->createBlackList();
             folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);

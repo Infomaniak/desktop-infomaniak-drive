@@ -67,7 +67,7 @@ private slots:
     void onExpandButtonClicked();
     void onCancelButtonClicked();
     void onValidateButtonClicked();
-    void onDisplaySmartSyncInfo(const QString &link);
+    void onOpenFolder(const QString &link);
     void onSyncTriggered();
     void onPauseTriggered();
     void onResumeTriggered();

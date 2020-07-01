@@ -1,4 +1,4 @@
-set( APPLICATION_NAME       "Infomaniak Drive" )
+set( APPLICATION_NAME       "kDrive" )
 
 # if (NOT DEFINED APPLICATION_SHORTNAME)
 #     set(APPLICATION_SHORTNAME "${APPLICATION_NAME}")

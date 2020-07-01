@@ -1089,7 +1089,7 @@ Cette action stoppera toute synchronisation en cours.</translation>
     </message>
     <message>
         <source>Force kDrive &quot;%1&quot; synchronization</source>
-        <translation>Forcer la synchronisation du kDrive &quot;%1&quot; synchronization</translation>
+        <translation>Forcer la synchronisation du kDrive &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Force folder synchronization</source>

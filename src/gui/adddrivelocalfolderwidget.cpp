@@ -154,7 +154,7 @@ void AddDriveLocalFolderWidget::initUI()
     folderNameSelectedHBox->addWidget(_folderIconLabel);
 
     _folderNameLabel = new QLabel(this);
-    _folderNameLabel->setObjectName("foldernamelabel");
+    _folderNameLabel->setObjectName("folderNameLabel");
     folderNameSelectedHBox->addWidget(_folderNameLabel);
     folderNameSelectedHBox->addStretch();
 

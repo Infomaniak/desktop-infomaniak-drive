@@ -152,7 +152,7 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     connect(_expandButton, &CustomToolButton::clicked, this, &FolderItemWidget::onExpandButtonClicked);
     connect(cancelButton, &QPushButton::clicked, this, &FolderItemWidget::onCancelButtonClicked);
     connect(validateButton, &QPushButton::clicked, this, &FolderItemWidget::onValidateButtonClicked);
-    connect(synchroLabel, &QLabel::linkActivated, this, &FolderItemWidget::onDisplaySmartSyncInfo);
+    connect(synchroLabel, &QLabel::linkActivated, this, &FolderItemWidget::onOpenFolder);
     connect(this, &FolderItemWidget::displayFolderDetailCanceled, this, &FolderItemWidget::onDisplayFolderDetailCanceled);
 }
 
@@ -242,7 +242,7 @@ void FolderItemWidget::onValidateButtonClicked()
     emit validateUpdate(_folderId);
 }
 
-void FolderItemWidget::onDisplaySmartSyncInfo(const QString &link)
+void FolderItemWidget::onOpenFolder(const QString &link)
 {
     Q_UNUSED(link)
 
