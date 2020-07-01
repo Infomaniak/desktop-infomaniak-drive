@@ -96,7 +96,7 @@ void setLaunchOnStartup_private(const QString &appName, const QString &guiName, 
 
 static inline bool hasDarkSystray_private()
 {
-    return false;
+    return true;
 }
 
 QVariant Utility::registryGetKeyValue(HKEY hRootKey, const QString &subKey, const QString &valueName)
