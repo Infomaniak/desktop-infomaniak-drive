@@ -123,7 +123,6 @@ void ErrorsPopup::paintEvent(QPaintEvent *event)
         int delta = displayRect.right() - (_position.x() + menuOffsetX + geometry().width());
         QPoint offset = QPoint(menuOffsetX + (delta > 0 ? 0 : delta), menuOffsetY);
         move(_position + offset);
-        return;
     }
 
     // Update shadow color

@@ -81,7 +81,6 @@ void MenuWidget::paintEvent(QPaintEvent *event)
             break;
         }
         move(pos() + offset);
-        return;
     }
 
     // Update shadow color
