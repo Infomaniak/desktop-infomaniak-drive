@@ -94,7 +94,7 @@ void AboutDialog::initUI()
 
     // Text
     QLabel *textLabel = new QLabel(this);
-    textLabel->setObjectName("largeNormalTextLabel");
+    textLabel->setObjectName("textLabel");
     textLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     textLabel->setWordWrap(true);
     textLabel->setText(aboutText());
