@@ -1035,6 +1035,7 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                         connect(widget, &SynchronizedItemWidget::manageRightAndSharing, this, &SynthesisPopover::onManageRightAndSharingItem);
                         connect(widget, &SynchronizedItemWidget::copyLink, this, &SynthesisPopover::onCopyLinkItem);
                         connect(widget, &SynchronizedItemWidget::displayOnWebview, this, &SynthesisPopover::onOpenWebviewItem);
+                        connect(widget, &SynchronizedItemWidget::selectionChanged, this, &SynthesisPopover::onSelectionChanged);
 
                         if (accountInfoIt->second._synchronizedListWidget->count() > maxSynchronizedItems) {
                             // Remove last row
@@ -1516,6 +1517,11 @@ void SynthesisPopover::onOpenWebviewItem(const SynchronizedItem &item)
     OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_currentAccountId);
     OCC::fetchPrivateLinkUrl(accountPtr, item.filePath(), item.fileId(), this,
                              [this](const QString &url) { OCC::Utility::openBrowser(url, this); });
+}
+
+void SynthesisPopover::onSelectionChanged()
+{
+    forceRedraw();
 }
 
 void SynthesisPopover::onCopyUrlToClipboard(const QString &url)

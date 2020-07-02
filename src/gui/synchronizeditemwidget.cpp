@@ -165,7 +165,7 @@ void SynchronizedItemWidget::setSelected(bool isSelected)
         setGraphicsEffect(nullptr);
     }
 
-    repaint();
+    emit selectionChanged();
 }
 
 void SynchronizedItemWidget::paintEvent(QPaintEvent *event)

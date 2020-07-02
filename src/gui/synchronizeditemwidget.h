@@ -55,6 +55,7 @@ signals:
     void manageRightAndSharing(const SynchronizedItem &item);
     void copyLink(const SynchronizedItem &item);
     void displayOnWebview(const SynchronizedItem &item);
+    void selectionChanged();
 
 private:
     const SynchronizedItem _item;
