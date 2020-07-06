@@ -130,4 +130,4 @@ export LD_LIBRARY_PATH=/app/usr/lib/
 ./squashfs-root/AppRun /app/usr/share/applications/kDrive.desktop -appimage -unsupported-allow-new-glibc
 
 rm -rf ./squashfs-root
-mv Infomaniak_Drive*.AppImage /install/kDrive-${SUFFIX}-${DRONE_COMMIT}-x86_64.AppImage
+mv kDrive*.AppImage /install/kDrive-${SUFFIX}-${DRONE_COMMIT}-x86_64.AppImage
