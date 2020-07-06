@@ -103,6 +103,7 @@ private slots:
     void onDisplayDriveParameters();
     void onDisplayPreferences();
     void onSetStyle(bool darkTheme);
+    void onUndecidedListsCleared();
     void onSendLogs();
     void onOpenFolderItem(const QString &filePath);
     void onDebugReporterDone(bool retCode, const QString &debugId = QString());

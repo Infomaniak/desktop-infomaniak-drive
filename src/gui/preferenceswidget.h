@@ -36,11 +36,14 @@ public:
 
 signals:
     void setStyle(bool darkTheme);
+    void undecidedListsCleared();
 
 private:
     QLineEdit *_folderConfirmationAmountLineEdit;
     QLabel *_debuggingFolderLabel;
     QPushButton *_updateButton;
+
+    void clearUndecidedLists();
 
 private slots:
     void onFolderConfirmationSwitchClicked(bool checked = false);

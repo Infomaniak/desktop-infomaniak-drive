@@ -36,6 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "updater/updater.h"
 #include "updater/ocupdater.h"
 #include "updater/sparkleupdater.h"
+#include "folderman.h"
 
 #include <QBoxLayout>
 #include <QDesktopServices>
@@ -320,12 +321,30 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     connect(versionNumberLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
 }
 
+void PreferencesWidget::clearUndecidedLists()
+{
+    for (OCC::Folder *folder : OCC::FolderMan::instance()->map()) {
+        // Clear the undecided list
+        folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncUndecidedList, QStringList());
+
+        // Re-sync folder
+        if (folder->isBusy()) {
+            folder->slotTerminateSync();
+        }
+
+        OCC::FolderMan::instance()->scheduleFolder(folder);
+
+        emit undecidedListsCleared();
+    }
+}
+
 void PreferencesWidget::onFolderConfirmationSwitchClicked(bool checked)
 {
     OCC::ConfigFile cfg;
     auto folderLimit = cfg.newBigFolderSizeLimit();
     cfg.setNewBigFolderSizeLimit(checked, folderLimit.second);
     _folderConfirmationAmountLineEdit->setEnabled(checked);
+    clearUndecidedLists();
 }
 
 void PreferencesWidget::onFolderConfirmationAmountTextEdited(const QString &text)
@@ -334,6 +353,7 @@ void PreferencesWidget::onFolderConfirmationAmountTextEdited(const QString &text
     OCC::ConfigFile cfg;
     auto folderLimit = cfg.newBigFolderSizeLimit();
     cfg.setNewBigFolderSizeLimit(folderLimit.first, lValue);
+    clearUndecidedLists();
 }
 
 void PreferencesWidget::onDarkThemeSwitchClicked(bool checked)

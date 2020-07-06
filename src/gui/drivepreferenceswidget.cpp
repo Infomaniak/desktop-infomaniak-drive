@@ -272,6 +272,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     connect(this, &DrivePreferencesWidget::errorAdded, this, &DrivePreferencesWidget::onErrorAdded);
     connect(removeDriveButton, &CustomToolButton::clicked, this, &DrivePreferencesWidget::onRemoveDrive);
     connect(this, &DrivePreferencesWidget::newBigFolderDiscovered, this, &DrivePreferencesWidget::onNewBigFolderDiscovered);
+    connect(this, &DrivePreferencesWidget::undecidedListsCleared, this, &DrivePreferencesWidget::onUndecidedListsCleared);
 }
 
 void DrivePreferencesWidget::setAccount(const QString &accountId, const AccountInfo *accountInfo, bool errors)
@@ -742,6 +743,62 @@ bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, 
     return true;
 }
 
+bool DrivePreferencesWidget::updateSelectiveSyncList(OCC::Folder *folder)
+{
+    bool ok;
+    QStringList undecidedList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncUndecidedList, &ok);
+    if (!ok) {
+        qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
+        return false;
+    }
+
+    // If this folder had no undecided entries, skip it.
+    if (undecidedList.isEmpty()) {
+        return true;
+    }
+
+    // Remove all undecided folders from the blacklist
+    QStringList blackList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
+    if (!ok) {
+        qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
+        return false;
+    }
+    foreach (const auto &undecidedFolder, undecidedList) {
+        blackList.removeAll(undecidedFolder);
+    }
+    folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);
+
+    // Add all undecided folders to the white list
+    QStringList whiteList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, &ok);
+    if (!ok) {
+        qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
+        return false;
+    }
+    whiteList += undecidedList;
+    folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, whiteList);
+
+    // Clear the undecided list
+    folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncUndecidedList, QStringList());
+
+    // Trigger a sync
+    if (folder->isBusy()) {
+        folder->slotTerminateSync();
+    }
+
+    // The part that changed should not be read from the DB on next sync because there might be new folders
+    // (the ones that are no longer in the blacklist)
+    foreach (const auto &it, undecidedList) {
+        folder->journalDb()->schedulePathForRemoteDiscovery(it);
+        folder->schedulePathForLocalDiscovery(it);
+    }
+
+    // Also make sure we see the local file that had been ignored before
+    folder->slotNextSyncFullLocalDiscovery();
+    OCC::FolderMan::instance()->scheduleFolder(folder);
+
+    return true;
+}
+
 void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
 {
     Q_UNUSED(link)
@@ -772,56 +829,10 @@ void DrivePreferencesWidget::onBigFoldersWarningWidgetClicked()
         for (auto folderInfoElt : _accountInfo->_folderMap) {
             OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
             if (folder) {
-                bool ok;
-                QStringList undecidedList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncUndecidedList, &ok);
-                if (!ok) {
-                    qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
+                if (!updateSelectiveSyncList(folder)) {
+                    qCWarning(lcDrivePreferencesWidget) << "updateSelectiveSyncList error";
                     break;
                 }
-
-                // If this folder had no undecided entries, skip it.
-                if (undecidedList.isEmpty()) {
-                    continue;
-                }
-
-                // Remove all undecided folders from the blacklist
-                QStringList blackList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
-                if (!ok) {
-                    qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
-                    break;
-                }
-                foreach (const auto &undecidedFolder, undecidedList) {
-                    blackList.removeAll(undecidedFolder);
-                }
-                folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);
-
-                // Add all undecided folders to the white list
-                QStringList whiteList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, &ok);
-                if (!ok) {
-                    qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
-                    break;
-                }
-                whiteList += undecidedList;
-                folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncWhiteList, whiteList);
-
-                // Clear the undecided list
-                folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncUndecidedList, QStringList());
-
-                // Trigger a sync
-                if (folder->isBusy()) {
-                    folder->slotTerminateSync();
-                }
-
-                // The part that changed should not be read from the DB on next sync because there might be new folders
-                // (the ones that are no longer in the blacklist)
-                foreach (const auto &it, undecidedList) {
-                    folder->journalDb()->schedulePathForRemoteDiscovery(it);
-                    folder->schedulePathForLocalDiscovery(it);
-                }
-
-                // Also make sure we see the local file that had been ignored before
-                folder->slotNextSyncFullLocalDiscovery();
-                OCC::FolderMan::instance()->scheduleFolder(folder);
             }
         }
 
@@ -1191,9 +1202,15 @@ void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
         ASSERT(treeItemWidget->folderId() == folderId);
         OCC::Folder *folder = OCC::FolderMan::instance()->folder(treeItemWidget->folderId());
         if (folder) {
+            // Clear the undecided list
+            folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncUndecidedList, QStringList());
+            _displayBigFoldersWarningWidget->setVisible(false);
+
+            // Update the black list
             bool ok;
             QStringList oldBlackList = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
             if (!ok) {
+                qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
                 return;
             }
             //QSet<QString> oldBlackListSet(oldBlackList.begin(), oldBlackList.end());
@@ -1234,6 +1251,13 @@ void DrivePreferencesWidget::onNewBigFolderDiscovered(const QString &path)
     Q_UNUSED(path)
 
     _displayBigFoldersWarningWidget->setVisible(existUndecidedList());
+    refreshFoldersBlocs();
+}
+
+void DrivePreferencesWidget::onUndecidedListsCleared()
+{
+    _displayBigFoldersWarningWidget->setVisible(existUndecidedList());
+    refreshFoldersBlocs();
 }
 
 }

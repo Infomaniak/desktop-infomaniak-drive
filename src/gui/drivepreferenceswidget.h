@@ -62,6 +62,7 @@ signals:
     void removeDrive(QString accountId);
     void jobTerminated(JobResult result);
     void newBigFolderDiscovered(const QString &path);
+    void undecidedListsCleared();
 
 private:
     enum AddFolderStep {
@@ -101,6 +102,7 @@ private:
     QFrame *blocSeparatorFrame(PreferencesBlocWidget *folderBloc);
     bool createMissingFolders(const QString &folderBasePath, const QString &folderPath);
     bool addSynchronization(const QString &localFolderPath, const QString &serverFolderPath, QStringList blackList);
+    bool updateSelectiveSyncList(OCC::Folder *folder);
 
 private slots:
     void onDisplaySmartSyncInfo(const QString &link);
@@ -122,6 +124,7 @@ private slots:
     void onCancelUpdate(const QString &folderId);
     void onValidateUpdate(const QString &folderId);
     void onNewBigFolderDiscovered(const QString &path);
+    void onUndecidedListsCleared();
 };
 
 }

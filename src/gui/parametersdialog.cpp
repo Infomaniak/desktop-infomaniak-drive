@@ -276,6 +276,7 @@ void ParametersDialog::initUI()
     connect(_preferencesMenuBarWidget, &PreferencesMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDriveParameters);
     connect(_errorsMenuBarWidget, &ErrorsMenuBarWidget::backButtonClicked, this, &ParametersDialog::onDisplayDriveParameters);
     connect(_preferencesWidget, &PreferencesWidget::setStyle, this, &ParametersDialog::onSetStyle);
+    connect(_preferencesWidget, &PreferencesWidget::undecidedListsCleared, this, &ParametersDialog::onUndecidedListsCleared);
     connect(sendLogsWidget, &ActionWidget::clicked, this, &ParametersDialog::onSendLogs);
 }
 
@@ -649,6 +650,11 @@ void ParametersDialog::onDisplayPreferences()
 void ParametersDialog::onSetStyle(bool darkTheme)
 {
     emit setStyle(darkTheme);
+}
+
+void ParametersDialog::onUndecidedListsCleared()
+{
+    emit _drivePreferencesWidget->undecidedListsCleared();
 }
 
 void ParametersDialog::onSendLogs()
