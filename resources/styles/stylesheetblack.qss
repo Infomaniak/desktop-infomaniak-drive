@@ -1016,7 +1016,7 @@ KDC--ButtonsBarWidget
 
 KDC--SynchronizedItemWidget
 {
-    background_color: transparent;
+    background-color: transparent;
     qproperty-file_icon_size: 34px;
     qproperty-direction_icon_size: 10px;
     qproperty-direction_icon_color: #C0C0C0;
