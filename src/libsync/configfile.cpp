@@ -114,6 +114,18 @@ ConfigFile::ConfigFile()
 
     const QString config = configFile();
 
+    QFileInfo configFileInfo(config);
+    if (!configFileInfo.exists()) {
+        // Check for a previous version
+        QString configDirPath(configFileInfo.dir().path());
+        QString oldConfigDirPath = configDirPath;
+        oldConfigDirPath.replace(APPLICATION_NAME, "Infomaniak Drive");
+        QDir oldConfigDir(oldConfigDirPath);
+        if (oldConfigDir.exists()) {
+            // Rename old directory
+            oldConfigDir.rename(oldConfigDirPath, configDirPath);
+        }
+    }
 
     QSettings settings(config, QSettings::IniFormat);
     settings.beginGroup(defaultConnection());
