@@ -559,12 +559,8 @@ void FolderTreeItemWidget::onItemChanged(QTreeWidgetItem *item, int col)
     if (item->checkState(TreeWidgetColumn::Folder) == Qt::PartiallyChecked) {
         QTreeWidgetItem *parent = item->parent();
         if (parent) {
-            if (parent->checkState(TreeWidgetColumn::Folder) == Qt::Checked) {
+            if (parent->checkState(TreeWidgetColumn::Folder) != Qt::PartiallyChecked) {
                 parent->setCheckState(TreeWidgetColumn::Folder, Qt::PartiallyChecked);
-            }
-            else {
-                // Refresh parent
-                onItemChanged(parent, col);
             }
         }
     }
