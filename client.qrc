@@ -148,5 +148,6 @@
         <file>resources/icons/actions/dark-switch-off.svg</file>
         <file>resources/icons/actions/dark-branch-close.svg</file>
         <file>resources/icons/actions/dark-branch-open.svg</file>
+        <file>resources/icons/theme/white/state-information.svg</file>
     </qresource>
 </RCC>
