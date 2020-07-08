@@ -480,7 +480,9 @@ QPixmap Utility::getAvatarFromImage(const QImage &image)
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform, true);
     mask.fill(Qt::white);
     painter.setBrush(Qt::black);
-    painter.drawEllipse(QPoint(mask.width() / 2, mask.height() / 2), 100, 100);
+    int rx = mask.width() / 2.0;
+    int ry = mask.height() / 2.0;
+    painter.drawEllipse(QPoint(rx, ry), rx, ry);
 
     // Draw the final image.
     originalPixmap.setMask(mask);
