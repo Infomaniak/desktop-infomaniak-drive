@@ -701,7 +701,7 @@ void ParametersDialog::onSendLogs()
     QString temporaryFolderLogDirPath = OCC::Logger::instance()->temporaryFolderLogDirPath();
     QDir dir(temporaryFolderLogDirPath);
     if (dir.exists()) {
-        QStringList files = dir.entryList(QStringList("*owncloud.log.*.gz"), QDir::Files, QDir::Name | QDir::Reversed);
+        QStringList files = dir.entryList(QStringList(QString("*%1.log.*.gz").arg(APPLICATION_NAME)), QDir::Files, QDir::Name | QDir::Reversed);
         num = 0;
         for (const QString &file : files) {
             num++;

@@ -294,12 +294,12 @@ void Logger::enterNextLogFile()
 
         // Tentative new log name, will be adjusted if one like this already exists
         QDateTime now = QDateTime::currentDateTime();
-        QString newLogName = now.toString("yyyyMMdd_HHmm") + "_owncloud.log";
+        QString newLogName = now.toString("yyyyMMdd_HHmm") + QString("_%1.log").arg(APPLICATION_NAME);
 
         // Expire old log files and deal with conflicts
-        QStringList files = dir.entryList(QStringList("*owncloud.log.*"),
+        QStringList files = dir.entryList(QStringList(QString("*%1.log.*").arg(APPLICATION_NAME)),
             QDir::Files, QDir::Name);
-        QRegExp rx(R"(.*owncloud\.log\.(\d+).*)");
+        QRegExp rx(QString(R"(.*%1\.log\.(\d+).*)").arg(APPLICATION_NAME));
         int maxNumber = -1;
         foreach (const QString &s, files) {
             if (_logExpire.count() > 0) {
