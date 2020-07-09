@@ -4073,10 +4073,6 @@ El modo de archivos virtuales se excluye mutuamente con una sincronización sele
         <translation>He compartido algo contigo</translation>
     </message>
     <message>
-        <source>Share...</source>
-        <translation>Compartir...</translation>
-    </message>
-    <message>
         <source>Copy private link to clipboard</source>
         <translation>Copiar enlace privado al portapapeles</translation>
     </message>

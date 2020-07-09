@@ -4069,10 +4069,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>Ich habe etwas mit Ihnen geteilt</translation>
     </message>
     <message>
-        <source>Share...</source>
-        <translation>Teilen…</translation>
-    </message>
-    <message>
         <source>Copy private link to clipboard</source>
         <translation>Privater Link in die Zwischenablage kopiert</translation>
     </message>

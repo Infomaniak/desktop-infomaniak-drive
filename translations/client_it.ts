@@ -4047,10 +4047,6 @@ Questa è una nuova modalità sperimentale. Se decidi di usarla, ti preghiamo di
         <translation>Ho condiviso qualcosa con te</translation>
     </message>
     <message>
-        <source>Share...</source>
-        <translation>Condividi...</translation>
-    </message>
-    <message>
         <source>Copy private link to clipboard</source>
         <translation>Copia link privato negli appunti</translation>
     </message>

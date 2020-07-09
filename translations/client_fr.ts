@@ -4058,10 +4058,6 @@ Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser,
         <translation>J&apos;ai partagé quelque chose avec vous</translation>
     </message>
     <message>
-        <source>Share...</source>
-        <translation>Partager...</translation>
-    </message>
-    <message>
         <source>Copy private link to clipboard</source>
         <translation>Copier le lien privé vers le presse-papier</translation>
     </message>
