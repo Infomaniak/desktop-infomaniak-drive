@@ -92,6 +92,15 @@ ownCloudGui::ownCloudGui(Application *parent)
     connect(Logger::instance(), &Logger::guiLog, this, &ownCloudGui::slotShowTrayMessage);
     connect(Logger::instance(), &Logger::optionalGuiLog, this, &ownCloudGui::slotShowOptionalTrayMessage);
     connect(Logger::instance(), &Logger::guiMessage, this, &ownCloudGui::slotShowGuiMessage);
+
+    if (_tray->geometry().width() == 0) {
+        // No systray
+        qCDebug(lcApplication) << "No systray!";
+
+        // Workaround: create fake menu
+        QMenu *menu = new QMenu;
+        _tray->setContextMenu(menu);
+    }
 }
 
 // This should rather be in application.... or rather in ConfigFile?
