@@ -27,7 +27,7 @@
 #include "activitydata.h"
 #include "debugreporter.h"
 
-#include "ui_activitywidget.h"
+//#include "ui_activitywidget.h"
 
 class QPushButton;
 class QProgressIndicator;
