@@ -16,72 +16,36 @@ else()
 endif()
 
 set(client_UI_SRCS
-    #accountsettings.ui
-    #folderwizardsourcepage.ui
-    #folderwizardtargetpage.ui
-    #generalsettings.ui
-    #ignorelisteditor.ui
-    #networksettings.ui
-    #issueswidget.ui
-    #activitywidget.ui
-    #synclogdialog.ui
-    #settingsdialog.ui
     sharedialog.ui
     sharelinkwidget.ui
     shareusergroupwidget.ui
     shareuserline.ui
     sslerrordialog.ui
-    #addcertificatedialog.ui
-    #proxyauthdialog.ui
-    #notificationwidget.ui
-    #wizard/owncloudadvancedsetuppage.ui
-    #wizard/owncloudconnectionmethoddialog.ui
-    #wizard/owncloudhttpcredspage.ui
-    #wizard/owncloudoauthcredspage.ui
-    #wizard/owncloudsetupnocredspage.ui
-    #wizard/owncloudwizardresultpage.ui
     wizard/webview.ui
 )
 
 set(client_SRCS
     accountmanager.cpp
-    #accountsettings.cpp
     application.cpp
     clientproxy.cpp
     connectionvalidator.cpp
     folder.cpp
     folderman.cpp
-    #folderstatusmodel.cpp
-    #folderstatusdelegate.cpp
     folderwatcher.cpp
-    #folderwizard.cpp
-    #generalsettings.cpp
-    #ignorelisteditor.cpp
     lockwatcher.cpp
     logbrowser.cpp
     navigationpanehelper.cpp
-    #networksettings.cpp
     ocsjob.cpp
     ocssharejob.cpp
     ocsshareejob.cpp
     openfilemanager.cpp
     owncloudgui.cpp
-    #owncloudsetupwizard.cpp
-    #protocolwidget.cpp
-    #issueswidget.cpp
-    #activitydata.cpp
-    #activitylistmodel.cpp
-    #activitywidget.cpp
-    #activityitemdelegate.cpp
-    #selectivesyncdialog.cpp
-    #settingsdialog.cpp
     sharedialog.cpp
     sharelinkwidget.cpp
     sharemanager.cpp
     shareusergroupwidget.cpp
     sharee.cpp
     socketapi.cpp
-    #sslbutton.cpp
     sslerrordialog.cpp
     syncrunfilelog.cpp
     systray.cpp
@@ -89,32 +53,18 @@ set(client_SRCS
     quotainfo.cpp
     accountstate.cpp
     addcertificatedialog.cpp
-    #authenticationdialog.cpp
     proxyauthhandler.cpp
     proxyauthdialog.cpp
-    #synclogdialog.cpp
-    #tooltipupdater.cpp
     notificationwidget.cpp
     notificationconfirmjob.cpp
     servernotificationhandler.cpp
     guiutility.cpp
-    #elidedlabel.cpp
-    #widgetsettings.cpp
     creds/httpcredentialsgui.cpp
     creds/oauth.cpp
     creds/webflowcredentials.cpp
     creds/webflowcredentialsdialog.cpp
     wizard/postfixlineedit.cpp
-    #wizard/abstractcredswizardpage.cpp
-    #wizard/owncloudadvancedsetuppage.cpp
-    #wizard/owncloudconnectionmethoddialog.cpp
-    #wizard/owncloudhttpcredspage.cpp
-    #wizard/owncloudoauthcredspage.cpp
-    #wizard/owncloudsetuppage.cpp
     wizard/owncloudwizardcommon.cpp
-    #wizard/owncloudwizard.cpp
-    #wizard/owncloudwizardresultpage.cpp
-    #wizard/webviewpage.cpp
     wizard/webview.cpp
     debugreporter.cpp
     getorcreatepubliclinkshare.cpp
