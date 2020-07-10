@@ -239,6 +239,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
                                        this);
     _debuggingFolderLabel->setVisible(cfg.automaticLogDir());
     _debuggingFolderLabel->setAttribute(Qt::WA_NoMousePropagation);
+    _debuggingFolderLabel->setContextMenuPolicy(Qt::PreventContextMenu);
     debuggingVBox->addWidget(_debuggingFolderLabel);
     advancedBloc->addSeparator();
 
@@ -290,6 +291,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
                                             .arg(versionLink)
                                             .arg(MIRALL_VERSION_STRING),
                                             this);
+    versionNumberLabel->setContextMenuPolicy(Qt::PreventContextMenu);
     versionVBox->addWidget(versionNumberLabel);
 
     QLabel *copyrightLabel = new QLabel(QString("Copyright %1").arg(APPLICATION_VENDOR), this);

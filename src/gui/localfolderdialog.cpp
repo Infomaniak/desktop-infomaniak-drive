@@ -120,6 +120,7 @@ void LocalFolderDialog::initUI()
 
     _folderPathLabel = new QLabel(this);
     _folderPathLabel->setObjectName("folderpathlabel");
+    _folderPathLabel->setContextMenuPolicy(Qt::PreventContextMenu);
     folderSelectedVBox->addWidget(_folderPathLabel);
 
     CustomToolButton *updateButton = new CustomToolButton(this);

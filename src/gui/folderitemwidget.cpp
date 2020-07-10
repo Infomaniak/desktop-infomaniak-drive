@@ -93,6 +93,7 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
 
     QLabel *synchroLabel = new QLabel(this);
     synchroLabel->setObjectName("descriptionLabel");
+    synchroLabel->setContextMenuPolicy(Qt::PreventContextMenu);
     folderVBoxLayout->addWidget(synchroLabel);
 
     // Menu button

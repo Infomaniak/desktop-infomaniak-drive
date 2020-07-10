@@ -701,6 +701,7 @@ void SynthesisPopover::setSynchronizedDefaultPage(QWidget **widget, QWidget *par
         defaultTextLabel->setObjectName("defaultTextLabel");
         defaultTextLabel->setAlignment(Qt::AlignHCenter);
         defaultTextLabel->setWordWrap(true);
+        defaultTextLabel->setContextMenuPolicy(Qt::PreventContextMenu);
 
         vboxLayout->addWidget(defaultTextLabel);
 

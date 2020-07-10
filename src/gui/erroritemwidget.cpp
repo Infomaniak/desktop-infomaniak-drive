@@ -116,6 +116,7 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
                            .arg(OCC::Utility::linkStyle)
                            .arg(filePath));
     _filePathLabel->setWordWrap(true);
+    _filePathLabel->setContextMenuPolicy(Qt::PreventContextMenu);
     hBoxFilePath->addWidget(_filePathLabel);
     hBoxFilePath->setStretchFactor(_filePathLabel, 1);
 

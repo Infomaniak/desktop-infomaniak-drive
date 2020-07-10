@@ -98,6 +98,7 @@ void AboutDialog::initUI()
     textLabel->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     textLabel->setWordWrap(true);
     textLabel->setText(aboutText());
+    textLabel->setContextMenuPolicy(Qt::PreventContextMenu);
     mainLayout->addWidget(textLabel);
     mainLayout->addStretch();
 

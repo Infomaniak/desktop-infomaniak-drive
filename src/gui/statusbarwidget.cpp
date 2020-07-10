@@ -58,6 +58,7 @@ StatusBarWidget::StatusBarWidget(QWidget *parent)
     _statusLabel = new QLabel(this);
     _statusLabel->setObjectName("statusLabel");
     _statusLabel->setWordWrap(true);
+    _statusLabel->setContextMenuPolicy(Qt::PreventContextMenu);
     vBoxLayout->addWidget(_statusLabel);
 
     addStretch();
