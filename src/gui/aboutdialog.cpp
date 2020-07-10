@@ -171,7 +171,7 @@ void AboutDialog::onLinkActivated(const QString &link)
                 qCWarning(lcAboutDialog) << "QDesktopServices::openUrl failed for " << domainUrl.toString();
                 CustomMessageBox *msgBox = new CustomMessageBox(
                             QMessageBox::Warning,
-                            tr("Unable to open debugging folder %1.").arg(domainUrl.toString()),
+                            tr("Unable to open folder %1.").arg(domainUrl.toString()),
                             QMessageBox::Ok, this);
                 msgBox->exec();
             }
@@ -185,7 +185,7 @@ void AboutDialog::onLinkActivated(const QString &link)
                 qCWarning(lcAboutDialog) << "QDesktopServices::openUrl failed for " << gitUrl.toString();
                 CustomMessageBox *msgBox = new CustomMessageBox(
                             QMessageBox::Warning,
-                            tr("Unable to open debugging folder %1.").arg(gitUrl.toString()),
+                            tr("Unable to open folder %1.").arg(gitUrl.toString()),
                             QMessageBox::Ok, this);
                 msgBox->exec();
             }

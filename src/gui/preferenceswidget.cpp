@@ -413,7 +413,7 @@ void PreferencesWidget::onLinkActivated(const QString &link)
                 qCWarning(lcPerformancesWidget) << "QDesktopServices::openUrl failed for " << debuggingFolderUrl.toString();
                 CustomMessageBox *msgBox = new CustomMessageBox(
                             QMessageBox::Warning,
-                            tr("Unable to open debugging folder %1.").arg(debuggingFolderUrl.toString()),
+                            tr("Unable to open folder %1.").arg(debuggingFolderUrl.toString()),
                             QMessageBox::Ok, this);
                 msgBox->exec();
             }
