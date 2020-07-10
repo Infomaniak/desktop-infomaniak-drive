@@ -281,8 +281,6 @@ void StatusBarWidget::onResumeClicked()
 
 void StatusBarWidget::onSyncClicked()
 {
-    bool resetButtons = false;
-
     if (_severalDrives) {
         MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
@@ -376,7 +374,7 @@ void StatusBarWidget::onResumeAllSync()
 
 void StatusBarWidget::onRunSync()
 {
-    emit resumeSync(ActionType::Drive);
+    emit runSync(ActionType::Drive);
 }
 
 void StatusBarWidget::onRunFolderSync()
