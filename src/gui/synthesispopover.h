@@ -74,6 +74,7 @@ signals:
     void crash();
     void crashEnforce();
     void crashFatal();
+    void cannotSelect(bool cannotSelect);
 
 private:
     enum StackedWidget {
@@ -163,7 +164,7 @@ private slots:
     void onManageRightAndSharingItem(const SynchronizedItem &item);
     void onCopyLinkItem(const SynchronizedItem &item);
     void onOpenWebviewItem(const SynchronizedItem &item);
-    void onSelectionChanged();
+    void onSelectionChanged(bool isSelected);
     void onCopyUrlToClipboard(const QString &url);
     void onLinkActivated(const QString &link);
 };

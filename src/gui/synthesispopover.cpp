@@ -1,4 +1,4 @@
-/*
+﻿/*
 Infomaniak Drive
 Copyright (C) 2020 christophe.larchier@infomaniak.com
 
@@ -1037,6 +1037,7 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                         connect(widget, &SynchronizedItemWidget::copyLink, this, &SynthesisPopover::onCopyLinkItem);
                         connect(widget, &SynchronizedItemWidget::displayOnWebview, this, &SynthesisPopover::onOpenWebviewItem);
                         connect(widget, &SynchronizedItemWidget::selectionChanged, this, &SynthesisPopover::onSelectionChanged);
+                        connect(this, &SynthesisPopover::cannotSelect, widget, &SynchronizedItemWidget::onCannotSelect);
 
                         if (accountInfoIt->second._synchronizedListWidget->count() > maxSynchronizedItems) {
                             // Remove last row
@@ -1520,8 +1521,9 @@ void SynthesisPopover::onOpenWebviewItem(const SynchronizedItem &item)
                              [this](const QString &url) { OCC::Utility::openBrowser(url, this); });
 }
 
-void SynthesisPopover::onSelectionChanged()
+void SynthesisPopover::onSelectionChanged(bool isSelected)
 {
+    emit cannotSelect(isSelected);
     forceRedraw();
 }
 

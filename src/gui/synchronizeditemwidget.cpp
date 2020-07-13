@@ -59,6 +59,8 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     , _item(item)
     , _isWaitingTimer(false)
     , _isSelected(false)
+    , _isMenuOpened(false)
+    , _cannotSelect(false)
     , _fileIconSize(QSize())
     , _directionIconSize(QSize())
     , _backgroundColorSelection(QColor())
@@ -141,8 +143,17 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     connect(_menuButton, &CustomToolButton::clicked, this, &SynchronizedItemWidget::onMenuButtonClicked);
 }
 
+void SynchronizedItemWidget::onCannotSelect(bool cannotSelect)
+{
+    _cannotSelect = cannotSelect;
+}
+
 void SynchronizedItemWidget::setSelected(bool isSelected)
 {
+    if (_cannotSelect && isSelected) {
+        return;
+    }
+
     _isSelected = isSelected;
     if (_isSelected) {
         bool fileExists = QFile(_item.fullFilePath()).exists();
@@ -165,7 +176,7 @@ void SynchronizedItemWidget::setSelected(bool isSelected)
         setGraphicsEffect(nullptr);
     }
 
-    emit selectionChanged();
+    emit selectionChanged(isSelected);
 }
 
 void SynchronizedItemWidget::paintEvent(QPaintEvent *event)
@@ -196,21 +207,25 @@ void SynchronizedItemWidget::enterEvent(QEvent *event)
 {
     Q_UNUSED(event)
 
-    _isWaitingTimer = true;
-    QTimer::singleShot(hoverStartTimer, [=](){
-        if (_isWaitingTimer) {
-            setSelected(true);
-        }
-    });
+    if (!_isWaitingTimer) {
+        _isWaitingTimer = true;
+        QTimer::singleShot(hoverStartTimer, [=](){
+            if (_isWaitingTimer) {
+                setSelected(true);
+            }
+        });
+    }
 }
 
 void SynchronizedItemWidget::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event)
 
-    _isWaitingTimer = false;
-    if (_isSelected) {
-        setSelected(false);
+    if (_isWaitingTimer) {
+        _isWaitingTimer = false;
+        if (_isSelected && !_isMenuOpened) {
+            setSelected(false);
+        }
     }
 }
 
@@ -363,6 +378,7 @@ void SynchronizedItemWidget::onFolderButtonClicked()
 void SynchronizedItemWidget::onMenuButtonClicked()
 {
     if (_menuButton) {
+        _isMenuOpened = true;
         MenuWidget *menu = new MenuWidget(MenuWidget::Menu, this);
 
         QWidgetAction *openAction = new QWidgetAction(this);
@@ -405,6 +421,7 @@ void SynchronizedItemWidget::onMenuButtonClicked()
         menu->addAction(displayOnDriveAction);
 
         menu->exec(QWidget::mapToGlobal(_menuButton->geometry().center()));
+        _isMenuOpened = false;
     }
 }
 

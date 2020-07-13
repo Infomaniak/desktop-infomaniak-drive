@@ -55,12 +55,17 @@ signals:
     void manageRightAndSharing(const SynchronizedItem &item);
     void copyLink(const SynchronizedItem &item);
     void displayOnWebview(const SynchronizedItem &item);
-    void selectionChanged();
+    void selectionChanged(bool isSelected);
+
+public slots:
+    void onCannotSelect(bool cannotSelect);
 
 private:
     const SynchronizedItem _item;
     bool _isWaitingTimer;
     bool _isSelected;
+    bool _isMenuOpened;
+    bool _cannotSelect;
     QSize _fileIconSize;
     QSize _directionIconSize;
     QColor _directionIconColor;
