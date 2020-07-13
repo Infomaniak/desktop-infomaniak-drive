@@ -246,13 +246,6 @@ void BaseFolderTreeItemWidget::onUpdateDirectories(QStringList list)
     }
 
     CustomTreeWidgetItem *root = static_cast<CustomTreeWidgetItem *>(topLevelItem(0));
-    if (!root && list.size() <= 1) {
-        emit message(tr("No subfolders currently on the server."));
-        return;
-    } else {
-        emit showMessage(false);
-    }
-
     if (!root) {
         root = new CustomTreeWidgetItem(this);
 
