@@ -1161,11 +1161,18 @@ void ProcessDirectoryJob::processBlacklisted(const PathTuple &path, const OCC::L
     if (dbEntry.isValid() && ((dbEntry._modtime == localEntry.modtime && dbEntry._fileSize == localEntry.size) || (localEntry.isDirectory && dbEntry.isDirectory()))) {
         item->_instruction = CSYNC_INSTRUCTION_REMOVE;
         item->_direction = SyncFileItem::Down;
-    } else {
+    }
+    else if (dbEntry.isValid()) {
         item->_instruction = CSYNC_INSTRUCTION_IGNORE;
         item->_status = SyncFileItem::FileIgnored;
         item->_errorString = tr("Ignored because of the \"choose what to sync\" blacklist");
         _childIgnored = true;
+    }
+    else {
+        // Database inconstistency
+        item->_instruction = CSYNC_INSTRUCTION_REMOVE;
+        item->_direction = SyncFileItem::Down;
+        item->_type = localEntry.type;
     }
 
     qCInfo(lcDisco) << "Discovered (blacklisted) " << item->_file << item->_instruction << item->_direction << item->isDirectory();
