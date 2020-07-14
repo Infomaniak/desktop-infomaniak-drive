@@ -1241,6 +1241,7 @@ void FolderMan::setNotificationsDisabled(const QString &accountId, bool disabled
         if (folder->accountState() && folder->accountState()->account()
                 && folder->accountState()->account()->id() == accountId) {
             folder->setNotificationsDisabled(disabled);
+            folder->saveToSettings();
         }
     }
 }
