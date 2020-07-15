@@ -52,8 +52,14 @@ static QVector<int> tableColumnWidth = QVector<int>()
         << 35;  // tableColumn::Action
 
 static const int viewIconPathRole = Qt::UserRole;
-static const int skippedLinesRole = Qt::UserRole + 1;
-static const int isGlobalRole = Qt::UserRole + 2;
+static const int readOnlyRole = Qt::UserRole + 1;
+
+static const char patternProperty[] = "pattern";
+
+static const char noWarningIndicator = ']';
+static const char deletedIndicator = '[';
+
+Q_LOGGING_CATEGORY(lcFileExclusionDialog, "fileexclusiondialog", QtInfoMsg)
 
 FileExclusionDialog::FileExclusionDialog(QWidget *parent)
     : CustomDialog(true, parent)
@@ -64,6 +70,9 @@ FileExclusionDialog::FileExclusionDialog(QWidget *parent)
     , _actionIconColor(QColor())
     , _actionIconSize(QSize())
     , _needToSave(false)
+    , _readOnlyPatternMap(std::map<QString, PatternInfo>())
+    , _defaultPatternMap(std::map<QString, PatternInfo>())
+    , _userPatternMap(std::map<QString, PatternInfo>())
 {
     initUI();
     updateUI();
@@ -126,7 +135,7 @@ void FileExclusionDialog::initUI()
 
     QLabel *header2Label = new QLabel(tr("NO WARNING"), this);
     header2Label->setObjectName("header");
-    header2Label->setFixedWidth(tableColumnWidth[tableColumn::Deletable]);
+    header2Label->setFixedWidth(tableColumnWidth[tableColumn::NoWarning]);
     header2Label->setAlignment(Qt::AlignCenter);
     filesTableHeaderHBox->addWidget(header2Label);
     filesTableHeaderHBox->addStretch();
@@ -181,23 +190,27 @@ void FileExclusionDialog::updateUI()
 {
     _hiddenFilesCheckBox->setChecked(!OCC::FolderMan::instance()->ignoreHiddenFiles());
 
+    // Read only patterns
+    _readOnlyPatternMap[".csync_journal.db*"] = PatternInfo();
+    _readOnlyPatternMap["._sync_*.db*"] = PatternInfo();
+    _readOnlyPatternMap[".sync_*.db*"] = PatternInfo();
+
+    // Default patterns
     OCC::ConfigFile cfgFile;
-    addPattern(".csync_journal.db*", /*deletable=*/false, /*readonly=*/true, /*global=*/true);
-    addPattern("._sync_*.db*", /*deletable=*/false, /*readonly=*/true, /*global=*/true);
-    addPattern(".sync_*.db*", /*deletable=*/false, /*readonly=*/true, /*global=*/true);
-    readIgnoreFile(cfgFile.excludeFile(OCC::ConfigFile::SystemScope), /*global=*/true);
-    readIgnoreFile(cfgFile.excludeFile(OCC::ConfigFile::UserScope), /*global=*/false);
+    readIgnoreFile(cfgFile.excludeFile(OCC::ConfigFile::SystemScope), _defaultPatternMap);
+
+    // User patterns
+    readIgnoreFile(cfgFile.excludeFile(OCC::ConfigFile::UserScope), _userPatternMap);
+
+    loadPatternTable();
 }
 
-void FileExclusionDialog::readIgnoreFile(const QString &file, bool global)
+void FileExclusionDialog::readIgnoreFile(const QString &file, std::map<QString, PatternInfo> &patternMap)
 {
     QFile ignores(file);
     if (!ignores.open(QIODevice::ReadOnly)) {
         return;
     }
-
-    QStringList skippedLines;
-    bool readonly = global; // global ignores default to read-only
 
     while (!ignores.atEnd()) {
         QString line = QString::fromUtf8(ignores.readLine());
@@ -210,71 +223,66 @@ void FileExclusionDialog::readIgnoreFile(const QString &file, bool global)
             line.chop(1);
         }
 
-        // Collect empty lines and comments, we want to preserve them
-        if (line.isEmpty() || line.startsWith("#")) {
-            skippedLines.append(line);
-            // A directive that prohibits editing in the ui
-            if (line == "#!readonly") {
-                readonly = true;
-            }
-            continue;
+        bool noWarning = false;
+        bool deleted = false;
+        if (line.startsWith(noWarningIndicator)) {
+            noWarning = true;
+            line = line.mid(1);
         }
-
-        bool deletable = false;
-        if (line.startsWith(']')) {
-            deletable = true;
+        else if (line.startsWith(deletedIndicator)) {
+            deleted = true;
             line = line.mid(1);
         }
 
-        // Add and reset
-        addPattern(line, deletable, readonly, global, skippedLines);
-        skippedLines.clear();
-        readonly = global;
-    }
-
-    // Set columns size
-    for (int i = 0; i < tableColumnWidth.count(); i++) {
-        _filesTableView->setColumnWidth(i, tableColumnWidth[i]);
+        patternMap[line] = PatternInfo(noWarning, deleted);
     }
 }
 
-void FileExclusionDialog::addPattern(const QString &pattern, bool deletable, bool readOnly, bool global, const QStringList &skippedLines)
+void FileExclusionDialog::addPattern(const QString &pattern, const PatternInfo &patternInfo, bool readOnly,
+                                     int &row, QString scrollToPattern, int &scrollToRow)
 {
     QStandardItem *patternItem = new QStandardItem(pattern);
-    patternItem->setData(skippedLines, skippedLinesRole);
-    patternItem->setData(global, isGlobalRole);
+    QStandardItem *noWarningItem = new QStandardItem();
+    QStandardItem *actionItem = new QStandardItem();
 
-    QStandardItem *deletableItem = new QStandardItem();
+    QList<QStandardItem *> itemList;
+    itemList.insert(tableColumn::Pattern, patternItem);
+    itemList.insert(tableColumn::NoWarning, noWarningItem);
+    itemList.insert(tableColumn::Action, actionItem);
+    _filesTableModel->appendRow(itemList);
 
-    QStandardItem *viewItem = new QStandardItem();
-    setActionIcon(viewItem, ":/client/resources/icons/actions/delete.svg");
-
-    QList<QStandardItem *> row;
-    row.insert(tableColumn::Pattern, patternItem);
-    row.insert(tableColumn::Deletable, deletableItem);
-    row.insert(tableColumn::Action, viewItem);
-    _filesTableModel->appendRow(row);
+    patternItem->setData(readOnly, readOnlyRole);
 
     if (readOnly) {
-        patternItem->setFlags(patternItem->flags() ^ Qt::ItemIsEnabled);
-        deletableItem->setFlags(deletableItem->flags() ^ Qt::ItemIsEnabled);
+        noWarningItem->setFlags(noWarningItem->flags() ^ Qt::ItemIsEnabled);
+        actionItem->setFlags(actionItem->flags() ^ Qt::ItemIsEnabled);
+        setActionIcon(actionItem, QString());
+    }
+    else {
+        // Set custom checkbox for No Warning column
+        QWidget *noWarningWidget = new QWidget(this);
+        QHBoxLayout *noWarningHBox = new QHBoxLayout();
+        noWarningWidget->setLayout(noWarningHBox);
+        noWarningHBox->setContentsMargins(0, 0, 0, 0);
+        noWarningHBox->setAlignment(Qt::AlignCenter);
+        CustomCheckBox *noWarningCheckBox = new CustomCheckBox(this);
+        noWarningCheckBox->setChecked(patternInfo._noWarning);
+        noWarningCheckBox->setAutoFillBackground(true);
+        noWarningCheckBox->setObjectName("noWarningCheckBox");
+        noWarningCheckBox->setProperty(patternProperty, pattern);
+        noWarningHBox->addWidget(noWarningCheckBox);
+        int rowNum = _filesTableModel->rowCount() - 1;
+        _filesTableView->setIndexWidget(_filesTableModel->index(rowNum, tableColumn::NoWarning), noWarningWidget);
+
+        setActionIcon(actionItem, ":/client/resources/icons/actions/delete.svg");
+
+        connect(noWarningCheckBox, &CustomCheckBox::clicked, this, &FileExclusionDialog::onNoWarningCheckBoxClicked);
     }
 
-    // Set custom checkbox for Deletable column
-    QWidget *deletableWidget = new QWidget(this);
-    QHBoxLayout *deletableHBox = new QHBoxLayout();
-    deletableWidget->setLayout(deletableHBox);
-    deletableHBox->setContentsMargins(0, 0, 0, 0);
-    deletableHBox->setAlignment(Qt::AlignCenter);
-    CustomCheckBox *deletableCheckBox = new CustomCheckBox(this);
-    deletableCheckBox->setChecked(deletable);
-    deletableCheckBox->setAutoFillBackground(true);
-    deletableCheckBox->setObjectName("deletableCheckBox");
-    deletableHBox->addWidget(deletableCheckBox);
-    int rowNum = _filesTableModel->rowCount() - 1;
-    _filesTableView->setIndexWidget(_filesTableModel->index(rowNum, tableColumn::Deletable),
-                                    deletableWidget);
-    connect(deletableCheckBox, &CustomCheckBox::clicked, this, &FileExclusionDialog::onDeletableCheckBoxClicked);
+    row++;
+    if (!scrollToPattern.isEmpty() && pattern == scrollToPattern) {
+        scrollToRow = row;
+    }
 }
 
 void FileExclusionDialog::setActionIconColor(const QColor &color)
@@ -309,7 +317,7 @@ void FileExclusionDialog::setActionIcon(QStandardItem *item, const QString &view
         if (item->data(viewIconPathRole).isNull()) {
             item->setData(viewIconPath, viewIconPathRole);
         }
-        if (_actionIconColor != QColor() && _actionIconSize != QSize()) {
+        if (_actionIconColor != QColor() && _actionIconSize != QSize() && !viewIconPath.isEmpty()) {
             item->setData(OCC::Utility::getIconWithColor(viewIconPath, _actionIconColor).pixmap(_actionIconSize),
                           Qt::DecorationRole);
         }
@@ -320,6 +328,56 @@ void FileExclusionDialog::setNeedToSave(bool value)
 {
     _needToSave = value;
     _saveButton->setEnabled(value);
+}
+
+void FileExclusionDialog::loadPatternTable(QString scrollToPattern)
+{
+    int row = -1;
+    int scrollToRow = 0;
+
+    _filesTableModel->clear();
+
+    // Read only patterns
+    for (auto pattern : _readOnlyPatternMap) {
+        addPattern(pattern.first, pattern.second, true,
+                   row, scrollToPattern, scrollToRow);
+    }
+
+    // Default patterns
+    for (auto pattern : _defaultPatternMap) {
+        auto patternInfoIt = _userPatternMap.find(pattern.first);
+        if (patternInfoIt == _userPatternMap.end()) {
+            addPattern(pattern.first, pattern.second, false,
+                       row, scrollToPattern, scrollToRow);
+        }
+        else {
+            // Pattern updated or deleted by user
+            if (!patternInfoIt->second._deleted) {
+                addPattern(patternInfoIt->first, patternInfoIt->second, false,
+                           row, scrollToPattern, scrollToRow);
+            }
+        }
+    }
+
+    // User patterns
+    for (auto pattern : _userPatternMap) {
+        if (_defaultPatternMap.find(pattern.first) == _defaultPatternMap.end()) {
+            addPattern(pattern.first, pattern.second, false,
+                       row, scrollToPattern, scrollToRow);
+        }
+    }
+
+    if (scrollToRow) {
+        QModelIndex index = _filesTableModel->index(scrollToRow, tableColumn::Pattern);
+        _filesTableView->scrollTo(index);
+    }
+
+    // Set pattern table columns size
+    for (int i = 0; i < tableColumnWidth.count(); i++) {
+        _filesTableView->setColumnWidth(i, tableColumnWidth[i]);
+    }
+
+    _filesTableView->repaint();
 }
 
 void FileExclusionDialog::onExit()
@@ -359,10 +417,29 @@ void FileExclusionDialog::onAddFileButtonTriggered(bool checked)
     FileExclusionNameDialog *dialog = new FileExclusionNameDialog(this);
     if (dialog->exec() == QDialog::Accepted) {
         QString pattern = dialog->pattern();
-        addPattern(pattern, /*deletable=*/false, /*readonly=*/false, /*global=*/false);
-        _filesTableView->repaint();
-        _filesTableView->scrollToBottom();
-        setNeedToSave(true);
+        auto defaultPatternIt = _defaultPatternMap.find(pattern);
+        auto userPatternIt = _userPatternMap.find(pattern);
+        if ((defaultPatternIt == _defaultPatternMap.end()
+             && userPatternIt == _userPatternMap.end())
+                || (defaultPatternIt != _defaultPatternMap.end()
+                    && userPatternIt != _userPatternMap.end()
+                    && userPatternIt->second._deleted)) {
+            // Add or update pattern
+            _userPatternMap[pattern] = PatternInfo();
+
+            // Reload table
+            loadPatternTable(pattern);
+
+            setNeedToSave(true);
+        }
+        else {
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Question,
+                        tr("Pattern already existing, not added!"),
+                        QMessageBox::Yes, this);
+            msgBox->setDefaultButton(QMessageBox::Yes);
+            msgBox->exec();
+        }
     }
 }
 
@@ -370,9 +447,9 @@ void FileExclusionDialog::onTableViewClicked(const QModelIndex &index)
 {
     if (index.isValid()) {
         if (index.column() == tableColumn::Action) {
-            QStandardItem *item = _filesTableModel->item(index.row(), tableColumn::Deletable);
-            if (item && item->flags() & Qt::ItemIsEnabled) {
-                // Delete
+            QStandardItem *item = _filesTableModel->item(index.row(), tableColumn::Action);
+            if (item /*&& item->flags() & Qt::ItemIsEnabled*/) {
+                // Delete pattern
                 CustomMessageBox *msgBox = new CustomMessageBox(
                             QMessageBox::Question,
                             tr("Do you really want to delete?"),
@@ -381,8 +458,20 @@ void FileExclusionDialog::onTableViewClicked(const QModelIndex &index)
                 int ret = msgBox->exec();
                 if (ret != QDialog::Rejected) {
                     if (ret == QMessageBox::Yes) {
-                        _filesTableModel->removeRow(index.row());
-                        _filesTableView->repaint();
+                        QString pattern = _filesTableModel->index(index.row(), tableColumn::Pattern)
+                                .data(Qt::DisplayRole).toString();
+
+                        auto patternInfoIt = _defaultPatternMap.find(pattern);
+                        if (patternInfoIt == _defaultPatternMap.end()) {
+                            _userPatternMap.erase(pattern);
+                        }
+                        else {
+                            _userPatternMap[pattern] = PatternInfo(false, true);
+                        }
+
+                        // Reload table
+                        loadPatternTable(pattern);
+
                         setNeedToSave(true);
                     }
                 }
@@ -391,11 +480,42 @@ void FileExclusionDialog::onTableViewClicked(const QModelIndex &index)
     }
 }
 
-void FileExclusionDialog::onDeletableCheckBoxClicked(bool checked)
+void FileExclusionDialog::onNoWarningCheckBoxClicked(bool checked)
 {
-    Q_UNUSED(checked)
+    CustomCheckBox *noWarningCheckBox = qobject_cast<CustomCheckBox *>(sender());
+    if (noWarningCheckBox) {
+        QString pattern = noWarningCheckBox->property(patternProperty).toString();
 
-    setNeedToSave(true);
+        auto patternInfoIt = _defaultPatternMap.find(pattern);
+        if (patternInfoIt == _defaultPatternMap.end()) {
+            // User pattern
+            patternInfoIt = _userPatternMap.find(pattern);
+            if (patternInfoIt == _userPatternMap.end()) {
+                qCDebug(lcFileExclusionDialog()) << "Pattern not found: " << pattern;
+                return;
+            }
+            else {
+                patternInfoIt->second._noWarning = checked;
+            }
+        }
+        else {
+            // Default pattern
+            patternInfoIt = _userPatternMap.find(pattern);
+            if (patternInfoIt == _userPatternMap.end()) {
+                // Create user pattern
+                _userPatternMap[pattern] = PatternInfo(checked, false);
+            }
+            else {
+                // Delete user pattern
+                _userPatternMap.erase(pattern);
+            }
+        }
+
+        setNeedToSave(true);
+    }
+    else {
+        qCDebug(lcFileExclusionDialog()) << "Null pointer!";
+    }
 }
 
 void FileExclusionDialog::onSaveButtonTriggered(bool checked)
@@ -406,40 +526,24 @@ void FileExclusionDialog::onSaveButtonTriggered(bool checked)
     QString ignoreFilePath = cfgFile.excludeFile(OCC::ConfigFile::UserScope);
     QFile ignoreFile(ignoreFilePath);
     if (ignoreFile.open(QIODevice::WriteOnly)) {
-        for (int row = 0; row < _filesTableModel->rowCount(); ++row) {
-            QStandardItem *patternItem = _filesTableModel->item(row, tableColumn::Pattern);
+        for (auto pattern : _userPatternMap) {
+            QByteArray line;
+            if (pattern.second._deleted) {
+                line += deletedIndicator;
+            }
+            else if (pattern.second._noWarning) {
+                line += noWarningIndicator;
+            }
+            line += pattern.first.toUtf8() + '\n';
 
-            QWidget *deletableWidget = qobject_cast<QWidget *>(
-                        _filesTableView->indexWidget(_filesTableModel->index(row, tableColumn::Deletable)));
-            if (!deletableWidget) {
-               ASSERT(false);
-            }
-            CustomCheckBox *deletableCheckBox = deletableWidget->findChild<CustomCheckBox *>();
-            if (!deletableCheckBox) {
-               ASSERT(false);
-            }
-
-            if (patternItem->data(isGlobalRole).toBool()) {
-                continue;
-            }
-
-            QStringList skippedLines = patternItem->data(skippedLinesRole).toStringList();
-            for (const auto &line : skippedLines) {
-                ignoreFile.write(line.toUtf8() + '\n');
-            }
-
-            QByteArray prepend;
-            if (deletableCheckBox->isChecked()) {
-                prepend = "]";
-            } else if (patternItem->text().startsWith('#')) {
-                prepend = "\\";
-            }
-            ignoreFile.write(prepend + patternItem->text().toUtf8() + '\n');
+            ignoreFile.write(line);
         }
-    } else {
+    }
+    else {
+        qCWarning(lcFileExclusionDialog()) << "Cannot save file exclusions in " << ignoreFilePath;
         CustomMessageBox *msgBox = new CustomMessageBox(
                     QMessageBox::Warning,
-                    tr("Cannot write changes to '%1'.").arg(ignoreFilePath),
+                    tr("Cannot save changes!"),
                     QMessageBox::Ok, this);
         msgBox->exec();
     }

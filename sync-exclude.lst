@@ -1,5 +1,3 @@
-# This file contains fixed global exclude patterns
-
 ]*~
 ]~$*
 ].~lock.*
@@ -11,26 +9,20 @@
 ]._*
 ]Thumbs.db
 ]System Volume Information
-
 ].*.sw?
 ].*.*sw?
-
 ].TemporaryItems
 ].Trashes
 ].DocumentRevisions-V100
 ].Trash-*
 ].fseventd
 ].apdisk
-
 ].directory
-
 ]*.part
 ]*.filepart
 ]*.crdownload
-
 ]*.kate-swp
 ]*.gnucash.tmp-*
-
 ].synkron.*
 ].sync.ffs_db
 ].symform
@@ -38,5 +30,4 @@
 ].fuse_hidden*
 ]*.unison
 ].nfs*
-
 ]My Saved Places.

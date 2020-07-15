@@ -40,8 +40,17 @@ public:
 private:
     enum tableColumn {
         Pattern = 0,
-        Deletable,
+        NoWarning,
         Action
+    };
+
+    struct PatternInfo {
+        PatternInfo(bool noWarning = false, bool deleted = false) {
+            _noWarning = noWarning;
+            _deleted = deleted;
+        }
+        bool _noWarning;
+        bool _deleted;
     };
 
     CustomCheckBox *_hiddenFilesCheckBox;
@@ -51,27 +60,31 @@ private:
     QColor _actionIconColor;
     QSize _actionIconSize;
     bool _needToSave;
+    std::map<QString, PatternInfo> _readOnlyPatternMap;
+    std::map<QString, PatternInfo> _defaultPatternMap;
+    std::map<QString, PatternInfo> _userPatternMap;
 
     inline QColor actionIconColor() const { return _actionIconColor; }
     inline QSize actionIconSize() const { return _actionIconSize; }
 
     void initUI();
     void updateUI();
-    void readIgnoreFile(const QString &file, bool global);
-    void addPattern(const QString &pattern, bool deletable, bool readOnly, bool global,
-        const QStringList &skippedLines = QStringList());
+    void readIgnoreFile(const QString &file, std::map<QString, PatternInfo> &patternMap);
+    void addPattern(const QString &pattern, const PatternInfo &patternInfo, bool readOnly,
+                    int &row, QString scrollToPattern, int &scrollToRow);
     void setActionIconColor(const QColor &color);
     void setActionIconSize(const QSize &size);
     void setActionIcon();
     void setActionIcon(QStandardItem *item, const QString &viewIconPath);
     void setNeedToSave(bool value);
+    void loadPatternTable(QString scrollToPattern = QString());
 
 private slots:
     void onExit();
     void onHiddenFilesCheckBoxClicked(bool checked = false);
     void onAddFileButtonTriggered(bool checked = false);
     void onTableViewClicked(const QModelIndex &index);
-    void onDeletableCheckBoxClicked(bool checked = false);
+    void onNoWarningCheckBoxClicked(bool checked = false);
     void onSaveButtonTriggered(bool checked = false);
 };
 
