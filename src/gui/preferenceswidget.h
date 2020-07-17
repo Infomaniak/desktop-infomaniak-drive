@@ -41,6 +41,7 @@ signals:
 private:
     QLineEdit *_folderConfirmationAmountLineEdit;
     QLabel *_debuggingFolderLabel;
+    QLabel *_updateStatusLabel;
     QPushButton *_updateButton;
 
     void clearUndecidedLists();

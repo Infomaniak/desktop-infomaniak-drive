@@ -60,6 +60,8 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     : QWidget(parent)
     , _folderConfirmationAmountLineEdit(nullptr)
     , _debuggingFolderLabel(nullptr)
+    , _updateStatusLabel(nullptr)
+    , _updateButton(nullptr)
 {
     setContentsMargins(0, 0, 0, 0);
 
@@ -286,6 +288,12 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     versionBox->addLayout(versionVBox);
     versionBox->addStretch();
 
+    _updateStatusLabel = new QLabel(this);
+    _updateStatusLabel->setObjectName("boldTextLabel");
+    _updateStatusLabel->setWordWrap(true);
+    _updateStatusLabel->setVisible(false);
+    versionVBox->addWidget(_updateStatusLabel);
+
     QLabel *versionNumberLabel = new QLabel(tr("<a style=\"%1\" href=\"%2\">%3</a>")
                                             .arg(OCC::Utility::linkStyle)
                                             .arg(versionLink)
@@ -440,10 +448,24 @@ void PreferencesWidget::onUpdateInfo()
         connect(_updateButton, &QPushButton::clicked, ocupdater, &OCC::OCUpdater::slotStartInstaller, Qt::UniqueConnection);
         connect(_updateButton, &QPushButton::clicked, qApp, &QApplication::quit, Qt::UniqueConnection);
 
+        if (ocupdater->statusString().isEmpty()) {
+            _updateStatusLabel->setVisible(false);
+        }
+        else {
+            _updateStatusLabel->setVisible(true);
+            _updateStatusLabel->setText(ocupdater->statusString());
+        }
         _updateButton->setVisible(ocupdater->downloadState() == OCC::OCUpdater::DownloadComplete);
     }
 #if defined(Q_OS_MAC) && defined(HAVE_SPARKLE)
     else if (OCC::SparkleUpdater *sparkleUpdater = qobject_cast<OCC::SparkleUpdater *>(OCC::Updater::instance())) {
+        if (sparkleUpdater->statusString().isEmpty()) {
+            _updateStatusLabel->setVisible(false);
+        }
+        else {
+            _updateStatusLabel->setVisible(true);
+            _updateStatusLabel->setText(sparkleUpdater->statusString());
+        }
         _updateButton->setVisible(false);
     }
 #endif
