@@ -1975,10 +1975,6 @@ for additional privileges during the process.</source>
         <translation>Lo stato di aggiornamento è sconosciuto. Non è possibile verificare la presenza di nuovi aggiornamenti.</translation>
     </message>
     <message>
-        <source>No updates available. Your installation is at the latest version.</source>
-        <translation>Non ci sono aggiornamenti disponibili. La tua installazione è aggiornata all&apos;ultima versione.</translation>
-    </message>
-    <message>
         <source>Update Check</source>
         <translation>Controllo aggiornamenti</translation>
     </message>
@@ -1987,12 +1983,16 @@ for additional privileges during the process.</source>
         <translation>Scaricamento %1. Attendere...</translation>
     </message>
     <message>
-        <source>%1 available. Restart application to start the update.</source>
-        <translation>%1 disponibile. Riavvia applicazione per avviare l&apos;aggiornamento.</translation>
+        <source>An update is available: %1</source>
+        <translation>È disponibile un aggiornamento: %1</translation>
     </message>
     <message>
-        <source>New %1 available. Please use the system&apos;s update tool to install it.</source>
-        <translation>Nuovo %1 disponibile. Utilizza lo strumento di aggiornamento del sistema per installarlo.</translation>
+        <source>An update is available: %1. Please use the system&apos;s update tool to install it.</source>
+        <translation>È disponibile un aggiornamento: %1. Si prega di utilizzare lo strumento di aggiornamento del sistema per installarlo.</translation>
+    </message>
+    <message>
+        <source>%1 is up to date!</source>
+        <translation>%1 è aggiornato!</translation>
     </message>
 </context>
 <context>

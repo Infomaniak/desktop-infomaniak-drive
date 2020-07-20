@@ -24,6 +24,7 @@ namespace OCC {
 class SparkleUpdater : public Updater
 {
     Q_OBJECT
+
 public:
     SparkleUpdater(const QUrl &appCastUrl);
     ~SparkleUpdater();
@@ -36,6 +37,10 @@ public:
     bool handleStartup() Q_DECL_OVERRIDE { return false; }
 
     QString statusString();
+    bool updateFound() const;
+
+public slots:
+    void slotStartInstaller();
 
 private:
     class Private;

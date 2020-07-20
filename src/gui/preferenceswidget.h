@@ -44,7 +44,10 @@ private:
     QLabel *_updateStatusLabel;
     QPushButton *_updateButton;
 
+    void showEvent(QShowEvent *event) override;
+
     void clearUndecidedLists();
+    void updateStatus(QString status, bool updateAvailable);
 
 private slots:
     void onFolderConfirmationSwitchClicked(bool checked = false);

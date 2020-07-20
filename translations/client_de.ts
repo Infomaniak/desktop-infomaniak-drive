@@ -1973,14 +1973,6 @@ for additional privileges during the process.</source>
         <translation>Herunterladen von %1. Bitte warten…</translation>
     </message>
     <message>
-        <source>%1 available. Restart application to start the update.</source>
-        <translation>%1 ist verfügbar. Anwendung zum Start der Aktualisierung neu starten.</translation>
-    </message>
-    <message>
-        <source>New %1 available. Please use the system&apos;s update tool to install it.</source>
-        <translation>Aktualisierung von %1 verfügbar. Bitte nutzen Sie zur Installation das Systemaktualisierungstool.</translation>
-    </message>
-    <message>
         <source>Checking update server...</source>
         <translation>Aktualisierungsserver wird überprüft …</translation>
     </message>
@@ -1989,12 +1981,20 @@ for additional privileges during the process.</source>
         <translation>Updatestatus unbekannt: Auf neue Updates wurde nicht geprüft.</translation>
     </message>
     <message>
-        <source>No updates available. Your installation is at the latest version.</source>
-        <translation>Keine Aktualisierungen verfügbar. Ihre Installation ist die aktuelle Version.</translation>
-    </message>
-    <message>
         <source>Update Check</source>
         <translation>Aktualitätsprüfung</translation>
+    </message>
+    <message>
+        <source>An update is available: %1</source>
+        <translation>Eine Aktualisierung ist verfügbar: %1</translation>
+    </message>
+    <message>
+        <source>An update is available: %1. Please use the system&apos;s update tool to install it.</source>
+        <translation>Eine Aktualisierung ist verfügbar: %1. Bitte verwenden Sie das Update-Tool des Systems, um es zu installieren.</translation>
+    </message>
+    <message>
+        <source>%1 is up to date!</source>
+        <translation>%1 ist auf dem neuesten Stand!</translation>
     </message>
 </context>
 <context>

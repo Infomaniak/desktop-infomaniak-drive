@@ -20,11 +20,35 @@
 
 #include "common/utility.h"
 #include "updater/sparkleupdater.h"
+#include "config.h"
+
+typedef NS_ENUM(int, DownloadState) {
+    Unknown = 0,
+    FindValidUpdate,
+    DidNotFindUpdate,
+    AbortWithError
+};
 
 @interface DelegateObject : NSObject <SUUpdaterDelegate>
+{
+@protected
+    DownloadState _state;
+    NSString *_availableVersion;
+}
 - (BOOL)updaterMayCheckForUpdates:(SUUpdater *)bundle;
+- (DownloadState)downloadState;
+- (NSString *)availableVersion;
 @end
+
 @implementation DelegateObject //(SUUpdaterDelegateInformalProtocol)
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _state = Unknown;
+        _availableVersion = @"";
+    }
+    return self;
+}
 
 - (BOOL)updaterMayCheckForUpdates:(SUUpdater *)bundle
 {
@@ -33,12 +57,23 @@
     return YES;
 }
 
+- (DownloadState)downloadState
+{
+    return _state;
+}
+
+- (NSString *)availableVersion
+{
+    return _availableVersion;
+}
+
 // Sent when a valid update is found by the update driver.
 - (void)updater:(SUUpdater *)updater didFindValidUpdate:(SUAppcastItem *)update
 {
     Q_UNUSED(updater)
-    Q_UNUSED(update)
-    qCDebug(OCC::lcUpdater) << "";
+    qCDebug(OCC::lcUpdater) << "Version: " << update.versionString;
+    _state = FindValidUpdate;
+    _availableVersion = [update.versionString copy];
 }
 
 // Sent when a valid update is not found.
@@ -46,6 +81,7 @@
 {
     Q_UNUSED(update)
     qCDebug(OCC::lcUpdater) << "";
+    _state = DidNotFindUpdate;
 }
 
 // Sent immediately before installing the specified update.
@@ -53,25 +89,23 @@
 {
     Q_UNUSED(updater)
     Q_UNUSED(update)
-    qCDebug(OCC::lcUpdater) << "";
+    qCDebug(OCC::lcUpdater) << "Install update";
 }
 
 - (void) updater:(SUUpdater *)updater didAbortWithError:(NSError *)error
 {
     Q_UNUSED(updater)
-    qCDebug(OCC::lcUpdater) << error.description;
+    qCDebug(OCC::lcUpdater) << "Error: " << error.description;
+    _state = AbortWithError;
 }
 
 - (void)updater:(SUUpdater *)updater didFinishLoadingAppcast:(SUAppcast *)appcast
 {
     Q_UNUSED(updater)
     Q_UNUSED(appcast)
-    qCDebug(OCC::lcUpdater) << "";
+    qCDebug(OCC::lcUpdater) << "Finish loading Appcast";
 }
-
-
 @end
-
 
 namespace OCC {
 
@@ -123,13 +157,14 @@ void SparkleUpdater::setUpdateUrl(const QUrl &url)
 bool autoUpdaterAllowed()
 {
     // See https://github.com/owncloud/client/issues/2931
-    NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+    /*NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
     NSString *expectedPath = [NSString stringWithFormat:@"/Applications/%@", [bundlePath lastPathComponent]];
     if ([expectedPath isEqualTo:bundlePath]) {
         return true;
     }
     qCWarning(lcUpdater) << "We are not in /Applications, won't check for update!";
-    return false;
+    return false;*/
+    return true;
 }
 
 
@@ -150,8 +185,30 @@ void SparkleUpdater::backgroundCheckForUpdate()
 
 QString SparkleUpdater::statusString()
 {
-    // FIXME Show the real state depending on the callbacks
-    return QString();
+    DownloadState state = [d->delegate downloadState];
+    NSString *updateVersion = [d->delegate availableVersion];
+
+    switch (state) {
+    case Unknown:
+        return tr("Update status is unknown: Did not check for new updates.");
+    case FindValidUpdate:
+        return tr("An update is available: %1").arg([updateVersion UTF8String]);
+    case DidNotFindUpdate:
+        return tr("%1 is up to date!").arg(APPLICATION_NAME);
+    case AbortWithError:
+        return tr("Check for update aborted.");
+    }
+}
+
+bool SparkleUpdater::updateFound() const
+{
+    DownloadState state = [d->delegate downloadState];
+    return state == FindValidUpdate;
+}
+
+void SparkleUpdater::slotStartInstaller()
+{
+    [d->updater installUpdatesIfAvailable];
 }
 
 } // namespace OCC

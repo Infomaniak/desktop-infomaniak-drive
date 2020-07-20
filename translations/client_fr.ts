@@ -1974,14 +1974,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
         <translation>Téléchargement %1 en cours. Veuillez patienter…</translation>
     </message>
     <message>
-        <source>%1 available. Restart application to start the update.</source>
-        <translation>%1 disponible. Veuillez redémarrer l’application afin de démarrer la mise à jour.</translation>
-    </message>
-    <message>
-        <source>New %1 available. Please use the system&apos;s update tool to install it.</source>
-        <translation>Nouvel(le) %1 disponible. Veuillez utiliser l’outil de mise à jour système afin de l’installer.</translation>
-    </message>
-    <message>
         <source>Checking update server...</source>
         <translation>Interrogation du serveur de mises à jour...</translation>
     </message>
@@ -1990,12 +1982,20 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
         <translation>L&apos;état du processus de mise à jour est inconnu. Impossible de vérifier la présence de mises à jour.</translation>
     </message>
     <message>
-        <source>No updates available. Your installation is at the latest version.</source>
-        <translation>Aucune mise à jour disponible. Votre installation est à jour.</translation>
-    </message>
-    <message>
         <source>Update Check</source>
         <translation>Recherche de mise à jour</translation>
+    </message>
+    <message>
+        <source>An update is available: %1</source>
+        <translation>Une mise à jour est disponible: %1</translation>
+    </message>
+    <message>
+        <source>An update is available: %1. Please use the system&apos;s update tool to install it.</source>
+        <translation>Une mise à jour est disponible: %1. Veuillez utiliser l&apos;outil de mise à jour système pour l&apos;installer.</translation>
+    </message>
+    <message>
+        <source>%1 is up to date!</source>
+        <translation>%1 est à jour !</translation>
     </message>
 </context>
 <context>

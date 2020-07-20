@@ -286,7 +286,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     versionVBox->setContentsMargins(0, 0, 0, 0);
     versionVBox->setSpacing(0);
     versionBox->addLayout(versionVBox);
-    versionBox->addStretch();
+    versionBox->setStretchFactor(versionVBox, 1);
 
     _updateStatusLabel = new QLabel(this);
     _updateStatusLabel->setObjectName("boldTextLabel");
@@ -314,8 +314,6 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
 
     vBox->addStretch();
 
-    onUpdateInfo();
-
     connect(folderConfirmationSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onFolderConfirmationSwitchClicked);
     connect(_folderConfirmationAmountLineEdit, &QLineEdit::textEdited, this, &PreferencesWidget::onFolderConfirmationAmountTextEdited);
     if (darkThemeSwitch) {
@@ -329,6 +327,13 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     connect(proxyServerWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onProxyServerWidgetClicked);
     connect(bandwidthWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onBandwidthWidgetClicked);
     connect(versionNumberLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
+}
+
+void PreferencesWidget::showEvent(QShowEvent *event)
+{
+    Q_UNUSED(event)
+
+    onUpdateInfo();
 }
 
 void PreferencesWidget::clearUndecidedLists()
@@ -346,6 +351,18 @@ void PreferencesWidget::clearUndecidedLists()
 
         emit undecidedListsCleared();
     }
+}
+
+void PreferencesWidget::updateStatus(QString status, bool updateAvailable)
+{
+    if (status.isEmpty()) {
+        _updateStatusLabel->setVisible(false);
+    }
+    else {
+        _updateStatusLabel->setVisible(true);
+        _updateStatusLabel->setText(status);
+    }
+    _updateButton->setVisible(updateAvailable);
 }
 
 void PreferencesWidget::onFolderConfirmationSwitchClicked(bool checked)
@@ -448,25 +465,13 @@ void PreferencesWidget::onUpdateInfo()
         connect(_updateButton, &QPushButton::clicked, ocupdater, &OCC::OCUpdater::slotStartInstaller, Qt::UniqueConnection);
         connect(_updateButton, &QPushButton::clicked, qApp, &QApplication::quit, Qt::UniqueConnection);
 
-        if (ocupdater->statusString().isEmpty()) {
-            _updateStatusLabel->setVisible(false);
-        }
-        else {
-            _updateStatusLabel->setVisible(true);
-            _updateStatusLabel->setText(ocupdater->statusString());
-        }
-        _updateButton->setVisible(ocupdater->downloadState() == OCC::OCUpdater::DownloadComplete);
+        updateStatus(ocupdater->statusString(), ocupdater->downloadState() == OCC::OCUpdater::DownloadComplete);
     }
 #if defined(Q_OS_MAC) && defined(HAVE_SPARKLE)
     else if (OCC::SparkleUpdater *sparkleUpdater = qobject_cast<OCC::SparkleUpdater *>(OCC::Updater::instance())) {
-        if (sparkleUpdater->statusString().isEmpty()) {
-            _updateStatusLabel->setVisible(false);
-        }
-        else {
-            _updateStatusLabel->setVisible(true);
-            _updateStatusLabel->setText(sparkleUpdater->statusString());
-        }
-        _updateButton->setVisible(false);
+        connect(_updateButton, &QPushButton::clicked, sparkleUpdater, &OCC::SparkleUpdater::slotStartInstaller, Qt::UniqueConnection);
+
+        updateStatus(sparkleUpdater->statusString(), sparkleUpdater->updateFound());
     }
 #endif
 }
