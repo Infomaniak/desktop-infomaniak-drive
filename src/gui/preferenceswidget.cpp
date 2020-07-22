@@ -326,6 +326,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     connect(filesToExcludeWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onFilesToExcludeWidgetClicked);
     connect(proxyServerWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onProxyServerWidgetClicked);
     connect(bandwidthWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onBandwidthWidgetClicked);
+    connect(_updateStatusLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
     connect(versionNumberLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
 }
 
@@ -447,6 +448,28 @@ void PreferencesWidget::onLinkActivated(const QString &link)
     else if (link == versionLink) {
         AboutDialog *dialog = new AboutDialog(this);
         dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
+    }
+    else {
+        // URL link
+        QUrl url = QUrl(link);
+        if (url.isValid()) {
+            if (!QDesktopServices::openUrl(url)) {
+                qCWarning(lcPerformancesWidget) << "QDesktopServices::openUrl failed for " << link;
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
+                            tr("Unable to open link %1.").arg(link),
+                            QMessageBox::Ok, this);
+                msgBox->exec();
+            }
+        }
+        else {
+            qCWarning(lcPerformancesWidget) << "Invalid link " << link;
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Invalid link %1.").arg(link),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
+        }
     }
 }
 

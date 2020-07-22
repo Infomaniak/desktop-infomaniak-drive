@@ -16,6 +16,7 @@
 #include "config.h"
 #include "configfile.h"
 #include "common/utility.h"
+#include "guiutility.h"
 #include "accessmanager.h"
 
 #include "updater/ocupdater.h"
@@ -150,11 +151,16 @@ QString OCUpdater::statusString() const
     case DownloadComplete:
         return tr("An update is available: %1").arg(updateVersion);
     case DownloadFailed:
-        return tr("Could not download update. Please click <a href='%1'>here</a> to download the update manually.").arg(_updateInfo.web());
+        return tr("Could not download update. Please click <a style=\"%1\" href=\"%2\">here</a> to download it manually.")
+                .arg(Utility::linkStyle)
+                .arg(_updateInfo.web());
     case DownloadTimedOut:
         return tr("Could not check for new updates.");
     case UpdateOnlyAvailableThroughSystem:
-        return tr("An update is available: %1. Please click <a href='%2'>here</a> to download the update manually").arg(updateVersion, APPLICATION_SERVER_URL);
+        return tr("An update is available: %1. Please click <a style=\"%2\" href=\"%3\">here</a> to download it manually")
+                .arg(updateVersion)
+                .arg(Utility::linkStyle)
+                .arg(APPLICATION_DOWNLOAD_URL);
     case CheckingServer:
         return tr("Checking update server...");
     case Unknown:
