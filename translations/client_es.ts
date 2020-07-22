@@ -875,6 +875,14 @@ Esta acción interrumpirá cualquier sincronización actualmente en ejecución.<
         <source>Unable to open folder %1.</source>
         <translation>No se puede abrir la carpeta %1</translation>
     </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>No es posible abrir el enlace %1.</translation>
+    </message>
+    <message>
+        <source>Invalid link %1.</source>
+        <translation>Invalidar enlace %1.</translation>
+    </message>
 </context>
 <context>
     <name>KDC::ProgressBarWidget</name>
@@ -1961,10 +1969,6 @@ for additional privileges during the process.</source>
         <translation>Se instalará una nueva actualización de %1. Durante esta actualización puede que se soliciten privilegios adicionales.</translation>
     </message>
     <message>
-        <source>Could not download update. Please click &lt;a href=&apos;%1&apos;&gt;here&lt;/a&gt; to download the update manually.</source>
-        <translation>No se puede descargar la actualización. Por favor, haga clic &lt;a href=&apos;%1&apos;&gt;aquí&lt;/a&gt; para iniciar una descarga manual.</translation>
-    </message>
-    <message>
         <source>Could not check for new updates.</source>
         <translation>No se puede comprobar si hay actualizaciones.</translation>
     </message>
@@ -1989,12 +1993,16 @@ for additional privileges during the process.</source>
         <translation>Hay disponible una actualización: %1</translation>
     </message>
     <message>
-        <source>An update is available: %1. Please use the system&apos;s update tool to install it.</source>
-        <translation>Hay disponible una actualización: %1. Utilice la herramienta de actualización del sistema para instalarlo.</translation>
-    </message>
-    <message>
         <source>%1 is up to date!</source>
         <translation>¡%1 está actualizado!</translation>
+    </message>
+    <message>
+        <source>Could not download update. Please click &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;here&lt;/a&gt; to download it manually.</source>
+        <translation>No se pudo descargar la actualización. Haga clic &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;aquí&lt;/a&gt; para descargarlo manualmente.</translation>
+    </message>
+    <message>
+        <source>An update is available: %1. Please click &lt;a style=&quot;%2&quot; href=&quot;%3&quot;&gt;here&lt;/a&gt; to download it manually</source>
+        <translation>Hay una actualización disponible: %1. Haga clic &lt;a style=&quot;%2&quot; href=&quot;%3&quot;&gt;aquí&lt;/a&gt; para descargarlo manualmente</translation>
     </message>
 </context>
 <context>
