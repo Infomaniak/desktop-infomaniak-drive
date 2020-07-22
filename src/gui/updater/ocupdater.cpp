@@ -135,7 +135,7 @@ void OCUpdater::backgroundCheckForUpdate()
         qCInfo(lcUpdater) << "Update is downloaded, skip new check.";
         break;
     case UpdateOnlyAvailableThroughSystem:
-        qCInfo(lcUpdater) << "Update is only available through system, skip check.";
+        qCInfo(lcUpdater) << "Update available, skip check.";
         break;
     }
 }
@@ -154,7 +154,7 @@ QString OCUpdater::statusString() const
     case DownloadTimedOut:
         return tr("Could not check for new updates.");
     case UpdateOnlyAvailableThroughSystem:
-        return tr("An update is available: %1. Please use the system's update tool to install it.").arg(updateVersion);
+        return tr("An update is available: %1. Please click <a href='%2'>here</a> to download the update manually").arg(updateVersion, APPLICATION_SERVER_URL);
     case CheckingServer:
         return tr("Checking update server...");
     case Unknown:
