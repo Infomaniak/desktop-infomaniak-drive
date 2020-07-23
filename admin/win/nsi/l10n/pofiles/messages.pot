@@ -192,3 +192,8 @@ msgstr "The uninstaller is already running."
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
+#. InstallRedistributables_MESSAGEBOX_TEXT
+msgid "Warning! The kDrive application requires the installation of Microsoft C ++ 2015-2019 redistributables. This may cause the computer to restart."
+msgstr "Warning! The kDrive application requires the installation of Microsoft C ++ 2015-2019 redistributables. This may cause the computer to restart."
+
+
