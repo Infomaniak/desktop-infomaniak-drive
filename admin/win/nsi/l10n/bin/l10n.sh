@@ -31,24 +31,9 @@ python $SCRIPTDIR/build_locale_nsi.py -o $L10NDIR -p $PODIR -l "English"
 # 1258 — Vietnamese
 
 # convert file to proper content
-cd $L10NDIR
-iconv -t CP1252 -o German.nsh German.nsh
-iconv -t CP1252 -o Basque.nsh Basque.nsh
-iconv -t CP1252 -o English.nsh English.nsh
-iconv -t CP1252 -o Galician.nsh Galician.nsh
-iconv -t CP1253 -o Greek.nsh Greek.nsh    
-iconv -t CP1250 -o Slovenian.nsh Slovenian.nsh
-iconv -t CP1257 -o Estonian.nsh Estonian.nsh
-iconv -t CP1252 -o Italian.nsh Italian.nsh
-iconv -t CP1252 -o PortugueseBR.nsh PortugueseBR.nsh
-iconv -t CP1252 -o Spanish.nsh Spanish.nsh
-iconv -t CP1252 -o Dutch.nsh Dutch.nsh
-iconv -t CP1252 -o Finnish.nsh Finnish.nsh
-iconv -t CP932 -o Japanese.nsh Japanese.nsh
-iconv -t CP1250 -o Slovak.nsh Slovak.nsh
-iconv -t CP1254 -o Turkish.nsh Turkish.nsh
-iconv -t CP1252 -o Norwegian.nsh Norwegian.nsh
-iconv -t CP1250 -o Polish.nsh Polish.nsh
-iconv -t CP852  -o Czech.nsh Czech.nsh
-#iconv -t CP852  -o Slovak.nsh Slovak.nsh
+#cd $L10NDIR
+#iconv -c -t CP1252 German.nsh > German2.nsh
+#iconv -c -t CP1252 English.nsh > English2.nsh
+#iconv -c -t CP1252 Italian.nsh > Italian2.nsh
+#iconv -c -t CP1252 Spanish.nsh > Spanish2.nsh
 

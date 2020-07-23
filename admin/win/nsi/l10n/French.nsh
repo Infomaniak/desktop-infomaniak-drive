@@ -41,3 +41,4 @@ StrCpy $UAC_UNINSTALLER_REQUIRE_ADMIN "Ce désinstallateur requiert les droits a
 StrCpy $UAC_ERROR_LOGON_SERVICE "Service de logon non lancé ! Abandon."
 StrCpy $INIT_UNINSTALLER_RUNNING "Une désinstallation est déjà en cours."
 StrCpy $SectionGroup_Shortcuts "Raccourcis"
+StrCpy $InstallRedistributables_MESSAGEBOX_TEXT "L'application kDrive nécessite l'installation des redistributables Microsoft C++ 2015-2019. Cela peut causer le redémarrage de l'ordinateur."
