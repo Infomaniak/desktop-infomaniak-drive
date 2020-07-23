@@ -1,4 +1,6 @@
-;ownCloud installer script.
+; registry stuff
+!define regkey "Software\@{company}\@{productname}"
+!define uninstkey "Software\Microsoft\Windows\CurrentVersion\Uninstall\@{productname}"
 
 !define APPLICATION_SHORTNAME "@APPLICATION_EXECUTABLE@"
 !define APPLICATION_NAME "@APPLICATION_NAME@"
@@ -9,21 +11,20 @@
 !define APPLICATION_LICENSE "@APPLICATION_LICENSE@"
 !define APPLICATION_VIRTUALFILE_SUFFIX "@APPLICATION_VIRTUALFILE_SUFFIX@"
 !define APPLICATION_VIRTUALFILE_FILECLASS "@APPLICATION_EXECUTABLE@.@APPLICATION_VIRTUALFILE_SUFFIX@"
-!define WIN_SETUP_BITMAP_PATH "@WIN_SETUP_BITMAP_PATH@"
 
 !define CRASHREPORTER_EXECUTABLE "@CRASHREPORTER_EXECUTABLE@"
 
 ;-----------------------------------------------------------------------------
 ; Some installer script options (comment-out options not required)
 ;-----------------------------------------------------------------------------
-!if "@APPLICATION_LICENSE@" != ""
+!if "${APPLICATION_LICENSE}" != ""
   !define OPTION_LICENSE_AGREEMENT
 !endif
 !define OPTION_UAC_PLUGIN_ENHANCED
 !define OPTION_SECTION_SC_SHELL_EXT
 !define OPTION_SECTION_SC_START_MENU
 !define OPTION_SECTION_SC_DESKTOP
-!define OPTION_SECTION_SC_QUICK_LAUNCH
+;!define OPTION_SECTION_SC_QUICK_LAUNCH
 !define OPTION_FINISHPAGE
 !define OPTION_FINISHPAGE_LAUNCHER
 ; !define OPTION_FINISHPAGE_RELEASE_NOTES
@@ -31,23 +32,13 @@
 ;-----------------------------------------------------------------------------
 ; Some paths.
 ;-----------------------------------------------------------------------------
-!ifndef MING_PATH
-    !define MING_PATH "/usr/i686-w64-mingw32/sys-root/mingw"
-!endif
-!define MING_BIN "${MING_PATH}/bin"
-!define MING_LIB "${MING_PATH}/lib"
-!define MING_SHARE "${MING_PATH}/share"
 !define BUILD_PATH "@CMAKE_BINARY_DIR@"
 !define SOURCE_PATH "@CMAKE_SOURCE_DIR@"
-!define QT_DLL_PATH "${MING_BIN}"
-!define ACCESSIBLE_DLL_PATH "${MING_LIB}/qt5/plugins/accessible"
-!define IMAGEFORMATS_DLL_PATH "${MING_LIB}/qt5/plugins/imageformats"
-!define PLATFORMS_DLL_PATH "${MING_LIB}/qt5/plugins/platforms"
 
 !define CSYNC_LIBRARY_DIR "@CSYNC_LIBRARY_DIR@"
 !define CSYNC_CONFIG_DIR "@CSYNC_CONFIG_DIR@"
 
-!define NSI_PATH "${source_path}/admin/win/nsi"
+!define NSI_PATH "${SOURCE_PATH}\admin\win\nsi"
 
 ;-----------------------------------------------------------------------------
 ; Installer version
@@ -70,25 +61,27 @@ Var NoAutomaticUpdates
 ;-----------------------------------------------------------------------------
 ; Initial installer setup and definitions.
 ;-----------------------------------------------------------------------------
-Name "@CPACK_NSIS_PACKAGE_NAME@"
-BrandingText "${APPLICATION_NAME} ${VERSION}  -- ${BUILD_TIME}"
-OutFile "@CPACK_TOPLEVEL_DIRECTORY@/@CPACK_OUTPUT_FILE_NAME@"
+Name "@{productname}"
+Caption "@{productname} @{version}"
+BrandingText "${APPLICATION_NAME} ${VERSION} -- ${BUILD_TIME}"
+OutFile "@{setupname}"
 InstallDir "$PROGRAMFILES\@CPACK_PACKAGE_INSTALL_DIRECTORY@"
-InstallDirRegKey HKCU "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" ""
+InstallDirRegKey HKCU "${regkey}" ""
 InstType Standard
 InstType Full
 InstType Minimal
 CRCCheck On
-SetCompressor @CPACK_NSIS_COMPRESSOR@
 RequestExecutionLevel user ;Now using the UAC plugin.
-ReserveFile NSIS.InstallOptions.ini
-ReserveFile "${NSISDIR}\Plugins\InstallOptions.dll"
+;ReserveFile "${BUILD_PATH}\NSIS.InstallOptions.ini"
+;ReserveFile "${NSISDIR}\Plugins\InstallOptions.dll"
 
 @CPACK_NSIS_SECTION_SELECTED_VARS@
 
 ;-----------------------------------------------------------------------------
 ; Include some required header files.
 ;-----------------------------------------------------------------------------
+@{nsis_include_internal}
+@{nsis_include}
 !include LogicLib.nsh ;Used by APPDATA uninstaller.
 !include MUI2.nsh ;Used by APPDATA uninstaller.
 !include InstallOptions.nsh ;Required by MUI2 to support old MUI_INSTALLOPTIONS.
@@ -101,7 +94,7 @@ ReserveFile "${NSISDIR}\Plugins\InstallOptions.dll"
 !include Library.nsh ;Used by the COM registration for shell extensions
 !include x64.nsh ;Used to determine the right arch for the shell extensions
 
-!include ${source_path}/admin/win/nsi/lib/fileassoc.nsh
+!include ${NSI_PATH}\lib\fileassoc.nsh
 
 ;-----------------------------------------------------------------------------
 ; Memento selections stored in registry.
@@ -113,11 +106,8 @@ ReserveFile "${NSISDIR}\Plugins\InstallOptions.dll"
 ; Modern User Interface (MUI) definitions and setup.
 ;-----------------------------------------------------------------------------
 !define MUI_ABORTWARNING
-!define MUI_ICON ${NSI_PATH}\installer.ico
-!define MUI_UNICON ${NSI_PATH}\installer.ico
-!define MUI_WELCOMEFINISHPAGE_BITMAP ${WIN_SETUP_BITMAP_PATH}/welcome.bmp
-!define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP  ${WIN_SETUP_BITMAP_PATH}/page_header.bmp
+@{installerIcon}
+!define MUI_UNICON @{icon}
 !define MUI_COMPONENTSPAGE_SMALLDESC
 ; We removed this, h1 issue 191687
 ;!define MUI_FINISHPAGE_LINK "${APPLICATION_DOMAIN}"
@@ -156,8 +146,8 @@ Page custom PageReinstall PageLeaveReinstall
 ;-----------------------------------------------------------------------------
 !insertmacro MUI_LANGUAGE "English"
 
-!include ${source_path}/admin/win/nsi/l10n/languages.nsh
-!include ${source_path}/admin/win/nsi/l10n/declarations.nsh
+!include ${NSI_PATH}\l10n\languages.nsh
+!include ${NSI_PATH}\l10n\declarations.nsh
 
 ; Set version strings with english locale
 VIProductVersion "${VERSION}"
@@ -168,66 +158,24 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
 !macro SETLANG un
    Function ${un}SetLang
       # load the selected language file
-      !include "${source_path}/admin/win/nsi/l10n\English.nsh"
+      !include "${NSI_PATH}\l10n\English.nsh"
+      StrCmp $LANGUAGE ${LANG_FRENCH} French 0
       StrCmp $LANGUAGE ${LANG_GERMAN} German 0
-      StrCmp $LANGUAGE ${LANG_DUTCH} Dutch 0
-      StrCmp $LANGUAGE ${LANG_FINNISH} Finnish 0
-      StrCmp $LANGUAGE ${LANG_JAPANESE} Japanese 0
-      StrCmp $LANGUAGE ${LANG_SLOVENIAN} Slovenian 0
       StrCmp $LANGUAGE ${LANG_SPANISH} Spanish 0
       StrCmp $LANGUAGE ${LANG_ITALIAN} Italian 0
-      StrCmp $LANGUAGE ${LANG_ESTONIAN} Estonian 0
-      StrCmp $LANGUAGE ${LANG_GREEK} Greek 0
-      StrCmp $LANGUAGE ${LANG_BASQUE} Basque 0
-      StrCmp $LANGUAGE ${LANG_GALICIAN} Galician 0
-      StrCmp $LANGUAGE ${LANG_POLISH} Polish 0
-      StrCmp $LANGUAGE ${LANG_TURKISH} Turkish 0
-      StrCmp $LANGUAGE ${LANG_NORWEGIAN} Norwegian 0
-      StrCmp $LANGUAGE ${LANG_PORTUGUESEBR} Brazilian EndLanguageCmp
+      Goto EndLanguageCmp
+      French:
+      !include "${NSI_PATH}\l10n\French.nsh"
+      Goto EndLanguageCmp
       German:
-      !include "${source_path}/admin/win/nsi/l10n\German.nsh"
-      Goto EndLanguageCmp
-      Dutch:
-      !include "${source_path}/admin/win/nsi/l10n\Dutch.nsh"
-      Goto EndLanguageCmp
-      Finnish:
-      !include "${source_path}/admin/win/nsi/l10n\Finnish.nsh"
-      Goto EndLanguageCmp
-      Japanese:
-      !include "${source_path}/admin/win/nsi/l10n\Japanese.nsh"
-      Goto EndLanguageCmp
-      Slovenian:
-      !include "${source_path}/admin/win/nsi/l10n\Slovenian.nsh"
+      !include "${NSI_PATH}\l10n\German.nsh"
       Goto EndLanguageCmp
       Spanish:
-      !include "${source_path}/admin/win/nsi/l10n\Spanish.nsh"
+      !include "${NSI_PATH}\l10n\Spanish.nsh"
       Goto EndLanguageCmp
       Italian:
-      !include "${source_path}/admin/win/nsi/l10n\Italian.nsh"
+      !include "${NSI_PATH}\l10n\Italian.nsh"
       Goto EndLanguageCmp
-      Estonian:
-      !include "${source_path}/admin/win/nsi/l10n\Estonian.nsh"
-      Goto EndLanguageCmp
-      Greek:
-      !include "${source_path}/admin/win/nsi/l10n\Greek.nsh"
-      Goto EndLanguageCmp
-      Basque:
-      !include "${source_path}/admin/win/nsi/l10n\Basque.nsh"
-      Goto EndLanguageCmp
-      Galician:
-      !include "${source_path}/admin/win/nsi/l10n\Galician.nsh"
-      Goto EndLanguageCmp
-      Polish:
-      !include "${source_path}/admin/win/nsi/l10n\Polish.nsh"
-      Goto EndLanguageCmp
-      Turkish:
-      !include "${source_path}/admin/win/nsi/l10n\Turkish.nsh"
-      Goto EndLanguageCmp
-      Brazilian:
-      !include "${source_path}/admin/win/nsi/l10n\PortugueseBR.nsh"
-      Goto EndLanguageCmp
-      Norwegian:
-      !include "${source_path}/admin/win/nsi/l10n\Norwegian.nsh"
       EndLanguageCmp:
 
    FunctionEnd
@@ -288,13 +236,14 @@ Function EnsureOwncloudShutdown
 FunctionEnd
 
 Function InstallRedistributables
+   MessageBox MB_YESNO $InstallRedistributables_MESSAGEBOX_TEXT /SD IDYES IDYES install
+      Abort $UNINSTALL_ABORT
+   install:
+
    ${If} ${RunningX64}
-      ExecWait '"$OUTDIR\vcredist_x64.exe" /install /passive /norestart'
-   ${Else}
-      ExecWait '"$OUTDIR\vcredist_x86.exe" /install /passive /norestart'
+      ExecWait '"$OUTDIR\vc_redist.x64.exe" /install /passive /norestart'
    ${EndIf}
-   Delete "$OUTDIR\vcredist_x86.exe"
-   Delete "$OUTDIR\vcredist_x64.exe"
+   Delete "$OUTDIR\vc_redist.x64.exe"
 FunctionEnd
 
 ##############################################################################
@@ -304,21 +253,21 @@ FunctionEnd
 ##############################################################################
 
 Function PageReinstall
-   ReadRegStr $R0 HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" ""
+   ReadRegStr $R0 HKLM "${regkey}" ""
    StrCmp $R0 "" 0 +2
    Abort
 
    ;Detect version
-   ReadRegDWORD $R0 HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionMajor"
+   ReadRegDWORD $R0 HKLM "${regkey}" "VersionMajor"
    IntCmp $R0 ${VER_MAJOR} minor_check new_version older_version
    minor_check:
-      ReadRegDWORD $R0 HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionMinor"
+      ReadRegDWORD $R0 HKLM "${regkey}" "VersionMinor"
       IntCmp $R0 ${VER_MINOR} rev_check new_version older_version
    rev_check:
-      ReadRegDWORD $R0 HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionRevision"
+      ReadRegDWORD $R0 HKLM "${regkey}" "VersionRevision"
       IntCmp $R0 ${VER_PATCH} build_check new_version older_version
    build_check:
-      ReadRegDWORD $R0 HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionBuild"
+      ReadRegDWORD $R0 HKLM "${regkey}" "VersionBuild"
       IntCmp $R0 ${VER_BUILD} same_version new_version older_version
 
    new_version:
@@ -384,83 +333,12 @@ Section "${APPLICATION_NAME}" SEC_APPLICATION
    SetDetailsPrint listonly
    SetOutPath "$INSTDIR"
 
-   ;Main executable & csync
-   File "${BUILD_PATH}\bin\${APPLICATION_EXECUTABLE}"
-   File "${BUILD_PATH}\bin\${APPLICATION_CMD_EXECUTABLE}"
-   File "${BUILD_PATH}\bin\lib${APPLICATION_SHORTNAME}sync.dll"
-   File "${BUILD_PATH}\bin\lib${APPLICATION_SHORTNAME}_csync.dll"
-
-   File "${BUILD_PATH}\src\gui\client*.qm"
-   ; Make sure only to copy qt, not qt_help, etc
-   File "${MING_SHARE}\qt5\translations\qt_??.qm"
-   File "${MING_SHARE}\qt5\translations\qt_??_??.qm"
-   File "${MING_SHARE}\qt5\translations\qtbase_*.qm"
-   File "${MING_SHARE}\qt5\translations\qtkeychain_*.qm"
-
-   ;Add crash reporter if it was built
-   File /nonfatal "${BUILD_PATH}/bin/${CRASHREPORTER_EXECUTABLE}.exe"
-
-   SetOutPath "$INSTDIR\platforms"
-   File "${PLATFORMS_DLL_PATH}\qwindows.dll"
-   SetOutPath "$INSTDIR\imageformats"
-   File "${IMAGEFORMATS_DLL_PATH}\qgif.dll"
-   File "${IMAGEFORMATS_DLL_PATH}\qjpeg.dll"
-   File "${IMAGEFORMATS_DLL_PATH}\qico.dll"
-   File "${IMAGEFORMATS_DLL_PATH}\qsvg.dll"
-   ; PNG is built in Qt
-
-   SetOutPath "$INSTDIR"
-   ;License & release notes.
-   File "@CPACK_RESOURCE_FILE_LICENSE@"
-   ;File /oname=NOTES.txt ${NSI_PATH}\RELEASE_NOTES.txt
-
-   ;Qt config:
-   File "${NSI_PATH}\qt.conf"
-
-   ;Qt stuff:
-   File "${QT_DLL_PATH}\Qt5Core.dll"
-   File "${QT_DLL_PATH}\Qt5Gui.dll"
-   File "${QT_DLL_PATH}\Qt5Network.dll"
-   File "${QT_DLL_PATH}\Qt5PrintSupport.dll"
-   File "${QT_DLL_PATH}\Qt5Svg.dll"
-   File "${QT_DLL_PATH}\Qt5Qml.dll"
-   File "${QT_DLL_PATH}\Qt5Sql.dll"
-   File "${QT_DLL_PATH}\Qt5Widgets.dll"
-   File "${QT_DLL_PATH}\Qt5Xml.dll"
-
-   ;Qt deps
-   File "${MING_BIN}\libpng16-16.dll"
-   File "${MING_BIN}\icudata56.dll"
-   File "${MING_BIN}\icui18n56.dll"
-   File "${MING_BIN}\icuuc56.dll"
-   File "${MING_BIN}\libEGL.dll"
-   File "${MING_BIN}\libGLESv2.dll"
-   File "${MING_BIN}\libjpeg-8.dll"
-   File "${MING_BIN}\libpcre16-0.dll"
-   File "${MING_BIN}\libsqlite3-0.dll"
-   File "${MING_BIN}\libcrypto-10.dll"
-   File "${MING_BIN}\libssl-10.dll"
-   File "${MING_BIN}\libstdc++-6.dll"
-   File "${MING_BIN}\libwebp-5.dll"
-   File "${MING_BIN}\libxslt-1.dll"
-   File "${MING_BIN}\libxml2-2.dll"
-   File "${MING_BIN}\zlib1.dll"
-   File "${MING_BIN}\libharfbuzz-0.dll"
-   File "${MING_BIN}\libfreetype-6.dll"
-   File "${MING_BIN}\libglib-2.0-0.dll"
-   File "${MING_BIN}\libintl-8.dll"
-
-   ;QtKeyChain stuff
-   File "${MING_BIN}\libqt5keychain.dll"
-
-   ;MinGW stuff
-   File "${MING_BIN}\libgcc_s_sjlj-1.dll"
-   File "${MING_BIN}\libstdc++-6.dll"
-   File "${MING_BIN}\libwinpthread-1.dll"
-   File "${MING_BIN}\libssp-0.dll"
-
-   ;CSync configs
-   File "${SOURCE_PATH}/sync-exclude.lst"
+   File /a "@{dataPath}"
+   File /a "@{7za}"
+   File /a "@{icon}"
+   nsExec::ExecToLog '"$INSTDIR\7za.exe" x -r -y "$INSTDIR\@{dataName}" -o"$INSTDIR"'
+   Delete "$INSTDIR\7za.exe"
+   Delete "$INSTDIR\@{dataName}"
 
    ;Add file association
    !insertmacro APP_ASSOCIATE "${APPLICATION_VIRTUALFILE_SUFFIX}" "${APPLICATION_VIRTUALFILE_FILECLASS}" "Virtual File for Remote File" "$INSTDIR\${APPLICATION_EXECUTABLE},0" "Download" "$INSTDIR\${APPLICATION_EXECUTABLE} $\"%1$\""
@@ -472,8 +350,6 @@ SectionEnd
       SectionIn 1 2
       SetDetailsPrint textonly
       DetailPrint $OPTION_SECTION_SC_SHELL_EXT_DetailPrint
-      File "${BUILD_PATH}\vcredist_x86.exe"
-      File "${BUILD_PATH}\vcredist_x64.exe"
       Call InstallRedistributables
       CreateDirectory "$INSTDIR\shellext"
       !define LIBRARY_COM
@@ -481,14 +357,12 @@ SectionEnd
       !define LIBRARY_IGNORE_VERSION
       ${If} ${RunningX64}
          !define LIBRARY_X64
-         !insertmacro InstallLib DLL NOTSHARED REBOOT_PROTECTED "${SOURCE_PATH}\binary\shell_integration\windows\Release\x64\OCUtil_x64.dll" "$INSTDIR\shellext\OCUtil_x64.dll" "$INSTDIR\shellext"
-         !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${SOURCE_PATH}\binary\shell_integration\windows\Release\x64\OCOverlays_x64.dll" "$INSTDIR\shellext\OCOverlays_x64.dll" "$INSTDIR\shellext"
-         !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${SOURCE_PATH}\binary\shell_integration\windows\Release\x64\OCContextMenu_x64.dll" "$INSTDIR\shellext\OCContextMenu_x64.dll" "$INSTDIR\shellext"
+         !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${BUILD_PATH}\shell_integration\windows\OCOverlays\OCOverlays.dll" "$INSTDIR\shellext\OCOverlays.dll" "$INSTDIR\shellext"
+         !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${BUILD_PATH}\shell_integration\windows\OCContextMenu\OCContextMenu.dll" "$INSTDIR\shellext\OCContextMenu.dll" "$INSTDIR\shellext"
          !undef LIBRARY_X64
      ${Else}
-         !insertmacro InstallLib DLL NOTSHARED REBOOT_PROTECTED "${SOURCE_PATH}\binary\shell_integration\windows\Release\Win32\OCUtil_x86.dll" "$INSTDIR\shellext\OCUtil_x86.dll" "$INSTDIR\shellext"
-         !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${SOURCE_PATH}\binary\shell_integration\windows\Release\Win32\OCOverlays_x86.dll" "$INSTDIR\shellext\OCOverlays_x86.dll" "$INSTDIR\shellext"
-         !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${SOURCE_PATH}\binary\shell_integration\windows\Release\Win32\OCContextMenu_x86.dll" "$INSTDIR\shellext\OCContextMenu_x86.dll" "$INSTDIR\shellext"
+         !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${BUILD_PATH}\shell_integration\windows\OCOverlays\OCOverlays.dll" "$INSTDIR\shellext\OCOverlays.dll" "$INSTDIR\shellext"
+         !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${BUILD_PATH}\shell_integration\windows\OCContextMenu\OCContextMenu.dll" "$INSTDIR\shellext\OCContextMenu.dll" "$INSTDIR\shellext"
       ${Endif}
       !undef LIBRARY_COM
       !undef LIBRARY_SHELL_EXTENSION
@@ -562,11 +436,11 @@ Section -post
    SetDetailsPrint listonly
 
    ;Version numbers used to detect existing installation version for comparison.
-   WriteRegStr HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "" $INSTDIR
-   WriteRegDWORD HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionMajor" "${VER_MAJOR}"
-   WriteRegDWORD HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionMinor" "${VER_MINOR}"
-   WriteRegDWORD HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionRevision" "${VER_PATCH}"
-   WriteRegDWORD HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionBuild" "${VER_BUILD}"
+   WriteRegStr HKLM "${regkey}" "" $INSTDIR
+   WriteRegDWORD HKLM "${regkey}" "VersionMajor" "${VER_MAJOR}"
+   WriteRegDWORD HKLM "${regkey}" "VersionMinor" "${VER_MINOR}"
+   WriteRegDWORD HKLM "${regkey}" "VersionRevision" "${VER_PATCH}"
+   WriteRegDWORD HKLM "${regkey}" "VersionBuild" "${VER_BUILD}"
 
    ;Add or Remove Programs entry.
    WriteRegExpandStr ${MEMENTO_REGISTRY_ROOT} "${MEMENTO_REGISTRY_KEY}" "UninstallString" '"$INSTDIR\Uninstall.exe"'
@@ -633,12 +507,12 @@ Section Uninstall
    SetRegView lastused
 
    ;Delete registry keys.
-   DeleteRegValue HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionBuild"
-   DeleteRegValue HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionMajor"
-   DeleteRegValue HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionMinor"
-   DeleteRegValue HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "VersionRevision"
-   DeleteRegValue HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" ""
-   DeleteRegKey HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}"
+   DeleteRegValue HKLM "${regkey}" "VersionBuild"
+   DeleteRegValue HKLM "${regkey}" "VersionMajor"
+   DeleteRegValue HKLM "${regkey}" "VersionMinor"
+   DeleteRegValue HKLM "${regkey}" "VersionRevision"
+   DeleteRegValue HKLM "${regkey}" ""
+   DeleteRegKey HKLM "${regkey}"
 
    DeleteRegKey HKCR "${APPLICATION_NAME}"
 
@@ -653,14 +527,12 @@ Section Uninstall
       ${If} ${HasSection} SEC_SHELL_EXT
         DetailPrint "Uninstalling x64 overlay DLLs"
         !define LIBRARY_X64
-        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCContextMenu_x64.dll"
-        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCOverlays_x64.dll"
-        !insertmacro UnInstallLib DLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCUtil_x64.dll"
+        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCContextMenu.dll"
+        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCOverlays.dll"
         !undef LIBRARY_X64
         DetailPrint "Uninstalling x86 overlay DLLs"
-        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCContextMenu_x86.dll"
-        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCOverlays_x86.dll"
-        !insertmacro UnInstallLib DLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCUtil_x86.dll"
+        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCContextMenu.dll"
+        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCOverlays.dll"
       ${EndIf}
       !undef LIBRARY_COM
       !undef LIBRARY_SHELL_EXTENSION
@@ -700,6 +572,8 @@ Section Uninstall
 
    ;Remove all the Program Files.
    RMDir /r $INSTDIR
+;@{uninstallFiles}
+;@{uninstallDirs}
 
    DeleteRegKey ${MEMENTO_REGISTRY_ROOT} "${MEMENTO_REGISTRY_KEY}"
 
@@ -736,12 +610,14 @@ Function .onInit
 
    Call SetLang
 
+!ifdef OPTION_SECTION_SC_QUICK_LAUNCH
    ; Remove Quick Launch option from Windows 7, as no longer applicable - usually.
    ${IfNot} ${AtMostWinVista}
       SectionSetText ${SEC_QUICK_LAUNCH} $INIT_NO_QUICK_LAUNCH
       SectionSetFlags ${SEC_QUICK_LAUNCH} ${SF_RO}
       SectionSetInstTypes ${SEC_QUICK_LAUNCH} 0
    ${EndIf}
+!endif
 
    ; Some people might have a shortcut called 'ownCloud' pointing elsewhere, see #356
    ; Unselect item and adjust text
@@ -805,7 +681,7 @@ Function .onInstSuccess
    ${MementoSectionSave}
 
    ${If} $NoAutomaticUpdates == "yes"
-      WriteRegDWORD HKLM "Software\${APPLICATION_VENDOR}\${APPLICATION_NAME}" "skipUpdateCheck" "1"
+      WriteRegDWORD HKLM "${regkey}" "skipUpdateCheck" "1"
    ${EndIf}
 
    ; TODO: Only needed to when updating from 2.1.{0,1}. Remove in due time.
@@ -813,6 +689,8 @@ Function .onInstSuccess
    Delete /REBOOTOK $INSTDIR\bearer\qnativewifibearer.dll
    RMDir /REBOOTOK $INSTDIR\bearer
 
+DeleteRegKey SHCTX "${uninstkey}"
+DeleteRegKey SHCTX "${regkey}"
    ${If} ${Silent}
    ${AndIf} $InstallRunIfSilent == "yes"
      Call LaunchApplication

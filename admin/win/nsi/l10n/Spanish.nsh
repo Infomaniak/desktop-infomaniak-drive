@@ -41,3 +41,4 @@ StrCpy $UAC_UNINSTALLER_REQUIRE_ADMIN "El desinstalador requiere acceso administ
 StrCpy $UAC_ERROR_LOGON_SERVICE "Servicio Inicio de sesión no se está ejecutando, abortando!"
 StrCpy $INIT_UNINSTALLER_RUNNING "El desinstalador ya se encuentra en ejecución."
 StrCpy $SectionGroup_Shortcuts "Accesos directos"
+StrCpy $InstallRedistributables_MESSAGEBOX_TEXT "La aplicación kDrive requiere la instalación de redistribuibles de Microsoft C++ 2015-2019. Esto puede hacer que la computadora se reinicie. Continuar con la instalación ?"

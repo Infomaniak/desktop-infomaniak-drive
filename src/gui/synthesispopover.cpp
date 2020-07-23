@@ -207,7 +207,7 @@ void SynthesisPopover::setPosition(const QRect &sysTrayIconRect)
                 trianglePositionLeft
                 ? _sysTrayIconRect.center().x() - trianglePosition
                 : _sysTrayIconRect.center().x() - rect().width() + trianglePosition,
-                _sysTrayIconRect.bottom());
+                screenRect.y());
         }
         else if (position == OCC::Utility::systrayPosition::Bottom) {
             // Dialog position
@@ -215,12 +215,12 @@ void SynthesisPopover::setPosition(const QRect &sysTrayIconRect)
                 trianglePositionLeft
                 ? _sysTrayIconRect.center().x() - trianglePosition
                 : _sysTrayIconRect.center().x() - rect().width() + trianglePosition,
-                _sysTrayIconRect.top() - rect().height());
+                screenRect.y() + screenRect.height() - rect().height());
         }
         else if (position == OCC::Utility::systrayPosition::Left) {
             // Dialog position
             popoverPosition = QPoint(
-                _sysTrayIconRect.right(),
+                screenRect.x(),
                 trianglePositionTop
                 ? _sysTrayIconRect.center().y() - trianglePosition
                 : _sysTrayIconRect.center().y() - rect().height() + trianglePosition);
@@ -228,7 +228,7 @@ void SynthesisPopover::setPosition(const QRect &sysTrayIconRect)
         else if (position == OCC::Utility::systrayPosition::Right) {
             // Dialog position
             popoverPosition = QPoint(
-                _sysTrayIconRect.left() - rect().width(),
+                screenRect.x() + screenRect.width() - rect().width(),
                 trianglePositionTop
                 ? _sysTrayIconRect.center().y() - trianglePosition
                 : _sysTrayIconRect.center().y() - rect().height() + trianglePosition);
