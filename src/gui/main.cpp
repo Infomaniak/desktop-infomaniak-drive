@@ -48,6 +48,12 @@ int main(int argc, char **argv)
     //qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0");
     //qputenv("QT_SCALE_FACTOR", "1.2");
 
+#ifdef Q_OS_LINUX
+    // Bug with multi-screen
+    // cf. https://codereview.qt-project.org/c/qt/qtbase/+/200327
+    qputenv("QT_RELY_ON_NET_WORKAREA_ATOM", "1");
+#endif
+
     Q_INIT_RESOURCE(client);
 
 #ifdef Q_OS_WIN
