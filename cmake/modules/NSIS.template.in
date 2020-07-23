@@ -288,6 +288,7 @@ Function EnsureOwncloudShutdown
 FunctionEnd
 
 Function InstallRedistributables
+   MessageBox MB_OK|MB_ICONEXCLAMATION $InstallRedistributables_MESSAGEBOX_TEXT
    ${If} ${RunningX64}
       ExecWait '"$OUTDIR\vcredist_x64.exe" /install /passive /norestart'
    ${Else}
