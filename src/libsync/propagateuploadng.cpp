@@ -494,7 +494,7 @@ void PropagateUploadFileNG::doFinalMove()
     if (!_rangesToUpload.isEmpty())
         return;
 
-    ENFORCE(_jobs.isEmpty(), "MOVE for upload even though jobs are still running");
+    ENFORCE_2(_jobs.isEmpty(), "MOVE for upload even though jobs are still running");
 
     _finished = true;
 
@@ -531,7 +531,7 @@ void PropagateUploadFileNG::startNextChunk()
     if (propagator()->_abortRequested.fetchAndAddRelaxed(0))
         return;
 
-    ENFORCE(_bytesToUpload >= _sent, "Sent data exceeds file size");
+    ENFORCE_2(_bytesToUpload >= _sent, "Sent data exceeds file size");
 
     // All ranges complete!
     if (_rangesToUpload.isEmpty()) {
@@ -661,7 +661,7 @@ void PropagateUploadFileNG::slotPutFinished()
     markRangeAsDone(_currentChunkOffset, _currentChunkSize);
     _sent += _currentChunkSize;
 
-    ENFORCE(_sent <= _bytesToUpload, "can't send more than size");
+    ENFORCE_2(_sent <= _bytesToUpload, "can't send more than size");
 
     // Adjust the chunk size for the time taken.
     //

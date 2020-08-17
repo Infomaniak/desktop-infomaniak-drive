@@ -148,7 +148,7 @@ void FolderTreeItemWidget::insertPath(QTreeWidgetItem *parent, QStringList pathT
             // Set size
             if (size >= 0) {
                 item->setText(TreeWidgetColumn::Size, OCC::Utility::octetsToString(size));
-                item->setTextColor(TreeWidgetColumn::Size, _sizeTextColor);
+                item->setForeground(TreeWidgetColumn::Size, _sizeTextColor);
                 item->setTextAlignment(TreeWidgetColumn::Size, Qt::AlignRight | Qt::AlignVCenter);
                 item->setData(TreeWidgetColumn::Size, sizeRole, size);
             }

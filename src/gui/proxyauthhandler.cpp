@@ -90,7 +90,7 @@ void ProxyAuthHandler::handleProxyAuthenticationRequired(
         // to be destroyed before we get back. We can use this to check for its
         // liveness.
         qnam_alive = account->sharedNetworkAccessManager();
-        sending_qnam = qnam_alive.data();
+        sending_qnam = qnam_alive.toStrongRef().data();
     }
     if (!sending_qnam) {
         qCWarning(lcProxy) << "Could not get the sending QNAM for" << sender();
@@ -128,7 +128,7 @@ void ProxyAuthHandler::handleProxyAuthenticationRequired(
     qCInfo(lcProxy) << "got creds for" << _proxy;
     authenticator->setUser(_username);
     authenticator->setPassword(_password);
-    sending_qnam = qnam_alive.data();
+    sending_qnam = qnam_alive.toStrongRef().data();
     if (sending_qnam) {
         _gaveCredentialsTo.insert(sending_qnam);
         connect(sending_qnam, &QObject::destroyed,

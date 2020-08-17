@@ -124,7 +124,7 @@ HttpCredentials::HttpCredentials(const QString &user, const QString &password, c
     , _retryOnKeyChainError(false)
 {
     if (!unpackClientCertBundle()) {
-        ASSERT(false, "pkcs12 client cert bundle passed to HttpCredentials must be valid");
+        ASSERT_2(false, "pkcs12 client cert bundle passed to HttpCredentials must be valid");
     }
 }
 

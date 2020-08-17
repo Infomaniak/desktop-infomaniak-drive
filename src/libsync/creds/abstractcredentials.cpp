@@ -31,7 +31,7 @@ AbstractCredentials::AbstractCredentials()
 
 void AbstractCredentials::setAccount(Account *account)
 {
-    ENFORCE(!_account, "should only setAccount once");
+    ENFORCE_2(!_account, "should only setAccount once");
     _account = account;
 }
 

@@ -1213,8 +1213,11 @@ void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
                 qCWarning(lcDrivePreferencesWidget) << "Could not read selective sync list from db.";
                 return;
             }
-            //QSet<QString> oldBlackListSet(oldBlackList.begin(), oldBlackList.end());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+            QSet<QString> oldBlackListSet(oldBlackList.begin(), oldBlackList.end());
+#else
             QSet<QString> oldBlackListSet = oldBlackList.toSet();
+#endif
 
             QStringList blackList = treeItemWidget->createBlackList();
             folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, blackList);
@@ -1225,8 +1228,11 @@ void DrivePreferencesWidget::onValidateUpdate(const QString &folderId)
 
             // The part that changed should not be read from the DB on next sync because there might be new folders
             // (the ones that are no longer in the blacklist)
-            //QSet<QString> blackListSet(blackList.begin(), blackList.end());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+            QSet<QString> blackListSet(blackList.begin(), blackList.end());
+#else
             QSet<QString> blackListSet = blackList.toSet();
+#endif
             QSet<QString> changes = (oldBlackListSet - blackListSet) + (blackListSet - oldBlackListSet);
             foreach (const auto &it, changes) {
                 folder->journalDb()->schedulePathForRemoteDiscovery(it);

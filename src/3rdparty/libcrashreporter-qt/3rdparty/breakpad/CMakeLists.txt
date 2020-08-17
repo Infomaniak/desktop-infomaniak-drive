@@ -63,7 +63,7 @@ if(UNIX)
 endif()
 
 if(WIN32)
-    add_definitions( -DUNICODE -fshort-wchar )
+    add_definitions( -DUNICODE ) #-fshort-wchar )
     list(APPEND breakpadSources
         client/windows/handler/exception_handler.cc
         client/windows/crash_generation/crash_generation_client.cc

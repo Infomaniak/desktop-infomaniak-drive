@@ -16,6 +16,10 @@
  *
  */
 
+#ifdef WIN32
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 extern "C" {
 #include "libzsync/zsync.h"
 #include "libzsync/zsyncfile.h"
@@ -91,7 +95,11 @@ void ZsyncSeedRunnable::run()
     zsyncControlFile.flush();
 
     int fileHandle = zsyncControlFile.handle();
+#ifdef _WIN32
+    zsync_unique_ptr<FILE> f(_fdopen(_dup(fileHandle), "r"), [](FILE *f) {
+#else
     zsync_unique_ptr<FILE> f(fdopen(dup(fileHandle), "r"), [](FILE *f) {
+#endif
         fclose(f);
     });
     zsyncControlFile.close();
@@ -138,7 +146,11 @@ void ZsyncSeedRunnable::run()
          * is part of the target file. */
         qCInfo(lcZsyncSeed) << "Reading seed file:" << _zsyncFilePath;
         int fileHandle = file.handle();
+#ifdef _WIN32
+        zsync_unique_ptr<FILE> f(_fdopen(_dup(fileHandle), "r"), [](FILE *f) {
+#else
         zsync_unique_ptr<FILE> f(fdopen(dup(fileHandle), "r"), [](FILE *f) {
+#endif
             fclose(f);
         });
         file.close();
@@ -149,7 +161,7 @@ void ZsyncSeedRunnable::run()
     emit finishedSignal(zs.release());
 }
 
-static void log_zsync_errors(const char *func, FILE *stream, void */*error_context*/)
+static void log_zsync_errors(const char *func, FILE *stream, void * /*error_context*/)
 {
     qCWarning(lcZsyncGenerate) << "Zsync error: " << func << ": " << strerror(ferror(stream));
 }
@@ -162,13 +174,21 @@ void ZsyncGenerateRunnable::run()
     zsynctf.open();
 
     int metaHandle = zsyncmeta.handle();
+#ifdef WIN32
+    zsync_unique_ptr<FILE> meta(_fdopen(_dup(metaHandle), "w"), [](FILE *f) {
+#else
     zsync_unique_ptr<FILE> meta(fdopen(dup(metaHandle), "w"), [](FILE *f) {
+#endif
         fclose(f);
     });
     zsyncmeta.close();
 
     int tfHandle = zsynctf.handle();
+#ifdef WIN32
+    zsync_unique_ptr<FILE> tf(_fdopen(_dup(tfHandle), "w+"), [](FILE *f) {
+#else
     zsync_unique_ptr<FILE> tf(fdopen(dup(tfHandle), "w+"), [](FILE *f) {
+#endif
         fclose(f);
     });
     zsynctf.close();
@@ -187,7 +207,11 @@ void ZsyncGenerateRunnable::run()
         emit failedSignal(error);
         return;
     }
+#ifdef WIN32
+    zsync_unique_ptr<FILE> in(_fdopen(_dup(inFile.handle()), "r"), [](FILE *f) {
+#else
     zsync_unique_ptr<FILE> in(fdopen(dup(inFile.handle()), "r"), [](FILE *f) {
+#endif
         fclose(f);
     });
     if (!in) {

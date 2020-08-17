@@ -380,7 +380,7 @@ void UploadDevice::close()
 
 qint64 UploadDevice::writeData(const char *, qint64)
 {
-    ASSERT(false, "write to read only device");
+    ASSERT_2(false, "write to read only device");
     return 0;
 }
 
