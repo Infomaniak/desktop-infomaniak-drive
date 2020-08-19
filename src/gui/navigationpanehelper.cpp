@@ -74,6 +74,51 @@ void NavigationPaneHelper::updateCloudStorageRegistry()
         });
 #endif
 
+    // Then remove anything that isn't in our folder list anymore.
+    foreach (auto &clsid, entriesToRemove) {
+        QString clsidStr = clsid.toString();
+        QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
+        QString clsidPathWow64 = QString() % "Software\\Classes\\Wow6432Node\\CLSID\\" % clsidStr;
+        QString namespacePath = QString() % "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Desktop\\NameSpace\\" % clsidStr;
+        QString newstartpanelPath = QString() % "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel";
+
+        qCInfo(lcNavPane) << "Explorer Cloud storage provider: now unused, removing own CLSID" << clsidStr;
+#ifdef Q_OS_WIN
+        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, clsidPath);
+        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, clsidPathWow64);
+        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, namespacePath);
+        Utility::registryDeleteKeyValue(HKEY_CURRENT_USER, newstartpanelPath, clsidStr);
+#endif
+    }
+
+    // Remove ghost shortcuts
+    QVector<QUuid> ghostEntriesToRemove;
+#ifdef Q_OS_WIN
+    Utility::registryWalkSubKeys(
+        HKEY_CLASSES_ROOT,
+        QStringLiteral("CLSID"),
+        [&ghostEntriesToRemove](HKEY key, const QString &subKey) {
+            QVariant value = Utility::registryGetKeyValue(key, subKey, QStringLiteral(""));
+            if (value.toString() == QLatin1String("kDrive")) {
+                QUuid clsid{ subKey };
+                Q_ASSERT(!clsid.isNull());
+                ghostEntriesToRemove.append(clsid);
+            }
+        });
+#endif
+
+    foreach (auto &clsid, ghostEntriesToRemove) {
+        QString clsidStr = clsid.toString();
+        QString clsidPath = QString() % "CLSID\\" % clsidStr;
+        QString clsidPathWow64 = QString() % "Wow6432Node\\CLSID\\" % clsidStr;
+
+        qCInfo(lcNavPane) << "Explorer Cloud shortcut: now unused, removing own CLSID" << clsidStr;
+#ifdef Q_OS_WIN
+        Utility::registryDeleteKeyTree(HKEY_CLASSES_ROOT, clsidPath);
+        Utility::registryDeleteKeyTree(HKEY_CLASSES_ROOT, clsidPathWow64);
+#endif
+    }
+
     // Then re-save every folder that has a valid navigationPaneClsid to the registry.
     // We currently don't distinguish between new and existing CLSIDs, if it's there we just
     // save over it. We at least need to update the tile in case we are suddently using multiple accounts.
@@ -144,22 +189,6 @@ void NavigationPaneHelper::updateCloudStorageRegistry()
             Q_ASSERT(false);
 #endif
         }
-    }
-
-    // Then remove anything that isn't in our folder list anymore.
-    foreach (auto &clsid, entriesToRemove) {
-        QString clsidStr = clsid.toString();
-        QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
-        QString clsidPathWow64 = QString() % "Software\\Classes\\Wow6432Node\\CLSID\\" % clsidStr;
-        QString namespacePath = QString() % "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Desktop\\NameSpace\\" % clsidStr;
-
-        qCInfo(lcNavPane) << "Explorer Cloud storage provider: now unused, removing own CLSID" << clsidStr;
-#ifdef Q_OS_WIN
-        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, clsidPath);
-        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, clsidPathWow64);
-        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, namespacePath);
-        Utility::registryDeleteKeyValue(HKEY_CURRENT_USER, QStringLiteral("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel"), clsidStr);
-#endif
     }
 }
 
