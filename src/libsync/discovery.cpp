@@ -416,7 +416,11 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
 
     // The file is known in the db already
     if (dbEntry.isValid()) {
-        if (serverEntry.isDirectory != dbEntry.isDirectory()) {
+        if (dbEntry._modtime > serverEntry.modtime) {
+            // Force upload
+            item->_instruction = CSYNC_INSTRUCTION_SYNC;
+            item->_direction = SyncFileItem::Up;
+        } else if (serverEntry.isDirectory != dbEntry.isDirectory()) {
             // If the type of the entity changed, it's like NEW, but
             // needs to delete the other entity first.
             item->_instruction = CSYNC_INSTRUCTION_TYPE_CHANGE;
