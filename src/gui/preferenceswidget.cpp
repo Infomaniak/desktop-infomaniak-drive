@@ -134,7 +134,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     folderConfirmation1HBox->setSpacing(0);
     folderConfirmationBox->addLayout(folderConfirmation1HBox);
 
-    QLabel *folderConfirmationLabel = new QLabel(tr("Ask for confirmation before synchronizing files greater than"), this);
+    QLabel *folderConfirmationLabel = new QLabel(tr("Ask for confirmation before synchronizing folders greater than"), this);
     folderConfirmationLabel->setWordWrap(true);
     folderConfirmation1HBox->addWidget(folderConfirmationLabel);
     folderConfirmation1HBox->setStretchFactor(folderConfirmationLabel, 1);

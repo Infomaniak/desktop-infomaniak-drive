@@ -816,10 +816,6 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
         <translation>Generale</translation>
     </message>
     <message>
-        <source>Ask for confirmation before synchronizing files greater than</source>
-        <translation>Chiedi conferma prima di sincronizzare file più grandi di</translation>
-    </message>
-    <message>
         <source>Activate dark theme</source>
         <translation>Attiva tema scuro</translation>
     </message>
@@ -882,6 +878,10 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
     <message>
         <source>MB</source>
         <translation>MB</translation>
+    </message>
+    <message>
+        <source>Ask for confirmation before synchronizing folders greater than</source>
+        <translation>Chiedi conferma prima di sincronizzare cartelle più grandi di</translation>
     </message>
 </context>
 <context>

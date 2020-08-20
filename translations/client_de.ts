@@ -816,10 +816,6 @@ Durch diese Aktion werden gerade laufende Synchronisierungen abgebrochen.</trans
         <translation>Allgemein</translation>
     </message>
     <message>
-        <source>Ask for confirmation before synchronizing files greater than</source>
-        <translation>Um Bestätigung bitten, bevor Dateien synchronisiert werden, die grösser sind als</translation>
-    </message>
-    <message>
         <source>Activate dark theme</source>
         <translation>Dunkles Thema aktivieren</translation>
     </message>
@@ -882,6 +878,10 @@ Durch diese Aktion werden gerade laufende Synchronisierungen abgebrochen.</trans
     <message>
         <source>MB</source>
         <translation>MB</translation>
+    </message>
+    <message>
+        <source>Ask for confirmation before synchronizing folders greater than</source>
+        <translation>Um Bestätigung bitten, bevor Ordner synchronisiert werden, die grösser sind als</translation>
     </message>
 </context>
 <context>

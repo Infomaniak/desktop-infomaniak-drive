@@ -816,10 +816,6 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <source>Ask for confirmation before synchronizing files greater than</source>
-        <translation>Demander confirmation avant de synchroniser les fichiers supérieurs à</translation>
-    </message>
-    <message>
         <source>Activate dark theme</source>
         <translation>Activer le thème foncé</translation>
     </message>
@@ -882,6 +878,10 @@ Cette action stoppera toute synchronisation en cours.</translation>
     <message>
         <source>MB</source>
         <translation>Mo</translation>
+    </message>
+    <message>
+        <source>Ask for confirmation before synchronizing folders greater than</source>
+        <translation>Demander confirmation avant de synchroniser les dossiers supérieurs à</translation>
     </message>
 </context>
 <context>
