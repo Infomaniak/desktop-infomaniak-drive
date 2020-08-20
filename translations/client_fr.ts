@@ -303,7 +303,7 @@
         <translation>Voulez-vous enregistrer vos modifications ?</translation>
     </message>
     <message>
-        <source>Kb/s</source>
+        <source>KB/s</source>
         <translation>Ko/s</translation>
     </message>
 </context>
@@ -868,10 +868,6 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <translation>METTRE A JOUR</translation>
     </message>
     <message>
-        <source>Mb</source>
-        <translation>Mo</translation>
-    </message>
-    <message>
         <source>Unable to open folder %1.</source>
         <translation>Impossible d&apos;ouvrir le dossier %1</translation>
     </message>
@@ -882,6 +878,10 @@ Cette action stoppera toute synchronisation en cours.</translation>
     <message>
         <source>Invalid link %1.</source>
         <translation>Lien %1 invalide.</translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation>Mo</translation>
     </message>
 </context>
 <context>

@@ -160,7 +160,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     _folderConfirmationAmountLineEdit->setMaximumWidth(amountLineEditWidth);
     folderConfirmation2HBox->addWidget(_folderConfirmationAmountLineEdit);
 
-    QLabel *folderConfirmationAmountLabel = new QLabel(tr("Mb"), this);
+    QLabel *folderConfirmationAmountLabel = new QLabel(tr("MB"), this);
     folderConfirmationAmountLabel->setObjectName("folderConfirmationAmountLabel");
     folderConfirmation2HBox->addWidget(folderConfirmationAmountLabel);
     folderConfirmation2HBox->addStretch();

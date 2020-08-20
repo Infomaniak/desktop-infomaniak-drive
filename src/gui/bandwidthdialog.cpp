@@ -136,7 +136,7 @@ void BandwidthDialog::initUI()
 
     QLabel *downloadValueLabel = new QLabel(this);
     downloadValueLabel->setObjectName("textLabel");
-    downloadValueLabel->setText(tr("Kb/s"));
+    downloadValueLabel->setText(tr("KB/s"));
     downloadValueLimitHBox->addWidget(downloadValueLabel);
     downloadValueLimitHBox->addStretch();
 
@@ -195,7 +195,7 @@ void BandwidthDialog::initUI()
 
     QLabel *uploadValueLabel = new QLabel(this);
     uploadValueLabel->setObjectName("textLabel");
-    uploadValueLabel->setText(tr("Kb/s"));
+    uploadValueLabel->setText(tr("KB/s"));
     uploadValueLimitHBox->addWidget(uploadValueLabel);
     uploadValueLimitHBox->addStretch();
 

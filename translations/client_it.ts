@@ -303,8 +303,8 @@
         <translation>Salvare le modifiche?</translation>
     </message>
     <message>
-        <source>Kb/s</source>
-        <translation>Kb/s</translation>
+        <source>KB/s</source>
+        <translation>KB/s</translation>
     </message>
 </context>
 <context>
@@ -868,10 +868,6 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
         <translation>AGGIORNAMENTO</translation>
     </message>
     <message>
-        <source>Mb</source>
-        <translation>Mb</translation>
-    </message>
-    <message>
         <source>Unable to open folder %1.</source>
         <translation>Impossibile aprire la cartella %1</translation>
     </message>
@@ -882,6 +878,10 @@ Questa azione interromperà qualsiasi sincronizzazione in corso.</translation>
     <message>
         <source>Invalid link %1.</source>
         <translation>Link %1 non valido.</translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation>MB</translation>
     </message>
 </context>
 <context>
