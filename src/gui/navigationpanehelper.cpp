@@ -183,10 +183,6 @@ void NavigationPaneHelper::updateCloudStorageRegistry()
             // For us, to later be able to iterate and find our own namespace entries and associated CLSID.
             // Use the macro instead of the theme to make sure it matches with the uninstaller.
             Utility::registrySetKeyValue(HKEY_CURRENT_USER, namespacePath, QStringLiteral("ApplicationName"), REG_SZ, QLatin1String(APPLICATION_NAME));
-#else
-            // This code path should only occur on Windows (the config will be false, and the checkbox invisible on other platforms).
-            // Add runtime checks rather than #ifdefing out the whole code to help catch breakages when developing on other platforms.
-            Q_ASSERT(false);
 #endif
         }
     }
