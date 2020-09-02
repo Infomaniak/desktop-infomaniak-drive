@@ -317,12 +317,17 @@ void ownCloudGui::hideAndShowTray()
 void ownCloudGui::showSynthesisDialog()
 {
     if (_synthesisPopover) {
-        QRect trayIconRect = _tray->geometry();
-        if (!trayIconRect.isValid()) {
-            trayIconRect = QRect(QCursor::pos(), QSize(0, 0));
+        if (_synthesisPopover.get()->isVisible()) {
+            _synthesisPopover.get()->done(QDialog::Accepted);
         }
-        _synthesisPopover->setPosition(trayIconRect);
-        raiseDialog(_synthesisPopover.get());
+        else {
+            QRect trayIconRect = _tray->geometry();
+            if (!trayIconRect.isValid()) {
+                trayIconRect = QRect(QCursor::pos(), QSize(0, 0));
+            }
+            _synthesisPopover->setPosition(trayIconRect);
+            raiseDialog(_synthesisPopover.get());
+        }
     }
 }
 
