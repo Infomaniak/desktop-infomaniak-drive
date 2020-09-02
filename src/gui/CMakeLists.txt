@@ -277,6 +277,7 @@ else()
         string(REPLACE ".ts" ".lproj" LPROJ_DIR ${LPROJ_DIR})
         install(CODE "file(MAKE_DIRECTORY ${LPROJ_DIR})")
     endforeach()
+    install(CODE "file(MAKE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${OWNCLOUD_OSX_BUNDLE}/Contents/Resources/en.lproj)")
 endif()
 
 add_library(updater STATIC ${updater_SRCS})
