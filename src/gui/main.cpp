@@ -139,7 +139,7 @@ int main(int argc, char **argv)
         for (int i = 0; i < args.size(); i++) {
             qCInfo(lcApplication) << "args " << i << ": " << args[i];
         }
-        if (args.size() == 2 && args[1] == "--settings") {
+        if (args.size() == 1 || (args.size() == 2 && args[1] == "--settings")) {
             if (!app.sendMessage(QLatin1String("MSG_SHOWSETTINGS"))) {
                 return -1;
             }
