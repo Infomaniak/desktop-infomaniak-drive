@@ -367,9 +367,11 @@ Application::Application(int &argc, char **argv)
     // Cleanup at Quit.
     connect(this, &QCoreApplication::aboutToQuit, this, &Application::slotCleanup);
 
+#ifdef Q_OS_WIN
     // Update shotcuts
     FolderMan::instance()->navigationPaneHelper().setShowInExplorerNavigationPane(false);
     FolderMan::instance()->navigationPaneHelper().setShowInExplorerNavigationPane(true);
+#endif
 }
 
 Application::~Application()

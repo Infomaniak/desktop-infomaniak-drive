@@ -218,6 +218,20 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
         launchAtStartupSwitch->setCheckState(hasLaunchAtStartup ? Qt::Checked : Qt::Unchecked);
     }
     launchAtStartupBox->addWidget(launchAtStartupSwitch);
+    generalBloc->addSeparator();
+
+    // Drive shortcuts
+    QBoxLayout *shortcutsBox = generalBloc->addLayout(QBoxLayout::Direction::LeftToRight);
+
+    QLabel *shortcutsLabel = new QLabel(tr("Add Drive shortcuts in the File Explorer"), this);
+    shortcutsBox->addWidget(shortcutsLabel);
+    shortcutsBox->addStretch();
+
+    CustomSwitch *shortcutsSwitch = new CustomSwitch(this);
+    shortcutsSwitch->setLayoutDirection(Qt::RightToLeft);
+    shortcutsSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
+    shortcutsSwitch->setCheckState(cfg.showInExplorerNavigationPane() ? Qt::Checked : Qt::Unchecked);
+    shortcutsBox->addWidget(shortcutsSwitch);
 
     //
     // Advanced bloc
@@ -322,6 +336,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     }
     connect(monochromeSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onMonochromeSwitchClicked);
     connect(launchAtStartupSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onLaunchAtStartupSwitchClicked);
+    connect(shortcutsSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onShortcutsSwitchClicked);
     connect(debuggingWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onDebuggingWidgetClicked);
     connect(_debuggingFolderLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
     connect(filesToExcludeWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onFilesToExcludeWidgetClicked);
@@ -401,6 +416,12 @@ void PreferencesWidget::onLaunchAtStartupSwitchClicked(bool checked)
 {
     OCC::Theme *theme = OCC::Theme::instance();
     OCC::Utility::setLaunchOnStartup(theme->appName(), theme->appNameGUI(), checked);
+}
+
+void PreferencesWidget::onShortcutsSwitchClicked(bool checked)
+{
+    OCC::ConfigFile cfg;
+    cfg.setShowInExplorerNavigationPane(checked);
 }
 
 void PreferencesWidget::onDebuggingWidgetClicked()

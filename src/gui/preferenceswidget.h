@@ -55,6 +55,7 @@ private slots:
     void onDarkThemeSwitchClicked(bool checked = false);
     void onMonochromeSwitchClicked(bool checked = false);
     void onLaunchAtStartupSwitchClicked(bool checked = false);
+    void onShortcutsSwitchClicked(bool checked = false);
     void onDebuggingWidgetClicked();
     void onFilesToExcludeWidgetClicked();
     void onProxyServerWidgetClicked();
