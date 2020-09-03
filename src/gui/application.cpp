@@ -368,9 +368,11 @@ Application::Application(int &argc, char **argv)
     connect(this, &QCoreApplication::aboutToQuit, this, &Application::slotCleanup);
 
 #ifdef Q_OS_WIN
-    // Update shotcuts
+    // Update shortcuts
     FolderMan::instance()->navigationPaneHelper().setShowInExplorerNavigationPane(false);
-    FolderMan::instance()->navigationPaneHelper().setShowInExplorerNavigationPane(true);
+    if (cfg.showInExplorerNavigationPane()) {
+        FolderMan::instance()->navigationPaneHelper().setShowInExplorerNavigationPane(true);
+    }
 #endif
 }
 

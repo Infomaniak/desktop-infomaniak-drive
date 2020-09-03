@@ -36,9 +36,6 @@ NavigationPaneHelper::NavigationPaneHelper(FolderMan *folderMan)
 
 void NavigationPaneHelper::setShowInExplorerNavigationPane(bool show)
 {
-    if (_showInExplorerNavigationPane == show)
-        return;
-
     _showInExplorerNavigationPane = show;
     // Re-generate a new CLSID when enabling, possibly throwing away the old one.
     // updateCloudStorageRegistry will take care of removing any unknown CLSID our application owns from the registry.
