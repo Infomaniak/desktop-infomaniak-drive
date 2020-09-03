@@ -201,7 +201,6 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     QBoxLayout *launchAtStartupBox = generalBloc->addLayout(QBoxLayout::Direction::LeftToRight);
 
     QLabel *launchAtStartupLabel = new QLabel(tr("Launch kDrive at startup"), this);
-    launchAtStartupLabel->setWordWrap(true);
     launchAtStartupBox->addWidget(launchAtStartupLabel);
     launchAtStartupBox->addStretch();
 
@@ -227,6 +226,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
         QBoxLayout *shortcutsBox = generalBloc->addLayout(QBoxLayout::Direction::LeftToRight);
 
         QLabel *shortcutsLabel = new QLabel(tr("Show synchronized folders in File Explorer navigation pane"), this);
+        shortcutsLabel->setWordWrap(true);
         shortcutsBox->addWidget(shortcutsLabel);
         shortcutsBox->addStretch();
 
