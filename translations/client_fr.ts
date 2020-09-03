@@ -883,6 +883,10 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <source>Ask for confirmation before synchronizing folders greater than</source>
         <translation>Demander confirmation avant de synchroniser les dossiers supérieurs à</translation>
     </message>
+    <message>
+        <source>Show synchronized folders in File Explorer navigation pane</source>
+        <translation>Afficher les dossiers synchronisés dans le volet de navigation de l&apos;Explorateur de Fichier</translation>
+    </message>
 </context>
 <context>
     <name>KDC::ProgressBarWidget</name>

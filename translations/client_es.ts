@@ -883,6 +883,10 @@ Esta acción interrumpirá cualquier sincronización actualmente en ejecución.<
         <source>Ask for confirmation before synchronizing folders greater than</source>
         <translation>Solicitar confirmación antes de sincronizar carpetas mayores de</translation>
     </message>
+    <message>
+        <source>Show synchronized folders in File Explorer navigation pane</source>
+        <translation>Mostrar carpetas sincronizadas en el panel de navegación del Explorador de archivos</translation>
+    </message>
 </context>
 <context>
     <name>KDC::ProgressBarWidget</name>
