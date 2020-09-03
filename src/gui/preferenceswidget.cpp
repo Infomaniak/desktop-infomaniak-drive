@@ -221,17 +221,20 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     generalBloc->addSeparator();
 
     // Drive shortcuts
-    QBoxLayout *shortcutsBox = generalBloc->addLayout(QBoxLayout::Direction::LeftToRight);
+    CustomSwitch *shortcutsSwitch = nullptr;
+    if (OCC::Utility::isWindows()) {
+        QBoxLayout *shortcutsBox = generalBloc->addLayout(QBoxLayout::Direction::LeftToRight);
 
-    QLabel *shortcutsLabel = new QLabel(tr("Add Drive shortcuts in the File Explorer"), this);
-    shortcutsBox->addWidget(shortcutsLabel);
-    shortcutsBox->addStretch();
+        QLabel *shortcutsLabel = new QLabel(tr("Add Drive shortcuts in the File Explorer"), this);
+        shortcutsBox->addWidget(shortcutsLabel);
+        shortcutsBox->addStretch();
 
-    CustomSwitch *shortcutsSwitch = new CustomSwitch(this);
-    shortcutsSwitch->setLayoutDirection(Qt::RightToLeft);
-    shortcutsSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
-    shortcutsSwitch->setCheckState(cfg.showInExplorerNavigationPane() ? Qt::Checked : Qt::Unchecked);
-    shortcutsBox->addWidget(shortcutsSwitch);
+        shortcutsSwitch = new CustomSwitch(this);
+        shortcutsSwitch->setLayoutDirection(Qt::RightToLeft);
+        shortcutsSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
+        shortcutsSwitch->setCheckState(cfg.showInExplorerNavigationPane() ? Qt::Checked : Qt::Unchecked);
+        shortcutsBox->addWidget(shortcutsSwitch);
+    }
 
     //
     // Advanced bloc
@@ -422,6 +425,7 @@ void PreferencesWidget::onShortcutsSwitchClicked(bool checked)
 {
     OCC::ConfigFile cfg;
     cfg.setShowInExplorerNavigationPane(checked);
+    OCC::FolderMan::instance()->navigationPaneHelper().setShowInExplorerNavigationPane(checked);
 }
 
 void PreferencesWidget::onDebuggingWidgetClicked()
