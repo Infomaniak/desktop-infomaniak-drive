@@ -2010,6 +2010,53 @@ for additional privileges during the process.</source>
     </message>
 </context>
 <context>
+    <name>OCC::OwnCloudGui</name>
+    <message>
+        <source>Unsupported Server Version</source>
+        <translation>nicht unterstützte Server Version</translation>
+    </message>
+    <message>
+        <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
+        <translation>Der Server mit Konto %1 läuft mit einer nicht unterstützten Version %2. Die Verwendung dieses Clienten mit nicht unterstützten Serverversionen ist ungetestet und möglicherweise gefährlich. Fortfahren auf eigenes Risiko.</translation>
+    </message>
+    <message>
+        <source>Disconnected from %1</source>
+        <translation>Von %1 trennen</translation>
+    </message>
+    <message>
+        <source>Disconnected from accounts:</source>
+        <translation>Verbindungen zu Konten wurde getrennt:</translation>
+    </message>
+    <message>
+        <source>Account %1: %2</source>
+        <translation>Konto %1: %2</translation>
+    </message>
+    <message>
+        <source>Please sign in</source>
+        <translation>Bitte melden Sie sich an</translation>
+    </message>
+    <message>
+        <source>Account synchronization is disabled</source>
+        <translation>Account Synchronisation ist deaktiviert</translation>
+    </message>
+    <message>
+        <source>Folder %1: %2</source>
+        <translation>Ordner %1: %2</translation>
+    </message>
+    <message>
+        <source>There are no sync folders configured.</source>
+        <translation>Es wurden keine Synchonisationsordner konfiguriert.</translation>
+    </message>
+    <message>
+        <source>Unable to open folder path %1.</source>
+        <translation>Ordnerpfad kann nicht geöffnet werden %1.</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation>Über %1</translation>
+    </message>
+</context>
+<context>
     <name>OCC::PollJob</name>
     <message>
         <source>Invalid JSON reply from the poll URL</source>
@@ -2186,6 +2233,10 @@ for additional privileges during the process.</source>
     <message>
         <source>A file or folder was removed from a read only share, but restoring failed: %1</source>
         <translation>Eine Datei oder ein Ordner wurde von einer Nur-Lese-Freigabe wiederhergestellt, aber die Wiederherstellung ist mit folgendem Fehler fehlgeschlagen: %1</translation>
+    </message>
+    <message>
+        <source>Synchronization cannot be done because the file is opened at the same time locally and on kDrive webapp.</source>
+        <translation>Die Synchronisierung kann nicht durchgeführt werden, da die Datei gleichzeitig lokal und in der kDrive-Webanwendung geöffnet wird.</translation>
     </message>
 </context>
 <context>
@@ -2954,53 +3005,6 @@ for additional privileges during the process.</source>
     <message>
         <source>Unable to open file: %1</source>
         <translation>Konnte Datei nicht öffnen: %1</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ownCloudGui</name>
-    <message>
-        <source>Please sign in</source>
-        <translation>Bitte melden Sie sich an</translation>
-    </message>
-    <message>
-        <source>Folder %1: %2</source>
-        <translation>Ordner %1: %2</translation>
-    </message>
-    <message>
-        <source>There are no sync folders configured.</source>
-        <translation>Es wurden keine Synchonisationsordner konfiguriert.</translation>
-    </message>
-    <message>
-        <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
-        <translation>Der Server mit Konto %1 läuft mit einer nicht unterstützten Version %2. Die Verwendung dieses Clienten mit nicht unterstützten Serverversionen ist ungetestet und möglicherweise gefährlich. Fortfahren auf eigenes Risiko.</translation>
-    </message>
-    <message>
-        <source>Disconnected from %1</source>
-        <translation>Von %1 trennen</translation>
-    </message>
-    <message>
-        <source>Unsupported Server Version</source>
-        <translation>nicht unterstützte Server Version</translation>
-    </message>
-    <message>
-        <source>Disconnected from accounts:</source>
-        <translation>Verbindungen zu Konten wurde getrennt:</translation>
-    </message>
-    <message>
-        <source>Account %1: %2</source>
-        <translation>Konto %1: %2</translation>
-    </message>
-    <message>
-        <source>Account synchronization is disabled</source>
-        <translation>Account Synchronisation ist deaktiviert</translation>
-    </message>
-    <message>
-        <source>About %1</source>
-        <translation>Über %1</translation>
-    </message>
-    <message>
-        <source>Unable to open folder path %1.</source>
-        <translation>Ordnerpfad kann nicht geöffnet werden %1.</translation>
     </message>
 </context>
 <context>

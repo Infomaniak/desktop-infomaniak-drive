@@ -37,6 +37,7 @@ class ErrorItemWidget : public QWidget
 public:
     explicit ErrorItemWidget(const SynchronizedItem &item, const AccountInfo &accountInfo, QWidget *parent = nullptr);
     QSize sizeHint() const override;
+    bool isIdentical(const ErrorItemWidget *item) const;
 
 signals:
     void openFolder(const QString &filePath);

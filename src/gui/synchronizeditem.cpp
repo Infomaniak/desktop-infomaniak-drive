@@ -37,4 +37,10 @@ SynchronizedItem::SynchronizedItem(const QString &folderId, const QString &fileP
 {
 }
 
+bool SynchronizedItem::isIdentical(const SynchronizedItem &item) const
+{
+    return _folderId == item._folderId && _fileId == item._fileId
+            && _direction == item._direction && _type == item._type;
+}
+
 }

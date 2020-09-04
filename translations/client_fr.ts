@@ -2011,6 +2011,53 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     </message>
 </context>
 <context>
+    <name>OCC::OwnCloudGui</name>
+    <message>
+        <source>Unsupported Server Version</source>
+        <translation>Version du Serveur non prise en charge</translation>
+    </message>
+    <message>
+        <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
+        <translation>Le serveur sur le compte %1 exécute une version non prise en charge %2. L’utilisation de ce client avec des versions du serveur non prises en charge n’a pas été testée et peut être dangereuse. Vous poursuivez à vos propres risques.</translation>
+    </message>
+    <message>
+        <source>Disconnected from %1</source>
+        <translation>Déconnecté de %1</translation>
+    </message>
+    <message>
+        <source>Disconnected from accounts:</source>
+        <translation>Déconnecté des comptes :</translation>
+    </message>
+    <message>
+        <source>Account %1: %2</source>
+        <translation>Compte %1 : %2</translation>
+    </message>
+    <message>
+        <source>Please sign in</source>
+        <translation>Veuillez vous connecter</translation>
+    </message>
+    <message>
+        <source>Account synchronization is disabled</source>
+        <translation>La synchronisation est en pause</translation>
+    </message>
+    <message>
+        <source>Folder %1: %2</source>
+        <translation>Dossier %1 : %2</translation>
+    </message>
+    <message>
+        <source>There are no sync folders configured.</source>
+        <translation>Aucun dossier à synchroniser n&apos;est configuré.</translation>
+    </message>
+    <message>
+        <source>Unable to open folder path %1.</source>
+        <translation>Impossible d’ouvrir le dossier de débogage %1.</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation>À propos de %1</translation>
+    </message>
+</context>
+<context>
     <name>OCC::PollJob</name>
     <message>
         <source>Invalid JSON reply from the poll URL</source>
@@ -2187,6 +2234,10 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     <message>
         <source>A file or folder was removed from a read only share, but restoring failed: %1</source>
         <translation>Un fichier ou un dossier a été supprimé d&apos;un partage en lecture seule, mais la restauration a échoué : %1</translation>
+    </message>
+    <message>
+        <source>Synchronization cannot be done because the file is opened at the same time locally and on kDrive webapp.</source>
+        <translation>La synchronisation ne peut pas être effectuée car le fichier est ouvert en même temps localement et sur l&apos;application Web kDrive.</translation>
     </message>
 </context>
 <context>
@@ -2956,53 +3007,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     <message>
         <source>Unable to open file: %1</source>
         <translation>Impossible d’ouvrir le fichier: %1</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ownCloudGui</name>
-    <message>
-        <source>Please sign in</source>
-        <translation>Veuillez vous connecter</translation>
-    </message>
-    <message>
-        <source>Folder %1: %2</source>
-        <translation>Dossier %1 : %2</translation>
-    </message>
-    <message>
-        <source>There are no sync folders configured.</source>
-        <translation>Aucun dossier à synchroniser n&apos;est configuré.</translation>
-    </message>
-    <message>
-        <source>Disconnected from %1</source>
-        <translation>Déconnecté de %1</translation>
-    </message>
-    <message>
-        <source>Unsupported Server Version</source>
-        <translation>Version du Serveur non prise en charge</translation>
-    </message>
-    <message>
-        <source>Disconnected from accounts:</source>
-        <translation>Déconnecté des comptes :</translation>
-    </message>
-    <message>
-        <source>Account %1: %2</source>
-        <translation>Compte %1 : %2</translation>
-    </message>
-    <message>
-        <source>Account synchronization is disabled</source>
-        <translation>La synchronisation est en pause</translation>
-    </message>
-    <message>
-        <source>About %1</source>
-        <translation>À propos de %1</translation>
-    </message>
-    <message>
-        <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
-        <translation>Le serveur sur le compte %1 exécute une version non prise en charge %2. L’utilisation de ce client avec des versions du serveur non prises en charge n’a pas été testée et peut être dangereuse. Vous poursuivez à vos propres risques.</translation>
-    </message>
-    <message>
-        <source>Unable to open folder path %1.</source>
-        <translation>Impossible d’ouvrir le dossier de débogage %1.</translation>
     </message>
 </context>
 <context>
