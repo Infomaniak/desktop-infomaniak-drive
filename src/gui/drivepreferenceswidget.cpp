@@ -713,7 +713,7 @@ bool DrivePreferencesWidget::createMissingFolders(const QString &folderBasePath,
 
 bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, const QString &serverFolderPath, QStringList blackList)
 {
-    bool useVirtualFileSync = false;
+    bool useVirtualFileSync = OCC::Theme::instance()->showVirtualFilesOption();
 
     qCInfo(lcDrivePreferencesWidget) << "Adding folder definition for" << localFolderPath << serverFolderPath;
 

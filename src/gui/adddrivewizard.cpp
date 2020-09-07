@@ -266,7 +266,7 @@ OCC::AccountState *AddDriveWizard::applyAccountChanges()
 
 bool AddDriveWizard::addDrive()
 {
-    bool useVirtualFileSync = false;
+    bool useVirtualFileSync = OCC::Theme::instance()->showVirtualFilesOption();
     bool startFromScratch = false;
 
     auto accountState = applyAccountChanges();
