@@ -36,6 +36,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QRect>
 #include <QStackedWidget>
 
+namespace OCC {
+
+class OwnCloudGui;
+
+}
+
 namespace KDC {
 
 class SynthesisPopover : public QDialog
@@ -57,7 +63,7 @@ public:
     static const std::map<NotificationsDisabled, QString> _notificationsDisabledMap;
     static const std::map<NotificationsDisabled, QString> _notificationsDisabledForPeriodMap;
 
-    explicit SynthesisPopover(bool debugMode, QWidget *parent = nullptr);
+    explicit SynthesisPopover(bool debugMode, OCC::OwnCloudGui *gui, QWidget *parent = nullptr);
 
     void setPosition(const QRect &sysTrayIconRect);
     void forceRedraw();
@@ -96,6 +102,7 @@ private:
     };
 
     bool _debugMode;
+    OCC::OwnCloudGui *_gui;
     QRect _sysTrayIconRect;
     QString _currentAccountId;
     QColor _backgroundMainColor;

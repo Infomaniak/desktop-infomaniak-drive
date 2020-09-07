@@ -48,7 +48,6 @@ struct AccountInfo {
     void initQuotaInfo(OCC::AccountState *accountState);
     void updateStatus();
     QString folderPath(const QString &folderId, const QString &filePath) const;
-    bool hasWarningOrError() const;
 };
 
 }

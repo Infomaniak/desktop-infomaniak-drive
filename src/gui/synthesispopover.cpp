@@ -34,6 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "getorcreatepubliclinkshare.h"
 #include "configfile.h"
 #include "theme.h"
+#include "owncloudgui.h"
 
 #undef CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
@@ -95,9 +96,10 @@ const std::map<SynthesisPopover::NotificationsDisabled, QString> SynthesisPopove
 
 Q_LOGGING_CATEGORY(lcSynthesisPopover, "synthesispopover", QtInfoMsg)
 
-SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
+SynthesisPopover::SynthesisPopover(bool debugMode, OCC::OwnCloudGui *gui, QWidget *parent)
     : QDialog(parent)
     , _debugMode(debugMode)
+    , _gui(gui)
     , _sysTrayIconRect(QRect())
     , _currentAccountId(QString())
     , _backgroundMainColor(QColor())
@@ -880,7 +882,7 @@ void SynthesisPopover::onRefreshAccountList()
             // Count drives with warning/errors
             bool drivesWithErrors = false;
             for (auto const &accountInfo : _accountInfoMap) {
-                if (accountInfo.second.hasWarningOrError()) {
+                if (_gui->driveErrorCount(accountInfo.first) > 0) {
                     drivesWithErrors = true;
                     break;
                 }
@@ -999,7 +1001,6 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                                 || item.data()->_status == OCC::SyncFileItem::DetailError
                                 || item.data()->_status == OCC::SyncFileItem::BlacklistedError
                                 || item.data()->_status == OCC::SyncFileItem::FileIgnored) {
-                            accountInfoIt->second._errorsCount++;
                             return;
                         }
 
@@ -1070,11 +1071,11 @@ void SynthesisPopover::onOpenErrorsMenu(bool checked)
 
     QList<ErrorsPopup::DriveError> driveErrorList = QList<ErrorsPopup::DriveError>();
     for (auto const &accountInfo : _accountInfoMap) {
-        if (accountInfo.second.hasWarningOrError()) {
+        if (_gui->driveErrorCount(accountInfo.first) > 0) {
             ErrorsPopup::DriveError driveError;
             driveError.accountId = accountInfo.first;
             driveError.accountName = accountInfo.second._name;
-            driveError.errorsCount = accountInfo.second._errorsCount;
+            driveError.errorsCount = _gui->driveErrorCount(accountInfo.first);
             driveErrorList << driveError;
         }
     }

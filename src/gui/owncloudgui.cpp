@@ -51,7 +51,7 @@ namespace OCC {
 
 const char propertyAccountC[] = "oc_account";
 
-ownCloudGui::ownCloudGui(Application *parent)
+OwnCloudGui::OwnCloudGui(Application *parent)
     : QObject(parent)
     , _tray(nullptr)
     , _logBrowser(nullptr)
@@ -66,7 +66,7 @@ ownCloudGui::ownCloudGui(Application *parent)
     // for the beginning, set the offline icon until the account was verified
     _tray->setIcon(Theme::instance()->folderOfflineIcon(/*systray?*/ true, /*currently visible?*/ false));
 
-    connect(_tray.data(), &QSystemTrayIcon::activated, this, &ownCloudGui::slotTrayClicked);
+    connect(_tray.data(), &QSystemTrayIcon::activated, this, &OwnCloudGui::slotTrayClicked);
 
     _tray->show();
     setupSynthesisPopover();
@@ -80,18 +80,18 @@ ownCloudGui::ownCloudGui(Application *parent)
 
     ProgressDispatcher *pd = ProgressDispatcher::instance();
 
-    connect(pd, &ProgressDispatcher::progressInfo, this, &ownCloudGui::slotUpdateProgress);
-    connect(pd, &ProgressDispatcher::itemCompleted, this, &ownCloudGui::slotItemCompleted);
+    connect(pd, &ProgressDispatcher::progressInfo, this, &OwnCloudGui::slotUpdateProgress);
+    connect(pd, &ProgressDispatcher::itemCompleted, this, &OwnCloudGui::slotItemCompleted);
 
     FolderMan *folderMan = FolderMan::instance();
-    connect(folderMan, &FolderMan::folderSyncStateChange, this, &ownCloudGui::slotSyncStateChange);
+    connect(folderMan, &FolderMan::folderSyncStateChange, this, &OwnCloudGui::slotSyncStateChange);
 
-    connect(AccountManager::instance(), &AccountManager::accountAdded, this, &ownCloudGui::onRefreshAccountList);
-    connect(AccountManager::instance(), &AccountManager::accountRemoved, this, &ownCloudGui::onRefreshAccountList);
+    connect(AccountManager::instance(), &AccountManager::accountAdded, this, &OwnCloudGui::onRefreshAccountList);
+    connect(AccountManager::instance(), &AccountManager::accountRemoved, this, &OwnCloudGui::onRefreshAccountList);
 
-    connect(Logger::instance(), &Logger::guiLog, this, &ownCloudGui::slotShowTrayMessage);
-    connect(Logger::instance(), &Logger::optionalGuiLog, this, &ownCloudGui::slotShowOptionalTrayMessage);
-    connect(Logger::instance(), &Logger::guiMessage, this, &ownCloudGui::slotShowGuiMessage);
+    connect(Logger::instance(), &Logger::guiLog, this, &OwnCloudGui::slotShowTrayMessage);
+    connect(Logger::instance(), &Logger::optionalGuiLog, this, &OwnCloudGui::slotShowOptionalTrayMessage);
+    connect(Logger::instance(), &Logger::guiMessage, this, &OwnCloudGui::slotShowGuiMessage);
 
     if (_tray->geometry().width() == 0) {
         // No systray
@@ -104,7 +104,7 @@ ownCloudGui::ownCloudGui(Application *parent)
 }
 
 // This should rather be in application.... or rather in ConfigFile?
-void ownCloudGui::slotOpenParametersDialog(const QString &accountId)
+void OwnCloudGui::slotOpenParametersDialog(const QString &accountId)
 {
     // if account is set up, start the configuration wizard.
     if (!AccountManager::instance()->accounts().isEmpty()) {
@@ -119,7 +119,7 @@ void ownCloudGui::slotOpenParametersDialog(const QString &accountId)
     }
 }
 
-void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
+void OwnCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
 {
     if (_workaroundFakeDoubleClick) {
         static QElapsedTimer last_click;
@@ -147,7 +147,7 @@ void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
     // or SSL error dialog also comes to front.
 }
 
-void ownCloudGui::slotSyncStateChange(Folder *folder)
+void OwnCloudGui::slotSyncStateChange(Folder *folder)
 {
     slotComputeOverallSyncStatus();
     updatePopoverNeeded();
@@ -168,24 +168,24 @@ void ownCloudGui::slotSyncStateChange(Folder *folder)
     }
 }
 
-void ownCloudGui::slotFoldersChanged()
+void OwnCloudGui::slotFoldersChanged()
 {
     slotComputeOverallSyncStatus();
     updatePopoverNeeded();
 }
 
-void ownCloudGui::slotOpenPath(const QString &path)
+void OwnCloudGui::slotOpenPath(const QString &path)
 {
     showInFileManager(path);
 }
 
-void ownCloudGui::slotAccountStateChanged()
+void OwnCloudGui::slotAccountStateChanged()
 {
     updatePopoverNeeded();
     slotComputeOverallSyncStatus();
 }
 
-void ownCloudGui::slotTrayMessageIfServerUnsupported(Account *account)
+void OwnCloudGui::slotTrayMessageIfServerUnsupported(Account *account)
 {
     if (account->serverVersionUnsupported()) {
         slotShowTrayMessage(
@@ -197,12 +197,12 @@ void ownCloudGui::slotTrayMessageIfServerUnsupported(Account *account)
     }
 }
 
-void ownCloudGui::slotShowErrors()
+void OwnCloudGui::slotShowErrors()
 {
     slotShowParametersDialog();
 }
 
-void ownCloudGui::slotComputeOverallSyncStatus()
+void OwnCloudGui::slotComputeOverallSyncStatus()
 {
     bool allSignedOut = true;
     bool allPaused = true;
@@ -308,13 +308,13 @@ void ownCloudGui::slotComputeOverallSyncStatus()
     }
 }
 
-void ownCloudGui::hideAndShowTray()
+void OwnCloudGui::hideAndShowTray()
 {
     _tray->hide();
     _tray->show();
 }
 
-void ownCloudGui::showSynthesisDialog()
+void OwnCloudGui::showSynthesisDialog()
 {
     if (_synthesisPopover) {
         if (_synthesisPopover.get()->isVisible()) {
@@ -329,6 +329,14 @@ void ownCloudGui::showSynthesisDialog()
             raiseDialog(_synthesisPopover.get());
         }
     }
+}
+
+int OwnCloudGui::driveErrorCount(const QString &accountId) const
+{
+    if (_parametersDialog) {
+        return _parametersDialog->driveErrorCount(accountId);
+    }
+    return 0;
 }
 
 static QByteArray envForceQDBusTrayWorkaround()
@@ -361,19 +369,19 @@ static QByteArray envForceWorkaroundManualVisibility()
     return var;
 }
 
-void ownCloudGui::setupSynthesisPopover()
+void OwnCloudGui::setupSynthesisPopover()
 {
     if (_synthesisPopover) {
         return;
     }
 
-    _synthesisPopover.reset(new KDC::SynthesisPopover(_app->debugMode()));
-    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openParametersDialog, this, &ownCloudGui::slotShowParametersDialog);
-    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openShareDialogPublicLinks, this, &ownCloudGui::slotShowShareDialogPublicLinks);
+    _synthesisPopover.reset(new KDC::SynthesisPopover(_app->debugMode(), this));
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openParametersDialog, this, &OwnCloudGui::slotShowParametersDialog);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::openShareDialogPublicLinks, this, &OwnCloudGui::slotShowShareDialogPublicLinks);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::exit, _app, &Application::quit);
-    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::addDrive, this, &ownCloudGui::slotNewAccountWizard);
-    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::disableNotifications, this, &ownCloudGui::slotDisableNotifications);
-    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::applyStyle, this, &ownCloudGui::slotApplyStyle);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::addDrive, this, &OwnCloudGui::slotNewAccountWizard);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::disableNotifications, this, &OwnCloudGui::slotDisableNotifications);
+    connect(_synthesisPopover.get(), &KDC::SynthesisPopover::applyStyle, this, &OwnCloudGui::slotApplyStyle);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crash, _app, &Application::slotCrash);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crashEnforce, _app, &Application::slotCrashEnforce);
     connect(_synthesisPopover.get(), &KDC::SynthesisPopover::crashFatal, _app, &Application::slotCrashFatal);
@@ -411,7 +419,7 @@ void ownCloudGui::setupSynthesisPopover()
                           << "showhide:" << _workaroundShowAndHideTray
                           << "manualvisibility:" << _workaroundManualVisibility;
 
-    connect(&_delayedTrayUpdateTimer, &QTimer::timeout, this, &ownCloudGui::updatePopover);
+    connect(&_delayedTrayUpdateTimer, &QTimer::timeout, this, &OwnCloudGui::updatePopover);
     _delayedTrayUpdateTimer.setInterval(2 * 1000);
     _delayedTrayUpdateTimer.setSingleShot(true);
 
@@ -419,14 +427,14 @@ void ownCloudGui::setupSynthesisPopover()
     updatePopover();
 }
 
-void ownCloudGui::setupParametersDialog()
+void OwnCloudGui::setupParametersDialog()
 {
     _parametersDialog = new KDC::ParametersDialog();
-    connect(_parametersDialog, &KDC::ParametersDialog::addDrive, this, &ownCloudGui::slotNewAccountWizard);
-    connect(_parametersDialog, &KDC::ParametersDialog::setStyle, this, &ownCloudGui::slotSetStyle);
+    connect(_parametersDialog, &KDC::ParametersDialog::addDrive, this, &OwnCloudGui::slotNewAccountWizard);
+    connect(_parametersDialog, &KDC::ParametersDialog::setStyle, this, &OwnCloudGui::slotSetStyle);
 }
 
-void ownCloudGui::updatePopover()
+void OwnCloudGui::updatePopover()
 {
     if (_workaroundShowAndHideTray) {
         // To make tray menu updates work with these bugs (see setupPopover)
@@ -443,19 +451,19 @@ void ownCloudGui::updatePopover()
     }
 }
 
-void ownCloudGui::updatePopoverNeeded()
+void OwnCloudGui::updatePopoverNeeded()
 {
     // if it's visible and we can update live: update now
     updatePopover();
     return;
 }
 
-void ownCloudGui::onRefreshAccountList()
+void OwnCloudGui::onRefreshAccountList()
 {
     updatePopoverNeeded();
 }
 
-void ownCloudGui::slotShowTrayMessage(const QString &title, const QString &msg)
+void OwnCloudGui::slotShowTrayMessage(const QString &title, const QString &msg)
 {
     if (_tray) {
         _tray->showMessage(title, msg);
@@ -465,7 +473,7 @@ void ownCloudGui::slotShowTrayMessage(const QString &title, const QString &msg)
     }
 }
 
-void ownCloudGui::slotShowOptionalTrayMessage(const QString &title, const QString &msg)
+void OwnCloudGui::slotShowOptionalTrayMessage(const QString &title, const QString &msg)
 {
     ConfigFile cfg;
     if (cfg.optionalDesktopNotifications()) {
@@ -479,7 +487,7 @@ void ownCloudGui::slotShowOptionalTrayMessage(const QString &title, const QStrin
 /*
  * open the folder with the given Alias
  */
-void ownCloudGui::slotFolderOpenAction(const QString &alias)
+void OwnCloudGui::slotFolderOpenAction(const QString &alias)
 {
     Folder *f = FolderMan::instance()->folder(alias);
     if (f) {
@@ -499,7 +507,7 @@ void ownCloudGui::slotFolderOpenAction(const QString &alias)
     }
 }
 
-void ownCloudGui::slotUpdateProgress(const QString &folder, const ProgressInfo &progress)
+void OwnCloudGui::slotUpdateProgress(const QString &folder, const ProgressInfo &progress)
 {
     Q_UNUSED(folder);
 
@@ -508,24 +516,24 @@ void ownCloudGui::slotUpdateProgress(const QString &folder, const ProgressInfo &
     }
 }
 
-void ownCloudGui::slotItemCompleted(const QString &folder, const SyncFileItemPtr &item)
+void OwnCloudGui::slotItemCompleted(const QString &folder, const SyncFileItemPtr &item)
 {
     if (_synthesisPopover) {
          emit _synthesisPopover->itemCompleted(folder, item);
     }
 }
 
-void ownCloudGui::slotUnpauseAllFolders()
+void OwnCloudGui::slotUnpauseAllFolders()
 {
     setPauseOnAllFoldersHelper(false);
 }
 
-void ownCloudGui::slotPauseAllFolders()
+void OwnCloudGui::slotPauseAllFolders()
 {
     setPauseOnAllFoldersHelper(true);
 }
 
-void ownCloudGui::slotNewAccountWizard()
+void OwnCloudGui::slotNewAccountWizard()
 {
     if (_addDriveWizardRunning) {
         return;
@@ -559,7 +567,7 @@ void ownCloudGui::slotNewAccountWizard()
     }
 }
 
-void ownCloudGui::slotDisableNotifications(KDC::SynthesisPopover::NotificationsDisabled type,
+void OwnCloudGui::slotDisableNotifications(KDC::SynthesisPopover::NotificationsDisabled type,
                                            QDateTime value)
 {
     ConfigFile cfg;
@@ -577,12 +585,12 @@ void ownCloudGui::slotDisableNotifications(KDC::SynthesisPopover::NotificationsD
     }
 }
 
-void ownCloudGui::slotApplyStyle()
+void OwnCloudGui::slotApplyStyle()
 {
     Utility::setStyle(qApp);
 }
 
-void ownCloudGui::slotSetStyle(bool darkTheme)
+void OwnCloudGui::slotSetStyle(bool darkTheme)
 {
     ConfigFile cfg;
     cfg.setDarkTheme(darkTheme);
@@ -593,7 +601,7 @@ void ownCloudGui::slotSetStyle(bool darkTheme)
     _synthesisPopover->forceRedraw();
 }
 
-void ownCloudGui::setPauseOnAllFoldersHelper(bool pause)
+void OwnCloudGui::setPauseOnAllFoldersHelper(bool pause)
 {
     QList<AccountState *> accounts;
     if (auto account = qvariant_cast<AccountStatePtr>(sender()->property(propertyAccountC))) {
@@ -613,7 +621,7 @@ void ownCloudGui::setPauseOnAllFoldersHelper(bool pause)
     }
 }
 
-void ownCloudGui::slotShowGuiMessage(const QString &title, const QString &message)
+void OwnCloudGui::slotShowGuiMessage(const QString &title, const QString &message)
 {
     QMessageBox *msgBox = new QMessageBox;
     msgBox->setWindowFlags(msgBox->windowFlags() | Qt::WindowStaysOnTopHint);
@@ -624,7 +632,7 @@ void ownCloudGui::slotShowGuiMessage(const QString &title, const QString &messag
     msgBox->open();
 }
 
-void ownCloudGui::slotShowParametersDialog(const QString &accountId, bool errorPage)
+void OwnCloudGui::slotShowParametersDialog(const QString &accountId, bool errorPage)
 {
     if (_parametersDialog.isNull()) {
         setupParametersDialog();
@@ -643,7 +651,7 @@ void ownCloudGui::slotShowParametersDialog(const QString &accountId, bool errorP
     raiseDialog(_parametersDialog);
 }
 
-void ownCloudGui::slotShutdown()
+void OwnCloudGui::slotShutdown()
 {
     // explicitly close windows. This is somewhat of a hack to ensure
     // that saving the geometries happens ASAP during a OS shutdown
@@ -655,7 +663,7 @@ void ownCloudGui::slotShutdown()
         _logBrowser->deleteLater();
 }
 
-void ownCloudGui::slotToggleLogBrowser()
+void OwnCloudGui::slotToggleLogBrowser()
 {
     if (_logBrowser.isNull()) {
         // init the log browser.
@@ -670,19 +678,19 @@ void ownCloudGui::slotToggleLogBrowser()
     }
 }
 
-void ownCloudGui::slotOpenWebview()
+void OwnCloudGui::slotOpenWebview()
 {
     if (auto account = qvariant_cast<AccountPtr>(sender()->property(propertyAccountC))) {
         QDesktopServices::openUrl(account->url());
     }
 }
 
-void ownCloudGui::slotHelp()
+void OwnCloudGui::slotHelp()
 {
     QDesktopServices::openUrl(QUrl(Theme::instance()->helpUrl()));
 }
 
-void ownCloudGui::raiseDialog(QWidget *raiseWidget)
+void OwnCloudGui::raiseDialog(QWidget *raiseWidget)
 {
     QWidget *activeWindow = QApplication::activeWindow();
     if (activeWindow && activeWindow != raiseWidget) {
@@ -720,7 +728,7 @@ void ownCloudGui::raiseDialog(QWidget *raiseWidget)
 }
 
 
-void ownCloudGui::slotShowShareDialog(const QString &sharePath, const QString &localPath, ShareDialogStartPage startPage)
+void OwnCloudGui::slotShowShareDialog(const QString &sharePath, const QString &localPath, ShareDialogStartPage startPage)
 {
     QString file;
     const auto folder = FolderMan::instance()->folderForPath(localPath, &file);
@@ -765,17 +773,17 @@ void ownCloudGui::slotShowShareDialog(const QString &sharePath, const QString &l
         w->setAttribute(Qt::WA_DeleteOnClose, true);
 
         _shareDialogs[localPath] = w;
-        connect(w, &QObject::destroyed, this, &ownCloudGui::slotRemoveDestroyedShareDialogs);
+        connect(w, &QObject::destroyed, this, &OwnCloudGui::slotRemoveDestroyedShareDialogs);
     }
     raiseDialog(w);
 }
 
-void ownCloudGui::slotShowShareDialogPublicLinks(const QString &sharePath, const QString &localPath)
+void OwnCloudGui::slotShowShareDialogPublicLinks(const QString &sharePath, const QString &localPath)
 {
     slotShowShareDialog(sharePath, localPath, ShareDialogStartPage::PublicLinks);
 }
 
-void ownCloudGui::slotRemoveDestroyedShareDialogs()
+void OwnCloudGui::slotRemoveDestroyedShareDialogs()
 {
     QMutableMapIterator<QString, QPointer<ShareDialog>> it(_shareDialogs);
     while (it.hasNext()) {
@@ -786,7 +794,7 @@ void ownCloudGui::slotRemoveDestroyedShareDialogs()
     }
 }
 
-void ownCloudGui::slotAbout()
+void OwnCloudGui::slotAbout()
 {
     QString title = tr("About %1").arg(Theme::instance()->appNameGUI());
     QString about = Theme::instance()->about();

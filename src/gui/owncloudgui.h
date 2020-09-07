@@ -31,7 +31,6 @@
 namespace OCC {
 
 class Folder;
-
 class SettingsDialog;
 class ShareDialog;
 class Application;
@@ -44,14 +43,14 @@ enum class ShareDialogStartPage {
 };
 
 /**
- * @brief The ownCloudGui class
+ * @brief The OwnCloudGui class
  * @ingroup gui
  */
-class ownCloudGui : public QObject
+class OwnCloudGui : public QObject
 {
     Q_OBJECT
 public:
-    explicit ownCloudGui(Application *parent = 0);
+    explicit OwnCloudGui(Application *parent = 0);
 
     bool checkAccountExists(bool openSettings);
 
@@ -60,6 +59,7 @@ public:
     void setupOverlayIcons();
     void hideAndShowTray();
     void showSynthesisDialog();
+    int driveErrorCount(const QString &accountId) const;
 
 signals:
     void setupProxy();

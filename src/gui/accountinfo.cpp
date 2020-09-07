@@ -163,9 +163,4 @@ QString AccountInfo::folderPath(const QString &folderId, const QString &filePath
     return fullFilePath;
 }
 
-bool AccountInfo::hasWarningOrError() const
-{
-    return _errorsCount > 0;
-}
-
 }

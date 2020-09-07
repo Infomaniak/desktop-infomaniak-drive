@@ -312,7 +312,7 @@ Application::Application(int &argc, char **argv)
 
     // Setting up the gui class will allow tray notifications for the
     // setup that follows, like folder setup
-    _gui = new ownCloudGui(this);
+    _gui = new OwnCloudGui(this);
     if (_showLogWindow) {
         _gui->slotToggleLogBrowser(); // _showLogWindow is set in parseOptions.
     }
@@ -344,7 +344,7 @@ Application::Application(int &argc, char **argv)
     }
 
     connect(FolderMan::instance()->socketApi(), &SocketApi::shareCommandReceived,
-        _gui.data(), &ownCloudGui::slotShowShareDialog);
+        _gui.data(), &OwnCloudGui::slotShowShareDialog);
 
     // startup procedure.
     connect(&_checkConnectionTimer, &QTimer::timeout, this, &Application::slotCheckConnection);
@@ -360,7 +360,7 @@ Application::Application(int &argc, char **argv)
     // Update checks
     UpdaterScheduler *updaterScheduler = new UpdaterScheduler(this);
     connect(updaterScheduler, &UpdaterScheduler::updaterAnnouncement,
-        _gui.data(), &ownCloudGui::slotShowTrayMessage);
+        _gui.data(), &OwnCloudGui::slotShowTrayMessage);
     connect(updaterScheduler, &UpdaterScheduler::requestRestart,
         _folderManager.data(), &FolderMan::slotScheduleAppRestart);
 
@@ -397,9 +397,9 @@ void Application::slotAccountStateRemoved(AccountState *accountState)
 {
     if (_gui) {
         disconnect(accountState, &AccountState::stateChanged,
-            _gui.data(), &ownCloudGui::slotAccountStateChanged);
+            _gui.data(), &OwnCloudGui::slotAccountStateChanged);
         disconnect(accountState->account().data(), &Account::serverVersionChanged,
-            _gui.data(), &ownCloudGui::slotTrayMessageIfServerUnsupported);
+            _gui.data(), &OwnCloudGui::slotTrayMessageIfServerUnsupported);
     }
     if (_folderManager) {
         disconnect(accountState, &AccountState::stateChanged,
@@ -422,9 +422,9 @@ void Application::slotAccountStateRemoved(AccountState *accountState)
 void Application::slotAccountStateAdded(AccountState *accountState)
 {
     connect(accountState, &AccountState::stateChanged,
-        _gui.data(), &ownCloudGui::slotAccountStateChanged);
+        _gui.data(), &OwnCloudGui::slotAccountStateChanged);
     connect(accountState->account().data(), &Account::serverVersionChanged,
-        _gui.data(), &ownCloudGui::slotTrayMessageIfServerUnsupported);
+        _gui.data(), &OwnCloudGui::slotTrayMessageIfServerUnsupported);
     connect(accountState, &AccountState::stateChanged,
         _folderManager.data(), &FolderMan::slotAccountStateChanged);
     connect(accountState->account().data(), &Account::serverVersionChanged,
