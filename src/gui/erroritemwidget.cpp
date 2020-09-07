@@ -150,11 +150,6 @@ QSize ErrorItemWidget::sizeHint() const
     return QSize(width(), height);
 }
 
-bool ErrorItemWidget::isIdentical(const ErrorItemWidget *errorItem) const
-{
-    return _item.isIdentical(errorItem->_item);
-}
-
 void ErrorItemWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);

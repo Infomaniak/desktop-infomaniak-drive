@@ -44,7 +44,6 @@ public:
     inline QString fullFilePath() const { return _fullFilePath; };
     inline QDateTime dateTime() const { return _dateTime; };
     inline QString error() const { return _error; };
-    bool isIdentical(const SynchronizedItem &item) const;
 
 private:
     QString _folderId;
