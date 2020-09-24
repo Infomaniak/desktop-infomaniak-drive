@@ -51,7 +51,7 @@ void CommonUtility::setupTranslations(QCoreApplication *app, const QString &enfo
 {
     QStringList uiLanguages;
 // uiLanguages crashes on Windows with 4.8.0 release builds
-#if (QT_VERSION >= 0x040801) || (QT_VERSION >= 0x040800 && !defined(Q_OS_WIN))
+#if (QT_VERSION >= QT_VERSION_CHECK(4, 8, 1)) || (QT_VERSION >= QT_VERSION_CHECK(4, 8, 0) && !defined(Q_OS_WIN))
     uiLanguages = QLocale::system().uiLanguages();
 #else
     // older versions need to fall back to the systems locale
