@@ -118,7 +118,7 @@ static QString modeToPluginName(Vfs::Mode mode)
     if (mode == Vfs::WithSuffix)
         return "suffix";
     if (mode == Vfs::WindowsCfApi)
-        return "CloudFileProvider";
+        return "win";
     return QString();
 }
 

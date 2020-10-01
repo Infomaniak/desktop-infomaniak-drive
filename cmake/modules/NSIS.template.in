@@ -370,26 +370,6 @@ SectionEnd
 #   ${MementoSectionEnd}
 #!endif
 
-; Uninstall shell extension
-!define LIBRARY_COM
-!define LIBRARY_SHELL_EXTENSION
-!define LIBRARY_IGNORE_VERSION
-DetailPrint "Uninstalling x64 shell extension DLLs"
-!define LIBRARY_X64
-!insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\OCContextMenu.dll"
-!insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\OCOverlays.dll"
-!insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCContextMenu.dll"
-!insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCOverlays.dll"
-!undef LIBRARY_X64
-DetailPrint "Uninstalling x86 shell extension DLLs"
-!insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\OCContextMenu.dll"
-!insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\OCOverlays.dll"
-!insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCContextMenu.dll"
-!insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCOverlays.dll"
-!undef LIBRARY_COM
-!undef LIBRARY_SHELL_EXTENSION
-!undef LIBRARY_IGNORE_VERSION
-
 SectionGroup $SectionGroup_Shortcuts
 
 !ifdef OPTION_SECTION_SC_START_MENU
@@ -539,25 +519,25 @@ Section Uninstall
    ;Remove file association
    !insertmacro APP_UNASSOCIATE "${APPLICATION_VIRTUALFILE_SUFFIX}" "${APPLICATION_VIRTUALFILE_FILECLASS}"
 
-#   ;Shell extension
-#   !ifdef OPTION_SECTION_SC_SHELL_EXT
-#      !define LIBRARY_COM
-#      !define LIBRARY_SHELL_EXTENSION
-#      !define LIBRARY_IGNORE_VERSION
-#      ${If} ${HasSection} SEC_SHELL_EXT
-#        DetailPrint "Uninstalling x64 overlay DLLs"
-#        !define LIBRARY_X64
-#        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCContextMenu.dll"
-#        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCOverlays.dll"
-#        !undef LIBRARY_X64
-#        DetailPrint "Uninstalling x86 overlay DLLs"
-#        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCContextMenu.dll"
-#        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCOverlays.dll"
-#      ${EndIf}
-#      !undef LIBRARY_COM
-#      !undef LIBRARY_SHELL_EXTENSION
-#      !undef LIBRARY_IGNORE_VERSION
-#  !endif
+   ;Shell extension
+   !ifdef OPTION_SECTION_SC_SHELL_EXT
+      !define LIBRARY_COM
+      !define LIBRARY_SHELL_EXTENSION
+      !define LIBRARY_IGNORE_VERSION
+      ${If} ${HasSection} SEC_SHELL_EXT
+        DetailPrint "Uninstalling x64 overlay DLLs"
+        !define LIBRARY_X64
+        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCContextMenu.dll"
+        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCOverlays.dll"
+        !undef LIBRARY_X64
+        DetailPrint "Uninstalling x86 overlay DLLs"
+        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCContextMenu.dll"
+        !insertmacro UnInstallLib REGDLL NOTSHARED REBOOT_PROTECTED "$INSTDIR\shellext\OCOverlays.dll"
+      ${EndIf}
+      !undef LIBRARY_COM
+      !undef LIBRARY_SHELL_EXTENSION
+      !undef LIBRARY_IGNORE_VERSION
+  !endif
 
    ;Start menu shortcut
    !ifdef OPTION_SECTION_SC_START_MENU
