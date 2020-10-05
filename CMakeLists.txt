@@ -227,3 +227,13 @@ elseif(BUILD_CLIENT)
     endif()
     configure_file(sync-exclude.lst bin/sync-exclude.lst COPYONLY)
 endif()
+
+# Copy CloudFileProvider.dll into bin directory
+set(CMAKE_FIND_LIBRARY_SUFFIXES .dll)
+find_library(CLOUDFILEPROVIDER_SHARED_LIBRARY NAMES CloudFileProvider PATHS ${CLOUDFILEPROVIDER_DIRECTORY} NO_DEFAULT_PATH)
+
+file(COPY ${CLOUDFILEPROVIDER_SHARED_LIBRARY}
+    DESTINATION ${BIN_OUTPUT_DIRECTORY}
+)
+
+

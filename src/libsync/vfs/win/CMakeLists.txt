@@ -16,20 +16,4 @@ set_target_properties("${synclib_NAME}_vfs_win" PROPERTIES
     PREFIX ""
 )
 
-set(vfs_installdir "${PLUGINDIR}")
 
-INSTALL(TARGETS "${synclib_NAME}_vfs_win"
-    LIBRARY DESTINATION ${vfs_installdir}
-    RUNTIME DESTINATION ${vfs_installdir}
-)
-
-set(CMAKE_FIND_LIBRARY_SUFFIXES .dll)
-find_library(CLOUDFILEPROVIDER_SHARED_LIBRARY NAMES CloudFileProvider PATHS ${CLOUDFILEPROVIDER_DIRECTORY} NO_DEFAULT_PATH)
-
-INSTALL(FILES ${CLOUDFILEPROVIDER_SHARED_LIBRARY}
-    DESTINATION ${vfs_installdir}
-)
-
-message("-----")
-message(${vfs_installdir})
-message("-----")
