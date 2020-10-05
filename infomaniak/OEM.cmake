@@ -32,3 +32,5 @@ set( CRASHREPORTER_SUBMIT_URL "https://www.infomaniak.com/report/drive/crash" CA
 set( CRASHREPORTER_ICON ":/infomaniak.png" )
 
 set( DEBUGREPORTER_SUBMIT_URL "https://www.infomaniak.com/report/drive/logs" CACHE STRING "URL for debug reporter" )
+
+set( CLOUDFILEPROVIDER_DIRECTORY "C:\\Projects\\CloudFileProvider\\x64\\Release" )
