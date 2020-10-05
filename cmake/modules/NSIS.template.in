@@ -40,6 +40,8 @@
 
 !define NSI_PATH "${SOURCE_PATH}\admin\win\nsi"
 
+!define CLOUDFILEPROVIDER_DIRECTORY "C:\Projects\CloudFileProvider\x64\Release")
+
 ;-----------------------------------------------------------------------------
 ; Installer version
 ;-----------------------------------------------------------------------------

@@ -2,7 +2,6 @@ add_library("${synclib_NAME}_vfs_wincfapi" SHARED
     vfs_win.cpp
 )
 
-set(CLOUDFILEPROVIDER_DIRECTORY "../CloudFileProvider/x64/Release")
 set(CMAKE_FIND_LIBRARY_SUFFIXES .lib)
 find_library(CLOUDFILEPROVIDER_STATIC_LIBRARY NAMES CloudFileProvider PATHS ${CLOUDFILEPROVIDER_DIRECTORY} NO_DEFAULT_PATH)
 
