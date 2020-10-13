@@ -13,14 +13,39 @@
  */
 
 #include "vfs_win.h"
-
-#include <QFile>
-
 #include "syncfileitem.h"
 #include "filesystem.h"
 #include "common/syncjournaldb.h"
+#include "CloudFileProvider.h"
+
+#include <windows.h>
+#include <iostream>
+#include <thread>
+
+#include <QFile>
 
 namespace OCC {
+
+HINSTANCE hCloudFileProviderDll;
+
+Q_LOGGING_CATEGORY(lcVfsWin, "vfswin", QtInfoMsg)
+
+void debugCbk(TraceLevel level, const wchar_t *msg) {
+    switch (level) {
+    case TRACE_LEVEL_INFO:
+        qCInfo(lcVfsWin) << QString::fromWCharArray(msg);
+        break;
+    case TRACE_LEVEL_DEBUG:
+        qCDebug(lcVfsWin) << QString::fromWCharArray(msg);
+        break;
+    case TRACE_LEVEL_WARNING:
+        qCWarning(lcVfsWin) << QString::fromWCharArray(msg);
+        break;
+    case TRACE_LEVEL_ERROR:
+        qCCritical(lcVfsWin) << QString::fromWCharArray(msg);
+        break;
+    }
+}
 
 VfsWin::VfsWin(QObject *parent)
     : Vfs(parent)
@@ -43,10 +68,26 @@ QString VfsWin::fileSuffix() const
 
 void VfsWin::startImpl(const VfsSetupParams &params)
 {
+    Q_UNUSED(params)
+
+    qCDebug(lcVfsWin) << "Begin";
+
+    auto watchFct = [=]() {
+        const wchar_t serverFolder[] = L"C:\\temp\\sync_server";
+        const wchar_t clientFolder[] = L"C:\\temp\\sync_client";
+        qCDebug(lcVfsWin) << "StartCloudFileProvider() returned "
+                  << StartCloudFileProvider(serverFolder, clientFolder, debugCbk);
+    };
+
+    std::thread watchThread(watchFct);
+    watchThread.detach();
 }
 
 void VfsWin::stop()
 {
+    qCDebug(lcVfsWin) << "StopCloudFileProvider() returned " << StopCloudFileProvider();
+
+    FreeLibrary(hCloudFileProviderDll);
 }
 
 void VfsWin::unregisterFolder()

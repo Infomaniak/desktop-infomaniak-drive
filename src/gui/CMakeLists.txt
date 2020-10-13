@@ -192,7 +192,7 @@ IF( WIN32 )
       ${CMAKE_CURRENT_BINARY_DIR}/version.rc
       @ONLY)
     set(client_version ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
-    IF(NOT MSVC)
+    IF(!MSVC)
         set(client_manifest ${CMAKE_CURRENT_SOURCE_DIR}/manifest-mingw.rc)
     ENDIF()
 ENDIF()
