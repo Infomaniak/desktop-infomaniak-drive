@@ -16,7 +16,7 @@
 #include "syncfileitem.h"
 #include "filesystem.h"
 #include "common/syncjournaldb.h"
-#include "CloudFileProvider.h"
+#include "CloudFileProviderDll.h"
 
 #include <windows.h>
 #include <iostream>
@@ -25,8 +25,6 @@
 #include <QFile>
 
 namespace OCC {
-
-HINSTANCE hCloudFileProviderDll;
 
 Q_LOGGING_CATEGORY(lcVfsWin, "vfswin", QtInfoMsg)
 
@@ -72,11 +70,10 @@ void VfsWin::startImpl(const VfsSetupParams &params)
 
     qCDebug(lcVfsWin) << "Begin";
 
+    InitCloudFileProvider(debugCbk);
+
     auto watchFct = [=]() {
-        const wchar_t serverFolder[] = L"C:\\temp\\sync_server";
-        const wchar_t clientFolder[] = L"C:\\temp\\sync_client";
-        qCDebug(lcVfsWin) << "StartCloudFileProvider() returned "
-                  << StartCloudFileProvider(serverFolder, clientFolder, debugCbk);
+        StartCloudFileProvider(L"136470", L"kDrive1", L"310927", L"C:\\temp\\sync_server", L"C:\\temp\\sync_client1");
     };
 
     std::thread watchThread(watchFct);
@@ -85,9 +82,7 @@ void VfsWin::startImpl(const VfsSetupParams &params)
 
 void VfsWin::stop()
 {
-    qCDebug(lcVfsWin) << "StopCloudFileProvider() returned " << StopCloudFileProvider();
-
-    FreeLibrary(hCloudFileProviderDll);
+    StopCloudFileProvider(L"kDrive1");
 }
 
 void VfsWin::unregisterFolder()
