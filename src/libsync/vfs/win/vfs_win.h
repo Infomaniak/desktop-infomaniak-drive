@@ -13,15 +13,15 @@
  */
 #pragma once
 
-#include <QObject>
-#include <QScopedPointer>
-
 #include "common/vfs.h"
 #include "common/plugin.h"
 
-namespace OCC {
+#include <QObject>
+#include <QScopedPointer>
 
-class VfsWin : public Vfs
+namespace KDC {
+
+class VfsWin : public OCC::Vfs
 {
     Q_OBJECT
 
@@ -35,37 +35,37 @@ public:
     void stop() override;
     void unregisterFolder() override;
 
-    bool socketApiPinStateActionsShown() const override { return true; }
+    bool socketApiPinStateActionsShown() const override { return false; }
     bool isHydrating() const override;
 
     bool updateMetadata(const QString &filePath, time_t modtime, qint64 size, const QByteArray &fileId, QString *error) override;
 
-    void createPlaceholder(const SyncFileItem &item) override;
-    void dehydratePlaceholder(const SyncFileItem &item) override;
-    void convertToPlaceholder(const QString &filename, const SyncFileItem &item, const QString &) override;
+    void createPlaceholder(const OCC::SyncFileItem &item) override;
+    void dehydratePlaceholder(const OCC::SyncFileItem &item) override;
+    void convertToPlaceholder(const QString &filename, const OCC::SyncFileItem &item, const QString &) override;
 
-    bool needsMetadataUpdate(const SyncFileItem &) override { return false; }
+    bool needsMetadataUpdate(const OCC::SyncFileItem &) override { return false; }
     bool isDehydratedPlaceholder(const QString &filePath) override;
     bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data) override;
 
-    bool setPinState(const QString &folderPath, PinState state) override
+    bool setPinState(const QString &folderPath, OCC::PinState state) override
     { return setPinStateInDb(folderPath, state); }
-    Optional<PinState> pinState(const QString &folderPath) override
+    OCC::Optional<OCC::PinState> pinState(const QString &folderPath) override
     { return pinStateInDb(folderPath); }
     AvailabilityResult availability(const QString &folderPath) override;
 
 public slots:
-    void fileStatusChanged(const QString &, SyncFileStatus) override {}
+    void fileStatusChanged(const QString &, OCC::SyncFileStatus) override {}
 
 protected:
-    void startImpl(const VfsSetupParams &params) override;
+    void startImpl(const OCC::VfsSetupParams &params) override;
 };
 
-class WinVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsWin>
+class WinVfsPluginFactory : public QObject, public OCC::DefaultPluginFactory<VfsWin>
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.kdrive.PluginFactory" FILE "vfspluginmetadata.json")
     Q_INTERFACES(OCC::PluginFactory)
 };
 
-} // namespace OCC
+} // namespace KDC

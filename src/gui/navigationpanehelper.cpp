@@ -39,8 +39,11 @@ void NavigationPaneHelper::setShowInExplorerNavigationPane(bool show)
     _showInExplorerNavigationPane = show;
     // Re-generate a new CLSID when enabling, possibly throwing away the old one.
     // updateCloudStorageRegistry will take care of removing any unknown CLSID our application owns from the registry.
-    foreach (Folder *folder, _folderMan->map())
-        folder->setNavigationPaneClsid(show ? QUuid::createUuid() : QUuid());
+    foreach (Folder *folder, _folderMan->map()) {
+        if (folder->vfs().mode() != Vfs::Mode::WindowsCfApi) {
+            folder->setNavigationPaneClsid(show ? QUuid::createUuid() : QUuid());
+        }
+    }
 
     scheduleUpdateCloudStorageRegistry();
 }
