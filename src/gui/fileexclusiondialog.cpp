@@ -59,7 +59,7 @@ static const char patternProperty[] = "pattern";
 static const char noWarningIndicator = ']';
 static const char deletedIndicator = '[';
 
-Q_LOGGING_CATEGORY(lcFileExclusionDialog, "fileexclusiondialog", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcFileExclusionDialog, "gui.fileexclusiondialog", QtInfoMsg)
 
 FileExclusionDialog::FileExclusionDialog(QWidget *parent)
     : CustomDialog(true, parent)

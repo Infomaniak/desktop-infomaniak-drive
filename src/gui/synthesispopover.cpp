@@ -94,7 +94,7 @@ const std::map<SynthesisPopover::NotificationsDisabled, QString> SynthesisPopove
     { NotificationsDisabled::Always, QString(tr("Always")) }
 };
 
-Q_LOGGING_CATEGORY(lcSynthesisPopover, "synthesispopover", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcSynthesisPopover, "gui.synthesispopover", QtInfoMsg)
 
 SynthesisPopover::SynthesisPopover(bool debugMode, OCC::OwnCloudGui *gui, QWidget *parent)
     : QDialog(parent)

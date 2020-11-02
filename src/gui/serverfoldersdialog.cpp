@@ -31,7 +31,7 @@ static const int boxHSpacing = 10;
 static const int titleBoxVMargin = 14;
 static const int folderTreeBoxVMargin = 20;
 
-Q_LOGGING_CATEGORY(lcServerFoldersDialog, "serverfoldersdialog", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcServerFoldersDialog, "gui.serverfoldersdialog", QtInfoMsg)
 
 ServerFoldersDialog::ServerFoldersDialog(const QString &accountId, const QString &serverFolderName,
                                          const QString &serverFolderPath, QWidget *parent)

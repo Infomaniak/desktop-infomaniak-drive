@@ -58,7 +58,7 @@ static const int defaultLogoIconSize = 50;
 static const int maxErrorItems = 1000;
 static const int maxLogFilesToSend = 25;
 
-Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcParametersDialog, "gui.parametersdialog", QtInfoMsg)
 
 ParametersDialog::ParametersDialog(QWidget *parent)
     : CustomDialog(false, parent)

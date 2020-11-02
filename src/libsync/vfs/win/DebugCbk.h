@@ -8,4 +8,4 @@ typedef enum {
 } TraceLevel;
 
 // Type definition for the debug callback function.
-typedef void (TraceCbk)(TraceLevel level, const wchar_t*);
+typedef void (TraceCbk)(TraceLevel level, const wchar_t *msg);

@@ -49,7 +49,7 @@ static const int avatarSize = 40;
 
 static const QString folderBlocName("folderBloc");
 
-Q_LOGGING_CATEGORY(lcDrivePreferencesWidget, "drivepreferenceswidget", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcDrivePreferencesWidget, "gui.drivepreferenceswidget", QtInfoMsg)
 
 DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     : QWidget(parent)

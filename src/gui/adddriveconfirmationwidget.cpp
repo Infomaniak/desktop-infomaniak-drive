@@ -45,7 +45,7 @@ static const int buttonBoxVMargin = 20;
 static const int progressBarMin = 0;
 static const int progressBarMax = 4;
 
-Q_LOGGING_CATEGORY(lcAddDriveConfirmationWidget, "adddrivelocalfolderwidget", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcAddDriveConfirmationWidget, "gui.adddrivelocalfolderwidget", QtInfoMsg)
 
 AddDriveConfirmationWidget::AddDriveConfirmationWidget(QWidget *parent)
     : QWidget(parent)

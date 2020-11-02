@@ -54,7 +54,7 @@ static const int amountLineEditWidth = 85;
 static const QString debuggingFolderLink = "debuggingFolderLink";
 static const QString versionLink = "versionLink";
 
-Q_LOGGING_CATEGORY(lcPerformancesWidget, "performanceswidget", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcPerformancesWidget, "gui.performanceswidget", QtInfoMsg)
 
 PreferencesWidget::PreferencesWidget(QWidget *parent)
     : QWidget(parent)

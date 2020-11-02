@@ -38,7 +38,7 @@ static const int boxHMargin = 40;
 static const int boxVTMargin = 20;
 static const int boxVBMargin = 40;
 
-Q_LOGGING_CATEGORY(lcAddDriveWizard, "adddrivewizard", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcAddDriveWizard, "gui.adddrivewizard", QtInfoMsg)
 
 AddDriveWizard::AddDriveWizard(QWidget *parent)
     : CustomDialog(parent)

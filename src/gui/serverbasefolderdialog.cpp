@@ -34,7 +34,7 @@ static const int descriptionBoxVMargin = 15;
 static const int availableSpaceBoxVMargin = 20;
 static const int folderTreeBoxVMargin = 20;
 
-Q_LOGGING_CATEGORY(lcServerBaseFolderDialog, "serverbasefolderdialog", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcServerBaseFolderDialog, "gui.serverbasefolderdialog", QtInfoMsg)
 
 ServerBaseFolderDialog::ServerBaseFolderDialog(const QString &accountId, const QString &localFolderName, QWidget *parent)
     : CustomDialog(true, parent)

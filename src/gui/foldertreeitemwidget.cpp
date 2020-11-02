@@ -45,7 +45,7 @@ static const int dirRole = Qt::UserRole + 1;
 // 2nd column roles
 static const int sizeRole = Qt::UserRole;
 
-Q_LOGGING_CATEGORY(lcFolderTreeItemWidget, "foldertreeitemwidget", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcFolderTreeItemWidget, "gui.foldertreeitemwidget", QtInfoMsg)
 
 FolderTreeItemWidget::FolderTreeItemWidget(const QString &folderId, bool displayRoot, QWidget *parent)
     : QTreeWidget(parent)

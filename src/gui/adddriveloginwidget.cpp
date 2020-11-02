@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-Q_LOGGING_CATEGORY(lcAddDriveLoginWizard, "adddriveloginwizard", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcAddDriveLoginWizard, "gui.adddriveloginwizard", QtInfoMsg)
 
 AddDriveLoginWidget::AddDriveLoginWidget(QWidget *parent)
     : QWidget(parent)

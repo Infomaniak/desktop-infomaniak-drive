@@ -993,19 +993,30 @@ void PropagateDownloadFile::downloadFinished()
 
     QString error;
     emit propagator()->touchedFile(fn);
-    // The fileChanged() check is done above to generate better error messages.
-    if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
-        qCWarning(lcPropagateDownload) << QString("Rename failed: %1 => %2").arg(_tmpFile.fileName()).arg(fn);
-        // If the file is locked, we want to retry this sync when it
-        // becomes available again, otherwise try again directly
-        if (FileSystem::isFileLocked(fn)) {
-            emit propagator()->seenLockedFile(fn);
-        } else {
-            propagator()->_anotherSyncNeeded = true;
-        }
 
-        done(SyncFileItem::SoftError, error);
-        return;
+    auto vfs = propagator()->syncOptions()._vfs;
+    if (vfs && vfs->mode() == Vfs::WindowsCfApi) {
+        if (!FileSystem::remove(_tmpFile.fileName(), &error)) {
+            qCWarning(lcPropagateDownload) << QString("Remove failed: %1").arg(_tmpFile.fileName());
+            done(SyncFileItem::SoftError, error);
+            return;
+        }
+    }
+    else {
+        // The fileChanged() check is done above to generate better error messages.
+        if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
+            qCWarning(lcPropagateDownload) << QString("Rename failed: %1 => %2").arg(_tmpFile.fileName()).arg(fn);
+            // If the file is locked, we want to retry this sync when it
+            // becomes available again, otherwise try again directly
+            if (FileSystem::isFileLocked(fn)) {
+                emit propagator()->seenLockedFile(fn);
+            } else {
+                propagator()->_anotherSyncNeeded = true;
+            }
+
+            done(SyncFileItem::SoftError, error);
+            return;
+        }
     }
 
     FileSystem::setFileHidden(fn, false);
@@ -1019,7 +1030,6 @@ void PropagateDownloadFile::downloadFinished()
     if (_conflictRecord.isValid())
         propagator()->_journal->setConflictRecord(_conflictRecord);
 
-    auto vfs = propagator()->syncOptions()._vfs;
     if (vfs && vfs->mode() == Vfs::WithSuffix) {
         // If the virtual file used to have a different name and db
         // entry, remove it transfer its old pin state.

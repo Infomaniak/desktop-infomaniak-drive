@@ -66,24 +66,24 @@ void Vfs::start(const VfsSetupParams &params)
     startImpl(params);
 }
 
-bool Vfs::setPinStateInDb(const QString &folderPath, PinState state)
+bool Vfs::setPinStateInDb(const QString &fileRelativePath, PinState state)
 {
-    auto path = folderPath.toUtf8();
+    auto path = fileRelativePath.toUtf8();
     _setupParams.journal->internalPinStates().wipeForPathAndBelow(path);
     if (state != PinState::Inherited)
         _setupParams.journal->internalPinStates().setForPath(path, state);
     return true;
 }
 
-Optional<PinState> Vfs::pinStateInDb(const QString &folderPath)
+Optional<PinState> Vfs::pinStateInDb(const QString &fileRelativePath)
 {
-    auto pin = _setupParams.journal->internalPinStates().effectiveForPath(folderPath.toUtf8());
+    auto pin = _setupParams.journal->internalPinStates().effectiveForPath(fileRelativePath.toUtf8());
     return pin;
 }
 
-Vfs::AvailabilityResult Vfs::availabilityInDb(const QString &folderPath)
+Vfs::AvailabilityResult Vfs::availabilityInDb(const QString &fileRelativePath)
 {
-    auto path = folderPath.toUtf8();
+    auto path = fileRelativePath.toUtf8();
     auto pin = _setupParams.journal->internalPinStates().effectiveForPathRecursive(path);
     // not being able to retrieve the pin state isn't too bad
     auto hydrationStatus = _setupParams.journal->hasHydratedOrDehydratedFiles(path);

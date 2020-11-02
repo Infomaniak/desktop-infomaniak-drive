@@ -37,7 +37,7 @@ static const int noLimitButtonVMargin = 15;
 static const int valueLimitButtonVMargin = 40;
 static const int valueEditSize = 80;
 
-Q_LOGGING_CATEGORY(lcBandwidthDialog, "bandwidthdialog", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcBandwidthDialog, "gui.bandwidthdialog", QtInfoMsg)
 
 BandwidthDialog::BandwidthDialog(QWidget *parent)
     : CustomDialog(true, parent)

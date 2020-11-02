@@ -9,7 +9,7 @@
 
 namespace OCC {
 
-Q_LOGGING_CATEGORY(lcCommonUtility, "common.utility", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcCommonUtility, "libcommon.utility", QtInfoMsg)
 
 QString applicationTrPath()
 {

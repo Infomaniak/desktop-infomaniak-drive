@@ -23,7 +23,7 @@ using namespace QKeychain;
 
 namespace OCC {
 
-Q_LOGGING_CATEGORY(lcWebFlowCredentials, "sync.credentials.webflow", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcWebFlowCredentials, "gui.credentials.webflow", QtInfoMsg)
 
 namespace {
     const char userC[] = "user";

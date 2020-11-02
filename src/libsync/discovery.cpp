@@ -1512,6 +1512,11 @@ bool ProcessDirectoryJob::isVfsWithSuffix() const
     return _discoveryData->_syncOptions._vfs->mode() == Vfs::WithSuffix;
 }
 
+bool ProcessDirectoryJob::isVfsWin() const
+{
+    return _discoveryData->_syncOptions._vfs->mode() == Vfs::WindowsCfApi;
+}
+
 void ProcessDirectoryJob::computePinState(PinState parentState)
 {
     _pinState = parentState;
@@ -1525,7 +1530,7 @@ void ProcessDirectoryJob::setupDbPinStateActions(SyncJournalFileRecord &record)
 {
     // Only suffix-vfs uses the db for pin states.
     // Other plugins will set localEntry._type according to the file's pin state.
-    if (!isVfsWithSuffix())
+    if (!isVfsWithSuffix() && !isVfsWin())
         return;
 
     auto pin = _discoveryData->_statedb->internalPinStates().rawForPath(record._path);

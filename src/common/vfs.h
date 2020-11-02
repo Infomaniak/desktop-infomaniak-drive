@@ -192,7 +192,7 @@ public:
         const QString &replacesFile = QString()) = 0;
 
     /// Determine whether the file at the given absolute path is a dehydrated placeholder.
-    virtual bool isDehydratedPlaceholder(const QString &filePath) = 0;
+    virtual bool isDehydratedPlaceholder(const QString &fileRelativePath) = 0;
 
     /** Similar to isDehydratedPlaceholder() but used from sync discovery.
      *
@@ -210,29 +210,29 @@ public:
      * Usually this would forward to setting the pin state flag in the db table,
      * but some vfs plugins will store the pin state in file attributes instead.
      *
-     * folderPath is relative to the sync folder. Can be "" for root folder.
+     * fileRelativePath is relative to the sync folder. Can be "" for root folder.
      */
-    virtual bool setPinState(const QString &folderPath, PinState state) = 0;
+    virtual bool setPinState(const QString &fileRelativePath, PinState state) = 0;
 
     /** Returns the pin state of an item at a path.
      *
      * Usually backed by the db's effectivePinState() function but some vfs
      * plugins will override it to retrieve the state from elsewhere.
      *
-     * folderPath is relative to the sync folder. Can be "" for root folder.
+     * fileRelativePath is relative to the sync folder. Can be "" for root folder.
      *
      * Returns none on retrieval error.
      */
-    virtual Optional<PinState> pinState(const QString &folderPath) = 0;
+    virtual Optional<PinState> pinState(const QString &fileRelativePath) = 0;
 
     /** Returns availability status of an item at a path.
      *
      * The availability is a condensed user-facing version of PinState. See
      * VfsItemAvailability for details.
      *
-     * folderPath is relative to the sync folder. Can be "" for root folder.
+     * fileRelativePath is relative to the sync folder. Can be "" for root folder.
      */
-    virtual AvailabilityResult availability(const QString &folderPath) = 0;
+    virtual AvailabilityResult availability(const QString &fileRelativePath) = 0;
 
 public slots:
     /** Update in-sync state based on SyncFileStatusTracker signal.
@@ -262,9 +262,9 @@ protected:
     virtual void startImpl(const VfsSetupParams &params) = 0;
 
     // Db-backed pin state handling. Derived classes may use it to implement pin states.
-    bool setPinStateInDb(const QString &folderPath, PinState state);
-    Optional<PinState> pinStateInDb(const QString &folderPath);
-    AvailabilityResult availabilityInDb(const QString &folderPath);
+    bool setPinStateInDb(const QString &fileRelativePath, PinState state);
+    Optional<PinState> pinStateInDb(const QString &fileRelativePath);
+    AvailabilityResult availabilityInDb(const QString &fileRelativePath);
 
     // the parameters passed to start()
     VfsSetupParams _setupParams;

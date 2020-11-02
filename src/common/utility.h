@@ -227,17 +227,22 @@ namespace Utility {
     OCSYNC_EXPORT QByteArray conflictFileBaseNameFromPattern(const QByteArray &conflictName);
 
 #ifdef Q_OS_WIN
+    OCSYNC_EXPORT bool registryExistKeyTree(HKEY hRootKey, const QString &subKey);
+    OCSYNC_EXPORT bool registryExistKeyValue(HKEY hRootKey, const QString &subKey, const QString &valueName);
     OCSYNC_EXPORT QVariant registryGetKeyValue(HKEY hRootKey, const QString &subKey, const QString &valueName);
     OCSYNC_EXPORT bool registrySetKeyValue(HKEY hRootKey, const QString &subKey, const QString &valueName, DWORD type, const QVariant &value);
     OCSYNC_EXPORT bool registryDeleteKeyTree(HKEY hRootKey, const QString &subKey);
     OCSYNC_EXPORT bool registryDeleteKeyValue(HKEY hRootKey, const QString &subKey, const QString &valueName);
     OCSYNC_EXPORT bool registryWalkSubKeys(HKEY hRootKey, const QString &subKey, const std::function<void(HKEY, const QString &)> &callback);
 
+    // Add/remove legacy sync root keys
+    OCSYNC_EXPORT void addSyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath);
+    OCSYNC_EXPORT void removeSyncRootKeys(const QUuid &clsid);
+
     // Possibly refactor to share code with UnixTimevalToFileTime in c_time.c
     OCSYNC_EXPORT void UnixTimeToFiletime(time_t t, FILETIME *filetime);
     OCSYNC_EXPORT void FiletimeToLargeIntegerFiletime(FILETIME *filetime, LARGE_INTEGER *hundredNSecs);
     OCSYNC_EXPORT void UnixTimeToLargeIntegerFiletime(time_t t, LARGE_INTEGER *hundredNSecs);
-
 #endif
 }
 /** @} */ // \addtogroup

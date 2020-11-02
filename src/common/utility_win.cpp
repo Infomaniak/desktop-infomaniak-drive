@@ -99,6 +99,46 @@ static inline bool hasDarkSystray_private()
     return true;
 }
 
+bool Utility::registryExistKeyTree(HKEY hRootKey, const QString &subKey)
+{
+    QVariant value;
+
+    HKEY hKey;
+
+    REGSAM sam = KEY_READ | KEY_WOW64_64KEY;
+    LONG result = RegOpenKeyEx(hRootKey, reinterpret_cast<LPCWSTR>(subKey.utf16()), 0, sam, &hKey);
+    ASSERT(result == ERROR_SUCCESS || result == ERROR_FILE_NOT_FOUND);
+    if (result != ERROR_SUCCESS && result != ERROR_FILE_NOT_FOUND)
+        return false;
+
+    RegCloseKey(hKey);
+
+    return result == ERROR_SUCCESS;
+}
+
+bool Utility::registryExistKeyValue(HKEY hRootKey, const QString &subKey, const QString &valueName)
+{
+    QVariant value;
+
+    HKEY hKey;
+
+    REGSAM sam = KEY_READ | KEY_WOW64_64KEY;
+    LONG result = RegOpenKeyEx(hRootKey, reinterpret_cast<LPCWSTR>(subKey.utf16()), 0, sam, &hKey);
+    ASSERT(result == ERROR_SUCCESS || result == ERROR_FILE_NOT_FOUND);
+    if (result != ERROR_SUCCESS && result != ERROR_FILE_NOT_FOUND)
+        return false;
+
+    DWORD type = 0, sizeInBytes = 0;
+    result = RegQueryValueEx(hKey, reinterpret_cast<LPCWSTR>(valueName.utf16()), 0, &type, nullptr, &sizeInBytes);
+    ASSERT(result == ERROR_SUCCESS || result == ERROR_FILE_NOT_FOUND);
+    if (result != ERROR_SUCCESS && result != ERROR_FILE_NOT_FOUND)
+        return false;
+
+    RegCloseKey(hKey);
+
+    return result == ERROR_SUCCESS;
+}
+
 QVariant Utility::registryGetKeyValue(HKEY hRootKey, const QString &subKey, const QString &valueName)
 {
     QVariant value;
@@ -215,7 +255,7 @@ bool Utility::registryDeleteKeyValue(HKEY hRootKey, const QString &subKey, const
         return false;
 
     result = RegDeleteValue(hKey, reinterpret_cast<LPCWSTR>(valueName.utf16()));
-    ASSERT(result == ERROR_SUCCESS);
+    ASSERT(result == ERROR_SUCCESS || result == ERROR_FILE_NOT_FOUND);
 
     RegCloseKey(hKey);
     return result == ERROR_SUCCESS;

@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-Q_LOGGING_CATEGORY(lcAccountInfo, "accountinfo", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcAccountInfo, "gui.accountinfo", QtInfoMsg)
 
 AccountInfo::AccountInfo()
     : _name(QString())

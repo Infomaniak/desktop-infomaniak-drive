@@ -648,10 +648,25 @@ void Folder::setSupportsVirtualFiles(bool enabled)
         disconnect(_vfs.data(), 0, this, 0);
         disconnect(&_engine->syncFileStatusTracker(), 0, _vfs.data(), 0);
 
-        _vfs.reset(createVfsFromPlugin(newMode).release());
+        if (newMode == Vfs::Mode::WindowsCfApi) {
+            // Remove legacy sync root keys
+            Utility::removeSyncRootKeys(navigationPaneClsid());
+            setNavigationPaneClsid(QUuid());
+        }
+        else if (_definition.virtualFilesMode == Vfs::Mode::WindowsCfApi) {
+            // Add legacy sync root keys
+            if (OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane()) {
+                setNavigationPaneClsid(QUuid::createUuid());
+            }
+            Utility::addSyncRootKeys(navigationPaneClsid(), path(), cleanPath());
+        }
+
+        _vfs.reset(createVfsFromPlugin(newMode).release());        
 
         _definition.virtualFilesMode = newMode;
+
         startVfs();
+
         if (newMode != Vfs::Off)
             _saveInFoldersWithPlaceholders = true;
         saveToSettings();

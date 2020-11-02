@@ -225,7 +225,11 @@ void Logger::setLogFlush(bool flush)
 
 void Logger::setLogDebug(bool debug)
 {
-    QLoggingCategory::setFilterRules(debug ? QStringLiteral("*=true") : QString());
+    //QLoggingCategory::setFilterRules(debug ? QStringLiteral("*=true") : QString());
+    QLoggingCategory::setFilterRules(
+                debug
+                ? QStringLiteral("sync.*=true\ngui.*=true\nlibcommon.*=true\nvfs.*=true")
+                : QString());
     _logDebug = debug;
 }
 

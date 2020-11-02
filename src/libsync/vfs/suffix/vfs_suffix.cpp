@@ -115,11 +115,11 @@ void VfsSuffix::convertToPlaceholder(const QString &, const SyncFileItem &, cons
     // Nothing necessary
 }
 
-bool VfsSuffix::isDehydratedPlaceholder(const QString &filePath)
+bool VfsSuffix::isDehydratedPlaceholder(const QString &fileRelativePath)
 {
-    if (!filePath.endsWith(fileSuffix()))
+    if (!fileRelativePath.endsWith(fileSuffix()))
         return false;
-    QFileInfo fi(filePath);
+    QFileInfo fi(fileRelativePath);
     return fi.exists() && fi.size() == 1;
 }
 
@@ -132,9 +132,9 @@ bool VfsSuffix::statTypeVirtualFile(csync_file_stat_t *stat, void *)
     return false;
 }
 
-Vfs::AvailabilityResult VfsSuffix::availability(const QString &folderPath)
+Vfs::AvailabilityResult VfsSuffix::availability(const QString &fileRelativePath)
 {
-    return availabilityInDb(folderPath);
+    return availabilityInDb(fileRelativePath);
 }
 
 } // namespace OCC

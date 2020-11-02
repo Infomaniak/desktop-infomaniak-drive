@@ -47,7 +47,7 @@ static const QString gitLink = "gitLink";
 
 static const QString githubPrefix = "https://github.com/infomaniak/desktop-infomaniak-drive/commit/";
 
-Q_LOGGING_CATEGORY(lcAboutDialog, "aboutdialog", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcAboutDialog, "gui.aboutdialog", QtInfoMsg)
 
 AboutDialog::AboutDialog(QWidget *parent)
     : CustomDialog(true, parent)
