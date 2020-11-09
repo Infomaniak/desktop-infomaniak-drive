@@ -42,11 +42,11 @@ public:
 
     void createPlaceholder(const SyncFileItem &item) override;
     void dehydratePlaceholder(const SyncFileItem &item) override;
-    void convertToPlaceholder(const QString &filename, const SyncFileItem &item, const QString &) override;
+    bool convertToPlaceholder(const QString &filename, const SyncFileItem &item, const QString &) override;
 
     bool needsMetadataUpdate(const SyncFileItem &) override { return false; }
     bool isDehydratedPlaceholder(const QString &fileRelativePath) override;
-    bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data) override;
+    bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const QString &) override;
 
     bool setPinState(const QString &fileRelativePath, PinState state) override
     { return setPinStateInDb(fileRelativePath, state); }

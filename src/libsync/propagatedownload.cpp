@@ -960,7 +960,12 @@ void PropagateDownloadFile::downloadFinished()
         preserveGroupOwnership(_tmpFile.fileName(), existingFile);
 
         // Make the file a hydrated placeholder if possible
-        propagator()->syncOptions()._vfs->convertToPlaceholder(_tmpFile.fileName(), *_item, fn);
+        if (!propagator()->syncOptions()._vfs->convertToPlaceholder(_tmpFile.fileName(), *_item, fn)) {
+            // Reset pin state
+            propagator()->syncOptions()._vfs->setPinState(_item->_file, OCC::PinState::OnlineOnly);
+            // Reset status
+            _item->_type = ItemTypeVirtualFile;
+        }
     }
 
     // Apply the remote permissions

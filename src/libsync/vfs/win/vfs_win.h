@@ -1,16 +1,22 @@
 /*
- * Copyright (C) by Christian Kamm <mail@ckamm.de>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
- * for more details.
- */
+Infomaniak Drive
+Copyright (C) 2020 christophe.larchier@infomaniak.com
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 #pragma once
 
 #include "common/vfs.h"
@@ -42,23 +48,21 @@ public:
 
     void createPlaceholder(const OCC::SyncFileItem &item) override;
     void dehydratePlaceholder(const OCC::SyncFileItem &item) override;
-    void convertToPlaceholder(const QString &fileName, const OCC::SyncFileItem &item, const QString &replacesFile) override;
+    bool convertToPlaceholder(const QString &filePath, const OCC::SyncFileItem &item, const QString &replacesFile) override;
 
     bool needsMetadataUpdate(const OCC::SyncFileItem &) override { return true; }
     bool isDehydratedPlaceholder(const QString &fileRelativePath) override;
-    bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data) override;
+    bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const QString &fileDirectory) override;
 
     bool setPinState(const QString &fileRelativePath, OCC::PinState state) override;
     OCC::Optional<OCC::PinState> pinState(const QString &fileRelativePath) override;
     AvailabilityResult availability(const QString &fileRelativePath) override;
 
 public slots:
-    void fileStatusChanged(const QString &fileName, OCC::SyncFileStatus status) override;
+    void fileStatusChanged(const QString &filePath, OCC::SyncFileStatus status) override;
 
 protected:
     void startImpl(const OCC::VfsSetupParams &params) override;
-    void updateFileStatus(const QString &fileName, const QString &fromFileName,
-                          OCC::SyncFileStatus status, qint64 completed);
 };
 
 class WinVfsPluginFactory : public QObject, public OCC::DefaultPluginFactory<VfsWin>

@@ -186,7 +186,7 @@ public:
      * new placeholder shall supersede, for rename-replace actions with new downloads,
      * for example.
      */
-    virtual void convertToPlaceholder(
+    virtual bool convertToPlaceholder(
         const QString &filename,
         const SyncFileItem &item,
         const QString &replacesFile = QString()) = 0;
@@ -201,7 +201,7 @@ public:
      *
      * Returning true means that type was fully determined.
      */
-    virtual bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data) = 0;
+    virtual bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const QString &fileDirectory) = 0;
 
     /** Sets the pin state for the item at a path.
      *
@@ -292,11 +292,11 @@ public:
     bool updateMetadata(const QString &, time_t, qint64, const QByteArray &, QString *) override { return true; }
     void createPlaceholder(const SyncFileItem &) override {}
     void dehydratePlaceholder(const SyncFileItem &) override {}
-    void convertToPlaceholder(const QString &, const SyncFileItem &, const QString &) override {}
+    bool convertToPlaceholder(const QString &, const SyncFileItem &, const QString &) override { return true; }
 
     bool needsMetadataUpdate(const SyncFileItem &) override { return false; }
     bool isDehydratedPlaceholder(const QString &) override { return false; }
-    bool statTypeVirtualFile(csync_file_stat_t *, void *) override { return false; }
+    bool statTypeVirtualFile(csync_file_stat_t *, void *, const QString &) override { return false; }
 
     bool setPinState(const QString &, PinState) override { return true; }
     Optional<PinState> pinState(const QString &) override { return PinState::AlwaysLocal; }

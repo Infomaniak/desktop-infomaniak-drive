@@ -110,9 +110,10 @@ void VfsSuffix::dehydratePlaceholder(const SyncFileItem &item)
         setPinState(item._renameTarget, PinState::Unspecified);
 }
 
-void VfsSuffix::convertToPlaceholder(const QString &, const SyncFileItem &, const QString &)
+bool VfsSuffix::convertToPlaceholder(const QString &, const SyncFileItem &, const QString &)
 {
     // Nothing necessary
+    return true;
 }
 
 bool VfsSuffix::isDehydratedPlaceholder(const QString &fileRelativePath)
@@ -123,7 +124,7 @@ bool VfsSuffix::isDehydratedPlaceholder(const QString &fileRelativePath)
     return fi.exists() && fi.size() == 1;
 }
 
-bool VfsSuffix::statTypeVirtualFile(csync_file_stat_t *stat, void *)
+bool VfsSuffix::statTypeVirtualFile(csync_file_stat_t *stat, void *, const QString &)
 {
     if (stat->path.endsWith(fileSuffix().toUtf8())) {
         stat->type = ItemTypeVirtualFile;
