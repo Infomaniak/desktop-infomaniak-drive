@@ -22,6 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "common/vfs.h"
 #include "common/plugin.h"
 
+#include <windows.h>
+
 #include <QObject>
 #include <QScopedPointer>
 
@@ -63,6 +65,11 @@ public slots:
 
 protected:
     void startImpl(const OCC::VfsSetupParams &params) override;
+
+private:
+    void dehydrateFile(const QString &filePath);
+    void hydrateFile(const QString &filePath);
+    DWORD getPlaceholderAttributes(const QString &filePath);
 };
 
 class WinVfsPluginFactory : public QObject, public OCC::DefaultPluginFactory<VfsWin>

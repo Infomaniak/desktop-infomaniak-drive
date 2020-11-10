@@ -375,7 +375,7 @@ void PropagateDownloadFile::start()
         _item->_type = ItemTypeFile;
     }
     if (_item->_type == ItemTypeVirtualFile) {
-        qCDebug(lcPropagateDownload) << "creating virtual file" << _item->_file;
+        qCDebug(lcPropagateDownload) << "creating placeholder" << _item->_file;
         vfs->createPlaceholder(*_item);
         updateMetadata(false);
         return;
@@ -950,6 +950,7 @@ void PropagateDownloadFile::downloadFinished()
     // Accuracy, and we really need the time from the file system. (#3103)
     _item->_modtime = FileSystem::getModTime(_tmpFile.fileName());
 
+    auto vfs = propagator()->syncOptions()._vfs;
     bool previousFileExists = FileSystem::fileExists(fn);
     if (previousFileExists) {
         // Preserve the existing file permissions.
@@ -960,16 +961,16 @@ void PropagateDownloadFile::downloadFinished()
         preserveGroupOwnership(_tmpFile.fileName(), existingFile);
 
         // Make the file a hydrated placeholder if possible
-        if (!propagator()->syncOptions()._vfs->convertToPlaceholder(_tmpFile.fileName(), *_item, fn)) {
-            // Reset pin state
-            propagator()->syncOptions()._vfs->setPinState(_item->_file, OCC::PinState::OnlineOnly);
-            // Reset status
-            _item->_type = ItemTypeVirtualFile;
+        if (!vfs->convertToPlaceholder(_tmpFile.fileName(), *_item, fn)) {
+            done(SyncFileItem::SoftError, tr("File conversion to placeholder failed"));
+            return;
         }
     }
 
     // Apply the remote permissions
-    FileSystem::setFileReadOnlyWeak(_tmpFile.fileName(), !_item->_remotePerm.isNull() && !_item->_remotePerm.hasPermission(RemotePermissions::CanWrite));
+    if (_tmpFile.exists()) {
+        FileSystem::setFileReadOnlyWeak(_tmpFile.fileName(), !_item->_remotePerm.isNull() && !_item->_remotePerm.hasPermission(RemotePermissions::CanWrite));
+    }
 
     bool isConflict = _item->_instruction == CSYNC_INSTRUCTION_CONFLICT
         && (QFileInfo(fn).isDir() || !FileSystem::fileEquals(fn, _tmpFile.fileName()));
@@ -996,32 +997,22 @@ void PropagateDownloadFile::downloadFinished()
         }
     }
 
-    QString error;
     emit propagator()->touchedFile(fn);
 
-    auto vfs = propagator()->syncOptions()._vfs;
-    if (vfs && vfs->mode() == Vfs::WindowsCfApi) {
-        if (!FileSystem::remove(_tmpFile.fileName(), &error)) {
-            qCWarning(lcPropagateDownload) << QString("Remove failed: %1").arg(_tmpFile.fileName());
-            done(SyncFileItem::SoftError, error);
-            return;
+    // The fileChanged() check is done above to generate better error messages.
+    QString error;
+    if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
+        qCWarning(lcPropagateDownload) << QString("Rename failed: %1 => %2").arg(_tmpFile.fileName()).arg(fn);
+        // If the file is locked, we want to retry this sync when it
+        // becomes available again, otherwise try again directly
+        if (FileSystem::isFileLocked(fn)) {
+            emit propagator()->seenLockedFile(fn);
+        } else {
+            propagator()->_anotherSyncNeeded = true;
         }
-    }
-    else {
-        // The fileChanged() check is done above to generate better error messages.
-        if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
-            qCWarning(lcPropagateDownload) << QString("Rename failed: %1 => %2").arg(_tmpFile.fileName()).arg(fn);
-            // If the file is locked, we want to retry this sync when it
-            // becomes available again, otherwise try again directly
-            if (FileSystem::isFileLocked(fn)) {
-                emit propagator()->seenLockedFile(fn);
-            } else {
-                propagator()->_anotherSyncNeeded = true;
-            }
 
-            done(SyncFileItem::SoftError, error);
-            return;
-        }
+        done(SyncFileItem::SoftError, error);
+        return;
     }
 
     FileSystem::setFileHidden(fn, false);

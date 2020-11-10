@@ -32,12 +32,12 @@ extern "C" {
         bool *isDirectory);
 
     DLL_EXP int __cdecl CFPDehydratePlaceHolder(
-        const wchar_t *destPath, 
-        const wchar_t *fileName);
+        const wchar_t *driveID,
+        const wchar_t *filePath);
 
     DLL_EXP int __cdecl CFPHydratePlaceHolder(
-        const wchar_t *destPath,
-        const wchar_t *fileName);
+        const wchar_t *driveID,
+        const wchar_t *filePath);
 
     DLL_EXP int __cdecl CFPCreatePlaceHolder(
         const wchar_t *fileId,
@@ -57,5 +57,8 @@ extern "C" {
 
     DLL_EXP int __cdecl CFPCancelFetch(
         const wchar_t *driveID,
+        const wchar_t *filePath);
+
+    DLL_EXP int __cdecl CFPSetPinStateExcluded(
         const wchar_t *filePath);
 }
