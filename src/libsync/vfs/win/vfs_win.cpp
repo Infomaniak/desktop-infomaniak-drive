@@ -310,6 +310,12 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
             qCCritical(lcVfsWin) << "Error in CFPUpdateFetchStatus!";
             return false;
         }
+
+        // Force pin state to pinned
+        if (CFPSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), CFP_PIN_STATE_PINNED)) {
+            qCCritical(lcVfsWin) << "Error in CFPSetPinState!";
+            return false;
+        }
     }
 
     qCDebug(lcVfsWin) << "convertToPlaceholder - End";
@@ -417,15 +423,26 @@ void VfsWin::fileStatusChanged(const QString &filePath, OCC::SyncFileStatus stat
 
     if (status.tag() == OCC::SyncFileStatus::StatusExcluded) {
         qCDebug(lcVfsWin) << "Status Excluded";
-        if (CFPSetPinStateExcluded(QDir::toNativeSeparators(filePath).toStdWString().c_str())) {
-            qCCritical(lcVfsWin) << "Error in CFPSetPinStateExcluded!";
+        if (CFPSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), CFP_PIN_STATE_EXCLUDED)) {
+            qCCritical(lcVfsWin) << "Error in CFPSetPinState!";
             return;
         }
     }
     else if (status.tag() == OCC::SyncFileStatus::StatusUpToDate) {
         qCDebug(lcVfsWin) << "Status UpToDate";
+        QString fileRelativePath = filePath.midRef(_setupParams.filesystemPath.size()).toUtf8();
+        bool isDehydrated = isDehydratedPlaceholder(fileRelativePath);
+        // Update file type in DB
+        OCC::SyncJournalFileRecord record;
+        if (_setupParams.journal->getFileRecord(fileRelativePath, &record) && record.isValid()) {
+            record._type = isDehydrated ? ItemTypeVirtualFile : ItemTypeFile;
+            _setupParams.journal->setFileRecord(record);
+        }
+        // Update pin state in DB
+        setPinStateInDb(fileRelativePath, isDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal);
     }
     else if (status.tag() == OCC::SyncFileStatus::StatusSync) {
+        qCDebug(lcVfsWin) << "Status Sync";
         QString fileRelativePath = filePath.midRef(_setupParams.filesystemPath.size()).toUtf8();
         auto localPinState = pinState(fileRelativePath);
         auto dbPinState = pinStateInDb(fileRelativePath);
@@ -441,17 +458,6 @@ void VfsWin::fileStatusChanged(const QString &filePath, OCC::SyncFileStatus stat
             };
             std::thread hydrateTask(hydrateFct);
             hydrateTask.detach();
-        }
-        else if (*dbPinState != *localPinState) {
-            qCDebug(lcVfsWin) << "Fix DB type and pin state";
-            // Update file type in DB
-            OCC::SyncJournalFileRecord record;
-            if (_setupParams.journal->getFileRecord(fileRelativePath, &record) && record.isValid()) {
-                record._type = isDehydrated ? ItemTypeVirtualFile : ItemTypeFile;
-                _setupParams.journal->setFileRecord(record);
-            }
-            // Update pin state in DB
-            setPinStateInDb(fileRelativePath, isDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal);
         }
     }
     else if (status.tag() == OCC::SyncFileStatus::StatusWarning ||

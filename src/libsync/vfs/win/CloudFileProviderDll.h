@@ -11,6 +11,15 @@
 #endif
 
 extern "C" {
+    // CF_PIN_STATE clone
+    typedef enum CFP_PIN_STATE {
+        CFP_PIN_STATE_UNSPECIFIED = 0,
+        CFP_PIN_STATE_PINNED = 1,
+        CFP_PIN_STATE_UNPINNED = 2,
+        CFP_PIN_STATE_EXCLUDED = 3,
+        CFP_PIN_STATE_INHERIT = 4
+    } CFP_PIN_STATE;
+
     DLL_EXP int __cdecl CFPInitCloudFileProvider(
         TraceCbk *traceCbk,
         const wchar_t *appName);
@@ -59,6 +68,11 @@ extern "C" {
         const wchar_t *driveID,
         const wchar_t *filePath);
 
-    DLL_EXP int __cdecl CFPSetPinStateExcluded(
-        const wchar_t *filePath);
+    DLL_EXP int __cdecl CFPGetPinState(
+        const wchar_t *filePath,
+        CFP_PIN_STATE *state);
+
+    DLL_EXP int __cdecl CFPSetPinState(
+        const wchar_t *filePath,
+        CFP_PIN_STATE state);
 }

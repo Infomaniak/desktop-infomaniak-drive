@@ -488,12 +488,9 @@ void PropagateDownloadFile::startDownload()
     const auto diskSpaceResult = propagator()->diskSpaceCheck();
     if (diskSpaceResult != OwncloudPropagator::DiskSpaceOk) {
         if (diskSpaceResult == OwncloudPropagator::DiskSpaceFailure) {
-            // Using DetailError here will make the error not pop up in the account
-            // tab: instead we'll generate a general "disk space low" message and show
-            // these detail errors only in the error view.
-            done(SyncFileItem::DetailError,
+            done(SyncFileItem::FatalError,
                 tr("The download would reduce free local disk space below the limit"));
-            emit propagator()->insufficientLocalStorage();
+            //emit propagator()->insufficientLocalStorage();
         } else if (diskSpaceResult == OwncloudPropagator::DiskSpaceCritical) {
             done(SyncFileItem::FatalError,
                 tr("Free space on disk is less than %1").arg(Utility::octetsToString(criticalFreeSpaceLimit())));
