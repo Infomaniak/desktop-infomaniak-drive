@@ -133,7 +133,6 @@ public:
     /// Deregister the folder with the sync provider, like when a folder is removed.
     virtual void unregisterFolder() = 0;
 
-
     /** Whether the socket api should show pin state options
      *
      * Some plugins might provide alternate shell integration, making the normal
