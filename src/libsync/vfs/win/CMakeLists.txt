@@ -3,7 +3,7 @@ add_library("${synclib_NAME}_vfs_win" SHARED
 )
 
 set(CMAKE_FIND_LIBRARY_SUFFIXES .lib)
-find_library(CLOUDFILEPROVIDER_STATIC_LIBRARY NAMES CloudFileProvider PATHS ${CLOUDFILEPROVIDER_DIRECTORY} NO_DEFAULT_PATH)
+find_library(CLOUDFILEPROVIDER_STATIC_LIBRARY NAMES CloudFileProviderDll PATHS ${CLOUDFILEPROVIDER_DIRECTORY} NO_DEFAULT_PATH)
 
 target_link_libraries("${synclib_NAME}_vfs_win"
     ${synclib_NAME}
