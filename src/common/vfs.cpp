@@ -23,6 +23,9 @@
 
 #include <QPluginLoader>
 #include <QLoggingCategory>
+#include <QOperatingSystemVersion>
+
+#define MIN_WINDOWS10_MICROVERSION_FOR_CFAPI 16299 // Windows 10 version 1709
 
 using namespace OCC;
 
@@ -128,6 +131,17 @@ bool OCC::isVfsPluginAvailable(Vfs::Mode mode)
 {
     if (mode == Vfs::Off)
         return true;
+
+    if (mode == Vfs::WindowsCfApi) {
+        if (QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows10
+                && QOperatingSystemVersion::current().microVersion() >= MIN_WINDOWS10_MICROVERSION_FOR_CFAPI) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     auto name = modeToPluginName(mode);
     if (name.isEmpty())
         return false;
@@ -164,11 +178,11 @@ bool OCC::isVfsPluginAvailable(Vfs::Mode mode)
     return true;
 }
 
-Vfs::Mode OCC::bestAvailableVfsMode()
+Vfs::Mode OCC::bestAvailableVfsMode(bool showExperimentalOptions)
 {
     if (isVfsPluginAvailable(Vfs::WindowsCfApi)) {
         return Vfs::WindowsCfApi;
-    } else if (isVfsPluginAvailable(Vfs::WithSuffix)) {
+    } else if (showExperimentalOptions && isVfsPluginAvailable(Vfs::WithSuffix)) {
         return Vfs::WithSuffix;
     }
     return Vfs::Off;

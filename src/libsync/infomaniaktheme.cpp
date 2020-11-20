@@ -27,6 +27,7 @@
 #include "common/utility.h"
 #include "common/vfs.h"
 #include "version.h"
+#include "configfile.h"
 
 namespace OCC {
 
@@ -121,7 +122,7 @@ QString InfomaniakTheme::about() const
 
     devString += gitSHA1();
     devString += QString("<p><small>Using virtual files plugin: %1</small></p>")
-        .arg(Vfs::modeToString(bestAvailableVfsMode()));
+        .arg(Vfs::modeToString(bestAvailableVfsMode(ConfigFile().showExperimentalOptions())));
 
     return devString;
 }

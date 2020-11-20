@@ -491,6 +491,7 @@ void Folder::startVfs()
     vfsParams.journal = &_journal;
     vfsParams.providerName = Theme::instance()->appNameGUI();
     vfsParams.providerVersion = Theme::instance()->version();
+    vfsParams.folderAlias = alias();
 
     connect(_vfs.data(), &Vfs::beginHydrating, this, &Folder::slotHydrationStarts);
     connect(_vfs.data(), &Vfs::doneHydrating, this, &Folder::slotHydrationDone);
@@ -633,7 +634,7 @@ void Folder::setSupportsVirtualFiles(bool enabled)
 {
     Vfs::Mode newMode = _definition.virtualFilesMode;
     if (enabled && _definition.virtualFilesMode == Vfs::Off) {
-        newMode = bestAvailableVfsMode();
+        newMode = bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
     } else if (!enabled && _definition.virtualFilesMode != Vfs::Off) {
         newMode = Vfs::Off;
     }
@@ -693,6 +694,17 @@ void Folder::setRootPinState(PinState state)
 bool Folder::supportsSelectiveSync() const
 {
     return !supportsVirtualFiles() && !isVfsOnOffSwitchPending();
+}
+
+bool Folder::canSupportVirtualFiles() const
+{
+    OCC::Vfs::Mode mode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
+    if (mode == OCC::Vfs::WindowsCfApi) {
+        // Check file system
+        QString fsName(OCC::Utility::fileSystemName(QDir(path()).rootPath()));
+        return (fsName == "NTFS");
+    }
+    return true;
 }
 
 void Folder::saveToSettings() const

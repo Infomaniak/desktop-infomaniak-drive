@@ -41,6 +41,10 @@
 #include <QScreen>
 #include <QUrlQuery>
 
+#ifdef _WIN32
+#include <fileapi.h>
+#endif
+
 using namespace OCC;
 
 static const QString styleSheetWhiteFile(":/client/resources/styles/stylesheetwhite.qss");
@@ -550,6 +554,22 @@ qint64 Utility::folderSize(const QString &dirPath)
     return total;
 }
 
+qint64 Utility::folderDiskSize(const QString &dirPath)
+{
+    qint64 total = 0;
+
+#ifdef _WIN32
+    QDirIterator it(dirPath, QDirIterator::Subdirectories);
+    DWORD fileSizeLow, fileSizeHigh;
+    while (it.hasNext()) {
+        fileSizeLow = GetCompressedFileSizeA(it.next().toStdString().c_str(), &fileSizeHigh);
+        total += ((ULONGLONG)fileSizeHigh << 32) + fileSizeLow;
+    }
+#endif
+
+    return total;
+}
+
 bool Utility::openFolder(const QString &dirPath)
 {
     if (!dirPath.isEmpty()) {
@@ -582,4 +602,35 @@ QWidget *Utility::getTopLevelWidget(QWidget *widget)
         topLevelWidget = topLevelWidget->parentWidget();
     }
     return topLevelWidget ;
+}
+
+void Utility::forceUpdate(QWidget *widget)
+{
+    // Update all child widgets.
+    for (int i = 0; i < widget->children().size(); i++) {
+        QObject *child = widget->children()[i];
+        if (child->isWidgetType()) {
+            forceUpdate((QWidget *)child);
+        }
+    }
+
+    // Invalidate the layout of the widget.
+    if (widget->layout()) {
+        invalidateLayout(widget->layout());
+    }
+}
+
+void Utility::invalidateLayout(QLayout *layout)
+{
+    // Recompute the given layout and all its child layouts.
+    for (int i = 0; i < layout->count(); i++) {
+        QLayoutItem *item = layout->itemAt(i);
+        if (item->layout()) {
+            invalidateLayout(item->layout());
+        } else {
+            item->invalidate();
+        }
+    }
+    layout->invalidate();
+    layout->activate();
 }

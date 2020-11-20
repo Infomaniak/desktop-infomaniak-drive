@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "version.h"
 #include "config.h"
 #include "theme.h"
+#include "configfile.h"
 
 #include <QBoxLayout>
 #include <QDesktopServices>
@@ -135,9 +136,9 @@ QString AboutDialog::aboutText() const
             .arg(OCC::Utility::escape(APPLICATION_VENDOR))
             .arg(OCC::Utility::escape(APPLICATION_NAME));
     about += gitSHA1();
-    if (OCC::Theme::instance()->showVirtualFilesOption()) {
-        about += QString(tr("Using virtual files plugin: %1"))
-                .arg(OCC::Vfs::modeToString(OCC::bestAvailableVfsMode()));
+    OCC::Vfs::Mode mode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
+    if (mode != OCC::Vfs::Mode::Off) {
+        about += QString(tr("Using virtual files plugin: %1")).arg(mode);
     }
 
     return about;

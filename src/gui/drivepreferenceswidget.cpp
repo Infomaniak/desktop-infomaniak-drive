@@ -154,7 +154,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     // Synchronization bloc
     //
 
-    if (OCC::Theme::instance()->showVirtualFilesOption() && OCC::bestAvailableVfsMode() != OCC::Vfs::Off) {
+    if (OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions()) != OCC::Vfs::Off) {
         QLabel *synchronizationLabel = new QLabel(tr("Synchronization"), this);
         synchronizationLabel->setObjectName("blocLabel");
         _mainVBox->addWidget(synchronizationLabel);
@@ -372,54 +372,56 @@ void DrivePreferencesWidget::updateAccountInfo()
 
 void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)> &callback)
 {
-    const auto bestVfsMode = OCC::bestAvailableVfsMode();
+    const auto bestVfsMode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
     CustomMessageBox *msgBox = nullptr;
-    if (bestVfsMode == OCC::Vfs::WindowsCfApi) {
+    if (bestVfsMode == OCC::Vfs::WindowsCfApi || bestVfsMode == OCC::Vfs::WithSuffix) {
         msgBox = new CustomMessageBox(
-                    QMessageBox::Warning,
-                    tr("When the \"virtual files\" mode is enabled no files will be downloaded initially. "
-                       "Instead a virtual file will be created for each file that exists on the server. "
-                       "When a file is opened its contents will be downloaded automatically. "
-                       "Alternatively, files can be downloaded manually by using their context menu.\n\n"
-                       "The virtual files mode is mutually exclusive with selective sync. "
-                       "Currently unselected folders will be translated to online-only folders "
-                       "and your selective sync settings will be reset."),
+                    QMessageBox::Question,
+                    tr("Do you really want to turn on smart sync?"),
                      QMessageBox::NoButton, this);
-        msgBox->addButton(tr("ENABLE VIRTUAL FILES"), QMessageBox::Yes);
-        msgBox->addButton(tr("CONTINUE TO USE SELECTIVE SYNC"), QMessageBox::No);
-    } else {
-        ASSERT(bestVfsMode == OCC::Vfs::WithSuffix)
-        msgBox = new CustomMessageBox(
-                    QMessageBox::Warning,
-                    tr("When the \"virtual files\" mode is enabled no files will be downloaded initially. "
-                       "Instead, a tiny \"%1\" file will be created for each file that exists on the server. "
-                       "The contents can be downloaded by running these files or by using their context menu.\n\n"
-                       "The virtual files mode is mutually exclusive with selective sync. "
-                       "Currently unselected folders will be translated to online-only folders "
-                       "and your selective sync settings will be reset.\n\n"
-                       "Switching to this mode will abort any currently running synchronization.\n\n"
-                       "This is a new, experimental mode. If you decide to use it, please report any "
-                       "issues that come up.").arg(APPLICATION_DOTVIRTUALFILE_SUFFIX),
-                    QMessageBox::NoButton, this);
-        msgBox->addButton(tr("ENABLE EXPERIMENTAL PLACEHOLDER MODE"), QMessageBox::Yes);
-        msgBox->addButton(tr("STAY SAFE"), QMessageBox::No);
+        msgBox->addButton(tr("CONFIRM"), QMessageBox::Yes);
+        msgBox->addButton(tr("CANCEL"), QMessageBox::No);
+        msgBox->setDefaultButton(QMessageBox::Yes);
     }
     int result = msgBox->exec();
     callback(result == QMessageBox::Yes);
 }
 
-void DrivePreferencesWidget::askDisableSmartSync(const std::function<void (bool)> &callback)
+void DrivePreferencesWidget::askDisableSmartSync(const std::function<void (bool, bool)> &callback)
 {
+    // Available space
+    qint64 freeSize = OCC::Utility::freeDiskSpace(dirSeparator);
+
+    // Compute folders size sum
+    qint64 localFoldersSize = 0;
+    qint64 localFoldersDiskSize = 0;
+    for (auto folderInfoElt : _accountInfo->_folderMap) {
+        OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
+        if (folder) {
+            localFoldersSize += OCC::Utility::folderSize(folder->path());
+            localFoldersDiskSize += OCC::Utility::folderDiskSize(folder->path());
+        }
+    }
+
+    qint64 diskSpaceMissing =  localFoldersSize - localFoldersDiskSize - freeSize;
+    bool diskSpaceWarning = diskSpaceMissing > 0;
+
     CustomMessageBox *msgBox = new CustomMessageBox(
                 QMessageBox::Question,
-                tr("This action will disable virtual file support. As a consequence contents of folders that "
-                   "are currently marked as 'available online only' will be downloaded.\n\n"
-                   "This action will abort any currently running synchronization."),
+                tr("Do you really want to turn off smart sync?"),
+                diskSpaceWarning
+                ? tr("You don't have enough space to sync all the files on your kDrive (%1 missing)."
+                     " If you turn off smart sync, you need to select which folders to sync on your computer."
+                     " In the meantime, the synchronization of your kDrive will be paused.")
+                  .arg(OCC::Utility::octetsToString(diskSpaceMissing))
+                : tr("If you turn off smart sync, all files will sync locally on your computer."),
+                diskSpaceWarning,
                 QMessageBox::NoButton, this);
-    msgBox->addButton(tr("DISABLE SUPPORT"), QMessageBox::Yes);
+    msgBox->addButton(tr("CONFIRM"), QMessageBox::Yes);
     msgBox->addButton(tr("CANCEL"), QMessageBox::No);
+    msgBox->setDefaultButton(QMessageBox::Yes);
     int result = msgBox->exec();
-    callback(result == QMessageBox::Yes);
+    callback(result == QMessageBox::Yes, diskSpaceWarning);
 }
 
 void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection)
@@ -451,7 +453,7 @@ void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QM
     updateSmartSyncSwitchState();
 }
 
-void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection)
+void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, bool diskSpaceWarning, std::shared_ptr<QMetaObject::Connection> connection)
 {
     if (*connection) {
         QObject::disconnect(*connection);
@@ -468,7 +470,13 @@ void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, std::shared_ptr<Q
     // Prevent issues with missing local files
     folder->slotNextSyncFullLocalDiscovery();
 
-    OCC::FolderMan::instance()->scheduleFolder(folder);
+    if (diskSpaceWarning) {
+        // Pause sync if disk space warning
+        OCC::Utility::pauseSync(_accountId, QString(), true);
+    }
+    else {
+        OCC::FolderMan::instance()->scheduleFolder(folder);
+    }
 
     updateSmartSyncSwitchState();
 }
@@ -713,7 +721,7 @@ bool DrivePreferencesWidget::createMissingFolders(const QString &folderBasePath,
 
 bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, const QString &serverFolderPath, QStringList blackList)
 {
-    bool useVirtualFileSync = OCC::Theme::instance()->showVirtualFilesOption();
+    bool useVirtualFileSync = _smartSyncSwitch->isChecked();
 
     qCInfo(lcDrivePreferencesWidget) << "Adding folder definition for" << localFolderPath << serverFolderPath;
 
@@ -721,7 +729,7 @@ bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, 
     folderDefinition.localPath = localFolderPath;
     folderDefinition.targetPath = OCC::FolderDefinition::prepareTargetPath(serverFolderPath);
     folderDefinition.ignoreHiddenFiles = OCC::FolderMan::instance()->ignoreHiddenFiles();
-    folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode();
+    folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
     if (OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane()) {
         folderDefinition.navigationPaneClsid = QUuid::createUuid();
     }
@@ -1005,7 +1013,7 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
             _smartSyncSwitch->setToolTip(tr("Smart synchronization activation in progress"));
             for (auto folderInfoElt : _accountInfo->_folderMap) {
                 OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
-                if (folder) {
+                if (folder && folder->canSupportVirtualFiles()) {
                     // It is unsafe to switch on vfs while a sync is running - wait if necessary.
                     auto connection = std::make_shared<QMetaObject::Connection>();
                     if (folder->isSyncRunning()) {
@@ -1021,7 +1029,7 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
         });
     }
     else {
-        askDisableSmartSync([this](bool enable) {
+        askDisableSmartSync([this](bool enable, bool diskSpaceWarning) {
             if (!enable) {
                 _smartSyncSwitch->setCheckState(Qt::Checked);
                 return;
@@ -1037,10 +1045,10 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
                     if (folder->isSyncRunning()) {
                         folder->setVfsOnOffSwitchPending(true);
                         *connection = connect(folder, &OCC::Folder::syncFinished,
-                                              this, [=](){ switchVfsOff(folder, connection); });
+                                              this, [=](){ switchVfsOff(folder, diskSpaceWarning, connection); });
                         folder->slotTerminateSync();
                     } else {
-                        switchVfsOff(folder, connection);
+                        switchVfsOff(folder, diskSpaceWarning, connection);
                     }
                 }
             }

@@ -313,6 +313,36 @@ KDC--CustomDialog QLabel#textLabel
     font-size: 13px;
 }
 
+KDC--CustomDialog QLabel#okTextLabel
+{
+    background-color: #0098FF;
+    border: 0px;
+    border-radius: 3px;
+    padding-left: 13px;
+    padding-right: 13px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 14px;
+}
+
+KDC--CustomDialog QLabel#warningTextLabel
+{
+    background-color: #FF8500;
+    border: 0px;
+    border-radius: 3px;
+    padding-left: 13px;
+    padding-right: 13px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 14px;
+}
+
 KDC--CustomDialog QLabel#largeNormalTextLabel
 {
     color: #B7B7B7;
@@ -1656,6 +1686,34 @@ KDC--ConfirmSynchronizationDialog QLabel#foldername
     font-family: "Suisse Int'l";
     font-weight: 650; /* bold */
     font-size: 16px;
+}
+
+/********************************/
+/* KDC--AddDriveSmartSyncWidget */
+/********************************/
+
+KDC--AddDriveSmartSyncWidget
+{
+    qproperty-info_icon_color: #9F9F9F;
+    qproperty-info_icon_size: 20px;
+    qproperty-logo_color: #FFFFFF;
+}
+
+KDC--AddDriveSmartSyncWidget QProgressBar
+{
+    background-color: #C0C0C0;
+    min-height: 5px;
+    max-height: 5px;
+    border: 0px;
+    border-radius: 2px;
+    padding: 0px;
+}
+
+KDC--AddDriveSmartSyncWidget QProgressBar::chunk
+{
+    background-color: #0098FF;
+    border: 0px;
+    border-radius: 2px;
 }
 
 /************************************/

@@ -46,6 +46,7 @@ AddDriveWizard::AddDriveWizard(QWidget *parent)
     , _stepStackedWidget(nullptr)
     , _addDriveStartWidget(nullptr)
     , _addDriveLoginWidget(nullptr)
+    , _addDriveSmartSyncWidget(nullptr)
     , _addDriveServerFoldersWidget(nullptr)
     , _addDriveLocalFolderWidget(nullptr)
     , _addDriveConfirmationWidget(nullptr)
@@ -65,6 +66,9 @@ AddDriveWizard::AddDriveWizard(QWidget *parent)
 
 void AddDriveWizard::setButtonIcon(const QColor &value)
 {
+    if (_addDriveSmartSyncWidget) {
+        _addDriveSmartSyncWidget->setButtonIcon(value);
+    }
     if (_addDriveServerFoldersWidget) {
         _addDriveServerFoldersWidget->setButtonIcon(value);
     }
@@ -90,8 +94,11 @@ void AddDriveWizard::initUI()
     _addDriveLoginWidget = new AddDriveLoginWidget(this);
     _stepStackedWidget->insertWidget(Login, _addDriveLoginWidget);
 
+    _addDriveSmartSyncWidget = new AddDriveSmartSyncWidget(this);
+    _stepStackedWidget->insertWidget(RemoteFolders, _addDriveSmartSyncWidget);
+
     _addDriveServerFoldersWidget = new AddDriveServerFoldersWidget(this);
-    _stepStackedWidget->insertWidget(RemoteFoders, _addDriveServerFoldersWidget);
+    _stepStackedWidget->insertWidget(RemoteFolders, _addDriveServerFoldersWidget);
 
     _addDriveLocalFolderWidget = new AddDriveLocalFolderWidget(this);
     _stepStackedWidget->insertWidget(LocalFolder, _addDriveLocalFolderWidget);
@@ -101,6 +108,7 @@ void AddDriveWizard::initUI()
 
     connect(_addDriveStartWidget, &AddDriveStartWidget::terminated, this, &AddDriveWizard::onStepTerminated);
     connect(_addDriveLoginWidget, &AddDriveLoginWidget::terminated, this, &AddDriveWizard::onStepTerminated);
+    connect(_addDriveSmartSyncWidget, &AddDriveSmartSyncWidget::terminated, this, &AddDriveWizard::onStepTerminated);
     connect(_addDriveServerFoldersWidget, &AddDriveServerFoldersWidget::terminated, this, &AddDriveWizard::onStepTerminated);
     connect(_addDriveLocalFolderWidget, &AddDriveLocalFolderWidget::terminated, this, &AddDriveWizard::onStepTerminated);
     connect(_addDriveConfirmationWidget, &AddDriveConfirmationWidget::terminated, this, &AddDriveWizard::onStepTerminated);
@@ -119,9 +127,20 @@ void AddDriveWizard::start()
     startNextStep();
 }
 
-void AddDriveWizard::startNextStep()
+void AddDriveWizard::startNextStep(bool backward)
 {
-    _currentStep = (Step) (_currentStep + 1);
+    _currentStep = (Step) (_currentStep + (backward ? -1 : 1));
+
+    if (_currentStep == SmartSync
+            && OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions()) != OCC::Vfs::WindowsCfApi) {
+        // Skip Smart Sync step
+        _currentStep = (Step) (_currentStep + (backward ? -1 : 1));
+    }
+    else if (_currentStep == RemoteFolders && _smartSync) {
+        // Skip Remote Folders step
+        _currentStep = (Step) (_currentStep + (backward ? -1 : 1));
+    }
+
     _stepStackedWidget->setCurrentIndex(_currentStep);
 
     if (_currentStep == Begin) {
@@ -135,13 +154,17 @@ void AddDriveWizard::startNextStep()
         _addDriveLoginWidget->setAccountPtr(_accountPtr);
         _addDriveLoginWidget->login(_serverUrl);
     }
-    else if (_currentStep == RemoteFoders) {
+    else if (_currentStep == SmartSync) {
+        setBackgroundForcedColor(QColor());
+    }
+    else if (_currentStep == RemoteFolders) {
         setBackgroundForcedColor(QColor());
         _addDriveServerFoldersWidget->setAccountPtr(_accountPtr);
     }
     else if (_currentStep == LocalFolder) {
         setBackgroundForcedColor(QColor());
         _addDriveLocalFolderWidget->setAccountPtr(_accountPtr);
+        _addDriveLocalFolderWidget->setSmartSync(_smartSync);
         QString localFolderPath = OCC::Theme::instance()->defaultClientFolder();
         if (!QDir(localFolderPath).isAbsolute()) {
             localFolderPath = QDir::homePath() + dirSeparator + localFolderPath;
@@ -266,7 +289,6 @@ OCC::AccountState *AddDriveWizard::applyAccountChanges()
 
 bool AddDriveWizard::addDrive()
 {
-    bool useVirtualFileSync = OCC::Theme::instance()->showVirtualFilesOption();
     bool startFromScratch = false;
 
     auto accountState = applyAccountChanges();
@@ -299,8 +321,8 @@ bool AddDriveWizard::addDrive()
         folderDefinition.localPath = localFolderPath;
         folderDefinition.targetPath = OCC::FolderDefinition::prepareTargetPath(_serverFolderPath);
         folderDefinition.ignoreHiddenFiles = OCC::FolderMan::instance()->ignoreHiddenFiles();
-        if (useVirtualFileSync) {
-            folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode();
+        if (_smartSync) {
+            folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
         }
         if (OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane()) {
             folderDefinition.navigationPaneClsid = QUuid::createUuid();
@@ -308,7 +330,7 @@ bool AddDriveWizard::addDrive()
 
         OCC::Folder *folder = OCC::FolderMan::instance()->addFolder(accountState, folderDefinition);
         if (folder) {
-            if (folderDefinition.virtualFilesMode != OCC::Vfs::Off && useVirtualFileSync) {
+            if (folderDefinition.virtualFilesMode != OCC::Vfs::Off && _smartSync) {
                 folder->setRootPinState(OCC::PinState::OnlineOnly);
             }
 
@@ -533,27 +555,30 @@ void AddDriveWizard::onStepTerminated(bool next)
         _loginUrl = _addDriveLoginWidget->loginUrl();
         setCredentials(_addDriveLoginWidget->credentials());
     }
-    else if (_currentStep == RemoteFoders) {
+    else if (_currentStep == SmartSync) {
+        if (next) {
+            _smartSync = _addDriveSmartSyncWidget->smartSync();
+        }
+        startNextStep(!next);
+    }
+    else if (_currentStep == RemoteFolders) {
         if (next) {
             _selectionSize = _addDriveServerFoldersWidget->selectionSize();
             _blackList = _addDriveServerFoldersWidget->createBlackList();
         }
-        else {
-            _currentStep = Begin;
-        }
-        startNextStep();
+        startNextStep(!next);
     }
     else if (_currentStep == LocalFolder) {
         if (next) {
             _localFolderPath = _addDriveLocalFolderWidget->localFolderPath();
+            if (_smartSync) {
+                _smartSync = _addDriveLocalFolderWidget->folderCompatibleWithSmartSync();
+            }
             if (!addDrive()) {
                 reject();
             }
         }
-        else {
-            _currentStep = Login;
-        }
-        startNextStep();
+        startNextStep(!next);
     }
     else if (_currentStep == Confirmation) {
         _action = _addDriveConfirmationWidget->action();

@@ -272,9 +272,6 @@ Application::Application(int &argc, char **argv)
 #endif
 
     // Check vfs plugins
-    if (Theme::instance()->showVirtualFilesOption() && bestAvailableVfsMode() == Vfs::Off) {
-        qCWarning(lcApplication) << "Theme wants to show vfs mode, but no vfs plugins are available";
-    }
     if (isVfsPluginAvailable(Vfs::WindowsCfApi))
         qCInfo(lcApplication) << "VFS windows plugin is available";
     if (isVfsPluginAvailable(Vfs::WithSuffix))

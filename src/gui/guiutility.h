@@ -99,8 +99,11 @@ namespace Utility {
     QUrl getUrlFromLocalPath(const QString &path);
     int getQFontWeightFromQSSFontWeight(int weight);
     qint64 folderSize(const QString &dirPath);
+    qint64 folderDiskSize(const QString &dirPath);
     bool openFolder(const QString &path);
     QWidget *getTopLevelWidget(QWidget *widget);
+    void forceUpdate(QWidget *widget);
+    void invalidateLayout(QLayout *layout);
 
 } // namespace Utility
 } // namespace OCC

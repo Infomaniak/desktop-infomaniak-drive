@@ -22,6 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customtoolbutton.h"
 #include "guiutility.h"
 #include "wizard/owncloudwizardcommon.h"
+#include "common/vfs.h"
+#include "configfile.h"
 
 #include <QBoxLayout>
 #include <QDir>
@@ -67,6 +69,8 @@ AddDriveLocalFolderWidget::AddDriveLocalFolderWidget(QWidget *parent)
     , _folderIconSize(QSize())
     , _logoColor(QColor())
     , _needToSave(false)
+    , _smartSync(false)
+    , _folderCompatibleWithSmartSync(false)
 {
     initUI();
     updateUI();
@@ -243,6 +247,16 @@ void AddDriveLocalFolderWidget::updateUI()
         }
         else {
             _infoWidget->setVisible(false);
+        }
+
+        if (_smartSync) {
+            OCC::Vfs::Mode mode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
+            if (mode == OCC::Vfs::WindowsCfApi) {
+                // Check file system
+                QString fsName(OCC::Utility::fileSystemName(dir.rootPath()));
+                _folderCompatibleWithSmartSync = (fsName == "NTFS");
+                qCDebug(lcAddDriveLocalFolderWidget) << "Folder compatible with smart sync : " << _folderCompatibleWithSmartSync;
+            }
         }
     }
 }

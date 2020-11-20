@@ -800,7 +800,7 @@ void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListe
         bool isOnTheServer = record.isValid();
         auto flagString = isOnTheServer ? QLatin1String("::") : QLatin1String(":d:");
 
-        if (folder && folder->supportsVirtualFiles()) {
+        if (folder) {
             listener->sendMessage(QLatin1String("VFS_MODE:") + Vfs::modeToString(folder->vfs().mode()));
         }
 

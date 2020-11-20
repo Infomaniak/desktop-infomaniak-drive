@@ -372,7 +372,7 @@ public:
      * By default, the options are not shown unless experimental options are
      * manually enabled in the configuration file.
      */
-    virtual bool showVirtualFilesOption() const;
+    virtual bool showVirtualFilesOption() const { return true; };
 
     /**
      * @brief Open directly the browser for oauth2 without doing any unauthenticated request

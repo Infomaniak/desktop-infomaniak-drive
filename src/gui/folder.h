@@ -303,6 +303,8 @@ public:
     /** Whether this folder should show selective sync ui */
     bool supportsSelectiveSync() const;
 
+    bool canSupportVirtualFiles() const;
+
 signals:
     void syncStateChange();
     void syncStarted();

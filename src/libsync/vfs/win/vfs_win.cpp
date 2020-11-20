@@ -59,6 +59,10 @@ void debugCbk(TraceLevel level, const wchar_t *msg) {
 VfsWin::VfsWin(QObject *parent)
     : Vfs(parent)
 {
+    if (CFPInitCloudFileProvider(debugCbk, QString(APPLICATION_SHORTNAME).toStdWString().c_str()) != S_OK) {
+        qCCritical(lcVfsWin) << "Error in CFPInitCloudFileProvider!";
+        return;
+    }
 }
 
 VfsWin::~VfsWin()
@@ -79,15 +83,11 @@ void VfsWin::startImpl(const OCC::VfsSetupParams &params)
 {
     qCDebug(lcVfsWin) << "startImpl - Begin - driveId = " << params.account.get()->driveId();
 
-    if (CFPInitCloudFileProvider(debugCbk, QString(APPLICATION_SHORTNAME).toStdWString().c_str()) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPInitCloudFileProvider!";
-        return;
-    }
-
     if (CFPStartCloudFileProvider(
                 params.account.get()->driveId().toStdWString().c_str(),
                 params.providerName.toStdWString().c_str(),
                 params.account.get()->davUser().toStdWString().c_str(),
+                params.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(params.filesystemPath).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPStartCloudFileProvider!";
     }
@@ -101,8 +101,9 @@ void VfsWin::dehydrateFile(const QString &filePath)
 
     // Dehydrate file
     if (CFPDehydratePlaceHolder(
-            _setupParams.account.get()->driveId().toStdWString().c_str(),
-            QDir::toNativeSeparators(filePath).toStdWString().c_str())) {
+                _setupParams.account.get()->driveId().toStdWString().c_str(),
+                _setupParams.folderAlias.toStdWString().c_str(),
+                QDir::toNativeSeparators(filePath).toStdWString().c_str())) {
         qCCritical(lcVfsWin) << "Error in CFPDehydratePlaceHolder!";
         return;
     }
@@ -124,8 +125,9 @@ void VfsWin::hydrateFile(const QString &filePath)
     qCDebug(lcVfsWin) << "hydrateFile - Begin - path = " << filePath;
 
     if (CFPHydratePlaceHolder(
-            _setupParams.account.get()->driveId().toStdWString().c_str(),
-            QDir::toNativeSeparators(filePath).toStdWString().c_str())) {
+                _setupParams.account.get()->driveId().toStdWString().c_str(),
+                _setupParams.folderAlias.toStdWString().c_str(),
+                QDir::toNativeSeparators(filePath).toStdWString().c_str())) {
         qCCritical(lcVfsWin) << "Error in CFPHydratePlaceHolder!";
         return;
     }
@@ -158,7 +160,9 @@ void VfsWin::unregisterFolder()
 {
     qCDebug(lcVfsWin) << "unregisterFolder - Begin - driveId = " << _setupParams.account.get()->driveId();
 
-    if (CFPStopCloudFileProvider(_setupParams.account.get()->driveId().toStdWString().c_str()) != S_OK) {
+    if (CFPStopCloudFileProvider(
+                _setupParams.account.get()->driveId().toStdWString().c_str(),
+                _setupParams.folderAlias.toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPStopCloudFileProvider!";
     }
 
@@ -304,6 +308,7 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
         // Download finished
         if (CFPUpdateFetchStatus(
                     _setupParams.account.get()->driveId().toStdWString().c_str(),
+                    _setupParams.folderAlias.toStdWString().c_str(),
                     QDir::toNativeSeparators(replacesFile).toStdWString().c_str(),
                     QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                     item._size) != S_OK) {
@@ -465,6 +470,7 @@ void VfsWin::fileStatusChanged(const QString &filePath, OCC::SyncFileStatus stat
         qCDebug(lcVfsWin) << "Cancel hydration of file " << filePath;
         if (CFPCancelFetch(
                     _setupParams.account.get()->driveId().toStdWString().c_str(),
+                    _setupParams.folderAlias.toStdWString().c_str(),
                     QDir::toNativeSeparators(filePath).toStdWString().c_str()) != S_OK) {
             qCWarning(lcVfsWin) << "Error in CFPCancelFetch!";
             return;

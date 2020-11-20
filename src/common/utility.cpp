@@ -44,6 +44,10 @@
 #include <unistd.h>
 #endif
 
+#if defined(Q_OS_WIN)
+#include <fileapi.h>
+#endif
+
 #include <math.h>
 #include <stdarg.h>
 #include <cstring>
@@ -735,6 +739,20 @@ void Utility::removeSyncRootKeys(const QUuid &clsid)
     if (Utility::registryExistKeyValue(HKEY_CURRENT_USER, newstartpanelPath, clsidStr)) {
         Utility::registryDeleteKeyValue(HKEY_CURRENT_USER, newstartpanelPath, clsidStr);
     }
+}
+
+QString Utility::fileSystemName(const QString &rootPath)
+{
+#ifdef Q_OS_WIN
+    WCHAR fileSystemName[10];
+    if (GetVolumeInformation(rootPath.toStdWString().c_str(), nullptr, 0, nullptr, nullptr, nullptr,
+                            fileSystemName, sizeof(fileSystemName)) == TRUE)
+    {
+        return QString::fromStdWString(fileSystemName);
+    }
+#endif
+
+    return QString();
 }
 
 } // namespace OCC

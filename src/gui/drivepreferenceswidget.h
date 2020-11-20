@@ -89,9 +89,9 @@ private:
     bool existUndecidedList();
     void updateAccountInfo();
     void askEnableSmartSync(const std::function<void(bool enable)> &callback);
-    void askDisableSmartSync(const std::function<void(bool enable)> &callback);
+    void askDisableSmartSync(const std::function<void(bool enable, bool diskSpaceWarning)> &callback);
     void switchVfsOn(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection);
-    void switchVfsOff(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection);
+    void switchVfsOff(OCC::Folder *folder, bool diskSpaceWarning, std::shared_ptr<QMetaObject::Connection> connection);
     void resetFoldersBlocs();
     void updateFoldersBlocs();
     void refreshFoldersBlocs();

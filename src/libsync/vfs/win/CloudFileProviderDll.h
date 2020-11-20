@@ -25,13 +25,15 @@ extern "C" {
         const wchar_t *appName);
 
     DLL_EXP int __cdecl CFPStartCloudFileProvider(
-        const wchar_t *driveID,
+        const wchar_t *driveId,
         const wchar_t *driveAlias,
-        const wchar_t *userID,
-        const wchar_t *clientFolder);
+        const wchar_t *userId,
+        const wchar_t *folderId,
+        const wchar_t *folderPath);
 
     DLL_EXP int __cdecl CFPStopCloudFileProvider(
-        const wchar_t *driveID);
+        const wchar_t *driveId,
+        const wchar_t *folderId);
 
     DLL_EXP int __cdecl CFPGetPlaceHolderStatus(
         const wchar_t *destPath, 
@@ -41,11 +43,13 @@ extern "C" {
         bool *isDirectory);
 
     DLL_EXP int __cdecl CFPDehydratePlaceHolder(
-        const wchar_t *driveID,
+        const wchar_t *driveId,
+        const wchar_t *folderId,
         const wchar_t *filePath);
 
     DLL_EXP int __cdecl CFPHydratePlaceHolder(
-        const wchar_t *driveID,
+        const wchar_t *driveId,
+        const wchar_t *folderId,
         const wchar_t *filePath);
 
     DLL_EXP int __cdecl CFPCreatePlaceHolder(
@@ -59,13 +63,15 @@ extern "C" {
         WIN32_FIND_DATA *findData);
 
     DLL_EXP int __cdecl CFPUpdateFetchStatus(
-        const wchar_t *driveID,
+        const wchar_t *driveId,
+        const wchar_t *folderId,
         const wchar_t *filePath,
         const wchar_t *fromFilePath,
         LONGLONG completed);
 
     DLL_EXP int __cdecl CFPCancelFetch(
-        const wchar_t *driveID,
+        const wchar_t *driveId,
+        const wchar_t *folderId,
         const wchar_t *filePath);
 
     DLL_EXP int __cdecl CFPGetPinState(

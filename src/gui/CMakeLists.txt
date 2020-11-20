@@ -78,6 +78,7 @@ set(client_SRCS
     adddrivelocalfolderwidget.cpp
     adddriveloginwidget.cpp
     adddriveserverfolderswidget.cpp
+    adddrivesmartsyncwidget.cpp
     adddrivestartwidget.cpp
     adddrivewizard.cpp
     bandwidthdialog.cpp

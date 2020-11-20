@@ -67,6 +67,8 @@ struct OCSYNC_EXPORT VfsSetupParams
      * For some plugins that doesn't work well in tests.
      */
     bool enableShellIntegration = true;
+
+    QString folderAlias;
 };
 
 /** Interface describing how to deal with virtual/placeholder files.
@@ -312,7 +314,7 @@ protected:
 OCSYNC_EXPORT bool isVfsPluginAvailable(Vfs::Mode mode);
 
 /// Return the best available VFS mode.
-OCSYNC_EXPORT Vfs::Mode bestAvailableVfsMode();
+OCSYNC_EXPORT Vfs::Mode bestAvailableVfsMode(bool showExperimentalOptions);
 
 /// Create a VFS instance for the mode, returns nullptr on failure.
 OCSYNC_EXPORT std::unique_ptr<Vfs> createVfsFromPlugin(Vfs::Mode mode);

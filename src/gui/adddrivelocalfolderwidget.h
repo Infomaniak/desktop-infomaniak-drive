@@ -45,6 +45,8 @@ public:
     void setAccountPtr(OCC::AccountPtr accountPtr);
     void setLocalFolderPath(const QString &path);
     inline QString localFolderPath() const { return _localFolderPath; }
+    inline void setSmartSync(bool smartSync) { _smartSync = smartSync; }
+    inline bool folderCompatibleWithSmartSync() { return _folderCompatibleWithSmartSync; }
     void setButtonIcon(const QColor &value);
 
 signals:
@@ -69,6 +71,8 @@ private:
     QSize _infoIconSize;
     QColor _logoColor;
     bool _needToSave;
+    bool _smartSync;
+    bool _folderCompatibleWithSmartSync;
 
     inline QColor folderIconColor() const { return _folderIconColor; }
     inline void setFolderIconColor(QColor color)

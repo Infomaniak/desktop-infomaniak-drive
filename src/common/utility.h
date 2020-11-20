@@ -244,6 +244,8 @@ namespace Utility {
     OCSYNC_EXPORT void FiletimeToLargeIntegerFiletime(FILETIME *filetime, LARGE_INTEGER *hundredNSecs);
     OCSYNC_EXPORT void UnixTimeToLargeIntegerFiletime(time_t t, LARGE_INTEGER *hundredNSecs);
 #endif
+
+    OCSYNC_EXPORT QString fileSystemName(const QString &rootPath);
 }
 /** @} */ // \addtogroup
 

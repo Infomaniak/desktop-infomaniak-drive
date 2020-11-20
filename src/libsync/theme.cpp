@@ -463,7 +463,7 @@ QString Theme::about() const
 
     devString += gitSHA1();
     devString += QString("<p><small>Using virtual files plugin: %1</small></p>")
-        .arg(Vfs::modeToString(bestAvailableVfsMode()));
+        .arg(Vfs::modeToString(bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions())));
 
     return devString;
 }
@@ -677,11 +677,6 @@ QString Theme::versionSwitchOutput() const
     stream << "Using Qt " << qVersion() << ", built against Qt " << QT_VERSION_STR << endl;
     stream << "Using '" << QSslSocket::sslLibraryVersionString() << "'" << endl;
     return helpText;
-}
-
-bool Theme::showVirtualFilesOption() const
-{
-    return ConfigFile().showExperimentalOptions();
 }
 
 bool Theme::noUnauthedRequests() const
