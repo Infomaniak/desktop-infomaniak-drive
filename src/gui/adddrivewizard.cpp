@@ -133,7 +133,7 @@ void AddDriveWizard::startNextStep(bool backward)
 
     if (_currentStep == SmartSync
             && OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions()) != OCC::Vfs::WindowsCfApi) {
-        // Skip Smart Sync step
+        // Skip Lite Sync step
         _currentStep = (Step) (_currentStep + (backward ? -1 : 1));
     }
     else if (_currentStep == RemoteFolders && _smartSync) {

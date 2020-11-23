@@ -41,8 +41,10 @@ QString VfsSuffix::fileSuffix() const
     return QStringLiteral(APPLICATION_DOTVIRTUALFILE_SUFFIX);
 }
 
-void VfsSuffix::startImpl(const VfsSetupParams &params)
+void VfsSuffix::startImpl(const VfsSetupParams &params, QString &namespaceCLSID)
 {
+    Q_UNUSED(namespaceCLSID)
+
     // It is unsafe for the database to contain any ".owncloud" file entries
     // that are not marked as a virtual file. These could be real .owncloud
     // files that were synced before vfs was enabled.

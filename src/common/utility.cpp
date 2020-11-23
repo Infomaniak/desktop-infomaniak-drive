@@ -755,4 +755,14 @@ QString Utility::fileSystemName(const QString &rootPath)
     return QString();
 }
 
+void Utility::setRootFolderPinState(const QUuid &clsid, bool visible)
+{
+    QString clsidStr = clsid.toString();
+    QString clsidPath = QString() % "CLSID\\" % clsidStr;
+
+    if (Utility::registryExistKeyTree(HKEY_CLASSES_ROOT, clsidPath)) {
+        Utility::registrySetKeyValue(HKEY_CLASSES_ROOT, clsidPath, "System.IsPinnedToNameSpaceTree", REG_DWORD, visible);
+    }
+}
+
 } // namespace OCC
