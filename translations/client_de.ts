@@ -215,6 +215,33 @@
     </message>
 </context>
 <context>
+    <name>KDC::AddDriveSmartSyncWidget</name>
+    <message>
+        <source>Would you like to activate Lite Sync?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. Learn more</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Conserve your computer space</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decide which files should be available online or locally</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LATER</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>YES</source>
+        <translation type="unfinished">JA</translation>
+    </message>
+</context>
+<context>
     <name>KDC::AddDriveStartWidget</name>
     <message>
         <source>Server :</source>
@@ -452,10 +479,6 @@
         <translation>Synchronisierung</translation>
     </message>
     <message>
-        <source>Activate smart synchronization</source>
-        <translation>Intelligente Synchronisierung aktivieren</translation>
-    </message>
-    <message>
         <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
         <translation>Alle Ihre Dateien synchronisieren, ohne den Speicherplatz Ihres Rechners zu verwenden. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Mehr erfahren&lt;/a&gt;</translation>
     </message>
@@ -476,48 +499,8 @@
         <translation>Synchronisierung entfernen</translation>
     </message>
     <message>
-        <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead a virtual file will be created for each file that exists on the server. When a file is opened its contents will be downloaded automatically. Alternatively, files can be downloaded manually by using their context menu.
-
-The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.</source>
-        <translation>Wenn der Modus &quot;Virtuelle Dateien&quot; aktiviert ist, werden zunächst keine Dateien heruntergeladen. Stattdessen wird für jede Datei des Servers eine virtuelle Datei erstellt. Wird eine Datei geöffnet, werden dessen Inhalte automatisch heruntergeladen. Alternativ können Dateien manuell über das Kontextmenü heruntergeladen werden.
-
-Der Modus Virtuelle Dateien und der Modus Selektive Synchronisierung schliessen sich gegenseitig aus. Aktuell nicht ausgewählte Ordner werden in nur online verfügbare Ordner umgewandelt, und Ihre Einstellungen für die selektive Synchronisierung werden zurückgesetzt.</translation>
-    </message>
-    <message>
-        <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead, a tiny &quot;%1&quot; file will be created for each file that exists on the server. The contents can be downloaded by running these files or by using their context menu.
-
-The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.
-
-Switching to this mode will abort any currently running synchronization.
-
-This is a new, experimental mode. If you decide to use it, please report any issues that come up.</source>
-        <translation>Wenn der Modus &quot;Virtuelle Dateien&quot; aktiviert ist, werden zunächst keine Dateien heruntergeladen. Stattdessen wird für jede Datei des Servers eine kleine &quot;%1&quot; Datei erstellt. Die Inhalte der Dateien können durch Ausführen der Datei oder über ihr Kontextmenü heruntergeladen werden.
-
-Der Modus virtuelle Dateien und der Modus Selektive Synchronisierung schliessen sich gegenseitig aus. Aktuell nicht ausgewählte Ordner werden in nur online verfügbare Ordner umgewandelt, und Ihre Einstellungen für die Selektive Synchronisierung werden zurückgesetzt.
-
-Das Umschalten in diesen Modus beendet derzeit laufende Synchronisierungen.
-
-Dies ist ein neuer experimenteller Modus. Wenn Sie den Modus nutzen, dann melden Sie uns bitte etwaige Probleme.</translation>
-    </message>
-    <message>
-        <source>This action will disable virtual file support. As a consequence contents of folders that are currently marked as &apos;available online only&apos; will be downloaded.
-
-This action will abort any currently running synchronization.</source>
-        <translation>Diese Aktion deaktiviert die Unterstützung virtueller Dateien. Infolgedessen werden Inhalte von Ordnern, die gegenwärtig als &apos;nur online verfügbar&apos; gekennzeichnet sind, heruntergeladen.
-
-Durch diese Aktion werden gerade laufende Synchronisierungen abgebrochen.</translation>
-    </message>
-    <message>
         <source>New folder synchronization failed!</source>
         <translation>Neue Ordnersynchronisierung fehlgeschlagen!</translation>
-    </message>
-    <message>
-        <source>Smart synchronization activation in progress</source>
-        <translation>Aktivierung der intelligenten Synchronisierung läuft</translation>
-    </message>
-    <message>
-        <source>Smart synchronization deactivation in progress</source>
-        <translation>Deaktivierung der intelligenten Synchronisierung läuft</translation>
     </message>
     <message>
         <source>Do you really want to stop syncing the folder &lt;i&gt;%1&lt;/i&gt; ?&lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.</source>
@@ -526,26 +509,6 @@ Durch diese Aktion werden gerade laufende Synchronisierungen abgebrochen.</trans
     <message>
         <source>Some folders were not synchronized because they are too large.</source>
         <translation>Einige Ordner wurden nicht synchronisiert, da sie zu gross sind.</translation>
-    </message>
-    <message>
-        <source>ENABLE VIRTUAL FILES</source>
-        <translation>VIRTUELLE DATEIEN AKTIVIEREN</translation>
-    </message>
-    <message>
-        <source>CONTINUE TO USE SELECTIVE SYNC</source>
-        <translation>SELEKTIVE SYNCHRONISIERUNG WEITER NUTZEN</translation>
-    </message>
-    <message>
-        <source>ENABLE EXPERIMENTAL PLACEHOLDER MODE</source>
-        <translation>EXPERIMENTELLEN PLATZHALTERMODUS AKTIVIEREN</translation>
-    </message>
-    <message>
-        <source>STAY SAFE</source>
-        <translation>SICHER BLEIBEN</translation>
-    </message>
-    <message>
-        <source>DISABLE SUPPORT</source>
-        <translation>UNTERSTÜTZUNG DEAKTIVIEREN</translation>
     </message>
     <message>
         <source>CANCEL</source>
@@ -566,6 +529,38 @@ Durch diese Aktion werden gerade laufende Synchronisierungen abgebrochen.</trans
     <message>
         <source>Enable the notifications for this kDrive</source>
         <translation>Aktivieren Sie die Benachrichtigungen für dieses kDrive</translation>
+    </message>
+    <message>
+        <source>CONFIRM</source>
+        <translation type="unfinished">BESTÄTIGEN</translation>
+    </message>
+    <message>
+        <source>Activate Lite Sync</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to turn on Lite Sync?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to turn off Lite Sync?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have enough space to sync all the files on your kDrive (%1 missing). If you turn off Lite Sync, you need to select which folders to sync on your computer. In the meantime, the synchronization of your kDrive will be paused.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If you turn off Lite Sync, all files will sync locally on your computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lite Sync activation in progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lite Sync deactivation in progress</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -782,10 +777,6 @@ Durch diese Aktion werden gerade laufende Synchronisierungen abgebrochen.</trans
         <translation>Übertragung fehlgeschlagen!</translation>
     </message>
     <message>
-        <source>Need help ? Generate an archive of the application logs to send it to our support</source>
-        <translation>Sie benötigen Hilfe? Generieren Sie ein Archiv der Anwendungslogs und senden Sie es an unseren Support</translation>
-    </message>
-    <message>
         <source>REMOVE SYNCHRONIZATION</source>
         <translation>SYNCHRONISIERUNG ENTFERNEN</translation>
     </message>
@@ -796,6 +787,10 @@ Durch diese Aktion werden gerade laufende Synchronisierungen abgebrochen.</trans
     <message>
         <source>No kDrive configured!</source>
         <translation>Kein kDrive eingerichtet!</translation>
+    </message>
+    <message>
+        <source>Need help? Generate an application log archive to send to our support team.</source>
+        <translation>Sie benötigen Hilfe? Generieren Sie ein Archiv der Anwendungslogs und senden Sie es an unseren Support.</translation>
     </message>
 </context>
 <context>
@@ -1086,7 +1081,7 @@ Durch diese Aktion werden gerade laufende Synchronisierungen abgebrochen.</trans
     </message>
     <message>
         <source>Open</source>
-        <translation>Offen</translation>
+        <translation>Öffnen</translation>
     </message>
     <message>
         <source>Add to favorites</source>
@@ -2222,6 +2217,10 @@ for additional privileges during the process.</source>
     <message>
         <source>Error writing metadata to the database</source>
         <translation>Fehler beim Schreiben der Metadaten in die Datenbank</translation>
+    </message>
+    <message>
+        <source>File conversion to placeholder failed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
