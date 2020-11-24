@@ -69,6 +69,7 @@ struct OCSYNC_EXPORT VfsSetupParams
     bool enableShellIntegration = true;
 
     QString folderAlias;
+    QString folderName;
 };
 
 /** Interface describing how to deal with virtual/placeholder files.
@@ -127,7 +128,7 @@ public:
      *
      * The plugin-specific work is done in startImpl().
      */
-    void start(const VfsSetupParams &params);
+    void start(const VfsSetupParams &params, QString &namespaceCLSID = QString());
 
     /// Stop interaction with VFS provider. Like when the client application quits.
     virtual void stop() = 0;
@@ -260,7 +261,7 @@ protected:
      * Usually some registration needs to be done with the backend. This function
      * should take care of it if necessary.
      */
-    virtual void startImpl(const VfsSetupParams &params) = 0;
+    virtual void startImpl(const VfsSetupParams &params, QString &namespaceCLSID = QString()) = 0;
 
     // Db-backed pin state handling. Derived classes may use it to implement pin states.
     bool setPinStateInDb(const QString &fileRelativePath, PinState state);
@@ -307,7 +308,7 @@ public slots:
     void fileStatusChanged(const QString &, SyncFileStatus) override {}
 
 protected:
-    void startImpl(const VfsSetupParams &) override {}
+    void startImpl(const VfsSetupParams &, QString &) override {}
 };
 
 /// Check whether the plugin for the mode is available.

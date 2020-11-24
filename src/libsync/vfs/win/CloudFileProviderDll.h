@@ -26,21 +26,26 @@ extern "C" {
 
     DLL_EXP int __cdecl CFPStartCloudFileProvider(
         const wchar_t *driveId,
-        const wchar_t *driveAlias,
         const wchar_t *userId,
         const wchar_t *folderId,
-        const wchar_t *folderPath);
+        const wchar_t *folderName,
+        const wchar_t *folderPath,
+        wchar_t *namespaceCLSID,
+        DWORD *namespaceCLSIDSize);
 
     DLL_EXP int __cdecl CFPStopCloudFileProvider(
         const wchar_t *driveId,
         const wchar_t *folderId);
 
     DLL_EXP int __cdecl CFPGetPlaceHolderStatus(
-        const wchar_t *destPath, 
-        const wchar_t *fileName, 
+        const wchar_t *filePath, 
         bool *isPlaceholder, 
         bool *isDehydrated,
         bool *isDirectory);
+
+    DLL_EXP int __cdecl CFPSetPlaceHolderStatus(
+        const wchar_t *filePath,
+        bool inSync);
 
     DLL_EXP int __cdecl CFPDehydratePlaceHolder(
         const wchar_t *driveId,

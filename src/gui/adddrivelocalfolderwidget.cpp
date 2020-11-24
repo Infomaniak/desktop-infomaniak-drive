@@ -255,7 +255,7 @@ void AddDriveLocalFolderWidget::updateUI()
                 // Check file system
                 QString fsName(OCC::Utility::fileSystemName(dir.rootPath()));
                 _folderCompatibleWithSmartSync = (fsName == "NTFS");
-                qCDebug(lcAddDriveLocalFolderWidget) << "Folder compatible with smart sync : " << _folderCompatibleWithSmartSync;
+                qCDebug(lcAddDriveLocalFolderWidget) << "Folder compatible with Lite Sync : " << _folderCompatibleWithSmartSync;
             }
         }
     }

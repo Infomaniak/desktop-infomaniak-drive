@@ -169,7 +169,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
         smartSync1HBox->setSpacing(0);
         smartSyncBox->addLayout(smartSync1HBox);
 
-        QLabel *smartSyncLabel = new QLabel(tr("Activate smart synchronization"), this);
+        QLabel *smartSyncLabel = new QLabel(tr("Activate Lite Sync"), this);
         smartSync1HBox->addWidget(smartSyncLabel);
         smartSync1HBox->addStretch();
 
@@ -377,7 +377,7 @@ void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)>
     if (bestVfsMode == OCC::Vfs::WindowsCfApi || bestVfsMode == OCC::Vfs::WithSuffix) {
         msgBox = new CustomMessageBox(
                     QMessageBox::Question,
-                    tr("Do you really want to turn on smart sync?"),
+                    tr("Do you really want to turn on Lite Sync?"),
                      QMessageBox::NoButton, this);
         msgBox->addButton(tr("CONFIRM"), QMessageBox::Yes);
         msgBox->addButton(tr("CANCEL"), QMessageBox::No);
@@ -408,13 +408,13 @@ void DrivePreferencesWidget::askDisableSmartSync(const std::function<void (bool,
 
     CustomMessageBox *msgBox = new CustomMessageBox(
                 QMessageBox::Question,
-                tr("Do you really want to turn off smart sync?"),
+                tr("Do you really want to turn off Lite Sync?"),
                 diskSpaceWarning
                 ? tr("You don't have enough space to sync all the files on your kDrive (%1 missing)."
-                     " If you turn off smart sync, you need to select which folders to sync on your computer."
+                     " If you turn off Lite Sync, you need to select which folders to sync on your computer."
                      " In the meantime, the synchronization of your kDrive will be paused.")
                   .arg(OCC::Utility::octetsToString(diskSpaceMissing))
-                : tr("If you turn off smart sync, all files will sync locally on your computer."),
+                : tr("If you turn off Lite Sync, all files will sync locally on your computer."),
                 diskSpaceWarning,
                 QMessageBox::NoButton, this);
     msgBox->addButton(tr("CONFIRM"), QMessageBox::Yes);
@@ -431,9 +431,9 @@ void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QM
     }
 
     // Wipe selective sync blacklist
-    bool ok = false;
+    /*bool ok = false;
     auto oldBlacklist = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
-    folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, {});
+    folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, {});*/
 
     // Change the folder vfs mode and load the plugin
     folder->setSupportsVirtualFiles(true);
@@ -442,10 +442,10 @@ void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QM
     // Setting to Unspecified retains existing data.
     // Selective sync excluded folders become OnlineOnly.
     folder->setRootPinState(OCC::PinState::Unspecified);
-    for (const auto &entry : oldBlacklist) {
+    /*for (const auto &entry : oldBlacklist) {
         folder->journalDb()->schedulePathForRemoteDiscovery(entry);
         folder->vfs().setPinState(entry, OCC::PinState::OnlineOnly);
-    }
+    }*/
     folder->slotNextSyncFullLocalDiscovery();
 
     OCC::FolderMan::instance()->scheduleFolder(folder);
@@ -465,7 +465,7 @@ void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, bool diskSpaceWar
 
     // Wipe pin states and selective sync db
     folder->setRootPinState(OCC::PinState::AlwaysLocal);
-    folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, {});
+    //folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, {});
 
     // Prevent issues with missing local files
     folder->slotNextSyncFullLocalDiscovery();
@@ -1010,7 +1010,7 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
             }
 
             _smartSyncSwitch->setEnabled(false);
-            _smartSyncSwitch->setToolTip(tr("Smart synchronization activation in progress"));
+            _smartSyncSwitch->setToolTip(tr("Lite Sync activation in progress"));
             for (auto folderInfoElt : _accountInfo->_folderMap) {
                 OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
                 if (folder && folder->canSupportVirtualFiles()) {
@@ -1036,7 +1036,7 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
             }
 
             _smartSyncSwitch->setEnabled(false);
-            _smartSyncSwitch->setToolTip(tr("Smart synchronization deactivation in progress"));
+            _smartSyncSwitch->setToolTip(tr("Lite Sync deactivation in progress"));
             for (auto folderInfoElt : _accountInfo->_folderMap) {
                 OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
                 if (folder) {

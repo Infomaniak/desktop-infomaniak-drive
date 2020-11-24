@@ -30,14 +30,16 @@ namespace KDC {
 
 static const int boxHSpacing = 10;
 static const int logoBoxVMargin = 20;
-static const int progressBarVMargin = 40;
+static const int progressBarVMargin = 50;
 static const int hLogoSpacing = 20;
 static const int logoIconSize = 39;
 static const QSize logoTextIconSize = QSize(60, 42);
 static const int titleBoxVMargin = 20;
+static const int pictureBoxVMargin = 40;
 static const int textBoxVMargin = 20;
 static const int progressBarMin = 0;
 static const int progressBarMax = 4;
+static const QSize pictureIconSize = QSize(202, 140);
 static const QSize checkIconSize = QSize(20, 20);
 
 Q_LOGGING_CATEGORY(lcAddDriveSmartSyncWidget, "gui.AddDriveSmartSyncWidget", QtInfoMsg)
@@ -92,6 +94,19 @@ void AddDriveSmartSyncWidget::initUI()
     progressBar->setFormat(QString());
     mainLayout->addWidget(progressBar);
     mainLayout->addSpacing(progressBarVMargin);
+
+    // Picture
+    QHBoxLayout *pictureHBox = new QHBoxLayout();
+    pictureHBox->setContentsMargins(0, 0, 0, 0);
+    pictureHBox->setSpacing(boxHSpacing);
+    mainLayout->addLayout(pictureHBox);
+    mainLayout->addSpacing(pictureBoxVMargin);
+
+    QLabel *pictureIconLabel = new QLabel(this);
+    pictureIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/pictures/lite-sync.svg")
+                               .pixmap(pictureIconSize));
+    pictureIconLabel->setAlignment(Qt::AlignCenter);
+    pictureHBox->addWidget(pictureIconLabel);
 
     // Title
     QLabel *titleLabel = new QLabel(this);

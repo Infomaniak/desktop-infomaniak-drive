@@ -64,12 +64,13 @@ public slots:
     void fileStatusChanged(const QString &filePath, OCC::SyncFileStatus status) override;
 
 protected:
-    void startImpl(const OCC::VfsSetupParams &params) override;
+    void startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSID = QString()) override;
 
 private:
     void dehydrateFile(const QString &filePath);
     void hydrateFile(const QString &filePath);
     DWORD getPlaceholderAttributes(const QString &filePath);
+    void setPlaceholderStatus(const QString &filePath, bool inSync);
 };
 
 class WinVfsPluginFactory : public QObject, public OCC::DefaultPluginFactory<VfsWin>

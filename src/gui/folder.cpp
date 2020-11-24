@@ -492,6 +492,7 @@ void Folder::startVfs()
     vfsParams.providerName = Theme::instance()->appNameGUI();
     vfsParams.providerVersion = Theme::instance()->version();
     vfsParams.folderAlias = alias();
+    vfsParams.folderName = shortGuiLocalPath();
 
     connect(_vfs.data(), &Vfs::beginHydrating, this, &Folder::slotHydrationStarts);
     connect(_vfs.data(), &Vfs::doneHydrating, this, &Folder::slotHydrationDone);
@@ -499,7 +500,11 @@ void Folder::startVfs()
     connect(&_engine->syncFileStatusTracker(), &SyncFileStatusTracker::fileStatusChanged,
             _vfs.data(), &Vfs::fileStatusChanged);
 
-    _vfs->start(vfsParams);
+    QString namespaceCLSID = QString();
+    _vfs->start(vfsParams, namespaceCLSID);
+    if (!namespaceCLSID.isEmpty()) {
+        setNavigationPaneClsid(namespaceCLSID);
+    }
 
     // Immediately mark the sqlite temporaries as excluded. They get recreated
     // on db-open and need to get marked again every time.

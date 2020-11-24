@@ -63,10 +63,10 @@ Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
     return {};
 }
 
-void Vfs::start(const VfsSetupParams &params)
+void Vfs::start(const VfsSetupParams &params, QString &namespaceCLSID)
 {
     _setupParams = params;
-    startImpl(params);
+    startImpl(params, namespaceCLSID);
 }
 
 bool Vfs::setPinStateInDb(const QString &fileRelativePath, PinState state)
