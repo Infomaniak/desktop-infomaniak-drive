@@ -113,15 +113,6 @@ void VfsWin::dehydrateFile(const QString &filePath)
         qCCritical(lcVfsWin) << "Error in CFPDehydratePlaceHolder!";
         return;
     }
-    // Update file type in DB
-    QString fileRelativePath = filePath.midRef(_setupParams.filesystemPath.size()).toUtf8();
-    OCC::SyncJournalFileRecord record;
-    if (_setupParams.journal->getFileRecord(fileRelativePath, &record) && record.isValid()) {
-        record._type = ItemTypeVirtualFile;
-        _setupParams.journal->setFileRecord(record);
-    }
-    // Update pin state in DB
-    setPinStateInDb(fileRelativePath, OCC::PinState::OnlineOnly);
 
     qCDebug(lcVfsWin) << "dehydrateFile - End";
 }
@@ -133,7 +124,7 @@ void VfsWin::hydrateFile(const QString &filePath)
     if (CFPHydratePlaceHolder(
                 _setupParams.account.get()->driveId().toStdWString().c_str(),
                 _setupParams.folderAlias.toStdWString().c_str(),
-                QDir::toNativeSeparators(filePath).toStdWString().c_str())) {
+                QDir::toNativeSeparators(filePath).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPHydratePlaceHolder!";
         return;
     }
@@ -164,6 +155,45 @@ void VfsWin::setPlaceholderStatus(const QString &filePath, bool inSync)
                 inSync) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPSetPlaceHolderStatus!";
         return;
+    }
+}
+
+void VfsWin::checkAndFixFileMetadata(const QString &filePath)
+{
+    bool isPlaceholder;
+    bool isDehydrated;
+    bool isSynced;
+    if (CFPGetPlaceHolderStatus(
+                QDir::toNativeSeparators(filePath).toStdWString().c_str(),
+                &isPlaceholder,
+                &isDehydrated,
+                &isSynced,
+                nullptr) != S_OK) {
+        qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
+        return;
+    }
+
+    // Update file type in DB
+    QString fileRelativePath = filePath.midRef(_setupParams.filesystemPath.size()).toUtf8();
+    ItemType type = isDehydrated ? ItemTypeVirtualFile : ItemTypeFile;
+    OCC::SyncJournalFileRecord record;
+    if (_setupParams.journal->getFileRecord(fileRelativePath, &record) && record.isValid()) {
+        if (record._type != type) {
+            record._type = type;
+            _setupParams.journal->setFileRecord(record);
+        }
+    }
+
+    // Update pin state in DB
+    OCC::PinState pinState = isDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal;
+    auto dbPinState = pinStateInDb(fileRelativePath);
+    if (pinState != *dbPinState) {
+        setPinStateInDb(fileRelativePath, isDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal);
+    }
+
+    // Set status to synchronized
+    if (isPlaceholder && !isSynced) {
+        setPlaceholderStatus(filePath, true);
     }
 }
 
@@ -262,6 +292,7 @@ void VfsWin::dehydratePlaceholder(const OCC::SyncFileItem &item)
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 &isPlaceholder,
                 nullptr,
+                nullptr,
                 nullptr) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
         return;
@@ -273,7 +304,12 @@ void VfsWin::dehydratePlaceholder(const OCC::SyncFileItem &item)
         return;
     }
 
-    dehydrateFile(_setupParams.filesystemPath + item._file);
+    qCDebug(lcVfsWin) << "Dehydrate file " << filePath;
+    auto dehydrateFct = [=]() {
+        dehydrateFile(filePath);
+    };
+    std::thread dehydrateTask(dehydrateFct);
+    dehydrateTask.detach();
 
     qCDebug(lcVfsWin) << "dehydratePlaceholder - End";
 }
@@ -289,10 +325,12 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
 
     // Check if file is already a placeholder
     bool isPlaceholder;
+    bool isSynced;
     if (CFPGetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 &isPlaceholder,
                 nullptr,
+                &isSynced,
                 nullptr) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
         return false;
@@ -300,20 +338,9 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
 
     if (!isPlaceholder) {
         // Convert to placeholder
-        WIN32_FIND_DATA findData;
-        wcscpy_s(findData.cFileName, MAX_PATH, QDir::toNativeSeparators(item._file).toStdWString().c_str());
-        findData.dwFileAttributes = getPlaceholderAttributes(_setupParams.filesystemPath + item._file);
-        if (item._type == ItemTypeDirectory) {
-            findData.dwFileAttributes |= FILE_ATTRIBUTE_DIRECTORY;
-        }
-        else {
-            findData.dwFileAttributes |= FILE_ATTRIBUTE_ARCHIVE;
-        }
-
         if (CFPConvertToPlaceHolder(
                     QString(item._fileId).toStdWString().c_str(),
-                    QDir::toNativeSeparators(_setupParams.filesystemPath).toStdWString().c_str(),
-                    &findData) != S_OK) {
+                    QDir::toNativeSeparators(filePath).toStdWString().c_str()) != S_OK) {
             qCCritical(lcVfsWin) << "Error in CFPConvertToPlaceHolder!";
             return false;
         }
@@ -352,6 +379,7 @@ bool VfsWin::isDehydratedPlaceholder(const QString &fileRelativePath)
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 nullptr,
                 &isDehydrated,
+                nullptr,
                 nullptr) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
         return false;
@@ -375,6 +403,7 @@ bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 &isPlaceholder,
                 &isDehydrated,
+                nullptr,
                 &isDirectory) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
         return false;
@@ -450,18 +479,7 @@ void VfsWin::fileStatusChanged(const QString &filePath, OCC::SyncFileStatus stat
     }
     else if (status.tag() == OCC::SyncFileStatus::StatusUpToDate) {
         qCDebug(lcVfsWin) << "Status UpToDate";
-        QString fileRelativePath = filePath.midRef(_setupParams.filesystemPath.size()).toUtf8();
-        bool isDehydrated = isDehydratedPlaceholder(fileRelativePath);
-        // Update file type in DB
-        OCC::SyncJournalFileRecord record;
-        if (_setupParams.journal->getFileRecord(fileRelativePath, &record) && record.isValid()) {
-            record._type = isDehydrated ? ItemTypeVirtualFile : ItemTypeFile;
-            _setupParams.journal->setFileRecord(record);
-        }
-        // Update pin state in DB
-        setPinStateInDb(fileRelativePath, isDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal);
-        // Set status to synchronized
-        setPlaceholderStatus(filePath, true);
+        checkAndFixFileMetadata(filePath);
     }
     else if (status.tag() == OCC::SyncFileStatus::StatusSync) {
         qCDebug(lcVfsWin) << "Status Sync";
@@ -471,7 +489,11 @@ void VfsWin::fileStatusChanged(const QString &filePath, OCC::SyncFileStatus stat
         bool isDehydrated = isDehydratedPlaceholder(fileRelativePath);
         if (*localPinState == OCC::PinState::OnlineOnly && !isDehydrated) {
             qCDebug(lcVfsWin) << "Dehydrate file " << filePath;
-            dehydrateFile(filePath);
+            auto dehydrateFct = [=]() {
+                dehydrateFile(filePath);
+            };
+            std::thread dehydrateTask(dehydrateFct);
+            dehydrateTask.detach();
         }
         else if (*localPinState == OCC::PinState::AlwaysLocal && isDehydrated) {
             qCDebug(lcVfsWin) << "Hydrate file " << filePath;

@@ -41,6 +41,7 @@ extern "C" {
         const wchar_t *filePath, 
         bool *isPlaceholder, 
         bool *isDehydrated,
+        bool *isSynced,
         bool *isDirectory);
 
     DLL_EXP int __cdecl CFPSetPlaceHolderStatus(
@@ -64,8 +65,7 @@ extern "C" {
 
     DLL_EXP int __cdecl CFPConvertToPlaceHolder(
         const wchar_t *fileId,
-        const wchar_t *destPath,
-        WIN32_FIND_DATA *findData);
+        const wchar_t *filePath);
 
     DLL_EXP int __cdecl CFPUpdateFetchStatus(
         const wchar_t *driveId,

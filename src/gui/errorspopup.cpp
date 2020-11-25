@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QBoxLayout>
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
+#include <QLoggingCategory>
 #include <QPainter>
 #include <QPainterPath>
 #include <QScreen>
@@ -44,6 +45,8 @@ static const int menuOffsetX = -30;
 static const int menuOffsetY = 10;
 
 const std::string actionTypeProperty = "actionType";
+
+Q_LOGGING_CATEGORY(lcErrorsPopup, "gui.errorspopup", QtInfoMsg)
 
 ErrorsPopup::ErrorsPopup(const QList<DriveError> &driveErrorList, QPoint position, QWidget *parent)
     : QDialog(parent)

@@ -19,11 +19,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "bottomwidget.h"
 
+#include <QLoggingCategory>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPointF>
 
 namespace KDC {
+
+Q_LOGGING_CATEGORY(lcBottomWidget, "gui.bottomwidget", QtInfoMsg)
 
 BottomWidget::BottomWidget(QWidget *parent)
     : QWidget(parent)

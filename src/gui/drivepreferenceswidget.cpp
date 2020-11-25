@@ -357,8 +357,10 @@ void DrivePreferencesWidget::updateAccountInfo()
 {
     OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
     if (!accountPtr.isNull()) {
-        _accountAvatarLabel->setPixmap(OCC::Utility::getAvatarFromImage(accountPtr->avatar())
-                                       .scaled(avatarSize, avatarSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        if (!accountPtr->avatar().isNull()) {
+            _accountAvatarLabel->setPixmap(OCC::Utility::getAvatarFromImage(accountPtr->avatar())
+                                           .scaled(avatarSize, avatarSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
 
         _accountNameLabel->setText(accountPtr->davDisplayName());
 
