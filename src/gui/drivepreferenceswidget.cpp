@@ -744,9 +744,11 @@ bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, 
     folderDefinition.targetPath = OCC::FolderDefinition::prepareTargetPath(serverFolderPath);
     folderDefinition.ignoreHiddenFiles = OCC::FolderMan::instance()->ignoreHiddenFiles();
     folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
+#ifdef Q_OS_WIN
     if (OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane()) {
         folderDefinition.navigationPaneClsid = QUuid::createUuid();
     }
+#endif
 
     OCC::AccountStatePtr accountStatePtr = OCC::AccountManager::instance()->getAccountStateFromId(_accountId);
     OCC::Folder *folder = OCC::FolderMan::instance()->addFolder(accountStatePtr.data(), folderDefinition);

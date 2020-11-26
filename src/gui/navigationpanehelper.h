@@ -29,17 +29,23 @@ class NavigationPaneHelper : public QObject
 public:
     NavigationPaneHelper(FolderMan *folderMan);
 
+#ifdef Q_OS_WIN
     bool showInExplorerNavigationPane() const { return _showInExplorerNavigationPane; }
     void setShowInExplorerNavigationPane(bool show);
 
     void scheduleUpdateCloudStorageRegistry();
+#endif
 
 private:
+#ifdef Q_OS_WIN
     void updateCloudStorageRegistry();
+#endif
 
     FolderMan *_folderMan;
     bool _showInExplorerNavigationPane;
+#ifdef Q_OS_WIN
     QTimer _updateCloudStorageRegistryTimer;
+#endif
 };
 
 } // namespace OCC

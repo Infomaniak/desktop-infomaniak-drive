@@ -175,10 +175,6 @@
         <translation>Ordner bearbeiten</translation>
     </message>
     <message>
-        <source>You will find all your files in this folder when the configuration is complete.&lt;br&gt;You can drop new files there to sync them to your kDrive.</source>
-        <translation>Alle Ihre Dateien befinden sich in diesem Ordner, sobald die Einrichtung abgeschlossen ist.&lt;br&gt;Sie können dort neue Dateien ablegen und mit Ihrem kDrive synchronisieren.</translation>
-    </message>
-    <message>
         <source>END</source>
         <translation>ENDE</translation>
     </message>
@@ -189,6 +185,14 @@
     <message>
         <source>The contents of the &lt;b&gt;%1&lt;/b&gt; folder will be synchronized in your kDrive</source>
         <translation>Der Inhalt des &lt;b&gt;%1&lt;/b&gt;-Ordners wird in Ihrem kDrive synchronisiert</translation>
+    </message>
+    <message>
+        <source>You will find all your files in this folder when the configuration is complete. You can drop new files there to sync them to your kDrive.</source>
+        <translation>lle Ihre Dateien befinden sich in diesem Ordner, sobald die Einrichtung abgeschlossen ist. Sie können dort neue Dateien ablegen und mit Ihrem kDrive synchronisieren.</translation>
+    </message>
+    <message>
+        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -221,10 +225,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. Learn more</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Conserve your computer space</source>
         <translation type="unfinished"></translation>
     </message>
@@ -239,6 +239,10 @@
     <message>
         <source>YES</source>
         <translation type="unfinished">JA</translation>
+    </message>
+    <message>
+        <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

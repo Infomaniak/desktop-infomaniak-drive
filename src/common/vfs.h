@@ -128,7 +128,7 @@ public:
      *
      * The plugin-specific work is done in startImpl().
      */
-    void start(const VfsSetupParams &params, QString &namespaceCLSID = QString());
+    void start(const VfsSetupParams &params, QString &namespaceCLSID);
 
     /// Stop interaction with VFS provider. Like when the client application quits.
     virtual void stop() = 0;
@@ -261,7 +261,7 @@ protected:
      * Usually some registration needs to be done with the backend. This function
      * should take care of it if necessary.
      */
-    virtual void startImpl(const VfsSetupParams &params, QString &namespaceCLSID = QString()) = 0;
+    virtual void startImpl(const VfsSetupParams &params, QString &namespaceCLSID) = 0;
 
     // Db-backed pin state handling. Derived classes may use it to implement pin states.
     bool setPinStateInDb(const QString &fileRelativePath, PinState state);

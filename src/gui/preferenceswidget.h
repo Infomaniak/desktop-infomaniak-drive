@@ -55,7 +55,9 @@ private slots:
     void onDarkThemeSwitchClicked(bool checked = false);
     void onMonochromeSwitchClicked(bool checked = false);
     void onLaunchAtStartupSwitchClicked(bool checked = false);
+#ifdef Q_OS_WIN
     void onShortcutsSwitchClicked(bool checked = false);
+#endif
     void onDebuggingWidgetClicked();
     void onFilesToExcludeWidgetClicked();
     void onProxyServerWidgetClicked();

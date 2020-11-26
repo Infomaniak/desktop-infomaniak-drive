@@ -565,6 +565,8 @@ qint64 Utility::folderDiskSize(const QString &dirPath)
         fileSizeLow = GetCompressedFileSizeA(it.next().toStdString().c_str(), &fileSizeHigh);
         total += ((ULONGLONG)fileSizeHigh << 32) + fileSizeLow;
     }
+#else
+    Q_UNUSED(dirPath)
 #endif
 
     return total;

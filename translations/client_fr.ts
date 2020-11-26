@@ -175,12 +175,8 @@
         <translation>Modifier le dossier</translation>
     </message>
     <message>
-        <source>You will find all your files in this folder when the configuration is complete.&lt;br&gt;You can drop new files there to sync them to your kDrive.</source>
-        <translation>Vous retrouverez tous vos fichiers dans ce dossier une fois la configuration terminée.&lt;br&gt;Vous pouvez y glisser de nouveaux fichiers pour les synchroniser avec votre kDrive.</translation>
-    </message>
-    <message>
         <source>END</source>
-        <translation>FIN</translation>
+        <translation>TERMINER</translation>
     </message>
     <message>
         <source>Select folder</source>
@@ -189,6 +185,14 @@
     <message>
         <source>The contents of the &lt;b&gt;%1&lt;/b&gt; folder will be synchronized in your kDrive</source>
         <translation>Le contenu du dossier &lt;b&gt;%1&lt;/b&gt; sera synchronisé sur votre kDrive</translation>
+    </message>
+    <message>
+        <source>You will find all your files in this folder when the configuration is complete. You can drop new files there to sync them to your kDrive.</source>
+        <translation>Vous retrouverez tous vos fichiers dans ce dossier une fois la configuration terminée. Vous pouvez y glisser de nouveaux fichiers pour les synchroniser avec votre kDrive.</translation>
+    </message>
+    <message>
+        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation>Ce dossier n&apos;est pas compatible avec la Lite Sync. Veuillez sélectionner un autre dossier ou, si vous continuez, la Lite Sync ne sera pas activée.  &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;En savoir plus&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
@@ -221,10 +225,6 @@
         <translation>Voulez vous activer la Lite Sync ?</translation>
     </message>
     <message>
-        <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. Learn more</source>
-        <translation>Lite Sync synchronise tous vos fichiers sans utiliser d&apos;espace sur votre ordinateur. Vous pouvez parcourir les fichiers de votre kDrive et les télécharger localement quand vous le souhaitez. En savoir plus.</translation>
-    </message>
-    <message>
         <source>Conserve your computer space</source>
         <translation>Economiser l&apos;espace de votre ordinateur</translation>
     </message>
@@ -239,6 +239,10 @@
     <message>
         <source>YES</source>
         <translation>OUI</translation>
+    </message>
+    <message>
+        <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation>La Lite Sync synchronise tous vos fichiers sans utiliser l&apos;espace de votre ordinateur. Vous pouvez parcourir les fichiers de votre kDrive et les télécharger quand vous le souhaitez. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;En savoir plus&lt;/a&gt;</translation>
     </message>
 </context>
 <context>

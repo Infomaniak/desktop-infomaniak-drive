@@ -654,6 +654,7 @@ void Folder::setSupportsVirtualFiles(bool enabled)
         disconnect(_vfs.data(), 0, this, 0);
         disconnect(&_engine->syncFileStatusTracker(), 0, _vfs.data(), 0);
 
+#ifdef Q_OS_WIN
         if (newMode == Vfs::Mode::WindowsCfApi) {
             // Remove legacy sync root keys
             Utility::removeSyncRootKeys(navigationPaneClsid());
@@ -666,6 +667,7 @@ void Folder::setSupportsVirtualFiles(bool enabled)
             }
             Utility::addSyncRootKeys(navigationPaneClsid(), path(), cleanPath());
         }
+#endif
 
         _vfs.reset(createVfsFromPlugin(newMode).release());        
 

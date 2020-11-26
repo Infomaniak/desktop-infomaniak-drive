@@ -998,7 +998,9 @@ Folder *FolderMan::addFolder(AccountState *accountState, const FolderDefinition 
         emit folderListChanged(_folderMap);
     }
 
+#ifdef Q_OS_WIN
     _navigationPaneHelper.scheduleUpdateCloudStorageRegistry();
+#endif
     return folder;
 }
 
@@ -1122,7 +1124,9 @@ void FolderMan::removeFolder(Folder *f)
         delete f;
     }
 
+#ifdef Q_OS_WIN
     _navigationPaneHelper.scheduleUpdateCloudStorageRegistry();
+#endif
 
     emit folderListChanged(_folderMap);
 }

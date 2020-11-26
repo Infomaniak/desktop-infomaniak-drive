@@ -30,10 +30,13 @@ NavigationPaneHelper::NavigationPaneHelper(FolderMan *folderMan)
     ConfigFile cfg;
     _showInExplorerNavigationPane = cfg.showInExplorerNavigationPane();
 
+#ifdef Q_OS_WIN
     _updateCloudStorageRegistryTimer.setSingleShot(true);
     connect(&_updateCloudStorageRegistryTimer, &QTimer::timeout, this, &NavigationPaneHelper::updateCloudStorageRegistry);
+#endif
 }
 
+#ifdef Q_OS_WIN
 void NavigationPaneHelper::setShowInExplorerNavigationPane(bool show)
 {
     _showInExplorerNavigationPane = show;
@@ -60,7 +63,6 @@ void NavigationPaneHelper::scheduleUpdateCloudStorageRegistry()
 
 void NavigationPaneHelper::updateCloudStorageRegistry()
 {
-#ifdef Q_OS_WIN
     // Start by looking at every registered namespace extension for the sidebar, and look for an "ApplicationName" value
     // that matches ours when we saved.
     QVector<QUuid> entriesToRemove;
@@ -89,7 +91,7 @@ void NavigationPaneHelper::updateCloudStorageRegistry()
             }
         }
     }
-#endif
 }
+#endif
 
 } // namespace OCC

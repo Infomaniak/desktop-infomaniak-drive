@@ -324,9 +324,11 @@ bool AddDriveWizard::addDrive()
         if (_smartSync) {
             folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
         }
+#ifdef Q_OS_WIN
         if (OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane()) {
             folderDefinition.navigationPaneClsid = QUuid::createUuid();
         }
+#endif
 
         OCC::Folder *folder = OCC::FolderMan::instance()->addFolder(accountState, folderDefinition);
         if (folder) {

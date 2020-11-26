@@ -662,6 +662,7 @@ QString Utility::sanitizeForFileName(const QString &name)
     return result;
 }
 
+#ifdef Q_OS_WIN
 // Add legacy sync root keys
 void Utility::addSyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath)
 {
@@ -740,6 +741,7 @@ void Utility::removeSyncRootKeys(const QUuid &clsid)
         Utility::registryDeleteKeyValue(HKEY_CURRENT_USER, newstartpanelPath, clsidStr);
     }
 }
+#endif
 
 QString Utility::fileSystemName(const QString &rootPath)
 {
@@ -750,11 +752,14 @@ QString Utility::fileSystemName(const QString &rootPath)
     {
         return QString::fromStdWString(fileSystemName);
     }
+#else
+    Q_UNUSED(rootPath)
 #endif
 
     return QString();
 }
 
+#ifdef Q_OS_WIN
 void Utility::setRootFolderPinState(const QUuid &clsid, bool visible)
 {
     QString clsidStr = clsid.toString();
@@ -764,5 +769,6 @@ void Utility::setRootFolderPinState(const QUuid &clsid, bool visible)
         Utility::registrySetKeyValue(HKEY_CLASSES_ROOT, clsidPath, "System.IsPinnedToNameSpaceTree", REG_DWORD, visible);
     }
 }
+#endif
 
 } // namespace OCC
