@@ -60,6 +60,9 @@ AddDriveLocalFolderWidget::AddDriveLocalFolderWidget(QWidget *parent)
     , _folderIconLabel(nullptr)
     , _folderNameLabel(nullptr)
     , _folderPathLabel(nullptr)
+    , _warningWidget(nullptr)
+    , _warningIconLabel(nullptr)
+    , _warningLabel(nullptr)
     , _infoWidget(nullptr)
     , _infoIconLabel(nullptr)
     , _infoLabel(nullptr)
@@ -67,6 +70,10 @@ AddDriveLocalFolderWidget::AddDriveLocalFolderWidget(QWidget *parent)
     , _endButton(nullptr)
     , _folderIconColor(QColor())
     , _folderIconSize(QSize())
+    , _infoIconColor(QColor())
+    , _infoIconSize(QSize())
+    , _warningIconColor(QColor())
+    , _warningIconSize(QSize())
     , _logoColor(QColor())
     , _needToSave(false)
     , _smartSync(false)
@@ -197,12 +204,36 @@ void AddDriveLocalFolderWidget::initUI()
     infoHBox->addWidget(_infoLabel);
     infoHBox->setStretchFactor(_infoLabel, 1);
 
+    // Warning
+    _warningWidget = new QWidget(this);
+    _warningWidget->setVisible(false);
+    mainLayout->addWidget(_warningWidget);
+
+    QVBoxLayout *warningVBox = new QVBoxLayout();
+    warningVBox->setContentsMargins(0, 0, 0, 0);
+    _warningWidget->setLayout(warningVBox);
+
+    QHBoxLayout *warningHBox = new QHBoxLayout();
+    warningHBox->setContentsMargins(0, 0, 0, 0);
+    warningHBox->setSpacing(infoBoxSpacing);
+    warningVBox->addLayout(warningHBox);
+    warningVBox->addSpacing(infoWidgetVMargin);
+
+    _warningIconLabel = new QLabel(this);
+    warningHBox->addWidget(_warningIconLabel);
+
+    _warningLabel = new QLabel(this);
+    _warningLabel->setObjectName("largeMediumTextLabel");
+    _warningLabel->setWordWrap(true);
+    warningHBox->addWidget(_warningLabel);
+    warningHBox->setStretchFactor(_warningLabel, 1);
+
     // Description
     QLabel *descriptionLabel = new QLabel(this);
     descriptionLabel->setObjectName("largeNormalTextLabel");
     descriptionLabel->setWordWrap(true);
-    descriptionLabel->setText(tr("You will find all your files in this folder when the configuration is complete.<br>"
-                                 "You can drop new files there to sync them to your kDrive."));
+    descriptionLabel->setText(tr("You will find all your files in this folder when the configuration is complete."
+                                 " You can drop new files there to sync them to your kDrive."));
     mainLayout->addWidget(descriptionLabel);
     mainLayout->addStretch();
 
@@ -226,6 +257,7 @@ void AddDriveLocalFolderWidget::initUI()
 
     connect(updateButton, &CustomToolButton::clicked, this, &AddDriveLocalFolderWidget::onUpdateFolderButtonTriggered);
     connect(_folderPathLabel, &QLabel::linkActivated, this, &AddDriveLocalFolderWidget::onLinkActivated);
+    connect(_warningLabel, &QLabel::linkActivated, this, &AddDriveLocalFolderWidget::onLinkActivated);
     connect(_backButton, &QPushButton::clicked, this, &AddDriveLocalFolderWidget::onBackButtonTriggered);
     connect(_endButton, &QPushButton::clicked, this, &AddDriveLocalFolderWidget::onContinueButtonTriggered);
 }
@@ -255,7 +287,16 @@ void AddDriveLocalFolderWidget::updateUI()
                 // Check file system
                 QString fsName(OCC::Utility::fileSystemName(dir.rootPath()));
                 _folderCompatibleWithSmartSync = (fsName == "NTFS");
-                qCDebug(lcAddDriveLocalFolderWidget) << "Folder compatible with Lite Sync : " << _folderCompatibleWithSmartSync;
+                if (!_folderCompatibleWithSmartSync) {
+                    _warningLabel->setText(tr("This folder is not compatible with Lite Sync."
+                                              " Please select another folder or if you continue Lite Sync will be disabled."
+                                              " <a style=\"%1\" href=\"ref\">Learn more</a>")
+                                           .arg(OCC::Utility::linkStyle));
+                    _warningWidget->setVisible(true);
+                }
+                else {
+                    _warningWidget->setVisible(false);
+                }
             }
         }
     }
@@ -285,6 +326,14 @@ void AddDriveLocalFolderWidget::setInfoIcon()
     if (_infoIconColor != QColor() && _infoIconSize != QSize()) {
         _infoIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/information.svg", _infoIconColor)
                                    .pixmap(_infoIconSize));
+    }
+}
+
+void AddDriveLocalFolderWidget::setWarningIcon()
+{
+    if (_warningIconColor != QColor() && _warningIconSize != QSize()) {
+        _warningIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/warning.svg", _warningIconColor)
+                                   .pixmap(_warningIconSize));
     }
 }
 

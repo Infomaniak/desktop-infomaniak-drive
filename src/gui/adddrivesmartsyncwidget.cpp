@@ -123,7 +123,8 @@ void AddDriveSmartSyncWidget::initUI()
     textLabel->setContentsMargins(0, 0, 0, 0);
     textLabel->setText(tr("Lite Sync syncs all your files without using your computer space."
                           " You can browse the files in your kDrive and download them locally whenever you want."
-                          " Learn more"));
+                          " <a style=\"%1\" href=\"ref\">Learn more</a>")
+                        .arg(OCC::Utility::linkStyle));
     textLabel->setWordWrap(true);
     mainLayout->addWidget(textLabel);
     mainLayout->addSpacing(textBoxVMargin);
@@ -189,9 +190,15 @@ void AddDriveSmartSyncWidget::initUI()
     _yesButton->setText(tr("YES"));
     buttonsHBox->addWidget(_yesButton);
 
+    connect(textLabel, &QLabel::linkActivated, this, &AddDriveSmartSyncWidget::onLinkActivated);
     connect(_backButton, &QPushButton::clicked, this, &AddDriveSmartSyncWidget::onBackButtonTriggered);
     connect(_laterButton, &QPushButton::clicked, this, &AddDriveSmartSyncWidget::onLaterButtonTriggered);
     connect(_yesButton, &QPushButton::clicked, this, &AddDriveSmartSyncWidget::onYesButtonTriggered);
+}
+
+void AddDriveSmartSyncWidget::onLinkActivated(const QString &link)
+{
+    Q_UNUSED(link)
 }
 
 void AddDriveSmartSyncWidget::setLogoColor(const QColor &color)

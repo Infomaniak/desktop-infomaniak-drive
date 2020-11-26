@@ -64,6 +64,7 @@ private:
     void initUI();
 
 private slots:
+    void onLinkActivated(const QString &link);
     void onBackButtonTriggered(bool checked = false);
     void onLaterButtonTriggered(bool checked = false);
     void onYesButtonTriggered(bool checked = false);

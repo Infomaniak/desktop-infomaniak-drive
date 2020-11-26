@@ -37,6 +37,8 @@ class AddDriveLocalFolderWidget : public QWidget
     Q_PROPERTY(QSize folder_icon_size READ folderIconSize WRITE setFolderIconSize)
     Q_PROPERTY(QColor info_icon_color READ infoIconColor WRITE setInfoIconColor)
     Q_PROPERTY(QSize info_icon_size READ infoIconSize WRITE setInfoIconSize)
+    Q_PROPERTY(QSize warning_icon_size READ warningIconSize WRITE setWarningIconSize)
+    Q_PROPERTY(QColor warning_icon_color READ warningIconColor WRITE setWarningIconColor)
     Q_PROPERTY(QColor logo_color READ logoColor WRITE setLogoColor)
 
 public:
@@ -46,7 +48,7 @@ public:
     void setLocalFolderPath(const QString &path);
     inline QString localFolderPath() const { return _localFolderPath; }
     inline void setSmartSync(bool smartSync) { _smartSync = smartSync; }
-    inline bool folderCompatibleWithSmartSync() { return _folderCompatibleWithSmartSync; }
+    inline bool folderCompatibleWithSmartSync() const { return _folderCompatibleWithSmartSync; }
     void setButtonIcon(const QColor &value);
 
 signals:
@@ -60,6 +62,9 @@ private:
     QLabel *_folderIconLabel;
     QLabel *_folderNameLabel;
     QLabel *_folderPathLabel;
+    QWidget *_warningWidget;
+    QLabel *_warningIconLabel;
+    QLabel *_warningLabel;
     QWidget *_infoWidget;
     QLabel *_infoIconLabel;
     QLabel *_infoLabel;
@@ -69,6 +74,8 @@ private:
     QSize _folderIconSize;
     QColor _infoIconColor;
     QSize _infoIconSize;
+    QColor _warningIconColor;
+    QSize _warningIconSize;
     QColor _logoColor;
     bool _needToSave;
     bool _smartSync;
@@ -102,6 +109,18 @@ private:
         setInfoIcon();
     }
 
+    inline QSize warningIconSize() const { return _warningIconSize; }
+    inline void setWarningIconSize(const QSize &size) {
+        _warningIconSize = size;
+        setWarningIcon();
+    }
+
+    inline QColor warningIconColor() const { return _warningIconColor; }
+    inline void setWarningIconColor(const QColor &value) {
+        _warningIconColor = value;
+        setWarningIcon();
+    }
+
     inline QColor logoColor() const { return _logoColor; }
     void setLogoColor(const QColor& color);
 
@@ -110,6 +129,7 @@ private:
     void selectFolder(const QString &startDirPath);
     void setFolderIcon();
     void setInfoIcon();
+    void setWarningIcon();
 
 private slots:
     void onDisplayMessage(const QString &text);

@@ -43,8 +43,11 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     , _menuButton(nullptr)
     , _statusIconLabel(nullptr)
     , _nameLabel(nullptr)
+    , _smartSyncIconLabel(nullptr)
     , _updateWidget(nullptr)
     , _isExpanded(false)
+    , _smartSync(false)
+    , _folderCompatibleWithSmartSync(false)
 {
     QHBoxLayout *mainLayout = new QHBoxLayout();
     mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -95,6 +98,11 @@ FolderItemWidget::FolderItemWidget(const QString &folderId, const FolderInfo *fo
     synchroLabel->setObjectName("descriptionLabel");
     synchroLabel->setContextMenuPolicy(Qt::PreventContextMenu);
     folderVBoxLayout->addWidget(synchroLabel);
+
+    // Smart sync activation icon
+    _smartSyncIconLabel = new QLabel(this);
+    _smartSyncIconLabel->setVisible(false);
+    detailHBoxLayout->addWidget(_smartSyncIconLabel);
 
     // Menu button
     _menuButton = new CustomToolButton(this);
@@ -169,6 +177,21 @@ void FolderItemWidget::updateItem(const FolderInfo *folderInfo)
 void FolderItemWidget::setUpdateWidgetVisible(bool visible)
 {
     _updateWidget->setVisible(visible);
+}
+
+void FolderItemWidget::setSmartSync(bool smartSync)
+{
+    _smartSync = smartSync;
+    _smartSyncIconLabel->setVisible(smartSync);
+}
+
+void FolderItemWidget::setFolderCompatibleWithSmartSync(bool folderCompatibleWithSmartSync)
+{
+    _folderCompatibleWithSmartSync = folderCompatibleWithSmartSync;
+    _smartSyncIconLabel->setPixmap(
+                folderCompatibleWithSmartSync
+                ? OCC::Utility::getIconWithColor(":/client/resources/icons/actions/litesync-on.svg").pixmap(QSize(18, 18))
+                : OCC::Utility::getIconWithColor(":/client/resources/icons/actions/litesync-off.svg").pixmap(QSize(18, 18)));
 }
 
 void FolderItemWidget::setExpandButton()

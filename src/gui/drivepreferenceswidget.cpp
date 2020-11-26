@@ -523,6 +523,15 @@ void DrivePreferencesWidget::updateFoldersBlocs()
             }
         }
 
+        // Check if smart sync is activated
+        bool smartSync = false;
+        for (auto folderInfoElt : _accountInfo->_folderMap) {
+            OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
+            if (folder) {
+                smartSync = folder->vfs().mode() != OCC::Vfs::Off;
+            }
+        }
+
         for (auto folderInfoElt : _accountInfo->_folderMap) {
             if (!folderIdList.contains(folderInfoElt.first)) {
                 // Create folder bloc
@@ -533,6 +542,9 @@ void DrivePreferencesWidget::updateFoldersBlocs()
                 QBoxLayout *folderBox = folderBloc->addLayout(QBoxLayout::Direction::LeftToRight);
 
                 FolderItemWidget *folderItemWidget = new FolderItemWidget(folderInfoElt.first, folderInfoElt.second.get(), this);
+                OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
+                folderItemWidget->setSmartSync(smartSync);
+                folderItemWidget->setFolderCompatibleWithSmartSync(folder->canSupportVirtualFiles());
                 folderBox->addWidget(folderItemWidget);
 
                 QFrame *line = folderBloc->addSeparator();
@@ -723,7 +735,7 @@ bool DrivePreferencesWidget::createMissingFolders(const QString &folderBasePath,
 
 bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, const QString &serverFolderPath, QStringList blackList)
 {
-    bool useVirtualFileSync = _smartSyncSwitch->isChecked();
+    bool useVirtualFileSync = _smartSyncSwitch->checkState() == Qt::Checked;
 
     qCInfo(lcDrivePreferencesWidget) << "Adding folder definition for" << localFolderPath << serverFolderPath;
 
