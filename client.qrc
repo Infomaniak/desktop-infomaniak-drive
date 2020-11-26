@@ -130,5 +130,7 @@
         <file>resources/icons/actions/dark-branch-open.svg</file>
         <file>resources/icons/theme/white/state-information.svg</file>
         <file>resources/pictures/lite-sync.svg</file>
+        <file>resources/icons/actions/litesync-on.svg</file>
+        <file>resources/icons/actions/litesync-off.svg</file>
     </qresource>
 </RCC>
