@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "buttonsbarwidget.h"
 
 #include <QBrush>
+#include <QLoggingCategory>
 #include <QPainter>
 #include <QRect>
 
@@ -27,6 +28,8 @@ namespace KDC {
 
 static const int hMargin = 30;
 static const int vMargin = 20;
+
+Q_LOGGING_CATEGORY(lcButtonsBarWidget, "gui.buttonsbarwidget", QtInfoMsg)
 
 ButtonsBarWidget::ButtonsBarWidget(QWidget *parent)
     : QWidget(parent)

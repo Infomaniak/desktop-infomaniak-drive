@@ -71,6 +71,7 @@ private:
     void hydrateFile(const QString &filePath);
     DWORD getPlaceholderAttributes(const QString &filePath);
     void setPlaceholderStatus(const QString &filePath, bool inSync);
+    void checkAndFixFileMetadata(const QString &filePath);
 };
 
 class WinVfsPluginFactory : public QObject, public OCC::DefaultPluginFactory<VfsWin>

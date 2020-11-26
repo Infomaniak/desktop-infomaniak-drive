@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <QFrame>
 #include <QGraphicsDropShadowEffect>
+#include <QLoggingCategory>
 #include <QPainter>
 #include <QScrollBar>
 
@@ -33,6 +34,8 @@ static const int boxVMargin = 18;
 static const int textVSpacing = 10;
 static const int textHSpacing = 10;
 static const int shadowBlurRadius = 20;
+
+Q_LOGGING_CATEGORY(lcPreferencesBlocWidget, "gui.preferencesblocidget", QtInfoMsg)
 
 PreferencesBlocWidget::PreferencesBlocWidget(QWidget *parent)
     : QWidget(parent)

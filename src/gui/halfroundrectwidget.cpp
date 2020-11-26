@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <QBrush>
 #include <QLinearGradient>
+#include <QLoggingCategory>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPoint>
@@ -32,6 +33,8 @@ namespace KDC {
 
 static const int cornerRadius = 20;
 static const int shadowWidth = 5;
+
+Q_LOGGING_CATEGORY(lcHalfRoundRectWidget, "gui.halfroundwidget", QtInfoMsg)
 
 HalfRoundRectWidget::HalfRoundRectWidget(QWidget *parent)
     : QWidget(parent)

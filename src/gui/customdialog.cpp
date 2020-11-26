@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QBoxLayout>
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
+#include <QLoggingCategory>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStylePainter>
@@ -41,6 +42,8 @@ static const int mainBoxHMargin= 0;
 static const int mainBoxVTMargin = 0;
 static const int mainBoxVBMargin = 40;
 static const int shadowBlurRadius = 20;
+
+Q_LOGGING_CATEGORY(lcCustomDialog, "gui.customdialog", QtInfoMsg)
 
 CustomDialog::CustomDialog(bool popup, QWidget *parent)
     : QDialog(parent)

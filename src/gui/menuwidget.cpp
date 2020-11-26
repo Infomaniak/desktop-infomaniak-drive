@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <QAction>
 #include <QGraphicsDropShadowEffect>
+#include <QLoggingCategory>
 #include <QPainter>
 #include <QTimer>
 
@@ -34,6 +35,8 @@ static const int cornerRadius = 5;
 static const int shadowBlurRadius = 10;
 static const int menuOffsetX = -30;
 static const int menuOffsetY = 10;
+
+Q_LOGGING_CATEGORY(lcMenuWidget, "gui.menuwidget", QtInfoMsg)
 
 MenuWidget::MenuWidget(Type type, QWidget *parent)
     : QMenu(parent)

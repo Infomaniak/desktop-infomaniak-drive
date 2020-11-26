@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
+#include <QLoggingCategory>
 #include <QPainterPath>
 #include <QPainter>
 
@@ -31,6 +32,8 @@ static const int boxHMargin= 15;
 static const int boxVMargin = 5;
 static const int boxSpacing = 10;
 static const int shadowBlurRadius = 20;
+
+Q_LOGGING_CATEGORY(lcActionWidget, "gui.actionwidget", QtInfoMsg)
 
 ActionWidget::ActionWidget(const QString &path, const QString &text, QWidget *parent)
     : ClickableWidget(parent)
