@@ -145,6 +145,7 @@ DWORD VfsWin::getPlaceholderAttributes(const QString &filePath)
             dwChildAttrs = FILE_ATTRIBUTE_UNPINNED;
         }
     }
+
     return dwChildAttrs;
 }
 
@@ -391,35 +392,49 @@ bool VfsWin::isDehydratedPlaceholder(const QString &fileRelativePath)
 
 bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const QString &fileDirectory)
 {
-    Q_UNUSED(stat_data)
-
     qCDebug(lcVfsWin) << "statTypeVirtualFile - Begin - path = " << stat->path;
 
     QString filePath(fileDirectory + stat->path);
     bool isPlaceholder;
     bool isDehydrated;
+    bool isSynced;
     bool isDirectory;
     if (CFPGetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 &isPlaceholder,
                 &isDehydrated,
-                nullptr,
+                &isSynced,
                 &isDirectory) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
         return false;
     }
 
     if (isPlaceholder) {
-        if (isDehydrated) {
-            stat->type = ItemTypeVirtualFile;
-            qCDebug(lcVfsWin) << "Status type VirtualFile";
-            return true;
-        }
-
         if (isDirectory) {
             stat->type = ItemTypeDirectory;
             qCDebug(lcVfsWin) << "Status type Directory";
             return true;
+        }
+        else {
+            WIN32_FIND_DATA *ffd = (WIN32_FIND_DATA *) stat_data;
+            if (ffd && ffd->dwFileAttributes != INVALID_FILE_ATTRIBUTES) {
+                if ((ffd->dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) && (ffd->dwFileAttributes & FILE_ATTRIBUTE_PINNED)) {
+                    qCDebug(lcVfsWin) << "Status type VirtualFileDownload";
+                    stat->type = ItemTypeVirtualFileDownload;
+                    return true;
+                }
+                else if (!(ffd->dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) && (ffd->dwFileAttributes & FILE_ATTRIBUTE_UNPINNED)) {
+                    qCDebug(lcVfsWin) << "Status type VirtualFileDehydration";
+                    stat->type = ItemTypeVirtualFileDehydration;
+                    return true;
+                }
+            }
+
+            if (isDehydrated) {
+                qCDebug(lcVfsWin) << "Status type VirtualFile";
+                stat->type = ItemTypeVirtualFile;
+                return true;
+            }
         }
     }
 
@@ -448,6 +463,7 @@ OCC::Optional<OCC::PinState> VfsWin::pinState(const QString &fileRelativePath)
             return OCC::PinState::OnlineOnly;
         }
     }
+
     return OCC::PinState::Unspecified;
 }
 
