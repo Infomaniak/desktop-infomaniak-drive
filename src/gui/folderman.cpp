@@ -999,11 +999,16 @@ Folder *FolderMan::addFolder(AccountState *accountState, const FolderDefinition 
     }
 
 #ifdef Q_OS_WIN
-    if (folder->vfs().mode() != Vfs::WindowsCfApi) {
-        _navigationPaneHelper.scheduleUpdateCloudStorageRegistry();
-    }
     bool show = OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane();
-    Utility::setRootFolderPinState(folder->navigationPaneClsid(), show);
+    if (folder->vfs().mode() != Vfs::WindowsCfApi) {
+        if (folder->navigationPaneClsid() == QUuid()) {
+            folder->setNavigationPaneClsid(QUuid::createUuid());
+        }
+        Utility::addSyncRootKeys(folder->navigationPaneClsid(), folder->path(), folder->cleanPath(), show);
+    }
+    else {
+        Utility::setRootFolderPinState(folder->navigationPaneClsid(), show);
+    }
 #endif
 
     return folder;
@@ -1104,7 +1109,7 @@ void FolderMan::removeFolder(Folder *folder)
 
 #ifdef Q_OS_WIN
     if (folder->vfs().mode() != Vfs::WindowsCfApi) {
-        _navigationPaneHelper.scheduleUpdateCloudStorageRegistry();
+        Utility::removeSyncRootKeys(folder->navigationPaneClsid());
     }
 #endif
 
