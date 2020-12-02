@@ -662,10 +662,11 @@ void Folder::setSupportsVirtualFiles(bool enabled)
         }
         else if (_definition.virtualFilesMode == Vfs::Mode::WindowsCfApi) {
             // Add legacy sync root keys
-            if (OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane()) {
+            bool show = OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane();
+            if (navigationPaneClsid() == QUuid()) {
                 setNavigationPaneClsid(QUuid::createUuid());
             }
-            Utility::addSyncRootKeys(navigationPaneClsid(), path(), cleanPath());
+            Utility::addSyncRootKeys(navigationPaneClsid(), path(), cleanPath(), show);
         }
 #endif
 

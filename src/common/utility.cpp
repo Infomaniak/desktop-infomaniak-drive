@@ -664,7 +664,7 @@ QString Utility::sanitizeForFileName(const QString &name)
 
 #ifdef Q_OS_WIN
 // Add legacy sync root keys
-void Utility::addSyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath)
+void Utility::addSyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath, bool show)
 {
     QString clsidStr = clsid.toString();
     QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
@@ -685,8 +685,8 @@ void Utility::addSyncRootKeys(const QUuid &clsid, const QString &folderPath, con
     Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath + QStringLiteral("\\DefaultIcon"), QString(), REG_SZ, iconPath);
     Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64 + QStringLiteral("\\DefaultIcon"), QString(), REG_SZ, iconPath);
     // Step 3: Add your extension to the Navigation Pane and make it visible
-    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, QStringLiteral("System.IsPinnedToNameSpaceTree"), REG_DWORD, 0x1);
-    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64, QStringLiteral("System.IsPinnedToNameSpaceTree"), REG_DWORD, 0x1);
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, QStringLiteral("System.IsPinnedToNameSpaceTree"), REG_DWORD, show);
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64, QStringLiteral("System.IsPinnedToNameSpaceTree"), REG_DWORD, show);
     // Step 4: Set the location for your extension in the Navigation Pane
     Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, QStringLiteral("SortOrderIndex"), REG_DWORD, 0x41);
     Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64, QStringLiteral("SortOrderIndex"), REG_DWORD, 0x41);
@@ -763,10 +763,10 @@ QString Utility::fileSystemName(const QString &rootPath)
 void Utility::setRootFolderPinState(const QUuid &clsid, bool visible)
 {
     QString clsidStr = clsid.toString();
-    QString clsidPath = QString() % "CLSID\\" % clsidStr;
+    QString clsidPath = QString() % "SOFTWARE\\Classes\\CLSID\\" % clsidStr;
 
-    if (Utility::registryExistKeyTree(HKEY_CLASSES_ROOT, clsidPath)) {
-        Utility::registrySetKeyValue(HKEY_CLASSES_ROOT, clsidPath, "System.IsPinnedToNameSpaceTree", REG_DWORD, visible);
+    if (Utility::registryExistKeyTree(HKEY_CURRENT_USER, clsidPath)) {
+        Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, "System.IsPinnedToNameSpaceTree", REG_DWORD, visible);
     }
 }
 #endif

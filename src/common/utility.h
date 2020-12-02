@@ -236,7 +236,7 @@ namespace Utility {
     OCSYNC_EXPORT bool registryWalkSubKeys(HKEY hRootKey, const QString &subKey, const std::function<void(HKEY, const QString &)> &callback);
 
     // Add/remove legacy sync root keys
-    OCSYNC_EXPORT void addSyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath);
+    OCSYNC_EXPORT void addSyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath, bool show);
     OCSYNC_EXPORT void removeSyncRootKeys(const QUuid &clsid);
 
     // Set root folder pin state (wincfapi)

@@ -999,14 +999,13 @@ Folder *FolderMan::addFolder(AccountState *accountState, const FolderDefinition 
     }
 
 #ifdef Q_OS_WIN
-    if (folder->vfs().mode() == Vfs::WindowsCfApi) {
-        bool show = OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane();
-        Utility::setRootFolderPinState(folder->navigationPaneClsid(), show);
-    }
-    else {
+    if (folder->vfs().mode() != Vfs::WindowsCfApi) {
         _navigationPaneHelper.scheduleUpdateCloudStorageRegistry();
     }
+    bool show = OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane();
+    Utility::setRootFolderPinState(folder->navigationPaneClsid(), show);
 #endif
+
     return folder;
 }
 
