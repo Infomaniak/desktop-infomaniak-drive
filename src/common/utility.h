@@ -236,11 +236,11 @@ namespace Utility {
     OCSYNC_EXPORT bool registryWalkSubKeys(HKEY hRootKey, const QString &subKey, const std::function<void(HKEY, const QString &)> &callback);
 
     // Add/remove legacy sync root keys
-    OCSYNC_EXPORT void addSyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath, bool show);
-    OCSYNC_EXPORT void removeSyncRootKeys(const QUuid &clsid);
+    OCSYNC_EXPORT void addLegacySyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath, bool show);
+    OCSYNC_EXPORT void removeLegacySyncRootKeys(const QUuid &clsid);
 
-    // Set root folder pin state (wincfapi)
-    OCSYNC_EXPORT void setRootFolderPinState(const QUuid &clsid, bool visible);
+    // Set folder pin state
+    OCSYNC_EXPORT void setFolderPinState(const QUuid &clsid, bool show);
 
     // Possibly refactor to share code with UnixTimevalToFileTime in c_time.c
     OCSYNC_EXPORT void UnixTimeToFiletime(time_t t, FILETIME *filetime);

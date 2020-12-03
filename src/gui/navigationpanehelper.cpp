@@ -53,7 +53,7 @@ void NavigationPaneHelper::setShowInExplorerNavigationPane(bool show)
 
     // Set pin state
     foreach (Folder *folder, _folderMan->map()) {
-        Utility::setRootFolderPinState(folder->navigationPaneClsid(), show);
+        Utility::setFolderPinState(folder->navigationPaneClsid(), show);
     }
 }
 
@@ -83,7 +83,7 @@ void NavigationPaneHelper::updateCloudStorageRegistry()
 
     // Then remove anything
     foreach (auto &clsid, entriesToRemove) {
-        Utility::removeSyncRootKeys(clsid);
+        Utility::removeLegacySyncRootKeys(clsid);
     }
 
     // Then re-save every folder that has a valid navigationPaneClsid to the registry
@@ -93,7 +93,7 @@ void NavigationPaneHelper::updateCloudStorageRegistry()
             if (folder->navigationPaneClsid() == QUuid()) {
                 folder->setNavigationPaneClsid(QUuid::createUuid());
             }
-            Utility::addSyncRootKeys(folder->navigationPaneClsid(), folder->path(), folder->cleanPath(), show);
+            Utility::addLegacySyncRootKeys(folder->navigationPaneClsid(), folder->path(), folder->cleanPath(), show);
         }
     }
 }

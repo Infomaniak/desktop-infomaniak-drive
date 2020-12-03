@@ -664,7 +664,7 @@ QString Utility::sanitizeForFileName(const QString &name)
 
 #ifdef Q_OS_WIN
 // Add legacy sync root keys
-void Utility::addSyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath, bool show)
+void Utility::addLegacySyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath, bool show)
 {
     QString clsidStr = clsid.toString();
     QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
@@ -720,7 +720,7 @@ void Utility::addSyncRootKeys(const QUuid &clsid, const QString &folderPath, con
 }
 
 // Remove legacy sync root keys
-void Utility::removeSyncRootKeys(const QUuid &clsid)
+void Utility::removeLegacySyncRootKeys(const QUuid &clsid)
 {
     QString clsidStr = clsid.toString();
     QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
@@ -760,15 +760,21 @@ QString Utility::fileSystemName(const QString &rootPath)
 }
 
 #ifdef Q_OS_WIN
-void Utility::setRootFolderPinState(const QUuid &clsid, bool visible)
+void Utility::setFolderPinState(const QUuid &clsid, bool show)
 {
     QString clsidStr = clsid.toString();
-    QString clsidPath = QString() % "SOFTWARE\\Classes\\CLSID\\" % clsidStr;
+    QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
+    QString clsidPathWow64 = QString() % "Software\\Classes\\Wow6432Node\\CLSID\\" % clsidStr;
 
     if (Utility::registryExistKeyTree(HKEY_CURRENT_USER, clsidPath)) {
-        Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, "System.IsPinnedToNameSpaceTree", REG_DWORD, visible);
+        Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, "System.IsPinnedToNameSpaceTree", REG_DWORD, show);
+    }
+
+    if (Utility::registryExistKeyTree(HKEY_CURRENT_USER, clsidPathWow64)) {
+        Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64, "System.IsPinnedToNameSpaceTree", REG_DWORD, show);
     }
 }
+
 #endif
 
 } // namespace OCC

@@ -1000,14 +1000,14 @@ Folder *FolderMan::addFolder(AccountState *accountState, const FolderDefinition 
 
 #ifdef Q_OS_WIN
     bool show = OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane();
-    if (folder->vfs().mode() != Vfs::WindowsCfApi) {
+    if (folder->vfs().mode() == Vfs::WindowsCfApi) {
+        Utility::setFolderPinState(folder->navigationPaneClsid(), show);
+    }
+    else {
         if (folder->navigationPaneClsid() == QUuid()) {
             folder->setNavigationPaneClsid(QUuid::createUuid());
         }
-        Utility::addSyncRootKeys(folder->navigationPaneClsid(), folder->path(), folder->cleanPath(), show);
-    }
-    else {
-        Utility::setRootFolderPinState(folder->navigationPaneClsid(), show);
+        Utility::addLegacySyncRootKeys(folder->navigationPaneClsid(), folder->path(), folder->cleanPath(), show);
     }
 #endif
 
@@ -1109,7 +1109,7 @@ void FolderMan::removeFolder(Folder *folder)
 
 #ifdef Q_OS_WIN
     if (folder->vfs().mode() != Vfs::WindowsCfApi) {
-        Utility::removeSyncRootKeys(folder->navigationPaneClsid());
+        Utility::removeLegacySyncRootKeys(folder->navigationPaneClsid());
     }
 #endif
 

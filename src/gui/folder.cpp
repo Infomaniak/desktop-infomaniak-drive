@@ -657,7 +657,7 @@ void Folder::setSupportsVirtualFiles(bool enabled)
 #ifdef Q_OS_WIN
         if (newMode == Vfs::Mode::WindowsCfApi) {
             // Remove legacy sync root keys
-            Utility::removeSyncRootKeys(navigationPaneClsid());
+            Utility::removeLegacySyncRootKeys(navigationPaneClsid());
             setNavigationPaneClsid(QUuid());
         }
         else if (_definition.virtualFilesMode == Vfs::Mode::WindowsCfApi) {
@@ -666,7 +666,7 @@ void Folder::setSupportsVirtualFiles(bool enabled)
             if (navigationPaneClsid() == QUuid()) {
                 setNavigationPaneClsid(QUuid::createUuid());
             }
-            Utility::addSyncRootKeys(navigationPaneClsid(), path(), cleanPath(), show);
+            Utility::addLegacySyncRootKeys(navigationPaneClsid(), path(), cleanPath(), show);
         }
 #endif
 
