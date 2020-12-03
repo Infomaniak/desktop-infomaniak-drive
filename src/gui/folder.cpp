@@ -657,15 +657,16 @@ void Folder::setSupportsVirtualFiles(bool enabled)
 #ifdef Q_OS_WIN
         if (newMode == Vfs::Mode::WindowsCfApi) {
             // Remove legacy sync root keys
-            Utility::removeSyncRootKeys(navigationPaneClsid());
+            Utility::removeLegacySyncRootKeys(navigationPaneClsid());
             setNavigationPaneClsid(QUuid());
         }
         else if (_definition.virtualFilesMode == Vfs::Mode::WindowsCfApi) {
             // Add legacy sync root keys
-            if (OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane()) {
+            bool show = OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane();
+            if (navigationPaneClsid() == QUuid()) {
                 setNavigationPaneClsid(QUuid::createUuid());
             }
-            Utility::addSyncRootKeys(navigationPaneClsid(), path(), cleanPath());
+            Utility::addLegacySyncRootKeys(navigationPaneClsid(), path(), cleanPath(), show);
         }
 #endif
 
@@ -1242,7 +1243,7 @@ void Folder::registerFolderWatcher()
     connect(_folderWatcher.data(), &FolderWatcher::becameUnreliable,
         this, &Folder::slotWatcherUnreliable);
     _folderWatcher->init(path());
-    _folderWatcher->startNotificatonTest(path() + QLatin1String(".owncloudsync.log"));
+    _folderWatcher->startNotificatonTest(path() + QLatin1String(".notificationTest"));
 }
 
 bool Folder::supportsVirtualFiles() const

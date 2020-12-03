@@ -999,8 +999,18 @@ Folder *FolderMan::addFolder(AccountState *accountState, const FolderDefinition 
     }
 
 #ifdef Q_OS_WIN
-    _navigationPaneHelper.scheduleUpdateCloudStorageRegistry();
+    bool show = OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane();
+    if (folder->vfs().mode() == Vfs::WindowsCfApi) {
+        Utility::setFolderPinState(folder->navigationPaneClsid(), show);
+    }
+    else {
+        if (folder->navigationPaneClsid() == QUuid()) {
+            folder->setNavigationPaneClsid(QUuid::createUuid());
+        }
+        Utility::addLegacySyncRootKeys(folder->navigationPaneClsid(), folder->path(), folder->cleanPath(), show);
+    }
 #endif
+
     return folder;
 }
 
@@ -1088,45 +1098,48 @@ QStringList FolderMan::findFileInLocalFolders(const QString &relPath, const Acco
     return re;
 }
 
-void FolderMan::removeFolder(Folder *f)
+void FolderMan::removeFolder(Folder *folder)
 {
-    if (!f) {
+    if (!folder) {
         qCCritical(lcFolderMan) << "Can not remove null folder";
         return;
     }
 
-    qCInfo(lcFolderMan) << "Removing " << f->alias();
+    qCInfo(lcFolderMan) << "Removing " << folder->alias();
 
-    const bool currentlyRunning = f->isSyncRunning();
+#ifdef Q_OS_WIN
+    if (folder->vfs().mode() != Vfs::WindowsCfApi) {
+        Utility::removeLegacySyncRootKeys(folder->navigationPaneClsid());
+    }
+#endif
+
+    const bool currentlyRunning = folder->isSyncRunning();
     if (currentlyRunning) {
         // abort the sync now
-        f->slotTerminateSync();
+        folder->slotTerminateSync();
     }
 
-    if (_scheduledFolders.removeAll(f) > 0) {
+    if (_scheduledFolders.removeAll(folder) > 0) {
         emit scheduleQueueChanged();
     }
 
-    f->setSyncPaused(true);
-    f->wipeForRemoval();
+    folder->setSyncPaused(true);
+    folder->wipeForRemoval();
 
     // remove the folder configuration
-    f->removeFromSettings();
+    folder->removeFromSettings();
 
-    unloadFolder(f);
+    unloadFolder(folder);
+
     if (currentlyRunning) {
         // We want to schedule the next folder once this is done
-        connect(f, &Folder::syncFinished,
+        connect(folder, &Folder::syncFinished,
             this, &FolderMan::slotFolderSyncFinished);
         // Let the folder delete itself when done.
-        connect(f, &Folder::syncFinished, f, &QObject::deleteLater);
+        connect(folder, &Folder::syncFinished, folder, &QObject::deleteLater);
     } else {
-        delete f;
+        delete folder;
     }
-
-#ifdef Q_OS_WIN
-    _navigationPaneHelper.scheduleUpdateCloudStorageRegistry();
-#endif
 
     emit folderListChanged(_folderMap);
 }

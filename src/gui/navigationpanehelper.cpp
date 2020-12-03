@@ -40,18 +40,21 @@ NavigationPaneHelper::NavigationPaneHelper(FolderMan *folderMan)
 void NavigationPaneHelper::setShowInExplorerNavigationPane(bool show)
 {
     _showInExplorerNavigationPane = show;
-    // Re-generate a new CLSID when enabling, possibly throwing away the old one.
-    // updateCloudStorageRegistry will take care of removing any unknown CLSID our application owns from the registry.
+
+    // Fix folders without CLSID (to remove later)
     foreach (Folder *folder, _folderMan->map()) {
-        if (folder->vfs().mode() == Vfs::Mode::WindowsCfApi) {
-            Utility::setRootFolderPinState(folder->navigationPaneClsid(), show);
-        }
-        else {
-            folder->setNavigationPaneClsid(show ? QUuid::createUuid() : QUuid());
+        if (folder->vfs().mode() != Vfs::Mode::WindowsCfApi) {
+            if (folder->navigationPaneClsid() == QUuid()) {
+                folder->setNavigationPaneClsid(show ? QUuid::createUuid() : QUuid());
+            }
         }
     }
-
     scheduleUpdateCloudStorageRegistry();
+
+    // Set pin state
+    foreach (Folder *folder, _folderMan->map()) {
+        Utility::setFolderPinState(folder->navigationPaneClsid(), show);
+    }
 }
 
 void NavigationPaneHelper::scheduleUpdateCloudStorageRegistry()
@@ -80,15 +83,17 @@ void NavigationPaneHelper::updateCloudStorageRegistry()
 
     // Then remove anything
     foreach (auto &clsid, entriesToRemove) {
-        Utility::removeSyncRootKeys(clsid);
+        Utility::removeLegacySyncRootKeys(clsid);
     }
 
     // Then re-save every folder that has a valid navigationPaneClsid to the registry
+    bool show = OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane();
     foreach (Folder *folder, _folderMan->map()) {
-        if (!folder->navigationPaneClsid().isNull()) {
-            if (folder->vfs().mode() != Vfs::Mode::WindowsCfApi) {
-                Utility::addSyncRootKeys(folder->navigationPaneClsid(), folder->path(), folder->cleanPath());
+        if (folder->vfs().mode() != Vfs::Mode::WindowsCfApi) {
+            if (folder->navigationPaneClsid() == QUuid()) {
+                folder->setNavigationPaneClsid(QUuid::createUuid());
             }
+            Utility::addLegacySyncRootKeys(folder->navigationPaneClsid(), folder->path(), folder->cleanPath(), show);
         }
     }
 }

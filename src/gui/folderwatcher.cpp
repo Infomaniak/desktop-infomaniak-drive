@@ -108,11 +108,14 @@ void FolderWatcher::startNotificationTestWhenReady()
     } else {
         QFile f(path);
         f.open(QIODevice::WriteOnly | QIODevice::Append);
+        FileSystem::setFileHidden(path, true);
     }
 
     QTimer::singleShot(5000, this, [this]() {
-        if (!_testNotificationPath.isEmpty())
+        if (!_testNotificationPath.isEmpty()) {
+            QFile::remove(_testNotificationPath);
             emit becameUnreliable(tr("The watcher did not receive a test notification."));
+        }
         _testNotificationPath.clear();
     });
 }
@@ -160,6 +163,7 @@ void FolderWatcher::changeDetected(const QStringList &paths)
         QString path = paths[i];
         if (!_testNotificationPath.isEmpty()
             && Utility::fileNamesEqual(path, _testNotificationPath)) {
+            QFile::remove(_testNotificationPath);
             _testNotificationPath.clear();
         }
         if (pathIsIgnored(path)) {
