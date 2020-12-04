@@ -535,7 +535,7 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                         if (!(item.data()->_status == OCC::SyncFileItem::NoStatus
                                 || item.data()->_status == OCC::SyncFileItem::FatalError
                                 || item.data()->_status == OCC::SyncFileItem::NormalError
-                                || item.data()->_status == OCC::SyncFileItem::SoftError
+                                //|| item.data()->_status == OCC::SyncFileItem::SoftError
                                 || item.data()->_status == OCC::SyncFileItem::DetailError
                                 || item.data()->_status == OCC::SyncFileItem::BlacklistedError
                                 || item.data()->_status == OCC::SyncFileItem::FileIgnored)) {
