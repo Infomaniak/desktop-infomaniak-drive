@@ -965,6 +965,9 @@ void Folder::slotSyncFinished(bool success)
     bool syncError = !_syncResult.errorStrings().isEmpty();
     if (syncError) {
         qCWarning(lcFolder) << "SyncEngine finished with ERROR";
+        for (QString error : _syncResult.errorStrings()) {
+            qCWarning(lcFolder) << "Error: " << error;
+        }
     } else {
         qCInfo(lcFolder) << "SyncEngine finished without problem.";
     }
