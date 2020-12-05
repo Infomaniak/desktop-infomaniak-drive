@@ -45,21 +45,22 @@ extern "C" {
         bool *isDirectory);
 
     DLL_EXP int __cdecl CFPSetPlaceHolderStatus(
-        const wchar_t *filePath,
+        const wchar_t *path,
+        bool directory,
         bool inSync);
 
     DLL_EXP int __cdecl CFPDehydratePlaceHolder(
         const wchar_t *driveId,
         const wchar_t *folderId,
-        const wchar_t *filePath);
+        const wchar_t *path);
 
     DLL_EXP int __cdecl CFPHydratePlaceHolder(
         const wchar_t *driveId,
         const wchar_t *folderId,
-        const wchar_t *filePath);
+        const wchar_t *path);
 
     DLL_EXP int __cdecl CFPCreatePlaceHolder(
-        const wchar_t *fileId,
+        const wchar_t *relativePath,
         const wchar_t *destPath,
         WIN32_FIND_DATA *findData);
 
@@ -80,10 +81,12 @@ extern "C" {
         const wchar_t *filePath);
 
     DLL_EXP int __cdecl CFPGetPinState(
-        const wchar_t *filePath,
+        const wchar_t *path,
+        bool directory,
         CFP_PIN_STATE *state);
 
     DLL_EXP int __cdecl CFPSetPinState(
-        const wchar_t *filePath,
+        const wchar_t *path,
+        bool directory,
         CFP_PIN_STATE state);
 }
