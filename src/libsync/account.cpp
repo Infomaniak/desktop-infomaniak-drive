@@ -235,7 +235,8 @@ void Account::lendCookieJarTo(QNetworkAccessManager *guest)
 
 QString Account::cookieJarPath()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + "/cookies" + id() + ".db";
+    return QStandardPaths::writableLocation(
+                Utility::isWindows() ? QStandardPaths::AppDataLocation : QStandardPaths::AppConfigLocation) + "/cookies" + id() + ".db";
 }
 
 void Account::resetNetworkAccessManager()

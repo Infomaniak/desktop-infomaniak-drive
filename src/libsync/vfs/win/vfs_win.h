@@ -57,7 +57,7 @@ public:
     bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const QString &fileDirectory) override;
 
     bool setPinState(const QString &fileRelativePath, OCC::PinState state) override;
-    OCC::Optional<OCC::PinState> pinState(const QString &fileRelativePath) override;
+    OCC::Optional<OCC::PinState> pinState(const QString &relativePath) override;
     AvailabilityResult availability(const QString &fileRelativePath) override;
 
 public slots:
@@ -69,10 +69,11 @@ protected:
 private:
     void dehydrate(const QString &path);
     void hydrate(const QString &path);
+    void cancelHydrate(const QString &path);
+    void exclude(const QString &path);
     DWORD getPlaceholderAttributes(const QString &path);
     void setPlaceholderStatus(const QString &path, bool directory, bool inSync);
-    void checkAndFixFileMetadata(const QString &filePath);
-    void checkAndFixDirMetadata(const QString &dirPath);
+    void checkAndFixMetadata(const QString &path);
 };
 
 class WinVfsPluginFactory : public QObject, public OCC::DefaultPluginFactory<VfsWin>

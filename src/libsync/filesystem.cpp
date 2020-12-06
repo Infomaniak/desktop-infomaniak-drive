@@ -73,7 +73,7 @@ time_t FileSystem::getModTime(const QString &filename)
         result = stat.modtime;
     } else {
         qCWarning(lcFileSystem) << "Could not get modification time for" << filename
-                                << "with csync, using QFileInfo";
+                                << "with csync, using QFileInfo (file renamed?)";
         result = Utility::qDateTimeToTime_t(QFileInfo(filename).lastModified());
     }
     return result;

@@ -83,7 +83,6 @@ Logger::Logger(QObject *parent)
     , _logExpire(0)
     , _logDebug(false)
 {
-    //qSetMessagePattern("%{time MM-dd hh:mm:ss:zzz} [ %{type} %{category} ]%{if-debug}\t[ %{function} ]%{endif}:\t%{message}");
     qSetMessagePattern("%{time yyyy-MM-dd hh:mm:ss:zzz} [%{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-critical}C%{endif}%{if-fatal}F%{endif}] (%{threadid}) %{file}:%{line} - %{message}");
 #ifndef NO_MSG_HANDLER
     qInstallMessageHandler(mirallLogCatcher);
@@ -228,7 +227,7 @@ void Logger::setLogDebug(bool debug)
     //QLoggingCategory::setFilterRules(debug ? QStringLiteral("*=true") : QString());
     QLoggingCategory::setFilterRules(
                 debug
-                ? QStringLiteral("sync.*=true\ngui.*=true\nlibcommon.*=true\nvfs.*=true")
+                ? QStringLiteral("sync.*=true\nsync.database.*=false\ngui.*=true\nlibcommon.*=true\nvfs.*=true")
                 : QString());
     _logDebug = debug;
 }

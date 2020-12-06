@@ -41,7 +41,7 @@
 
 namespace OCC {
 
-Q_LOGGING_CATEGORY(lcSql, "sync.database.sql", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcSql, "sync.database.sql", QtWarningMsg)
 
 SqlDatabase::SqlDatabase()
     : _db(0)
