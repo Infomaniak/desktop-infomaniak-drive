@@ -246,6 +246,7 @@ void SynthesisPopover::forceRedraw()
     // Windows hack
     QTimer::singleShot(0, this, [=]()
     {
+        qCDebug(lcSynthesisPopover) << "forceRedraw";
         if (geometry().height() > windowSize.height()) {
             setGeometry(geometry() + QMargins(0, 0, 0, -1));
             setMaximumHeight(windowSize.height());
@@ -254,6 +255,7 @@ void SynthesisPopover::forceRedraw()
             setMaximumHeight(windowSize.height() + 1);
             setGeometry(geometry() + QMargins(0, 0, 0, 1));
         }
+        qCDebug(lcSynthesisPopover) << "forceRedraw";
     });
 #endif
 }
@@ -422,6 +424,7 @@ bool SynthesisPopover::event(QEvent *event)
 {
     bool ret = QDialog::event(event);
     if (event->type() == QEvent::WindowDeactivate) {
+        setGraphicsEffect(nullptr);
         done(QDialog::Accepted);
     }
     return ret;

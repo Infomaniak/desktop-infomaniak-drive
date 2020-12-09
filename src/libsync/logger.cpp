@@ -227,7 +227,7 @@ void Logger::setLogDebug(bool debug)
     //QLoggingCategory::setFilterRules(debug ? QStringLiteral("*=true") : QString());
     QLoggingCategory::setFilterRules(
                 debug
-                ? QStringLiteral("sync.*=true\nsync.database.*=false\ngui.*=true\nlibcommon.*=true\nvfs.*=true")
+                ? QStringLiteral("*=false\nsync.*=true\nsync.database.sql=false\ngui.*=true\nlibcommon.*=true\nvfs.*=true")
                 : QString());
     _logDebug = debug;
 }

@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <iostream>
 #include <thread>
 #include <unordered_map>
+#include <shobjidl_core.h>
 
 #include <QFile>
 #include <QDir>
@@ -97,6 +98,11 @@ void VfsWin::startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSI
     }
 
     namespaceCLSID = QString::fromStdWString(clsid);
+
+    /*const CLSID CLSID_ExplorerCommand = { 0xA18E9226, 0xE817, 0x4958, { 0xBD, 0x21, 0xD6, 0x96, 0x7D, 0xBD, 0x19, 0x21 } };
+    IExplorerCommand *explorerCommand;
+    HRESULT hr = CoCreateInstance(CLSID_ExplorerCommand, NULL, CLSCTX_LOCAL_SERVER, IID_IExplorerCommand, (void **) &explorerCommand);
+    qCDebug(lcVfsWin) << "End";*/
 }
 
 void VfsWin::dehydrate(const QString &path)
