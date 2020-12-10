@@ -1,3 +1,8 @@
+/*
+Infomaniak Drive Windows Explorer Extension DLL
+Copyright (C) 2020 christophe.larchier@infomaniak.com
+*/
+
 #pragma once
 
 typedef enum {

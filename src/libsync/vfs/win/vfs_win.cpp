@@ -23,7 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "common/syncjournaldb.h"
 #include "account.h"
 
-#include "CloudFileProviderDll.h"
+// CloudFileProvider dll
+#include "debug.h"
+#include "cloudfileproviderdll.h"
 
 #include <Windows.h>
 #include <iostream>
@@ -60,7 +62,7 @@ void debugCbk(TraceLevel level, const wchar_t *msg) {
 VfsWin::VfsWin(QObject *parent)
     : Vfs(parent)
 {
-    if (CFPInitCloudFileProvider(debugCbk, QString(APPLICATION_SHORTNAME).toStdWString().c_str()) != S_OK) {
+    if (cfpInitCloudFileProvider(debugCbk, QString(APPLICATION_SHORTNAME).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPInitCloudFileProvider!";
         return;
     }
@@ -86,7 +88,7 @@ void VfsWin::startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSI
 
     wchar_t clsid[39] = L"";
     unsigned long clsidSize = sizeof(clsid);
-    if (CFPStartCloudFileProvider(
+    if (cfpStartCloudFileProvider(
                 params.account.get()->driveId().toStdWString().c_str(),
                 params.account.get()->davUser().toStdWString().c_str(),
                 params.folderAlias.toStdWString().c_str(),
@@ -110,7 +112,7 @@ void VfsWin::dehydrate(const QString &path)
     qCDebug(lcVfsWin) << "dehydrate - path = " << path;
 
     // Dehydrate file
-    if (CFPDehydratePlaceHolder(
+    if (cfpDehydratePlaceHolder(
                 _setupParams.account.get()->driveId().toStdWString().c_str(),
                 _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
@@ -123,7 +125,7 @@ void VfsWin::hydrate(const QString &path)
 {
     qCDebug(lcVfsWin) << "hydrate - path = " << path;
 
-    if (CFPHydratePlaceHolder(
+    if (cfpHydratePlaceHolder(
                 _setupParams.account.get()->driveId().toStdWString().c_str(),
                 _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
@@ -136,7 +138,7 @@ void VfsWin::cancelHydrate(const QString &path)
 {
     qCDebug(lcVfsWin) << "cancelHydrate - path = " << path;
 
-    if (CFPCancelFetch(
+    if (cfpCancelFetch(
                 _setupParams.account.get()->driveId().toStdWString().c_str(),
                 _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
@@ -151,7 +153,7 @@ void VfsWin::exclude(const QString &path)
 
     bool isPlaceholder;
     bool isDirectory;
-    if (CFPGetPlaceHolderStatus(
+    if (cfpGetPlaceHolderStatus(
                 QDir::toNativeSeparators(path).toStdWString().c_str(),
                 &isPlaceholder,
                 nullptr,
@@ -162,13 +164,13 @@ void VfsWin::exclude(const QString &path)
     }
 
     if (isPlaceholder) {
-        CFP_PIN_STATE state;
-        if (CFPGetPinState(QDir::toNativeSeparators(path).toStdWString().c_str(), isDirectory, &state) != S_OK) {
+        CfpPinState state;
+        if (cfpGetPinState(QDir::toNativeSeparators(path).toStdWString().c_str(), isDirectory, &state) != S_OK) {
             qCCritical(lcVfsWin) << "Error in CFPGetPinState!";
             return;
         }
         if (state != CFP_PIN_STATE_EXCLUDED) {
-            if (CFPSetPinState(QDir::toNativeSeparators(path).toStdWString().c_str(), isDirectory, CFP_PIN_STATE_EXCLUDED) != S_OK) {
+            if (cfpSetPinState(QDir::toNativeSeparators(path).toStdWString().c_str(), isDirectory, CFP_PIN_STATE_EXCLUDED) != S_OK) {
                 qCCritical(lcVfsWin) << "Error in CFPSetPinState!";
                 return;
             }
@@ -195,7 +197,7 @@ DWORD VfsWin::getPlaceholderAttributes(const QString &filePath)
 
 void VfsWin::setPlaceholderStatus(const QString &filePath, bool directory, bool inSync)
 {
-    if (CFPSetPlaceHolderStatus(
+    if (cfpSetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 directory,
                 inSync) != S_OK) {
@@ -210,7 +212,7 @@ void VfsWin::checkAndFixMetadata(const QString &path)
     bool isDehydrated;
     bool isSynced;
     bool isDirectory;
-    if (CFPGetPlaceHolderStatus(
+    if (cfpGetPlaceHolderStatus(
                 QDir::toNativeSeparators(path).toStdWString().c_str(),
                 &isPlaceholder,
                 &isDehydrated,
@@ -263,7 +265,7 @@ void VfsWin::unregisterFolder()
 {
     qCDebug(lcVfsWin) << "unregisterFolder - driveId = " << _setupParams.account.get()->driveId();
 
-    if (CFPStopCloudFileProvider(
+    if (cfpStopCloudFileProvider(
                 _setupParams.account.get()->driveId().toStdWString().c_str(),
                 _setupParams.folderAlias.toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPStopCloudFileProvider!";
@@ -313,7 +315,7 @@ void VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
         findData.dwFileAttributes |= FILE_ATTRIBUTE_ARCHIVE;
     }
 
-    if (CFPCreatePlaceHolder(
+    if (cfpCreatePlaceHolder(
                 QDir::toNativeSeparators(item._file).toStdWString().c_str(),
                 QDir::toNativeSeparators(_setupParams.filesystemPath).toStdWString().c_str(),
                 &findData) != S_OK) {
@@ -339,7 +341,7 @@ void VfsWin::dehydratePlaceholder(const OCC::SyncFileItem &item)
     }
 
     bool isPlaceholder;
-    if (CFPGetPlaceHolderStatus(
+    if (cfpGetPlaceHolderStatus(
                 QDir::toNativeSeparators(path).toStdWString().c_str(),
                 &isPlaceholder,
                 nullptr,
@@ -376,7 +378,7 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
     bool isPlaceholder;
     bool isSynced;
     bool isDirectory;
-    if (CFPGetPlaceHolderStatus(
+    if (cfpGetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 &isPlaceholder,
                 nullptr,
@@ -388,7 +390,7 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
 
     if (!isPlaceholder) {
         // Convert to placeholder
-        if (CFPConvertToPlaceHolder(
+        if (cfpConvertToPlaceHolder(
                     QString(item._fileId).toStdWString().c_str(),
                     QDir::toNativeSeparators(filePath).toStdWString().c_str()) != S_OK) {
             qCCritical(lcVfsWin) << "Error in CFPConvertToPlaceHolder!";
@@ -398,7 +400,7 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
 
     if (!replacesFile.isEmpty()) {
         // Download finished
-        if (CFPUpdateFetchStatus(
+        if (cfpUpdateFetchStatus(
                     _setupParams.account.get()->driveId().toStdWString().c_str(),
                     _setupParams.folderAlias.toStdWString().c_str(),
                     QDir::toNativeSeparators(replacesFile).toStdWString().c_str(),
@@ -409,7 +411,7 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
         }
 
         // Force pin state to pinned
-        if (CFPSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), isDirectory, CFP_PIN_STATE_PINNED)) {
+        if (cfpSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), isDirectory, CFP_PIN_STATE_PINNED)) {
             qCCritical(lcVfsWin) << "Error in CFPSetPinState!";
             return false;
         }
@@ -424,7 +426,7 @@ bool VfsWin::isDehydratedPlaceholder(const QString &fileRelativePath)
 
     bool isDehydrated;
     QString filePath(_setupParams.filesystemPath + fileRelativePath);
-    if (CFPGetPlaceHolderStatus(
+    if (cfpGetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 nullptr,
                 &isDehydrated,
@@ -446,7 +448,7 @@ bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const
     bool isDehydrated;
     bool isSynced;
     bool isDirectory;
-    if (CFPGetPlaceHolderStatus(
+    if (cfpGetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 &isPlaceholder,
                 &isDehydrated,
