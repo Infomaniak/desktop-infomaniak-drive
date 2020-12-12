@@ -34,11 +34,15 @@ class LocalFolderDialog : public CustomDialog
 
     Q_PROPERTY(QColor folder_icon_color READ folderIconColor WRITE setFolderIconColor)
     Q_PROPERTY(QSize folder_icon_size READ folderIconSize WRITE setFolderIconSize)
+    Q_PROPERTY(QSize warning_icon_size READ warningIconSize WRITE setWarningIconSize)
+    Q_PROPERTY(QColor warning_icon_color READ warningIconColor WRITE setWarningIconColor)
 
 public:
     explicit LocalFolderDialog(const QString &localFolderPath, QWidget *parent = nullptr);
 
     inline QString localFolderPath() const { return _localFolderPath; }
+    inline void setSmartSync(bool smartSync) { _smartSync = smartSync; }
+    inline bool folderCompatibleWithSmartSync() const { return _folderCompatibleWithSmartSync; }
 
 signals:
     void openFolder(const QString &filePath);
@@ -53,7 +57,14 @@ private:
     QLabel *_folderPathLabel;
     QColor _folderIconColor;
     QSize _folderIconSize;
+    QColor _warningIconColor;
+    QSize _warningIconSize;
+    QWidget *_warningWidget;
+    QLabel *_warningIconLabel;
+    QLabel *_warningLabel;
     bool _okToContinue;
+    bool _smartSync;
+    bool _folderCompatibleWithSmartSync;
 
     inline QColor folderIconColor() const { return _folderIconColor; }
     inline void setFolderIconColor(QColor color)
@@ -69,11 +80,24 @@ private:
         setFolderIcon();
     }
 
+    inline QSize warningIconSize() const { return _warningIconSize; }
+    inline void setWarningIconSize(const QSize &size) {
+        _warningIconSize = size;
+        setWarningIcon();
+    }
+
+    inline QColor warningIconColor() const { return _warningIconColor; }
+    inline void setWarningIconColor(const QColor &value) {
+        _warningIconColor = value;
+        setWarningIcon();
+    }
+
     void initUI();
     void updateUI();
     void setOkToContinue(bool value);
     void selectFolder(const QString &startDirPath);
     void setFolderIcon();
+    void setWarningIcon();
 
 private slots:
     void onExit();

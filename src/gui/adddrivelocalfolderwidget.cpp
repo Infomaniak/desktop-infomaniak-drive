@@ -285,7 +285,7 @@ void AddDriveLocalFolderWidget::updateUI()
             OCC::Vfs::Mode mode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
             if (mode == OCC::Vfs::WindowsCfApi) {
                 // Check file system
-                QString fsName(OCC::Utility::fileSystemName(dir.rootPath()));
+                QString fsName(OCC::Utility::fileSystemName(_localFolderPath));
                 _folderCompatibleWithSmartSync = (fsName == "NTFS");
                 if (!_folderCompatibleWithSmartSync) {
                     _warningLabel->setText(tr("This folder is not compatible with Lite Sync."

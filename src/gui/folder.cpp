@@ -709,7 +709,7 @@ bool Folder::canSupportVirtualFiles() const
     OCC::Vfs::Mode mode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
     if (mode == OCC::Vfs::WindowsCfApi) {
         // Check file system
-        QString fsName(OCC::Utility::fileSystemName(QDir(path()).rootPath()));
+        QString fsName(OCC::Utility::fileSystemName(path()));
         return (fsName == "NTFS");
     }
     return true;

@@ -310,18 +310,14 @@ void DrivePreferencesWidget::reset()
 void DrivePreferencesWidget::updateSmartSyncSwitchState()
 {
     if (_smartSyncSwitch) {
-        bool smartSyncAvailable = false;
-        bool oneDoesntSupportsVirtualFiles = false;
         bool oneHasVfsOnOffSwitchPending = false;
         for (auto folderInfoElt : _accountInfo->_folderMap) {
             OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
             if (folder) {
-                oneDoesntSupportsVirtualFiles |= !folder->supportsVirtualFiles();
                 oneHasVfsOnOffSwitchPending |= folder->isVfsOnOffSwitchPending();
             }
         }
-        smartSyncAvailable = oneDoesntSupportsVirtualFiles && !oneHasVfsOnOffSwitchPending;
-        _smartSyncSwitch->setCheckState(smartSyncAvailable ? Qt::Unchecked : Qt::Checked);
+        _smartSyncSwitch->setCheckState(isSmartSyncActivated() ? Qt::Checked : Qt::Unchecked);
         _smartSyncSwitch->setEnabled(!oneHasVfsOnOffSwitchPending);
         if (!oneHasVfsOnOffSwitchPending) {
             _smartSyncSwitch->setToolTip("");
@@ -523,15 +519,7 @@ void DrivePreferencesWidget::updateFoldersBlocs()
             }
         }
 
-        // Check if smart sync is activated
-        bool smartSync = false;
-        for (auto folderInfoElt : _accountInfo->_folderMap) {
-            OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
-            if (folder) {
-                smartSync = folder->vfs().mode() != OCC::Vfs::Off;
-            }
-        }
-
+        bool smartSync = isSmartSyncActivated();
         for (auto folderInfoElt : _accountInfo->_folderMap) {
             if (!folderIdList.contains(folderInfoElt.first)) {
                 // Create folder bloc
@@ -733,17 +721,17 @@ bool DrivePreferencesWidget::createMissingFolders(const QString &folderBasePath,
     return true;
 }
 
-bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, const QString &serverFolderPath, QStringList blackList)
+bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, bool smartSync, const QString &serverFolderPath, QStringList blackList)
 {
-    bool useVirtualFileSync = _smartSyncSwitch->checkState() == Qt::Checked;
-
     qCInfo(lcDrivePreferencesWidget) << "Adding folder definition for" << localFolderPath << serverFolderPath;
 
     OCC::FolderDefinition folderDefinition;
     folderDefinition.localPath = localFolderPath;
     folderDefinition.targetPath = OCC::FolderDefinition::prepareTargetPath(serverFolderPath);
     folderDefinition.ignoreHiddenFiles = OCC::FolderMan::instance()->ignoreHiddenFiles();
-    folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
+    if (smartSync) {
+        folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
+    }
 #ifdef Q_OS_WIN
     if (OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane()) {
         folderDefinition.navigationPaneClsid = QUuid::createUuid();
@@ -753,7 +741,7 @@ bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, 
     OCC::AccountStatePtr accountStatePtr = OCC::AccountManager::instance()->getAccountStateFromId(_accountId);
     OCC::Folder *folder = OCC::FolderMan::instance()->addFolder(accountStatePtr.data(), folderDefinition);
     if (folder) {
-        if (folderDefinition.virtualFilesMode != OCC::Vfs::Off && useVirtualFileSync) {
+        if (folderDefinition.virtualFilesMode != OCC::Vfs::Off && smartSync) {
             folder->setRootPinState(OCC::PinState::OnlineOnly);
         }
 
@@ -823,6 +811,21 @@ bool DrivePreferencesWidget::updateSelectiveSyncList(OCC::Folder *folder)
     return true;
 }
 
+bool DrivePreferencesWidget::isSmartSyncActivated()
+{
+    // Check if smart sync is activated at least for one folder
+    bool smartSync = false;
+    for (auto folderInfoElt : _accountInfo->_folderMap) {
+        OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
+        if (folder && folder->vfs().mode() != OCC::Vfs::Off) {
+            smartSync = true;
+            break;
+        }
+    }
+
+    return smartSync;
+}
+
 void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
 {
     Q_UNUSED(link)
@@ -871,6 +874,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
 
     const QString addFolderError = tr("New folder synchronization failed!");
     QString localFolderPath = QString();
+    bool smartSync = false;
     QString serverFolderPath = QString();
     QString serverFolderBasePath = QString();
     JobResult folderHasSubfoldersJobResult = JobResult::No;
@@ -884,6 +888,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
     while (true) {
         if (nextStep == SelectLocalFolder) {
             LocalFolderDialog *localFolderDialog = new LocalFolderDialog(localFolderPath, this);
+            localFolderDialog->setSmartSync(isSmartSyncActivated());
             connect(localFolderDialog, &LocalFolderDialog::openFolder, this, &DrivePreferencesWidget::onOpenFolder);
             if (localFolderDialog->exec(OCC::Utility::getTopLevelWidget(this)->pos()) == QDialog::Rejected) {
                 break;
@@ -893,6 +898,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             QFileInfo localFolderInfo(localFolderPath);
             localFolderName = localFolderInfo.baseName();
             localFolderSize = OCC::Utility::folderSize(localFolderPath);
+            smartSync = localFolderDialog->folderCompatibleWithSmartSync();
             qCDebug(lcDrivePreferencesWidget) << "Local folder selected: " << localFolderPath;
             nextStep = SelectServerBaseFolder;
         }
@@ -1002,7 +1008,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             }
 
             // Add folder to synchronization
-            if (!addSynchronization(localFolderPath, serverFolderPath, blackList)) {
+            if (!addSynchronization(localFolderPath, smartSync, serverFolderPath, blackList)) {
                 CustomMessageBox *msgBox = new CustomMessageBox(
                             QMessageBox::Warning,
                             addFolderError,

@@ -34,6 +34,7 @@
 #include <QDateTime>
 #include <QSysInfo>
 #include <QStandardPaths>
+#include <QStorageInfo>
 #include <QCollator>
 #include <QSysInfo>
 #include <QUuid>
@@ -743,18 +744,19 @@ void Utility::removeLegacySyncRootKeys(const QUuid &clsid)
 }
 #endif
 
-QString Utility::fileSystemName(const QString &rootPath)
+QString Utility::fileSystemName(const QString &dirPath)
 {
-#ifdef Q_OS_WIN
-    WCHAR fileSystemName[10];
-    if (GetVolumeInformation(rootPath.toStdWString().c_str(), nullptr, 0, nullptr, nullptr, nullptr,
-                            fileSystemName, sizeof(fileSystemName)) == TRUE)
-    {
-        return QString::fromStdWString(fileSystemName);
+    QDir dir(dirPath);
+    if (dir.exists()) {
+        QStorageInfo info(dirPath);
+        if (info.isValid()) {
+            return info.fileSystemType();
+        }
     }
-#else
-    Q_UNUSED(rootPath)
-#endif
+    else {
+        dir.cdUp();
+        return fileSystemName(dir.path());
+    }
 
     return QString();
 }

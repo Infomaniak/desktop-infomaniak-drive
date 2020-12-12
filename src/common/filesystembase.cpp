@@ -334,29 +334,6 @@ bool FileSystem::fileExists(const QString &filename, const QFileInfo &fileInfo)
     return re;
 }
 
-#ifdef Q_OS_WIN
-QString FileSystem::fileSystemForPath(const QString &path)
-{
-    // See also QStorageInfo (Qt >=5.4) and GetVolumeInformationByHandleW (>= Vista)
-    QString drive = path.left(2);
-    if (!drive.endsWith(":"))
-        return QString();
-    drive.append('\\');
-
-    const size_t fileSystemBufferSize = 4096;
-    TCHAR fileSystemBuffer[fileSystemBufferSize];
-
-    if (!GetVolumeInformationW(
-            reinterpret_cast<LPCWSTR>(drive.utf16()),
-            NULL, 0,
-            NULL, NULL, NULL,
-            fileSystemBuffer, fileSystemBufferSize)) {
-        return QString();
-    }
-    return QString::fromUtf16(reinterpret_cast<const ushort *>(fileSystemBuffer));
-}
-#endif
-
 bool FileSystem::remove(const QString &fileName, QString *errorString)
 {
 #ifdef Q_OS_WIN

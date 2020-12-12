@@ -151,11 +151,10 @@ void VfsWin::exclude(const QString &path)
 {
     qCDebug(lcVfsWin) << "exclude - path = " << path;
 
-    bool isPlaceholder;
     bool isDirectory;
     if (cfpGetPlaceHolderStatus(
                 QDir::toNativeSeparators(path).toStdWString().c_str(),
-                &isPlaceholder,
+                nullptr,
                 nullptr,
                 nullptr,
                 &isDirectory) != S_OK) {
@@ -163,18 +162,9 @@ void VfsWin::exclude(const QString &path)
         return;
     }
 
-    if (isPlaceholder) {
-        CfpPinState state;
-        if (cfpGetPinState(QDir::toNativeSeparators(path).toStdWString().c_str(), isDirectory, &state) != S_OK) {
-            qCCritical(lcVfsWin) << "Error in CFPGetPinState!";
-            return;
-        }
-        if (state != CFP_PIN_STATE_EXCLUDED) {
-            if (cfpSetPinState(QDir::toNativeSeparators(path).toStdWString().c_str(), isDirectory, CFP_PIN_STATE_EXCLUDED) != S_OK) {
-                qCCritical(lcVfsWin) << "Error in CFPSetPinState!";
-                return;
-            }
-        }
+    if (cfpSetPinState(QDir::toNativeSeparators(path).toStdWString().c_str(), isDirectory, CFP_PIN_STATE_EXCLUDED) != S_OK) {
+        qCCritical(lcVfsWin) << "Error in CFPSetPinState!";
+        return;
     }
 }
 

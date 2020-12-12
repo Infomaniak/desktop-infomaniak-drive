@@ -1622,6 +1622,8 @@ KDC--LocalFolderDialog
 {
     qproperty-folder_icon_color: #9F9F9F;
     qproperty-folder_icon_size: 20px;
+    qproperty-warning_icon_color: #E9563D;
+    qproperty-warning_icon_size: 20px;
 }
 
 KDC--LocalFolderDialog QWidget#folderSelectionWidget
