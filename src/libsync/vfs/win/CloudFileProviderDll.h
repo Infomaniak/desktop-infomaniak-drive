@@ -23,7 +23,9 @@ extern "C" {
 
     DLL_EXP int __cdecl cfpInitCloudFileProvider(
         TraceCbk *traceCbk,
-        const wchar_t *appName);
+        const wchar_t *appName,
+        const wchar_t* version,
+        const wchar_t* trashURI);
 
     DLL_EXP int __cdecl cfpStartCloudFileProvider(
         const wchar_t *driveId,

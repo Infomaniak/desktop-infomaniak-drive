@@ -14,6 +14,7 @@ set( APPLICATION_ICON_NAME  "infomaniak" )
 set( APPLICATION_SERVER_URL "https://connect.drive.infomaniak.com" CACHE STRING "URL for the server to use. If entered the server can only connect to this instance" )
 set( APPLICATION_VIRTUALFILE_SUFFIX "kdrive" CACHE STRING "Virtual file suffix (not including the .)")
 set( APPLICATION_DOWNLOAD_URL "https://drive.infomaniak.com/app/drive/sync" CACHE STRING "App download URL" )
+set( APPLICATION_TRASH_URL "https://drive.infomaniak.com/app/drive/%s/trash" CACHE STRING "App trash URL" )
 
 set( LINUX_PACKAGE_SHORTNAME "infomaniakdrive" )
 

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "filesystem.h"
 #include "common/syncjournaldb.h"
 #include "account.h"
+#include "version.h"
 
 // CloudFileProvider dll
 #include "debug.h"
@@ -62,7 +63,11 @@ void debugCbk(TraceLevel level, const wchar_t *msg) {
 VfsWin::VfsWin(QObject *parent)
     : Vfs(parent)
 {
-    if (cfpInitCloudFileProvider(debugCbk, QString(APPLICATION_SHORTNAME).toStdWString().c_str()) != S_OK) {
+    if (cfpInitCloudFileProvider(
+                debugCbk,
+                QString(APPLICATION_SHORTNAME).toStdWString().c_str(),
+                OCC::Utility::escape(MIRALL_VERSION_STRING).toStdWString().c_str(),
+                QString(APPLICATION_TRASH_URL).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in CFPInitCloudFileProvider!";
         return;
     }
