@@ -33,6 +33,7 @@
 #include "common/asserts.h"
 #include "guiutility.h"
 #include "getorcreatepubliclinkshare.h"
+#include "thumbnailjob.h"
 
 #include <array>
 #include <QBitArray>
@@ -323,6 +324,35 @@ void SocketApi::slotReadSocket()
             qCWarning(lcSocketApi) << "The command is not supported by this version of the client:" << command << "with argument:" << argument;
         }
     }
+}
+
+void SocketApi::slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
+                                     const QString &folderPath, const QString &fileRelativePath)
+{
+    if (statusCode != 200) {
+        qCWarning(lcSharing) << "Thumbnail status code: " << statusCode;
+        return;
+    }
+
+    QPixmap pixmap;
+    if (!pixmap.loadFromData(reply)) {
+        qCWarning(lcSharing) << "Error in pixmap.loadFromData for " << folderPath + fileRelativePath;
+        return;
+    }
+
+    QFileInfo fileInfo(folderPath + fileRelativePath);
+    QString filePath(fileInfo.absolutePath() + "\\.thumb_" + fileInfo.fileName());
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly)) {
+        qCWarning(lcSharing) << "Error in file.open for " << filePath;
+        return;
+    }
+
+    if (!pixmap.save(&file)) {
+        qCWarning(lcSharing) << "Error in pixmap.save for " << filePath;
+    }
+
+    file.close();
 }
 
 void SocketApi::slotRegisterPath(const QString &alias)
@@ -680,6 +710,26 @@ void SocketApi::command_GET_STRINGS(const QString &argument, SocketListener *lis
         }
     }
     listener->sendMessage(QString("GET_STRINGS:END"));
+}
+
+void SocketApi::command_GET_THUMBNAIL(const QString &localFile, SocketListener *)
+{
+    if (!QFileInfo(localFile).isFile()) {
+        return;
+    }
+
+    Folder *folder = FolderMan::instance()->folderForPath(localFile);
+    if (!folder) {
+        qCDebug(lcSocketApi) << "Folder not found for " << localFile;
+        return;
+    }
+
+    //QString driveUrl = folder->accountState()->account()->url().toString();
+    QString fileRelativePath = localFile.midRef(folder->path().size()).toUtf8();
+
+    ThumbnailJob *job = new ThumbnailJob(folder->path(), fileRelativePath, folder->accountState()->account(), this);
+    connect(job, &ThumbnailJob::jobFinished, this, &SocketApi::slotThumbnailFetched);
+    job->start();
 }
 
 void SocketApi::sendSharingContextMenuOptions(const FileData &fileData, SocketListener *listener)

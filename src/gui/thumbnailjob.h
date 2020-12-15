@@ -31,7 +31,7 @@ class ThumbnailJob : public AbstractNetworkJob
 {
     Q_OBJECT
 public:
-    explicit ThumbnailJob(const QString &path, AccountPtr account, QObject *parent = 0);
+    explicit ThumbnailJob(const QString &folderPath, const QString &fileRelativePath, AccountPtr account, QObject *parent = 0);
 public slots:
     void start() Q_DECL_OVERRIDE;
 signals:
@@ -43,9 +43,13 @@ signals:
      * will contain the image data in PNG. If the status code is different the content
      * of reply is undefined.
      */
-    void jobFinished(int statusCode, QByteArray reply);
+    void jobFinished(int statusCode, QByteArray reply, const QString &folderPath, const QString &fileRelativePath);
 private slots:
     virtual bool finished() Q_DECL_OVERRIDE;
+
+private:
+    const QString _folderPath;
+    const QString _fileRelativePath;
 };
 }
 

@@ -310,6 +310,7 @@ void DrivePreferencesWidget::reset()
 void DrivePreferencesWidget::updateSmartSyncSwitchState()
 {
     if (_smartSyncSwitch) {
+        bool smartSync = isSmartSyncActivated();
         bool oneHasVfsOnOffSwitchPending = false;
         for (auto folderInfoElt : _accountInfo->_folderMap) {
             OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
@@ -317,12 +318,20 @@ void DrivePreferencesWidget::updateSmartSyncSwitchState()
                 oneHasVfsOnOffSwitchPending |= folder->isVfsOnOffSwitchPending();
             }
         }
-        _smartSyncSwitch->setCheckState(isSmartSyncActivated() ? Qt::Checked : Qt::Unchecked);
+        _smartSyncSwitch->setCheckState(smartSync ? Qt::Checked : Qt::Unchecked);
         _smartSyncSwitch->setEnabled(!oneHasVfsOnOffSwitchPending);
         if (!oneHasVfsOnOffSwitchPending) {
             _smartSyncSwitch->setToolTip("");
         }
-    }
+
+        QList<PreferencesBlocWidget *> folderBlocList = findChildren<PreferencesBlocWidget *>(folderBlocName);
+        for (PreferencesBlocWidget *folderBloc : folderBlocList) {
+            FolderItemWidget *itemWidget = blocItemWidget(folderBloc);
+            if (itemWidget) {
+                itemWidget->setSmartSync(smartSync);
+            }
+        }
+    }    
 }
 
 bool DrivePreferencesWidget::existUndecidedList()

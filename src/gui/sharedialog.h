@@ -53,7 +53,8 @@ private slots:
     void done(int r) override;
     void slotPropfindReceived(const QVariantMap &result);
     void slotPropfindError();
-    void slotThumbnailFetched(const int &statusCode, const QByteArray &reply);
+    void slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
+                              const QString &folderPath, const QString &fileRelativePath);
     void slotAccountStateChanged(int state);
 
 private:

@@ -194,6 +194,7 @@ void FileExclusionDialog::updateUI()
     _readOnlyPatternMap[".csync_journal.db*"] = PatternInfo();
     _readOnlyPatternMap["._sync_*.db*"] = PatternInfo();
     _readOnlyPatternMap[".sync_*.db*"] = PatternInfo();
+    _readOnlyPatternMap[".thumb_*"] = PatternInfo();
 
     // Default patterns
     OCC::ConfigFile cfgFile;

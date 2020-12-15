@@ -64,6 +64,8 @@ private slots:
     void onLostConnection();
     void slotSocketDestroyed(QObject *obj);
     void slotReadSocket();
+    void slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
+                              const QString &folderPath, const QString &fileRelativePath);
 
     static void copyUrlToClipboard(const QString &link);
     static void emailPrivateLink(const QString &link);
@@ -122,6 +124,9 @@ private:
 
     /** Sends translated/branded strings that may be useful to the integration */
     Q_INVOKABLE void command_GET_STRINGS(const QString &argument, SocketListener *listener);
+
+    /** Sends the request URL to get a thumbnail */
+    Q_INVOKABLE void command_GET_THUMBNAIL(const QString &localFile, SocketListener *listener);
 
     // Sends the context menu options relating to sharing to listener
     void sendSharingContextMenuOptions(const FileData &fileData, SocketListener *listener);

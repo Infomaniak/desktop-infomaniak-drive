@@ -105,11 +105,6 @@ void VfsWin::startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSI
     }
 
     namespaceCLSID = QString::fromStdWString(clsid);
-
-    /*const CLSID CLSID_ExplorerCommand = { 0xA18E9226, 0xE817, 0x4958, { 0xBD, 0x21, 0xD6, 0x96, 0x7D, 0xBD, 0x19, 0x21 } };
-    IExplorerCommand *explorerCommand;
-    HRESULT hr = CoCreateInstance(CLSID_ExplorerCommand, NULL, CLSCTX_LOCAL_SERVER, IID_IExplorerCommand, (void **) &explorerCommand);
-    qCDebug(lcVfsWin) << "End";*/
 }
 
 void VfsWin::dehydrate(const QString &path)
@@ -520,7 +515,6 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
     qCDebug(lcVfsWin) << "fileStatusChanged - path = " << path << " - status = " << status.tag();
 
     if (!OCC::FileSystem::fileExists(path)) {
-        qCCritical(lcVfsWin) << "File/directory doesn't exist";
         return;
     }
 

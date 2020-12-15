@@ -120,7 +120,7 @@ ShareDialog::ShareDialog(QPointer<AccountState> accountState,
     }
 
     if (QFileInfo(_localPath).isFile()) {
-        ThumbnailJob *job = new ThumbnailJob(_sharePath, _accountState->account(), this);
+        ThumbnailJob *job = new ThumbnailJob(QString(), _sharePath, _accountState->account(), this);
         connect(job, &ThumbnailJob::jobFinished, this, &ShareDialog::slotThumbnailFetched);
         job->start();
     }
@@ -249,8 +249,12 @@ void ShareDialog::customizeStyle()
     }
 }
 
-void ShareDialog::slotThumbnailFetched(const int &statusCode, const QByteArray &reply)
+void ShareDialog::slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
+                                       const QString &folderPath, const QString &fileRelativePath)
 {
+    Q_UNUSED(folderPath)
+    Q_UNUSED(fileRelativePath)
+
     if (statusCode != 200) {
         qCWarning(lcSharing) << "Thumbnail status code: " << statusCode;
         return;

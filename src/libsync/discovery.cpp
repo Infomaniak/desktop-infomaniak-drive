@@ -697,11 +697,8 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
             qCInfo(lcDisco) << "Stale DB entry";
             _discoveryData->_statedb->deleteFileRecord(path._original, true);
             return;
-        } else if (dbEntry._type == ItemTypeVirtualFile && isVfsWithSuffix()) {
+        } else if (dbEntry._type == ItemTypeVirtualFile && (isVfsWithSuffix() || isVfsWin())) {
             // If the virtual file is removed, recreate it.
-            // This is a precaution since the suffix files don't look like the real ones
-            // and we don't want users to accidentally delete server data because they
-            // might not expect that deleting the placeholder will have a remote effect.
             item->_instruction = CSYNC_INSTRUCTION_NEW;
             item->_direction = SyncFileItem::Down;
             item->_type = ItemTypeVirtualFile;
