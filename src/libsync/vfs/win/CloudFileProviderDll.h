@@ -44,8 +44,7 @@ extern "C" {
         const wchar_t *filePath, 
         bool *isPlaceholder, 
         bool *isDehydrated,
-        bool *isSynced,
-        bool *isDirectory);
+        bool *isSynced);
 
     DLL_EXP int __cdecl cfpSetPlaceHolderStatus(
         const wchar_t *path,
@@ -63,6 +62,7 @@ extern "C" {
         const wchar_t *path);
 
     DLL_EXP int __cdecl cfpCreatePlaceHolder(
+        const wchar_t *fileId,
         const wchar_t *relativePath,
         const wchar_t *destPath,
         WIN32_FIND_DATA *findData);
