@@ -37,5 +37,5 @@ set( DEBUGREPORTER_SUBMIT_URL "https://www.infomaniak.com/report/drive/logs" CAC
 
 set( CLOUDFILEPROVIDER_DIRECTORY "C:\\Projects\\CloudFileProvider\\x64\\Release" )
 #set( CLOUDFILEPROVIDER_APPX_DIRECTORY "C:\\Projects\\CloudFileProvider\\CloudFileProviderPackage\\bin\\x64\\Release\\AppX" )
-set( CLOUDFILEPROVIDER_APPX_DIRECTORY "C:\\Projects\\CloudFileProvider\\CloudFileProviderPackage\\AppPackages\\CloudFileProviderPackage" )
+set( CLOUDFILEPROVIDER_APPX_DIRECTORY "C:\\Projects\\CloudFileProvider\\CloudFileProviderPackage\\AppPackages\\CloudFileProviderPackage_1.0.0.0_Test" )
 set( CLOUDFILEPROVIDER_APPX_PACKAGE "Infomaniak.kDrive.Extension_1.0.0.0_x64__e4e5bp7s792f4" )
