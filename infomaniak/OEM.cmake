@@ -15,7 +15,7 @@ set( APPLICATION_SERVER_URL "https://connect.drive.infomaniak.com" CACHE STRING 
 set( APPLICATION_VIRTUALFILE_SUFFIX "kdrive" CACHE STRING "Virtual file suffix (not including the .)")
 set( APPLICATION_DOWNLOAD_URL "https://drive.infomaniak.com/app/drive/sync" CACHE STRING "App download URL" )
 set( APPLICATION_TRASH_URL "https://drive.infomaniak.com/app/drive/%s/trash" CACHE STRING "App trash URL" )
-set( APPLICATION_THUMBNAIL_URL "%1/index.php/apps/files/api/v1/thumbnail/%2/%3/%4" CACHE STRING "App thumbnail URL" )
+set( APPLICATION_THUMBNAIL_URL "index.php/apps/files/api/v1/thumbnail/%1/%1/%2" CACHE STRING "App thumbnail URL" )
 
 set( LINUX_PACKAGE_SHORTNAME "infomaniakdrive" )
 
@@ -37,4 +37,3 @@ set( DEBUGREPORTER_SUBMIT_URL "https://www.infomaniak.com/report/drive/logs" CAC
 
 set( CLOUDFILEPROVIDER_DIRECTORY "C:\\Projects\\CloudFileProvider\\x64\\Release" )
 set( CLOUDFILEPROVIDER_APPX_DIRECTORY "C:\\Projects\\CloudFileProvider\\CloudFileProviderPackage\\AppPackages\\CloudFileProviderPackage_1.0.0.0_Test" )
-set( CLOUDFILEPROVIDER_APPX_PACKAGE "Infomaniak.kDrive.Extension_1.0.0.0_x64__e4e5bp7s792f4" )

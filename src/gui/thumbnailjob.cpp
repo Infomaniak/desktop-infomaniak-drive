@@ -15,13 +15,21 @@
 #include "thumbnailjob.h"
 #include "networkjobs.h"
 #include "account.h"
+#include "config.h"
+
+#include <QDir>
 
 namespace OCC {
 
-ThumbnailJob::ThumbnailJob(const QString &folderPath, const QString &fileRelativePath, AccountPtr account, QObject *parent)
-    : AbstractNetworkJob(account, QLatin1String("index.php/apps/files/api/v1/thumbnail/150/150/") + fileRelativePath, parent)
-    , _folderPath(folderPath)
+ThumbnailJob::ThumbnailJob(const QString &fileRelativePath, unsigned int width, const OCC::SocketListener *listener,
+                           AccountPtr account, QObject *parent)
+    : AbstractNetworkJob(
+          account,
+          QString(APPLICATION_THUMBNAIL_URL).arg(width).arg(QDir::cleanPath(fileRelativePath)),
+          parent)
     , _fileRelativePath(fileRelativePath)
+    , _width(width)
+    , _listener(listener)
 {
     setIgnoreCredentialFailure(true);
 }
@@ -35,7 +43,7 @@ void ThumbnailJob::start()
 bool ThumbnailJob::finished()
 {
     emit jobFinished(reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(), reply()->readAll(),
-                     _folderPath, _fileRelativePath);
+                     _fileRelativePath, _width, _listener);
     return true;
 }
 }

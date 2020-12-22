@@ -20,6 +20,7 @@
 #include "common/syncfilestatus.h"
 #include "sharedialog.h" // for the ShareDialogStartPage
 #include "common/syncjournalfilerecord.h"
+#include "socketlistener.h"
 
 #if defined(Q_OS_MAC)
 #include "socketapisocket_mac.h"
@@ -36,7 +37,6 @@ namespace OCC {
 
 class SyncFileStatus;
 class Folder;
-class SocketListener;
 
 /**
  * @brief The SocketApi class
@@ -65,7 +65,7 @@ private slots:
     void slotSocketDestroyed(QObject *obj);
     void slotReadSocket();
     void slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
-                              const QString &folderPath, const QString &fileRelativePath);
+                              const QString &fileRelativePath, unsigned int width, const OCC::SocketListener *listener);
 
     static void copyUrlToClipboard(const QString &link);
     static void emailPrivateLink(const QString &link);
@@ -129,7 +129,7 @@ private:
     Q_INVOKABLE void command_GET_THUMBNAIL(const QString &localFile, SocketListener *listener);
 
     // Sends the context menu options relating to sharing to listener
-    void sendSharingContextMenuOptions(const FileData &fileData, SocketListener *listener);
+    void sendSharingContextMenuOptions(const FileData &argument, SocketListener *listener);
 
     /** Send the list of menu item. (added in version 1.1)
      * argument is a list of files for which the menu should be shown, separated by '\x1e'
