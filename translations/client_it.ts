@@ -742,6 +742,10 @@
         <source>Select folder</source>
         <translation>Seleziona cartella</translation>
     </message>
+    <message>
+        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>KDC::MainMenuBarWidget</name>

@@ -742,6 +742,10 @@
         <source>Select folder</source>
         <translation>Sélectionner le dossier</translation>
     </message>
+    <message>
+        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation>Ce dossier n&apos;est pas compatible avec la Lite Sync. Veuillez sélectionner un autre dossier ou, si vous continuez, la Lite Sync ne sera pas activée.  &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;En savoir plus&lt;/a&gt;</translation>
+    </message>
 </context>
 <context>
     <name>KDC::MainMenuBarWidget</name>
