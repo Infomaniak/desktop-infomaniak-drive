@@ -28,6 +28,11 @@
 
 namespace OCC {
 
+#ifdef Q_OS_OSX
+bool canOsXSendUserNotification();
+void sendOsXUserNotification(const QString &title, const QString &message);
+#endif
+
 void Systray::showMessage(const QString &title, const QString &message, MessageIcon icon, int millisecondsTimeoutHint)
 {
 #ifdef USE_FDO_NOTIFICATIONS
@@ -40,7 +45,7 @@ void Systray::showMessage(const QString &title, const QString &message, MessageI
     } else
 #endif
 #ifdef Q_OS_OSX
-        if (canOsXSendUserNotification()) {
+    if (canOsXSendUserNotification()) {
         sendOsXUserNotification(title, message);
     } else
 #endif

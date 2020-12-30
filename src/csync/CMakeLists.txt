@@ -96,7 +96,8 @@ endif(ZLIB_FOUND)
 if (APPLE)
     find_library(FOUNDATION_LIBRARY NAMES Foundation)
     find_library(CORESERVICES_LIBRARY NAMES CoreServices)
-    target_link_libraries("${csync_NAME}" ${FOUNDATION_LIBRARY} ${CORESERVICES_LIBRARY})
+    find_library(APPKIT_LIBRARY NAMES AppKit)
+    target_link_libraries("${csync_NAME}" ${FOUNDATION_LIBRARY} ${CORESERVICES_LIBRARY} ${APPKIT_LIBRARY})
 endif()
 
 set_target_properties(
