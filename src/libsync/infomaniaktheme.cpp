@@ -41,24 +41,6 @@ bool InfomaniakTheme::wizardHideExternalStorageConfirmationCheckbox() const
     return true;
 }
 
-QString InfomaniakTheme::systrayIconFlavor(bool mono, bool sysTrayMenuVisible) const
-{
-    Q_UNUSED(sysTrayMenuVisible)
-    QString flavor;
-    if (mono) {
-        flavor = Utility::hasDarkSystray() ? QLatin1String("white") : QLatin1String("black");
-
-#ifdef Q_OS_MAC
-        if (sysTrayMenuVisible) {
-            flavor = QLatin1String("white");
-        }
-#endif
-    } else {
-        flavor = QLatin1String("systray_colored");
-    }
-    return flavor;
-}
-
 QString InfomaniakTheme::gitSHA1() const
 {
     QString devString;

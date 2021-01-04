@@ -124,37 +124,6 @@ QIcon Theme::applicationIcon() const
     return themeIcon(QStringLiteral(APPLICATION_ICON_NAME "-icon"));
 }
 
-QIcon Theme::svgThemeIcon(const QString &name) const
-{
-    QColor bg(qApp->palette().base().color());
-    QString flavor = CommonUtility::colorThresholdCheck(bg.red(), bg.green(), bg.blue())
-            ? QLatin1String("white")
-            : QLatin1String("black");
-
-    QString key = name + "," + flavor;
-    QIcon &cached = _iconCache[key]; // Take reference, this will also "set" the cache entry
-    if (cached.isNull()) {
-        QString pixmapName = QString::fromLatin1(":/client/theme/%1/%2.svg").arg(flavor).arg(name);
-        if (QFile::exists(pixmapName)) {
-            QList<int> sizes;
-            sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
-            foreach (int size, sizes) {
-                cached.addPixmap(QIcon(pixmapName).pixmap(QSize(size, size)));
-            }
-        }
-    }
-
-#ifdef Q_OS_MAC
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    // This defines the icon as a template and enables automatic macOS color handling
-    // See https://bugreports.qt.io/browse/QTBUG-42109
-    cached.setIsMask(false);
-#endif
-#endif
-
-    return cached;
-}
-
 /*
  * helper to load a icon from either the icon theme the desktop provides or from
  * the apps Qt resources.
@@ -378,12 +347,6 @@ bool Theme::systrayUseMonoIcons() const
     return _mono;
 }
 
-bool Theme::monoIconsAvailable() const
-{
-    QString themeDir = QString::fromLatin1(":/client/theme/%1/").arg(Theme::instance()->systrayIconFlavor(true));
-    return QDir(themeDir).exists();
-}
-
 void Theme::clearIconCache()
 {
     _iconCache.clear();
@@ -474,39 +437,6 @@ bool Theme::aboutShowCopyright() const
 }
 
 #ifndef TOKEN_AUTH_ONLY
-QVariant Theme::customMedia(CustomMediaType type)
-{
-    QVariant re;
-    QString key;
-
-    switch (type) {
-    case oCSetupTop:
-        key = QLatin1String("oCSetupTop");
-        break;
-    case oCSetupSide:
-        key = QLatin1String("oCSetupSide");
-        break;
-    case oCSetupBottom:
-        key = QLatin1String("oCSetupBottom");
-        break;
-    case oCSetupResultTop:
-        key = QLatin1String("oCSetupResultTop");
-        break;
-    }
-
-    QString imgPath = QString::fromLatin1(":/client/theme/colored/%1.png").arg(key);
-    if (QFile::exists(imgPath)) {
-        QPixmap pix(imgPath);
-        if (pix.isNull()) {
-            // pixmap loading hasn't succeeded. We take the text instead.
-            re.setValue(key);
-        } else {
-            re.setValue(pix);
-        }
-    }
-    return re;
-}
-
 QIcon Theme::syncStateIcon(SyncResult::Status status, bool sysTray, bool sysTrayMenuVisible, bool alert) const
 {
     // FIXME: Mind the size!
