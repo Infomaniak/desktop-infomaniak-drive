@@ -73,8 +73,8 @@
         <file>resources/icons/theme/white/state-offline.svg</file>
         <file>resources/icons/theme/white/state-ok.svg</file>
         <file>resources/icons/theme/white/state-pause.svg</file>
-        <file>resources/icons/theme/white/state-sync.svg</file>
         <file>resources/icons/theme/white/state-warning.svg</file>
+        <file>resources/icons/theme/white/state-sync.svg</file>
         <file>resources/logos/kdrive.svg</file>
         <file>resources/logos/kdrive-without-text.svg</file>
         <file>resources/fonts/SuisseIntl-Black.otf</file>
