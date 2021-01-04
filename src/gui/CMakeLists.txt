@@ -46,6 +46,7 @@ set(client_SRCS
     shareusergroupwidget.cpp
     sharee.cpp
     socketapi.cpp
+    socketlistener.cpp
     sslerrordialog.cpp
     syncrunfilelog.cpp
     systray.cpp

@@ -18,6 +18,7 @@
 #include "accountstate.h"
 #include "sharepermissions.h"
 #include "owncloudgui.h"
+#include "socketlistener.h"
 
 #include <QPointer>
 #include <QString>
@@ -54,7 +55,7 @@ private slots:
     void slotPropfindReceived(const QVariantMap &result);
     void slotPropfindError();
     void slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
-                              const QString &folderPath, const QString &fileRelativePath);
+                              const QString &fileRelativePath, int width, const OCC::SocketListener *listener);
     void slotAccountStateChanged(int state);
 
 private:
