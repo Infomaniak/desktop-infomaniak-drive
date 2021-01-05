@@ -2052,10 +2052,6 @@ for additional privileges during the process.</source>
         <source>Unable to open folder path %1.</source>
         <translation>Impossibile aprire il percorso della cartella %1.</translation>
     </message>
-    <message>
-        <source>About %1</source>
-        <translation>Informazioni su %1</translation>
-    </message>
 </context>
 <context>
     <name>OCC::PollJob</name>

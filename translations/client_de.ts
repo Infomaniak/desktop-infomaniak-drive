@@ -2054,10 +2054,6 @@ for additional privileges during the process.</source>
         <source>Unable to open folder path %1.</source>
         <translation>Ordnerpfad kann nicht geöffnet werden %1.</translation>
     </message>
-    <message>
-        <source>About %1</source>
-        <translation>Über %1</translation>
-    </message>
 </context>
 <context>
     <name>OCC::PollJob</name>

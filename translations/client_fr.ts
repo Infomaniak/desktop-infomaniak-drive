@@ -2055,10 +2055,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
         <source>Unable to open folder path %1.</source>
         <translation>Impossible d’ouvrir le dossier de débogage %1.</translation>
     </message>
-    <message>
-        <source>About %1</source>
-        <translation>À propos de %1</translation>
-    </message>
 </context>
 <context>
     <name>OCC::PollJob</name>
