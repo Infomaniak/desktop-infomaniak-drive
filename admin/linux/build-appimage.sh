@@ -103,7 +103,7 @@ mv ./etc/kDrive/sync-exclude.lst ./usr/bin/
 rm -rf ./etc
 
 # sed -i -e 's|Icon=nextcloud|Icon=Nextcloud|g' usr/share/applications/kDrive.desktop # Bug in desktop file?
-cp ./usr/share/icons/hicolor/512x512/apps/kdrive.png . # Workaround for linuxeployqt bug, FIXME
+cp ./usr/share/icons/hicolor/512x512/apps/kdrive-win.png . # Workaround for linuxeployqt bug, FIXME
 
 # Because distros need to get their shit together
 cp -P /usr/local/lib/libssl.so* ./usr/lib/
