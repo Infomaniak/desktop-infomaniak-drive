@@ -1343,6 +1343,14 @@ bool FolderDefinition::load(QSettings &settings, const QString &alias,
     // Target paths also have a convention
     folder->targetPath = prepareTargetPath(folder->targetPath);
 
+    if (folder->virtualFilesMode == Vfs::WithSuffix) {
+        if (Utility::isWindows()) {
+            // Suffix mode doesn't exist anymore
+            folder->virtualFilesMode = Vfs::Off;
+            FolderDefinition::save(settings, *folder);
+        }
+    }
+
     return true;
 }
 

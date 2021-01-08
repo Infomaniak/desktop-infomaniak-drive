@@ -259,8 +259,9 @@ void FolderMan::setupFoldersHelper(QSettings &settings, AccountStatePtr account,
 
             auto vfs = createVfsFromPlugin(folderDefinition.virtualFilesMode);
             if (!vfs) {
-                // TODO: Must do better error handling
-                qFatal("Could not load plugin");
+                QMessageBox::critical(0, APPLICATION_SHORTNAME, tr("Virtual Files plugin specified in kDrive.cfg is incorrect!"));
+                qCritical("Cannot load plugin");
+                std::exit(1);
             }
 
             Folder *f = addFolderInternal(std::move(folderDefinition), account.data(), std::move(vfs));
