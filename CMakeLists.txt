@@ -229,11 +229,11 @@ elseif(BUILD_CLIENT)
 endif()
 
 if (WIN32)
-    # Copy CloudFileProviderDll.dll into bin directory
+    # Copy vfs.dll into bin directory
     set(CMAKE_FIND_LIBRARY_SUFFIXES .dll)
-    find_library(CLOUDFILEPROVIDER_SHARED_LIBRARY NAMES CloudFileProviderDll PATHS ${CLOUDFILEPROVIDER_DIRECTORY} NO_DEFAULT_PATH)
+    find_library(VFS_SHARED_LIBRARY NAMES vfs PATHS ${VFS_DIRECTORY} NO_DEFAULT_PATH)
 
-    file(COPY ${CLOUDFILEPROVIDER_SHARED_LIBRARY}
+    file(COPY ${VFS_SHARED_LIBRARY}
         DESTINATION ${BIN_OUTPUT_DIRECTORY})
 endif()
 

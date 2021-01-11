@@ -14,20 +14,20 @@ Copyright (C) 2020 christophe.larchier@infomaniak.com
 extern "C" {
     // CF_PIN_STATE clone
     typedef enum {
-        CFP_PIN_STATE_UNSPECIFIED = 0,
-        CFP_PIN_STATE_PINNED = 1,
-        CFP_PIN_STATE_UNPINNED = 2,
-        CFP_PIN_STATE_EXCLUDED = 3,
-        CFP_PIN_STATE_INHERIT = 4
-    } CfpPinState;
+        VFS_PIN_STATE_UNSPECIFIED = 0,
+        VFS_PIN_STATE_PINNED = 1,
+        VFS_PIN_STATE_UNPINNED = 2,
+        VFS_PIN_STATE_EXCLUDED = 3,
+        VFS_PIN_STATE_INHERIT = 4
+    } VfsPinState;
 
-    DLL_EXP int __cdecl cfpInitCloudFileProvider(
+    DLL_EXP int __cdecl vfsInit(
         TraceCbk *traceCbk,
         const wchar_t *appName,
         const wchar_t* version,
         const wchar_t* trashURI);
 
-    DLL_EXP int __cdecl cfpStartCloudFileProvider(
+    DLL_EXP int __cdecl vfsStart(
         const wchar_t *driveId,
         const wchar_t *userId,
         const wchar_t *folderId,
@@ -36,60 +36,60 @@ extern "C" {
         wchar_t *namespaceCLSID,
         DWORD *namespaceCLSIDSize);
 
-    DLL_EXP int __cdecl cfpStopCloudFileProvider(
+    DLL_EXP int __cdecl vfsStop(
         const wchar_t *driveId,
         const wchar_t *folderId);
 
-    DLL_EXP int __cdecl cfpGetPlaceHolderStatus(
+    DLL_EXP int __cdecl vfsGetPlaceHolderStatus(
         const wchar_t *filePath, 
         bool *isPlaceholder, 
         bool *isDehydrated,
         bool *isSynced);
 
-    DLL_EXP int __cdecl cfpSetPlaceHolderStatus(
+    DLL_EXP int __cdecl vfsSetPlaceHolderStatus(
         const wchar_t *path,
         bool directory,
         bool inSync);
 
-    DLL_EXP int __cdecl cfpDehydratePlaceHolder(
+    DLL_EXP int __cdecl vfsDehydratePlaceHolder(
         const wchar_t *driveId,
         const wchar_t *folderId,
         const wchar_t *path);
 
-    DLL_EXP int __cdecl cfpHydratePlaceHolder(
+    DLL_EXP int __cdecl vfsHydratePlaceHolder(
         const wchar_t *driveId,
         const wchar_t *folderId,
         const wchar_t *path);
 
-    DLL_EXP int __cdecl cfpCreatePlaceHolder(
+    DLL_EXP int __cdecl vfsCreatePlaceHolder(
         const wchar_t *fileId,
         const wchar_t *relativePath,
         const wchar_t *destPath,
         WIN32_FIND_DATA *findData);
 
-    DLL_EXP int __cdecl cfpConvertToPlaceHolder(
+    DLL_EXP int __cdecl vfsConvertToPlaceHolder(
         const wchar_t *fileId,
         const wchar_t *filePath);
 
-    DLL_EXP int __cdecl cfpUpdateFetchStatus(
+    DLL_EXP int __cdecl vfsUpdateFetchStatus(
         const wchar_t *driveId,
         const wchar_t *folderId,
         const wchar_t *filePath,
         const wchar_t *fromFilePath,
         LONGLONG completed);
 
-    DLL_EXP int __cdecl cfpCancelFetch(
+    DLL_EXP int __cdecl vfsCancelFetch(
         const wchar_t *driveId,
         const wchar_t *folderId,
         const wchar_t *filePath);
 
-    DLL_EXP int __cdecl cfpGetPinState(
+    DLL_EXP int __cdecl vfsGetPinState(
         const wchar_t *path,
         bool directory,
-        CfpPinState *state);
+        VfsPinState *state);
 
-    DLL_EXP int __cdecl cfpSetPinState(
+    DLL_EXP int __cdecl vfsSetPinState(
         const wchar_t *path,
         bool directory,
-        CfpPinState state);
+        VfsPinState state);
 }

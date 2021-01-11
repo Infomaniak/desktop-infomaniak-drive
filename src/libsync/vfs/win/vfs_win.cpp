@@ -24,9 +24,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "account.h"
 #include "version.h"
 
-// CloudFileProvider dll
+// Vfs dll
 #include "debug.h"
-#include "cloudfileproviderdll.h"
+#include "vfs.h"
 
 #include <Windows.h>
 #include <iostream>
@@ -63,12 +63,12 @@ void debugCbk(TraceLevel level, const wchar_t *msg) {
 VfsWin::VfsWin(QObject *parent)
     : Vfs(parent)
 {
-    if (cfpInitCloudFileProvider(
+    if (vfsInit(
                 debugCbk,
                 QString(APPLICATION_SHORTNAME).toStdWString().c_str(),
                 OCC::Utility::escape(MIRALL_VERSION_STRING).toStdWString().c_str(),
                 QString(APPLICATION_TRASH_URL).toStdWString().c_str()) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPInitCloudFileProvider!";
+        qCCritical(lcVfsWin) << "Error in vfsInit!";
         return;
     }
 }
@@ -93,7 +93,7 @@ void VfsWin::startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSI
 
     wchar_t clsid[39] = L"";
     unsigned long clsidSize = sizeof(clsid);
-    if (cfpStartCloudFileProvider(
+    if (vfsStart(
                 params.account.get()->driveId().toStdWString().c_str(),
                 params.account.get()->davUser().toStdWString().c_str(),
                 params.folderAlias.toStdWString().c_str(),
@@ -101,7 +101,7 @@ void VfsWin::startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSI
                 QDir::toNativeSeparators(params.filesystemPath).toStdWString().c_str(),
                 clsid,
                 &clsidSize) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPStartCloudFileProvider!";
+        qCCritical(lcVfsWin) << "Error in vfsStart!";
     }
 
     namespaceCLSID = QString::fromStdWString(clsid);
@@ -112,11 +112,11 @@ void VfsWin::dehydrate(const QString &path)
     qCDebug(lcVfsWin) << "dehydrate - path = " << path;
 
     // Dehydrate file
-    if (cfpDehydratePlaceHolder(
+    if (vfsDehydratePlaceHolder(
                 _setupParams.account.get()->driveId().toStdWString().c_str(),
                 _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPDehydratePlaceHolder!";
+        qCCritical(lcVfsWin) << "Error in vfsDehydratePlaceHolder!";
         return;
     }
 }
@@ -125,11 +125,11 @@ void VfsWin::hydrate(const QString &path)
 {
     qCDebug(lcVfsWin) << "hydrate - path = " << path;
 
-    if (cfpHydratePlaceHolder(
+    if (vfsHydratePlaceHolder(
                 _setupParams.account.get()->driveId().toStdWString().c_str(),
                 _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPHydratePlaceHolder!";
+        qCCritical(lcVfsWin) << "Error in vfsHydratePlaceHolder!";
         return;
     }
 }
@@ -138,11 +138,11 @@ void VfsWin::cancelHydrate(const QString &path)
 {
     qCDebug(lcVfsWin) << "cancelHydrate - path = " << path;
 
-    if (cfpCancelFetch(
+    if (vfsCancelFetch(
                 _setupParams.account.get()->driveId().toStdWString().c_str(),
                 _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPCancelFetch!";
+        qCCritical(lcVfsWin) << "Error in vfsCancelFetch!";
         return;
     }
 }
@@ -157,8 +157,8 @@ void VfsWin::exclude(const QString &path)
         return;
     }
 
-    if (cfpSetPinState(QDir::toNativeSeparators(path).toStdWString().c_str(), dwAttrs & FILE_ATTRIBUTE_DIRECTORY, CFP_PIN_STATE_EXCLUDED) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPSetPinState!";
+    if (vfsSetPinState(QDir::toNativeSeparators(path).toStdWString().c_str(), dwAttrs & FILE_ATTRIBUTE_DIRECTORY, VFS_PIN_STATE_EXCLUDED) != S_OK) {
+        qCCritical(lcVfsWin) << "Error in vfsSetPinState!";
         return;
     }
 }
@@ -182,11 +182,11 @@ DWORD VfsWin::getPlaceholderAttributes(const QString &filePath)
 
 void VfsWin::setPlaceholderStatus(const QString &filePath, bool directory, bool inSync)
 {
-    if (cfpSetPlaceHolderStatus(
+    if (vfsSetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 directory,
                 inSync) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPSetPlaceHolderStatus!";
+        qCCritical(lcVfsWin) << "Error in vfsSetPlaceHolderStatus!";
         return;
     }
 }
@@ -207,12 +207,12 @@ void VfsWin::checkAndFixMetadata(const QString &path)
     bool isPlaceholder;
     bool isDehydrated;
     bool isSynced;
-    if (cfpGetPlaceHolderStatus(
+    if (vfsGetPlaceHolderStatus(
                 QDir::toNativeSeparators(path).toStdWString().c_str(),
                 &isPlaceholder,
                 &isDehydrated,
                 &isSynced) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
+        qCCritical(lcVfsWin) << "Error in vfsGetPlaceHolderStatus!";
         return;
     }
 
@@ -269,10 +269,10 @@ void VfsWin::unregisterFolder()
 {
     qCDebug(lcVfsWin) << "unregisterFolder - driveId = " << _setupParams.account.get()->driveId();
 
-    if (cfpStopCloudFileProvider(
+    if (vfsStop(
                 _setupParams.account.get()->driveId().toStdWString().c_str(),
                 _setupParams.folderAlias.toStdWString().c_str()) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPStopCloudFileProvider!";
+        qCCritical(lcVfsWin) << "Error in vfsStop!";
     }
 }
 
@@ -324,12 +324,12 @@ void VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
         findData.dwFileAttributes |= FILE_ATTRIBUTE_ARCHIVE;
     }
 
-    if (cfpCreatePlaceHolder(
+    if (vfsCreatePlaceHolder(
                 QString(item._fileId).toStdWString().c_str(),
                 QDir::toNativeSeparators(item._file).toStdWString().c_str(),
                 QDir::toNativeSeparators(_setupParams.filesystemPath).toStdWString().c_str(),
                 &findData) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPCreatePlaceHolder!";
+        qCCritical(lcVfsWin) << "Error in vfsCreatePlaceHolder!";
     }
 }
 
@@ -351,12 +351,12 @@ void VfsWin::dehydratePlaceholder(const OCC::SyncFileItem &item)
 
     // Check if the file is a placeholder
     bool isPlaceholder;
-    if (cfpGetPlaceHolderStatus(
+    if (vfsGetPlaceHolderStatus(
                 QDir::toNativeSeparators(path).toStdWString().c_str(),
                 &isPlaceholder,
                 nullptr,
                 nullptr) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
+        qCCritical(lcVfsWin) << "Error in vfsGetPlaceHolderStatus!";
         return;
     }
 
@@ -412,40 +412,40 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
     // Check if file is already a placeholder
     bool isPlaceholder;
     bool isSynced;
-    if (cfpGetPlaceHolderStatus(
+    if (vfsGetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 &isPlaceholder,
                 nullptr,
                 &isSynced) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
+        qCCritical(lcVfsWin) << "Error in vfsGetPlaceHolderStatus!";
         return false;
     }
 
     if (!isPlaceholder) {
         // Convert to placeholder
-        if (cfpConvertToPlaceHolder(
+        if (vfsConvertToPlaceHolder(
                     QString(item._fileId).toStdWString().c_str(),
                     QDir::toNativeSeparators(filePath).toStdWString().c_str()) != S_OK) {
-            qCCritical(lcVfsWin) << "Error in CFPConvertToPlaceHolder!";
+            qCCritical(lcVfsWin) << "Error in vfsConvertToPlaceHolder!";
             return false;
         }
     }
 
     if (!replacesFile.isEmpty()) {
         // Download finished
-        if (cfpUpdateFetchStatus(
+        if (vfsUpdateFetchStatus(
                     _setupParams.account.get()->driveId().toStdWString().c_str(),
                     _setupParams.folderAlias.toStdWString().c_str(),
                     QDir::toNativeSeparators(replacesFile).toStdWString().c_str(),
                     QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                     item._size) != S_OK) {
-            qCCritical(lcVfsWin) << "Error in CFPUpdateFetchStatus!";
+            qCCritical(lcVfsWin) << "Error in vfsUpdateFetchStatus!";
             return false;
         }
 
         // Force pin state to pinned
-        if (cfpSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), dwAttrs & FILE_ATTRIBUTE_DIRECTORY, CFP_PIN_STATE_PINNED)) {
-            qCCritical(lcVfsWin) << "Error in CFPSetPinState!";
+        if (vfsSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), dwAttrs & FILE_ATTRIBUTE_DIRECTORY, VFS_PIN_STATE_PINNED)) {
+            qCCritical(lcVfsWin) << "Error in vfsSetPinState!";
             return false;
         }
     }
@@ -459,12 +459,12 @@ bool VfsWin::isDehydratedPlaceholder(const QString &fileRelativePath)
 
     bool isDehydrated;
     QString filePath(_setupParams.filesystemPath + fileRelativePath);
-    if (cfpGetPlaceHolderStatus(
+    if (vfsGetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 nullptr,
                 &isDehydrated,
                 nullptr) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
+        qCCritical(lcVfsWin) << "Error in vfsGetPlaceHolderStatus!";
         return false;
     }
 
@@ -487,12 +487,12 @@ bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const
     bool isPlaceholder;
     bool isDehydrated;
     bool isSynced;
-    if (cfpGetPlaceHolderStatus(
+    if (vfsGetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 &isPlaceholder,
                 &isDehydrated,
                 &isSynced) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in CFPGetPlaceHolderStatus!";
+        qCCritical(lcVfsWin) << "Error in vfsGetPlaceHolderStatus!";
         return false;
     }
 
