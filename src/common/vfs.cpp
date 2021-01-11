@@ -139,7 +139,8 @@ bool OCC::isVfsPluginAvailable(Vfs::Mode mode)
     }
 
     if (mode == Vfs::WindowsCfApi) {
-        if (QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows10
+        if (QOperatingSystemVersion::OSType() == QOperatingSystemVersion::OSType::Windows
+                && QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows10
                 && QOperatingSystemVersion::current().microVersion() >= MIN_WINDOWS10_MICROVERSION_FOR_CFAPI) {
             return true;
         }
