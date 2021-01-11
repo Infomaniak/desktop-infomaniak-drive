@@ -39,5 +39,5 @@ set( CRASHREPORTER_ICON ":/infomaniak.png" )
 
 set( DEBUGREPORTER_SUBMIT_URL "https://www.infomaniak.com/report/drive/logs" CACHE STRING "URL for debug reporter" )
 
-set( CLOUDFILEPROVIDER_DIRECTORY "C:\\Projects\\CloudFileProvider\\x64\\Release" )
-set( CLOUDFILEPROVIDER_APPX_DIRECTORY "C:\\Projects\\CloudFileProvider\\CloudFileProviderPackage\\AppPackages\\CloudFileProviderPackage_1.0.0.0_Test" )
+set( VFS_DIRECTORY "C:\\Projects\\kdrive-ext-win\\x64\\Release" )
+set( VFS_APPX_DIRECTORY "C:\\Projects\\kdrive-ext-win\\FileExplorerExtensionPackage\\AppPackages\\FileExplorerExtensionPackage_1.0.0.0_Test" )
