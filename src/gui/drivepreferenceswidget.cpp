@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "common/vfs.h"
 #include "filesystem.h"
 
+#include <QDesktopServices>
 #include <QDir>
 #include <QIcon>
 #include <QLabel>
@@ -181,8 +182,9 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
         _smartSyncDescriptionLabel = new QLabel(this);
         _smartSyncDescriptionLabel->setObjectName("description");
         _smartSyncDescriptionLabel->setText(tr("Synchronize all your files without using your computer space."
-                                              " <a style=\"%1\" href=\"ref\">Learn more</a>")
-                                            .arg(OCC::Utility::linkStyle));
+                                              " <a style=\"%1\" href=\"%2\">Learn more</a>")
+                                            .arg(OCC::Utility::linkStyle)
+                                            .arg(OCC::Utility::learnMoreLink));
         _smartSyncDescriptionLabel->setWordWrap(true);
         smartSyncBox->addWidget(_smartSyncDescriptionLabel);
     }
@@ -266,7 +268,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     connect(addFolderButton, &CustomPushButton::clicked, this, &DrivePreferencesWidget::onAddFolder);
     if (_smartSyncSwitch && _smartSyncDescriptionLabel) {
         connect(_smartSyncSwitch, &CustomSwitch::clicked, this, &DrivePreferencesWidget::onSmartSyncSwitchClicked);
-        connect(_smartSyncDescriptionLabel, &QLabel::linkActivated, this, &DrivePreferencesWidget::onDisplaySmartSyncInfo);
+        connect(_smartSyncDescriptionLabel, &QLabel::linkActivated, this, &DrivePreferencesWidget::onLinkActivated);
     }
     connect(_notificationsSwitch, &CustomSwitch::clicked, this, &DrivePreferencesWidget::onNotificationsSwitchClicked);
     connect(this, &DrivePreferencesWidget::errorAdded, this, &DrivePreferencesWidget::onErrorAdded);
@@ -835,11 +837,19 @@ bool DrivePreferencesWidget::isSmartSyncActivated()
     return smartSync;
 }
 
-void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
+void DrivePreferencesWidget::onLinkActivated(const QString &link)
 {
-    Q_UNUSED(link)
-
-    // TODO
+    if (link == OCC::Utility::learnMoreLink) {
+        // Learn more: Lite Sync
+        if (!QDesktopServices::openUrl(QUrl(LEARNMORE_LITESYNC_URL))) {
+            qCWarning(lcDrivePreferencesWidget) << "QDesktopServices::openUrl failed for " << link;
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Unable to open link %1.").arg(link),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
+        }
+    }
 }
 
 void DrivePreferencesWidget::onErrorsWidgetClicked()

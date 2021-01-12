@@ -106,7 +106,7 @@ private:
     bool isSmartSyncActivated();
 
 private slots:
-    void onDisplaySmartSyncInfo(const QString &link);
+    void onLinkActivated(const QString &link);
     void onErrorsWidgetClicked();
     void onBigFoldersWarningWidgetClicked();
     void onAddFolder(bool checked = false);

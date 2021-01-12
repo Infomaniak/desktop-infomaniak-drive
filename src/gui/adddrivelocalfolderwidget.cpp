@@ -24,8 +24,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "wizard/owncloudwizardcommon.h"
 #include "common/vfs.h"
 #include "configfile.h"
+#include "config.h"
 
 #include <QBoxLayout>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFileDialog>
 #include <QLoggingCategory>
@@ -290,8 +292,9 @@ void AddDriveLocalFolderWidget::updateUI()
                 if (!_folderCompatibleWithSmartSync) {
                     _warningLabel->setText(tr("This folder is not compatible with Lite Sync."
                                               " Please select another folder or if you continue Lite Sync will be disabled."
-                                              " <a style=\"%1\" href=\"ref\">Learn more</a>")
-                                           .arg(OCC::Utility::linkStyle));
+                                              " <a style=\"%1\" href=\"%2\">Learn more</a>")
+                                           .arg(OCC::Utility::linkStyle)
+                                           .arg(OCC::Utility::learnMoreLink));
                     _warningWidget->setVisible(true);
                 }
                 else {
@@ -383,7 +386,17 @@ void AddDriveLocalFolderWidget::onUpdateFolderButtonTriggered(bool checked)
 
 void AddDriveLocalFolderWidget::onLinkActivated(const QString &link)
 {
-    Q_UNUSED(link)
+    if (link == OCC::Utility::learnMoreLink) {
+        // Learn more: Folder not compatible with Lite Sync
+        if (!QDesktopServices::openUrl(QUrl(LEARNMORE_LITESYNC_COMPATIBILITY_URL))) {
+            qCWarning(lcAddDriveLocalFolderWidget) << "QDesktopServices::openUrl failed for " << link;
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Unable to open link %1.").arg(link),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
+        }
+    }
 }
 
 }

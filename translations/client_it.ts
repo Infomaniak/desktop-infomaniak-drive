@@ -191,8 +191,12 @@
         <translation>Al termine della configurazione tutti i tuoi file saranno in questa cartella. Puoi trascinare nuovi file in questa cartella per sincronizzarli con il tuo kDrive.</translation>
     </message>
     <message>
-        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>Impossibile aprire il link %1.</translation>
     </message>
 </context>
 <context>
@@ -238,11 +242,15 @@
     </message>
     <message>
         <source>YES</source>
-        <translation type="unfinished">SÌ</translation>
+        <translation>SÌ</translation>
     </message>
     <message>
-        <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>Impossibile aprire il link %1.</translation>
     </message>
 </context>
 <context>
@@ -484,7 +492,7 @@
     </message>
     <message>
         <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation>Sincronizza tutti i tuoi file senza usare lo spazio del computer. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Maggiori informazioni&lt;/a&gt;</translation>
+        <translation type="vanished">Sincronizza tutti i tuoi file senza usare lo spazio del computer. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Maggiori informazioni&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Notifications</source>
@@ -536,7 +544,7 @@
     </message>
     <message>
         <source>CONFIRM</source>
-        <translation type="unfinished">CONFERMA</translation>
+        <translation>CONFERMA</translation>
     </message>
     <message>
         <source>Activate Lite Sync</source>
@@ -565,6 +573,14 @@
     <message>
         <source>Lite Sync deactivation in progress</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation>Sincronizza tutti i tuoi file senza usare lo spazio del computer. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Maggiori informazioni&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>Impossibile aprire il link %1.</translation>
     </message>
 </context>
 <context>
@@ -743,8 +759,12 @@
         <translation>Seleziona cartella</translation>
     </message>
     <message>
-        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>Impossibile aprire il link %1.</translation>
     </message>
 </context>
 <context>
@@ -1725,6 +1745,10 @@ Se decidi di eliminare i file, non saranno più a tua disposizione, a meno che t
     <message>
         <source>The local folder %1 is already contained in a folder used in a folder sync connection. Please pick another one!</source>
         <translation>La cartella locale %1 è già contenuta in una cartella utilizzata in una connessione di sincronizzazione delle cartelle. Selezionane un&apos;altra!</translation>
+    </message>
+    <message>
+        <source>Virtual Files plugin specified in kDrive.cfg is incorrect!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

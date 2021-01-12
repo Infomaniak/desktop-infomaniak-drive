@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "wizard/owncloudwizardcommon.h"
 
 #include <QBoxLayout>
+#include <QDesktopServices>
 #include <QDir>
 #include <QProgressBar>
 
@@ -123,8 +124,9 @@ void AddDriveSmartSyncWidget::initUI()
     textLabel->setContentsMargins(0, 0, 0, 0);
     textLabel->setText(tr("Lite Sync syncs all your files without using your computer space."
                           " You can browse the files in your kDrive and download them locally whenever you want."
-                          " <a style=\"%1\" href=\"ref\">Learn more</a>")
-                        .arg(OCC::Utility::linkStyle));
+                          " <a style=\"%1\" href=\"%2\">Learn more</a>")
+                        .arg(OCC::Utility::linkStyle)
+                        .arg(OCC::Utility::learnMoreLink));
     textLabel->setWordWrap(true);
     mainLayout->addWidget(textLabel);
     mainLayout->addSpacing(textBoxVMargin);
@@ -198,7 +200,17 @@ void AddDriveSmartSyncWidget::initUI()
 
 void AddDriveSmartSyncWidget::onLinkActivated(const QString &link)
 {
-    Q_UNUSED(link)
+    if (link == OCC::Utility::learnMoreLink) {
+        // Learn more: Lite Sync
+        if (!QDesktopServices::openUrl(QUrl(LEARNMORE_LITESYNC_URL))) {
+            qCWarning(lcAddDriveSmartSyncWidget) << "QDesktopServices::openUrl failed for " << link;
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Unable to open link %1.").arg(link),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
+        }
+    }
 }
 
 void AddDriveSmartSyncWidget::setLogoColor(const QColor &color)

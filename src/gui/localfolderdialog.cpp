@@ -23,8 +23,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "common/utility.h"
 #include "common/vfs.h"
 #include "configfile.h"
+#include "custommessagebox.h"
+#include "config.h"
 
 #include <QBoxLayout>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFileDialog>
 #include <QLabel>
@@ -39,6 +42,8 @@ static const int selectionBoxHMargin = 15;
 static const int selectionBoxVMargin = 20;
 static const int selectionBoxSpacing = 10;
 static const int warningBoxSpacing = 10;
+
+Q_LOGGING_CATEGORY(lcLocalFolderDialog, "gui.localfolderdialog", QtInfoMsg)
 
 LocalFolderDialog::LocalFolderDialog(const QString &localFolderPath, QWidget *parent)
     : CustomDialog(true, parent)
@@ -215,8 +220,9 @@ void LocalFolderDialog::updateUI()
             if (!_folderCompatibleWithSmartSync) {
                 _warningLabel->setText(tr("This folder is not compatible with Lite Sync."
                                           " Please select another folder or if you continue Lite Sync will be disabled."
-                                          " <a style=\"%1\" href=\"ref\">Learn more</a>")
-                                       .arg(OCC::Utility::linkStyle));
+                                          " <a style=\"%1\" href=\"%2\">Learn more</a>")
+                                       .arg(OCC::Utility::linkStyle)
+                                       .arg(OCC::Utility::learnMoreLink));
                 _warningWidget->setVisible(true);
             }
             else {
@@ -290,9 +296,20 @@ void LocalFolderDialog::onUpdateFolderButtonTriggered(bool checked)
 
 void LocalFolderDialog::onLinkActivated(const QString &link)
 {
-    Q_UNUSED(link)
-
-    emit openFolder(_localFolderPath);
+    if (link == OCC::Utility::learnMoreLink) {
+        // Learn more: Folder not compatible with Lite Sync
+        if (!QDesktopServices::openUrl(QUrl(LEARNMORE_LITESYNC_COMPATIBILITY_URL))) {
+            qCWarning(lcLocalFolderDialog) << "QDesktopServices::openUrl failed for " << link;
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Unable to open link %1.").arg(link),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
+        }
+    }
+    else {
+        emit openFolder(_localFolderPath);
+    }
 }
 
 }
