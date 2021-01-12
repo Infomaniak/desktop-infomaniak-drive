@@ -188,7 +188,13 @@ QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVis
     QString flavor;
     if (sysTray) {
         if (_mono) {
-            flavor = Utility::hasDarkSystray() ? QString("white") : QString("black");
+            if (QOperatingSystemVersion::OSType() == QOperatingSystemVersion::OSType::MacOS
+                    && QOperatingSystemVersion::current() >= QOperatingSystemVersion::MacOSBigSur) {
+                flavor = QString("black");
+            }
+            else {
+                flavor = Utility::hasDarkSystray() ? QString("white") : QString("black");
+            }
         } else {
             flavor = QString("colored");
         }
@@ -199,7 +205,7 @@ QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVis
     QString key = name + "," + flavor;
     QIcon &cached = _iconCache[key];
     if (cached.isNull()) {
-        QString pixmapName = QString(":/client/resources/icons/theme/%1/%2.svg").arg(flavor).arg(name);
+        QString pixmapName = QString(":/client/resources/icons/theme/%1/%2.svg").arg(flavor, name);
         if (QFile::exists(pixmapName)) {
             QList<int> sizes;
             sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
@@ -212,7 +218,7 @@ QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVis
 #ifdef Q_OS_MAC
     // This defines the icon as a template and enables automatic macOS color handling
     // See https://bugreports.qt.io/browse/QTBUG-42109
-    cached.setIsMask(false);
+    cached.setIsMask(_mono && sysTray);
 #endif
 
     return cached;
