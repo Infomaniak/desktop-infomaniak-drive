@@ -188,8 +188,8 @@ QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVis
     QString flavor;
     if (sysTray) {
         if (_mono) {
-            if (QOperatingSystemVersion::OSType() == QOperatingSystemVersion::OSType::MacOS
-                    && QOperatingSystemVersion::current() >= QOperatingSystemVersion::MacOSBigSur) {
+            if (QOperatingSystemVersion::current().currentType() == QOperatingSystemVersion::OSType::MacOS
+                    && QOperatingSystemVersion::current() > QOperatingSystemVersion::MacOSCatalina) {
                 flavor = QString("black");
             }
             else {
