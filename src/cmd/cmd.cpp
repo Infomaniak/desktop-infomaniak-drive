@@ -306,9 +306,19 @@ void selectiveSyncFixup(OCC::SyncJournalDb *journal, const QStringList &newList)
 
     bool ok;
 
-    auto oldBlackListSet = journal->getSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, &ok).toSet();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    QSet<QString> oldBlackListSet = QSet<QString>(
+                journal->getSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, &ok).begin(),
+                journal->getSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, &ok).end());
+#else
+    QSet<QString> oldBlackListSet = journal->getSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, &ok).toSet();
+#endif
     if (ok) {
-        auto blackListSet = newList.toSet();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+        QSet<QString> blackListSet = QSet<QString>(newList.begin(), newList.end());
+#else
+        QSet<QString> blackListSet = newList.toSet();
+#endif
         auto changes = (oldBlackListSet - blackListSet) + (blackListSet - oldBlackListSet);
         foreach (const auto &it, changes) {
             journal->schedulePathForRemoteDiscovery(it);

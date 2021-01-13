@@ -226,16 +226,18 @@ void PropagateItemJob::done(SyncFileItem::Status statusArg, const QString &error
 
     _item->_status = statusArg;
 
+    const QString newErrorString = translateError(errorString);
+
     if (_item->_isRestoration) {
         if (_item->_status == SyncFileItem::Success
             || _item->_status == SyncFileItem::Conflict) {
             _item->_status = SyncFileItem::Restoration;
         } else {
-            _item->_errorString += tr("; Restoration Failed: %1").arg(errorString);
+            _item->_errorString += tr("; Restoration Failed: %1").arg(newErrorString);
         }
     } else {
         if (_item->_errorString.isEmpty()) {
-            _item->_errorString = errorString;
+            _item->_errorString = newErrorString;
         }
     }
 
@@ -300,6 +302,18 @@ void PropagateItemJob::slotRestoreJobFinished(SyncFileItem::Status status)
     } else {
         done(status, tr("A file or folder was removed from a read only share, but restoring failed: %1").arg(msg));
     }
+}
+
+const QString PropagateItemJob::translateError(const QString &errorString)
+{
+    QString newErrorString;
+    if (errorString.contains("Sabre\\DAV\\Exception\\Locked")) {
+        newErrorString = tr("Synchronization cannot be done because the file is opened at the same time locally and on kDrive webapp.") ;
+    }
+    else {
+        return errorString;
+    }
+    return newErrorString;
 }
 
 // ================================================================================

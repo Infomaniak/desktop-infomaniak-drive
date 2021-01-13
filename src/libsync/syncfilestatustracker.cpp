@@ -322,7 +322,7 @@ SyncFileStatus SyncFileStatusTracker::resolveSyncAndErrorStatus(const QString &r
             status.set(problemStatus);
     }
 
-    ASSERT(sharedFlag != UnknownShared,
+    ASSERT_2(sharedFlag != UnknownShared,
         "The shared status needs to have been fetched from a SyncFileItem or the DB at this point.");
     if (sharedFlag == Shared)
         status.setShared(true);

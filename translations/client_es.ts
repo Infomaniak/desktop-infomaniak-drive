@@ -303,8 +303,8 @@
         <translation>¿Desea guardar sus modificaciones?</translation>
     </message>
     <message>
-        <source>Kb/s</source>
-        <translation>Kb/s</translation>
+        <source>KB/s</source>
+        <translation>KB/s</translation>
     </message>
 </context>
 <context>
@@ -816,10 +816,6 @@ Esta acción interrumpirá cualquier sincronización actualmente en ejecución.<
         <translation>General</translation>
     </message>
     <message>
-        <source>Ask for confirmation before synchronizing files greater than</source>
-        <translation>Solicitar confirmación antes de sincronizar carpetas mayores de</translation>
-    </message>
-    <message>
         <source>Activate dark theme</source>
         <translation>Activar tema oscuro</translation>
     </message>
@@ -868,12 +864,28 @@ Esta acción interrumpirá cualquier sincronización actualmente en ejecución.<
         <translation>ACTUALIZAR</translation>
     </message>
     <message>
-        <source>Mb</source>
-        <translation>Mb</translation>
-    </message>
-    <message>
         <source>Unable to open folder %1.</source>
         <translation>No se puede abrir la carpeta %1</translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>No es posible abrir el enlace %1.</translation>
+    </message>
+    <message>
+        <source>Invalid link %1.</source>
+        <translation>Invalidar enlace %1.</translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation>MB</translation>
+    </message>
+    <message>
+        <source>Ask for confirmation before synchronizing folders greater than</source>
+        <translation>Solicitar confirmación antes de sincronizar carpetas mayores de</translation>
+    </message>
+    <message>
+        <source>Show synchronized folders in File Explorer navigation pane</source>
+        <translation>Mostrar carpetas sincronizadas en el panel de navegación del Explorador de archivos</translation>
     </message>
 </context>
 <context>
@@ -1961,10 +1973,6 @@ for additional privileges during the process.</source>
         <translation>Se instalará una nueva actualización de %1. Durante esta actualización puede que se soliciten privilegios adicionales.</translation>
     </message>
     <message>
-        <source>Could not download update. Please click &lt;a href=&apos;%1&apos;&gt;here&lt;/a&gt; to download the update manually.</source>
-        <translation>No se puede descargar la actualización. Por favor, haga clic &lt;a href=&apos;%1&apos;&gt;aquí&lt;/a&gt; para iniciar una descarga manual.</translation>
-    </message>
-    <message>
         <source>Could not check for new updates.</source>
         <translation>No se puede comprobar si hay actualizaciones.</translation>
     </message>
@@ -1989,12 +1997,63 @@ for additional privileges during the process.</source>
         <translation>Hay disponible una actualización: %1</translation>
     </message>
     <message>
-        <source>An update is available: %1. Please use the system&apos;s update tool to install it.</source>
-        <translation>Hay disponible una actualización: %1. Utilice la herramienta de actualización del sistema para instalarlo.</translation>
-    </message>
-    <message>
         <source>%1 is up to date!</source>
         <translation>¡%1 está actualizado!</translation>
+    </message>
+    <message>
+        <source>Could not download update. Please click &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;here&lt;/a&gt; to download it manually.</source>
+        <translation>No se pudo descargar la actualización. Haga clic &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;aquí&lt;/a&gt; para descargarlo manualmente.</translation>
+    </message>
+    <message>
+        <source>An update is available: %1. Please click &lt;a style=&quot;%2&quot; href=&quot;%3&quot;&gt;here&lt;/a&gt; to download it manually</source>
+        <translation>Hay una actualización disponible: %1. Haga clic &lt;a style=&quot;%2&quot; href=&quot;%3&quot;&gt;aquí&lt;/a&gt; para descargarlo manualmente</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::OwnCloudGui</name>
+    <message>
+        <source>Unsupported Server Version</source>
+        <translation>Versión del servidor no soportada</translation>
+    </message>
+    <message>
+        <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
+        <translation>El servidor de la cuenta %1 ejecuta una versión %2 no compatible. Este cliente con versiones del servidor no compatibles es potencialmente peligroso. Continúa bajo tu responsabilidad.</translation>
+    </message>
+    <message>
+        <source>Disconnected from %1</source>
+        <translation>Desconectado de %1</translation>
+    </message>
+    <message>
+        <source>Disconnected from accounts:</source>
+        <translation>Desconectado desde cuentas:</translation>
+    </message>
+    <message>
+        <source>Account %1: %2</source>
+        <translation>Cuenta %1: %2</translation>
+    </message>
+    <message>
+        <source>Please sign in</source>
+        <translation>Por favor, regístrese</translation>
+    </message>
+    <message>
+        <source>Account synchronization is disabled</source>
+        <translation>La sincronización está deshabilitada</translation>
+    </message>
+    <message>
+        <source>Folder %1: %2</source>
+        <translation>Archivo %1: %2</translation>
+    </message>
+    <message>
+        <source>There are no sync folders configured.</source>
+        <translation>No hay carpetas configuradas para sincronizar.</translation>
+    </message>
+    <message>
+        <source>Unable to open folder path %1.</source>
+        <translation>No es posible abrir la ruta de la carpeta %1.</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation>Acerca de %1</translation>
     </message>
 </context>
 <context>
@@ -2174,6 +2233,10 @@ for additional privileges during the process.</source>
     <message>
         <source>A file or folder was removed from a read only share, but restoring failed: %1</source>
         <translation>Un archivo o directorio fue eliminado de una carpeta de compartida de solo lectura pero la recuperación falló: %1</translation>
+    </message>
+    <message>
+        <source>Synchronization cannot be done because the file is opened at the same time locally and on kDrive webapp.</source>
+        <translation>No se puede realizar la sincronización porque el archivo se abre al mismo tiempo localmente y en la aplicación web kDrive.</translation>
     </message>
 </context>
 <context>
@@ -2942,53 +3005,6 @@ for additional privileges during the process.</source>
     <message>
         <source>Unable to open file: %1</source>
         <translation>No es posible abrir archivo: %1 </translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ownCloudGui</name>
-    <message>
-        <source>Please sign in</source>
-        <translation>Por favor, regístrese</translation>
-    </message>
-    <message>
-        <source>Folder %1: %2</source>
-        <translation>Archivo %1: %2</translation>
-    </message>
-    <message>
-        <source>There are no sync folders configured.</source>
-        <translation>No hay carpetas configuradas para sincronizar.</translation>
-    </message>
-    <message>
-        <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
-        <translation>El servidor de la cuenta %1 ejecuta una versión %2 no compatible. Este cliente con versiones del servidor no compatibles es potencialmente peligroso. Continúa bajo tu responsabilidad.</translation>
-    </message>
-    <message>
-        <source>Disconnected from %1</source>
-        <translation>Desconectado de %1</translation>
-    </message>
-    <message>
-        <source>Unsupported Server Version</source>
-        <translation>Versión del servidor no soportada</translation>
-    </message>
-    <message>
-        <source>Disconnected from accounts:</source>
-        <translation>Desconectado desde cuentas:</translation>
-    </message>
-    <message>
-        <source>Account %1: %2</source>
-        <translation>Cuenta %1: %2</translation>
-    </message>
-    <message>
-        <source>Account synchronization is disabled</source>
-        <translation>La sincronización está deshabilitada</translation>
-    </message>
-    <message>
-        <source>About %1</source>
-        <translation>Acerca de %1</translation>
-    </message>
-    <message>
-        <source>Unable to open folder path %1.</source>
-        <translation>No es posible abrir la ruta de la carpeta %1.</translation>
     </message>
 </context>
 <context>

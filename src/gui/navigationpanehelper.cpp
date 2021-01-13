@@ -36,9 +36,6 @@ NavigationPaneHelper::NavigationPaneHelper(FolderMan *folderMan)
 
 void NavigationPaneHelper::setShowInExplorerNavigationPane(bool show)
 {
-    if (_showInExplorerNavigationPane == show)
-        return;
-
     _showInExplorerNavigationPane = show;
     // Re-generate a new CLSID when enabling, possibly throwing away the old one.
     // updateCloudStorageRegistry will take care of removing any unknown CLSID our application owns from the registry.
@@ -57,10 +54,10 @@ void NavigationPaneHelper::scheduleUpdateCloudStorageRegistry()
 
 void NavigationPaneHelper::updateCloudStorageRegistry()
 {
+#ifdef Q_OS_WIN
     // Start by looking at every registered namespace extension for the sidebar, and look for an "ApplicationName" value
     // that matches ours when we saved.
     QVector<QUuid> entriesToRemove;
-#ifdef Q_OS_WIN
     Utility::registryWalkSubKeys(
         HKEY_CURRENT_USER,
         QStringLiteral("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Desktop\\NameSpace"),
@@ -72,7 +69,45 @@ void NavigationPaneHelper::updateCloudStorageRegistry()
                 entriesToRemove.append(clsid);
             }
         });
-#endif
+
+    // Then remove anything that isn't in our folder list anymore.
+    foreach (auto &clsid, entriesToRemove) {
+        QString clsidStr = clsid.toString();
+        QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
+        QString clsidPathWow64 = QString() % "Software\\Classes\\Wow6432Node\\CLSID\\" % clsidStr;
+        QString namespacePath = QString() % "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Desktop\\NameSpace\\" % clsidStr;
+        QString newstartpanelPath = QString() % "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel";
+
+        qCInfo(lcNavPane) << "Explorer Cloud storage provider: now unused, removing own CLSID" << clsidStr;
+        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, clsidPath);
+        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, clsidPathWow64);
+        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, namespacePath);
+        Utility::registryDeleteKeyValue(HKEY_CURRENT_USER, newstartpanelPath, clsidStr);
+    }
+
+    // Remove ghost shortcuts
+    QVector<QUuid> ghostEntriesToRemove;
+    Utility::registryWalkSubKeys(
+        HKEY_CLASSES_ROOT,
+        QStringLiteral("CLSID"),
+        [&ghostEntriesToRemove](HKEY key, const QString &subKey) {
+            QVariant value = Utility::registryGetKeyValue(key, subKey, QStringLiteral(""));
+            if (value.toString() == QLatin1String("kDrive")) {
+                QUuid clsid{ subKey };
+                Q_ASSERT(!clsid.isNull());
+                ghostEntriesToRemove.append(clsid);
+            }
+        });
+
+    foreach (auto &clsid, ghostEntriesToRemove) {
+        QString clsidStr = clsid.toString();
+        QString clsidPath = QString() % "CLSID\\" % clsidStr;
+        QString clsidPathWow64 = QString() % "Wow6432Node\\CLSID\\" % clsidStr;
+
+        qCInfo(lcNavPane) << "Explorer Cloud shortcut: now unused, removing own CLSID" << clsidStr;
+        Utility::registryDeleteKeyTree(HKEY_CLASSES_ROOT, clsidPath);
+        Utility::registryDeleteKeyTree(HKEY_CLASSES_ROOT, clsidPathWow64);
+    }
 
     // Then re-save every folder that has a valid navigationPaneClsid to the registry.
     // We currently don't distinguish between new and existing CLSIDs, if it's there we just
@@ -97,7 +132,6 @@ void NavigationPaneHelper::updateCloudStorageRegistry()
             QString targetFolderPath = QDir::toNativeSeparators(folder->cleanPath());
 
             qCInfo(lcNavPane) << "Explorer Cloud storage provider: saving path" << targetFolderPath << "to CLSID" << clsidStr;
-#ifdef Q_OS_WIN
             // Steps taken from: https://msdn.microsoft.com/en-us/library/windows/desktop/dn889934%28v=vs.85%29.aspx
             // Step 1: Add your CLSID and name your extension
             Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, QString(), REG_SZ, title);
@@ -138,29 +172,9 @@ void NavigationPaneHelper::updateCloudStorageRegistry()
             // For us, to later be able to iterate and find our own namespace entries and associated CLSID.
             // Use the macro instead of the theme to make sure it matches with the uninstaller.
             Utility::registrySetKeyValue(HKEY_CURRENT_USER, namespacePath, QStringLiteral("ApplicationName"), REG_SZ, QLatin1String(APPLICATION_NAME));
-#else
-            // This code path should only occur on Windows (the config will be false, and the checkbox invisible on other platforms).
-            // Add runtime checks rather than #ifdefing out the whole code to help catch breakages when developing on other platforms.
-            Q_ASSERT(false);
-#endif
         }
     }
-
-    // Then remove anything that isn't in our folder list anymore.
-    foreach (auto &clsid, entriesToRemove) {
-        QString clsidStr = clsid.toString();
-        QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
-        QString clsidPathWow64 = QString() % "Software\\Classes\\Wow6432Node\\CLSID\\" % clsidStr;
-        QString namespacePath = QString() % "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Desktop\\NameSpace\\" % clsidStr;
-
-        qCInfo(lcNavPane) << "Explorer Cloud storage provider: now unused, removing own CLSID" << clsidStr;
-#ifdef Q_OS_WIN
-        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, clsidPath);
-        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, clsidPathWow64);
-        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, namespacePath);
-        Utility::registryDeleteKeyValue(HKEY_CURRENT_USER, QStringLiteral("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel"), clsidStr);
 #endif
-    }
 }
 
 } // namespace OCC

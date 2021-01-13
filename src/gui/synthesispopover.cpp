@@ -34,6 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "getorcreatepubliclinkshare.h"
 #include "configfile.h"
 #include "theme.h"
+#include "owncloudgui.h"
 
 #undef CONSOLE_DEBUG
 #ifdef CONSOLE_DEBUG
@@ -95,9 +96,10 @@ const std::map<SynthesisPopover::NotificationsDisabled, QString> SynthesisPopove
 
 Q_LOGGING_CATEGORY(lcSynthesisPopover, "synthesispopover", QtInfoMsg)
 
-SynthesisPopover::SynthesisPopover(bool debugMode, QWidget *parent)
+SynthesisPopover::SynthesisPopover(bool debugMode, OCC::OwnCloudGui *gui, QWidget *parent)
     : QDialog(parent)
     , _debugMode(debugMode)
+    , _gui(gui)
     , _sysTrayIconRect(QRect())
     , _currentAccountId(QString())
     , _backgroundMainColor(QColor())
@@ -207,7 +209,7 @@ void SynthesisPopover::setPosition(const QRect &sysTrayIconRect)
                 trianglePositionLeft
                 ? _sysTrayIconRect.center().x() - trianglePosition
                 : _sysTrayIconRect.center().x() - rect().width() + trianglePosition,
-                _sysTrayIconRect.bottom());
+                screenRect.y());
         }
         else if (position == OCC::Utility::systrayPosition::Bottom) {
             // Dialog position
@@ -215,12 +217,12 @@ void SynthesisPopover::setPosition(const QRect &sysTrayIconRect)
                 trianglePositionLeft
                 ? _sysTrayIconRect.center().x() - trianglePosition
                 : _sysTrayIconRect.center().x() - rect().width() + trianglePosition,
-                _sysTrayIconRect.top() - rect().height());
+                screenRect.y() + screenRect.height() - rect().height());
         }
         else if (position == OCC::Utility::systrayPosition::Left) {
             // Dialog position
             popoverPosition = QPoint(
-                _sysTrayIconRect.right(),
+                screenRect.x(),
                 trianglePositionTop
                 ? _sysTrayIconRect.center().y() - trianglePosition
                 : _sysTrayIconRect.center().y() - rect().height() + trianglePosition);
@@ -228,7 +230,7 @@ void SynthesisPopover::setPosition(const QRect &sysTrayIconRect)
         else if (position == OCC::Utility::systrayPosition::Right) {
             // Dialog position
             popoverPosition = QPoint(
-                _sysTrayIconRect.left() - rect().width(),
+                screenRect.x() + screenRect.width() - rect().width(),
                 trianglePositionTop
                 ? _sysTrayIconRect.center().y() - trianglePosition
                 : _sysTrayIconRect.center().y() - rect().height() + trianglePosition);
@@ -880,7 +882,7 @@ void SynthesisPopover::onRefreshAccountList()
             // Count drives with warning/errors
             bool drivesWithErrors = false;
             for (auto const &accountInfo : _accountInfoMap) {
-                if (accountInfo.second.hasWarningOrError()) {
+                if (_gui->driveErrorCount(accountInfo.first) > 0) {
                     drivesWithErrors = true;
                     break;
                 }
@@ -999,7 +1001,6 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                                 || item.data()->_status == OCC::SyncFileItem::DetailError
                                 || item.data()->_status == OCC::SyncFileItem::BlacklistedError
                                 || item.data()->_status == OCC::SyncFileItem::FileIgnored) {
-                            accountInfoIt->second._errorsCount++;
                             return;
                         }
 
@@ -1070,11 +1071,11 @@ void SynthesisPopover::onOpenErrorsMenu(bool checked)
 
     QList<ErrorsPopup::DriveError> driveErrorList = QList<ErrorsPopup::DriveError>();
     for (auto const &accountInfo : _accountInfoMap) {
-        if (accountInfo.second.hasWarningOrError()) {
+        if (_gui->driveErrorCount(accountInfo.first) > 0) {
             ErrorsPopup::DriveError driveError;
             driveError.accountId = accountInfo.first;
             driveError.accountName = accountInfo.second._name;
-            driveError.errorsCount = accountInfo.second._errorsCount;
+            driveError.errorsCount = _gui->driveErrorCount(accountInfo.first);
             driveErrorList << driveError;
         }
     }

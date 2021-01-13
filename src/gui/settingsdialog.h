@@ -36,7 +36,6 @@ namespace Ui {
 class AccountSettings;
 class Application;
 class FolderMan;
-class ownCloudGui;
 class ActivitySettings;
 
 /**
@@ -48,7 +47,7 @@ class SettingsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit SettingsDialog(ownCloudGui *gui, QWidget *parent = 0);
+    explicit SettingsDialog(OwnCloudGui *gui, QWidget *parent = 0);
     ~SettingsDialog();
 
     void addAccount(const QString &title, QWidget *widget);
@@ -98,7 +97,7 @@ private:
     ActivitySettings *_activitySettings;
 
     QAction *_activityAction;
-    ownCloudGui *_gui;
+    OwnCloudGui *_gui;
 };
 }
 

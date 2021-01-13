@@ -52,10 +52,10 @@ QByteArray c_utf8_from_locale(const mbchar_t *wstr)
   size_t len;
   len = wcslen(wstr);
   /* Call once to get the required size. */
-  size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr, len, NULL, 0, NULL, NULL);
+  size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr, static_cast<int>(len), NULL, 0, NULL, NULL);
   if (size_needed > 0) {
     dst.resize(size_needed);
-    WideCharToMultiByte(CP_UTF8, 0, wstr, len, dst.data(), size_needed, NULL, NULL);
+    WideCharToMultiByte(CP_UTF8, 0, wstr, static_cast<int>(len), dst.data(), size_needed, NULL, NULL);
   }
   return dst;
 #else
@@ -95,7 +95,7 @@ mbchar_t* c_utf8_string_to_locale(const char *str)
     int size_needed;
 
     len = strlen(str);
-    size_needed = MultiByteToWideChar(CP_UTF8, 0, str, len, NULL, 0);
+    size_needed = MultiByteToWideChar(CP_UTF8, 0, str, static_cast<int>(len), NULL, 0);
     if (size_needed > 0) {
         int size_char = (size_needed + 1) * sizeof(mbchar_t);
         dst = (mbchar_t*)c_malloc(size_char);
@@ -114,7 +114,7 @@ mbchar_t* c_utf8_string_to_locale(const char *str)
          return NULL;
      } else {
  #ifdef _WIN32
-         QByteArray unc_str = OCC::FileSystem::pathtoUNC(QByteArray::fromRawData(str, strlen(str)));
+         QByteArray unc_str = OCC::FileSystem::pathtoUNC(QByteArray::fromRawData(str, static_cast<int>(strlen(str))));
          mbchar_t *dst = c_utf8_string_to_locale(unc_str);
          return dst;
  #else

@@ -112,6 +112,15 @@ void ParametersDialog::openDriveParametersPage(const QString &accountId)
     forceRedraw();
 }
 
+int ParametersDialog::driveErrorCount(const QString &accountId) const
+{
+    const auto accountInfoIt = _accountInfoMap.find(accountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        return accountInfoIt->second._errorsCount;
+    }
+    return 0;
+}
+
 void ParametersDialog::initUI()
 {
     /*
@@ -505,6 +514,24 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                 if (!account.isNull()) {
                     const auto accountInfoIt = _accountInfoMap.find(account->id());
                     if (accountInfoIt != _accountInfoMap.end()) {
+                        QString key = QString("%1|%2|%3|%4")
+                                    .arg(folderId)
+                                    .arg(QString(item.data()->_fileId))
+                                    .arg(static_cast<int>(item.data()->_direction))
+                                    .arg(static_cast<int>(item.data()->_type));
+
+                        if (accountInfoIt->second._errorsListWidget) {
+                            // Remove existing error with same key
+                            QList<QListWidgetItem *> widgetItemList = accountInfoIt->second._errorsListWidget->findItems(key, Qt::MatchExactly);
+                            for (QListWidgetItem *widgetItemTmp : widgetItemList) {
+                                ErrorItemWidget *widgetTmp = (ErrorItemWidget *) accountInfoIt->second._errorsListWidget->itemWidget(widgetItemTmp);
+                                Q_ASSERT(widgetTmp);
+                                accountInfoIt->second._errorsListWidget->takeItem(accountInfoIt->second._errorsListWidget->row(widgetItemTmp));
+                                delete widgetItemTmp;
+                                accountInfoIt->second._errorsCount--;
+                            }
+                        }
+
                         if (!(item.data()->_status == OCC::SyncFileItem::NoStatus
                                 || item.data()->_status == OCC::SyncFileItem::FatalError
                                 || item.data()->_status == OCC::SyncFileItem::NormalError
@@ -512,9 +539,10 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                                 || item.data()->_status == OCC::SyncFileItem::DetailError
                                 || item.data()->_status == OCC::SyncFileItem::BlacklistedError
                                 || item.data()->_status == OCC::SyncFileItem::FileIgnored)) {
-                            accountInfoIt->second._errorsCount++;
                             return;
                         }
+
+                        accountInfoIt->second._errorsCount++;
 
                         if (!accountInfoIt->second._errorsListWidget) {
                             accountInfoIt->second._errorsListWidget = new QListWidget(this);
@@ -527,6 +555,8 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
 
                         // Add item to synchronized list
                         QListWidgetItem *widgetItem = new QListWidgetItem();
+                        widgetItem->setText(key);
+                        widgetItem->setTextColor(Qt::transparent);
                         SynchronizedItem synchronizedItem(folderId,
                                                           item.data()->_file,
                                                           item.data()->_fileId,
@@ -549,6 +579,7 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                             // Remove last row
                             QListWidgetItem *lastWidgetItem = accountInfoIt->second._errorsListWidget->takeItem(
                                         accountInfoIt->second._errorsListWidget->count() - 1);
+                            Q_ASSERT(lastWidgetItem);
                             delete lastWidgetItem;
                         }
 
@@ -592,7 +623,7 @@ void ParametersDialog::onAccountSelected(QString id)
         _currentAccountId = id;
         _driveMenuBarWidget->progressBarWidget()->setUsedSize(accountInfoIt->second._totalSize, accountInfoIt->second._used);
         _drivePreferencesWidget->setAccount(accountInfoIt->first, &accountInfoIt->second,
-                                            accountInfoIt->second._errorsListWidget != nullptr);
+                                            accountInfoIt->second._errorsCount > 0);
         _drivePreferencesScrollArea->setVisible(true);
         _noDrivePagewidget->setVisible(false);
     }

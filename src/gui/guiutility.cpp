@@ -113,8 +113,10 @@ QString Utility::vfsCurrentAvailabilityText(VfsItemAvailability availability)
         return QCoreApplication::translate("utility", "Available online only");
     case VfsItemAvailability::OnlineOnly:
         return QCoreApplication::translate("utility", "Available online only");
+    default:
+        ENFORCE(false);
+        return QString();
     }
-    ENFORCE(false);
 }
 
 QString Utility::vfsPinActionText()
@@ -146,7 +148,7 @@ QIcon Utility::getIconWithColor(const QString &path, const QColor &color)
     pixmap.fill(Qt::transparent);
 
     QPainter painter(&pixmap);
-    painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
+    painter.setRenderHint(QPainter::Antialiasing, true);
     scene.render(&painter);
 
     QIcon icon;
@@ -235,7 +237,7 @@ QIcon Utility::getIconMenuWithColor(const QString &path, const QColor &color)
     pixmap.fill(Qt::transparent);
 
     QPainter painter(&pixmap);
-    painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform, true);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
     scene.render(&painter);
 
     QIcon icon;
@@ -477,7 +479,7 @@ QPixmap Utility::getAvatarFromImage(const QImage &image)
     // Draw mask
     QBitmap mask(originalPixmap.size());
     QPainter painter(&mask);
-    painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform, true);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
     mask.fill(Qt::white);
     painter.setBrush(Qt::black);
     int rx = mask.width() / 2.0;

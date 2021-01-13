@@ -30,7 +30,7 @@ StrCpy $OPTION_SECTION_SC_QUICK_LAUNCH_Desc "Scorciatoia per ${APPLICATION_NAME}
 StrCpy $UNINSTALLER_FILE_Detail "Creazione del programma di disinstallazione"
 StrCpy $UNINSTALLER_REGISTRY_Detail "Scrittura delle chiavi di registro del programma di installazione"
 StrCpy $UNINSTALLER_FINISHED_Detail "Completato"
-StrCpy $UNINSTALL_MESSAGEBOX "Non sembra che ${APPLICATION_NAME} sia installato nella cartella '$INSTDIR'.$$\nVuoi continuare comunque (non consigliato)?"
+StrCpy $UNINSTALL_MESSAGEBOX "Non sembra che ${APPLICATION_NAME} sia installato nella cartella '$INSTDIR'.$\n$\nVuoi continuare comunque (non consigliato)?"
 StrCpy $UNINSTALL_ABORT "Disinstallazione interrotta dall'utente"
 StrCpy $INIT_NO_QUICK_LAUNCH "Scorciatoia dell'avvio veloce (N/D)"
 StrCpy $INIT_NO_DESKTOP "Scorciatoia del desktop (sovrascrivi se esistente)"
@@ -41,3 +41,4 @@ StrCpy $UAC_UNINSTALLER_REQUIRE_ADMIN "Il programma di disinstallazione necessit
 StrCpy $UAC_ERROR_LOGON_SERVICE "Il servizio di accesso non è in esecuzione, interruzione in corso!"
 StrCpy $INIT_UNINSTALLER_RUNNING "Il programma di disinstallazione è già in esecuzione."
 StrCpy $SectionGroup_Shortcuts "Scorciatoie"
+StrCpy $InstallRedistributables_MESSAGEBOX_TEXT "L'applicazione kDrive richiede l'installazione di ridistribuibili Microsoft C ++ 2015-2019. Ciò potrebbe causare il riavvio del computer. Continuare con l'installazione ?"

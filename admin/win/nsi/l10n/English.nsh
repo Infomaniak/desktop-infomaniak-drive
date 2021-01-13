@@ -41,3 +41,4 @@ StrCpy $UAC_UNINSTALLER_REQUIRE_ADMIN "This uninstaller requires admin access, t
 StrCpy $UAC_ERROR_LOGON_SERVICE "Logon service is not running, aborting!"
 StrCpy $INIT_UNINSTALLER_RUNNING "The uninstaller is already running."
 StrCpy $SectionGroup_Shortcuts "Shortcuts"
+StrCpy $InstallRedistributables_MESSAGEBOX_TEXT "The kDrive application requires the installation of Microsoft C++ 2015-2019 redistributables. This may cause the computer to restart. Continue installation ?"

@@ -47,7 +47,7 @@ static const char deletedIndicator = '[';
 
 OCSYNC_EXPORT void csync_exclude_expand_escapes(QByteArray &input)
 {
-    size_t o = 0;
+    int o = 0;
     char *line = input.data();
     auto len = input.size();
     for (int i = 0; i < len; ++i) {
@@ -147,7 +147,7 @@ static CSYNC_EXCLUDE_TYPE _csync_excluded_common(const QString &path, bool exclu
         bname = path.midRef(lastSlash + 1);
     }
 
-    size_t blen = bname.size();
+    int blen = bname.size();
     // 9 = strlen(".sync_.db")
     if (blen >= 9 && bname.at(0) == '.') {
         if (bname.contains(QLatin1String(".db"))) {

@@ -50,6 +50,7 @@ public:
     void openPreferencesPage();
     void openDriveErrorsPage(const QString &accountId);
     void openDriveParametersPage(const QString &accountId);
+    int driveErrorCount(const QString &accountId) const;
 
 signals:
     void addDrive();

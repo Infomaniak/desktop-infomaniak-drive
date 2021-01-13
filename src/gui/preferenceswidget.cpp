@@ -134,9 +134,10 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     folderConfirmation1HBox->setSpacing(0);
     folderConfirmationBox->addLayout(folderConfirmation1HBox);
 
-    QLabel *folderConfirmationLabel = new QLabel(tr("Ask for confirmation before synchronizing files greater than"), this);
+    QLabel *folderConfirmationLabel = new QLabel(tr("Ask for confirmation before synchronizing folders greater than"), this);
+    folderConfirmationLabel->setWordWrap(true);
     folderConfirmation1HBox->addWidget(folderConfirmationLabel);
-    folderConfirmation1HBox->addStretch();
+    folderConfirmation1HBox->setStretchFactor(folderConfirmationLabel, 1);
 
     CustomSwitch *folderConfirmationSwitch = new CustomSwitch(this);
     folderConfirmationSwitch->setLayoutDirection(Qt::RightToLeft);
@@ -159,7 +160,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     _folderConfirmationAmountLineEdit->setMaximumWidth(amountLineEditWidth);
     folderConfirmation2HBox->addWidget(_folderConfirmationAmountLineEdit);
 
-    QLabel *folderConfirmationAmountLabel = new QLabel(tr("Mb"), this);
+    QLabel *folderConfirmationAmountLabel = new QLabel(tr("MB"), this);
     folderConfirmationAmountLabel->setObjectName("folderConfirmationAmountLabel");
     folderConfirmation2HBox->addWidget(folderConfirmationAmountLabel);
     folderConfirmation2HBox->addStretch();
@@ -217,6 +218,24 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
         launchAtStartupSwitch->setCheckState(hasLaunchAtStartup ? Qt::Checked : Qt::Unchecked);
     }
     launchAtStartupBox->addWidget(launchAtStartupSwitch);
+    generalBloc->addSeparator();
+
+    // Drive shortcuts
+    CustomSwitch *shortcutsSwitch = nullptr;
+    if (OCC::Utility::isWindows()) {
+        QBoxLayout *shortcutsBox = generalBloc->addLayout(QBoxLayout::Direction::LeftToRight);
+
+        QLabel *shortcutsLabel = new QLabel(tr("Show synchronized folders in File Explorer navigation pane"), this);
+        shortcutsLabel->setWordWrap(true);
+        shortcutsBox->addWidget(shortcutsLabel);
+        shortcutsBox->addStretch();
+
+        shortcutsSwitch = new CustomSwitch(this);
+        shortcutsSwitch->setLayoutDirection(Qt::RightToLeft);
+        shortcutsSwitch->setAttribute(Qt::WA_MacShowFocusRect, false);
+        shortcutsSwitch->setCheckState(cfg.showInExplorerNavigationPane() ? Qt::Checked : Qt::Unchecked);
+        shortcutsBox->addWidget(shortcutsSwitch);
+    }
 
     //
     // Advanced bloc
@@ -321,11 +340,13 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     }
     connect(monochromeSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onMonochromeSwitchClicked);
     connect(launchAtStartupSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onLaunchAtStartupSwitchClicked);
+    connect(shortcutsSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onShortcutsSwitchClicked);
     connect(debuggingWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onDebuggingWidgetClicked);
     connect(_debuggingFolderLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
     connect(filesToExcludeWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onFilesToExcludeWidgetClicked);
     connect(proxyServerWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onProxyServerWidgetClicked);
     connect(bandwidthWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onBandwidthWidgetClicked);
+    connect(_updateStatusLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
     connect(versionNumberLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
 }
 
@@ -401,6 +422,13 @@ void PreferencesWidget::onLaunchAtStartupSwitchClicked(bool checked)
     OCC::Utility::setLaunchOnStartup(theme->appName(), theme->appNameGUI(), checked);
 }
 
+void PreferencesWidget::onShortcutsSwitchClicked(bool checked)
+{
+    OCC::ConfigFile cfg;
+    cfg.setShowInExplorerNavigationPane(checked);
+    OCC::FolderMan::instance()->navigationPaneHelper().setShowInExplorerNavigationPane(checked);
+}
+
 void PreferencesWidget::onDebuggingWidgetClicked()
 {
     DebuggingDialog *dialog = new DebuggingDialog(this);
@@ -447,6 +475,28 @@ void PreferencesWidget::onLinkActivated(const QString &link)
     else if (link == versionLink) {
         AboutDialog *dialog = new AboutDialog(this);
         dialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
+    }
+    else {
+        // URL link
+        QUrl url = QUrl(link);
+        if (url.isValid()) {
+            if (!QDesktopServices::openUrl(url)) {
+                qCWarning(lcPerformancesWidget) << "QDesktopServices::openUrl failed for " << link;
+                CustomMessageBox *msgBox = new CustomMessageBox(
+                            QMessageBox::Warning,
+                            tr("Unable to open link %1.").arg(link),
+                            QMessageBox::Ok, this);
+                msgBox->exec();
+            }
+        }
+        else {
+            qCWarning(lcPerformancesWidget) << "Invalid link " << link;
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Invalid link %1.").arg(link),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
+        }
     }
 }
 

@@ -629,7 +629,7 @@ void PropagateDownloadFile::slotGetFinished()
             return;
         }
 
-        ASSERT(false, "Download slot finished, but there was no reply!");
+        ASSERT_2(false, "Download slot finished, but there was no reply!");
         done(SyncFileItem::FatalError, tr("Download slot finished, but there was no reply!"));
         return;
     }

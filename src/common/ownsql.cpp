@@ -266,7 +266,7 @@ int SqlQuery::prepare(const QByteArray &sql, bool allow_failure)
         if (_errId != SQLITE_OK) {
             _error = QString::fromUtf8(sqlite3_errmsg(_db));
             qCWarning(lcSql) << "Sqlite prepare statement error:" << _error << "in" << _sql;
-            ENFORCE(allow_failure, "SQLITE Prepare error");
+            ENFORCE_2(allow_failure, "SQLITE Prepare error");
         } else {
             ASSERT(_stmt);
             _sqldb->_queries.insert(this);
@@ -281,7 +281,7 @@ int SqlQuery::prepare(const QByteArray &sql, bool allow_failure)
  */
 static bool startsWithInsensitive(const QByteArray &a, const char *b)
 {
-    int len = strlen(b);
+    int len = static_cast<int>(strlen(b));
     return a.size() >= len && qstrnicmp(a.constData(), b, len) == 0;
 }
 

@@ -41,3 +41,4 @@ StrCpy $UAC_UNINSTALLER_REQUIRE_ADMIN "Das Deinstallationsprogramm erfordert Adm
 StrCpy $UAC_ERROR_LOGON_SERVICE "Anmeldedienst läuft nicht, abbruch!"
 StrCpy $INIT_UNINSTALLER_RUNNING "Das Deinstallationsprogramm wird bereits ausgeführt."
 StrCpy $SectionGroup_Shortcuts "Verknüpfungen"
+StrCpy $InstallRedistributables_MESSAGEBOX_TEXT "Die kDrive-Anwendung erfordert die Installation von Microsoft C++ 2015-2019 Redistributables. Dies kann dazu führen, dass der Computer neu gestartet wird. Installation fortsetzen ?"

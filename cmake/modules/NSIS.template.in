@@ -159,35 +159,16 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
    Function ${un}SetLang
       # load the selected language file
       !include "${NSI_PATH}\l10n\English.nsh"
+      StrCmp $LANGUAGE ${LANG_FRENCH} French 0
       StrCmp $LANGUAGE ${LANG_GERMAN} German 0
-      StrCmp $LANGUAGE ${LANG_DUTCH} Dutch 0
-      StrCmp $LANGUAGE ${LANG_FINNISH} Finnish 0
-      StrCmp $LANGUAGE ${LANG_JAPANESE} Japanese 0
-      StrCmp $LANGUAGE ${LANG_SLOVENIAN} Slovenian 0
       StrCmp $LANGUAGE ${LANG_SPANISH} Spanish 0
       StrCmp $LANGUAGE ${LANG_ITALIAN} Italian 0
-      StrCmp $LANGUAGE ${LANG_ESTONIAN} Estonian 0
-      StrCmp $LANGUAGE ${LANG_GREEK} Greek 0
-      StrCmp $LANGUAGE ${LANG_BASQUE} Basque 0
-      StrCmp $LANGUAGE ${LANG_GALICIAN} Galician 0
-      StrCmp $LANGUAGE ${LANG_POLISH} Polish 0
-      StrCmp $LANGUAGE ${LANG_TURKISH} Turkish 0
-      StrCmp $LANGUAGE ${LANG_NORWEGIAN} Norwegian 0
-      StrCmp $LANGUAGE ${LANG_PORTUGUESEBR} Brazilian EndLanguageCmp
+      Goto EndLanguageCmp
+      French:
+      !include "${NSI_PATH}\l10n\French.nsh"
+      Goto EndLanguageCmp
       German:
       !include "${NSI_PATH}\l10n\German.nsh"
-      Goto EndLanguageCmp
-      Dutch:
-      !include "${NSI_PATH}\l10n\Dutch.nsh"
-      Goto EndLanguageCmp
-      Finnish:
-      !include "${NSI_PATH}\l10n\Finnish.nsh"
-      Goto EndLanguageCmp
-      Japanese:
-      !include "${NSI_PATH}\l10n\Japanese.nsh"
-      Goto EndLanguageCmp
-      Slovenian:
-      !include "${NSI_PATH}\l10n\Slovenian.nsh"
       Goto EndLanguageCmp
       Spanish:
       !include "${NSI_PATH}\l10n\Spanish.nsh"
@@ -195,29 +176,6 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
       Italian:
       !include "${NSI_PATH}\l10n\Italian.nsh"
       Goto EndLanguageCmp
-      Estonian:
-      !include "${NSI_PATH}\l10n\Estonian.nsh"
-      Goto EndLanguageCmp
-      Greek:
-      !include "${NSI_PATH}\l10n\Greek.nsh"
-      Goto EndLanguageCmp
-      Basque:
-      !include "${NSI_PATH}\l10n\Basque.nsh"
-      Goto EndLanguageCmp
-      Galician:
-      !include "${NSI_PATH}\l10n\Galician.nsh"
-      Goto EndLanguageCmp
-      Polish:
-      !include "${NSI_PATH}\l10n\Polish.nsh"
-      Goto EndLanguageCmp
-      Turkish:
-      !include "${NSI_PATH}\l10n\Turkish.nsh"
-      Goto EndLanguageCmp
-      Brazilian:
-      !include "${NSI_PATH}\l10n\PortugueseBR.nsh"
-      Goto EndLanguageCmp
-      Norwegian:
-      !include "${NSI_PATH}\l10n\Norwegian.nsh"
       EndLanguageCmp:
 
    FunctionEnd
@@ -278,12 +236,13 @@ Function EnsureOwncloudShutdown
 FunctionEnd
 
 Function InstallRedistributables
+   MessageBox MB_YESNO $InstallRedistributables_MESSAGEBOX_TEXT /SD IDYES IDYES install
+      Abort $UNINSTALL_ABORT
+   install:
+
    ${If} ${RunningX64}
-      ExecWait '"$OUTDIR\vc_redist.x64.exe" /install /quiet'
-;   ${Else}
-;      ExecWait '"$OUTDIR\vcredist_x86.exe" /install /quiet'
+      ExecWait '"$OUTDIR\vc_redist.x64.exe" /install /passive /norestart'
    ${EndIf}
-;   Delete "$OUTDIR\vcredist_x86.exe"
    Delete "$OUTDIR\vc_redist.x64.exe"
 FunctionEnd
 

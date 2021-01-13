@@ -178,6 +178,8 @@ protected slots:
 private:
     QScopedPointer<PropagateItemJob> _restoreJob;
 
+    const QString translateError(const QString &errorString);
+
 public:
     PropagateItemJob(OwncloudPropagator *propagator, const SyncFileItemPtr &item)
         : PropagatorJob(propagator)
