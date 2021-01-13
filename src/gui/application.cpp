@@ -15,6 +15,7 @@
  */
 
 #include "application.h"
+#include "guiutility.h"
 
 #include <iostream>
 #include <random>
@@ -37,11 +38,12 @@
 #include "accountmanager.h"
 #include "creds/abstractcredentials.h"
 #include "updater/ocupdater.h"
-#include "owncloudsetupwizard.h"
+#include "adddrivewizard.h"
 #include "version.h"
 #include "csync_exclude.h"
 #include "common/vfs.h"
 #include "libcommon/commonutility.h"
+#include "customproxystyle.h"
 
 #include "config.h"
 
@@ -57,6 +59,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <QFontDatabase>
 
 class QSocket;
 
@@ -69,6 +72,8 @@ namespace {
     static const char optionsC[] =
         "Options:\n"
         "  -h --help            : show this help screen.\n"
+        "  --settings           : show the Settings window (if the application is running).\n"
+        "  --synthesis          : show the Synthesis window (if the application is running).\n"
         "  --logwindow          : open a window to show log output.\n"
         "  --logfile <filename> : write log output to file <filename>.\n"
         "  --logfile -          : write log output to stdout.\n"
@@ -80,6 +85,18 @@ namespace {
         "  --logdebug           : also output debug-level messages in the log.\n"
         "  --confdir <dirname>  : Use the given configuration folder.\n";
 }
+
+static const QList<QString> fontFiles =
+        QList<QString>()
+        << QString(":/client/resources/fonts/SuisseIntl-Thin.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-UltraLight.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-Light.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-Regular.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-Medium.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-SemiBold.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-Bold.otf")
+        << QString(":/client/resources/fonts/SuisseIntl-Black.otf");
+//static const QString defaultFontFamily("Suisse Int'l");
 
 // ----------------------------------------------------------------------------------
 
@@ -174,6 +191,7 @@ Application::Application(int &argc, char **argv)
     setWindowIcon(_theme->applicationIcon());
     setApplicationVersion(_theme->version());
     setAttribute(Qt::AA_UseHighDpiPixmaps, true);
+    setStyle(new KDC::CustomProxyStyle);
 
     if (!ConfigFile().exists()) {
         // Migrate from version <= 2.4
@@ -302,8 +320,20 @@ Application::Application(int &argc, char **argv)
     FolderMan::instance()->setupFolders();
     _proxy.setupQtProxyFromConfig(); // folders have to be defined first, than we set up the Qt proxy.
 
-    // Enable word wrapping of QInputDialog (#4197)
-    setStyleSheet("QInputDialog QLabel { qproperty-wordWrap:1; }");
+    // Load fonts
+    for (QString fontFile : fontFiles) {
+        if (QFontDatabase::addApplicationFont(fontFile) < 0) {
+            qCInfo(lcApplication) << "Error adding font file!";
+        }
+    }
+
+    // Set default font
+    /*QFont font(defaultFontFamily);
+    font.setStyleStrategy(QFont::PreferAntialias);
+    QApplication::setFont(font);*/
+
+    // Set style
+    Utility::setStyle(qApp);
 
     connect(AccountManager::instance(), &AccountManager::accountAdded,
         this, &Application::slotAccountStateAdded);
@@ -350,6 +380,11 @@ Application::~Application()
     AccountManager::instance()->shutdown();
 }
 
+void Application::showSynthesisDialog()
+{
+    _gui->showSynthesisDialog();
+}
+
 void Application::slotAccountStateRemoved(AccountState *accountState)
 {
     if (_gui) {
@@ -369,7 +404,10 @@ void Application::slotAccountStateRemoved(AccountState *accountState)
     if (AccountManager::instance()->accounts().isEmpty()) {
         // allow to add a new account if there is non any more. Always think
         // about single account theming!
-        OwncloudSetupWizard::runWizard(this, SLOT(slotownCloudWizardDone(int)));
+        //OwncloudSetupWizard::runWizard(this, SLOT(slotownCloudWizardDone(int)));
+        /*KDC::AddDriveWizard *wizard = new KDC::AddDriveWizard();
+        Application *app = qobject_cast<Application *>(qApp);
+        app->slotownCloudWizardDone(wizard->exec());*/
     }
 }
 
@@ -423,9 +461,7 @@ void Application::slotCheckConnection()
 
     if (list.isEmpty()) {
         // let gui open the setup wizard
-        _gui->slotOpenSettingsDialog();
-
-        _checkConnectionTimer.stop(); // don't popup the wizard on interval;
+        _gui->slotOpenParametersDialog();
     }
 }
 
@@ -469,8 +505,6 @@ void Application::slotownCloudWizardDone(int res)
         if (shouldSetAutoStart) {
             Utility::setLaunchOnStartup(_theme->appName(), _theme->appNameGUI(), true);
         }
-
-        _gui->slotShowSettings();
     }
 }
 
@@ -515,6 +549,16 @@ void Application::slotParseMessage(const QString &msg, QObject *)
             return;
         }
         showSettingsDialog();
+    }
+    else if (msg.startsWith(QLatin1String("MSG_SHOWSYNTHESIS"))) {
+        qCInfo(lcApplication) << "Running for" << _startedAt.elapsed() / 1000.0 << "sec";
+        if (_startedAt.elapsed() < 10 * 1000) {
+            // This call is mirrored with the one in int main()
+            qCWarning(lcApplication) << "Ignoring MSG_SHOWSETTINGS, possibly double-invocation of client via session restore and auto start";
+            return;
+        }
+
+        showSynthesisDialog();
     }
 }
 
@@ -572,6 +616,8 @@ void Application::parseOptions(const QStringList &options)
         } else if (option.endsWith(QStringLiteral(APPLICATION_DOTVIRTUALFILE_SUFFIX))) {
             // virtual file, open it after the Folder were created (if the app is not terminated)
             QTimer::singleShot(0, this, [this, option] { openVirtualFile(option); });
+        } else if (option == QLatin1String("--settings")) {
+        } else if (option == QLatin1String("--synthesis")) {
         } else {
             showHint("Unrecognized option '" + option.toStdString() + "'");
         }
@@ -652,7 +698,7 @@ bool Application::versionOnly()
 
 void Application::showSettingsDialog()
 {
-    _gui->slotShowSettings();
+    _gui->slotShowParametersDialog();
 }
 
 void Application::setAlert(bool alert)
@@ -665,6 +711,13 @@ void Application::setAlert(bool alert)
 bool Application::getAlert()
 {
     return _alert;
+}
+
+void Application::updateSystrayIcon()
+{
+    if (_theme && _theme->systrayUseMonoIcons()) {
+        slotUseMonoIconsChanged(_theme->systrayUseMonoIcons());
+    }
 }
 
 void Application::openVirtualFile(const QString &filename)
@@ -684,7 +737,7 @@ void Application::openVirtualFile(const QString &filename)
     folder->implicitlyHydrateFile(relativePath);
     QString normalName = filename.left(filename.size() - virtualFileExt.size());
     auto con = QSharedPointer<QMetaObject::Connection>::create();
-    *con = QObject::connect(folder, &Folder::syncFinished, [con, normalName] {
+    *con = QObject::connect(folder, &Folder::syncFinished, [=] {
         QObject::disconnect(*con);
         if (QFile::exists(normalName)) {
             QDesktopServices::openUrl(QUrl::fromLocalFile(normalName));
@@ -695,8 +748,7 @@ void Application::openVirtualFile(const QString &filename)
 void Application::tryTrayAgain()
 {
     qCInfo(lcApplication) << "Trying tray icon, tray available:" << QSystemTrayIcon::isSystemTrayAvailable();
-    if (!_gui->contextMenuVisible())
-        _gui->hideAndShowTray();
+    _gui->hideAndShowTray();
 }
 
 bool Application::event(QEvent *event)

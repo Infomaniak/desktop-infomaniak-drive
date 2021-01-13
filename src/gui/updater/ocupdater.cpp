@@ -13,6 +13,7 @@
  */
 
 #include "theme.h"
+#include "config.h"
 #include "configfile.h"
 #include "common/utility.h"
 #include "accessmanager.h"
@@ -147,18 +148,13 @@ QString OCUpdater::statusString() const
     case Downloading:
         return tr("Downloading %1. Please wait...").arg(updateVersion);
     case DownloadComplete:
-        return tr("%1 available. Restart application to start the update.").arg(updateVersion);
+        return tr("An update is available: %1").arg(updateVersion);
     case DownloadFailed:
         return tr("Could not download update. Please click <a href='%1'>here</a> to download the update manually.").arg(_updateInfo.web());
     case DownloadTimedOut:
         return tr("Could not check for new updates.");
     case UpdateOnlyAvailableThroughSystem:
-        if (Utility::isLinux()) {
-            return tr("New %1 available. Please install it.").arg(updateVersion);
-        }
-        else {
-            return tr("New %1 available. Please use the system's update tool to install it.").arg(updateVersion);
-        }
+        return tr("An update is available: %1. Please use the system's update tool to install it.").arg(updateVersion);
     case CheckingServer:
         return tr("Checking update server...");
     case Unknown:
@@ -166,7 +162,7 @@ QString OCUpdater::statusString() const
     case UpToDate:
     // fall through
     default:
-        return tr("No updates available. Your installation is at the latest version.");
+        return tr("%1 is up to date!").arg(APPLICATION_NAME);
     }
 }
 

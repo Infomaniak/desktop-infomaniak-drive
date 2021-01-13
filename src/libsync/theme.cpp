@@ -18,6 +18,7 @@
 #include "version.h"
 #include "configfile.h"
 #include "common/vfs.h"
+#include "libcommon/commonutility.h"
 
 #include <QtCore>
 #ifndef TOKEN_AUTH_ONLY
@@ -126,11 +127,9 @@ QIcon Theme::applicationIcon() const
 QIcon Theme::svgThemeIcon(const QString &name) const
 {
     QColor bg(qApp->palette().base().color());
-    qCInfo(lcTheme) << "RGB: " << bg.red() << "." << bg.green() << "." << bg.blue();
-    QString flavor = Utility::colorThresholdCheck(bg.red(), bg.green(), bg.blue()) > 0.5
+    QString flavor = CommonUtility::colorThresholdCheck(bg.red(), bg.green(), bg.blue())
             ? QLatin1String("white")
             : QLatin1String("black");
-    qCInfo(lcTheme) << "Flavor: " << flavor;
 
     QString key = name + "," + flavor;
     QIcon &cached = _iconCache[key]; // Take reference, this will also "set" the cache entry
@@ -209,6 +208,42 @@ QIcon Theme::themeIcon(const QString &name, bool sysTray, bool sysTrayMenuVisibl
     // See https://bugreports.qt.io/browse/QTBUG-42109
     cached.setIsMask(_mono && sysTray && !sysTrayMenuVisible);
 #endif
+#endif
+
+    return cached;
+}
+
+QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVisible) const
+{
+    Q_UNUSED(sysTrayMenuVisible)
+    QString flavor;
+    if (sysTray) {
+        if (_mono) {
+            flavor = Utility::hasDarkSystray() ? QString("white") : QString("black");
+        } else {
+            flavor = QString("colored");
+        }
+    } else {
+        flavor = QString("colored");
+    }
+
+    QString key = name + "," + flavor;
+    QIcon &cached = _iconCache[key];
+    if (cached.isNull()) {
+        QString pixmapName = QString(":/client/resources/icons/theme/%1/%2.svg").arg(flavor).arg(name);
+        if (QFile::exists(pixmapName)) {
+            QList<int> sizes;
+            sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
+            foreach (int size, sizes) {
+                cached.addPixmap(QIcon(pixmapName).pixmap(QSize(size, size)));
+            }
+        }
+    }
+
+#ifdef Q_OS_MAC
+    // This defines the icon as a template and enables automatic macOS color handling
+    // See https://bugreports.qt.io/browse/QTBUG-42109
+    cached.setIsMask(false);
 #endif
 
     return cached;
@@ -504,7 +539,7 @@ QIcon Theme::syncStateIcon(SyncResult::Status status, bool sysTray, bool sysTray
         statusIcon = QLatin1String("state-error");
     }
 
-    QIcon icon = themeIcon(statusIcon, sysTray, sysTrayMenuVisible);
+    QIcon icon = newThemeIcon(statusIcon, sysTray, sysTrayMenuVisible);
 
     if (sysTray && alert) {
         updateIconWithText(icon, QString("!"));
@@ -515,12 +550,12 @@ QIcon Theme::syncStateIcon(SyncResult::Status status, bool sysTray, bool sysTray
 
 QIcon Theme::folderDisabledIcon() const
 {
-    return themeIcon(QLatin1String("state-pause"));
+    return newThemeIcon(QLatin1String("state-pause"));
 }
 
 QIcon Theme::folderOfflineIcon(bool sysTray, bool sysTrayMenuVisible) const
 {
-    return themeIcon(QLatin1String("state-offline"), sysTray, sysTrayMenuVisible);
+    return newThemeIcon(QLatin1String("state-offline"), sysTray, sysTrayMenuVisible);
 }
 
 QColor Theme::wizardHeaderTitleColor() const
@@ -656,12 +691,7 @@ bool Theme::noUnauthedRequests() const
 
 QIcon Theme::stateErrorIcon() const
 {
-    return themeIcon(QLatin1String("state-error"));
-}
-
-QIcon Theme::stateWarningIcon() const
-{
-    return themeIcon(QLatin1String("state-information"));
+    return newThemeIcon(QLatin1String("state-error"));
 }
 
 } // end namespace client

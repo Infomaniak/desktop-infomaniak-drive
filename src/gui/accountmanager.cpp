@@ -13,6 +13,7 @@
  */
 
 #include "accountmanager.h"
+#include "accountstate.h"
 #include "configfile.h"
 #include "sslerrordialog.h"
 #include "proxyauthhandler.h"
@@ -115,6 +116,33 @@ void AccountManager::backwardMigrationSettingsKeys(QStringList *deleteKeys, QStr
     } else {
         deleteKeys->append(settings->group());
     }
+}
+
+AccountStatePtr AccountManager::getAccountStateFromId(const QString &id)
+{
+    foreach (AccountStatePtr accountStatePtr, accounts()) {
+        if (accountStatePtr->account()->id() == id) {
+            return accountStatePtr;
+        }
+    }
+    return QExplicitlySharedDataPointer<AccountState>();
+}
+
+AccountPtr AccountManager::getAccountFromId(const QString &id)
+{
+    AccountStatePtr accountStatePtr = getAccountStateFromId(id);
+    if (accountStatePtr.data()) {
+        return accountStatePtr->account();
+    }
+    return nullptr;
+}
+
+QString AccountManager::getUserId(AccountPtr accountPtr)
+{
+    if (!accountPtr.isNull()) {
+        return accountPtr->credentialSetting(QLatin1String(userC)).toString();
+    }
+    return QString();
 }
 
 bool AccountManager::restoreFromLegacySettings()

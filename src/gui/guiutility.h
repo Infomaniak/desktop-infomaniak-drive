@@ -15,14 +15,38 @@
 #ifndef GUIUTILITY_H
 #define GUIUTILITY_H
 
+#include <QApplication>
+#include <QColor>
+#include <QIcon>
+#include <QPoint>
 #include <QString>
+#include <QStringList>
 #include <QUrl>
 #include <QWidget>
 
 #include "common/pinstate.h"
+#include "syncfileitem.h"
+#include "syncresult.h"
+
+static const QString dirSeparator = "/";
 
 namespace OCC {
 namespace Utility {
+    static const QString linkStyle = QString("color:#0098FF; font-weight:450; text-decoration:none;");
+    static const QString learnMoreLink = QString("learnMoreLink");
+
+    enum systrayPosition {
+        Top = 0,
+        Bottom,
+        Left,
+        Right
+    };
+
+    enum WizardAction {
+        OpenFolder = 0,
+        OpenParameters,
+        AddDrive
+    };
 
     /** Open an url in the browser.
      *
@@ -48,6 +72,35 @@ namespace Utility {
 
     /** Translated text for "free up local space" (and unpinning the item) */
     QString vfsFreeSpaceActionText();
+
+    QPixmap getAvatarFromImage(const QImage &image);
+    QIcon getIconWithColor(const QString &path, const QColor &color = QColor());
+    QIcon getIconMenuWithColor(const QString &path, const QColor &color = QColor());
+
+    systrayPosition getSystrayPosition(QScreen *screen);
+    bool isPointInSystray(QScreen *screen, const QPoint &point);
+
+    bool isDarkTheme();
+    void setStyle(QApplication *app);
+    void setStyle(QApplication *app, bool isDarkTheme);
+
+    QString getFileStatusIconPath(SyncFileItem::Status status);
+    QString getFolderStatusIconPath(bool paused, OCC::SyncResult::Status status);
+    QString getFolderStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status,
+                                    qint64 currentFile, qint64 totalFiles, qint64 estimatedRemainingTime);
+    QString getAccountStatusIconPath(bool paused, OCC::SyncResult::Status status);
+    QString getAccountStatusText(bool paused, bool unresolvedConflicts, SyncResult::Status status);
+    bool getPauseActionAvailable(bool paused, OCC::SyncResult::Status status);
+    bool getResumeActionAvailable(bool paused, OCC::SyncResult::Status status);
+    bool getSyncActionAvailable(bool paused, OCC::SyncResult::Status status);
+    void pauseSync(const QString &accountId, const QString &folderId, bool pause);
+    void runSync(const QString &accountId, const QString &folderId);
+    QColor getShadowColor(bool dialog = false);
+    QUrl getUrlFromLocalPath(const QString &path);
+    int getQFontWeightFromQSSFontWeight(int weight);
+    qint64 folderSize(const QString &dirPath);
+    bool openFolder(const QString &path);
+    QWidget *getTopLevelWidget(QWidget *widget);
 
 } // namespace Utility
 } // namespace OCC

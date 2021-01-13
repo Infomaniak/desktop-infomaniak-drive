@@ -1,10 +1,11 @@
 #ifndef WEBFLOWCREDENTIALSDIALOG_H
 #define WEBFLOWCREDENTIALSDIALOG_H
 
+#include "customdialog.h"
+#include "accountfwd.h"
+
 #include <QDialog>
 #include <QUrl>
-
-#include "accountfwd.h"
 
 class QLabel;
 class QVBoxLayout;
@@ -13,7 +14,7 @@ namespace OCC {
 
 class WebView;
 
-class WebFlowCredentialsDialog : public QDialog
+class WebFlowCredentialsDialog : public KDC::CustomDialog
 {
     Q_OBJECT
 public:
@@ -34,7 +35,9 @@ private:
 
     QLabel *_errorLabel;
     QLabel *_infoLabel;
-    QVBoxLayout *_layout;
+
+private slots:
+    void onExit();
 };
 
 }

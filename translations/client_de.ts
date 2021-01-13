@@ -5,59 +5,59 @@
     <name>CrashReporter</name>
     <message>
         <source>Tomahawk Crash Reporter</source>
-        <translation type="unfinished"></translation>
+        <translation>Tomahawk Crash Reporter</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Abort</source>
-        <translation type="unfinished"></translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Send this report</source>
-        <translation type="unfinished"></translation>
+        <translation>Diesen Bericht senden</translation>
     </message>
     <message>
         <source>Don&apos;t send</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht senden</translation>
     </message>
     <message>
         <source>You can disable sending crash reports in the configuration dialog.</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Senden von Problemberichten kann im Konfigurationsdialog deaktiviert werden.</translation>
     </message>
     <message>
         <source>We cannot gather useful debug information on your system.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wir können keine nützlichen Debug-Informationen auf Ihrem System sammeln.</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Schliessen</translation>
     </message>
     <message>
         <source>Ready to send debug information (&lt;a href=&quot;%1&quot;&gt;view backtrace&lt;/a&gt;).</source>
-        <translation type="unfinished"></translation>
+        <translation>Bereit, um Debug-Informationen zu senden (&lt;a href=&quot;%1&quot;&gt;Backtrace anzeigen&lt;/a&gt;).</translation>
     </message>
     <message>
         <source>Gathering debug information...</source>
-        <translation type="unfinished"></translation>
+        <translation>Debug-Informationen werden gesammelt...</translation>
     </message>
     <message>
         <source>Uploaded %L1 of %L2 KB.</source>
-        <translation type="unfinished"></translation>
+        <translation>Heraufgeladen %L1 von %L2 KB.</translation>
     </message>
     <message>
         <source>Failed to send crash info.</source>
-        <translation type="unfinished"></translation>
+        <translation>Es konnten keine Informationen zum Problem versendet werden.</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Sorry!&lt;/span&gt; %1 crashed. Please tell us about it! %1 has created an error report for you that can help improve the stability of the product. You can now send this report directly to the developers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Entschuldigung!&lt;/span&gt; %1 wurde angehalten. Bitte machen Sie nähere Angaben! %1 hat für Sie einen Fehlerbericht erstellt, der die Stabilität des Produkts verbessern kann. Sie können diesen Bericht jetzt direkt an die Entwickler senden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Sent! &lt;b&gt;Many thanks&lt;/b&gt;. Please refer to crash identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gesendet! &lt;b&gt;Vielen Dank&lt;/b&gt;. Weitere Einzelheiten enthält der Crash Identifier &lt;b&gt;%1&lt;/b&gt; in den Fehlerberichten.</translation>
     </message>
 </context>
 <context>
@@ -80,53 +80,11 @@
     </message>
     <message>
         <source>File doesn&apos;t exist!</source>
-        <translation type="unfinished"></translation>
+        <translation>Datei ist nicht vorhanden!</translation>
     </message>
     <message>
         <source>Delete canceled because move to trash failed!</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>FolderWizardSourcePage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>Pick a local folder on your computer to sync</source>
-        <translation>Wählen Sie einen lokalen Ordner zum Synchronisieren aus</translation>
-    </message>
-    <message>
-        <source>&amp;Choose...</source>
-        <translation>Aus&amp;wählen…</translation>
-    </message>
-</context>
-<context>
-    <name>FolderWizardTargetPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>Select a remote destination folder</source>
-        <translation>Einen entfernten Zielordner auswählen</translation>
-    </message>
-    <message>
-        <source>Create Folder</source>
-        <translation>Ordner erstellen</translation>
-    </message>
-    <message>
-        <source>Refresh</source>
-        <translation>Aktualisieren</translation>
-    </message>
-    <message>
-        <source>Folders</source>
-        <translation>Ordner</translation>
-    </message>
-    <message>
-        <source>TextLabel</source>
-        <translation>TextLabel</translation>
+        <translation>Löschvorgang abgebrochen, da ein Verschieben in den Papierkorb nicht möglich war!</translation>
     </message>
 </context>
 <context>
@@ -146,6 +104,1128 @@
     <message>
         <source>Server returned wrong content-range</source>
         <translation>Server hat falschen Bereich für den Inhalt zurück gegeben</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AboutDialog</name>
+    <message>
+        <source>About</source>
+        <translation>Über</translation>
+    </message>
+    <message>
+        <source>CLOSE</source>
+        <translation>SCHLIESSEN</translation>
+    </message>
+    <message>
+        <source>Version %1. For more information visit &lt;a style=&quot;%2&quot; href=&quot;%3&quot;&gt;%4&lt;/a&gt;&lt;br&gt;&lt;br&gt;</source>
+        <translation>Version %1. Weitere Informationen unter &lt;a style=&quot;%2&quot; href=&quot;%3&quot;&gt;%4&lt;/a&gt;&lt;br&gt;&lt;br&gt;</translation>
+    </message>
+    <message>
+        <source>Copyright Infomaniak Network SA, ownCloud GmbH and Nextcloud GmbH&lt;br&gt;&lt;br&gt;</source>
+        <translation>Copyright Infomaniak Network SA, ownCloud GmbH und Nextcloud GmbH&lt;br&gt;&lt;br&gt;</translation>
+    </message>
+    <message>
+        <source>Distributed by %1 and licensed under the GNU Lesser General Public License (LGPL) Version 2.1.&lt;br&gt;&lt;br&gt;%2 and the %2 logo are registered trademarks of %1.&lt;br&gt;&lt;br&gt;</source>
+        <translation>Vertrieben durch %1 und lizenziert unter der GNU Lesser General Public License (LGPL) Version 2.1.&lt;br&gt;&lt;br&gt;%2 und das %2 Logo sind eingetragene Warenzeichen von %1.&lt;br&gt;&lt;br&gt;</translation>
+    </message>
+    <message>
+        <source>Built from Git revision &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;%3&lt;/a&gt; on %4, %5 using Qt %6, %7&lt;br&gt;&lt;br&gt;</source>
+        <translation>Entwickelt aus der Git-Revision &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;%3&lt;/a&gt; am %4, %5 unter Verwendung von Qt %6, %7&lt;br&gt;&lt;br&gt;</translation>
+    </message>
+    <message>
+        <source>Using virtual files plugin: %1</source>
+        <translation>Plugin für virtuelle Dateien verwenden: %1</translation>
+    </message>
+    <message>
+        <source>Unable to open folder %1.</source>
+        <translation>Ordner %1 kann nicht geöffnet werden</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AddDriveConfirmationWidget</name>
+    <message>
+        <source>Synchronization will start and you will be able to add files to your %1 folder.</source>
+        <translation>Die Synchronisierung beginnt, und Sie können Dateien zu Ihrem %1 Ordner hinzufügen.</translation>
+    </message>
+    <message>
+        <source>Your kDrive is ready!</source>
+        <translation>Ihr kDrive ist bereit!</translation>
+    </message>
+    <message>
+        <source>OPEN FOLDER</source>
+        <translation>ORDNER ÖFFNEN</translation>
+    </message>
+    <message>
+        <source>PARAMETERS</source>
+        <translation>EINSTELLUNGEN</translation>
+    </message>
+    <message>
+        <source>Synchronize another drive</source>
+        <translation>Weiteren kDrive synchronisieren</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AddDriveLocalFolderWidget</name>
+    <message>
+        <source>Location of your %1 kDrive</source>
+        <translation>Ort Ihres %1 kDrive</translation>
+    </message>
+    <message>
+        <source>Edit folder</source>
+        <translation>Ordner bearbeiten</translation>
+    </message>
+    <message>
+        <source>You will find all your files in this folder when the configuration is complete.&lt;br&gt;You can drop new files there to sync them to your kDrive.</source>
+        <translation>Alle Ihre Dateien befinden sich in diesem Ordner, sobald die Einrichtung abgeschlossen ist.&lt;br&gt;Sie können dort neue Dateien ablegen und mit Ihrem kDrive synchronisieren.</translation>
+    </message>
+    <message>
+        <source>END</source>
+        <translation>ENDE</translation>
+    </message>
+    <message>
+        <source>Select folder</source>
+        <translation>Ordner auswählen</translation>
+    </message>
+    <message>
+        <source>The contents of the &lt;b&gt;%1&lt;/b&gt; folder will be synchronized in your kDrive</source>
+        <translation>Der Inhalt des &lt;b&gt;%1&lt;/b&gt;-Ordners wird in Ihrem kDrive synchronisiert</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AddDriveServerFoldersWidget</name>
+    <message>
+        <source>Select kDrive folders to synchronize on your desktop</source>
+        <translation>kDrive-Ordner für die Synchronisierung auf Ihrem Desktop wählen</translation>
+    </message>
+    <message>
+        <source>CONTINUE</source>
+        <translation>FORTFAHREN</translation>
+    </message>
+    <message>
+        <source>Space available on your computer : %1</source>
+        <translation>Auf Ihrem Rechner verfügbarer Speicherplatz: %1</translation>
+    </message>
+    <message>
+        <source>An error occurred while loading the list of sub folders.</source>
+        <translation>Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+    </message>
+    <message>
+        <source>No subfolders currently on the server.</source>
+        <translation>Aktuell befinden sich keine Unterordner auf dem Server.</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AddDriveStartWidget</name>
+    <message>
+        <source>Server :</source>
+        <translation>Server:</translation>
+    </message>
+    <message>
+        <source>NEXT</source>
+        <translation>WEITER</translation>
+    </message>
+    <message>
+        <source>Invalid server URL</source>
+        <translation>Ungültige Server-URL</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AddDriveWizard</name>
+    <message>
+        <source>Creating local sync folder %1...</source>
+        <translation>Lokaler Synchronisierungsordner wird erstellt %1...</translation>
+    </message>
+    <message>
+        <source>Failed to create local folder %1</source>
+        <translation>Lokaler Ordner %1 konnte nicht erstellt werden</translation>
+    </message>
+    <message>
+        <source>Invalid URL</source>
+        <translation>Ungültige URL</translation>
+    </message>
+    <message>
+        <source>Failed to connect to %1 at %2:&lt;br/&gt;%3</source>
+        <translation>Verbindung mit %1 auf %2:&lt;br/&gt;%3 fehlgeschlagen</translation>
+    </message>
+    <message>
+        <source>Timeout while trying to connect to %1 at %2.</source>
+        <translation>Zeitüberschreitung bei versuchter Verbindung mit %1 auf %2.</translation>
+    </message>
+    <message>
+        <source>The authenticated request to the server was redirected to &apos;%1&apos;. The URL is bad, the server is misconfigured.</source>
+        <translation>Die authentifizierte Anfrage an den Server wurde weitergeleitet an &apos;%1&apos;. Diese URL ist ungültig, der Server ist falsch konfiguriert.</translation>
+    </message>
+    <message>
+        <source>Access forbidden by server. To verify that you have proper access, &lt;a href=&quot;%1&quot;&gt;click here&lt;/a&gt; to access the service with your browser.</source>
+        <translation>Zugang vom Server untersagt. &lt;a href=&quot;%1&quot;&gt;Hier klicken,&lt;/a&gt; um den ordnungsgemässen Zugang zu überprüfen und mit Ihrem Browser auf den Dienst zuzugreifen.</translation>
+    </message>
+    <message>
+        <source>There was an invalid response to an authenticated webdav request</source>
+        <translation>Es gab eine ungültige Reaktion auf eine WebDav-Authentifizierungs-Anfrage</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::BandwidthDialog</name>
+    <message>
+        <source>Bandwidth</source>
+        <translation>Bandbreite</translation>
+    </message>
+    <message>
+        <source>Download bandwidth</source>
+        <translation>Download-Bandbreite</translation>
+    </message>
+    <message>
+        <source>No limit</source>
+        <translation>Keine Begrenzung</translation>
+    </message>
+    <message>
+        <source>Automatically limit</source>
+        <translation>Automatisch begrenzen</translation>
+    </message>
+    <message>
+        <source>Limit to</source>
+        <translation>Begrenzen auf</translation>
+    </message>
+    <message>
+        <source>Upload bandwidth</source>
+        <translation>Upload-Bandbreite</translation>
+    </message>
+    <message>
+        <source>SAVE</source>
+        <translation>SPEICHERN</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+    <message>
+        <source>Do you want to save your modifications?</source>
+        <translation>Wollen Sie Ihre Änderungen speichern?</translation>
+    </message>
+    <message>
+        <source>Kb/s</source>
+        <translation>Kb/s</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::BaseFolderTreeItemWidget</name>
+    <message>
+        <source>No subfolders currently on the server.</source>
+        <translation>Aktuell befinden sich keine Unterordner auf dem Server.</translation>
+    </message>
+    <message>
+        <source>An error occurred while loading the list of sub folders.</source>
+        <translation>Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::BigFoldersDialog</name>
+    <message>
+        <source>Some folders were not synchronized because they are too large :</source>
+        <translation>Einige Ordner wurden nicht synchronisiert, da sie zu gross sind:</translation>
+    </message>
+    <message>
+        <source>Location</source>
+        <translation>Ort</translation>
+    </message>
+    <message>
+        <source>SYNCHRONIZE ALL</source>
+        <translation>ALLES SYNCHRONISIEREN</translation>
+    </message>
+    <message>
+        <source>DO NOT SYNCHRONIZE</source>
+        <translation>NICHT SYNCHRONISIEREN</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ConfirmSynchronizationDialog</name>
+    <message>
+        <source>Summary of your advanced folder synchronization</source>
+        <translation>Zusammenfassung Ihrer erweiterten Ordnersynchronisierung</translation>
+    </message>
+    <message>
+        <source>The contents of the folder on your computer will be synchronized to the folder of the selected kDrive and vice versa.</source>
+        <translation>Die Inhalte des Ordners auf Ihrem Rechner werden mit dem Ordner des ausgewählten kDrive synchronisiert und umgekehrt.</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+    <message>
+        <source>SYNCHRONIZE</source>
+        <translation>SYNCHRONISIEREN</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::CustomMessageBox</name>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+    <message>
+        <source>YES</source>
+        <translation>JA</translation>
+    </message>
+    <message>
+        <source>NO</source>
+        <translation>NEIN</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::DebuggingDialog</name>
+    <message>
+        <source>Info</source>
+        <translation>Info</translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation>Debuggen</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Warnung</translation>
+    </message>
+    <message>
+        <source>Critical</source>
+        <translation>Kritisch</translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation>Schwer</translation>
+    </message>
+    <message>
+        <source>Record debugging information</source>
+        <translation>Debugging-Informationen speichern</translation>
+    </message>
+    <message>
+        <source>Activate the recording of information in a temporary folder</source>
+        <translation>Speicherung von Informationen in temporärem Ordner aktivieren</translation>
+    </message>
+    <message>
+        <source>Minimum trace level</source>
+        <translation>Mindest-Trace-Level</translation>
+    </message>
+    <message>
+        <source>Delete logs older than %1 hours</source>
+        <translation>Logs löschen, die älter sind als %1 Stunden</translation>
+    </message>
+    <message>
+        <source>SAVE</source>
+        <translation>SPEICHERN</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+    <message>
+        <source>Do you want to save your modifications?</source>
+        <translation>Wollen Sie Ihre Änderungen speichern?</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::DisplayErrorsWidget</name>
+    <message>
+        <source>Some files couldn&apos;t be synchronized</source>
+        <translation>Einige Dateien konnten nicht synchronisiert werden</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::DrivePreferencesWidget</name>
+    <message>
+        <source>Some files couldn&apos;t be synchronized</source>
+        <translation>Einige Dateien konnten nicht synchronisiert werden</translation>
+    </message>
+    <message>
+        <source>Folders</source>
+        <translation>Ordner</translation>
+    </message>
+    <message>
+        <source>Add an advanced synchronization</source>
+        <translation>Erweiterte Synchronisierung hinzufügen</translation>
+    </message>
+    <message>
+        <source>Synchronization</source>
+        <translation>Synchronisierung</translation>
+    </message>
+    <message>
+        <source>Activate smart synchronization</source>
+        <translation>Intelligente Synchronisierung aktivieren</translation>
+    </message>
+    <message>
+        <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation>Alle Ihre Dateien synchronisieren, ohne den Speicherplatz Ihres Rechners zu verwenden. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Mehr erfahren&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>Benachrichtigungen</translation>
+    </message>
+    <message>
+        <source>A notification will be displayed as soon as a new folder has been synchronized or modified</source>
+        <translation>Es wird eine Benachrichtigung angezeigt, sobald ein neuer Ordner synchronisiert oder geändert wurde</translation>
+    </message>
+    <message>
+        <source>Connected with</source>
+        <translation>Verbunden mit</translation>
+    </message>
+    <message>
+        <source>Remove synchronization</source>
+        <translation>Synchronisierung entfernen</translation>
+    </message>
+    <message>
+        <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead a virtual file will be created for each file that exists on the server. When a file is opened its contents will be downloaded automatically. Alternatively, files can be downloaded manually by using their context menu.
+
+The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.</source>
+        <translation>Wenn der Modus &quot;Virtuelle Dateien&quot; aktiviert ist, werden zunächst keine Dateien heruntergeladen. Stattdessen wird für jede Datei des Servers eine virtuelle Datei erstellt. Wird eine Datei geöffnet, werden dessen Inhalte automatisch heruntergeladen. Alternativ können Dateien manuell über das Kontextmenü heruntergeladen werden.
+
+Der Modus Virtuelle Dateien und der Modus Selektive Synchronisierung schliessen sich gegenseitig aus. Aktuell nicht ausgewählte Ordner werden in nur online verfügbare Ordner umgewandelt, und Ihre Einstellungen für die selektive Synchronisierung werden zurückgesetzt.</translation>
+    </message>
+    <message>
+        <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead, a tiny &quot;%1&quot; file will be created for each file that exists on the server. The contents can be downloaded by running these files or by using their context menu.
+
+The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.
+
+Switching to this mode will abort any currently running synchronization.
+
+This is a new, experimental mode. If you decide to use it, please report any issues that come up.</source>
+        <translation>Wenn der Modus &quot;Virtuelle Dateien&quot; aktiviert ist, werden zunächst keine Dateien heruntergeladen. Stattdessen wird für jede Datei des Servers eine kleine &quot;%1&quot; Datei erstellt. Die Inhalte der Dateien können durch Ausführen der Datei oder über ihr Kontextmenü heruntergeladen werden.
+
+Der Modus virtuelle Dateien und der Modus Selektive Synchronisierung schliessen sich gegenseitig aus. Aktuell nicht ausgewählte Ordner werden in nur online verfügbare Ordner umgewandelt, und Ihre Einstellungen für die Selektive Synchronisierung werden zurückgesetzt.
+
+Das Umschalten in diesen Modus beendet derzeit laufende Synchronisierungen.
+
+Dies ist ein neuer experimenteller Modus. Wenn Sie den Modus nutzen, dann melden Sie uns bitte etwaige Probleme.</translation>
+    </message>
+    <message>
+        <source>This action will disable virtual file support. As a consequence contents of folders that are currently marked as &apos;available online only&apos; will be downloaded.
+
+This action will abort any currently running synchronization.</source>
+        <translation>Diese Aktion deaktiviert die Unterstützung virtueller Dateien. Infolgedessen werden Inhalte von Ordnern, die gegenwärtig als &apos;nur online verfügbar&apos; gekennzeichnet sind, heruntergeladen.
+
+Durch diese Aktion werden gerade laufende Synchronisierungen abgebrochen.</translation>
+    </message>
+    <message>
+        <source>New folder synchronization failed!</source>
+        <translation>Neue Ordnersynchronisierung fehlgeschlagen!</translation>
+    </message>
+    <message>
+        <source>Smart synchronization activation in progress</source>
+        <translation>Aktivierung der intelligenten Synchronisierung läuft</translation>
+    </message>
+    <message>
+        <source>Smart synchronization deactivation in progress</source>
+        <translation>Deaktivierung der intelligenten Synchronisierung läuft</translation>
+    </message>
+    <message>
+        <source>Do you really want to stop syncing the folder &lt;i&gt;%1&lt;/i&gt; ?&lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.</source>
+        <translation>Wollen Sie die Synchronisierung des Ordners &lt;i&gt;%1&lt;/i&gt;wirklich beenden?&lt;br&gt;&lt;b&gt;Hinweis:&lt;/b&gt; Hierdurch werden &lt;b&gt;keine&lt;/b&gt; Dateien gelöscht.</translation>
+    </message>
+    <message>
+        <source>Some folders were not synchronized because they are too large.</source>
+        <translation>Einige Ordner wurden nicht synchronisiert, da sie zu gross sind.</translation>
+    </message>
+    <message>
+        <source>ENABLE VIRTUAL FILES</source>
+        <translation>VIRTUELLE DATEIEN AKTIVIEREN</translation>
+    </message>
+    <message>
+        <source>CONTINUE TO USE SELECTIVE SYNC</source>
+        <translation>SELEKTIVE SYNCHRONISIERUNG WEITER NUTZEN</translation>
+    </message>
+    <message>
+        <source>ENABLE EXPERIMENTAL PLACEHOLDER MODE</source>
+        <translation>EXPERIMENTELLEN PLATZHALTERMODUS AKTIVIEREN</translation>
+    </message>
+    <message>
+        <source>STAY SAFE</source>
+        <translation>SICHER BLEIBEN</translation>
+    </message>
+    <message>
+        <source>DISABLE SUPPORT</source>
+        <translation>UNTERSTÜTZUNG DEAKTIVIEREN</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+    <message>
+        <source>REMOVE FOLDER SYNC CONNECTION</source>
+        <translation>ORDNERSYNCHRONISIERUNG ENTFERNEN</translation>
+    </message>
+    <message>
+        <source>An error occurred while loading the list of sub folders.</source>
+        <translation>Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+    </message>
+    <message>
+        <source>No subfolders currently on the server.</source>
+        <translation>Aktuell befinden sich keine Unterordner auf dem Server.</translation>
+    </message>
+    <message>
+        <source>Enable the notifications for this kDrive</source>
+        <translation>Aktivieren Sie die Benachrichtigungen für dieses kDrive</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::DriveSelectionWidget</name>
+    <message>
+        <source>Add a kDrive</source>
+        <translation>kDrive hinzufügen</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ErrorsMenuBarWidget</name>
+    <message>
+        <source>Back to drive preferences</source>
+        <translation>Zurück zu kDrive-Einstellungen</translation>
+    </message>
+    <message>
+        <source>Synchronization errors</source>
+        <translation>Synchronisierungsfehler</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ErrorsPopup</name>
+    <message numerus="yes">
+        <source>Some files couldn&apos;t be synchronized on the following kDrive(s) :</source>
+        <comment>Number of kDrives</comment>
+        <translation>
+            <numerusform>Einige Dateien auf dem/den folgenden kDrive(s) konnten nicht synchronisiert werden:</numerusform>
+            <numerusform>Einige Dateien auf dem/den folgenden kDrive(s) konnten nicht synchronisiert werden:</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source> (%n warning(s) or error(s))</source>
+        <comment>Number of warnings or errors</comment>
+        <translation>
+            <numerusform>(%n Warnung(en) oder Fehler)</numerusform>
+            <numerusform>(%n Warnung(en) oder Fehler)</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ErrorsWidget</name>
+    <message>
+        <source>Some files couldn&apos;t be synchronized</source>
+        <translation>Einige Dateien konnten nicht synchronisiert werden</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::FileExclusionDialog</name>
+    <message>
+        <source>Excluded files</source>
+        <translation>Ausgeschlossene Dateien</translation>
+    </message>
+    <message>
+        <source>Add files or folders that will not be synchronized on your computer.</source>
+        <translation>Fügen Sie Dateien oder Ordner hinzu, die auf Ihrem Rechner nicht synchronisiert werden.</translation>
+    </message>
+    <message>
+        <source>Synchronize hidden files</source>
+        <translation>Versteckte Dateien synchronisieren</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Hinzufügen</translation>
+    </message>
+    <message>
+        <source>NAME</source>
+        <translation>NAME</translation>
+    </message>
+    <message>
+        <source>SAVE</source>
+        <translation>SPEICHERN</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+    <message>
+        <source>Do you want to save your modifications?</source>
+        <translation>Wollen Sie Ihre Änderungen speichern?</translation>
+    </message>
+    <message>
+        <source>Do you really want to delete?</source>
+        <translation>Möchten Sie wirklich löschen?</translation>
+    </message>
+    <message>
+        <source>NO WARNING</source>
+        <translation>KEINE WARNUNG</translation>
+    </message>
+    <message>
+        <source>Pattern already existing, not added!</source>
+        <translation>Muster bereits vorhanden, nicht hinzugefügt!</translation>
+    </message>
+    <message>
+        <source>Cannot save changes!</source>
+        <translation>Änderungen können nicht gespeichert werden!</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::FileExclusionNameDialog</name>
+    <message>
+        <source>VALIDATE</source>
+        <translation>BESTÄTIGEN</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::FolderItemWidget</name>
+    <message>
+        <source>More actions</source>
+        <translation>Weitere Aktionen</translation>
+    </message>
+    <message>
+        <source>Synchronized into &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;%2&lt;/a&gt;</source>
+        <translation>Synchronisiert in &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;%2&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Unselected folders will be deleted and will no longer be synchronized with this computer.</source>
+        <translation>Nicht ausgewählte Ordner werden gelöscht und nicht mehr mit diesem Rechner synchronisiert.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>VALIDATE</source>
+        <translation>BESTÄTIGEN</translation>
+    </message>
+    <message>
+        <source>Force synchronization</source>
+        <translation>Synchronisierung erzwingen</translation>
+    </message>
+    <message>
+        <source>Pause synchronization</source>
+        <translation>Stoppe Synchronisation</translation>
+    </message>
+    <message>
+        <source>Resume synchronization</source>
+        <translation>Synchronisierung fortsetzen</translation>
+    </message>
+    <message>
+        <source>Remove synchronization</source>
+        <translation>Synchronisierung entfernen</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::LocalFolderDialog</name>
+    <message>
+        <source>Which folder on your computer would you like to&lt;br&gt;synchronize ?</source>
+        <translation>Welchen Ordner auf Ihrem Rechner möchten Sie&lt;br&gt;synchronisieren?</translation>
+    </message>
+    <message>
+        <source>The content of this folder will be synchronized on the kDrive</source>
+        <translation>Der Inhalt dieses Ordners wird auf dem kDrive synchronisiert</translation>
+    </message>
+    <message>
+        <source>Select a folder</source>
+        <translation>Ordner auswählen</translation>
+    </message>
+    <message>
+        <source>Edit folder</source>
+        <translation>Ordner bearbeiten</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+    <message>
+        <source>CONTINUE</source>
+        <translation>FORTFAHREN</translation>
+    </message>
+    <message>
+        <source>Select folder</source>
+        <translation>Ordner auswählen</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::MainMenuBarWidget</name>
+    <message>
+        <source>Preferences</source>
+        <translation>Einstellungen</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Hilfe</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ParametersDialog</name>
+    <message>
+        <source>History</source>
+        <translation>Verlauf</translation>
+    </message>
+    <message>
+        <source>Do you really want to remove the synchronization of the account &lt;i&gt;%1&lt;/i&gt; ?&lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.</source>
+        <translation>Wollen Sie die Synchronisierung des Kontos &lt;i&gt;%1&lt;/i&gt; wirklich entfernen?&lt;br&gt;&lt;b&gt;Hinweis:&lt;/b&gt; Hierdurch werden &lt;b&gt;keine&lt;/b&gt; Dateien gelöscht.</translation>
+    </message>
+    <message>
+        <source>Please confirm the transmission of debugging information to our support.</source>
+        <translation>Bitte bestätigen Sie die Übertragung von Debugging-Informationen an unseren Support.</translation>
+    </message>
+    <message>
+        <source>Unable to open folder path %1.</source>
+        <translation>Ordnerpfad kann nicht geöffnet werden %1.</translation>
+    </message>
+    <message>
+        <source>Transmission done!&lt;br&gt;Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
+        <translation>Übertragung abgeschlossen!&lt;br&gt;Weitere Einzelheiten enthält der Identifier &lt;b&gt;%1&lt;/b&gt; in den Fehlerberichten.</translation>
+    </message>
+    <message>
+        <source>Transmission failed!</source>
+        <translation>Übertragung fehlgeschlagen!</translation>
+    </message>
+    <message>
+        <source>Need help ? Generate an archive of the application logs to send it to our support</source>
+        <translation>Sie benötigen Hilfe? Generieren Sie ein Archiv der Anwendungslogs und senden Sie es an unseren Support</translation>
+    </message>
+    <message>
+        <source>REMOVE SYNCHRONIZATION</source>
+        <translation>SYNCHRONISIERUNG ENTFERNEN</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+    <message>
+        <source>No kDrive configured!</source>
+        <translation>Kein kDrive eingerichtet!</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::PreferencesMenuBarWidget</name>
+    <message>
+        <source>Back to drive list</source>
+        <translation>Zurück zur kDrive-Liste</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation>Einstellungen</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::PreferencesWidget</name>
+    <message>
+        <source>General</source>
+        <translation>Allgemein</translation>
+    </message>
+    <message>
+        <source>Ask for confirmation before synchronizing files greater than</source>
+        <translation>Um Bestätigung bitten, bevor Dateien synchronisiert werden, die grösser sind als</translation>
+    </message>
+    <message>
+        <source>Activate dark theme</source>
+        <translation>Dunkles Thema aktivieren</translation>
+    </message>
+    <message>
+        <source>Activate monochrome icons</source>
+        <translation>Einfarbige Schaltflächen aktivieren</translation>
+    </message>
+    <message>
+        <source>Launch kDrive at startup</source>
+        <translation>kDrive beim Start öffnen</translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation>Erweitert</translation>
+    </message>
+    <message>
+        <source>Debugging information</source>
+        <translation>Debugging-Informationen</translation>
+    </message>
+    <message>
+        <source>&lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Open debugging folder&lt;/a&gt;</source>
+        <translation>&lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Debugging-Ordner öffnen&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Files to exclude</source>
+        <translation>Auszuschliessende Dateien</translation>
+    </message>
+    <message>
+        <source>Proxy server</source>
+        <translation>Proxy-Server</translation>
+    </message>
+    <message>
+        <source>Bandwidth</source>
+        <translation>Bandbreite</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Version</translation>
+    </message>
+    <message>
+        <source>&lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;%3&lt;/a&gt;</source>
+        <translation>&lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;%3&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>UPDATE</source>
+        <translation>AKTUALISIEREN</translation>
+    </message>
+    <message>
+        <source>Mb</source>
+        <translation>Mb</translation>
+    </message>
+    <message>
+        <source>Unable to open folder %1.</source>
+        <translation>Ordner %1 kann nicht geöffnet werden</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ProgressBarWidget</name>
+    <message>
+        <source>%1 in use</source>
+        <translation>%1 wird verwendet</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ProxyServerDialog</name>
+    <message>
+        <source>SOCKS5 Proxy</source>
+        <translation>SOCKS5 Proxy</translation>
+    </message>
+    <message>
+        <source>HTTP(S) Proxy</source>
+        <translation>HTTP(S) Proxy</translation>
+    </message>
+    <message>
+        <source>Proxy server</source>
+        <translation>Proxy-Server</translation>
+    </message>
+    <message>
+        <source>No proxy server</source>
+        <translation>Kein Proxy-Server</translation>
+    </message>
+    <message>
+        <source>Use system parameters</source>
+        <translation>Systemeinstellungen verwenden</translation>
+    </message>
+    <message>
+        <source>Indicate a proxy manually</source>
+        <translation>Proxy-Server manuell eingeben</translation>
+    </message>
+    <message>
+        <source>Port</source>
+        <translation>Port</translation>
+    </message>
+    <message>
+        <source>Address of the proxy server</source>
+        <translation>Adresse des Proxy-Servers</translation>
+    </message>
+    <message>
+        <source>Authentication needed</source>
+        <translation>Authentifizierung erforderlich</translation>
+    </message>
+    <message>
+        <source>User</source>
+        <translation>Benutzer</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>Passwort</translation>
+    </message>
+    <message>
+        <source>SAVE</source>
+        <translation>SPEICHERN</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+    <message>
+        <source>Do you want to save your modifications?</source>
+        <translation>Wollen Sie Ihre Änderungen speichern?</translation>
+    </message>
+    <message>
+        <source>Unable to save, all mandatory fields are not completed!</source>
+        <translation>Speichern nicht möglich, es wurden nicht alle Pflichtfelder ausgefüllt!</translation>
+    </message>
+    <message>
+        <source>Proxy not found, save anyway?</source>
+        <translation>Proxy-Server nicht gefunden – trotzdem speichern?</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::SendErrorsWidget</name>
+    <message>
+        <source>Generate an archive of the application logs to send it to our support</source>
+        <translation>Archiv der Anwendungslogs generieren und an unseren Support senden</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ServerBaseFolderDialog</name>
+    <message>
+        <source>Select a folder on your kDrive</source>
+        <translation>Ordner auf Ihrem kDrive auswählen</translation>
+    </message>
+    <message>
+        <source>The content of the selected folder will be synchronized into the &lt;b&gt;%1&lt;/b&gt; folder.</source>
+        <translation>Der Inhalt des ausgewählten Ordners wird in dem &lt;b&gt;%1&lt;/b&gt; Ordner synchronisiert.</translation>
+    </message>
+    <message>
+        <source>CONTINUE</source>
+        <translation>FORTFAHREN</translation>
+    </message>
+    <message>
+        <source>Space available on your computer for the current folder : %1</source>
+        <translation>Auf Ihrem Rechner für den aktuellen Ordner verfügbarer Speicherplatz: %1</translation>
+    </message>
+    <message>
+        <source>This folder is already being synced.</source>
+        <translation>Dieser Ordner wird bereits synchronisiert.</translation>
+    </message>
+    <message>
+        <source>You are already syncing &lt;i&gt;%1&lt;/i&gt;, which is a parent folder of &lt;i&gt;%2&lt;/i&gt;.</source>
+        <translation>Sie synchronisieren bereits &lt;i&gt;%1&lt;/i&gt;, der ein übergeordneter Ordner von &lt;i&gt;%2&lt;/i&gt; ist.</translation>
+    </message>
+    <message>
+        <source>CONFIRM</source>
+        <translation>BESTÄTIGEN</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>ABBRECHEN</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::ServerFoldersDialog</name>
+    <message>
+        <source>The &lt;b&gt;%1&lt;/b&gt; folder contains subfolders,&lt;br&gt; select the ones you want to synchronize</source>
+        <translation>Der &lt;b&gt;%1&lt;/b&gt; Ordner enthält Unterordner,&lt;br&gt; wählen Sie diejenigen aus, die Sie synchronisieren möchten</translation>
+    </message>
+    <message>
+        <source>CONTINUE</source>
+        <translation>FORTFAHREN</translation>
+    </message>
+    <message>
+        <source>An error occurred while loading the list of sub folders.</source>
+        <translation>Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+    </message>
+    <message>
+        <source>No subfolders currently on the server.</source>
+        <translation>Aktuell befinden sich keine Unterordner auf dem Server.</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::StatusBarWidget</name>
+    <message>
+        <source>Pause synchronization</source>
+        <translation>Stoppe Synchronisation</translation>
+    </message>
+    <message>
+        <source>Resume synchronization</source>
+        <translation>Synchronisierung fortsetzen</translation>
+    </message>
+    <message>
+        <source>Force synchronization</source>
+        <translation>Synchronisierung erzwingen</translation>
+    </message>
+    <message>
+        <source>Pause kDrive &quot;%1&quot; synchronization</source>
+        <translation>Synchronisierung des kDrive &quot;%1&quot; pausieren</translation>
+    </message>
+    <message>
+        <source>Pause folder synchronization</source>
+        <translation>Ordnersynchronisierung pausieren</translation>
+    </message>
+    <message>
+        <source>Pause all kDrives synchronization</source>
+        <translation>Synchronisierung aller kDrives pausieren</translation>
+    </message>
+    <message>
+        <source>Resume kDrive &quot;%1&quot; synchronization</source>
+        <translation>Synchronisierung des kDrive &quot;%1&quot; fortsetzen</translation>
+    </message>
+    <message>
+        <source>Resume folder synchronization</source>
+        <translation>Ordnersynchronisierung fortsetzen</translation>
+    </message>
+    <message>
+        <source>Resume all kDrives synchronization</source>
+        <translation>Synchronisierung aller kDrives fortsetzen</translation>
+    </message>
+    <message>
+        <source>Force kDrive &quot;%1&quot; synchronization</source>
+        <translation>Synchronisierung des kDrive &quot;%1&quot; erzwingen</translation>
+    </message>
+    <message>
+        <source>Force folder synchronization</source>
+        <translation>Ordnersynchronisierung erzwingen</translation>
+    </message>
+    <message>
+        <source>Force all kDrives synchronization</source>
+        <translation>Synchronisierung aller kDrives erzwingen</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::SynchronizedItemWidget</name>
+    <message>
+        <source>Show in folder</source>
+        <translation>In Ordner anzeigen</translation>
+    </message>
+    <message>
+        <source>More actions</source>
+        <translation>Weitere Aktionen</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Offen</translation>
+    </message>
+    <message>
+        <source>Add to favorites</source>
+        <translation>Zu Favoriten hinzufügen</translation>
+    </message>
+    <message>
+        <source>Rights and sharing</source>
+        <translation>Rechte und Freigaben</translation>
+    </message>
+    <message>
+        <source>Copy sharing link</source>
+        <translation>Freigabelink kopieren</translation>
+    </message>
+    <message>
+        <source>Display on drive.infomaniak.com</source>
+        <translation>Auf drive.infomaniak.com anzeigen</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::SynthesisPopover</name>
+    <message>
+        <source>Never</source>
+        <translation>Nie</translation>
+    </message>
+    <message>
+        <source>During 1 hour</source>
+        <translation>1 Stunde lang</translation>
+    </message>
+    <message>
+        <source>Until tomorrow 8:00AM</source>
+        <translation>Bis morgen 8 Uhr</translation>
+    </message>
+    <message>
+        <source>During 3 days</source>
+        <translation>3 Tage lang</translation>
+    </message>
+    <message>
+        <source>During 1 week</source>
+        <translation>1 Woche lang</translation>
+    </message>
+    <message>
+        <source>Always</source>
+        <translation>Immer</translation>
+    </message>
+    <message>
+        <source>For 1 more hour</source>
+        <translation>Für 1 weitere Stunde</translation>
+    </message>
+    <message>
+        <source>For 3 more days</source>
+        <translation>Für weitere 3 Tage</translation>
+    </message>
+    <message>
+        <source>For 1 more week</source>
+        <translation>Für 1 weitere Woche</translation>
+    </message>
+    <message>
+        <source>Show warnings and errors</source>
+        <translation>Warnungen und Fehler anzeigen</translation>
+    </message>
+    <message>
+        <source>Show in folder</source>
+        <translation>In Ordner anzeigen</translation>
+    </message>
+    <message>
+        <source>Display on drive.infomaniak.com</source>
+        <translation>Auf drive.infomaniak.com anzeigen</translation>
+    </message>
+    <message>
+        <source>More actions</source>
+        <translation>Weitere Aktionen</translation>
+    </message>
+    <message>
+        <source>Synchronized</source>
+        <translation>Synchronisiert</translation>
+    </message>
+    <message>
+        <source>Favorites</source>
+        <translation>Favoriten</translation>
+    </message>
+    <message>
+        <source>Activity</source>
+        <translation>Aktivität</translation>
+    </message>
+    <message>
+        <source>Not implemented!</source>
+        <translation>Nicht implementiert!</translation>
+    </message>
+    <message>
+        <source>No recently synchronized files</source>
+        <translation>Keine kürzlich synchronisierten Dateien</translation>
+    </message>
+    <message>
+        <source>No synchronized folder for this Drive!</source>
+        <translation>Kein synchronisierter Ordner für diesen kDrive!</translation>
+    </message>
+    <message>
+        <source>You can synchronize files &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;from your computer&lt;/a&gt; or on &lt;a style=&quot;%1&quot; href=&quot;%3&quot;&gt;drive.infomaniak.com&lt;/a&gt;.</source>
+        <translation>Sie können Dateien &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;von Ihrem Rechner&lt;/a&gt; oder auf &lt;a style=&quot;%1&quot; href=&quot;%3&quot;&gt;drive.infomaniak.com&lt;/a&gt; synchronisieren.</translation>
+    </message>
+    <message>
+        <source>No kDrive configured!</source>
+        <translation>Kein kDrive eingerichtet!</translation>
+    </message>
+    <message>
+        <source>Unable to access web site %1.</source>
+        <translation>Zugang zu Website nicht möglich %1.</translation>
+    </message>
+    <message>
+        <source>Notifications disabled until %1</source>
+        <translation>Benachrichtigungen deaktiviert bis %1</translation>
+    </message>
+    <message>
+        <source>Disable Notifications</source>
+        <translation>Benachrichtigungen deaktivieren</translation>
+    </message>
+    <message>
+        <source>Need help</source>
+        <translation>Hilfe benötigt</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation>Anwendung verlassen</translation>
+    </message>
+    <message>
+        <source>You cannot share the root directory of your Drive!</source>
+        <translation>Sie können das Stammverzeichnis Ihres kDrive nicht freigegeben!</translation>
+    </message>
+    <message>
+        <source>The shared link has been copied to the clipboard.</source>
+        <translation>Der freigegebene Link wurde in die Zwischenablage kopiert.</translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>Link kann nicht geöffnet werden %1.</translation>
+    </message>
+    <message>
+        <source>Invalid link %1.</source>
+        <translation>Ungültiger Link %1.</translation>
+    </message>
+    <message>
+        <source>Unable to open folder url %1.</source>
+        <translation>Ordner-URL kann nicht geöffnet werden %1.</translation>
+    </message>
+    <message>
+        <source>Drive parameters</source>
+        <translation>kDrive-Einstellungen</translation>
+    </message>
+    <message>
+        <source>Application preferences</source>
+        <translation>Anwendungseinstellungen</translation>
     </message>
 </context>
 <context>
@@ -180,249 +1260,6 @@
     <message>
         <source>Server replied &quot;%1 %2&quot; to &quot;%3 %4&quot;</source>
         <translation>Server hat &quot;%1 %2&quot; auf &quot;%3 %4&quot; geantwortet</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::AccountSettings</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
-        <source>Storage space: ...</source>
-        <translation>Speicherplatz: ...</translation>
-    </message>
-    <message>
-        <source>Unchecked folders will be &lt;b&gt;removed&lt;/b&gt; from your local file system and will not be synchronized to this computer anymore</source>
-        <translation>Nicht markierte Ordner werden von Ihrem lokalen Dateisystem &lt;b&gt;entfernt&lt;/b&gt; und werden auch nicht mehr auf diesem Rechner synchronisiert</translation>
-    </message>
-    <message>
-        <source>Apply manual changes</source>
-        <translation>Manuelle Änderungen übernehmen</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation>Anwenden</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Abbrechen</translation>
-    </message>
-    <message>
-        <source>No account configured.</source>
-        <translation>Kein Konto konfiguriert.</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Entfernen</translation>
-    </message>
-    <message>
-        <source>Choose what to sync</source>
-        <translation>Zu synchronisierende Elemente auswählen</translation>
-    </message>
-    <message>
-        <source>Force sync now</source>
-        <translation>Synchronisation jetzt erzwingen </translation>
-    </message>
-    <message>
-        <source>Restart sync</source>
-        <translation>Synchronisation neustarten</translation>
-    </message>
-    <message>
-        <source>Remove folder sync connection</source>
-        <translation>Ordner-Synchronisation entfernen</translation>
-    </message>
-    <message>
-        <source>Enable virtual file support %1...</source>
-        <translation>Unterstützung für virtuelle Dateien einschalten %1...</translation>
-    </message>
-    <message>
-        <source>(tech preview)</source>
-        <translation>(Tech-Vorschau)</translation>
-    </message>
-    <message>
-        <source>(experimental)</source>
-        <translation>(Experimentell)</translation>
-    </message>
-    <message>
-        <source>Folder creation failed</source>
-        <translation>Anlegen des Ordners fehlgeschlagen</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Could not create local folder &lt;i&gt;%1&lt;/i&gt;.</source>
-        <translation>&lt;p&gt;Konnte lokalen Ordner &lt;i&gt;%1&lt;/i&gt; nicht anlegen.</translation>
-    </message>
-    <message>
-        <source>Confirm Folder Sync Connection Removal</source>
-        <translation>Bestätigen Sie die Löschung der Ordner-Synchronisation</translation>
-    </message>
-    <message>
-        <source>Remove Folder Sync Connection</source>
-        <translation>Ordner-Synchronisation entfernen</translation>
-    </message>
-    <message>
-        <source>Disable virtual file support?</source>
-        <translation>Deaktiviere Unterstützung für virtuelle Dateien?</translation>
-    </message>
-    <message>
-        <source>This action will disable virtual file support. As a consequence contents of folders that are currently marked as &apos;available online only&apos; will be downloaded.
-
-The only advantage of disabling virtual file support is that the selective sync feature will become available again.
-
-This action will abort any currently running synchronization.</source>
-        <translation>Diese Aktion wird die Unterstützung für virtuelle Dateien abschalten. Als Konsequenz werden Inhalte aus Ordnern heruntergeladen, die aktuell als &apos;nur online verfügbar&apos; markiert sind.
-
-Der einzige Vorteil durch das Abschalten der Unterstützung für virtuelle Dateien ist, dass das Feature selective sync wieder verfügbar wird.
-
-Diese Aktion wird gerade laufende Synchronisationen abbrechen.</translation>
-    </message>
-    <message>
-        <source>Disable support</source>
-        <translation>Unterstützung abschalten</translation>
-    </message>
-    <message>
-        <source>Sync Running</source>
-        <translation>Synchronisation läuft</translation>
-    </message>
-    <message>
-        <source>The syncing operation is running.&lt;br/&gt;Do you want to terminate it?</source>
-        <translation>Die Synchronisation läuft gerade.&lt;br/&gt;Wollen Sie sie beenden?</translation>
-    </message>
-    <message>
-        <source>%1 in use</source>
-        <translation>%1 wird verwendet</translation>
-    </message>
-    <message>
-        <source>Connected to %1.</source>
-        <translation>Verbunden mit %1.</translation>
-    </message>
-    <message>
-        <source>Signed out from %1.</source>
-        <translation>Abgemeldet von %1.</translation>
-    </message>
-    <message>
-        <source>Obtaining authorization from the browser. &lt;a href=&apos;%1&apos;&gt;Click here&lt;/a&gt; to re-open the browser.</source>
-        <translation>Berechtigung vom Browser einholen. &lt;a href=&apos;%1&apos;&gt; Hier klicken &lt;/a&gt; zum nochmaligen Öffnen des Browsers.</translation>
-    </message>
-    <message>
-        <source>Connecting to %1...</source>
-        <translation>Verbinde mit %1...</translation>
-    </message>
-    <message>
-        <source>No connection to %1 at %2.</source>
-        <translation>Keine Verbindung zu %1 auf %2</translation>
-    </message>
-    <message>
-        <source>Log in</source>
-        <translation>Einloggen</translation>
-    </message>
-    <message>
-        <source>There are folders that were not synchronized because they are too big: </source>
-        <translation>Einige Verzeichnisse konnten nicht synchronisiert werden, da sie zu groß sind:</translation>
-    </message>
-    <message>
-        <source>There are folders that were not synchronized because they are external storages: </source>
-        <translation>Es gibt Verzeichnisse, die nicht synchronisiert werden konnten, da diese externe Speicher sind:</translation>
-    </message>
-    <message>
-        <source>There are folders that were not synchronized because they are too big or external storages: </source>
-        <translation>Es gibt Verzeichnisse, die nicht synchronisiert werden konnten, da diese zu groß oder externe Speicher sind:</translation>
-    </message>
-    <message>
-        <source>Confirm Account Removal</source>
-        <translation>Konto wirklich entfernen?</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Do you really want to remove the connection to the account &lt;i&gt;%1&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Wollen Sie wirklich die Verbindung zum Konto &lt;i&gt;%1&lt;/i&gt; lösen?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Anmerkung:&lt;/b&gt; Dieser Vorgang wird &lt;b&gt;keine&lt;/b&gt; Dateien löschen.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>Remove connection</source>
-        <translation>Verbindung entfernen</translation>
-    </message>
-    <message>
-        <source>Open folder</source>
-        <translation>Ordner öffnen</translation>
-    </message>
-    <message>
-        <source>Log out</source>
-        <translation>Abmelden</translation>
-    </message>
-    <message>
-        <source>Open local folder</source>
-        <translation>Öffne lokalen Ordner</translation>
-    </message>
-    <message>
-        <source>Open folder in browser</source>
-        <translation>Ordner im Browser öffnen</translation>
-    </message>
-    <message>
-        <source>Resume sync</source>
-        <translation>Synchronisation fortsetzen</translation>
-    </message>
-    <message>
-        <source>Pause sync</source>
-        <translation>Synchronisation pausieren</translation>
-    </message>
-    <message>
-        <source>Availability</source>
-        <translation>Verfügbarkeit</translation>
-    </message>
-    <message>
-        <source>Disable virtual file support...</source>
-        <translation>Deaktiviere Unterstützung für virtuelle Dateien ...</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Do you really want to stop syncing the folder &lt;i&gt;%1&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Möchten Sie den Ordner &lt;i&gt;%1&lt;/i&gt; wirklich nicht mehr synchronisieren?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Anmerkung:&lt;/b&gt; Dies wird &lt;b&gt;keine&lt;/b&gt; Dateien löschen.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>%1 (%3%) of %2 in use. Some folders, including network mounted or shared folders, might have different limits.</source>
-        <translation>%1 (%3%) von %2 Serverkapazität verwendet. Einige Ordner, einschließlich über das Netzwerk verbundene oder freigegebene Ordner oder geteilte Ordner können unterschiedliche Beschränkungen aufweisen. </translation>
-    </message>
-    <message>
-        <source>%1 of %2 in use</source>
-        <translation>%1 von %2 Serverkapazität verwendet</translation>
-    </message>
-    <message>
-        <source>Currently there is no storage usage information available.</source>
-        <translation>Derzeit sind keine Speichernutzungsinformationen verfügbar.</translation>
-    </message>
-    <message>
-        <source>The server version %1 is unsupported! Proceed at your own risk.</source>
-        <translation>Die Serverversion %1 ist nicht unterstützt! Fortfahren auf eigenes Risiko.</translation>
-    </message>
-    <message>
-        <source>No %1 connection configured.</source>
-        <translation>Keine %1-Verbindung konfiguriert.</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Connected with KDrive &amp;lt;server&amp;gt; as &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mit KDrive verbunden &amp;lt;server&amp;gt; als &amp;lt;user&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;i&gt;%1&lt;/i&gt; as &lt;i&gt;%2&lt;/i&gt;</source>
-        <translation>&lt;i&gt;%1&lt;/i&gt; als &lt;i&gt;%2&lt;/i&gt;</translation>
-    </message>
-    <message>
-        <source>Drive %1 is temporarily unavailable.</source>
-        <translation>Drive %1 ist derzeit nicht verfügbar.</translation>
-    </message>
-    <message>
-        <source>Drive %1 is currently in maintenance mode.</source>
-        <translation>Drive %1 befindet sich im Wartungsmodus.</translation>
-    </message>
-    <message>
-        <source>Synchronize these items</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Do not synchronize</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -465,74 +1302,6 @@ Diese Aktion wird gerade laufende Synchronisationen abbrechen.</translation>
     </message>
 </context>
 <context>
-    <name>OCC::ActivityItemDelegate</name>
-    <message>
-        <source>%1 on %2</source>
-        <translation>%1 auf %2</translation>
-    </message>
-    <message>
-        <source>%1 on %2 (disconnected)</source>
-        <translation>%1 auf %2 (nicht verbunden)</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ActivitySettings</name>
-    <message>
-        <source>Server Activity</source>
-        <translation>Serveraktivität</translation>
-    </message>
-    <message>
-        <source>Sync Protocol</source>
-        <translation>Synchronisationsprotokoll</translation>
-    </message>
-    <message>
-        <source>Not Synced</source>
-        <translation>nicht synchronisiert</translation>
-    </message>
-    <message>
-        <source>Not Synced (%1)</source>
-        <extracomment>%1 is the number of not synced files.</extracomment>
-        <translation>nicht synchronisiert (%1)</translation>
-    </message>
-    <message>
-        <source>The server activity list has been copied to the clipboard.</source>
-        <translation>Die Server-Aktivitätsliste wurde in die Zwischenablage  kopiert. </translation>
-    </message>
-    <message>
-        <source>The sync activity list has been copied to the clipboard.</source>
-        <translation>Die Synchronisationsliste wurde in die Zwischenablage kopiert.</translation>
-    </message>
-    <message>
-        <source>The list of unsynced items has been copied to the clipboard.</source>
-        <translation>Die Liste der unsynchronisierten Dateien wurde in die Zwischenablage kopiert.</translation>
-    </message>
-    <message>
-        <source>Copied to clipboard</source>
-        <translation>In die Zwischenablage kopiert</translation>
-    </message>
-    <message>
-        <source>If you experience synchronization errors, you can transmit debugging information to our support.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Transmit debugging information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please confirm the transmission of debugging information to our support.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Transmission failed!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Transmission done!
-Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>OCC::ActivityWidget</name>
     <message>
         <source>Form</source>
@@ -541,48 +1310,6 @@ Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
     <message>
         <source>TextLabel</source>
         <translation>TextLabel</translation>
-    </message>
-    <message>
-        <source>Server Activities</source>
-        <translation>Server Aktivitäten</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Kopieren</translation>
-    </message>
-    <message>
-        <source>Copy the activity list to the clipboard.</source>
-        <translation>Aktivitätsliste in die Zwischenablage kopieren.</translation>
-    </message>
-    <message>
-        <source>Action Required: Notifications</source>
-        <translation>Handlung erforderlich: Benachrichtigungen</translation>
-    </message>
-    <message>
-        <source>&lt;br/&gt;Account %1 does not have activities enabled.</source>
-        <translation>&lt;br/&gt;Für Konto %1 sind serverseitig keine Aktivitäten aktiviert.</translation>
-    </message>
-    <message numerus="yes">
-        <source>You received %n new request(s) from %1.</source>
-        <translation>
-            <numerusform>Sie haben %n neue Anfrage(n) von %1 erhalten.</numerusform>
-            <numerusform>Sie haben %n neue Anfrage(n) von %1 erhalten.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>You received %n new request(s) from %1 and %2.</source>
-        <translation>
-            <numerusform>Sie haben %n neue Anfrage(n) von %1 und %2 erhalten.</numerusform>
-            <numerusform>Sie haben %n neue Anfrage(n) von %1 und %2 erhalten.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>You received new request from %1, %2 and other accounts.</source>
-        <translation>Sie haben eine neue Anfrage von %1, %2 und anderen Konten erhalten.</translation>
-    </message>
-    <message>
-        <source>Action required. Open the activity view to react.</source>
-        <translation>Massnahme erforderlich. Öffnen Sie die Aktivitätsansicht, um zu reagieren.</translation>
     </message>
 </context>
 <context>
@@ -593,7 +1320,7 @@ Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
     </message>
     <message>
         <source>This server probably requires a SSL client certificate.</source>
-        <translation>Der Server benötigt vermutlich ein SSL-Client-Zertifikat</translation>
+        <translation>Der Server benötigt vermutlich ein SSL-Client-Zertifikat.</translation>
     </message>
     <message>
         <source>Certificate &amp; Key (pkcs12) :</source>
@@ -632,7 +1359,7 @@ Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
     </message>
     <message>
         <source>Some settings were configured in newer versions of this client and use features that are not available in this version.&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;The current configuration file was already backed up to &lt;i&gt;%2&lt;/i&gt;.</source>
-        <translation>Einige Einstellungen wurden in neueren Versionen dieses Programms eingestellt und nutzen Funktionen die in dieser Version nicht verfügbar sind. &lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt; Die aktuelle Konfigurations-Datei wurde bereits an folgenden Ort gesichert: &lt;i&gt;%2&lt;/i&gt;</translation>
+        <translation>Einige Einstellungen wurden in neueren Versionen dieses Programms eingestellt und nutzen Funktionen die in dieser Version nicht verfügbar sind. &lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt; Die aktuelle Konfigurations-Datei wurde bereits an folgenden Ort gesichert: &lt;i&gt;%2&lt;/i&gt;.</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -653,25 +1380,6 @@ Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
     <message>
         <source>Quit ownCloud</source>
         <translation>ownCloud verlassen</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::AuthenticationDialog</name>
-    <message>
-        <source>Authentication Required</source>
-        <translation>Authentifizierung erforderlich</translation>
-    </message>
-    <message>
-        <source>Enter username and password for &apos;%1&apos; at %2.</source>
-        <translation>Benutzername und Passwort für &apos;%1&apos; auf %2 eingeben.</translation>
-    </message>
-    <message>
-        <source>&amp;User:</source>
-        <translation>&amp;Benutzer:</translation>
-    </message>
-    <message>
-        <source>&amp;Password:</source>
-        <translation>&amp;Passwort:</translation>
     </message>
 </context>
 <context>
@@ -712,11 +1420,11 @@ Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
     <name>OCC::DebugReporter</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Sending of debugging information</source>
-        <translation type="unfinished"></translation>
+        <translation>Debugging-Informationen werden versendet</translation>
     </message>
 </context>
 <context>
@@ -943,7 +1651,7 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     </message>
     <message>
         <source>Waiting to start syncing.</source>
-        <translation>Wartet auf Beginn der Synchronisation</translation>
+        <translation>Wartet auf Beginn der Synchronisation.</translation>
     </message>
     <message>
         <source>Preparing for sync.</source>
@@ -967,7 +1675,7 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     </message>
     <message>
         <source>User Abort.</source>
-        <translation>Benutzer-Abbruch</translation>
+        <translation>Benutzer-Abbruch.</translation>
     </message>
     <message>
         <source>Sync is paused.</source>
@@ -1007,145 +1715,6 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     </message>
 </context>
 <context>
-    <name>OCC::FolderStatusDelegate</name>
-    <message>
-        <source>Add Folder Sync Connection</source>
-        <translation>Ordner-Synchronisation hinzufügen</translation>
-    </message>
-    <message>
-        <source>Synchronizing with local folder</source>
-        <translation>Synchronisiere mit lokalem Verzeichnis</translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation>Datei</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::FolderStatusModel</name>
-    <message>
-        <source>You need to be connected to add a folder</source>
-        <translation>Sie müssen verbunden sein, um einen Ordner hinzuzufügen</translation>
-    </message>
-    <message>
-        <source>Click this button to add a folder to synchronize.</source>
-        <translation>Wählen Sie diese Schaltfläche, um einen zu synchronisierenden Ordner hinzuzufügen.</translation>
-    </message>
-    <message>
-        <source>%1 (%2)</source>
-        <extracomment>Example text: &quot;File.txt (23KB)&quot;</extracomment>
-        <translation>%1 (%2)</translation>
-    </message>
-    <message>
-        <source>Error while loading the list of folders from the server.</source>
-        <translation>Fehler beim Empfang der Ordnerliste vom Server.</translation>
-    </message>
-    <message>
-        <source>Virtual file support is enabled.</source>
-        <translation>Unterstützung für virtuelle Dateien ist aktiviert.</translation>
-    </message>
-    <message>
-        <source>Signed out</source>
-        <translation>Abgemeldet</translation>
-    </message>
-    <message>
-        <source>Fetching folder list from server...</source>
-        <translation>Empfange Orderliste vom Server...</translation>
-    </message>
-    <message>
-        <source>There are unresolved conflicts. Click for details.</source>
-        <translation>Es existieren ungelöste Konflikte. Für Details klicken.</translation>
-    </message>
-    <message>
-        <source>Checking for changes in remote &apos;%1&apos;</source>
-        <translation>Änderungen der entfernten Ressource &apos;%1&apos; werden geprüft</translation>
-    </message>
-    <message>
-        <source>Checking for changes in local &apos;%1&apos;</source>
-        <translation>Änderungen der lokalen Ressource &apos;%1&apos; werden geprüft</translation>
-    </message>
-    <message>
-        <source>Reconciling changes</source>
-        <translation>Änderungen zusammenführen</translation>
-    </message>
-    <message>
-        <source>, &apos;%1&apos;</source>
-        <extracomment>Build a list of file names</extracomment>
-        <translation>, &apos;%1&apos;</translation>
-    </message>
-    <message>
-        <source>&apos;%1&apos;</source>
-        <extracomment>Argument is a file name</extracomment>
-        <translation>&apos;%1&apos;</translation>
-    </message>
-    <message>
-        <source>Syncing %1</source>
-        <extracomment>Example text: &quot;Syncing &apos;foo.txt&apos;, &apos;bar.txt&apos;&quot;</extracomment>
-        <translation>Synchronisiere %1</translation>
-    </message>
-    <message>
-        <source>, </source>
-        <translation>, </translation>
-    </message>
-    <message>
-        <source>download %1/s</source>
-        <extracomment>Example text: &quot;download 24Kb/s&quot; (%1 is replaced by 24Kb (translated))</extracomment>
-        <translation>Download %1/s</translation>
-    </message>
-    <message>
-        <source>↓ %1/s</source>
-        <translation>↓ %1/s</translation>
-    </message>
-    <message>
-        <source>↑ %1/s</source>
-        <translation>↑ %1/s</translation>
-    </message>
-    <message>
-        <source>upload %1/s</source>
-        <extracomment>Example text: &quot;upload 24Kb/s&quot; (%1 is replaced by 24Kb (translated))</extracomment>
-        <translation>Upload %1/s</translation>
-    </message>
-    <message>
-        <source>%1 %2 (%3 of %4)</source>
-        <extracomment>Example text: &quot;uploading foobar.png (2MB of 2MB)&quot;</extracomment>
-        <translation>%1 %2 (%3 von %4)</translation>
-    </message>
-    <message>
-        <source>%1 %2</source>
-        <extracomment>Example text: &quot;uploading foobar.png&quot;</extracomment>
-        <translation>%1 %2</translation>
-    </message>
-    <message>
-        <source>%5 left, %1 of %2, file %3 of %4</source>
-        <extracomment>Example text: &quot;5 minutes left, 12 MB of 345 MB, file 6 of 7&quot;</extracomment>
-        <translation>%5 übrig, %1 von %2, Datei %3 von %4</translation>
-    </message>
-    <message>
-        <source>%1 of %2, file %3 of %4</source>
-        <extracomment>Example text: &quot;12 MB of 345 MB, file 6 of 7&quot;</extracomment>
-        <translation>%1 of %2, Datei %3 von %4</translation>
-    </message>
-    <message>
-        <source>file %1 of %2</source>
-        <translation>Datei %1 von %2</translation>
-    </message>
-    <message>
-        <source>Waiting...</source>
-        <translation>Warte...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Waiting for %n other folder(s)...</source>
-        <translation>
-            <numerusform>Warte auf einen anderen Ordner</numerusform>
-            <numerusform>Warte auf %n andere Ordner</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Preparing to sync...</source>
-        <translation>Bereite Synchronisation vor...</translation>
-    </message>
-</context>
-<context>
     <name>OCC::FolderWatcher</name>
     <message>
         <source>The watcher did not receive a test notification.</source>
@@ -1157,97 +1726,6 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     <message>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
         <translation>Dieses Problem tritt normalerweise auf, wenn die Inotify-watcher erschöpft sind. Überprüfen Sie die FAQ für Details.</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::FolderWizard</name>
-    <message>
-        <source>Add Folder Sync Connection</source>
-        <translation>Ordner-Synchronisation hinzufügen</translation>
-    </message>
-    <message>
-        <source>Add Sync Connection</source>
-        <translation>Synchronisation hinzufügen</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::FolderWizardLocalPath</name>
-    <message>
-        <source>Click to select a local folder to sync.</source>
-        <translation>Zur Auswahl eines lokalen Verzeichnisses für die Synchronisation klicken.</translation>
-    </message>
-    <message>
-        <source>Enter the path to the local folder.</source>
-        <translation>Pfad zum lokalen Verzeichnis eingeben</translation>
-    </message>
-    <message>
-        <source>Select the source folder</source>
-        <translation>Den Quellordner wählen</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::FolderWizardRemotePath</name>
-    <message>
-        <source>Create Remote Folder</source>
-        <translation>Entfernten Ordner erstellen</translation>
-    </message>
-    <message>
-        <source>Enter the name of the new folder to be created below &apos;%1&apos;:</source>
-        <translation>Geben Sie den Namen des neuen, unter &apos;%1&apos; zu erstellenden Ordners ein: </translation>
-    </message>
-    <message>
-        <source>Folder was successfully created on %1.</source>
-        <translation>Order erfolgreich auf %1 erstellt.</translation>
-    </message>
-    <message>
-        <source>Authentication failed accessing %1</source>
-        <translation>Die Authentifizierung ist beim Zugriff auf %1 fehlgeschlagen</translation>
-    </message>
-    <message>
-        <source>Failed to create the folder on %1. Please check manually.</source>
-        <translation>Die Erstellung des Ordners auf %1 ist fehlgeschlagen. Bitte prüfen Sie dies manuell.</translation>
-    </message>
-    <message>
-        <source>Failed to list a folder. Error: %1</source>
-        <translation>Konnte Ordner nicht listen. Fehler: %1</translation>
-    </message>
-    <message>
-        <source>Choose this to sync the entire account</source>
-        <translation>Wählen Sie dies, um das gesamte Konto zu synchronisieren</translation>
-    </message>
-    <message>
-        <source>This folder is already being synced.</source>
-        <translation>Dieser Ordner wird bereits synchronisiert.</translation>
-    </message>
-    <message>
-        <source>You are already syncing &lt;i&gt;%1&lt;/i&gt;, which is a parent folder of &lt;i&gt;%2&lt;/i&gt;.</source>
-        <translation>Sie synchronisieren bereits &lt;i&gt;%1&lt;/i&gt;, das ein übergeordneten Ordner von &lt;i&gt;%2&lt;/i&gt; ist.</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::FolderWizardSelectiveSync</name>
-    <message>
-        <source>Use virtual files instead of downloading content immediately %1</source>
-        <translation>Virtuelle Dateien verwenden, anstatt die Dateien herunter zu laden %1</translation>
-    </message>
-    <message>
-        <source>(tech preview)</source>
-        <translation>(Tech-Vorschau)</translation>
-    </message>
-    <message>
-        <source>(experimental)</source>
-        <translation>(Experimentell)</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::FormatWarningsWizardPage</name>
-    <message>
-        <source>&lt;b&gt;Warning:&lt;/b&gt; %1</source>
-        <translation>&lt;b&gt;Warnung:&lt;/b&gt; %1</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Warning:&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Warnung:&lt;/b&gt;</translation>
     </message>
 </context>
 <context>
@@ -1277,122 +1755,14 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     </message>
 </context>
 <context>
-    <name>OCC::GeneralSettings</name>
+    <name>OCC::GetOrCreatePublicLinkShare</name>
     <message>
-        <source>Form</source>
-        <translation>Formular</translation>
+        <source>Context menu share</source>
+        <translation>Teilen über das Kontextmenü</translation>
     </message>
     <message>
-        <source>General Settings</source>
-        <translation>Allgemeine Einstellungen</translation>
-    </message>
-    <message>
-        <source>For System Tray</source>
-        <translation>Für das Systembenachrichtungsfeld</translation>
-    </message>
-    <message>
-        <source>stable</source>
-        <translation>Stabil</translation>
-    </message>
-    <message>
-        <source>beta</source>
-        <translation>Beta</translation>
-    </message>
-    <message>
-        <source>Advanced</source>
-        <translation>Erweitert</translation>
-    </message>
-    <message>
-        <source>Ask for confirmation before synchronizing folders larger than</source>
-        <translation>Bestätigung erfragen, bevor Ordner synchronisiert werden die größer sind als:</translation>
-    </message>
-    <message>
-        <source>MB</source>
-        <extracomment>Trailing part of &quot;Ask confirmation before syncing folder larger than&quot; </extracomment>
-        <translation>MB</translation>
-    </message>
-    <message>
-        <source>Ask for confirmation before synchronizing external storages</source>
-        <translation>Bestätigung erfragen, bevor externe Speicher synchronisiert werden</translation>
-    </message>
-    <message>
-        <source>&amp;Launch on System Startup</source>
-        <translation>&amp;Starten beim Systemstart</translation>
-    </message>
-    <message>
-        <source>Show &amp;Desktop Notifications</source>
-        <translation>Zeige &amp;Desktop-Benachrichtigungen</translation>
-    </message>
-    <message>
-        <source>Use &amp;Monochrome Icons</source>
-        <translation>&amp;Monochrome Icons verwenden</translation>
-    </message>
-    <message>
-        <source>Experimental</source>
-        <translation>Experimentell</translation>
-    </message>
-    <message>
-        <source>Enable Delta-Synchronization for files larger than</source>
-        <translation>Delta-Synchronisation für Dateien einschalten, die größer sind als</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Version</translation>
-    </message>
-    <message>
-        <source>&amp;Update Channel</source>
-        <translation>&amp;Update Kanal</translation>
-    </message>
-    <message>
-        <source>•</source>
-        <translation>•</translation>
-    </message>
-    <message>
-        <source>Edit &amp;Ignored Files</source>
-        <translation>I&amp;gnorierte Dateien bearbeiten</translation>
-    </message>
-    <message>
-        <source>Show sync folders in &amp;Explorer&apos;s Navigation Pane</source>
-        <translation>Synchronisations-Ordner und Explorer-Navigation zeigen</translation>
-    </message>
-    <message>
-        <source>S&amp;how crash reporter</source>
-        <translation>&amp;Crash-Reporter anzeigen</translation>
-    </message>
-    <message>
-        <source>&amp;Restart &amp;&amp; Update</source>
-        <translation>&amp;Neustarten &amp;&amp; aktualisieren</translation>
-    </message>
-    <message>
-        <source>You cannot disable autostart because system-wide autostart is enabled.</source>
-        <translation>Autostart kann nicht abgeschaltet werden, da Autostart als Systemeinstellung aktiviert ist.</translation>
-    </message>
-    <message>
-        <source>Change update channel?</source>
-        <translation>Update-Kanal verändern?</translation>
-    </message>
-    <message>
-        <source>The update channel determines which client updates will be offered for installation. The &quot;stable&quot; channel contains only upgrades that are considered reliable, while the versions in the &quot;beta&quot; channel may contain newer features and bugfixes, but have not yet been tested thoroughly.
-
-Note that this selects only what pool upgrades are taken from, and that there are no downgrades: So going back from the beta channel to the stable channel usually cannot be done immediately and means waiting for a stable version that is newer than the currently installed beta version.</source>
-        <translation>Der Update-Kanal legt fest welche Programm-Updates zur Installation angeboten werden. Der &quot;Stabil&quot;-Kanal enthält nur Upgrades die als verlässlich betrachtet werden, während Versionen im &quot;Beta&quot;-Kanal neuer Funktionen und Fehlerbehebungen enthalten können, die bisher noch nicht komplett bzw. ausführlich genug getestet werden konnten.
-Beachten Sie, das dies nur bestimmt von welchem Bereich Sie Upgrades erhalten und dass es keine Downgrade-Möglichkeiten gibt: Ein &quot;Schritt zurück&quot; vom Beta-Kanal zum Stabilen-Kanal kann normalerweise nicht unverzüglich erfolgen und bedeutet Wartezeiten auf eine Stabile-Version, die dann neuer ist als die jeweils aktuell installierte Beta-Version.</translation>
-    </message>
-    <message>
-        <source>Change update channel</source>
-        <translation>Update-Kanal ändern</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Abbrechen</translation>
-    </message>
-    <message>
-        <source>Move to trash files/directories deleted on the server</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>state</source>
-        <translation type="unfinished"></translation>
+        <source>Context menu share %1</source>
+        <translation>Freigabe %1 über das Kontextmenü</translation>
     </message>
 </context>
 <context>
@@ -1415,69 +1785,6 @@ Beachten Sie, das dies nur bestimmt von welchem Bereich Sie Upgrades erhalten un
     </message>
 </context>
 <context>
-    <name>OCC::IgnoreListEditor</name>
-    <message>
-        <source>Ignored Files Editor</source>
-        <translation>Editor für ignorierte Dateien</translation>
-    </message>
-    <message>
-        <source>Global Ignore Settings</source>
-        <translation>Globale Ignorier-Einstellungen</translation>
-    </message>
-    <message>
-        <source>Sync hidden files</source>
-        <translation>Synchronisiere versteckte Dateien</translation>
-    </message>
-    <message>
-        <source>Files Ignored by Patterns</source>
-        <translation>Nach Muster ignorierte Dateien</translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation>Hinzufügen</translation>
-    </message>
-    <message>
-        <source>Pattern</source>
-        <translation>Muster</translation>
-    </message>
-    <message>
-        <source>Allow Deletion</source>
-        <translation>Löschen erlauben</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Entfernen</translation>
-    </message>
-    <message>
-        <source>Files or folders matching a pattern will not be synchronized. Changes take effect the next time folders are synchronized.
-
-Items where deletion is allowed will be deleted if they prevent a directory from being removed. This is useful for meta data.</source>
-        <translation>Dateien oder Ordner, die diesem Muster entsprechen, werden nicht synchronisiert. Änderungen werden bei der nächsten Synchronisation übernommen.
-
-Objekte, bei denen Löschen erlaubt ist, werden gelöscht, wenn sie die Löschung eines Ordners verhindern würden. Das ist für Metadaten nützlich.</translation>
-    </message>
-    <message>
-        <source>Could not open file</source>
-        <translation>Datei konnte nicht geöffnet werden</translation>
-    </message>
-    <message>
-        <source>Cannot write changes to &apos;%1&apos;.</source>
-        <translation>Konnte Änderungen nicht in &apos;%1&apos; schreiben.</translation>
-    </message>
-    <message>
-        <source>Add Ignore Pattern</source>
-        <translation>Ignoriermuster hinzufügen</translation>
-    </message>
-    <message>
-        <source>Add a new ignore pattern:</source>
-        <translation>Neues Ignoriermuster hinzufügen:</translation>
-    </message>
-    <message>
-        <source>This entry is provided by the system at &apos;%1&apos; and cannot be modified in this view.</source>
-        <translation>Dieser Eintrag wird vom System auf &apos;%1&apos; bereitgestellt und kann in dieser Ansicht nicht geändert werden.</translation>
-    </message>
-</context>
-<context>
     <name>OCC::InfomaniakTheme</name>
     <message>
         <source>&lt;p&gt;Version %2. For more information visit &lt;a style=&quot;color: #489EF3&quot; href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;</source>
@@ -1490,69 +1797,6 @@ Objekte, bei denen Löschen erlaubt ist, werden gelöscht, wenn sie die Löschun
     <message>
         <source>&lt;p&gt;Distributed by %1 and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;%2 and the %2 logo are registered trademarks of %1.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Zur Verfügung gestellt durch %1 und lizenziert unter der GNU General Public License (GPL) Version 2.0.&lt;br&gt;%2 und das %2 Logo sind eingetragene Warenzeichen von %1.&lt;/p&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::IssuesWidget</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>List of issues</source>
-        <translation>Liste der Fehler</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation>Benutzerkonto</translation>
-    </message>
-    <message>
-        <source>&lt;no filter&gt;</source>
-        <translation>&lt;no filter&gt;</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Ordner</translation>
-    </message>
-    <message>
-        <source>Show warnings</source>
-        <translation>Warnungen anzeigen</translation>
-    </message>
-    <message>
-        <source>Show ignored files</source>
-        <translation>Ignorierte Dateien anzeigen</translation>
-    </message>
-    <message>
-        <source>There were too many issues. Not all will be visible here.</source>
-        <translation>Es gab zu viele Probleme. Nicht alle können hier dargestellt werden.</translation>
-    </message>
-    <message>
-        <source>There were conflicts. Check the documentation on how to resolve them.</source>
-        <translation>Es bestehen Konflikte. Prüfen Sie die Dokumentation, wie diese zu lösen sind.</translation>
-    </message>
-    <message>
-        <source>Copy the issues list to the clipboard.</source>
-        <translation>Liste der Fehler in die Zwischenablage kopieren.</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Kopieren</translation>
-    </message>
-    <message>
-        <source>Time</source>
-        <translation>Zeit</translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation>Datei</translation>
-    </message>
-    <message>
-        <source>Issue</source>
-        <translation>Fehler</translation>
-    </message>
-    <message>
-        <source>There were conflicts. &lt;a href=&quot;%1&quot;&gt;Check the documentation on how to resolve them.&lt;/a&gt;</source>
-        <translation>Es bestehen Konflikte. &lt;a href=&quot;%1&quot;&gt;Prüfen Sie die Dokumentation, wie diese zu lösen sind.&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
@@ -1574,7 +1818,7 @@ Since log files can get large, the client will start a new one for each sync run
 If enabled, logs will be written to %1</source>
         <translation>Der Client kann Debug-Logs in einen temporären Ordner schreiben. Diese Logs sind sehr hilfreich bei der Fehlersuche.
 Da die Log Dateien groß werden können, wird der Client eine neue Datei für jeden Synchronisationslauf anlegen und alte Dateien komprimieren. Es wird außerdem empfohlen das Löschen von Log Dateien nach einigen Stunden einzuschalten. Dies verhindert unnötigen Verbrauch von Plattenplatz.
-Logs werden nach %1 geschrieben, wenn eingeschaltet.</translation>
+Logs werden nach %1 geschrieben, wenn eingeschaltet</translation>
     </message>
     <message>
         <source>Enable logging to temporary folder</source>
@@ -1596,7 +1840,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     </message>
     <message>
         <source>Minimum log level: </source>
-        <translation type="unfinished"></translation>
+        <translation>Minimaler Log-Level:</translation>
     </message>
 </context>
 <context>
@@ -1614,7 +1858,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <name>OCC::NSISUpdater</name>
     <message>
         <source>New Version Available</source>
-        <translation>Eine neue Version ist verfügbar.</translation>
+        <translation>Eine neue Version ist verfügbar</translation>
     </message>
     <message>
         <source>&lt;p&gt;A new version of the %1 Client is available.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; is available for download. The installed version is %3.&lt;/p&gt;</source>
@@ -1651,89 +1895,6 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <source>Update manually</source>
         <translation>Manuell aktualisieren</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::NetworkSettings</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>Proxy Settings</source>
-        <translation>Proxy-Einstellungen</translation>
-    </message>
-    <message>
-        <source>No Proxy</source>
-        <translation>Kein Proxy</translation>
-    </message>
-    <message>
-        <source>Use system proxy</source>
-        <translation>Benutze System-Proxy</translation>
-    </message>
-    <message>
-        <source>Specify proxy manually as</source>
-        <translation>Proxy manuell definieren als</translation>
-    </message>
-    <message>
-        <source>Host</source>
-        <translation>Host</translation>
-    </message>
-    <message>
-        <source>:</source>
-        <translation>:</translation>
-    </message>
-    <message>
-        <source>Proxy server requires authentication</source>
-        <translation>Proxyserver erfordert eine Authentifizierung</translation>
-    </message>
-    <message>
-        <source>Download Bandwidth</source>
-        <translation>Download-Bandbreite</translation>
-    </message>
-    <message>
-        <source>Limit to</source>
-        <translation>Begrenzen auf</translation>
-    </message>
-    <message>
-        <source>KBytes/s</source>
-        <translation>KBytes/s</translation>
-    </message>
-    <message>
-        <source>No limit</source>
-        <translation>Keine Begrenzung</translation>
-    </message>
-    <message>
-        <source>Limit to 3/4 of estimated bandwidth</source>
-        <translation>Auf 3/4 der geschätzten Bandbreite begrenzen</translation>
-    </message>
-    <message>
-        <source>Upload Bandwidth</source>
-        <translation>Upload-Bandbreite</translation>
-    </message>
-    <message>
-        <source>Limit automatically</source>
-        <translation>Automatisch begrenzen</translation>
-    </message>
-    <message>
-        <source>Hostname of proxy server</source>
-        <translation>Hostname des Proxy-Servers</translation>
-    </message>
-    <message>
-        <source>Username for proxy server</source>
-        <translation>Benutzername für den Proxy-Server</translation>
-    </message>
-    <message>
-        <source>Password for proxy server</source>
-        <translation>Passwort für den Proxy-Server</translation>
-    </message>
-    <message>
-        <source>HTTP(S) proxy</source>
-        <translation>HTTP(S)-Proxy</translation>
-    </message>
-    <message>
-        <source>SOCKS5 proxy</source>
-        <translation>SOCKS5-Proxy</translation>
     </message>
 </context>
 <context>
@@ -1812,14 +1973,6 @@ for additional privileges during the process.</source>
         <translation>Herunterladen von %1. Bitte warten…</translation>
     </message>
     <message>
-        <source>%1 available. Restart application to start the update.</source>
-        <translation>%1 ist verfügbar. Anwendung zum Start der Aktualisierung neu starten.</translation>
-    </message>
-    <message>
-        <source>New %1 available. Please use the system&apos;s update tool to install it.</source>
-        <translation>Aktualisierung von %1 verfügbar. Bitte nutzen Sie zur Installation das Systemaktualisierungstool.</translation>
-    </message>
-    <message>
         <source>Checking update server...</source>
         <translation>Aktualisierungsserver wird überprüft …</translation>
     </message>
@@ -1828,328 +1981,20 @@ for additional privileges during the process.</source>
         <translation>Updatestatus unbekannt: Auf neue Updates wurde nicht geprüft.</translation>
     </message>
     <message>
-        <source>No updates available. Your installation is at the latest version.</source>
-        <translation>Keine Aktualisierungen verfügbar. Ihre Installation ist die aktuelle Version.</translation>
-    </message>
-    <message>
         <source>Update Check</source>
         <translation>Aktualitätsprüfung</translation>
     </message>
-</context>
-<context>
-    <name>OCC::OwncloudAdvancedSetupPage</name>
     <message>
-        <source>Setup local folder options</source>
-        <translation>Einstellungen der Optionen für lokale Verzeichnisse </translation>
+        <source>An update is available: %1</source>
+        <translation>Eine Aktualisierung ist verfügbar: %1</translation>
     </message>
     <message>
-        <source>Connect...</source>
-        <translation>Verbinden…</translation>
+        <source>An update is available: %1. Please use the system&apos;s update tool to install it.</source>
+        <translation>Eine Aktualisierung ist verfügbar: %1. Bitte verwenden Sie das Update-Tool des Systems, um es zu installieren.</translation>
     </message>
     <message>
-        <source>Use &amp;virtual files instead of downloading content immediately %1</source>
-        <translation>&amp;Virtuelle Dateien verwenden, anstatt die Dateien herunter zu laden %1</translation>
-    </message>
-    <message>
-        <source>(tech preview)</source>
-        <translation>(Tech-Vorschau)</translation>
-    </message>
-    <message>
-        <source>(experimental)</source>
-        <translation>(Experimentell)</translation>
-    </message>
-    <message>
-        <source>%1 folder &apos;%2&apos; is synced to local folder &apos;%3&apos;</source>
-        <translation>%1 Ordner &apos;%2&apos; wird mit dem lokalen Ordner &apos;%3&apos; synchronisiert</translation>
-    </message>
-    <message>
-        <source>Sync the folder &apos;%1&apos;</source>
-        <translation>Ordner &apos;%1&apos; synchronisieren</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;&lt;small&gt;&lt;strong&gt;Warning:&lt;/strong&gt; The local folder is not empty. Pick a resolution!&lt;/small&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;small&gt;&lt;strong&gt;Achtung:&lt;/strong&gt; Der lokale Ordner ist nicht leer. Bitte wählen Sie eine entsprechende Lösung!&lt;/small&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>Local Sync Folder</source>
-        <translation>Lokaler Ordner für die Synchronisation</translation>
-    </message>
-    <message>
-        <source>(%1)</source>
-        <translation>(%1)</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::OwncloudConnectionMethodDialog</name>
-    <message>
-        <source>Connection failed</source>
-        <translation>Verbindung fehlgeschlagen</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Failed to connect to the secure server address specified. How do you wish to proceed?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Verbindung mit der angegebenen sicheren Serveradresse fehlgeschlagen. Wie möchten Sie fortfahren?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Select a different URL</source>
-        <translation>Andere URL wählen</translation>
-    </message>
-    <message>
-        <source>Retry unencrypted over HTTP (insecure)</source>
-        <translation>Unverschlüsselt über HTTP versuchen (unsicher)</translation>
-    </message>
-    <message>
-        <source>Configure client-side TLS certificate</source>
-        <translation>Clientseitiges TLS-Zertifikat konfigurieren.</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Failed to connect to the secure server address &lt;em&gt;%1&lt;/em&gt;. How do you wish to proceed?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sichere Verbindung zur Server-Adresse &lt;em&gt;%1&lt;/em&gt; fehlgeschlagen. Wie wollen Sie fortfahren?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::OwncloudHttpCredsPage</name>
-    <message>
-        <source>&amp;Email</source>
-        <translation>&amp;E-Mail</translation>
-    </message>
-    <message>
-        <source>Connect to %1</source>
-        <translation>Verbinden mit %1</translation>
-    </message>
-    <message>
-        <source>Enter user credentials</source>
-        <translation>Geben Sie die Benutzer-Anmeldeinformationen ein</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::OwncloudOAuthCredsPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation>Verbinden mit %1</translation>
-    </message>
-    <message>
-        <source>Login in your browser</source>
-        <translation>Melden Sie sich in Ihrem Browser an</translation>
-    </message>
-    <message>
-        <source>Copy link to clipboard</source>
-        <translation>Link in Zwischenablage kopieren</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::OwncloudSetupPage</name>
-    <message>
-        <source>Connect to %1</source>
-        <translation>Verbinden mit %1</translation>
-    </message>
-    <message>
-        <source>Setup %1 server</source>
-        <translation>%1 Server einrichten</translation>
-    </message>
-    <message>
-        <source>This url is NOT secure as it is not encrypted.
-It is not advisable to use it.</source>
-        <translation>Diese URL ist NICHT sicher, das sie nicht verschlüsselt ist.
-Es ist nicht ratsam, diese zu benutzen.</translation>
-    </message>
-    <message>
-        <source>This url is secure. You can use it.</source>
-        <translation>Diese URL ist sicher. Sie können Sie benutzen.</translation>
-    </message>
-    <message>
-        <source>&amp;Next &gt;</source>
-        <translation>&amp;Weiter &gt;</translation>
-    </message>
-    <message>
-        <source>Invalid URL</source>
-        <translation>Ungültige URL</translation>
-    </message>
-    <message>
-        <source>Could not load certificate. Maybe wrong password?</source>
-        <translation>Zertifikat kann nicht geladen werden.  Falsches Passwort?</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::OwncloudSetupWizard</name>
-    <message>
-        <source>&lt;font color=&quot;green&quot;&gt;Successfully connected to %1: %2 version %3 (%4)&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;</source>
-        <translation>&lt;font color=&quot;green&quot;&gt;Erfolgreich mit  %1 verbunden: %2 Version %3 (%4)&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;</translation>
-    </message>
-    <message>
-        <source>Failed to connect to %1 at %2:&lt;br/&gt;%3</source>
-        <translation>Die Verbindung zu %1 auf %2:&lt;br/&gt;%3 konnte nicht hergestellt werden</translation>
-    </message>
-    <message>
-        <source>Timeout while trying to connect to %1 at %2.</source>
-        <translation>Zeitüberschreitung beim Verbindungsversuch mit %1 unter %2.</translation>
-    </message>
-    <message>
-        <source>Trying to connect to %1 at %2...</source>
-        <translation>Verbindungsversuch mit %1 unter %2…</translation>
-    </message>
-    <message>
-        <source>The authenticated request to the server was redirected to &apos;%1&apos;. The URL is bad, the server is misconfigured.</source>
-        <translation>Die Authentifizierungs-Anfrage an den Server wurde weitergeleitet an &apos;%1&apos;. Diese Adresse ist ungültig, der Server ist falsch konfiguriert.</translation>
-    </message>
-    <message>
-        <source>There was an invalid response to an authenticated webdav request</source>
-        <translation>Es gab eine ungültige Reaktion auf eine WebDav-Authentifizierungs-Anfrage</translation>
-    </message>
-    <message>
-        <source>Access forbidden by server. To verify that you have proper access, &lt;a href=&quot;%1&quot;&gt;click here&lt;/a&gt; to access the service with your browser.</source>
-        <translation>Zugang vom Server nicht erlaubt. &lt;a href=&quot;%1&quot;&gt;Klicken Sie hier&lt;/a&gt; zum Zugriff auf den Dienst mithilfe Ihres Browsers, so dass Sie sicherstellen können, dass Ihr Zugang ordnungsgemäß funktioniert.</translation>
-    </message>
-    <message>
-        <source>Invalid URL</source>
-        <translation>Ungültige URL</translation>
-    </message>
-    <message>
-        <source>Local sync folder %1 already exists, setting it up for sync.&lt;br/&gt;&lt;br/&gt;</source>
-        <translation>Lokaler Sync-Ordner %1 existiert bereits, aktiviere Synchronistation.&lt;br/&gt;&lt;br/&gt;</translation>
-    </message>
-    <message>
-        <source>Creating local sync folder %1...</source>
-        <translation>Lokaler Synchronisations-Ordner %1 wird erstellt ...</translation>
-    </message>
-    <message>
-        <source>ok</source>
-        <translation>ok</translation>
-    </message>
-    <message>
-        <source>failed.</source>
-        <translation>fehlgeschlagen.</translation>
-    </message>
-    <message>
-        <source>Could not create local folder %1</source>
-        <translation>Der lokale Ordner %1 konnte nicht angelegt werden</translation>
-    </message>
-    <message>
-        <source>No remote folder specified!</source>
-        <translation>Keinen entfernten Ordner angegeben!</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>Fehler: %1</translation>
-    </message>
-    <message>
-        <source>creating folder on ownCloud: %1</source>
-        <translation>erstelle Ordner auf ownCloud: %1</translation>
-    </message>
-    <message>
-        <source>Remote folder %1 created successfully.</source>
-        <translation>Remoteordner %1 erfolgreich erstellt.</translation>
-    </message>
-    <message>
-        <source>The remote folder %1 already exists. Connecting it for syncing.</source>
-        <translation>Der Ordner %1 ist auf dem Server bereits vorhanden. Verbinde zur Synchronisation.</translation>
-    </message>
-    <message>
-        <source>The folder creation resulted in HTTP error code %1</source>
-        <translation>Das Erstellen des Verzeichnisses erzeugte den HTTP-Fehler-Code %1</translation>
-    </message>
-    <message>
-        <source>The remote folder creation failed because the provided credentials are wrong!&lt;br/&gt;Please go back and check your credentials.&lt;/p&gt;</source>
-        <translation>Die Remote-Ordner-Erstellung ist fehlgeschlagen, weil die angegebenen Zugangsdaten falsch sind. Bitte gehen Sie zurück und überprüfen Sie die Zugangsdaten.</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;&lt;font color=&quot;red&quot;&gt;Remote folder creation failed probably because the provided credentials are wrong.&lt;/font&gt;&lt;br/&gt;Please go back and check your credentials.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;font color=&quot;red&quot;&gt;Die Remote-Ordner-Erstellung ist fehlgeschlagen, vermutlich sind die angegebenen Zugangsdaten falsch.&lt;/font&gt;&lt;br/&gt;Bitte gehen Sie zurück und überprüfen Sie Ihre Zugangsdaten.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>Remote folder %1 creation failed with error &lt;tt&gt;%2&lt;/tt&gt;.</source>
-        <translation>Remote-Ordner %1 konnte mit folgendem Fehler nicht erstellt werden: &lt;tt&gt;%2&lt;/tt&gt;.</translation>
-    </message>
-    <message>
-        <source>A sync connection from %1 to remote directory %2 was set up.</source>
-        <translation>Eine Synchronisationsverbindung für Ordner %1 zum entfernten Ordner %2 wurde eingerichtet.</translation>
-    </message>
-    <message>
-        <source>Successfully connected to %1!</source>
-        <translation>Erfolgreich verbunden mit %1!</translation>
-    </message>
-    <message>
-        <source>Connection to %1 could not be established. Please check again.</source>
-        <translation>Die Verbindung zu %1 konnte nicht hergestellt werden. Bitte prüfen Sie die Einstellungen erneut.</translation>
-    </message>
-    <message>
-        <source>Folder rename failed</source>
-        <translation>Ordner umbenennen fehlgeschlagen.</translation>
-    </message>
-    <message>
-        <source>Can&apos;t remove and back up the folder because the folder or a file in it is open in another program. Please close the folder or file and hit retry or cancel the setup.</source>
-        <translation>Der Ordner kann nicht entfernt und gesichert werden, da der Ordner oder einer seiner Dateien in einem anderen Programm geöffnet ist. Bitte schließen Sie den Ordner oder die Datei oder beenden Sie die Installation.</translation>
-    </message>
-    <message>
-        <source>&lt;font color=&quot;green&quot;&gt;&lt;b&gt;Local sync folder %1 successfully created!&lt;/b&gt;&lt;/font&gt;</source>
-        <translation>&lt;font color=&quot;green&quot;&gt;&lt;b&gt;Lokaler Sync-Ordner %1 erfolgreich erstellt!&lt;/b&gt;&lt;/font&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::OwncloudWizard</name>
-    <message>
-        <source>%1 Connection Wizard</source>
-        <translation>%1 Verbindungsassistent</translation>
-    </message>
-    <message>
-        <source>Enable technical preview feature?</source>
-        <translation>Feature aus der technischen Vorschau freischalten?</translation>
-    </message>
-    <message>
-        <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead a virtual file will be created for each file that exists on the server. When a file is opened its contents will be downloaded automatically. Alternatively, files can be downloaded manually by using their context menu.
-
-The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.</source>
-        <translation>Wenn der Modus &quot;Virtuelle Dateien&quot; freigeschaltet ist, werden die Dateien nicht sofort heruntergeladen. Stattdessen wird für jede Datei des Servers eine Platzhalter-Datei erstellt. Der Inhalt der Datei wird beim Ausführen automatisch heruntergeladen. Stattdessen können Dateien auch händisch über das Kontext-Menü heruntergeladen werden.
-
-Der Modus &quot;Virtuelle Dateien&quot; schließt sich mit dem Modus &quot;Selective Sync&quot; gegenseitig aus. Aktuell abgewählte Ordner werden zu nur online verfügbaren Ordnern umgesetzt und die Einstellungen im &quot;Selective Sync&quot; werden verworfen.</translation>
-    </message>
-    <message>
-        <source>Enable virtual files</source>
-        <translation> Virtuelle Dateien freischalten</translation>
-    </message>
-    <message>
-        <source>Continue to use selective sync</source>
-        <translation>Selective Sync&quot; weiterbenutzen</translation>
-    </message>
-    <message>
-        <source>Enable experimental feature?</source>
-        <translation>Experimentelle Funktion aktivieren?</translation>
-    </message>
-    <message>
-        <source>Enable experimental placeholder mode</source>
-        <translation>Experimentellen Platzhalter Modus freischalten</translation>
-    </message>
-    <message>
-        <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead, a tiny &quot;%1&quot; file will be created for each file that exists on the server. The contents can be downloaded by running these files or by using their context menu.
-
-The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.
-
-Switching to this mode will abort any currently running synchronization.
-
-This is a new, experimental mode. If you decide to use it, please report any issues that come up.</source>
-        <translation>Wenn der Modus &quot;Virtuelle Dateien&quot; aktiviert ist, werden die Dateien nicht sofort heruntergeladen. Stattdessen wird für jede Datei des Servers eine winzige &quot;%1&quot; Datei erstellt. Der Inhalt der Dateien kann durch Ausführen der Datei oder über das Kontext-Menü heruntergeladen werden.
-
-Der Modus virtuelle Dateien schließt sich mit dem Modus &quot;Selective Sync&quot; gegenseitig aus. Aktuell abgewählte Ordner werden zu nur online verfügbaren Ordnern umgesetzt und die Einstellungen im &quot;Selective Sync&quot; werden verworfen.
-
-Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, berichten sie bitte alle Probleme, die auftreten.</translation>
-    </message>
-    <message>
-        <source>Stay safe</source>
-        <translation>Sicher bleiben</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::OwncloudWizardResultPage</name>
-    <message>
-        <source>Everything set up!</source>
-        <translation>Alles ist eingerichtet!</translation>
-    </message>
-    <message>
-        <source>Open Local Folder</source>
-        <translation>Öffne lokalen Ordner</translation>
-    </message>
-    <message>
-        <source>Open %1 in Browser</source>
-        <translation>%1 im Browser öffnen</translation>
+        <source>%1 is up to date!</source>
+        <translation>%1 ist auf dem neuesten Stand!</translation>
     </message>
 </context>
 <context>
@@ -2500,42 +2345,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <source>TextLabel</source>
         <translation>TextLabel</translation>
     </message>
-    <message>
-        <source>Open in browser</source>
-        <translation>Im Browser öffnen</translation>
-    </message>
-    <message>
-        <source>Time</source>
-        <translation>Zeit</translation>
-    </message>
-    <message>
-        <source>File</source>
-        <translation>Datei</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Ordner</translation>
-    </message>
-    <message>
-        <source>Action</source>
-        <translation>Aktion</translation>
-    </message>
-    <message>
-        <source>Size</source>
-        <translation>Größe</translation>
-    </message>
-    <message>
-        <source>Local sync protocol</source>
-        <translation>Lokales Sychronisationsprotokoll</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Kopieren</translation>
-    </message>
-    <message>
-        <source>Copy the activity list to the clipboard.</source>
-        <translation>Aktivitätsliste in die Zwischenablage kopieren.</translation>
-    </message>
 </context>
 <context>
     <name>OCC::ProxyAuthDialog</name>
@@ -2553,7 +2362,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
     <message>
         <source>The proxy server needs a username and password.</source>
-        <translation>Der Proxyserver benötigt Benutzername und Passwort</translation>
+        <translation>Der Proxyserver benötigt Benutzername und Passwort.</translation>
     </message>
     <message>
         <source>Password:</source>
@@ -2565,71 +2374,10 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
 </context>
 <context>
-    <name>OCC::SelectiveSyncDialog</name>
-    <message>
-        <source>Choose What to Sync</source>
-        <translation>Zu synchronisierende Elemente auswählen</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::SelectiveSyncWidget</name>
-    <message>
-        <source>Loading ...</source>
-        <translation>Laden…</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Name</translation>
-    </message>
-    <message>
-        <source>Size</source>
-        <translation>Größe</translation>
-    </message>
-    <message>
-        <source>No subfolders currently on the server.</source>
-        <translation>Aktuell befinden sich keine Unterordner auf dem Server.</translation>
-    </message>
-    <message>
-        <source>An error occurred while loading the list of sub folders.</source>
-        <translation>Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
-    </message>
-    <message>
-        <source>Select remote folders you wish to synchronize.</source>
-        <translation>Remote-Ordner auswählen, die Sie synchronisieren möchten.</translation>
-    </message>
-</context>
-<context>
     <name>OCC::ServerNotificationHandler</name>
     <message>
         <source>Dismiss</source>
         <translation>Ausblenden</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::SettingsDialog</name>
-    <message>
-        <source>Settings</source>
-        <translation>Einstellungen</translation>
-    </message>
-    <message>
-        <source>Activity</source>
-        <translation>Aktivität</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Allgemein</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Netzwerk</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation>Benutzerkonto</translation>
-    </message>
-    <message>
-        <source>Add new</source>
-        <translation>Neues Konto hinzufügen</translation>
     </message>
 </context>
 <context>
@@ -2908,14 +2656,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>Via %1 teilen</translation>
     </message>
     <message>
-        <source>Context menu share</source>
-        <translation>Teilen über das Kontextmenü</translation>
-    </message>
-    <message>
-        <source>Context menu share %1</source>
-        <translation>Freigabe %1 über das Kontextmenü</translation>
-    </message>
-    <message>
         <source>Confirm deletion</source>
         <translation>Löschung bestätigen</translation>
     </message>
@@ -2948,10 +2688,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>Ich habe etwas mit Ihnen geteilt</translation>
     </message>
     <message>
-        <source>Share...</source>
-        <translation>Teilen…</translation>
-    </message>
-    <message>
         <source>Copy private link to clipboard</source>
         <translation>Privater Link in die Zwischenablage kopiert</translation>
     </message>
@@ -2961,7 +2697,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
     <message>
         <source>Resharing this file is not allowed</source>
-        <translation>Weiter-Teilen dieser Datei ist nicht erlaubt.</translation>
+        <translation>Weiter-Teilen dieser Datei ist nicht erlaubt</translation>
     </message>
     <message>
         <source>Resharing this folder is not allowed</source>
@@ -3006,109 +2742,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     <message>
         <source>Delete</source>
         <translation>Löschen</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::SslButton</name>
-    <message>
-        <source>&lt;h3&gt;Certificate Details&lt;/h3&gt;</source>
-        <translation>&lt;h3&gt;Zertifikatdetails&lt;/h3&gt;</translation>
-    </message>
-    <message>
-        <source>Common Name (CN):</source>
-        <translation>Gemeinsamer Name (CN):</translation>
-    </message>
-    <message>
-        <source>Subject Alternative Names:</source>
-        <translation>Subject Alternative Names:</translation>
-    </message>
-    <message>
-        <source>Organization (O):</source>
-        <translation>Organisation (O):</translation>
-    </message>
-    <message>
-        <source>Organizational Unit (OU):</source>
-        <translation>Organisationseinheit (OU):</translation>
-    </message>
-    <message>
-        <source>State/Province:</source>
-        <translation>Staat/Provinz:</translation>
-    </message>
-    <message>
-        <source>Country:</source>
-        <translation>Land:</translation>
-    </message>
-    <message>
-        <source>Serial:</source>
-        <translation>Seriennummer:</translation>
-    </message>
-    <message>
-        <source>&lt;h3&gt;Issuer&lt;/h3&gt;</source>
-        <translation>&lt;h3&gt;Aussteller&lt;/h3&gt;</translation>
-    </message>
-    <message>
-        <source>Issuer:</source>
-        <translation>Aussteller:</translation>
-    </message>
-    <message>
-        <source>Issued on:</source>
-        <translation>Ausgestellt am:</translation>
-    </message>
-    <message>
-        <source>Expires on:</source>
-        <translation>Ablaufdatum:</translation>
-    </message>
-    <message>
-        <source>&lt;h3&gt;Fingerprints&lt;/h3&gt;</source>
-        <translation>&lt;h3&gt;Fingerabdrücke&lt;/h3&gt;</translation>
-    </message>
-    <message>
-        <source>SHA-256:</source>
-        <translation>SHA-256:</translation>
-    </message>
-    <message>
-        <source>SHA-1:</source>
-        <translation>SHA-1:</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This certificate was manually approved&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;b&gt;Hinweis:&lt;/b&gt; Dieses Zertifikat wurde manuell bestätigt&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>%1 (self-signed)</source>
-        <translation>%1 (selbst signiert)</translation>
-    </message>
-    <message>
-        <source>%1</source>
-        <translation>%1</translation>
-    </message>
-    <message>
-        <source>This connection is encrypted using %1 bit %2.
-</source>
-        <translation>Diese Verbindung ist verschlüsselt mit %1 Bit %2.
-</translation>
-    </message>
-    <message>
-        <source>Server version: %1</source>
-        <translation>Serverversion: %1</translation>
-    </message>
-    <message>
-        <source>No support for SSL session tickets/identifiers</source>
-        <translation>Keine Unterstützung für SSL session tickets</translation>
-    </message>
-    <message>
-        <source>Certificate information:</source>
-        <translation>Zertifikatsinformation:</translation>
-    </message>
-    <message>
-        <source>The connection is not secure</source>
-        <translation>Die Verbindung ist nicht sicher</translation>
-    </message>
-    <message>
-        <source>This connection is NOT secure as it is not encrypted.
-</source>
-        <translation>Diese Verbindung ist NICHT sicher, da diese nicht verschlüsselt ist.
-</translation>
     </message>
 </context>
 <context>
@@ -3179,7 +2812,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     <message>
         <source>Only %1 are available, need at least %2 to start</source>
         <comment>Placeholders are postfixed with file sizes using Utility::octetsToString()</comment>
-        <translation>Nur %1 sind verfügbar. Zum Beginnen werden mindestens %2 benötigt.</translation>
+        <translation>Nur %1 sind verfügbar. Zum Beginnen werden mindestens %2 benötigt</translation>
     </message>
     <message>
         <source>Unable to open or create the local sync database. Make sure you have write access in the sync folder.</source>
@@ -3223,13 +2856,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
 </context>
 <context>
-    <name>OCC::SyncLogDialog</name>
-    <message>
-        <source>Synchronisation Log</source>
-        <translation>Synchronisations Log</translation>
-    </message>
-</context>
-<context>
     <name>OCC::Systray</name>
     <message>
         <source>%1: %2</source>
@@ -3259,7 +2885,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
     <message>
         <source>The checksum header contained an unknown checksum type &apos;%1&apos;</source>
-        <translation>Die Prüfsummen-Kopfzeile enthielt den unbekannten Prüfsummentypen &apos;%1&apos;.</translation>
+        <translation>Die Prüfsummen-Kopfzeile enthielt den unbekannten Prüfsummentypen &apos;%1&apos;</translation>
     </message>
     <message>
         <source>The downloaded file does not match the checksum, it will be resumed.</source>
@@ -3280,12 +2906,12 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
 <context>
     <name>OCC::WebFlowCredentials</name>
     <message>
-        <source>You have been logged out of %1 as user %2. Please login again</source>
-        <translation>Sie wurden von %1 als Benutzer %2 abgemeldet. Bitte melden Sie sich erneut an</translation>
-    </message>
-    <message>
         <source>Please login with the user: %1</source>
         <translation>Mit folgendem Benutzer anmelden: %1</translation>
+    </message>
+    <message>
+        <source>You have been logged out of %1 as user %2. Please login again.</source>
+        <translation>Sie wurden von %1 als Benutzer %2 abgemeldet. Bitte melden Sie sich erneut an.</translation>
     </message>
 </context>
 <context>
@@ -3304,7 +2930,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
     <message>
         <source>Failed to write zsync metadata file:</source>
-        <translation>Fehler beim Schreiben der zsync Metadaten-Datei.</translation>
+        <translation>Fehler beim Schreiben der zsync Metadaten-Datei:</translation>
     </message>
 </context>
 <context>
@@ -3333,56 +2959,8 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>Es wurden keine Synchonisationsordner konfiguriert.</translation>
     </message>
     <message>
-        <source>Open in browser</source>
-        <translation>Im Browser öffnen</translation>
-    </message>
-    <message>
-        <source>Log in...</source>
-        <translation>Einloggen...</translation>
-    </message>
-    <message>
-        <source>Log out</source>
-        <translation>Abmelden</translation>
-    </message>
-    <message>
-        <source>Recent Changes</source>
-        <translation>Letzte Änderungen</translation>
-    </message>
-    <message>
-        <source>Managed Folders:</source>
-        <translation>Verwaltete Ordner:</translation>
-    </message>
-    <message>
-        <source>Open folder &apos;%1&apos;</source>
-        <translation>Ordner »%1« öffnen</translation>
-    </message>
-    <message>
-        <source>Open %1 in browser</source>
-        <translation>%1 im Browser öffnen</translation>
-    </message>
-    <message>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>Der Server mit Konto %1 läuft mit einer nicht unterstützten Version %2. Die Verwendung dieses Clienten mit nicht unterstützten Serverversionen ist ungetestet und möglicherweise gefährlich. Fortfahren auf eigenes Risiko.</translation>
-    </message>
-    <message>
-        <source>Unknown status</source>
-        <translation>Unbekannter Status</translation>
-    </message>
-    <message>
-        <source>Settings...</source>
-        <translation>Einstellungen …</translation>
-    </message>
-    <message>
-        <source>Details...</source>
-        <translation>Details …</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Hilfe</translation>
-    </message>
-    <message>
-        <source>Quit %1</source>
-        <translation>%1 beenden</translation>
     </message>
     <message>
         <source>Disconnected from %1</source>
@@ -3393,14 +2971,6 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>nicht unterstützte Server Version</translation>
     </message>
     <message>
-        <source>Disconnected</source>
-        <translation>Getrennt</translation>
-    </message>
-    <message>
-        <source>Disconnected from some accounts</source>
-        <translation>Die Verbindungen zu einigen Konten wurde getrennt</translation>
-    </message>
-    <message>
         <source>Disconnected from accounts:</source>
         <translation>Verbindungen zu Konten wurde getrennt:</translation>
     </message>
@@ -3409,252 +2979,16 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
         <translation>Konto %1: %2</translation>
     </message>
     <message>
-        <source>Signed out</source>
-        <translation>Abgemeldet</translation>
-    </message>
-    <message>
         <source>Account synchronization is disabled</source>
         <translation>Account Synchronisation ist deaktiviert</translation>
-    </message>
-    <message>
-        <source>Synchronization is paused</source>
-        <translation>Synchronisation pausiert</translation>
-    </message>
-    <message>
-        <source>Unresolved conflicts</source>
-        <translation>Ungelöste Konflikte</translation>
-    </message>
-    <message>
-        <source>Error during synchronization</source>
-        <translation>Fehler bei der Synchronisation</translation>
-    </message>
-    <message>
-        <source>No sync folders configured</source>
-        <translation>Keine Ordner zur Synchronisation konfiguriert</translation>
-    </message>
-    <message>
-        <source>Unpause all folders</source>
-        <translation>Setze alle Ordner fort</translation>
-    </message>
-    <message>
-        <source>Pause all folders</source>
-        <translation>Stoppe alle Ordner</translation>
-    </message>
-    <message>
-        <source>Unpause all synchronization</source>
-        <translation>Setze gesamte Synchronisation fort</translation>
-    </message>
-    <message>
-        <source>Unpause synchronization</source>
-        <translation>Setze Synchronisation fort</translation>
-    </message>
-    <message>
-        <source>Pause all synchronization</source>
-        <translation>Stoppe gesamte Synchronisation</translation>
-    </message>
-    <message>
-        <source>Pause synchronization</source>
-        <translation>Stoppe Synchronisation</translation>
-    </message>
-    <message>
-        <source>Log out of all accounts</source>
-        <translation>Bei allen Konten abmelden</translation>
-    </message>
-    <message>
-        <source>Log in to all accounts...</source>
-        <translation>Bei allen Konten anmelden...</translation>
-    </message>
-    <message>
-        <source>New account...</source>
-        <translation>Neues Konto...</translation>
     </message>
     <message>
         <source>About %1</source>
         <translation>Über %1</translation>
     </message>
     <message>
-        <source>No items synced recently</source>
-        <translation>Keine kürzlich synchronisierten Elemente</translation>
-    </message>
-    <message>
-        <source>Checking for changes in remote &apos;%1&apos;</source>
-        <translation>Änderungen der entfernten Ressource &apos;%1&apos; werden geprüft</translation>
-    </message>
-    <message>
-        <source>Checking for changes in local &apos;%1&apos;</source>
-        <translation>Änderungen der lokalen Ressource &apos;%1&apos; werden geprüft</translation>
-    </message>
-    <message>
-        <source>Syncing %1 of %2  (%3 left)</source>
-        <translation>Synchronisiere %1 von %2  (%3 übrig)</translation>
-    </message>
-    <message>
-        <source>Syncing %1 of %2</source>
-        <translation>Synchronisiere %1 von %2</translation>
-    </message>
-    <message>
-        <source>Syncing %1 (%2 left)</source>
-        <translation>Synchronisiere %1 (%2 übrig)</translation>
-    </message>
-    <message>
-        <source>Syncing %1</source>
-        <translation>Synchronisiere %1</translation>
-    </message>
-    <message>
-        <source>%1 (%2, %3)</source>
-        <translation>%1 (%2, %3)</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Aktuell</translation>
-    </message>
-    <message>
-        <source>See synchronization errors</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>OwncloudAdvancedSetupPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>TextLabel</source>
-        <translation>TextLabel</translation>
-    </message>
-    <message>
-        <source>Server</source>
-        <translation>Server</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If this box is checked, existing content in the local folder will be erased to start a clean sync from the server.&lt;/p&gt;&lt;p&gt;Do not check this if the local content should be uploaded to the servers folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wenn diese Option gesetzt ist, werden bestehende Inhalte im lokalen Ordner gelöscht, um eine saubere Synchronisation nur der Serverdaten zu ermöglichen.&lt;/p&gt;&lt;p&gt;Wählen Sie diese Option nicht, wenn die lokale Inhalte auf den Server übertragen werden sollen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Start a &amp;clean sync (Erases the local folder!)</source>
-        <translation>Saubere Syn&amp;chronisation beginnen (entfernt lokalen Ordner!)</translation>
-    </message>
-    <message>
-        <source>Ask for confirmation before synchroni&amp;zing folders larger than</source>
-        <translation>Bestätigung erfragen, bevor Ordner synchronisiert werden. Gren&amp;ze:</translation>
-    </message>
-    <message>
-        <source>MB</source>
-        <extracomment>Trailing part of &quot;Ask confirmation before syncing folder larger than&quot; </extracomment>
-        <translation>MB</translation>
-    </message>
-    <message>
-        <source>Ask for confirmation before synchronizing e&amp;xternal storages</source>
-        <translation>Bestätigung erfragen, bevor externe Speicher synchronisiert werden. Gren&amp;ze:</translation>
-    </message>
-    <message>
-        <source>Choose what to sync</source>
-        <translation>Zu synchronisierende Elemente auswählen</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When this option is selected, the wizard will close without synchronizing anything. You can use the &amp;quot;Add Folder Sync Connection&amp;quot; button from the account settings to choose which pair of local and remote folder you wish to synchronize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wenn diese Option angewählt ist, wird der Installationsassistent, ohne irgendetwas zu synchronisieren, beendet. Sie können den &amp;quot;Synchronisationsverzeichnis&amp;quot; Button in den Kontoeinstellungen nutzen, um das Ordnerpaar zwischen lokal und entfernt festzulegen, die Sie synchronisieren möchten&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Manually create folder sync connections </source>
-        <translation>Manuell Synchronisationsverzeichnis erstellen</translation>
-    </message>
-    <message>
-        <source>&amp;Local Folder</source>
-        <translation>&amp;Lokaler Ordner</translation>
-    </message>
-    <message>
-        <source>pbSelectLocalFolder</source>
-        <translation>pbSelectLocalFolder</translation>
-    </message>
-    <message>
-        <source>&amp;Keep local data</source>
-        <translation>&amp;Lokale Daten behalten</translation>
-    </message>
-    <message>
-        <source>S&amp;ynchronize everything from server (recommended)</source>
-        <translation>Alle Daten vom Server s&amp;ynchronisieren (empfohlen)</translation>
-    </message>
-    <message>
-        <source>Status message</source>
-        <translation>Statusnachricht</translation>
-    </message>
-</context>
-<context>
-    <name>OwncloudHttpCredsPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>&amp;Username</source>
-        <translation>&amp;Benutzername</translation>
-    </message>
-    <message>
-        <source>&amp;Password</source>
-        <translation>&amp;Passwort</translation>
-    </message>
-</context>
-<context>
-    <name>OwncloudOAuthCredsPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>Please switch to your browser to proceed.</source>
-        <translation>Bitte wechseln Sie zum Fortfahren in den Browser.</translation>
-    </message>
-    <message>
-        <source>An error occurred while connecting. Please try again.</source>
-        <translation>Fehler beim Aufbau der Verbindung. Bitte nochmal versuchen.</translation>
-    </message>
-    <message>
-        <source>Re-open Browser</source>
-        <translation>Browser erneut öffnen</translation>
-    </message>
-</context>
-<context>
-    <name>OwncloudSetupPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>TextLabel</source>
-        <translation>TextLabel</translation>
-    </message>
-    <message>
-        <source>Ser&amp;ver Address</source>
-        <translation>Ser&amp;veradresse</translation>
-    </message>
-    <message>
-        <source>https://...</source>
-        <translation>https://…</translation>
-    </message>
-    <message>
-        <source>Error Label</source>
-        <translation>Fehler-Label</translation>
-    </message>
-</context>
-<context>
-    <name>OwncloudWizardResultPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>TextLabel</source>
-        <translation>TextLabel</translation>
-    </message>
-    <message>
-        <source>Your entire account is synced to the local folder </source>
-        <translation>Ihr gesamtes Konto wird mit dem lokalen Ordner synchronisiert.</translation>
-    </message>
-    <message>
-        <source>PushButton</source>
-        <translation>Schaltfläche</translation>
+        <source>Unable to open folder path %1.</source>
+        <translation>Ordnerpfad kann nicht geöffnet werden %1.</translation>
     </message>
 </context>
 <context>
@@ -3703,23 +3037,23 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     </message>
     <message>
         <source>Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Info</translation>
     </message>
     <message>
         <source>Debug</source>
-        <translation type="unfinished"></translation>
+        <translation>Debuggen</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Warnung</translation>
     </message>
     <message>
         <source>Critical</source>
-        <translation type="unfinished"></translation>
+        <translation>Kritisch</translation>
     </message>
     <message>
         <source>Fatal</source>
-        <translation type="unfinished"></translation>
+        <translation>Schwer</translation>
     </message>
 </context>
 <context>
@@ -3791,7 +3125,7 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     <name>main.cpp</name>
     <message>
         <source>System Tray not available</source>
-        <translation>Die Taskleiste ist nicht verfügbar.</translation>
+        <translation>Die Taskleiste ist nicht verfügbar</translation>
     </message>
     <message>
         <source>%1 requires on a working system tray. If you are running XFCE, please follow &lt;a href=&quot;http://docs.xfce.org/xfce/xfce4-panel/systray&quot;&gt;these instructions&lt;/a&gt;. Otherwise, please install a system tray application such as &apos;trayer&apos; and try again.</source>
@@ -3975,6 +3309,52 @@ Dies ist ein neuer, experimenteller Modus. Wenn sie sich dafür entscheiden, ber
     <message>
         <source>Free up local space</source>
         <translation>Lokalen Speicherplatz freigeben</translation>
+    </message>
+    <message>
+        <source>Synchronization paused.</source>
+        <translation>Synchronisation pausiert.</translation>
+    </message>
+    <message>
+        <source>No folder to synchronize.</source>
+        <translation>Kein Ordner zum Synchronisieren.</translation>
+    </message>
+    <message>
+        <source>Synchronization in progress (%1 on %2)
+%3 left...</source>
+        <translation>Synchronisierung läuft (%1 auf %2)
+%3 übrig...</translation>
+    </message>
+    <message>
+        <source>Waiting for synchronization...</source>
+        <translation>Warten auf Synchronisierung...</translation>
+    </message>
+    <message>
+        <source>Synchronization in progress.</source>
+        <translation>Synchronisierung läuft.</translation>
+    </message>
+    <message>
+        <source>Preparing to synchronize...</source>
+        <translation>Synchronisation wird vorbereitet...</translation>
+    </message>
+    <message>
+        <source>You are up to date, unresolved conflicts.</source>
+        <translation>Sie sind up to date! Ungelöste Konflikte.</translation>
+    </message>
+    <message>
+        <source>You are up to date!</source>
+        <translation>Sie sind up to date ! </translation>
+    </message>
+    <message>
+        <source>Some files couldn&apos;t be synchronized.</source>
+        <translation>Einige Dateien konnten nicht synchronisiert werden.</translation>
+    </message>
+    <message>
+        <source>&lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation>&lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Mehr erfahren&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Setup error.</source>
+        <translation>Setup-Fehler.</translation>
     </message>
 </context>
 </TS>

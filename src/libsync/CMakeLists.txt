@@ -123,7 +123,8 @@ ENDIF(NOT APPLE)
 
 add_library(${synclib_NAME} SHARED ${libsync_SRCS})
 target_link_libraries(${synclib_NAME}
-    "${csync_NAME}"
+    ${commonlib_NAME}
+    ${csync_NAME}
     ${OS_SPECIFIC_LINK_LIBRARIES}
     Qt5::Core Qt5::Network
 )

@@ -208,7 +208,7 @@ private:
     static QString convertToRegexpSyntax(QString exclude, bool wildcardsMatchSlash);
 
     /// Files to load excludes from
-    QSet<QString> _excludeFiles;
+    QStringList _excludeFiles;
 
     /// Exclude patterns added with addManualExclude()
     QStringList _manualExcludes;

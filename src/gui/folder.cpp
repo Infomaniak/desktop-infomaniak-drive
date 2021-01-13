@@ -231,6 +231,17 @@ void Folder::setIgnoreHiddenFiles(bool ignore)
     _definition.ignoreHiddenFiles = ignore;
 }
 
+bool Folder::notificationsDisabled()
+{
+    bool re(_definition.notificationsDisabled);
+    return re;
+}
+
+void Folder::setNotificationsDisabled(bool disabled)
+{
+    _definition.notificationsDisabled = disabled;
+}
+
 QString Folder::cleanPath() const
 {
     QString cleanedPath = QDir::cleanPath(_canonicalLocalPath);
@@ -400,6 +411,10 @@ void Folder::showSyncResultPopup()
 void Folder::createGuiLog(const QString &filename, LogStatus status, int count,
     const QString &renameTarget)
 {
+    if (notificationsDisabled()) {
+        return;
+    }
+
     if (count > 0) {
         Logger *logger = Logger::instance();
 
@@ -1238,6 +1253,7 @@ void FolderDefinition::save(QSettings &settings, const FolderDefinition &folder)
     settings.setValue(QLatin1String("targetPath"), folder.targetPath);
     settings.setValue(QLatin1String("paused"), folder.paused);
     settings.setValue(QLatin1String("ignoreHiddenFiles"), folder.ignoreHiddenFiles);
+    settings.setValue(QLatin1String("notificationsDisabled"), folder.notificationsDisabled);
 
     settings.setValue(QStringLiteral("virtualFilesMode"), Vfs::modeToString(folder.virtualFilesMode));
 
@@ -1265,6 +1281,7 @@ bool FolderDefinition::load(QSettings &settings, const QString &alias,
     folder->paused = settings.value(QLatin1String("paused")).toBool();
     folder->ignoreHiddenFiles = settings.value(QLatin1String("ignoreHiddenFiles"), QVariant(true)).toBool();
     folder->navigationPaneClsid = settings.value(QLatin1String("navigationPaneClsid")).toUuid();
+    folder->notificationsDisabled = settings.value(QLatin1String("notificationsDisabled"), QVariant(false)).toBool();
 
     folder->virtualFilesMode = Vfs::Off;
     QString vfsModeString = settings.value(QStringLiteral("virtualFilesMode")).toString();

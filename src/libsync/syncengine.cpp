@@ -642,7 +642,7 @@ void SyncEngine::slotDiscoveryFinished()
 
     //    qCInfo(lcEngine) << "Permissions of the root folder: " << _csync_ctx->remote.root_perms.toString();
 
-    if (!_hasNoneFiles && _hasRemoveFile) {
+    /*if (!_hasNoneFiles && _hasRemoveFile) {
         qCInfo(lcEngine) << "All the files are going to be changed, asking the user";
         bool cancel = false;
         int side = 0; // > 0 means more deleted on the server.  < 0 means more deleted on the client
@@ -657,7 +657,7 @@ void SyncEngine::slotDiscoveryFinished()
             finalize(false);
             return;
         }
-    }
+    }*/
 
     auto databaseFingerprint = _journal->dataFingerprint();
     // If databaseFingerprint is empty, this means that there was no information in the database

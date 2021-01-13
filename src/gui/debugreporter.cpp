@@ -6,8 +6,16 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QVBoxLayout>
+#include <QVector>
 
 namespace OCC {
+
+static const QVector<QString> mapKeyName = QVector<QString>()
+        << QString("Drive id")
+        << QString("Drive")
+        << QString("User id")
+        << QString("User name")
+        << QString("Log file");
 
 Q_LOGGING_CATEGORY(lcDebugReporter, "gui.debugreporter", QtInfoMsg)
 
@@ -36,42 +44,49 @@ DebugReporter::~DebugReporter()
     delete m_reply;
 }
 
-void DebugReporter::setReportData(const QByteArray &name, const QByteArray &content)
+void DebugReporter::setReportData(MapKeyType keyType, int keyIndex, const QByteArray &content)
 {
-    m_formContents.insert(name, content);
+    m_formContents.insert(MapKey(keyType, keyIndex), content);
 }
 
-void DebugReporter::setReportData(const QByteArray &name, const QByteArray &content, const QByteArray &contentType, const QByteArray &fileName)
+void DebugReporter::setReportData(MapKeyType keyType, int keyIndex, const QByteArray &content, const QByteArray &contentType, const QByteArray &fileName)
 {
-    setReportData(name, content);
+    setReportData(keyType, keyIndex, content);
 
     if (!contentType.isEmpty() && !fileName.isEmpty())
     {
-        m_formContentTypes.insert(name, contentType);
-        m_formFileNames.insert(name, fileName);
+        m_formContentTypes.insert(MapKey(keyType, keyIndex), contentType);
+        m_formFileNames.insert(MapKey(keyType, keyIndex), fileName);
     }
 }
 
 void DebugReporter::send()
 {
     QByteArray body;
-    foreach (const QByteArray& name, m_formContents.keys())
+    foreach (const MapKey &mapKey, m_formContents.keys())
     {
-        body += "--thkboundary\r\n";
-        body += "Content-Disposition: form-data; name=\"" + name + "\"";
+        QString value = m_formContents.value(mapKey);
+        if (!value.isEmpty()) {
+            QString name = QString("%1 %2").arg(mapKeyName[mapKey.keyType()]).arg(mapKey.keyIndex());
+            body += "--thkboundary\r\n";
+            body += "Content-Disposition: form-data; name=\"" + name + "\"";
 
-        if (!m_formFileNames.value(name).isEmpty() && !m_formContentTypes.value(name).isEmpty())
-        {
-            body += "; filename=\"" + m_formFileNames.value(name) + "\"\r\n";
-            body += "Content-Type: " + m_formContentTypes.value(name) + "\r\n";
-        }
-        else
-        {
+            if (!m_formFileNames.value(mapKey).isEmpty() && !m_formContentTypes.value(mapKey).isEmpty())
+            {
+                body += "; filename=\"" + m_formFileNames.value(mapKey) + "\"\r\n";
+                body += "Content-Type: " + m_formContentTypes.value(mapKey) + "\r\n";
+            }
+            else
+            {
+                body += "\r\n";
+            }
+
             body += "\r\n";
+            body += m_formContents.value(mapKey) + "\r\n";
         }
-
-        body += "\r\n";
-        body += m_formContents.value(name) + "\r\n";
+        else {
+            qCDebug(lcDebugReporter) << "Empty value for key:" << mapKey.keyType() << mapKey.keyIndex();
+        }
     }
 
     body += "--thkboundary\r\n";

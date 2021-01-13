@@ -1223,6 +1223,29 @@ void FolderMan::setDirtyNetworkLimits()
     }
 }
 
+bool FolderMan::notificationsDisabled(const QString &accountId)
+{
+    bool disabled = false;
+    foreach (Folder *folder, _folderMap.values()) {
+        if (folder->accountState() && folder->accountState()->account()
+                && folder->accountState()->account()->id() == accountId) {
+            disabled |= folder->notificationsDisabled();
+        }
+    }
+    return disabled;
+}
+
+void FolderMan::setNotificationsDisabled(const QString &accountId, bool disabled)
+{
+    foreach (Folder *folder, _folderMap.values()) {
+        if (folder->accountState() && folder->accountState()->account()
+                && folder->accountState()->account()->id() == accountId) {
+            folder->setNotificationsDisabled(disabled);
+            folder->saveToSettings();
+        }
+    }
+}
+
 void FolderMan::trayOverallStatus(const QList<Folder *> &folders,
     SyncResult::Status *status, bool *unresolvedConflicts)
 {

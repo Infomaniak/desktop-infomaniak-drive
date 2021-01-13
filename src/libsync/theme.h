@@ -384,11 +384,11 @@ public:
     virtual bool noUnauthedRequests() const;
 
     virtual QIcon stateErrorIcon() const;
-    virtual QIcon stateWarningIcon() const;
 
 protected:
 #ifndef TOKEN_AUTH_ONLY
     QIcon themeIcon(const QString &name, bool sysTray = false, bool sysTrayMenuVisible = false) const;
+    QIcon newThemeIcon(const QString &name, bool sysTray = false, bool sysTrayMenuVisible = false) const;
     void updateIconWithText(QIcon &icon, QString text) const;
 #endif
     Theme();

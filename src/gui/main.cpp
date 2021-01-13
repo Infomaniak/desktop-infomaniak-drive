@@ -45,6 +45,9 @@ void warnSystray()
 
 int main(int argc, char **argv)
 {
+    //qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0");
+    //qputenv("QT_SCALE_FACTOR", "1.2");
+
     Q_INIT_RESOURCE(client);
 
 #ifdef Q_OS_WIN
@@ -56,8 +59,16 @@ int main(int argc, char **argv)
 // We do not define it on linux so the behaviour is kept the same
 // as other Qt apps in the desktop environment. (which may or may
 // not set this envoronment variable)
-    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+    if (!qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")) {
+        qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+    }
 #endif // !Q_OS_WIN
+
+    if (!qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")
+            && !qEnvironmentVariableIsSet("QT_SCALE_FACTOR")
+            && !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
+        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    }
 
 #ifdef Q_OS_MAC
     Mac::CocoaInitializer cocoaInit; // RIIA
@@ -118,12 +129,24 @@ int main(int argc, char **argv)
         }
 
         QStringList args = app.arguments();
-        if (args.size() > 1) {
+        qCInfo(lcApplication) << "args size:" << args.size();
+        for (int i = 0; i < args.size(); i++) {
+            qCInfo(lcApplication) << "args " << i << ": " << args[i];
+        }
+        if (args.size() == 2 && args[1] == "--settings") {
+            if (!app.sendMessage(QLatin1String("MSG_SHOWSETTINGS"))) {
+                return -1;
+            }
+        }
+        else if (args.size() == 2 && args[1] == "--synthesis") {
+            if (!app.sendMessage(QLatin1String("MSG_SHOWSYNTHESIS"))) {
+                return -1;
+            }
+        }
+        else if (args.size() > 1) {
             QString msg = args.join(QLatin1String("|"));
             if (!app.sendMessage(QLatin1String("MSG_PARSEOPTIONS:") + msg))
                 return -1;
-        } else if (!app.sendMessage(QLatin1String("MSG_SHOWSETTINGS"))) {
-            return -1;
         }
         return 0;
     }

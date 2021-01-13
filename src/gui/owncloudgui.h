@@ -18,6 +18,8 @@
 #include "systray.h"
 #include "connectionvalidator.h"
 #include "progressdispatcher.h"
+#include "synthesispopover.h"
+#include "parametersdialog.h"
 
 #include <QObject>
 #include <QPointer>
@@ -56,37 +58,33 @@ public:
     static void raiseDialog(QWidget *raiseWidget);
     static QSize settingsDialogSize() { return QSize(800, 500); }
     void setupOverlayIcons();
-
-    /// Whether the tray menu is visible
-    bool contextMenuVisible() const;
-
     void hideAndShowTray();
+    void showSynthesisDialog();
 
 signals:
     void setupProxy();
 
 public slots:
-    void setupContextMenu();
-    void updateContextMenu();
-    void updateContextMenuNeeded();
-    void slotContextMenuAboutToShow();
-    void slotContextMenuAboutToHide();
+    void setupSynthesisPopover();
+    void setupParametersDialog();
+    void updatePopover();
+    void updatePopoverNeeded();
+    void onRefreshAccountList();
     void slotComputeOverallSyncStatus();
     void slotShowTrayMessage(const QString &title, const QString &msg);
     void slotShowOptionalTrayMessage(const QString &title, const QString &msg);
     void slotFolderOpenAction(const QString &alias);
-    void slotRebuildRecentMenus();
     void slotUpdateProgress(const QString &folder, const ProgressInfo &progress);
+    void slotItemCompleted(const QString &folder, const SyncFileItemPtr &item);
     void slotShowGuiMessage(const QString &title, const QString &message);
     void slotFoldersChanged();
-    void slotShowSettings();
-    void slotShowSyncProtocol();
+    void slotShowParametersDialog(const QString &accountId = QString(), bool errorPage = false);
     void slotShutdown();
     void slotSyncStateChange(Folder *);
     void slotTrayClicked(QSystemTrayIcon::ActivationReason reason);
     void slotToggleLogBrowser();
-    void slotOpenOwnCloud();
-    void slotOpenSettingsDialog();
+    void slotOpenWebview();
+    void slotOpenParametersDialog(const QString &accountId = QString());
     void slotHelp();
     void slotAbout();
     void slotOpenPath(const QString &path);
@@ -102,33 +100,25 @@ public slots:
      * to the folder).
      */
     void slotShowShareDialog(const QString &sharePath, const QString &localPath, ShareDialogStartPage startPage);
+    void slotShowShareDialogPublicLinks(const QString &sharePath, const QString &localPath);
 
     void slotRemoveDestroyedShareDialogs();
 
 private slots:
-    void slotLogin();
-    void slotLogout();
     void slotUnpauseAllFolders();
     void slotPauseAllFolders();
     void slotNewAccountWizard();
+    void slotDisableNotifications(KDC::SynthesisPopover::NotificationsDisabled type, QDateTime value);
+    void slotApplyStyle();
+    void slotSetStyle(bool darkTheme);
 
 private:
     void setPauseOnAllFoldersHelper(bool pause);
-    void setupActions();
-    void addAccountContextMenu(AccountStatePtr accountState, QMenu *menu, bool separateMenu);
 
     QPointer<Systray> _tray;
-    QPointer<SettingsDialog> _settingsDialog;
     QPointer<LogBrowser> _logBrowser;
-    // tray's menu
-    QScopedPointer<QMenu> _contextMenu;
-
-    // Manually tracking whether the context menu is visible via aboutToShow
-    // and aboutToHide. Unfortunately aboutToHide isn't reliable everywhere
-    // so this only gets used with _workaroundManualVisibility (when the tray's
-    // isVisible() is unreliable)
-    bool _contextMenuVisibleManual = false;
-
+    QScopedPointer<KDC::SynthesisPopover> _synthesisPopover;
+    QPointer<KDC::ParametersDialog> _parametersDialog;
     QMenu *_recentActionsMenu;
     QVector<QMenu *> _accountMenus;
     bool _workaroundShowAndHideTray = false;
@@ -137,10 +127,11 @@ private:
     bool _workaroundManualVisibility = false;
     QTimer _delayedTrayUpdateTimer;
     QMap<QString, QPointer<ShareDialog>> _shareDialogs;
+    QDateTime _notificationEnableDate;
+    bool _addDriveWizardRunning;
 
     QAction *_actionLogin;
     QAction *_actionLogout;
-
     QAction *_actionNewAccountWizard;
     QAction *_actionSettings;
     QAction *_actionShowErrors;
@@ -153,7 +144,6 @@ private:
     QAction *_actionCrash;
     QAction *_actionCrashEnforce;
     QAction *_actionCrashFatal;
-
 
     QList<QAction *> _recentItemsActions;
     Application *_app;

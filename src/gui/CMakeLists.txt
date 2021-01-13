@@ -1,5 +1,5 @@
 project(gui)
-find_package(Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt5 REQUIRED COMPONENTS Widgets Svg)
 set(CMAKE_AUTOMOC TRUE)
 set(CMAKE_AUTOUIC TRUE)
 set(CMAKE_AUTORCC TRUE)
@@ -16,73 +16,36 @@ else()
 endif()
 
 set(client_UI_SRCS
-    accountsettings.ui
-    folderwizardsourcepage.ui
-    folderwizardtargetpage.ui
-    generalsettings.ui
-    ignorelisteditor.ui
-    networksettings.ui
-    protocolwidget.ui
-    issueswidget.ui
-    activitywidget.ui
-    synclogdialog.ui
-    settingsdialog.ui
     sharedialog.ui
     sharelinkwidget.ui
     shareusergroupwidget.ui
     shareuserline.ui
     sslerrordialog.ui
-    addcertificatedialog.ui
-    proxyauthdialog.ui
-    notificationwidget.ui
-    wizard/owncloudadvancedsetuppage.ui
-    wizard/owncloudconnectionmethoddialog.ui
-    wizard/owncloudhttpcredspage.ui
-    wizard/owncloudoauthcredspage.ui
-    wizard/owncloudsetupnocredspage.ui
-    wizard/owncloudwizardresultpage.ui
     wizard/webview.ui
 )
 
 set(client_SRCS
     accountmanager.cpp
-    accountsettings.cpp
     application.cpp
     clientproxy.cpp
     connectionvalidator.cpp
     folder.cpp
     folderman.cpp
-    folderstatusmodel.cpp
-    folderstatusdelegate.cpp
     folderwatcher.cpp
-    folderwizard.cpp
-    generalsettings.cpp
-    ignorelisteditor.cpp
     lockwatcher.cpp
     logbrowser.cpp
     navigationpanehelper.cpp
-    networksettings.cpp
     ocsjob.cpp
     ocssharejob.cpp
     ocsshareejob.cpp
     openfilemanager.cpp
     owncloudgui.cpp
-    owncloudsetupwizard.cpp
-    protocolwidget.cpp
-    issueswidget.cpp
-    activitydata.cpp
-    activitylistmodel.cpp
-    activitywidget.cpp
-    activityitemdelegate.cpp
-    selectivesyncdialog.cpp
-    settingsdialog.cpp
     sharedialog.cpp
     sharelinkwidget.cpp
     sharemanager.cpp
     shareusergroupwidget.cpp
     sharee.cpp
     socketapi.cpp
-    sslbutton.cpp
     sslerrordialog.cpp
     syncrunfilelog.cpp
     systray.cpp
@@ -90,34 +53,82 @@ set(client_SRCS
     quotainfo.cpp
     accountstate.cpp
     addcertificatedialog.cpp
-    authenticationdialog.cpp
     proxyauthhandler.cpp
     proxyauthdialog.cpp
-    synclogdialog.cpp
-    tooltipupdater.cpp
     notificationwidget.cpp
     notificationconfirmjob.cpp
     servernotificationhandler.cpp
     guiutility.cpp
-    elidedlabel.cpp
-    widgetsettings.cpp
     creds/httpcredentialsgui.cpp
     creds/oauth.cpp
     creds/webflowcredentials.cpp
     creds/webflowcredentialsdialog.cpp
     wizard/postfixlineedit.cpp
-    wizard/abstractcredswizardpage.cpp
-    wizard/owncloudadvancedsetuppage.cpp
-    wizard/owncloudconnectionmethoddialog.cpp
-    wizard/owncloudhttpcredspage.cpp
-    wizard/owncloudoauthcredspage.cpp
-    wizard/owncloudsetuppage.cpp
     wizard/owncloudwizardcommon.cpp
-    wizard/owncloudwizard.cpp
-    wizard/owncloudwizardresultpage.cpp
-    wizard/webviewpage.cpp
     wizard/webview.cpp
     debugreporter.cpp
+    getorcreatepubliclinkshare.cpp
+
+    # KDrive V3
+    aboutdialog.cpp
+    accountinfo.cpp
+    accountitem.cpp
+    actionwidget.cpp
+    adddriveconfirmationwidget.cpp
+    adddrivelocalfolderwidget.cpp
+    adddriveloginwidget.cpp
+    adddriveserverfolderswidget.cpp
+    adddrivestartwidget.cpp
+    adddrivewizard.cpp
+    bandwidthdialog.cpp
+    basefoldertreeitemwidget.cpp
+    bigfoldersdialog.cpp
+    bottomwidget.cpp
+    buttonsbarwidget.cpp
+    clickablewidget.cpp
+    confirmsynchronizationdialog.cpp
+    customdialog.cpp
+    custommessagebox.cpp
+    customproxystyle.cpp
+    custompushbutton.cpp
+    customtogglepushbutton.cpp
+    customtoolbutton.cpp
+    customcheckbox.cpp
+    customcombobox.cpp
+    customradiobutton.cpp
+    customswitch.cpp
+    customtooltip.cpp
+    customtreewidgetitem.cpp
+    customsystembar.cpp
+    customwordwraplabel.cpp
+    debuggingdialog.cpp
+    drivepreferenceswidget.cpp
+    driveselectionwidget.cpp
+    erroritemwidget.cpp
+    errorsmenubarwidget.cpp
+    errorspopup.cpp
+    fileexclusiondialog.cpp
+    fileexclusionnamedialog.cpp
+    folderinfo.cpp
+    folderitemwidget.cpp
+    foldertreeitemwidget.cpp
+    halfroundrectwidget.cpp
+    localfolderdialog.cpp
+    mainmenubarwidget.cpp
+    menuitemwidget.cpp
+    menuwidget.cpp
+    parametersdialog.cpp
+    preferencesblocwidget.cpp
+    preferencesmenubarwidget.cpp
+    preferenceswidget.cpp
+    progressbarwidget.cpp
+    proxyserverdialog.cpp
+    serverbasefolderdialog.cpp
+    serverfoldersdialog.cpp
+    statusbarwidget.cpp
+    synchronizeditem.cpp
+    synchronizeditemwidget.cpp
+    synthesispopover.cpp
 )
 
 set(updater_SRCS
@@ -276,7 +287,7 @@ set_target_properties( ${APPLICATION_EXECUTABLE} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY  ${BIN_OUTPUT_DIRECTORY}
 )
 
-target_link_libraries( ${APPLICATION_EXECUTABLE} Qt5::Widgets Qt5::Network Qt5::Xml)
+target_link_libraries( ${APPLICATION_EXECUTABLE} Qt5::Widgets Qt5::Network Qt5::Xml Qt5::Svg)
 target_link_libraries( ${APPLICATION_EXECUTABLE} ${commonlib_NAME} )
 target_link_libraries( ${APPLICATION_EXECUTABLE} ${synclib_NAME} )
 target_link_libraries( ${APPLICATION_EXECUTABLE} updater )

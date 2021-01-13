@@ -193,7 +193,8 @@ bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &loc
         }
     }
     if (excluded == CSYNC_NOT_EXCLUDED && _discoveryData->_ignoreHiddenFiles && isHidden) {
-        excluded = CSYNC_FILE_EXCLUDE_HIDDEN;
+        //excluded = CSYNC_FILE_EXCLUDE_HIDDEN;
+        excluded = CSYNC_FILE_SILENTLY_EXCLUDED;
     }
     if (excluded == CSYNC_NOT_EXCLUDED && !localName.isEmpty()
             && _discoveryData->_serverBlacklistedFiles.contains(localName)) {
@@ -1160,11 +1161,18 @@ void ProcessDirectoryJob::processBlacklisted(const PathTuple &path, const OCC::L
     if (dbEntry.isValid() && ((dbEntry._modtime == localEntry.modtime && dbEntry._fileSize == localEntry.size) || (localEntry.isDirectory && dbEntry.isDirectory()))) {
         item->_instruction = CSYNC_INSTRUCTION_REMOVE;
         item->_direction = SyncFileItem::Down;
-    } else {
+    }
+    else if (dbEntry.isValid()) {
         item->_instruction = CSYNC_INSTRUCTION_IGNORE;
         item->_status = SyncFileItem::FileIgnored;
         item->_errorString = tr("Ignored because of the \"choose what to sync\" blacklist");
         _childIgnored = true;
+    }
+    else {
+        // Database inconstistency
+        item->_instruction = CSYNC_INSTRUCTION_REMOVE;
+        item->_direction = SyncFileItem::Down;
+        item->_type = localEntry.type;
     }
 
     qCInfo(lcDisco) << "Discovered (blacklisted) " << item->_file << item->_instruction << item->_direction << item->isDirectory();

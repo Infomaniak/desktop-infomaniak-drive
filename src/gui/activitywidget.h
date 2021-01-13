@@ -27,7 +27,7 @@
 #include "activitydata.h"
 #include "debugreporter.h"
 
-#include "ui_activitywidget.h"
+//#include "ui_activitywidget.h"
 
 class QPushButton;
 class QProgressIndicator;
@@ -136,8 +136,7 @@ public:
     explicit ActivitySettings(QWidget *parent = 0);
     ~ActivitySettings();
     QSize sizeHint() const Q_DECL_OVERRIDE { return ownCloudGui::settingsDialogSize(); }
-    int getIssueCount();
-    inline int getErrorCount() const { return _errorItemCount; };
+    int getErrorCount();
 
 public slots:
     void slotRefresh(AccountState *ptr);
@@ -151,7 +150,7 @@ private slots:
     void slotCopyToClipboard();
     void setActivityTabHidden(bool hidden);
     void slotRegularNotificationCheck();
-    void slotShowIssueItemCount(int issueCount, int errorCount);
+    void slotShowIssueItemCount(int cnt);
     void slotShowActivityTab();
     void slotSendDebugData();
     void slotDebugReporterDone(bool retCode, const QString &debugId);
@@ -168,7 +167,6 @@ private:
     int _protocolTabId;
     int _syncIssueTabId;
     int _issueItemCount;
-    int _errorItemCount;
 
     ActivityWidget *_activityWidget;
     ProtocolWidget *_protocolWidget;

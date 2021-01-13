@@ -89,6 +89,7 @@ static const char newBigFolderSizeLimitC[] = "newBigFolderSizeLimit";
 static const char useNewBigFolderSizeLimitC[] = "useNewBigFolderSizeLimit";
 static const char confirmExternalStorageC[] = "confirmExternalStorage";
 static const char moveToTrashC[] = "moveToTrash";
+static const char darkThemeC[] = "darkTheme";
 
 static const char deltaSyncEnabledC[] = "DeltaSync/enabled";
 static const char deltaSyncMinimumFileSizeC[] = "DeltaSync/minFileSize";
@@ -113,6 +114,18 @@ ConfigFile::ConfigFile()
 
     const QString config = configFile();
 
+    QFileInfo configFileInfo(config);
+    if (!configFileInfo.exists()) {
+        // Check for a previous version
+        QString configDirPath(configFileInfo.dir().path());
+        QString oldConfigDirPath = configDirPath;
+        oldConfigDirPath.replace(APPLICATION_NAME, "Infomaniak Drive");
+        QDir oldConfigDir(oldConfigDirPath);
+        if (oldConfigDir.exists()) {
+            // Rename old directory
+            oldConfigDir.rename(oldConfigDirPath, configDirPath);
+        }
+    }
 
     QSettings settings(config, QSettings::IniFormat);
     settings.beginGroup(defaultConnection());
@@ -508,7 +521,7 @@ chrono::milliseconds ConfigFile::updateCheckInterval(const QString &connection) 
     QSettings settings(configFile(), QSettings::IniFormat);
     settings.beginGroup(con);
 
-    auto defaultInterval = chrono::hours(10);
+    auto defaultInterval = chrono::hours(1);
     auto interval = millisecondsValue(settings, updateCheckIntervalC, defaultInterval);
 
     auto minInterval = chrono::minutes(5);
@@ -733,6 +746,16 @@ bool ConfigFile::moveToTrash() const
 void ConfigFile::setMoveToTrash(bool isChecked)
 {
     setValue(moveToTrashC, isChecked);
+}
+
+bool ConfigFile::darkTheme() const
+{
+    return getValue(darkThemeC, QString(), false).toBool();
+}
+
+void ConfigFile::setDarkTheme(bool isChecked)
+{
+    setValue(darkThemeC, isChecked);
 }
 
 bool ConfigFile::deltaSyncEnabled() const

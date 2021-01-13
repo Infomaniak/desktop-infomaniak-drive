@@ -83,6 +83,10 @@ public:
      */
     static void backwardMigrationSettingsKeys(QStringList *deleteKeys, QStringList *ignoreKeys);
 
+    AccountStatePtr getAccountStateFromId(const QString &id);
+    AccountPtr getAccountFromId(const QString &id);
+    QString getUserId(AccountPtr accountPtr);
+
 private:
     // saving and loading Account to settings
     void saveAccountHelper(Account *account, QSettings &settings, bool saveCredentials = true);

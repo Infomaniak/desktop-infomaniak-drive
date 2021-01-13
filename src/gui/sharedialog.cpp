@@ -17,6 +17,7 @@
 #include "sharelinkwidget.h"
 #include "shareusergroupwidget.h"
 #include "ui_sharedialog.h"
+#include "guiutility.h"
 
 #include "account.h"
 #include "accountstate.h"

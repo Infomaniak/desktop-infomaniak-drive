@@ -41,6 +41,10 @@
 
 /** Expands C-like escape sequences (in place)
  */
+
+static const char noWarningIndicator = ']';
+static const char deletedIndicator = '[';
+
 OCSYNC_EXPORT void csync_exclude_expand_escapes(QByteArray &input)
 {
     size_t o = 0;
@@ -261,7 +265,7 @@ ExcludedFiles::~ExcludedFiles()
 
 void ExcludedFiles::addExcludeFilePath(const QString &path)
 {
-    _excludeFiles.insert(path);
+    _excludeFiles << path;
 }
 
 void ExcludedFiles::setExcludeConflictFiles(bool onoff)
@@ -312,6 +316,31 @@ bool ExcludedFiles::reloadExcludeFiles()
             if (line.isEmpty() || line.startsWith('#'))
                 continue;
             csync_exclude_expand_escapes(line);
+
+            // Remove duplicate pattern
+            QString pattern(line);
+            bool deletePattern = false;
+            if (pattern[0] == deletedIndicator) {
+                pattern = pattern.mid(1);
+                deletePattern = true;
+            }
+            else if (pattern[0] == noWarningIndicator) {
+                pattern = pattern.mid(1);
+            }
+
+            int index = _allExcludes.indexOf(pattern);
+            if (index == -1) {
+                index = _allExcludes.indexOf(noWarningIndicator + pattern);
+            }
+
+            if (index >= 0) {
+                _allExcludes.removeAt(index);
+            }
+
+            if (deletePattern) {
+                continue;
+            }
+
             _allExcludes.append(QString::fromUtf8(line));
         }
     }
