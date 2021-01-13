@@ -44,3 +44,5 @@ set( LEARNMORE_LITESYNC_COMPATIBILITY_URL "https://www.infomaniak.com/fr/support
 
 set( VFS_DIRECTORY "C:\\Projects\\kdrive-ext-win\\x64\\Release" )
 set( VFS_APPX_DIRECTORY "C:\\Projects\\kdrive-ext-win\\FileExplorerExtensionPackage\\AppPackages\\FileExplorerExtensionPackage_1.0.0.0_Test" )
+set( VFS_APPX_BUNDLE "FileExplorerExtensionPackage_1.0.0.0_x64.msixbundle" )
+set( VFS_APPX_PACKAGE "Infomaniak.kDrive.Extension_1.0.0.0_x64__e4e5bp7s792f4" )
