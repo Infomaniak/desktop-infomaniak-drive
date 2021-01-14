@@ -2100,7 +2100,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
-        <translation>I nomi del file che contengono il carattere &apos;%1&apos; non sono supportati su questo file system.</translation>
+        <translation type="vanished">I nomi del file che contengono il carattere &apos;%1&apos; non sono supportati su questo file system.</translation>
     </message>
     <message>
         <source>File name contains at least one invalid character</source>
@@ -2193,6 +2193,10 @@ for additional privileges during the process.</source>
     <message>
         <source>Server replied with an error while reading directory &apos;%1&apos; : %2</source>
         <translation>Il server ha riportato un errore durante la lettura della cartella &apos;%1&apos;: %2</translation>
+    </message>
+    <message>
+        <source>Your operating system does not support &apos;%1&apos; character in file names. Synchronization could not be performed. Please rename the affected file.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

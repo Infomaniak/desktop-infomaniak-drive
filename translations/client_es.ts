@@ -2103,7 +2103,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
-        <translation>Los nombres de archivo que contengan el caracter &apos;%1&apos;  no son compatibles con este sistema de archivos.</translation>
+        <translation type="vanished">Los nombres de archivo que contengan el caracter &apos;%1&apos;  no son compatibles con este sistema de archivos.</translation>
     </message>
     <message>
         <source>File name contains at least one invalid character</source>
@@ -2196,6 +2196,10 @@ for additional privileges during the process.</source>
     <message>
         <source>Moved to invalid target, restoring</source>
         <translation>Movido a objetivo no válido, restaurando</translation>
+    </message>
+    <message>
+        <source>Your operating system does not support &apos;%1&apos; character in file names. Synchronization could not be performed. Please rename the affected file.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
