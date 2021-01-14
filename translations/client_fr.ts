@@ -2115,7 +2115,7 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     </message>
     <message>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
-        <translation>Les noms de fichier contenant le caractère &apos;%1&apos; ne sont pas pris en charge sur votre système.</translation>
+        <translation type="vanished">Les noms de fichier contenant le caractère &apos;%1&apos; ne sont pas pris en charge sur votre système.</translation>
     </message>
     <message>
         <source>File name contains at least one invalid character</source>
@@ -2208,6 +2208,10 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     <message>
         <source>Server replied with an error while reading directory &apos;%1&apos; : %2</source>
         <translation>Le serveur à répondu par une erreur lors de la lecture du répertoire %1 : %2</translation>
+    </message>
+    <message>
+        <source>Your operating system does not support &apos;%1&apos; character in file names. Synchronization could not be performed. Please rename the affected file.</source>
+        <translation>Votre système d&apos;exploitation ne supporte pas le caractère &apos;%1&apos; dans le nom des fichiers. La synchronisation n&apos;a pas pu être effectuée. Veuillez renommer le fichier concerné.</translation>
     </message>
 </context>
 <context>
