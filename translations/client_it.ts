@@ -64,7 +64,7 @@
     <name>FileSystem</name>
     <message>
         <source>Could not make directories in trash</source>
-        <translation>Non posso creare cartelle nel cestino</translation>
+        <translation>Impossibile creare cartelle nel cestino</translation>
     </message>
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
@@ -84,7 +84,7 @@
     </message>
     <message>
         <source>Delete canceled because move to trash failed!</source>
-        <translation>Eliminazione annullata perché lo spostamento nel cestino non è riuscito.</translation>
+        <translation>Eliminazione annullata perché lo spostamento nel cestino non è riuscito!</translation>
     </message>
 </context>
 <context>
@@ -99,7 +99,7 @@
     </message>
     <message>
         <source>We received an unexpected download Content-Length.</source>
-        <translation>Abbiamo ricevuto un inaspettato download Content-Length.</translation>
+        <translation>Abbiamo ricevuto un content-length di download inattesa.</translation>
     </message>
     <message>
         <source>Server returned wrong content-range</source>
@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>Unable to open folder %1.</source>
-        <translation>Impossibile aprire la cartella %1</translation>
+        <translation>Impossibile aprire la cartella %1.</translation>
     </message>
 </context>
 <context>
@@ -184,7 +184,7 @@
     </message>
     <message>
         <source>The contents of the &lt;b&gt;%1&lt;/b&gt; folder will be synchronized in your kDrive</source>
-        <translation>Il contenuto della cartella &lt;b&gt;%1&lt;/b&gt; verrà sincronizzato in kDrive</translation>
+        <translation>Il contenuto della cartella &lt;b&gt;%1&lt;/b&gt; verrà sincronizzato nel tuo kDrive</translation>
     </message>
     <message>
         <source>You will find all your files in this folder when the configuration is complete. You can drop new files there to sync them to your kDrive.</source>
@@ -192,7 +192,7 @@
     </message>
     <message>
         <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Questa cartella non è compatibile con Lite Sync. Seleziona un’altra cartella. Se continui, Lite Sync verrà disabilitato. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Maggiori informazioni&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Unable to open link %1.</source>
@@ -226,19 +226,19 @@
     <name>KDC::AddDriveSmartSyncWidget</name>
     <message>
         <source>Would you like to activate Lite Sync?</source>
-        <translation type="unfinished"></translation>
+        <translation>Desideri attivare Lite Sync?</translation>
     </message>
     <message>
         <source>Conserve your computer space</source>
-        <translation type="unfinished"></translation>
+        <translation>Risparmia spazio sul tuo computer</translation>
     </message>
     <message>
         <source>Decide which files should be available online or locally</source>
-        <translation type="unfinished"></translation>
+        <translation>Scegli quali file rendere disponibili online o localmente</translation>
     </message>
     <message>
         <source>LATER</source>
-        <translation type="unfinished"></translation>
+        <translation>PIÙ TARDI</translation>
     </message>
     <message>
         <source>YES</source>
@@ -246,7 +246,7 @@
     </message>
     <message>
         <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Lite Sync sincronizza tutti i tuoi file senza occupare spazio sul tuo computer. Puoi sfogliare i file sul tuo kDrive e scaricarli localmente quando vuoi. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Maggiori informazioni&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Unable to open link %1.</source>
@@ -307,11 +307,11 @@
     <name>KDC::BandwidthDialog</name>
     <message>
         <source>Bandwidth</source>
-        <translation>Ampiezza di banda</translation>
+        <translation>Larghezza di banda</translation>
     </message>
     <message>
         <source>Download bandwidth</source>
-        <translation>Ampiezza di banda in entrata</translation>
+        <translation>Ampiezza di banda di download</translation>
     </message>
     <message>
         <source>No limit</source>
@@ -327,7 +327,7 @@
     </message>
     <message>
         <source>Upload bandwidth</source>
-        <translation>Ampiezza di banda in uscita</translation>
+        <translation>Ampiezza di banda di upload</translation>
     </message>
     <message>
         <source>SAVE</source>
@@ -491,10 +491,6 @@
         <translation>Sincronizzazione</translation>
     </message>
     <message>
-        <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="vanished">Sincronizza tutti i tuoi file senza usare lo spazio del computer. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Maggiori informazioni&lt;/a&gt;</translation>
-    </message>
-    <message>
         <source>Notifications</source>
         <translation>Notifiche</translation>
     </message>
@@ -512,7 +508,7 @@
     </message>
     <message>
         <source>New folder synchronization failed!</source>
-        <translation>Sincronizzazione nuova cartella non riuscita.</translation>
+        <translation>Sincronizzazione nuova cartella non riuscita!</translation>
     </message>
     <message>
         <source>Do you really want to stop syncing the folder &lt;i&gt;%1&lt;/i&gt; ?&lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.</source>
@@ -548,35 +544,35 @@
     </message>
     <message>
         <source>Activate Lite Sync</source>
-        <translation type="unfinished"></translation>
+        <translation>Attiva Lite Sync</translation>
     </message>
     <message>
         <source>Do you really want to turn on Lite Sync?</source>
-        <translation type="unfinished"></translation>
+        <translation>Desideri davvero abilitare Lite Sync?</translation>
     </message>
     <message>
         <source>Do you really want to turn off Lite Sync?</source>
-        <translation type="unfinished"></translation>
+        <translation>Desideri davvero disabilitare Lite Sync?</translation>
     </message>
     <message>
         <source>You don&apos;t have enough space to sync all the files on your kDrive (%1 missing). If you turn off Lite Sync, you need to select which folders to sync on your computer. In the meantime, the synchronization of your kDrive will be paused.</source>
-        <translation type="unfinished"></translation>
+        <translation>Non hai abbastanza spazio libero per sincronizzare tutti i file sul tuo kDrive (%1 mancanti). Se disabiliti Lite Sync dovrai selezionare quali cartelle sincronizzare sul tuo computer. Nel frattempo la sincronizzazione del tuo kDrive verrà sospesa.</translation>
     </message>
     <message>
         <source>If you turn off Lite Sync, all files will sync locally on your computer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Se disabiliti Lite Sync, tutti i file verranno sincronizzati localmente sul tuo computer.</translation>
     </message>
     <message>
         <source>Lite Sync activation in progress</source>
-        <translation type="unfinished"></translation>
+        <translation>Attivazione di Lite Sync in corso</translation>
     </message>
     <message>
         <source>Lite Sync deactivation in progress</source>
-        <translation type="unfinished"></translation>
+        <translation>Disattivazione di Lite Sync in corso</translation>
     </message>
     <message>
         <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation>Sincronizza tutti i tuoi file senza usare lo spazio del computer. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Maggiori informazioni&lt;/a&gt;</translation>
+        <translation>Sincronizza tutti i tuoi file senza occupare spazio sul computer. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Maggiori informazioni&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Unable to open link %1.</source>
@@ -594,7 +590,7 @@
     <name>KDC::ErrorsMenuBarWidget</name>
     <message>
         <source>Back to drive preferences</source>
-        <translation>Torna alle preferenze del kDrive</translation>
+        <translation>Torna alle preferenze del drive</translation>
     </message>
     <message>
         <source>Synchronization errors</source>
@@ -607,7 +603,7 @@
         <source>Some files couldn&apos;t be synchronized on the following kDrive(s) :</source>
         <comment>Number of kDrives</comment>
         <translation>
-            <numerusform>Non è stato possibile sincronizzare alcuni file sul kDrive seguente:</numerusform>
+            <numerusform>Non è stato possibile sincronizzare alcuni file sui kDrive seguenti:</numerusform>
             <numerusform>Non è stato possibile sincronizzare alcuni file sui kDrive seguenti:</numerusform>
         </translation>
     </message>
@@ -760,7 +756,7 @@
     </message>
     <message>
         <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Questa cartella non è compatibile con Lite Sync. Seleziona un’altra cartella. Se continui, Lite Sync verrà disabilitato. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Maggiori informazioni&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Unable to open link %1.</source>
@@ -775,7 +771,7 @@
     </message>
     <message>
         <source>Help</source>
-        <translation>Aiuto</translation>
+        <translation>Guida</translation>
     </message>
 </context>
 <context>
@@ -802,7 +798,7 @@
     </message>
     <message>
         <source>Transmission failed!</source>
-        <translation>Invio non riuscito.</translation>
+        <translation>Invio non riuscito!</translation>
     </message>
     <message>
         <source>REMOVE SYNCHRONIZATION</source>
@@ -872,7 +868,7 @@
     </message>
     <message>
         <source>Bandwidth</source>
-        <translation>Ampiezza di banda</translation>
+        <translation>Larghezza di banda</translation>
     </message>
     <message>
         <source>Version</source>
@@ -888,7 +884,7 @@
     </message>
     <message>
         <source>Unable to open folder %1.</source>
-        <translation>Impossibile aprire la cartella %1</translation>
+        <translation>Impossibile aprire la cartella %1.</translation>
     </message>
     <message>
         <source>Unable to open link %1.</source>
@@ -978,7 +974,7 @@
     </message>
     <message>
         <source>Unable to save, all mandatory fields are not completed!</source>
-        <translation>Impossibile salvare. Tutti i campi obbligatori non sono completati.</translation>
+        <translation>Impossibile salvare. Non tutti i campi obbligatori sono stati completati!</translation>
     </message>
     <message>
         <source>Proxy not found, save anyway?</source>
@@ -1113,7 +1109,7 @@
     </message>
     <message>
         <source>Add to favorites</source>
-        <translation>Aggiungi ai Preferiti</translation>
+        <translation>Aggiungi ai preferiti</translation>
     </message>
     <message>
         <source>Rights and sharing</source>
@@ -1236,7 +1232,7 @@
     </message>
     <message>
         <source>You cannot share the root directory of your Drive!</source>
-        <translation>Non puoi condividere la directory radice del tuo kDrive!</translation>
+        <translation>Non puoi condividere la directory radice del tuo drive!</translation>
     </message>
     <message>
         <source>The shared link has been copied to the clipboard.</source>
@@ -1256,7 +1252,7 @@
     </message>
     <message>
         <source>Drive parameters</source>
-        <translation>Parametri del kDrive</translation>
+        <translation>Parametri del drive</translation>
     </message>
     <message>
         <source>Application preferences</source>
@@ -1394,7 +1390,7 @@
     </message>
     <message>
         <source>Some settings were configured in newer versions of this client and use features that are not available in this version.&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;The current configuration file was already backed up to &lt;i&gt;%2&lt;/i&gt;.</source>
-        <translation>Alcune impostazioni erano state configurate in versioni più recenti di questo client ed usano funzioni non disponibili in questa.&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Il file di configurazione attuale è già stato copiato in &lt;i&gt;%2&lt;/i&gt;.</translation>
+        <translation>Alcune impostazioni erano state configurate in versioni più recenti di questo client e usano funzioni non disponibili in questa.&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Il file di configurazione attuale è già stato copiato in &lt;i&gt;%2&lt;/i&gt;.</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -1406,7 +1402,7 @@
     </message>
     <message>
         <source>Error accessing the configuration file</source>
-        <translation>Errore accedendo al file di configurazione</translation>
+        <translation>Errore durante l&apos;accesso al file di configurazione</translation>
     </message>
     <message>
         <source>There was an error while accessing the configuration file at %1.</source>
@@ -1528,15 +1524,15 @@
     <message numerus="yes">
         <source>%1 and %n other file(s) have been removed.</source>
         <translation>
-            <numerusform>%1 e %n altro file sono stati rimossi.</numerusform>
+            <numerusform>%1 e %n altri file sono stati rimossi.</numerusform>
             <numerusform>%1 e %n altri file sono stati rimossi.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 and %n other file(s) have been added.</source>
         <translation>
-            <numerusform>%1 e %n altro file sono stati aggiunti.</numerusform>
-            <numerusform>%1 e %n altri files sono stati aggiunti.</numerusform>
+            <numerusform>%1 e %n altri file sono stati aggiunti.</numerusform>
+            <numerusform>%1 e %n altri file sono stati aggiunti.</numerusform>
         </translation>
     </message>
     <message>
@@ -1547,28 +1543,28 @@
     <message numerus="yes">
         <source>%1 and %n other file(s) have been updated.</source>
         <translation>
-            <numerusform>%1 e %n altro file sono stati aggiornati.</numerusform>
+            <numerusform>%1 e %n altri file sono stati aggiornati.</numerusform>
             <numerusform>%1 e %n altri file sono stati aggiornati.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 has been renamed to %2 and %n other file(s) have been renamed.</source>
         <translation>
-            <numerusform>%1 è stato rinominato in %2 e %n altro file è stato rinominato.</numerusform>
+            <numerusform>%1 è stato rinominato in %2 e %n altri file sono stati rinominati.</numerusform>
             <numerusform>%1 è stato rinominato in %2 e %n altri file sono stati rinominati.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 has been moved to %2 and %n other file(s) have been moved.</source>
         <translation>
-            <numerusform>%1 è stato spostato in %2 e %n altro file è stato spostato.</numerusform>
+            <numerusform>%1 è stato spostato in %2 e %n altri file sono stati spostati.</numerusform>
             <numerusform>%1 è stato spostato in %2 e %n altri file sono stati spostati.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 has and %n other file(s) have sync conflicts.</source>
         <translation>
-            <numerusform>%1 e %n altro file hanno conflitti di sincronizzazione.</numerusform>
+            <numerusform>%1 e %n altri file hanno conflitti di sincronizzazione.</numerusform>
             <numerusform>%1 e %n altri file hanno conflitti di sincronizzazione.</numerusform>
         </translation>
     </message>
@@ -1579,7 +1575,7 @@
     <message numerus="yes">
         <source>%1 and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation>
-            <numerusform>%1 e %n altro file non sono stati sincronizzati a causa di errori. Controlla il log per i dettagli.</numerusform>
+            <numerusform>%1 e %n altri file non sono stati sincronizzati a causa di errori. Controlla il log per i dettagli.</numerusform>
             <numerusform>%1 e %n altri file non sono stati sincronizzati a causa di errori. Controlla il log per i dettagli.</numerusform>
         </translation>
     </message>
@@ -1603,7 +1599,7 @@
     <message>
         <source>A folder from an external storage has been added.
 </source>
-        <translation>Una nuova cartella da un&apos;archiviazione esterna è stata aggiunta.</translation>
+        <translation>Una nuova cartella da un dispositivo di archiviazione esterno è stata aggiunta.</translation>
     </message>
     <message>
         <source>Please go in the settings to select it if you wish to download it.</source>
@@ -1611,7 +1607,7 @@
     </message>
     <message>
         <source>The folder %1 was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
-        <translation>La cattella %1 è stata creata ma esclusa dalla sincronizzazione in prevecedenza. I dati al suo interno non saranno sincronzzati.</translation>
+        <translation>La cartella %1 è stata creata ma esclusa dalla sincronizzazione in precedenza. I dati al suo interno non saranno sincronizzati.</translation>
     </message>
     <message>
         <source>The file %1 was created but was excluded from synchronization previously. It will not be synchronized.</source>
@@ -1634,7 +1630,7 @@ Ciò significa che il client di sincronizzazione potrebbe non inviare le modific
 Are you sure you want to sync those actions with the server?
 If this was an accident and you decide to keep your files, they will be re-synced from the server.</source>
         <translation>Tutti i file nella tua cartella locale sincronizzata &apos;%1&apos; sono stati eliminati. Queste eliminazioni verranno sincronizzate con il server, perdendo questi file a meno che non siano ripristinati.
-Sei sicuro di voler sincronizzare queste azioni con il server?
+Desideri davvero sincronizzare queste azioni con il server?
 Se è stato un errore e decidi di mantenere i tuoi file, verranno risincronizzati dal server.</translation>
     </message>
     <message>
@@ -1696,7 +1692,7 @@ Se decidi di eliminare i file, non saranno più a tua disposizione, a meno che t
     </message>
     <message>
         <source>Sync was successful, unresolved conflicts.</source>
-        <translation>La sincronia ha avuto successo, nessun conflitto.</translation>
+        <translation>La sincronizzazione è stata completata correttamente, nessun conflitto.</translation>
     </message>
     <message>
         <source>Last Sync was successful.</source>
@@ -1732,7 +1728,7 @@ Se decidi di eliminare i file, non saranno più a tua disposizione, a meno che t
     </message>
     <message>
         <source>You have no permission to write to the selected folder!</source>
-        <translation>Non hai i permessi di scrittura per la cartella selezionata!</translation>
+        <translation>Non disponi del permesso di scrittura per la cartella selezionata!</translation>
     </message>
     <message>
         <source>There is already a sync from the server to this local folder. Please pick another local folder!</source>
@@ -1748,7 +1744,7 @@ Se decidi di eliminare i file, non saranno più a tua disposizione, a meno che t
     </message>
     <message>
         <source>Virtual Files plugin specified in kDrive.cfg is incorrect!</source>
-        <translation type="unfinished"></translation>
+        <translation>Il plugin Virtual Files specificato in kDrive.cfg non è corretto!</translation>
     </message>
 </context>
 <context>
@@ -1781,7 +1777,7 @@ Se decidi di eliminare i file, non saranno più a tua disposizione, a meno che t
     </message>
     <message>
         <source>We received a different E-Tag for delta. Retrying next time.</source>
-        <translation>È stato ricevuto un E-Tag diverso per delta. Riproveremo al prossimo tentativo.</translation>
+        <translation>È stato ricevuto un E-Tag diverso per delta. Verrà eseguito un secondo tentativo.</translation>
     </message>
 </context>
 <context>
@@ -1810,7 +1806,7 @@ Se decidi di eliminare i file, non saranno più a tua disposizione, a meno che t
     </message>
     <message>
         <source>Reading from keychain failed with error: &apos;%1&apos;</source>
-        <translation>Lettura dal portachiavi non riuscita con errore: &apos;%1&apos;</translation>
+        <translation>Lettura da keychain non riuscita con errore: &apos;%1&apos;</translation>
     </message>
     <message>
         <source>Enter Password</source>
@@ -2092,15 +2088,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>File is listed on the ignore list.</source>
-        <translation>Il file è stato aggiunto alla lista ignorati.</translation>
+        <translation>Il file è stato aggiunto alla lista di esclusione.</translation>
     </message>
     <message>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>I nomi del file che terminano con un punto non sono supportati su questo file system.</translation>
-    </message>
-    <message>
-        <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
-        <translation type="vanished">I nomi del file che contengono il carattere &apos;%1&apos; non sono supportati su questo file system.</translation>
     </message>
     <message>
         <source>File name contains at least one invalid character</source>
@@ -2136,11 +2128,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Not allowed to remove, restoring</source>
-        <translation>Rimozione non consentita, ripristino</translation>
+        <translation>Rimozione non consentita, ripristino in corso</translation>
     </message>
     <message>
         <source>Ignored because of the &quot;choose what to sync&quot; blacklist</source>
-        <translation>Ignorato in base alla lista nera per la scelta di cosa sincronizzare</translation>
+        <translation>Ignorato in base alla blacklist per la scelta di elementi da sincronizzare</translation>
     </message>
     <message>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
@@ -2196,7 +2188,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Your operating system does not support &apos;%1&apos; character in file names. Synchronization could not be performed. Please rename the affected file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il tuo sistema operativo non supporta il carattere &quot;%1&quot; nei nomi dei file. Impossibile eseguire la sincronizzazione. Rinomina il file interessato.</translation>
     </message>
 </context>
 <context>
@@ -2210,7 +2202,7 @@ for additional privileges during the process.</source>
     <name>OCC::PropagateDownloadFile</name>
     <message>
         <source>File %1 can not be downloaded because of a local file name clash!</source>
-        <translation>Il file %1 non può essere scaricato a causa di un conflitto con un file locale.</translation>
+        <translation>Il file %1 non può essere scaricato a causa di un conflitto con un file locale!</translation>
     </message>
     <message>
         <source>The download would reduce free local disk space below the limit</source>
@@ -2234,7 +2226,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>File %1 cannot be saved because of a local file name clash!</source>
-        <translation>Il file %1 non può essere salvato a causa di un conflitto con un file locale.</translation>
+        <translation>Il file %1 non può essere salvato a causa di un conflitto con un file locale!</translation>
     </message>
     <message>
         <source>File has changed since discovery</source>
@@ -2250,7 +2242,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>File conversion to placeholder failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Conversione di file in segnaposto fallita</translation>
     </message>
 </context>
 <context>
@@ -2261,11 +2253,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>A file or folder was removed from a read only share, but restoring failed: %1</source>
-        <translation>Un file o una cartella è stato rimosso da una condivisione in sola lettura, ma il ripristino non è riuscito: %1</translation>
+        <translation>Un file o una cartella sono stati rimossi da una condivisione in sola lettura, ma il ripristino non è riuscito: %1</translation>
     </message>
     <message>
         <source>Synchronization cannot be done because the file is opened at the same time locally and on kDrive webapp.</source>
-        <translation>La sincronizzazione non può essere eseguita perché il file viene aperto contemporaneamente in locale e sulla webapp kDrive.</translation>
+        <translation>La sincronizzazione non può essere eseguita perché il file viene aperto contemporaneamente in locale e sulla web app kDrive.</translation>
     </message>
 </context>
 <context>
@@ -2358,15 +2350,15 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Local file changed during syncing. It will be resumed.</source>
-        <translation>Il file locale è stato modificato durante la sincronizzazione. Sarà ripristinato.</translation>
+        <translation>Il file locale è stato modificato durante la sincronizzazione e sarà ripristinato.</translation>
     </message>
     <message>
         <source>Local file changed during sync.</source>
-        <translation>Un file locale è cambiato durante la sincronizzazione.</translation>
+        <translation>Un file locale è stato modificato durante la sincronizzazione.</translation>
     </message>
     <message>
         <source>Upload of %1 exceeds the quota for the folder</source>
-        <translation>L&apos;upload eccede di %1 la quota della cartella</translation>
+        <translation>L&apos;upload di %1 eccede la quota della cartella</translation>
     </message>
     <message>
         <source>Error writing metadata to the database</source>
@@ -2381,7 +2373,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Local file changed during sync.</source>
-        <translation>Un file locale è cambiato durante la sincronizzazione.</translation>
+        <translation>Un file locale è stato modificato durante la sincronizzazione.</translation>
     </message>
     <message>
         <source>Poll URL missing</source>
@@ -2420,11 +2412,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Local file changed during sync.</source>
-        <translation>Un file locale è cambiato durante la sincronizzazione.</translation>
+        <translation>Un file locale è stato modificato durante la sincronizzazione.</translation>
     </message>
     <message>
         <source>The server did not acknowledge the last chunk. (No e-tag was present)</source>
-        <translation>Il server non ha riconosciuto l&apos;ultimo pezzo. (Non era presente alcun e-tag)</translation>
+        <translation>Il server non ha riconosciuto l&apos;ultimo blocco. (Non era presente alcun e-tag)</translation>
     </message>
 </context>
 <context>
@@ -2512,7 +2504,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>The file can not be shared because it was shared without sharing permission.</source>
-        <translation>Il file non può essere condiviso poiché è stato condiviso senza il permesso di condivisione.</translation>
+        <translation>Il file non può essere condiviso di nuovo poiché è già stato condiviso senza il relativo permesso.</translation>
     </message>
     <message>
         <source>Users and Groups</source>
@@ -2535,7 +2527,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Receive files from others without revealing the contents of the folder.</source>
-        <translation>Ricevere files dagli altri senza rivelare il contenuto della cartella.</translation>
+        <translation>Ricevere file dagli altri senza rivelare il contenuto della cartella.</translation>
     </message>
     <message>
         <source>TextLabel</source>
@@ -2559,11 +2551,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Download / View</source>
-        <translation>Scarica / visiona</translation>
+        <translation>Scarica / visualizza</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>
-        <translation>I destinatari possono vedere, scaricare, modificare, cancellare ed inviare contenuti.</translation>
+        <translation>I destinatari possono vedere, scaricare, modificare, eliminare e inviare contenuti.</translation>
     </message>
     <message>
         <source>Anyone with the link has access to the file/folder</source>
@@ -2575,7 +2567,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>The file can not be shared because it was shared without sharing permission.</source>
-        <translation>Il file non può essere condiviso poiché è stato condiviso senza il permesso di condivisione.</translation>
+        <translation>Il file non può essere condiviso di nuovo poiché è già stato condiviso senza il relativo permesso.</translation>
     </message>
     <message>
         <source>Link shares have been disabled</source>
@@ -2603,7 +2595,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Send link by email</source>
-        <translation>Invia collegamento tramite email</translation>
+        <translation>Invia collegamento tramite e-mail</translation>
     </message>
     <message>
         <source>Send link by email (direct download)</source>
@@ -2615,7 +2607,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Confirm Link Share Deletion</source>
-        <translation>Conferma la cancellazione del link di condivisione</translation>
+        <translation>Conferma l’eliminazione del link di condivisione</translation>
     </message>
     <message>
         <source>&lt;p&gt;Do you really want to delete the public link share &lt;i&gt;%1&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;Note: This action cannot be undone.&lt;/p&gt;</source>
@@ -2670,7 +2662,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can direct people to this shared file or folder &lt;a href=&quot;private link menu&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;by giving them a private link&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Puoi indirizzare le persone a questo file o cartella condivisa &lt;a href=&quot;private link menu&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;dando loro un link privato&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Puoi indirizzare le persone a questo file o cartella condivisi &lt;a href=&quot;private link menu&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;dando loro un link privato&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>The item is not shared with any users or groups</source>
@@ -2686,7 +2678,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Send link by email</source>
-        <translation>Invia collegamento tramite email</translation>
+        <translation>Invia collegamento tramite e-mail</translation>
     </message>
     <message>
         <source>No results for &apos;%1&apos;</source>
@@ -2765,7 +2757,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Resharing this file is not allowed</source>
-        <translation>Ricondividere questo file non è permesso</translation>
+        <translation>Ricondivisione di questo file non consentita</translation>
     </message>
     <message>
         <source>Copy public link to clipboard</source>
@@ -2908,15 +2900,15 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Unable to open or create the local sync database. Make sure you have write access in the sync folder.</source>
-        <translation>Non posso aprire o creare il database locale di sincronizzazione. Assicurarsi di avere il i permessi di scrittura nella cartella di sincronizzazione.</translation>
+        <translation>Impossibile aprire o creare il database locale di sincronizzazione. Assicurati di avere il i permessi di scrittura nella cartella di sincronizzazione.</translation>
     </message>
     <message>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
-        <translation>Lo spazio su disco è scarso: I downloads che ridurranno lo spazio libero al di sotto di %1 verranno saltati.</translation>
+        <translation>Lo spazio su disco è scarso: I download che ridurranno lo spazio libero al di sotto di %1 verranno saltati.</translation>
     </message>
     <message>
         <source>There is insufficient space available on the server for some uploads.</source>
-        <translation>Non c&apos;è spazio disponibile sul server per effettuare caricamenti.</translation>
+        <translation>Spazio insufficiente nel server per alcuni caricamenti.</translation>
     </message>
     <message>
         <source>Unresolved conflict.</source>
@@ -2924,7 +2916,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Unable to read the blacklist from the local database</source>
-        <translation>Impossibile leggere la lista nera dal database locale</translation>
+        <translation>Impossibile leggere la blacklist dal database locale</translation>
     </message>
     <message>
         <source>Unable to read from the sync journal.</source>
@@ -2958,7 +2950,7 @@ for additional privileges during the process.</source>
     <name>OCC::Theme</name>
     <message>
         <source>&lt;p&gt;Version %2. For more information visit &lt;a href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://central.owncloud.org/c/desktop-client&quot;&gt;https://central.owncloud.org&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;small&gt;By Klaas Freitag, Daniel Molkentin, Olivier Goffart, Markus Götz,  Jan-Christoph Borchardt, and others.&lt;/small&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Versione %2. Per altre informazioni visita &lt;a href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Per problemi noti e aiuto, visita: &lt;a href=&quot;https://central.owncloud.org/c/desktop-client&quot;&gt;https://central.owncloud.org&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;small&gt;Di Klaas Freitag, Daniel Molkentin, Olivier Goffart, Markus Götz,  Jan-Christoph Borchardt ed altri.&lt;/small&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Versione %2. Per altre informazioni visita &lt;a href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Per problemi noti e aiuto, visita: &lt;a href=&quot;https://central.owncloud.org/c/desktop-client&quot;&gt;https://central.owncloud.org&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;small&gt;Di Klaas Freitag, Daniel Molkentin, Olivier Goffart, Markus Götz,  Jan-Christoph Borchardt e altri.&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Copyright ownCloud GmbH&lt;/p&gt;</source>
@@ -2981,7 +2973,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>The downloaded file does not match the checksum, it will be resumed.</source>
-        <translation>Il file scaricato non verifica il codice di controllo, sarà ripristinato.</translation>
+        <translation>Il file scaricato non corrisponde alla checksum e sarà ripristinato.</translation>
     </message>
 </context>
 <context>
@@ -3170,11 +3162,11 @@ for additional privileges during the process.</source>
     <name>main.cpp</name>
     <message>
         <source>System Tray not available</source>
-        <translation>Il vassoio di sistema non è disponibile</translation>
+        <translation>Area di notifica non disponibile</translation>
     </message>
     <message>
         <source>%1 requires on a working system tray. If you are running XFCE, please follow &lt;a href=&quot;http://docs.xfce.org/xfce/xfce4-panel/systray&quot;&gt;these instructions&lt;/a&gt;. Otherwise, please install a system tray application such as &apos;trayer&apos; and try again.</source>
-        <translation>%1 richiede un vassoio di sistema. Se stai usando XFCE, segui &lt;a href=&quot;http://docs.xfce.org/xfce/xfce4-panel/systray&quot;&gt;queste istruzioni&lt;/a&gt;.  Altrimenti, installa un&apos;applicazione vassoio di sistema come &apos;trayer&apos; e riprova.</translation>
+        <translation>%1 richiede un’area di notifica funzionante. Se stai usando XFCE, segui &lt;a href=&quot;http://docs.xfce.org/xfce/xfce4-panel/systray&quot;&gt;queste istruzioni&lt;/a&gt;.  Altrimenti, installa un&apos;applicazione area di notifica come &apos;trayer&apos; e riprova.</translation>
     </message>
 </context>
 <context>
@@ -3321,7 +3313,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>There was an error when launching the browser to go to URL %1. Maybe no default browser is configured?</source>
-        <translation>Si è verificato un errore all&apos;avvio del browser per accedere all&apos;URL%1. Forse non è stato configurato nessun browser predefinito?</translation>
+        <translation>Si è verificato un errore all&apos;avvio del browser per accedere all&apos;URL%1. Verifica che sia stato configurato nessun browser predefinito.</translation>
     </message>
     <message>
         <source>Could not open email client</source>
@@ -3329,7 +3321,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>There was an error when launching the email client to create a new message. Maybe no default email client is configured?</source>
-        <translation>Si è verificato un errore durante l&apos;avvio del client di posta per creare un nuovo messaggio. Forse non hai ancora configurato alcun client di posta predefinito?</translation>
+        <translation>Si è verificato un errore durante l&apos;avvio del client di posta per creare un nuovo messaggio. Verifica che sia stato configurato un client di posta predefinito.</translation>
     </message>
     <message>
         <source>Always available locally</source>
@@ -3357,7 +3349,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Synchronization paused.</source>
-        <translation>Sincronizzazione in pausa.</translation>
+        <translation>Sincronizzazione sospesa.</translation>
     </message>
     <message>
         <source>No folder to synchronize.</source>

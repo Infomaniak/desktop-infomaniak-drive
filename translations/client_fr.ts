@@ -191,10 +191,6 @@
         <translation>Vous retrouverez tous vos fichiers dans ce dossier une fois la configuration terminée. Vous pouvez y glisser de nouveaux fichiers pour les synchroniser avec votre kDrive.</translation>
     </message>
     <message>
-        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="vanished">Ce dossier n&apos;est pas compatible avec la Lite Sync. Veuillez sélectionner un autre dossier ou, si vous continuez, la Lite Sync ne sera pas activée.  &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;En savoir plus&lt;/a&gt;</translation>
-    </message>
-    <message>
         <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
         <translation>Ce dossier n&apos;est pas compatible avec la Lite Sync. Veuillez sélectionner un autre dossier ou, si vous continuez, la Lite Sync ne sera pas activée.  &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;En savoir plus&lt;/a&gt;</translation>
     </message>
@@ -247,10 +243,6 @@
     <message>
         <source>YES</source>
         <translation>OUI</translation>
-    </message>
-    <message>
-        <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="vanished">La Lite Sync synchronise tous vos fichiers sans utiliser l&apos;espace de votre ordinateur. Vous pouvez parcourir les fichiers de votre kDrive et les télécharger quand vous le souhaitez. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;En savoir plus&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
@@ -497,10 +489,6 @@
     <message>
         <source>Synchronization</source>
         <translation>Synchronisation</translation>
-    </message>
-    <message>
-        <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="vanished">Synchronisez tous vos fichiers sans utiliser l’espace de votre ordinateur. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;En savoir plus&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Notifications</source>
@@ -765,10 +753,6 @@
     <message>
         <source>Select folder</source>
         <translation>Sélectionner le dossier</translation>
-    </message>
-    <message>
-        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="vanished">Ce dossier n&apos;est pas compatible avec la Lite Sync. Veuillez sélectionner un autre dossier ou, si vous continuez, la Lite Sync ne sera pas activée.  &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;En savoir plus&lt;/a&gt;</translation>
     </message>
     <message>
         <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
@@ -2112,10 +2096,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     <message>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Les noms de fichier se terminant par un point ne sont pas pris en charge sur votre système.</translation>
-    </message>
-    <message>
-        <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
-        <translation type="vanished">Les noms de fichier contenant le caractère &apos;%1&apos; ne sont pas pris en charge sur votre système.</translation>
     </message>
     <message>
         <source>File name contains at least one invalid character</source>

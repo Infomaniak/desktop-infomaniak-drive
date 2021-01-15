@@ -64,7 +64,7 @@
     <name>FileSystem</name>
     <message>
         <source>Could not make directories in trash</source>
-        <translation>Ordner können nicht im Papierkorb erstellt werden</translation>
+        <translation>Verzeichnisse konnten nicht im Papierkorb erstellt werden</translation>
     </message>
     <message>
         <source>Could not move &apos;%1&apos; to &apos;%2&apos;</source>
@@ -76,7 +76,7 @@
     </message>
     <message>
         <source>Could not remove folder &apos;%1&apos;</source>
-        <translation>Der Ordner konnte nicht gelöscht werden &apos;%1&apos;</translation>
+        <translation>Der Ordner &apos;%1&apos; konnte nicht gelöscht werden</translation>
     </message>
     <message>
         <source>File doesn&apos;t exist!</source>
@@ -95,15 +95,15 @@
     </message>
     <message>
         <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation>Es wurde ein unterschiedlicher E-Tag zum Fortfahren empfangen. Bitte beim nächsten mal nochmal versuchen.</translation>
+        <translation>Es wurde ein unterschiedliches E-Tag zum Fortfahren empfangen. Beim nächsten Mal wird dies erneut versucht.</translation>
     </message>
     <message>
         <source>We received an unexpected download Content-Length.</source>
-        <translation>Unerwartete Content-Length beim Herunterladen empfangen.</translation>
+        <translation>Unerwartete Content-Länge beim Herunterladen empfangen.</translation>
     </message>
     <message>
         <source>Server returned wrong content-range</source>
-        <translation>Server hat falschen Bereich für den Inhalt zurück gegeben</translation>
+        <translation>Server hat falschen Inhaltsbereich zurückgesendet</translation>
     </message>
 </context>
 <context>
@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>Unable to open folder %1.</source>
-        <translation>Ordner %1 kann nicht geöffnet werden</translation>
+        <translation>Ordner %1 kann nicht geöffnet werden.</translation>
     </message>
 </context>
 <context>
@@ -161,7 +161,7 @@
     </message>
     <message>
         <source>Synchronize another drive</source>
-        <translation>Weiteren kDrive synchronisieren</translation>
+        <translation>Weiteren Drive synchronisieren</translation>
     </message>
 </context>
 <context>
@@ -188,15 +188,15 @@
     </message>
     <message>
         <source>You will find all your files in this folder when the configuration is complete. You can drop new files there to sync them to your kDrive.</source>
-        <translation>lle Ihre Dateien befinden sich in diesem Ordner, sobald die Einrichtung abgeschlossen ist. Sie können dort neue Dateien ablegen und mit Ihrem kDrive synchronisieren.</translation>
+        <translation>Alle Ihre Dateien befinden sich in diesem Ordner, sobald die Einrichtung abgeschlossen ist. Sie können dort neue Dateien ablegen und mit Ihrem kDrive synchronisieren.</translation>
     </message>
     <message>
         <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieser Ordner ist nicht kompatibel mit Lite Sync. Bitte wählen Sie einen anderen Ordner, oder Lite Sync wird deaktiviert, wenn Sie fortfahren. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Mehr erfahren&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Unable to open link %1.</source>
-        <translation>Link kann nicht geöffnet werden %1.</translation>
+        <translation>Link %1 kann nicht geöffnet werden.</translation>
     </message>
 </context>
 <context>
@@ -215,7 +215,7 @@
     </message>
     <message>
         <source>An error occurred while loading the list of sub folders.</source>
-        <translation>Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+        <translation>Beim Laden der Liste der Unterordner ist ein Fehler aufgetreten.</translation>
     </message>
     <message>
         <source>No subfolders currently on the server.</source>
@@ -226,19 +226,19 @@
     <name>KDC::AddDriveSmartSyncWidget</name>
     <message>
         <source>Would you like to activate Lite Sync?</source>
-        <translation type="unfinished"></translation>
+        <translation>Möchten Sie Lite Sync aktivieren?</translation>
     </message>
     <message>
         <source>Conserve your computer space</source>
-        <translation type="unfinished"></translation>
+        <translation>Bewahren Sie Ihren Rechnerspeicherplatz</translation>
     </message>
     <message>
         <source>Decide which files should be available online or locally</source>
-        <translation type="unfinished"></translation>
+        <translation>Entscheiden Sie, welche Dateien online oder lokal verfügbar sein sollen</translation>
     </message>
     <message>
         <source>LATER</source>
-        <translation type="unfinished"></translation>
+        <translation>SPÄTER</translation>
     </message>
     <message>
         <source>YES</source>
@@ -246,11 +246,11 @@
     </message>
     <message>
         <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Lite Sync synchronisiert alle Ihre Dateien, ohne Ihren Rechnerspeicherplatz zu nutzen. Sie können die Dateien in Ihrem kDrive durchsuchen und jederzeit lokal herunterladen. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Mehr erfahren&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Unable to open link %1.</source>
-        <translation>Link kann nicht geöffnet werden %1.</translation>
+        <translation>Link %1 kann nicht geöffnet werden.</translation>
     </message>
 </context>
 <context>
@@ -272,7 +272,7 @@
     <name>KDC::AddDriveWizard</name>
     <message>
         <source>Creating local sync folder %1...</source>
-        <translation>Lokaler Synchronisierungsordner wird erstellt %1...</translation>
+        <translation>Lokaler Synchronisierungsordner %1 wird erstellt...</translation>
     </message>
     <message>
         <source>Failed to create local folder %1</source>
@@ -292,7 +292,7 @@
     </message>
     <message>
         <source>The authenticated request to the server was redirected to &apos;%1&apos;. The URL is bad, the server is misconfigured.</source>
-        <translation>Die authentifizierte Anfrage an den Server wurde weitergeleitet an &apos;%1&apos;. Diese URL ist ungültig, der Server ist falsch konfiguriert.</translation>
+        <translation>Die authentifizierte Anfrage an den Server wurde weitergeleitet an &apos;%1&apos;. Die URL ist ungültig, der Server ist falsch konfiguriert.</translation>
     </message>
     <message>
         <source>Access forbidden by server. To verify that you have proper access, &lt;a href=&quot;%1&quot;&gt;click here&lt;/a&gt; to access the service with your browser.</source>
@@ -300,7 +300,7 @@
     </message>
     <message>
         <source>There was an invalid response to an authenticated webdav request</source>
-        <translation>Es gab eine ungültige Reaktion auf eine WebDav-Authentifizierungs-Anfrage</translation>
+        <translation>Es gab eine ungültige Antwort auf eine authentifizierte WebDav-Anfrage</translation>
     </message>
 </context>
 <context>
@@ -354,7 +354,7 @@
     </message>
     <message>
         <source>An error occurred while loading the list of sub folders.</source>
-        <translation>Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+        <translation>Beim Laden der Liste der Unterordner ist ein Fehler aufgetreten.</translation>
     </message>
 </context>
 <context>
@@ -491,10 +491,6 @@
         <translation>Synchronisierung</translation>
     </message>
     <message>
-        <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="vanished">Alle Ihre Dateien synchronisieren, ohne den Speicherplatz Ihres Rechners zu verwenden. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Mehr erfahren&lt;/a&gt;</translation>
-    </message>
-    <message>
         <source>Notifications</source>
         <translation>Benachrichtigungen</translation>
     </message>
@@ -528,11 +524,11 @@
     </message>
     <message>
         <source>REMOVE FOLDER SYNC CONNECTION</source>
-        <translation>ORDNERSYNCHRONISIERUNG ENTFERNEN</translation>
+        <translation>VERBINDUNG FÜR ORDNERSYNCHRONISIERUNG ENTFERNEN</translation>
     </message>
     <message>
         <source>An error occurred while loading the list of sub folders.</source>
-        <translation>Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+        <translation>Beim Laden der Liste der Unterordner ist ein Fehler aufgetreten.</translation>
     </message>
     <message>
         <source>No subfolders currently on the server.</source>
@@ -540,7 +536,7 @@
     </message>
     <message>
         <source>Enable the notifications for this kDrive</source>
-        <translation>Aktivieren Sie die Benachrichtigungen für dieses kDrive</translation>
+        <translation>Benachrichtigungen für diesen kDrive aktivieren</translation>
     </message>
     <message>
         <source>CONFIRM</source>
@@ -548,31 +544,31 @@
     </message>
     <message>
         <source>Activate Lite Sync</source>
-        <translation type="unfinished"></translation>
+        <translation>Lite Sync aktivieren</translation>
     </message>
     <message>
         <source>Do you really want to turn on Lite Sync?</source>
-        <translation type="unfinished"></translation>
+        <translation>Wollen Sie Lite Sync wirklich einschalten?</translation>
     </message>
     <message>
         <source>Do you really want to turn off Lite Sync?</source>
-        <translation type="unfinished"></translation>
+        <translation>Wollen Sie Lite Sync wirklich ausschalten?</translation>
     </message>
     <message>
         <source>You don&apos;t have enough space to sync all the files on your kDrive (%1 missing). If you turn off Lite Sync, you need to select which folders to sync on your computer. In the meantime, the synchronization of your kDrive will be paused.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sie haben nicht genug Speicherplatz, um alle Dateien auf Ihrem kDrive (%1 fehlt) zu synchronisieren. Wenn Sie Lite Sync ausschalten, müssen Sie die auf Ihrem Rechner zu synchronisierenden Ordner auswählen. Bis dahin wird die Synchronisierung Ihres kDrive ausgesetzt.</translation>
     </message>
     <message>
         <source>If you turn off Lite Sync, all files will sync locally on your computer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wenn Sie Lite Sync ausschalten, werden alle Dateien lokal auf Ihrem Rechner synchronisiert.</translation>
     </message>
     <message>
         <source>Lite Sync activation in progress</source>
-        <translation type="unfinished"></translation>
+        <translation>Lite Sync-Aktivierung läuft</translation>
     </message>
     <message>
         <source>Lite Sync deactivation in progress</source>
-        <translation type="unfinished"></translation>
+        <translation>Lite Sync-Deaktivierung läuft</translation>
     </message>
     <message>
         <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
@@ -580,7 +576,7 @@
     </message>
     <message>
         <source>Unable to open link %1.</source>
-        <translation>Link kann nicht geöffnet werden %1.</translation>
+        <translation>Link %1 kann nicht geöffnet werden.</translation>
     </message>
 </context>
 <context>
@@ -607,8 +603,8 @@
         <source>Some files couldn&apos;t be synchronized on the following kDrive(s) :</source>
         <comment>Number of kDrives</comment>
         <translation>
-            <numerusform>Einige Dateien auf dem/den folgenden kDrive(s) konnten nicht synchronisiert werden:</numerusform>
-            <numerusform>Einige Dateien auf dem/den folgenden kDrive(s) konnten nicht synchronisiert werden:</numerusform>
+            <numerusform>Einige Dateien auf dem / den folgenden kDrive(s) konnten nicht synchronisiert werden:</numerusform>
+            <numerusform>Einige Dateien auf dem / den folgenden kDrive(s) konnten nicht synchronisiert werden:</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -717,7 +713,7 @@
     </message>
     <message>
         <source>Pause synchronization</source>
-        <translation>Stoppe Synchronisation</translation>
+        <translation>Synchronisierung pausieren</translation>
     </message>
     <message>
         <source>Resume synchronization</source>
@@ -760,11 +756,11 @@
     </message>
     <message>
         <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieser Ordner ist nicht kompatibel mit Lite Sync. Bitte wählen Sie einen anderen Ordner, oder Lite Sync wird deaktiviert, wenn Sie fortfahren. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Mehr erfahren&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Unable to open link %1.</source>
-        <translation>Link kann nicht geöffnet werden %1.</translation>
+        <translation>Link %1 kann nicht geöffnet werden.</translation>
     </message>
 </context>
 <context>
@@ -794,7 +790,7 @@
     </message>
     <message>
         <source>Unable to open folder path %1.</source>
-        <translation>Ordnerpfad kann nicht geöffnet werden %1.</translation>
+        <translation>Ordnerpfad %1 kann nicht geöffnet werden.</translation>
     </message>
     <message>
         <source>Transmission done!&lt;br&gt;Please refer to identifier &lt;b&gt;%1&lt;/b&gt; in bug reports.</source>
@@ -825,7 +821,7 @@
     <name>KDC::PreferencesMenuBarWidget</name>
     <message>
         <source>Back to drive list</source>
-        <translation>Zurück zur kDrive-Liste</translation>
+        <translation>Zurück zur Drive-Liste</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -888,11 +884,11 @@
     </message>
     <message>
         <source>Unable to open folder %1.</source>
-        <translation>Ordner %1 kann nicht geöffnet werden</translation>
+        <translation>Ordner %1 kann nicht geöffnet werden.</translation>
     </message>
     <message>
         <source>Unable to open link %1.</source>
-        <translation>Link kann nicht geöffnet werden %1.</translation>
+        <translation>Link %1 kann nicht geöffnet werden.</translation>
     </message>
     <message>
         <source>Invalid link %1.</source>
@@ -1039,7 +1035,7 @@
     </message>
     <message>
         <source>An error occurred while loading the list of sub folders.</source>
-        <translation>Ein Fehler ist aufgetreten, während die Liste der Unterordner geladen wurde.</translation>
+        <translation>Beim Laden der Liste der Unterordner ist ein Fehler aufgetreten.</translation>
     </message>
     <message>
         <source>No subfolders currently on the server.</source>
@@ -1050,7 +1046,7 @@
     <name>KDC::StatusBarWidget</name>
     <message>
         <source>Pause synchronization</source>
-        <translation>Stoppe Synchronisation</translation>
+        <translation>Synchronisierung pausieren</translation>
     </message>
     <message>
         <source>Resume synchronization</source>
@@ -1216,7 +1212,7 @@
     </message>
     <message>
         <source>Unable to access web site %1.</source>
-        <translation>Zugang zu Website nicht möglich %1.</translation>
+        <translation>Zugang zu Website %1 nicht möglich.</translation>
     </message>
     <message>
         <source>Notifications disabled until %1</source>
@@ -1236,7 +1232,7 @@
     </message>
     <message>
         <source>You cannot share the root directory of your Drive!</source>
-        <translation>Sie können das Stammverzeichnis Ihres kDrive nicht freigegeben!</translation>
+        <translation>Sie können das Stammverzeichnis Ihres Drive nicht freigeben!</translation>
     </message>
     <message>
         <source>The shared link has been copied to the clipboard.</source>
@@ -1244,7 +1240,7 @@
     </message>
     <message>
         <source>Unable to open link %1.</source>
-        <translation>Link kann nicht geöffnet werden %1.</translation>
+        <translation>Link %1 kann nicht geöffnet werden.</translation>
     </message>
     <message>
         <source>Invalid link %1.</source>
@@ -1252,11 +1248,11 @@
     </message>
     <message>
         <source>Unable to open folder url %1.</source>
-        <translation>Ordner-URL kann nicht geöffnet werden %1.</translation>
+        <translation>Ordner-URL %1 kann nicht geöffnet werden.</translation>
     </message>
     <message>
         <source>Drive parameters</source>
-        <translation>kDrive-Einstellungen</translation>
+        <translation>Drive-Einstellungen</translation>
     </message>
     <message>
         <source>Application preferences</source>
@@ -1333,7 +1329,7 @@
     </message>
     <message>
         <source>Unknown account state</source>
-        <translation>Unbekannten Konto-Zustand</translation>
+        <translation>Unbekannter Konto-Zustand</translation>
     </message>
 </context>
 <context>
@@ -1351,7 +1347,7 @@
     <name>OCC::AddCertificateDialog</name>
     <message>
         <source>SSL client certificate authentication</source>
-        <translation>SSL-Client-Zertifikatsauthentifizierung</translation>
+        <translation>Authentifizierung SSL-Client-Zertifikat</translation>
     </message>
     <message>
         <source>This server probably requires a SSL client certificate.</source>
@@ -1371,7 +1367,7 @@
     </message>
     <message>
         <source>An encrypted pkcs12 bundle is strongly recommended as a copy will be stored in the configuration file.</source>
-        <translation>Ein verschlüsseltes pkcs12 Bundle wird besonders empfohlen, da eine Kopie davon in der Konfigurationsdatei gespeichert wird.</translation>
+        <translation>Ein verschlüsseltes pkcs12 Bundle wird unbedingt empfohlen, da eine Kopie davon in der Konfigurationsdatei gespeichert wird.</translation>
     </message>
     <message>
         <source>Select a certificate</source>
@@ -1386,15 +1382,15 @@
     <name>OCC::Application</name>
     <message>
         <source>Continuing will mean &lt;b&gt;deleting these settings&lt;/b&gt;.</source>
-        <translation>Fortsetzen bedeutet &lt;b&gt;dass diese Einstellungen gelöscht werden&lt;/b&gt;.</translation>
+        <translation>Fortsetzen bedeutet, &lt;b&gt;dass diese Einstellungen gelöscht werden&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Continuing will mean &lt;b&gt;ignoring these settings&lt;/b&gt;.</source>
-        <translation>Fortsetzen bedeutet &lt;b&gt;dass diese Einstellungen ignoriert werden&lt;/b&gt;.</translation>
+        <translation>Fortsetzen bedeutet, &lt;b&gt;dass diese Einstellungen ignoriert werden&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Some settings were configured in newer versions of this client and use features that are not available in this version.&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;The current configuration file was already backed up to &lt;i&gt;%2&lt;/i&gt;.</source>
-        <translation>Einige Einstellungen wurden in neueren Versionen dieses Programms eingestellt und nutzen Funktionen die in dieser Version nicht verfügbar sind. &lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt; Die aktuelle Konfigurations-Datei wurde bereits an folgenden Ort gesichert: &lt;i&gt;%2&lt;/i&gt;.</translation>
+        <translation>Einige Einstellungen wurden in neueren Versionen dieses Clients eingestellt und nutzen Funktionen, die in dieser Version nicht verfügbar sind. &lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt; Die aktuelle Konfigurationsdatei wurde bereits an folgendem Ort gesichert: &lt;i&gt;%2&lt;/i&gt;.</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -1436,7 +1432,7 @@
     </message>
     <message>
         <source>Please update to the latest server and restart the client.</source>
-        <translation>Aktualisieren Sie auf die letzte Server-Version und starten Sie den Client neu.</translation>
+        <translation>Aktualisieren Sie auf die neueste Server-Version und starten Sie den Client neu.</translation>
     </message>
     <message>
         <source>Authentication error: Either username or password are wrong.</source>
@@ -1448,7 +1444,7 @@
     </message>
     <message>
         <source>The provided credentials are not correct</source>
-        <translation>Die zur Verfügung gestellten Anmeldeinformationen sind nicht korrekt</translation>
+        <translation>Die zur Verfügung gestellten Zugangsdaten sind nicht korrekt</translation>
     </message>
 </context>
 <context>
@@ -1466,37 +1462,37 @@
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
-        <translation>Server Fehler: Die PROPFIND Antwort ist nicht XML formattiert!</translation>
+        <translation>Server Fehler: Die PROPFIND Antwort ist nicht XML-formattiert!</translation>
     </message>
 </context>
 <context>
     <name>OCC::DiscoverySingleLocalDirectoryJob</name>
     <message>
         <source>Error while opening directory %1</source>
-        <translation>Fehler beim Öffnen des Ordners %1</translation>
+        <translation>Fehler beim Öffnen des Verzeichnisses %1</translation>
     </message>
     <message>
         <source>Directory not accessible on client, permission denied</source>
-        <translation>Der Ordner ist auf dem Client nicht erreichbar, Zugriff verweigert</translation>
+        <translation>Das Verzeichnis ist auf dem Client nicht zugänglich, Zugriff verweigert</translation>
     </message>
     <message>
         <source>Directory not found: %1</source>
-        <translation>Ordner nicht gefunden: %1</translation>
+        <translation>Verzeichnis nicht gefunden: %1</translation>
     </message>
     <message>
         <source>Filename encoding is not valid</source>
-        <translation>Dateikodierung ist ungültig</translation>
+        <translation>Kodierung des Dateinamens ist ungültig</translation>
     </message>
     <message>
         <source>Error while reading directory %1</source>
-        <translation>Fehler beim Lesen des Ordners %1</translation>
+        <translation>Fehler beim Lesen des Verzeichnisses %1</translation>
     </message>
 </context>
 <context>
     <name>OCC::Folder</name>
     <message>
         <source>Local folder %1 does not exist.</source>
-        <translation>Lokales Verzeichnis %1 existiert nicht.</translation>
+        <translation>Lokaler Ordner %1 existiert nicht.</translation>
     </message>
     <message>
         <source>%1 should be a folder but is not.</source>
@@ -1523,20 +1519,20 @@
     </message>
     <message>
         <source>%1 has been moved to %2.</source>
-        <translation>%1 wurde in %2 verschoben.</translation>
+        <translation>%1 wurde zu %2 verschoben.</translation>
     </message>
     <message numerus="yes">
         <source>%1 and %n other file(s) have been removed.</source>
         <translation>
-            <numerusform>%1 und %n andere Datei wurde gelöscht.</numerusform>
-            <numerusform>%1 und %n andere Dateien wurden gelöscht.</numerusform>
+            <numerusform>%1 und %n andere Datei(en) wurde(n) gelöscht.</numerusform>
+            <numerusform>%1 und %n andere Datei(en) wurde(n) gelöscht.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 and %n other file(s) have been added.</source>
         <translation>
-            <numerusform>%1 und %n andere Datei(en) wurden hinzugefügt.</numerusform>
-            <numerusform>%1 und %n andere Datei(en) wurden hinzugefügt.</numerusform>
+            <numerusform>%1 und %n andere Datei(en) wurde(n) hinzugefügt.</numerusform>
+            <numerusform>%1 und %n andere Datei(en) wurde(n) hinzugefügt.</numerusform>
         </translation>
     </message>
     <message>
@@ -1547,29 +1543,29 @@
     <message numerus="yes">
         <source>%1 and %n other file(s) have been updated.</source>
         <translation>
-            <numerusform>%1 und %n andere Datei wurde aktualisiert.</numerusform>
-            <numerusform>%1 und %n andere Dateien wurden aktualisiert.</numerusform>
+            <numerusform>%1 und %n andere Datei(en) wurde(n) aktualisiert.</numerusform>
+            <numerusform>%1 und %n andere Datei(en) wurde(n) aktualisiert.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 has been renamed to %2 and %n other file(s) have been renamed.</source>
         <translation>
-            <numerusform>%1 wurde in %2 umbenannt und %n andere Datei wurde umbenannt.</numerusform>
-            <numerusform>%1 wurde in %2 umbenannt und %n andere Dateien wurden umbenannt.</numerusform>
+            <numerusform>%1 wurde in %2 umbenannt und %n andere Datei(en) wurde(n) umbenannt.</numerusform>
+            <numerusform>%1 wurde in %2 umbenannt und %n andere Datei(en) wurde(n) umbenannt.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 has been moved to %2 and %n other file(s) have been moved.</source>
         <translation>
-            <numerusform>%1 wurde in %2 verschoben und %n andere Datei wurde verschoben.</numerusform>
-            <numerusform>%1 wurde in %2 verschoben und %n andere Dateien wurden verschoben.</numerusform>
+            <numerusform>%1 wurde zu %2 verschoben und %n andere Datei(en) wurde(n) verschoben.</numerusform>
+            <numerusform>%1 wurde zu %2 verschoben und %n andere Datei(en) wurde(n) verschoben.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 has and %n other file(s) have sync conflicts.</source>
         <translation>
-            <numerusform>%1 und %n andere Datei haben Konflikte beim Abgleichen.</numerusform>
-            <numerusform>%1 und %n andere Dateien haben Konflikte beim Abgleichen.</numerusform>
+            <numerusform>%1 und %n andere Datei(en) hat / haben Synchronisierungskonflikte.</numerusform>
+            <numerusform>%1 und %n andere Datei(en) hat / haben Synchronisierungskonflikte.</numerusform>
         </translation>
     </message>
     <message>
@@ -1579,8 +1575,8 @@
     <message numerus="yes">
         <source>%1 and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation>
-            <numerusform>%1 und %n weitere Datei konnten aufgrund von Fehlern nicht synchronisiert werden. Schauen Sie in das Protokoll für Details.</numerusform>
-            <numerusform>%1 und %n weitere Dateien konnten aufgrund von Fehlern nicht synchronisiert werden. Schauen Sie in das Protokoll für Details.</numerusform>
+            <numerusform>%1 und %n weitere Datei(en) konnte(n) aufgrund von Fehlern nicht synchronisiert werden. Schauen Sie in das Protokoll für Details.</numerusform>
+            <numerusform>%1 und %n weitere Datei(en) konnte(n) aufgrund von Fehlern nicht synchronisiert werden. Schauen Sie in das Protokoll für Details.</numerusform>
         </translation>
     </message>
     <message>
@@ -1593,31 +1589,30 @@
     </message>
     <message>
         <source>Could not read system exclude file</source>
-        <translation>Systemeigene Ausschlussdatei kann nicht gelesen werden</translation>
+        <translation>Systemeigene Ausschlussdatei konnte nicht gelesen werden</translation>
     </message>
     <message>
         <source>A new folder larger than %1 MB has been added: %2.
 </source>
-        <translation>Ein neues Verzeichnis größer als %1 MB wurde hinzugefügt: %2.
+        <translation>Ein neuer Ordner grösser als %1 MB wurde hinzugefügt: %2.
 </translation>
     </message>
     <message>
         <source>A folder from an external storage has been added.
 </source>
-        <translation>Ein Verzeichnis, von einem externen Speicher wurde hinzugefügt.
-</translation>
+        <translation>Es wurde ein Ordner von einem externen Speicherplatz hinzugefügt.</translation>
     </message>
     <message>
         <source>Please go in the settings to select it if you wish to download it.</source>
-        <translation>Bitte wechseln Sie zu den Einstellungen, falls Sie das Verzeichnis herunterladen möchten.</translation>
+        <translation>Bitte wechseln Sie zu den Einstellungen, falls Sie den Ordner herunterladen möchten.</translation>
     </message>
     <message>
         <source>The folder %1 was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
-        <translation>Der Ordner %1 wurde erzeugt aber früher von der Synchronisation ausgeschlossen. Daten im Ordner werden nicht synchronisiert.</translation>
+        <translation>Der Ordner %1 wurde erstellt, aber zuvor von der Synchronisierung ausgeschlossen. Daten im Ordner werden nicht synchronisiert.</translation>
     </message>
     <message>
         <source>The file %1 was created but was excluded from synchronization previously. It will not be synchronized.</source>
-        <translation>Die Datei %1 wurde erzeugt aber früher von der Synchronisation ausgeschlossen. Sie wird nicht synchronisiert.</translation>
+        <translation>Die Datei %1 wurde erstellt, aber zuvor von der Synchronisierung ausgeschlossen. Sie wird nicht synchronisiert.</translation>
     </message>
     <message>
         <source>Changes in synchronized folders could not be tracked reliably.
@@ -1627,7 +1622,7 @@ This means that the synchronization client might not upload local changes immedi
 %1</source>
         <translation>Änderungen in synchronisierten Ordnern konnten nicht zuverlässig verfolgt werden.
 
-Dies bedeutet, dass der Synchronisationsclient lokale Änderungen möglicherweise nicht sofort hochlädt und stattdessen nur nach lokalen Änderungen sucht und sie gelegentlich hochlädt (standardmäßig alle zwei Stunden).
+Dies bedeutet, dass der Synchronisierungsclient lokale Änderungen möglicherweise nicht sofort hochlädt und stattdessen nur nach lokalen Änderungen sucht und sie gelegentlich hochlädt (standardmässig alle zwei Stunden).
 
 %1</translation>
     </message>
@@ -1635,9 +1630,9 @@ Dies bedeutet, dass der Synchronisationsclient lokale Änderungen möglicherweis
         <source>All the files in your local sync folder &apos;%1&apos; were deleted. These deletes will be synchronized with your server, making such files unavailable unless restored.
 Are you sure you want to sync those actions with the server?
 If this was an accident and you decide to keep your files, they will be re-synced from the server.</source>
-        <translation>Alle Dateien im lokalen Synchronisationsordner &apos;%1&apos; wurden gelöscht. Diese Löschung wird mit Ihrem Server synchronisiert, wodurch die Dateien nicht mehr verfügbar sind, es sei denn, sie werden wiederhergestellt.
-Sind Sie sich sicher, dass Sie diese Aktion mit Ihrem Server synchronisieren möchten?
-Falls dies ein Missgeschick war und Sie sich zum Behalten der Dateien entscheiden, werden diese wieder vom Server synchronisiert.</translation>
+        <translation>Alle Dateien im lokalen Synchronisierungsordner &apos;%1&apos; wurden gelöscht. Diese Löschungen werden mit Ihrem Server synchronisiert, wodurch die Dateien nicht mehr verfügbar sind, sofern sie nicht wiederhergestellt werden.
+Sind Sie sich sicher, dass Sie diese Aktionen mit dem Server synchronisieren möchten?
+Falls dies ein Versehen war und Sie Ihre Dateien behalten wollen, werden diese wieder vom Server synchronisiert.</translation>
     </message>
     <message>
         <source>Remove All Files?</source>
@@ -1645,7 +1640,7 @@ Falls dies ein Missgeschick war und Sie sich zum Behalten der Dateien entscheide
     </message>
     <message>
         <source>Remove all files</source>
-        <translation>Lösche alle Dateien</translation>
+        <translation>Alle Dateien löschen</translation>
     </message>
     <message>
         <source>Keep files</source>
@@ -1656,21 +1651,21 @@ Falls dies ein Missgeschick war und Sie sich zum Behalten der Dateien entscheide
 These deletes will be synchronized to your local sync folder, making such files unavailable unless you have a right to restore. 
 If you decide to keep the files, they will be re-synced with the server if you have rights to do so.
 If you decide to delete the files, they will be unavailable to you, unless you are the owner.</source>
-        <translation>Alle Dateien im Synchronisationsordner &apos;%1&apos; Ordner wurden vom Server gelöscht.
-Diese Löschungen wird in Ihren lokalen Synchronisationsordner übernommen, wodurch solche Dateien nicht mehr verfügbar sind, sofern Sie keine Berechtigung für die Wiederherstellung besitzen. 
-Wenn Sie sich dazu entscheiden, die Dateien zu behalten, werden diese wieder zum Server synchronisiert, sofern Sie die Rechte dazu haben.
-Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht mehr verfügbar, sofern Sie nicht der Eigentümer sind.</translation>
+        <translation>Alle Dateien im Synchronisierungsordner &apos;%1&apos; Ordner wurden vom Server gelöscht.
+Diese Löschungen werden mit Ihrem lokalen Synchronisierungsordner synchronisiert, wodurch solche Dateien nicht mehr verfügbar sind, sofern Sie keine Berechtigung für die Wiederherstellung besitzen. 
+Wenn Sie die Dateien behalten wollen, werden diese mit dem Server synchronisiert, sofern Sie die einschlägigen Berechtigungen besitzen.
+Wenn Sie Ihre Dateien löschen wollen, sind sie für Sie nicht mehr verfügbar, sofern Sie nicht der Eigentümer sind.</translation>
     </message>
 </context>
 <context>
     <name>OCC::FolderMan</name>
     <message>
         <source>Could not reset folder state</source>
-        <translation>Konnte Ordner-Zustand nicht zurücksetzen</translation>
+        <translation>Konnte Ordnerzustand nicht zurücksetzen</translation>
     </message>
     <message>
         <source>An old sync journal &apos;%1&apos; was found, but could not be removed. Please make sure that no application is currently using it.</source>
-        <translation>Ein altes Synchronisations-Journal &apos;%1&apos; wurde gefunden, konnte jedoch nicht entfernt werden. Bitte stellen Sie sicher, dass keine Anwendung es verwendet.</translation>
+        <translation>Ein altes Synchronisierungsprotokoll &apos;%1&apos; wurde gefunden, konnte jedoch nicht entfernt werden. Bitte stellen Sie sicher, dass keine Anwendung es verwendet.</translation>
     </message>
     <message>
         <source> (backup)</source>
@@ -1686,27 +1681,27 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     </message>
     <message>
         <source>Waiting to start syncing.</source>
-        <translation>Wartet auf Beginn der Synchronisation.</translation>
+        <translation>Synchronisierung ausstehend.</translation>
     </message>
     <message>
         <source>Preparing for sync.</source>
-        <translation>Synchronisation wird vorbereitet.</translation>
+        <translation>Synchronisierung wird vorbereitet.</translation>
     </message>
     <message>
         <source>Sync is running.</source>
-        <translation>Synchronisation läuft.</translation>
+        <translation>Synchronisierung läuft.</translation>
     </message>
     <message>
         <source>Sync was successful, unresolved conflicts.</source>
-        <translation>Synchronisation war erfolgreich, ungelöste Konflikte. </translation>
+        <translation>Synchronisierung war erfolgreich, ungelöste Konflikte. </translation>
     </message>
     <message>
         <source>Last Sync was successful.</source>
-        <translation>Die letzte Synchronisation war erfolgreich.</translation>
+        <translation>Die letzte Synchronisierung war erfolgreich.</translation>
     </message>
     <message>
         <source>Setup Error.</source>
-        <translation>Installationsfehler.</translation>
+        <translation>Setup-Fehler.</translation>
     </message>
     <message>
         <source>User Abort.</source>
@@ -1714,23 +1709,23 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     </message>
     <message>
         <source>Sync is paused.</source>
-        <translation>Synchronisation wurde angehalten.</translation>
+        <translation>Synchronisierung wurde angehalten.</translation>
     </message>
     <message>
         <source>%1 (Sync is paused)</source>
-        <translation>%1 (Synchronisation ist pausiert)</translation>
+        <translation>%1 (Synchronisierung wurde angehalten)</translation>
     </message>
     <message>
         <source>No valid folder selected!</source>
-        <translation>Kein gültiger Ordner gewählt!</translation>
+        <translation>Kein gültiger Ordner ausgewählt!</translation>
     </message>
     <message>
         <source>The selected path does not exist!</source>
-        <translation>Der gewählte Pfad existiert nicht!</translation>
+        <translation>Der ausgewählte Pfad existiert nicht!</translation>
     </message>
     <message>
         <source>The selected path is not a folder!</source>
-        <translation>Der gewählte Pfad ist kein Ordner!</translation>
+        <translation>Der ausgewählte Pfad ist kein Ordner!</translation>
     </message>
     <message>
         <source>You have no permission to write to the selected folder!</source>
@@ -1738,19 +1733,19 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     </message>
     <message>
         <source>There is already a sync from the server to this local folder. Please pick another local folder!</source>
-        <translation>Es existiert bereits eine Synchronisation vom Server zu diesem lokalen Ordner. Bitte wählen Sie ein anderes lokales Verzeichnis!</translation>
+        <translation>Es existiert bereits eine Synchronisierung vom Server zu diesem lokalen Ordner. Bitte wählen Sie einen anderen lokalen Ordner!</translation>
     </message>
     <message>
         <source>The local folder %1 already contains a folder used in a folder sync connection. Please pick another one!</source>
-        <translation>Der lokale Ordner %1 liegt innerhalb eines synchronisierten Ordners. Bitte wählen Sie einen anderen aus!</translation>
+        <translation>Der lokale Ordner %1 enthält bereits einen Ordner, der für die Synchronisierungsverbindung eines Ordners verwendet wird. Bitte wählen Sie einen anderen aus!</translation>
     </message>
     <message>
         <source>The local folder %1 is already contained in a folder used in a folder sync connection. Please pick another one!</source>
-        <translation>Der lokale Ordner %1 liegt in einem Ordner, der bereits synchronisiert wird. Bitte wählen Sie einen anderen aus!</translation>
+        <translation>Der lokale Ordner %1 ist bereits in einem Ordner enthalten, der für die Synchronisierungsverbindung eines Ordners verwendet wird. Bitte wählen Sie einen anderen aus!</translation>
     </message>
     <message>
         <source>Virtual Files plugin specified in kDrive.cfg is incorrect!</source>
-        <translation type="unfinished"></translation>
+        <translation>Das in kDrive.cfg angegebene Plugin für virtuelle Dateien ist falsch!</translation>
     </message>
 </context>
 <context>
@@ -1764,7 +1759,7 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     <name>OCC::FolderWatcherPrivate</name>
     <message>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
-        <translation>Dieses Problem tritt normalerweise auf, wenn die Inotify-watcher erschöpft sind. Überprüfen Sie die FAQ für Details.</translation>
+        <translation>Dieses Problem tritt normalerweise auf, wenn die Inotify-Watches erschöpft sind. Einzelheiten entnehmen Sie den FAQ.</translation>
     </message>
 </context>
 <context>
@@ -1775,15 +1770,15 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     </message>
     <message>
         <source>Failed to get zsync byte ranges.</source>
-        <translation>Fehler bei zsync_needed_byte_ranges().</translation>
+        <translation>Fehler beim Abruf der zsync byte-Spannen.</translation>
     </message>
     <message>
         <source>Failed to initialize zsync receive structure.</source>
-        <translation>Fehler beim Initialisieren der zsync Empfangs-Datenstruktur.</translation>
+        <translation>Fehler beim Initialisieren der zsync-Empfangsstruktur.</translation>
     </message>
     <message>
         <source>We received a different E-Tag for delta. Retrying next time.</source>
-        <translation>Es wurde ein unterschiedlicher E-Tag für das Delta empfangen. Ein erneuter Versuch wird unternommen.</translation>
+        <translation>Es wurde ein unterschiedliches E-Tag für das Delta empfangen. Beim nächsten Mal wird dies erneut versucht.</translation>
     </message>
 </context>
 <context>
@@ -1797,7 +1792,7 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     <name>OCC::GetOrCreatePublicLinkShare</name>
     <message>
         <source>Context menu share</source>
-        <translation>Teilen über das Kontextmenü</translation>
+        <translation>Freigabe über das Kontextmenü</translation>
     </message>
     <message>
         <source>Context menu share %1</source>
@@ -1812,7 +1807,7 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     </message>
     <message>
         <source>Reading from keychain failed with error: &apos;%1&apos;</source>
-        <translation>Schlüsselbund fehlgeschlagen mit Fehler: &apos;%1&apos;</translation>
+        <translation>Lesen von Keychain fehlgeschlagen mit Fehler: &apos;%1&apos;</translation>
     </message>
     <message>
         <source>Enter Password</source>
@@ -1820,7 +1815,7 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     </message>
     <message>
         <source>&lt;a href=&quot;%1&quot;&gt;Click here&lt;/a&gt; to request an app password from the web interface.</source>
-        <translation>&lt;a href=&quot;%1&quot;&gt;Klicken Sie hier&lt;/a&gt; um ein App-Passwort von dem Web-Interface zu erhalten.</translation>
+        <translation>&lt;a href=&quot;%1&quot;&gt;Klicken Sie hier,&lt;/a&gt; um ein App-Passwort von der Web-Interface zu erhalten.</translation>
     </message>
 </context>
 <context>
@@ -1849,19 +1844,19 @@ Wenn Sie sich dazu entscheiden, die Dateien zu löschen, sind sie für Sie nicht
     <name>OCC::LogBrowser</name>
     <message>
         <source>Log Output</source>
-        <translation>Log-Ausgabe</translation>
+        <translation>Log-Datei</translation>
     </message>
     <message>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
 Since log files can get large, the client will start a new one for each sync run and compress older ones. It is also recommended to enable deleting log files after a couple of hours to avoid consuming too much disk space.
 If enabled, logs will be written to %1</source>
         <translation>Der Client kann Debug-Logs in einen temporären Ordner schreiben. Diese Logs sind sehr hilfreich bei der Fehlersuche.
-Da die Log Dateien groß werden können, wird der Client eine neue Datei für jeden Synchronisationslauf anlegen und alte Dateien komprimieren. Es wird außerdem empfohlen das Löschen von Log Dateien nach einigen Stunden einzuschalten. Dies verhindert unnötigen Verbrauch von Plattenplatz.
-Logs werden nach %1 geschrieben, wenn eingeschaltet</translation>
+Da Log-Dateien gross werden können, legt der Client für jede Synchronisierungsreihe eine neue Datei an und komprimiert alte Dateien. Es wird ausserdem empfohlen, das Löschen von Log-Dateien nach einigen Stunden zu aktivieren. Dies verhindert unnötigen Verbrauch von Festplattenplatz.
+Logs werden nach %1 geschrieben, wenn aktiviert</translation>
     </message>
     <message>
         <source>Enable logging to temporary folder</source>
-        <translation>Einschalten von Logging in einen temporären Ordner</translation>
+        <translation>Logging in temporärem Ordner aktivieren</translation>
     </message>
     <message>
         <source>Delete logs older than %1 hours</source>
@@ -1871,7 +1866,7 @@ Logs werden nach %1 geschrieben, wenn eingeschaltet</translation>
         <source>These settings persist across client restarts.
 Note that using any logging command line options will override the settings.</source>
         <translation>Diese Einstellungen bleiben nach einem Neustart des Clients erhalten.
-Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen überschreiben.</translation>
+Beachten Sie, dass Logging-Kommandozeilenoptionen diese Einstellungen überschreiben.</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -1890,7 +1885,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     </message>
     <message>
         <source>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;cannot be opened for writing.&lt;br/&gt;&lt;br/&gt;The log output can &lt;b&gt;not&lt;/b&gt; be saved!&lt;/nobr&gt;</source>
-        <translation>&lt;nobr&gt;Datei »%1«&lt;br/&gt;kann nicht zum Schreiben geöffnet werden.&lt;br/&gt;&lt;br/&gt;Die Protokolldatei kann &lt;b&gt;nicht&lt;/b&gt; gespeichert werden!&lt;/nobr&gt;</translation>
+        <translation>&lt;nobr&gt;Datei »%1«&lt;br/&gt;kann nicht zum Schreiben geöffnet werden.&lt;br/&gt;&lt;br/&gt;Die Log-Datei kann &lt;b&gt;nicht&lt;/b&gt; gespeichert werden!&lt;/nobr&gt;</translation>
     </message>
 </context>
 <context>
@@ -1921,7 +1916,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     </message>
     <message>
         <source>&lt;p&gt;A new version of the %1 Client is available but the updating process failed.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; has been downloaded. The installed version is %3.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Eine neue Version des %1 Clients ist verfügbar, aber der Aktualisierungs-Prozess ist fehlgeschlagen.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; wurde heruntergeladen. Die installierte Version ist %3.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Eine neue Version des %1 Clients ist verfügbar, aber der Aktualisierungsprozess ist fehlgeschlagen.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; wurde heruntergeladen. Die installierte Version ist %3.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Ask again later</source>
@@ -1940,21 +1935,21 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <name>OCC::NotificationWidget</name>
     <message>
         <source>Created at %1</source>
-        <translation>Erstellt von %1</translation>
+        <translation>Erstellt um %1</translation>
     </message>
     <message>
         <source>Closing in a few seconds...</source>
-        <translation>Schließe in wenigen Sekunden...</translation>
+        <translation>Schliesse in wenigen Sekunden...</translation>
     </message>
     <message>
         <source>%1 request failed at %2</source>
         <extracomment>The second parameter is a time, such as &apos;failed at 09:58pm&apos;</extracomment>
-        <translation>%1 Anfrage an %2 fehlgeschlagen</translation>
+        <translation>%1 Anfrage um %2 fehlgeschlagen</translation>
     </message>
     <message>
         <source>&apos;%1&apos; selected at %2</source>
         <extracomment>The second parameter is a time, such as &apos;selected at 09:58pm&apos;</extracomment>
-        <translation>&apos;%1&apos; ausgewählt von %2</translation>
+        <translation>&apos;%1&apos; ausgewählt um %2</translation>
     </message>
 </context>
 <context>
@@ -1969,15 +1964,15 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     </message>
     <message>
         <source>Empty JSON from OAuth2 redirect</source>
-        <translation>Leere JSON-Antwort von der OAuth2 Weiterleitung</translation>
+        <translation>Leere JSON-Antwort von der OAuth2-Weiterleitung</translation>
     </message>
     <message>
         <source>Could not parse the JSON returned from the server: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
-        <translation>Die JSON Antwort des Servers konnte nicht geparst werden: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
+        <translation>Die JSON-Antwort des Servers konnte nicht geparst werden: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
         <source>The reply from the server did not contain all expected fields</source>
-        <translation>Die Antwort des Servers hat nicht alle erwarteten Felder beinhaltet</translation>
+        <translation>Die Antwort des Servers beinhaltete nicht alle erwarteten Felder</translation>
     </message>
     <message>
         <source>&lt;h1&gt;Login Error&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</source>
@@ -1985,7 +1980,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     </message>
     <message>
         <source>&lt;h1&gt;Wrong user&lt;/h1&gt;&lt;p&gt;You logged-in with user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please log out of %3 in another tab, then &lt;a href=&apos;%4&apos;&gt;click here&lt;/a&gt; and log in as user %2&lt;/p&gt;</source>
-        <translation>&lt;h1&gt;Falscher Benutzer&lt;/h1&gt;&lt;p&gt;Sie haben sich mit dem Benutzer &lt;em&gt;%1&lt;/em&gt; angemeldet, sollten sich jedoch mit dem Benutzer &lt;em&gt;%2&lt;/em&gt; anmelden. &lt;br&gt;Bitte melden Sie sich in einem anderen Tab von %3 ab und &lt;a href=&apos;%4&apos;&gt;klicken Sie hier&lt;/a&gt; um sich als %2&lt;/p&gt; anzumelden</translation>
+        <translation>&lt;h1&gt;Falscher Benutzer&lt;/h1&gt;&lt;p&gt;Sie haben sich als Benutzer &lt;em&gt;%1&lt;/em&gt; angemeldet, müssen sich jedoch als Benutzer &lt;em&gt;%2&lt;/em&gt; anmelden. &lt;br&gt;Bitte melden Sie sich in einem anderen Tab von %3 ab und &lt;a href=&apos;%4&apos;&gt;klicken Sie hier,&lt;/a&gt; um sich als Benutzer %2&lt;/p&gt; anzumelden</translation>
     </message>
 </context>
 <context>
@@ -1997,11 +1992,11 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <source>A new update for %1 is about to be installed. The updater may ask
 for additional privileges during the process.</source>
-        <translation>Ein neues Update für %1 wird installiert. Während des Updatevorganges werden Sie eventuell gefragt zusätzliche Rechte im Rahmen des Updatevorganges zu gewähren.</translation>
+        <translation>Ein neues Update für %1 wird installiert. Während des Updatevorgangs werden Sie eventuell aufgefordert, zusätzliche Berichtigungen zu gewähren.</translation>
     </message>
     <message>
         <source>Could not check for new updates.</source>
-        <translation>Auf neue Aktualisierungen kann nicht geprüft werden.</translation>
+        <translation>Es konnte nicht nach neuen Updates gesucht werden.</translation>
     </message>
     <message>
         <source>Downloading %1. Please wait...</source>
@@ -2009,19 +2004,19 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Checking update server...</source>
-        <translation>Aktualisierungsserver wird überprüft …</translation>
+        <translation>Updateserver wird überprüft …</translation>
     </message>
     <message>
         <source>Update status is unknown: Did not check for new updates.</source>
-        <translation>Updatestatus unbekannt: Auf neue Updates wurde nicht geprüft.</translation>
+        <translation>Updatestatus unbekannt: Es wurde nicht nach neuen Updates gesucht.</translation>
     </message>
     <message>
         <source>Update Check</source>
-        <translation>Aktualitätsprüfung</translation>
+        <translation>Updateprüfung</translation>
     </message>
     <message>
         <source>An update is available: %1</source>
-        <translation>Eine Aktualisierung ist verfügbar: %1</translation>
+        <translation>Ein Update ist verfügbar: %1</translation>
     </message>
     <message>
         <source>%1 is up to date!</source>
@@ -2040,11 +2035,11 @@ for additional privileges during the process.</source>
     <name>OCC::OwnCloudGui</name>
     <message>
         <source>Unsupported Server Version</source>
-        <translation>nicht unterstützte Server Version</translation>
+        <translation>Nicht unterstützte Serverversion</translation>
     </message>
     <message>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
-        <translation>Der Server mit Konto %1 läuft mit einer nicht unterstützten Version %2. Die Verwendung dieses Clienten mit nicht unterstützten Serverversionen ist ungetestet und möglicherweise gefährlich. Fortfahren auf eigenes Risiko.</translation>
+        <translation>Der Server auf Konto %1 läuft mit einer nicht unterstützten Version %2. Die Verwendung dieses Clients mit nicht unterstützten Serverversionen wurde nicht getestet und ist möglicherweise gefährlich. Fortfahren auf eigenes Risiko.</translation>
     </message>
     <message>
         <source>Disconnected from %1</source>
@@ -2064,7 +2059,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Account synchronization is disabled</source>
-        <translation>Account Synchronisation ist deaktiviert</translation>
+        <translation>Kontosynchronisierung ist deaktiviert</translation>
     </message>
     <message>
         <source>Folder %1: %2</source>
@@ -2072,11 +2067,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>There are no sync folders configured.</source>
-        <translation>Es wurden keine Synchonisationsordner konfiguriert.</translation>
+        <translation>Es wurden keine Synchronisierungsordner konfiguriert.</translation>
     </message>
     <message>
         <source>Unable to open folder path %1.</source>
-        <translation>Ordnerpfad kann nicht geöffnet werden %1.</translation>
+        <translation>Ordnerpfad %1 kann nicht geöffnet werden.</translation>
     </message>
 </context>
 <context>
@@ -2090,7 +2085,7 @@ for additional privileges during the process.</source>
     <name>OCC::ProcessDirectoryJob</name>
     <message>
         <source>Symbolic links are not supported in syncing.</source>
-        <translation>Symbolische Verknüpfungen werden bei der Synchronisation nicht unterstützt.</translation>
+        <translation>Symbolische Verknüpfungen werden bei der Synchronisierung nicht unterstützt.</translation>
     </message>
     <message>
         <source>File is listed on the ignore list.</source>
@@ -2098,11 +2093,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>File names ending with a period are not supported on this file system.</source>
-        <translation>Dateinamen die mit einem Punkt enden sind in diesem Dateisystem nicht unterstützt.</translation>
-    </message>
-    <message>
-        <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
-        <translation type="vanished">Dateinamen beinhalten das Zeichen &apos;%1&apos; diese werden in diesem Dateisystem nicht unterstützt.</translation>
+        <translation>Dateinamen, die mit einem Punkt enden, werden in diesem Dateisystem nicht unterstützt.</translation>
     </message>
     <message>
         <source>File name contains at least one invalid character</source>
@@ -2122,7 +2113,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
-        <translation>Datei wird ignoriert, weil sie versteckt ist.</translation>
+        <translation>Datei / Ordner wird ignoriert, weil sie / er versteckt ist.</translation>
     </message>
     <message>
         <source>Stat failed.</source>
@@ -2146,7 +2137,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>size</source>
-        <translation>Größe</translation>
+        <translation>Grösse</translation>
     </message>
     <message>
         <source>permissions</source>
@@ -2166,27 +2157,27 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Moved to invalid target, restoring</source>
-        <translation>An ungültigen Zielort verschoben, Wiederherstellung</translation>
+        <translation>An ungültigen Zielort verschoben, wird wiederhergestellt</translation>
     </message>
     <message>
         <source>Not allowed to remove, restoring</source>
-        <translation>Löschen nicht erlaubt, Wiederherstellung</translation>
+        <translation>Löschen nicht erlaubt, wird wiederhergestellt</translation>
     </message>
     <message>
         <source>Ignored because of the &quot;choose what to sync&quot; blacklist</source>
-        <translation>Aufgrund der »Zu synchronisierende Elemente auswählen«-Sperrliste ignoriert</translation>
+        <translation>Aufgrund der &quot;Zu synchronisierende Elemente auswählen&quot;-Sperrliste ignoriert</translation>
     </message>
     <message>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
-        <translation>Nicht erlaubt, da Sie keine Rechte zur Erstellung von Unterordnern haben</translation>
+        <translation>Nicht erlaubt, da Sie keine Berechtigung besitzen, Unterordner zu diesem Ordner hinzuzufügen</translation>
     </message>
     <message>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
-        <translation>Nicht erlaubt, da Sie keine Rechte zum Hinzufügen von Dateien in diesen Ordner haben</translation>
+        <translation>Nicht erlaubt, da Sie keine Berechtigung besitzen, Dateien zu diesem Ordner hinzuzufügen</translation>
     </message>
     <message>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
-        <translation>Das Hochladen dieser Datei ist nicht erlaubt, da die Datei auf dem Server schreibgeschützt ist, Wiederherstellung</translation>
+        <translation>Das Hochladen dieser Datei ist nicht erlaubt, da die Datei auf dem Server schreibgeschützt ist, wird wieder hergestellt</translation>
     </message>
     <message>
         <source>Error while reading the database</source>
@@ -2194,11 +2185,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Server replied with an error while reading directory &apos;%1&apos; : %2</source>
-        <translation>Der Server meldet einen Fehler beim Lesen des Ordners &apos;%1&apos; : %2</translation>
+        <translation>Der Server hat einen Fehler beim Lesen des Verzeichnisses &apos;%1&apos; gemeldet: %2</translation>
     </message>
     <message>
         <source>Your operating system does not support &apos;%1&apos; character in file names. Synchronization could not be performed. Please rename the affected file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ihr Betriebssystem unterstützt kein &apos;%1&apos;-Zeichen in Dateinamen. Die Synchronisation konnte nicht durchgeführt werden. Bitte benennen Sie die betroffene Datei um.</translation>
     </message>
 </context>
 <context>
@@ -2212,19 +2203,19 @@ for additional privileges during the process.</source>
     <name>OCC::PropagateDownloadFile</name>
     <message>
         <source>File %1 can not be downloaded because of a local file name clash!</source>
-        <translation>Die Datei %1 kann aufgrund eines Konfliktes mit dem lokalen Dateinamen nicht herunter geladen werden!</translation>
+        <translation>Die Datei %1 kann aufgrund eines Konflikts mit dem lokalen Dateinamen nicht heruntergeladen werden!</translation>
     </message>
     <message>
         <source>The download would reduce free local disk space below the limit</source>
-        <translation>Das Herunterladen würde den lokalen freien Speicherplatz unter das Limit reduzieren</translation>
+        <translation>Das Herunterladen würde den lokalen freien Speicherplatz unter das Limit bringen</translation>
     </message>
     <message>
         <source>Free space on disk is less than %1</source>
-        <translation>Der freie Speicher auf der Festplatte ist weniger als %1</translation>
+        <translation>Der freie Festplattenplatz beträgt weniger als %1</translation>
     </message>
     <message>
         <source>Download slot finished, but there was no reply!</source>
-        <translation>Herunterladen eines Teils beendet, aber es kam keine Antwort!</translation>
+        <translation>Download-Slot abgeschlossen, aber es kam keine Antwort!</translation>
     </message>
     <message>
         <source>File was deleted from server</source>
@@ -2232,19 +2223,19 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>The file could not be downloaded completely.</source>
-        <translation>Die Datei konnte nicht vollständig herunter geladen werden.</translation>
+        <translation>Die Datei konnte nicht vollständig heruntergeladen werden.</translation>
     </message>
     <message>
         <source>The downloaded file is empty despite the server announced it should have been %1.</source>
-        <translation>Die heruntergeladene Datei ist leer, obwohl der Server %1  als Größe übermittelt hat.</translation>
+        <translation>Die heruntergeladene Datei ist leer, obwohl der Server %1 als Grösse übermittelt hat.</translation>
     </message>
     <message>
         <source>File %1 cannot be saved because of a local file name clash!</source>
-        <translation>Die Datei %1 kann aufgrund eines Konfliktes mit dem lokalen Dateinamen nicht gespeichert geladen werden!</translation>
+        <translation>Die Datei %1 kann aufgrund eines Konflikts mit dem lokalen Dateinamen nicht gespeichert werden!</translation>
     </message>
     <message>
         <source>File has changed since discovery</source>
-        <translation>Datei ist seit der Entdeckung geändert worden</translation>
+        <translation>Datei wurde seit Entdeckung geändert</translation>
     </message>
     <message>
         <source>Error writing metadata to the database</source>
@@ -2252,7 +2243,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>File conversion to placeholder failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Dateiumwandlung in Platzhalter fehlgeschlagen</translation>
     </message>
 </context>
 <context>
@@ -2263,11 +2254,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>A file or folder was removed from a read only share, but restoring failed: %1</source>
-        <translation>Eine Datei oder ein Ordner wurde von einer Nur-Lese-Freigabe wiederhergestellt, aber die Wiederherstellung ist mit folgendem Fehler fehlgeschlagen: %1</translation>
+        <translation>Eine Datei oder ein Ordner wurde von einer Nur-Lese-Freigabe entfernt, aber die Wiederherstellung ist fehlgeschlagen: %1</translation>
     </message>
     <message>
         <source>Synchronization cannot be done because the file is opened at the same time locally and on kDrive webapp.</source>
-        <translation>Die Synchronisierung kann nicht durchgeführt werden, da die Datei gleichzeitig lokal und in der kDrive-Webanwendung geöffnet wird.</translation>
+        <translation>Die Synchronisierung kann nicht durchgeführt werden, da die Datei gleichzeitig lokal und in der kDrive-Webanwendung geöffnet ist.</translation>
     </message>
 </context>
 <context>
@@ -2278,11 +2269,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Attention, possible case sensitivity clash with %1</source>
-        <translation>Achtung, es könnte ein Problem mit der Groß- und Kleinschreibung für %1 auftreten</translation>
+        <translation>Achtung, es könnte ein Problem mit der Gross- und Kleinschreibung für %1 auftreten</translation>
     </message>
     <message>
         <source>could not create folder %1</source>
-        <translation>Ordner %1 konnte nicht angelegt werden </translation>
+        <translation>Ordner %1 konnte nicht erstellt werden </translation>
     </message>
     <message>
         <source>Error writing metadata to the database</source>
@@ -2293,14 +2284,14 @@ for additional privileges during the process.</source>
     <name>OCC::PropagateLocalRemove</name>
     <message>
         <source>Could not remove %1 because of a local file name clash</source>
-        <translation>%1 kann aufgrund eines Konfliktes mit dem lokalen Dateinamen nicht gelöscht werden</translation>
+        <translation>%1 konnte aufgrund eines Konflikts mit dem lokalen Dateinamen nicht gelöscht werden</translation>
     </message>
 </context>
 <context>
     <name>OCC::PropagateLocalRename</name>
     <message>
         <source>File %1 can not be renamed to %2 because of a local file name clash</source>
-        <translation>%1 kann aufgrund eines Konfliktes mit dem lokalen Dateinamen nicht zu %2 umbenannt werden</translation>
+        <translation>%1 kann aufgrund eines Konflikts mit dem lokalen Dateinamen nicht in %2 umbenannt werden</translation>
     </message>
     <message>
         <source>Error writing metadata to the database</source>
@@ -2308,21 +2299,21 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Error setting pin state</source>
-        <translation>Fehler beim Setzen des PIN-Zustandes</translation>
+        <translation>Fehler beim Festlegen des PIN-Zustands</translation>
     </message>
 </context>
 <context>
     <name>OCC::PropagateRemoteDelete</name>
     <message>
         <source>Wrong HTTP code returned by server. Expected 204, but received &quot;%1 %2&quot;.</source>
-        <translation>Es wurde ein falscher HTTP-Status-Code vom Server gesendet. Erwartet wurde 204, aber gesendet wurde &quot;%1 %2&quot;.</translation>
+        <translation>Es wurde ein falscher HTTP-Code vom Server gesendet. Erwartet wurde 204, aber gesendet wurde &quot;%1 %2&quot;.</translation>
     </message>
 </context>
 <context>
     <name>OCC::PropagateRemoteMkdir</name>
     <message>
         <source>Wrong HTTP code returned by server. Expected 201, but received &quot;%1 %2&quot;.</source>
-        <translation>Es wurde ein falscher HTTP-Status-Code vom Server gesendet. Erwartet wurde 201, aber gesendet wurde &quot;%1 %2&quot;.</translation>
+        <translation>Es wurde ein falscher HTTP-Code vom Server gesendet. Erwartet wurde 201, aber gesendet wurde &quot;%1 %2&quot;.</translation>
     </message>
     <message>
         <source>Error writing metadata to the database</source>
@@ -2333,11 +2324,11 @@ for additional privileges during the process.</source>
     <name>OCC::PropagateRemoteMove</name>
     <message>
         <source>Could not rename %1 to %2, error: %3</source>
-        <translation>Konnte %1 nicht nach %2 umbenennen, Fehler: %3</translation>
+        <translation>Konnte %1 nicht in %2 umbenennen, Fehler: %3</translation>
     </message>
     <message>
         <source>Wrong HTTP code returned by server. Expected 201, but received &quot;%1 %2&quot;.</source>
-        <translation>Es wurde ein falscher HTTP-Status-Code vom Server gesendet. Erwartet wurde 201, aber gesendet wurde &quot;%1 %2&quot;.</translation>
+        <translation>Es wurde ein falscher HTTP-Code vom Server gesendet. Erwartet wurde 201, aber gesendet wurde &quot;%1 %2&quot;.</translation>
     </message>
     <message>
         <source>Error writing metadata to the database</source>
@@ -2345,30 +2336,30 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Error setting pin state</source>
-        <translation>Fehler beim Setzen des PIN-Zustandes</translation>
+        <translation>Fehler beim Festlegen des PIN-Zustands</translation>
     </message>
 </context>
 <context>
     <name>OCC::PropagateUploadFileCommon</name>
     <message>
         <source>File %1 cannot be uploaded because another file with the same name, differing only in case, exists</source>
-        <translation>Die Datei %1 kann nicht hochgeladen werden, da eine andere Datei mit dem selben Namen, nur unterschiedlicher Großschreibung, existiert</translation>
+        <translation>Die Datei %1 kann nicht hochgeladen werden, da eine andere Datei mit demselben Namen, aber unterschiedlicher Grossschreibung besteht</translation>
     </message>
     <message>
         <source>File Removed</source>
-        <translation>Datei gelöscht</translation>
+        <translation>Datei entfernt</translation>
     </message>
     <message>
         <source>Local file changed during syncing. It will be resumed.</source>
-        <translation>Lokale Datei hat sich während der Synchronisation geändert. Die Synchronisation wird wiederaufgenommen.</translation>
+        <translation>Die lokale Datei hat sich während der Synchronisierung geändert. Synchronisierung wird wiederaufgenommen.</translation>
     </message>
     <message>
         <source>Local file changed during sync.</source>
-        <translation>Eine lokale Datei wurde während der Synchronisation geändert.</translation>
+        <translation>Lokale Datei wurde während der Synchronisierung geändert.</translation>
     </message>
     <message>
         <source>Upload of %1 exceeds the quota for the folder</source>
-        <translation>Das Hochladen von %1 überschreitet das Speicherkontingent des Ordners </translation>
+        <translation>Das Hochladen von %1 überschreitet das Kontingent des Ordners </translation>
     </message>
     <message>
         <source>Error writing metadata to the database</source>
@@ -2379,19 +2370,19 @@ for additional privileges during the process.</source>
     <name>OCC::PropagateUploadFileNG</name>
     <message>
         <source>Failed to get zsync byte ranges.</source>
-        <translation>Fehler bei zsync_needed_byte_ranges().</translation>
+        <translation>Fehler beim Abruf der zsync byte-Spannen.</translation>
     </message>
     <message>
         <source>Failed to generate zsync file.</source>
-        <translation>Fehler beim Erzeugen der zsync Datei.</translation>
+        <translation>Fehler beim das Erstellen der zsync-Datei.</translation>
     </message>
     <message>
         <source>The local file was removed during sync.</source>
-        <translation>Die lokale Datei wurde während der Synchronisation gelöscht.</translation>
+        <translation>Die lokale Datei wurde während der Synchronisierung entfernt.</translation>
     </message>
     <message>
         <source>Local file changed during sync.</source>
-        <translation>Eine lokale Datei wurde während der Synchronisation geändert.</translation>
+        <translation>Lokale Datei wurde während der Synchronisierung geändert.</translation>
     </message>
     <message>
         <source>Poll URL missing</source>
@@ -2399,7 +2390,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Unexpected return code from server (%1)</source>
-        <translation>Unerwarteter Rückgabe-Code Antwort vom Server (%1)</translation>
+        <translation>Unerwarteter Rückgabe-Code vom Server (%1)</translation>
     </message>
     <message>
         <source>Missing File ID from server</source>
@@ -2407,7 +2398,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Missing ETag from server</source>
-        <translation>Fehlender ETag vom Server</translation>
+        <translation>Fehlendes ETag vom Server</translation>
     </message>
 </context>
 <context>
@@ -2418,15 +2409,15 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>The local file was removed during sync.</source>
-        <translation>Die lokale Datei wurde während der Synchronisation gelöscht.</translation>
+        <translation>Die lokale Datei wurde während der Synchronisierung entfernt.</translation>
     </message>
     <message>
         <source>Local file changed during sync.</source>
-        <translation>Eine lokale Datei wurde während der Synchronisation geändert.</translation>
+        <translation>Lokale Datei wurde während der Synchronisierung geändert.</translation>
     </message>
     <message>
         <source>The server did not acknowledge the last chunk. (No e-tag was present)</source>
-        <translation>Der Server hat den letzten Block nicht bestätigt. (Der E-Tag war nicht vorhanden)</translation>
+        <translation>Der Server hat den letzten Block nicht bestätigt. (Kein E-Tag vorhanden)</translation>
     </message>
 </context>
 <context>
@@ -2506,7 +2497,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>The server does not allow sharing</source>
-        <translation>Der Server erlaubt das teilen nicht</translation>
+        <translation>Der Server erlaubt keine Freigaben</translation>
     </message>
     <message>
         <source>Retrieving maximum possible sharing permissions from server...</source>
@@ -2514,7 +2505,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>The file can not be shared because it was shared without sharing permission.</source>
-        <translation>Die Datei kann nicht geteilt werden, weil sie ohne erneute Teilungs-Berechtigung für Sie geteilt wurde.</translation>
+        <translation>Die Datei kann nicht freigegeben werden, weil sie ohne Freigabeberechtigung freigegeben wurde.</translation>
     </message>
     <message>
         <source>Users and Groups</source>
@@ -2529,11 +2520,11 @@ for additional privileges during the process.</source>
     <name>OCC::ShareLinkWidget</name>
     <message>
         <source>Share NewDocument.odt</source>
-        <translation>Teile NewDocument.odt</translation>
+        <translation>NewDocument.odt freigeben</translation>
     </message>
     <message>
         <source>Upload only (File Drop)</source>
-        <translation>Nur hochladen (Datei hineinziehen)</translation>
+        <translation>Nur hochladen (Datei ziehen)</translation>
     </message>
     <message>
         <source>Receive files from others without revealing the contents of the folder.</source>
@@ -2549,7 +2540,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>&amp;Create</source>
-        <translation>Erstellen</translation>
+        <translation>&amp;Erstellen</translation>
     </message>
     <message>
         <source>TextLabel</source>
@@ -2557,15 +2548,15 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Set &amp;password </source>
-        <translation>&amp;password festlegen</translation>
+        <translation>&amp;Passwort festlegen</translation>
     </message>
     <message>
         <source>Set &amp;expiration date</source>
-        <translation>Ablaufdatum setzen</translation>
+        <translation>&amp;Ablaufdatum setzen</translation>
     </message>
     <message>
         <source>Set password</source>
-        <translation>Passwort setzen</translation>
+        <translation>Passwort festlegen</translation>
     </message>
     <message>
         <source>Recipients can view or download contents.</source>
@@ -2573,31 +2564,31 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Download / View</source>
-        <translation>Herunterladen/Ansehen</translation>
+        <translation>Herunterladen / Ansehen</translation>
     </message>
     <message>
         <source>Recipients can view, download, edit, delete and upload contents.</source>
-        <translation>Empfänger können Inhalte sehen, herunterladen, ändern, löschen und hochladen.</translation>
+        <translation>Empfänger können Inhalte einsehen, herunterladen, bearbeiten, löschen und hochladen.</translation>
     </message>
     <message>
         <source>Anyone with the link has access to the file/folder</source>
-        <translation>Jeder mit dem Link hat Zugriff auf die Datei/Ordner</translation>
+        <translation>Jeder mit dem Link hat Zugriff auf die Datei / den Ordner</translation>
     </message>
     <message>
         <source>P&amp;assword protect</source>
-        <translation>Passwort geschützt</translation>
+        <translation>P&amp;asswortschutz</translation>
     </message>
     <message>
         <source>The file can not be shared because it was shared without sharing permission.</source>
-        <translation>Die Datei kann nicht geteilt werden, weil sie ohne erneute Teilungs-Berechtigung für Sie geteilt wurde.</translation>
+        <translation>Die Datei kann nicht freigegeben werden, weil sie ohne Freigabeberechtigung freigegeben wurde.</translation>
     </message>
     <message>
         <source>Link shares have been disabled</source>
-        <translation>Das Teilen von Links wurde deaktiviert</translation>
+        <translation>Die Freigabe von Links wurde deaktiviert</translation>
     </message>
     <message>
         <source>Create public link share</source>
-        <translation>Öffentlichen Link zum Teilen erstellen</translation>
+        <translation>Öffentlichen Link zum Freigeben erstellen</translation>
     </message>
     <message>
         <source>Delete</source>
@@ -2613,7 +2604,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Copy link to clipboard (direct download)</source>
-        <translation>Link in die Zwischenablage kopieren (direkter download)</translation>
+        <translation>Link in Zwischenablage kopieren (direkter Download)</translation>
     </message>
     <message>
         <source>Send link by email</source>
@@ -2621,7 +2612,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Send link by email (direct download)</source>
-        <translation>Link per Email senden (direkter download)</translation>
+        <translation>Link per E-Mail verschicken (direkter Download)</translation>
     </message>
     <message>
         <source>Create new...</source>
@@ -2633,7 +2624,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Confirm Link Share Deletion</source>
-        <translation>Löschung des öffentlichen Links bestätigen</translation>
+        <translation>Löschung des freigegebenen Links bestätigen</translation>
     </message>
     <message>
         <source>&lt;p&gt;Do you really want to delete the public link share &lt;i&gt;%1&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;Note: This action cannot be undone.&lt;/p&gt;</source>
@@ -2649,11 +2640,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Delete link share</source>
-        <translation>Öffentlichen Link löschen</translation>
+        <translation>Freigegebenen Link löschen</translation>
     </message>
     <message>
         <source>Please Set Password</source>
-        <translation>Bitte wählen Sie ein Passwort:</translation>
+        <translation>Bitte wählen Sie ein Passwort</translation>
     </message>
     <message>
         <source>Download / View / Edit</source>
@@ -2664,7 +2655,7 @@ for additional privileges during the process.</source>
     <name>OCC::ShareUserGroupWidget</name>
     <message>
         <source>Share NewDocument.odt</source>
-        <translation>Teile NewDocument.odt</translation>
+        <translation>NewDocument.odt freigeben</translation>
     </message>
     <message>
         <source>Share with users or groups ...</source>
@@ -2672,11 +2663,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can direct people to this shared file or folder &lt;a href=&quot;private link menu&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;by giving them a private link&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sie können Personen direkt zu dieser Freigabe leiten,&lt;a href=&quot;private link menu&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt; wenn Sie Ihnen diesen privaten Link &lt;/span&gt;&lt;/a&gt; geben.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sie können Personen direkt zu dieser freigegebenen Datei leiten,&lt;a href=&quot;private link menu&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt; wenn Sie ihnen einen privaten Link &lt;/span&gt;&lt;/a&gt; geben.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>The item is not shared with any users or groups</source>
-        <translation>Das Element wird mit keinem Benutzer oder Gruppe geteilt</translation>
+        <translation>Das Element wird mit keinen Benutzern oder Gruppen geteilt</translation>
     </message>
     <message>
         <source>Open link in browser</source>
@@ -2727,7 +2718,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>change</source>
-        <translation>Ändern</translation>
+        <translation>ändern</translation>
     </message>
     <message>
         <source>delete</source>
@@ -2755,7 +2746,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Do you want to delete the directory &lt;i&gt;%1&lt;/i&gt; and all its contents permanently?</source>
-        <translation>Möchten Sie den Ordner &lt;i&gt;%1&lt;/i&gt; und alle seine Inhalte dauerhaft löschen?</translation>
+        <translation>Möchten Sie das Verzeichnis &lt;i&gt;%1&lt;/i&gt; und alle seine Inhalte dauerhaft löschen?</translation>
     </message>
     <message>
         <source>Do you want to delete the file &lt;i&gt;%1&lt;/i&gt; permanently?</source>
@@ -2783,19 +2774,19 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Copy private link to clipboard</source>
-        <translation>Privater Link in die Zwischenablage kopiert</translation>
+        <translation>Privaten Link in die Zwischenablage kopieren</translation>
     </message>
     <message>
         <source>Send private link by email...</source>
-        <translation>Sende privaten Link per Email...</translation>
+        <translation>Privaten Link per E-Mail senden...</translation>
     </message>
     <message>
         <source>Resharing this file is not allowed</source>
-        <translation>Weiter-Teilen dieser Datei ist nicht erlaubt</translation>
+        <translation>Die erneute Freigabe dieser Datei ist nicht erlaubt</translation>
     </message>
     <message>
         <source>Resharing this folder is not allowed</source>
-        <translation>Weiterteilen des Ordners ist nicht erlaubt</translation>
+        <translation>Die erneute Freigabe des Ordners ist nicht erlaubt</translation>
     </message>
     <message>
         <source>Copy public link to clipboard</source>
@@ -2807,7 +2798,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Show file versions in browser</source>
-        <translation>Zeige Dateiversionen im Browser</translation>
+        <translation>Dateiversionen im Browser zeigen</translation>
     </message>
     <message>
         <source>Rename...</source>
@@ -2886,7 +2877,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Effective Date: %1</source>
-        <translation>Aktuelles Datum: %1</translation>
+        <translation>Gültigkeitsdatum: %1</translation>
     </message>
     <message>
         <source>Expiration Date: %1</source>
@@ -2901,7 +2892,7 @@ for additional privileges during the process.</source>
     <name>OCC::SyncEngine</name>
     <message>
         <source>%1 (skipped due to earlier error, trying again in %2)</source>
-        <translation>%1 (Übersprungen aufgrund des früheren Fehlers, erneuter Versuch in %2)</translation>
+        <translation>%1 (übersprungen aufgrund eines früheren Fehlers, erneuter Versuch in %2)</translation>
     </message>
     <message>
         <source>Only %1 are available, need at least %2 to start</source>
@@ -2910,15 +2901,15 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Unable to open or create the local sync database. Make sure you have write access in the sync folder.</source>
-        <translation>Öffnen oder Erstellen der Sync-Datenbank nicht möglich. Bitte sicherstellen, dass Schreibrechte für den zu synchronisierenden Ordner existieren.</translation>
+        <translation>Öffnen oder Erstellen der lokalen Sync-Datenbank nicht möglich. Bitte sicherstellen, dass Schreibrechte für den zu synchronisierenden Ordner existieren.</translation>
     </message>
     <message>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
-        <translation>Der freie Speicherplatz wird knapp: Downloads, die den freien Speicher unter %1 senken, wurden ausgelassen.</translation>
+        <translation>Der Festplattenplatz wird knapp: Downloads, die den ungenutzten Speicher unter %1 bringen, wurden übersprungen.</translation>
     </message>
     <message>
         <source>There is insufficient space available on the server for some uploads.</source>
-        <translation>Auf dem Server ist für einige Dateien zum Hochladen nicht genug Platz.</translation>
+        <translation>Für einige Uploads ist auf dem Server nicht genug Platz.</translation>
     </message>
     <message>
         <source>Unresolved conflict.</source>
@@ -2934,15 +2925,15 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Unable to read the blacklist from the local database</source>
-        <translation>Fehler beim Einlesen der Blacklist aus der lokalen Datenbank</translation>
+        <translation>Blacklist aus der lokalen Datenbank kann nicht gelesen werden</translation>
     </message>
     <message>
         <source>Unable to read from the sync journal.</source>
-        <translation>Fehler beim Einlesen des Synchronisierungsprotokolls.</translation>
+        <translation>Synchronisierungsprotokoll kann nicht gelesen werden.</translation>
     </message>
     <message>
         <source>Cannot open the sync journal</source>
-        <translation>Synchronisationsbericht kann nicht geöffnet werden</translation>
+        <translation>Synchronisierungsprotokoll kann nicht geöffnet werden</translation>
     </message>
     <message>
         <source>Aborted</source>
@@ -2960,7 +2951,7 @@ for additional privileges during the process.</source>
     <name>OCC::Theme</name>
     <message>
         <source>&lt;p&gt;Version %2. For more information visit &lt;a href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://central.owncloud.org/c/desktop-client&quot;&gt;https://central.owncloud.org&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;small&gt;By Klaas Freitag, Daniel Molkentin, Olivier Goffart, Markus Götz,  Jan-Christoph Borchardt, and others.&lt;/small&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Version %2. Für mehr Informationen gehe auf &lt;a href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Für bekannte Probleme und Hilfe gehe bitte auf: &lt;a href=&quot;https://central.owncloud.org/c/desktop-client&quot;&gt;https://central.owncloud.org&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;small&gt;Von Klaas Freitag, Daniel Molkentin, Olivier Goffart, Markus Götz, Jan-Christoph Borchardt, und anderen.&lt;/small&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Version %2. Weitere Infos unter &lt;a href=&quot;%3&quot;&gt;https://%4&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Hinweise zu bekannten Problemen und Hilfe unter: &lt;a href=&quot;https://central.owncloud.org/c/desktop-client&quot;&gt;https://central.owncloud.org&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;small&gt;Von Klaas Freitag, Daniel Molkentin, Olivier Goffart, Markus Götz, Jan-Christoph Borchardt, und anderen.&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Copyright ownCloud GmbH&lt;/p&gt;</source>
@@ -2979,11 +2970,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>The checksum header contained an unknown checksum type &apos;%1&apos;</source>
-        <translation>Die Prüfsummen-Kopfzeile enthielt den unbekannten Prüfsummentypen &apos;%1&apos;</translation>
+        <translation>Die Prüfsummen-Kopfzeile enthielt den unbekannten Prüfsummentyp &apos;%1&apos;</translation>
     </message>
     <message>
         <source>The downloaded file does not match the checksum, it will be resumed.</source>
-        <translation>Die heruntergeladene Datei entspricht nicht der Prüfsumme, das Herunterladen wird wiederaufgenommen.</translation>
+        <translation>Die heruntergeladene Datei entspricht nicht der Prüfsumme, der Download wird wiederaufgenommen.</translation>
     </message>
 </context>
 <context>
@@ -2994,14 +2985,14 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>The host &quot;%1&quot; provided an invalid certificate. Continue?</source>
-        <translation>Der Server &quot;%1&quot; hat ein ungültiges Zertifikat. Fortsetzen?</translation>
+        <translation>Der Server &quot;%1&quot; hat ein ungültiges Zertifikat ausgegeben. Fortsetzen?</translation>
     </message>
 </context>
 <context>
     <name>OCC::WebFlowCredentials</name>
     <message>
         <source>Please login with the user: %1</source>
-        <translation>Mit folgendem Benutzer anmelden: %1</translation>
+        <translation>Bitte melden Sie sich mit folgendem Benutzer an: %1</translation>
     </message>
     <message>
         <source>You have been logged out of %1 as user %2. Please login again.</source>
@@ -3012,15 +3003,15 @@ for additional privileges during the process.</source>
     <name>OCC::ZsyncGenerateRunnable</name>
     <message>
         <source>Failed to open input file %1: %2</source>
-        <translation>Fehler beim Öffnen der Eingabe Datei %1: %2</translation>
+        <translation>Fehler beim Öffnen der Eingabe-Datei %1: %2</translation>
     </message>
     <message>
         <source>Failed to open input file: %1</source>
-        <translation>Fehler beim Öffnen der Eingabe Datei %1</translation>
+        <translation>Fehler beim Öffnen der Eingabe-Datei: %1</translation>
     </message>
     <message>
         <source>Failed to write block sums:</source>
-        <translation>Fehler beim Schreiben der Block-Summe:</translation>
+        <translation>Fehler beim Schreiben der Blocksummen:</translation>
     </message>
     <message>
         <source>Failed to write zsync metadata file:</source>
@@ -3031,7 +3022,7 @@ for additional privileges during the process.</source>
     <name>OCC::ZsyncSeedRunnable</name>
     <message>
         <source>Unable to parse zsync file.</source>
-        <translation>Fehler beim Parsen der zsync Datei.</translation>
+        <translation>Fehler beim Parsen der zsync-Datei.</translation>
     </message>
     <message>
         <source>Unable to open file: %1</source>
@@ -3124,43 +3115,43 @@ for additional privileges during the process.</source>
     <message numerus="yes">
         <source>%n year(s)</source>
         <translation>
-            <numerusform>%n Jahr</numerusform>
-            <numerusform>%n Jahre</numerusform>
+            <numerusform>%n Jahr(e)</numerusform>
+            <numerusform>%n Jahr(e)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n month(s)</source>
         <translation>
-            <numerusform>%n Monat</numerusform>
-            <numerusform>%n Monate</numerusform>
+            <numerusform>%n Monat(e)</numerusform>
+            <numerusform>%n Monat(e)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
         <translation>
-            <numerusform>%n Tag</numerusform>
-            <numerusform>%n Tage</numerusform>
+            <numerusform>%n Tag(e)</numerusform>
+            <numerusform>%n Tag(e)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
         <translation>
-            <numerusform>%n Stunde</numerusform>
-            <numerusform>%n Stunden</numerusform>
+            <numerusform>%n Stunde(n)</numerusform>
+            <numerusform>%n Stunde(n)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
         <translation>
-            <numerusform>%n Minute</numerusform>
-            <numerusform>%n Minuten</numerusform>
+            <numerusform>%n Minute(n)</numerusform>
+            <numerusform>%n Minute(n)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
         <translation>
-            <numerusform>%n Sekunde</numerusform>
-            <numerusform>%n Sekunden</numerusform>
+            <numerusform>%n Sekunde(n)</numerusform>
+            <numerusform>%n Sekunde(n)</numerusform>
         </translation>
     </message>
     <message>
@@ -3172,25 +3163,25 @@ for additional privileges during the process.</source>
     <name>main.cpp</name>
     <message>
         <source>System Tray not available</source>
-        <translation>Die Taskleiste ist nicht verfügbar</translation>
+        <translation>Das Benachrichtigungsfeld ist nicht verfügbar</translation>
     </message>
     <message>
         <source>%1 requires on a working system tray. If you are running XFCE, please follow &lt;a href=&quot;http://docs.xfce.org/xfce/xfce4-panel/systray&quot;&gt;these instructions&lt;/a&gt;. Otherwise, please install a system tray application such as &apos;trayer&apos; and try again.</source>
-        <translation>%1 benötigt ein funktionierendes Benachrichtigungsfeld. Falls Sie XFCE einsetzen, dann folgen Sie bitte &lt;a href=&quot;http://docs.xfce.org/xfce/xfce4-panel/systray&quot;&gt;diesen Anweisungen&lt;/a&gt;. Andernfalls installieren Sie bitte ein Benachrichtigungsfeld wie zum Beispiel „Trayer“ und versuchen es nochmal.</translation>
+        <translation>%1 benötigt ein funktionierendes Benachrichtigungsfeld. Falls Sie XFCE einsetzen, dann befolgen Sie bitte &lt;a href=&quot;http://docs.xfce.org/xfce/xfce4-panel/systray&quot;&gt;diese Anweisungen&lt;/a&gt;. Andernfalls installieren Sie bitte ein Benachrichtigungsfeld wie „Trayer“ und versuchen es nochmal.</translation>
     </message>
 </context>
 <context>
     <name>nextcloudTheme::about()</name>
     <message>
         <source>&lt;p&gt;&lt;small&gt;Built from Git revision &lt;a style=&quot;color: #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; on %3, %4 using Qt %5, %6&lt;/small&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;small&gt;Gebaut aus der Git-Revision &lt;a style=&quot;color: #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; am %3, %4 verwendet Qt %5, %6&lt;/small&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;&lt;small&gt;Entwickelt aus der Git-Revision &lt;a style=&quot;color: #489EF3&quot; href=&quot;%1&quot;&gt;%2&lt;/a&gt; am %3, %4 unter Verwendung von Qt %5, %6&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
     <name>ownCloudTheme::about()</name>
     <message>
         <source>&lt;p&gt;&lt;small&gt;Built from Git revision &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt; on %3, %4 using Qt %5, %6&lt;/small&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;small&gt;Gebaut aus der GIT-Revision &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt; am %3, %4; verwendet Qt %5, %6&lt;/small&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;&lt;small&gt;Entwickelt aus der GIT-Revision &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt; am %3, %4; unter Verwendung von Qt %5, %6&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -3221,7 +3212,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Moved to %1</source>
-        <translation>Verschoben nach %1</translation>
+        <translation>Verschoben zu %1</translation>
     </message>
     <message>
         <source>Ignored</source>
@@ -3249,19 +3240,19 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>uploading</source>
-        <translation>Lade hoch</translation>
+        <translation>Hochladen</translation>
     </message>
     <message>
         <source>deleting</source>
-        <translation>Lösche</translation>
+        <translation>Löschen</translation>
     </message>
     <message>
         <source>moving</source>
-        <translation>Verschiebe</translation>
+        <translation>Verschieben</translation>
     </message>
     <message>
         <source>ignoring</source>
-        <translation>ignoriere</translation>
+        <translation>Ignorieren</translation>
     </message>
     <message>
         <source>error</source>
@@ -3269,7 +3260,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>updating local metadata</source>
-        <translation>aktualisiere lokale Metadaten</translation>
+        <translation>lokale Metadaten werden aktualisiert</translation>
     </message>
 </context>
 <context>
@@ -3280,31 +3271,31 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Waiting to start sync</source>
-        <translation>Warte, um mit der Synchronistation zu beginnen</translation>
+        <translation>Synchronisierung ausstehend</translation>
     </message>
     <message>
         <source>Sync is running</source>
-        <translation>Synchronisation läuft</translation>
+        <translation>Synchronisierung läuft</translation>
     </message>
     <message>
         <source>Sync Success</source>
-        <translation>Synchronisation erfolgreich</translation>
+        <translation>Synchronisierung erfolgreich</translation>
     </message>
     <message>
         <source>Sync Success, some files were ignored.</source>
-        <translation>Synchronisation abgeschlossen, einige Dateien wurden ignoriert.</translation>
+        <translation>Synchronisierung erfolgreich, einige Dateien wurden ignoriert.</translation>
     </message>
     <message>
         <source>Sync Error</source>
-        <translation>Synchronisationsfehler</translation>
+        <translation>Synchronisierungsfehler</translation>
     </message>
     <message>
         <source>Setup Error</source>
-        <translation>Installationsfehler</translation>
+        <translation>Setup-Fehler</translation>
     </message>
     <message>
         <source>Preparing to sync</source>
-        <translation>Synchronisation wird vorbereitet</translation>
+        <translation>Synchronisierung wird vorbereitet</translation>
     </message>
     <message>
         <source>Aborting...</source>
@@ -3312,7 +3303,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Sync is paused</source>
-        <translation>Synchronisation wird angehalten</translation>
+        <translation>Synchronisierung wurde angehalten</translation>
     </message>
 </context>
 <context>
@@ -3327,11 +3318,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Could not open email client</source>
-        <translation>Die E-Mail Anwendung konnte nicht geöffnet werden</translation>
+        <translation>Die E-Mail-Anwendung konnte nicht geöffnet werden</translation>
     </message>
     <message>
         <source>There was an error when launching the email client to create a new message. Maybe no default email client is configured?</source>
-        <translation>Es ist ein Fehler beim Öffnen einer E-Mail Anwendung zum Erstellen einer neuen Nachricht aufgetreten. Vielleicht ist keine E-Mail Anwendung konfiguriert?</translation>
+        <translation>Beim Öffnen der E-Mail-Anwendung für das Erstellen einer neuen Nachricht ist ein Fehler aufgetreten. Ist vielleicht keine E-Mail-Anwendung konfiguriert?</translation>
     </message>
     <message>
         <source>Always available locally</source>
@@ -3339,11 +3330,11 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Some available online only</source>
-        <translation>Nur einige Online verfügbar</translation>
+        <translation>Einige nur online verfügbar</translation>
     </message>
     <message>
         <source>Available online only</source>
-        <translation>Nur Online verfügbar</translation>
+        <translation>Nur online verfügbar</translation>
     </message>
     <message>
         <source>Currently available locally</source>
@@ -3351,7 +3342,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Make always available locally</source>
-        <translation>Auf immer lokal verfügbar umschalten</translation>
+        <translation>Immer lokal verfügbar machen</translation>
     </message>
     <message>
         <source>Free up local space</source>
@@ -3359,7 +3350,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Synchronization paused.</source>
-        <translation>Synchronisation pausiert.</translation>
+        <translation>Synchronisierung pausiert.</translation>
     </message>
     <message>
         <source>No folder to synchronize.</source>
@@ -3373,7 +3364,7 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Waiting for synchronization...</source>
-        <translation>Warten auf Synchronisierung...</translation>
+        <translation>Synchronisierung ausstehend...</translation>
     </message>
     <message>
         <source>Synchronization in progress.</source>
@@ -3381,15 +3372,15 @@ for additional privileges during the process.</source>
     </message>
     <message>
         <source>Preparing to synchronize...</source>
-        <translation>Synchronisation wird vorbereitet...</translation>
+        <translation>Synchronisierung wird vorbereitet...</translation>
     </message>
     <message>
         <source>You are up to date, unresolved conflicts.</source>
-        <translation>Sie sind up to date! Ungelöste Konflikte.</translation>
+        <translation>Sie sind auf dem neuesten Stand, ungelöste Konflikte.</translation>
     </message>
     <message>
         <source>You are up to date!</source>
-        <translation>Sie sind up to date ! </translation>
+        <translation>Sie sind auf dem neuesten Stand!</translation>
     </message>
     <message>
         <source>Some files couldn&apos;t be synchronized.</source>
