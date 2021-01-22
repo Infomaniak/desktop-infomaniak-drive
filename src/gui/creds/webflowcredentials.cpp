@@ -162,6 +162,7 @@ void WebFlowCredentials::askFromUser() {
     _askDialog->show();
 
     connect(_askDialog, &WebFlowCredentialsDialog::urlCatched, this, &WebFlowCredentials::slotAskFromUserCredentialsProvided);
+    connect(_askDialog, &WebFlowCredentialsDialog::rejected, this, &WebFlowCredentials::slotAskFromUserCredentialsRejected);
 
     qCDebug(lcWebFlowCredentials()) << "User needs to reauth!";
 }
@@ -197,6 +198,10 @@ void WebFlowCredentials::slotAskFromUserCredentialsProvided(const QString &user,
     _askDialog = nullptr;
 }
 
+void WebFlowCredentials::slotAskFromUserCredentialsRejected()
+{
+    emit rejected();
+}
 
 bool WebFlowCredentials::stillValid(QNetworkReply *reply) {
     if (reply->error() != QNetworkReply::NoError) {

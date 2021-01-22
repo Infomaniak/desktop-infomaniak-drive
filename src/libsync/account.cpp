@@ -198,6 +198,8 @@ void Account::setCredentials(AbstractCredentials *cred)
         this, &Account::slotCredentialsFetched);
     connect(_credentials.data(), &AbstractCredentials::asked,
         this, &Account::slotCredentialsAsked);
+    connect(_credentials.data(), &AbstractCredentials::rejected,
+        this, &Account::slotCredentialsRejected);
 }
 
 QUrl Account::davUrl() const
@@ -459,6 +461,11 @@ void Account::slotCredentialsFetched()
 void Account::slotCredentialsAsked()
 {
     emit credentialsAsked(_credentials.data());
+}
+
+void Account::slotCredentialsRejected()
+{
+    emit credentialsRejected(_credentials.data());
 }
 
 void Account::handleInvalidCredentials()

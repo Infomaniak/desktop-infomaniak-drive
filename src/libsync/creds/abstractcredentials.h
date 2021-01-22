@@ -106,6 +106,7 @@ Q_SIGNALS:
      * data or not.
      */
     void asked();
+    void rejected();
 
 protected:
     Account *_account;

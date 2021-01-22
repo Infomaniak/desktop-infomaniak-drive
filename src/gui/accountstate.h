@@ -147,6 +147,7 @@ protected Q_SLOTS:
     void slotInvalidCredentials();
     void slotCredentialsFetched(AbstractCredentials *creds);
     void slotCredentialsAsked(AbstractCredentials *creds);
+    void slotCredentialsRejected(AbstractCredentials *creds);
 
 private:
     AccountPtr _account;
