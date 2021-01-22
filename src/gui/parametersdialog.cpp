@@ -92,6 +92,20 @@ ParametersDialog::ParametersDialog(QWidget *parent)
             this, &ParametersDialog::onItemCompleted);
 }
 
+bool ParametersDialog::event(QEvent *event)
+{
+    bool ret = QDialog::event(event);
+    if (event->type() == QEvent::Show || event->type() == QEvent::Hide) {
+        // Activate/deactivate quota request
+        auto accountInfoIt = _accountInfoMap.begin();
+        while (accountInfoIt != _accountInfoMap.end()) {
+            accountInfoIt->second._quotaInfoPtr->setActive(event->type() == QEvent::Show);
+            accountInfoIt++;
+        }
+    }
+    return ret;
+}
+
 void ParametersDialog::openPreferencesPage()
 {
     onDisplayPreferences();

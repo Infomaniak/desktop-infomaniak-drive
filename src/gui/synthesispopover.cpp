@@ -425,6 +425,14 @@ bool SynthesisPopover::event(QEvent *event)
         setGraphicsEffect(nullptr);
         done(QDialog::Accepted);
     }
+    else if (event->type() == QEvent::Show || event->type() == QEvent::Hide) {
+        // Activate/deactivate quota request
+        auto accountInfoIt = _accountInfoMap.begin();
+        while (accountInfoIt != _accountInfoMap.end()) {
+            accountInfoIt->second._quotaInfoPtr->setActive(event->type() == QEvent::Show);
+            accountInfoIt++;
+        }
+    }
     return ret;
 }
 

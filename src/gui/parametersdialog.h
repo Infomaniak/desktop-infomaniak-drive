@@ -85,6 +85,8 @@ private:
     QStackedWidget *_errorsStackedWidget;
     std::map<QString, AccountInfoParameters> _accountInfoMap;
 
+    bool event(QEvent *event) override;
+
     void initUI();
     QByteArray contents(const QString& path);
     void reset();

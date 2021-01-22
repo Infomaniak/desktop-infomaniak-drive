@@ -50,7 +50,7 @@ void AccountInfo::initQuotaInfo(OCC::AccountState *accountState)
 {
     if (accountState) {
         _quotaInfoPtr = std::unique_ptr<OCC::QuotaInfo>(new OCC::QuotaInfo(accountState));
-        _quotaInfoPtr.get()->setActive(true);
+        _quotaInfoPtr.get()->setActive(false);
         _quotaInfoPtr.get()->setProperty(accountIdProperty, accountState->account()->id());
     }
 }
