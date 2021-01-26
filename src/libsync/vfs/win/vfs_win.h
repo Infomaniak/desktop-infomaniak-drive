@@ -64,7 +64,7 @@ public slots:
     void fileStatusChanged(const QString &path, OCC::SyncFileStatus status) override;
 
 protected:
-    void startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSID = QString()) override;
+    void startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSID) override;
 
 private:
     void dehydrate(const QString &path);

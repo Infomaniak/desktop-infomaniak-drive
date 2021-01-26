@@ -253,7 +253,7 @@ void SocketApi::slotReadSocket()
 }
 
 void SocketApi::slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
-                                     const QString &fileRelativePath, unsigned int width, const OCC::SocketListener *listener)
+                                     unsigned int width, uint64_t iNode, const OCC::SocketListener *listener)
 {
     if (statusCode != 200) {
         qCWarning(lcSharing) << "Thumbnail status code: " << statusCode;
@@ -262,7 +262,7 @@ void SocketApi::slotThumbnailFetched(const int &statusCode, const QByteArray &re
 
     QPixmap pixmap;
     if (!pixmap.loadFromData(reply)) {
-        qCWarning(lcSharing) << "Error in pixmap.loadFromData for " << fileRelativePath;
+        qCWarning(lcSharing) << "Error in pixmap.loadFromData for file with iNode " << iNode;
         return;
     }
 
@@ -281,7 +281,7 @@ void SocketApi::slotThumbnailFetched(const int &statusCode, const QByteArray &re
 
     QString pm(pixmapBuffer.data().toBase64());
     listener->sendMessage(QString("GET_THUMBNAIL:%1:%2")
-                          .arg(QDir::toNativeSeparators(fileRelativePath))
+                          .arg(QString::number(iNode))
                           .arg(QString(pixmapBuffer.data().toBase64())));
 }
 
@@ -646,18 +646,23 @@ void SocketApi::command_GET_THUMBNAIL(const QString &argument, OCC::SocketListen
 {
     QStringList argumentList = argument.split(QLatin1Char('\x1e'));
 
-    if (argumentList.size() != 2) {
+    if (argumentList.size() != 3) {
         qCCritical(lcSocketApi) << "Invalid argument " << argument;
         return;
     }
 
+    // Picture width asked
     unsigned int width(argumentList[0].toInt());
     if (width == 0) {
         qCCritical(lcSocketApi) << "Bad width " << width;
         return;
     }
 
-    QString filePath(argumentList[1]);
+    // File iNode
+    uint64_t iNode(argumentList[1].toULongLong());
+
+    // File path
+    QString filePath(argumentList[2]);
     if (!QFileInfo(filePath).isFile()) {
         qCCritical(lcSocketApi) << "Not a file: " << filePath;
         return;
@@ -669,8 +674,11 @@ void SocketApi::command_GET_THUMBNAIL(const QString &argument, OCC::SocketListen
         return;
     }
 
-    QString fileRelativePath = filePath.midRef(folder->path().size()).toUtf8();
-    ThumbnailJob *job = new ThumbnailJob(fileRelativePath, width, listener,
+    QString fileRemotePath = folder->remotePathTrailingSlash() + filePath.midRef(folder->path().size()).toUtf8();
+    if (fileRemotePath.startsWith('/')) {
+        fileRemotePath.remove(0, 1);
+    }
+    ThumbnailJob *job = new ThumbnailJob(fileRemotePath, width, iNode, listener,
                                          folder->accountState()->account(), this);
     connect(job, &ThumbnailJob::jobFinished, this, &SocketApi::slotThumbnailFetched);
     job->start();

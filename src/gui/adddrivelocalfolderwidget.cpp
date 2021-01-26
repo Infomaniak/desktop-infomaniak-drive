@@ -288,7 +288,7 @@ void AddDriveLocalFolderWidget::updateUI()
             if (mode == OCC::Vfs::WindowsCfApi) {
                 // Check file system
                 QString fsName(OCC::Utility::fileSystemName(_localFolderPath));
-                _folderCompatibleWithSmartSync = (fsName == "NTFS");
+                _folderCompatibleWithSmartSync = (fsName == "NTFS" && !QDir(_localFolderPath).isRoot());
                 if (!_folderCompatibleWithSmartSync) {
                     _warningLabel->setText(tr("This folder is not compatible with Lite Sync."
                                               " Please select another folder or if you continue Lite Sync will be disabled."

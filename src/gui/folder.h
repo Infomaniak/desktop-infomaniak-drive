@@ -450,7 +450,7 @@ private:
     void createGuiLog(const QString &filename, LogStatus status, int count,
         const QString &renameTarget = QString());
 
-    void startVfs();
+    bool startVfs();
 
     AccountStatePtr _accountState;
     FolderDefinition _definition;

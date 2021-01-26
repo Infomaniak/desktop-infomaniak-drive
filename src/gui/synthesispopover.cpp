@@ -1299,6 +1299,7 @@ void SynthesisPopover::onExit(bool checked)
 {
     Q_UNUSED(checked)
 
+    hide();
     emit exit();
 }
 

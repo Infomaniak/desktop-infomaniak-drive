@@ -102,6 +102,8 @@ void VfsWin::startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSI
                 clsid,
                 &clsidSize) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsStart!";
+        namespaceCLSID = QString();
+        return;
     }
 
     namespaceCLSID = QString::fromStdWString(clsid);

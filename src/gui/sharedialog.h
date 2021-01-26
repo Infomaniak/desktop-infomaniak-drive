@@ -55,7 +55,7 @@ private slots:
     void slotPropfindReceived(const QVariantMap &result);
     void slotPropfindError();
     void slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
-                              const QString &fileRelativePath, int width, const OCC::SocketListener *listener);
+                              int width, uint64_t iNode, const OCC::SocketListener *listener);
     void slotAccountStateChanged(int state);
 
 private:

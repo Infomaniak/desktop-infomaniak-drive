@@ -32,7 +32,8 @@ class ThumbnailJob : public AbstractNetworkJob
 {
     Q_OBJECT
 public:
-    explicit ThumbnailJob(const QString &fileRelativePath, unsigned int width, const OCC::SocketListener *listener,
+    explicit ThumbnailJob(const QString &fileRemotePath, unsigned int width, uint64_t iNode,
+                          const OCC::SocketListener *listener,
                           AccountPtr account, QObject *parent = 0);
 public slots:
     void start() Q_DECL_OVERRIDE;
@@ -46,13 +47,14 @@ signals:
      * of reply is undefined.
      */
     void jobFinished(int statusCode, QByteArray reply,
-                     const QString &fileRelativePath, unsigned int width, const OCC::SocketListener *listener);
+                     unsigned int width, uint64_t iNode, const OCC::SocketListener *listener);
 private slots:
     virtual bool finished() Q_DECL_OVERRIDE;
 
 private:
     const QString _fileRelativePath;
     unsigned int _width;
+    uint64_t _iNode;
     const OCC::SocketListener *_listener;
 };
 }

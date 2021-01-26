@@ -135,7 +135,16 @@ Folder::Folder(const FolderDefinition &definition,
     }
 
     // Initialize the vfs plugin
-    startVfs();
+    if (!startVfs() && _definition.virtualFilesMode != Vfs::Off) {
+        // Switch to off mode
+        qCWarning(lcFolder) << "Cannot start Vfs plugin, switch to Off mode";
+        _definition.virtualFilesMode = Vfs::Off;
+        _vfs.reset(createVfsFromPlugin(_definition.virtualFilesMode).release());
+        if (!startVfs()) {
+            qCCritical(lcFolder) << "Cannot start Vfs plugin in Off mode";
+            return;
+        }
+    }
 }
 
 Folder::~Folder()
@@ -479,7 +488,7 @@ void Folder::createGuiLog(const QString &filename, LogStatus status, int count,
     }
 }
 
-void Folder::startVfs()
+bool Folder::startVfs()
 {
     ENFORCE(_vfs);
     ENFORCE(_vfs->mode() == _definition.virtualFilesMode);
@@ -505,6 +514,11 @@ void Folder::startVfs()
     if (!namespaceCLSID.isEmpty()) {
         setNavigationPaneClsid(namespaceCLSID);
     }
+    else if (_vfs->mode() == Vfs::WindowsCfApi) {
+        // Vfs start error
+        _vfs->unregisterFolder();
+        return false;
+    }
 
     // Immediately mark the sqlite temporaries as excluded. They get recreated
     // on db-open and need to get marked again every time.
@@ -512,6 +526,8 @@ void Folder::startVfs()
     _journal.open();
     _vfs->fileStatusChanged(stateDbFile + "-wal", SyncFileStatus::StatusExcluded);
     _vfs->fileStatusChanged(stateDbFile + "-shm", SyncFileStatus::StatusExcluded);
+
+    return true;
 }
 
 int Folder::slotDiscardDownloadProgress()
@@ -671,10 +687,19 @@ void Folder::setSupportsVirtualFiles(bool enabled)
 #endif
 
         _vfs.reset(createVfsFromPlugin(newMode).release());        
-
         _definition.virtualFilesMode = newMode;
 
-        startVfs();
+        if (!startVfs() && newMode != Vfs::Off) {
+            // Switch to off mode
+            qCWarning(lcFolder) << "Cannot start Vfs plugin, switch to Off mode";
+            newMode = Vfs::Off;
+            _vfs.reset(createVfsFromPlugin(newMode).release());
+            _definition.virtualFilesMode = newMode;
+            if (!startVfs()) {
+                qCCritical(lcFolder) << "Cannot start Vfs plugin in Off mode";
+                return;
+            }
+        }
 
         if (newMode != Vfs::Off)
             _saveInFoldersWithPlaceholders = true;
