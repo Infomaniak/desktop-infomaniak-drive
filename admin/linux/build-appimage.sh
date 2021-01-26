@@ -6,7 +6,7 @@ mkdir -p /app
 mkdir -p /build
 
 # Set Qt-5.12
-export QT_BASE_DIR=/opt/qt5.12.5
+export QT_BASE_DIR=/opt/qt5.12.10
 export QTDIR=$QT_BASE_DIR
 export PATH=$QT_BASE_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$QT_BASE_DIR/lib:$LD_LIBRARY_PATH
@@ -18,11 +18,11 @@ if [ $SUFFIX != "master" ]; then
     SUFFIX="PR-$SUFFIX"
 fi
 
-# Build QtKeyChain 0.10.0
+# Build QtKeyChain 0.12.0
 cd /build
 git clone https://github.com/frankosterfeld/qtkeychain.git
 cd qtkeychain
-git checkout v0.10.0
+git checkout v0.12.0
 mkdir build
 cd build
 cmake -DCMAKE_PREFIX_PATH=$QT_BASE_DIR \
