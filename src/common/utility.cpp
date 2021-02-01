@@ -38,6 +38,7 @@
 #include <QCollator>
 #include <QSysInfo>
 #include <QUuid>
+#include <QOperatingSystemVersion>
 
 #ifdef Q_OS_UNIX
 #include <sys/statvfs.h>
