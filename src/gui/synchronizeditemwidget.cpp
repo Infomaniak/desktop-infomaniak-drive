@@ -84,6 +84,7 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     vboxText->setSpacing(0);
 
     QLabel *fileNameLabel = new QLabel(this);
+    fileNameLabel->setTextFormat(Qt::PlainText);
     fileNameLabel->setObjectName("fileNameLabel");
     QFileInfo fileInfo(_item.filePath());
     QString fileName = fileInfo.fileName();

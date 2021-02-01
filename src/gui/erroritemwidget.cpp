@@ -81,6 +81,7 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     hBox->setStretchFactor(vBoxMiddle, 1);
 
     _fileNameLabel = new QLabel(this);
+    _fileNameLabel->setTextFormat(Qt::PlainText);
     _fileNameLabel->setObjectName("fileNameLabel");
     QFileInfo fileInfo(_item.filePath());
     QString fileName = fileInfo.fileName();
