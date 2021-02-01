@@ -155,25 +155,16 @@ QString Utility::octetsToString(qint64 octets)
     return s.arg(value, 0, 'g', 2);
 }
 
-// Qtified version of get_platforms() in csync_owncloud.c
-static QLatin1String platform()
+static QString platform()
 {
-#if defined(Q_OS_WIN)
-    return QLatin1String("Windows");
-#elif defined(Q_OS_MAC)
-    return QLatin1String("Macintosh");
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
+    return QString("%1 %2.%3.%4")
+            .arg(QOperatingSystemVersion::current().name())
+            .arg(QOperatingSystemVersion::current().majorVersion())
+            .arg(QOperatingSystemVersion::current().minorVersion())
+            .arg(QOperatingSystemVersion::current().microVersion());
 #elif defined(Q_OS_LINUX)
     return QLatin1String("Linux");
-#elif defined(__DragonFly__) // Q_OS_FREEBSD also defined
-    return QLatin1String("DragonFlyBSD");
-#elif defined(Q_OS_FREEBSD) || defined(Q_OS_FREEBSD_KERNEL)
-    return QLatin1String("FreeBSD");
-#elif defined(Q_OS_NETBSD)
-    return QLatin1String("NetBSD");
-#elif defined(Q_OS_OPENBSD)
-    return QLatin1String("OpenBSD");
-#elif defined(Q_OS_SOLARIS)
-    return QLatin1String("Solaris");
 #else
     return QLatin1String("Unknown OS");
 #endif
@@ -181,18 +172,9 @@ static QLatin1String platform()
 
 QByteArray Utility::userAgentString()
 {
-    QString re = QString::fromLatin1("Mozilla/5.0 (%1) mirall/%2")
-                     .arg(platform(), QLatin1String(MIRALL_VERSION_STRING));
+    QString ua = QString("%1-desktop/%2 - %3").arg(APPLICATION_SHORTNAME, MIRALL_VERSION_STRING, platform());
 
-    QLatin1String appName(APPLICATION_SHORTNAME);
-
-    // this constant "ownCloud" is defined in the default OEM theming
-    // that is used for the standard client. If it is changed there,
-    // it needs to be adjusted here.
-    if (appName != QLatin1String("ownCloud")) {
-        re += QString(" (%1)").arg(appName);
-    }
-    return re.toLatin1();
+    return ua.toLatin1();
 }
 
 bool Utility::hasSystemLaunchOnStartup(const QString &appName)
