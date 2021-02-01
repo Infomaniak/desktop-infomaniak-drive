@@ -23,6 +23,7 @@
 #include <QUrl>
 #include <QFile>
 #include <QCoreApplication>
+#include <QTemporaryFile>
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -381,7 +382,21 @@ bool FileSystem::moveToTrash(const QString &fileName, QString *errorString)
     }
     return true;
 #elif defined Q_OS_MAC
-    QString cmd = QString("osascript -e 'set theFile to POSIX file \"%1\"' -e 'tell application \"Finder\" to delete theFile'").arg(fileName);
+    QString fileNameEscaped = QString(fileName)
+            .replace(R"(\)", R"(\\)")
+            .replace(R"(")", R"(\")");
+    QTemporaryFile cmdFile;
+    if (!cmdFile.open()) {
+        qCWarning(lcFileSystem) << "Error opening temporary file";
+        return false;
+    }
+    QTextStream cmdFileStream(&cmdFile);
+    cmdFileStream << "tell application \"Finder\"" << endl;
+    cmdFileStream << "  set theFile to POSIX file \"" << fileNameEscaped << "\"" << endl;
+    cmdFileStream << "  delete theFile" << endl;
+    cmdFileStream << "end tell" << endl;
+    cmdFile.close();
+    QString cmd = QString("osascript %1").arg(cmdFile.fileName());
     int status = system(cmd.toLocal8Bit());
     if (status == 0) {
         return true;
