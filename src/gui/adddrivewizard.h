@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "customdialog.h"
 #include "adddrivestartwidget.h"
 #include "adddriveloginwidget.h"
+#include "adddrivesmartsyncwidget.h"
 #include "adddriveserverfolderswidget.h"
 #include "adddrivelocalfolderwidget.h"
 #include "adddriveconfirmationwidget.h"
@@ -47,7 +48,8 @@ private:
         None = -1,
         Begin,
         Login,
-        RemoteFoders,
+        SmartSync,
+        RemoteFolders,
         LocalFolder,
         Confirmation
     };
@@ -56,11 +58,13 @@ private:
     QStackedWidget *_stepStackedWidget;
     AddDriveStartWidget *_addDriveStartWidget;
     AddDriveLoginWidget *_addDriveLoginWidget;
+    AddDriveSmartSyncWidget *_addDriveSmartSyncWidget;
     AddDriveServerFoldersWidget *_addDriveServerFoldersWidget;
     AddDriveLocalFolderWidget *_addDriveLocalFolderWidget;
     AddDriveConfirmationWidget *_addDriveConfirmationWidget;
     Step _currentStep;
     QString _loginUrl;
+    bool _smartSync;
     QString _serverFolderPath;
     qint64 _selectionSize;
     QStringList _blackList;
@@ -73,7 +77,7 @@ private:
 
     void initUI();
     void start();
-    void startNextStep();
+    void startNextStep(bool backward = false);
     void checkServer(const QString &urlString);
     void setCredentials(OCC::AbstractCredentials *creds);
     QString printQNetworkProxy(const QNetworkProxy &proxy);

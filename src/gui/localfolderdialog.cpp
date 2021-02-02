@@ -20,8 +20,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "localfolderdialog.h"
 #include "customtoolbutton.h"
 #include "guiutility.h"
+#include "common/utility.h"
+#include "common/vfs.h"
+#include "configfile.h"
+#include "custommessagebox.h"
+#include "config.h"
 
 #include <QBoxLayout>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFileDialog>
 #include <QLabel>
@@ -31,9 +37,13 @@ namespace KDC {
 static const int boxHMargin = 40;
 static const int titleBoxVMargin = 14;
 static const int descriptionBoxVMargin = 35;
+static const int folderSelectionBoxVMargin = 30;
 static const int selectionBoxHMargin = 15;
 static const int selectionBoxVMargin = 20;
 static const int selectionBoxSpacing = 10;
+static const int warningBoxSpacing = 10;
+
+Q_LOGGING_CATEGORY(lcLocalFolderDialog, "gui.localfolderdialog", QtInfoMsg)
 
 LocalFolderDialog::LocalFolderDialog(const QString &localFolderPath, QWidget *parent)
     : CustomDialog(true, parent)
@@ -44,7 +54,16 @@ LocalFolderDialog::LocalFolderDialog(const QString &localFolderPath, QWidget *pa
     , _folderIconLabel(nullptr)
     , _folderNameLabel(nullptr)
     , _folderPathLabel(nullptr)
+    , _folderIconColor(QColor())
+    , _folderIconSize(QSize())
+    , _warningIconColor(QColor())
+    , _warningIconSize(QSize())
+    , _warningWidget(nullptr)
+    , _warningIconLabel(nullptr)
+    , _warningLabel(nullptr)
     , _okToContinue(false)
+    , _smartSync(false)
+    , _folderCompatibleWithSmartSync(false)
 {
     initUI();
     updateUI();
@@ -74,7 +93,7 @@ void LocalFolderDialog::initUI()
     QVBoxLayout *folderSelectionVBox = new QVBoxLayout();
     folderSelectionVBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
     mainLayout->addLayout(folderSelectionVBox);
-    mainLayout->addStretch();
+    mainLayout->addSpacing(folderSelectionBoxVMargin);
 
     // Folder selection widget
     _folderSelectionWidget = new QWidget(this);
@@ -128,6 +147,30 @@ void LocalFolderDialog::initUI()
     updateButton->setToolTip(tr("Edit folder"));
     folderSelectedHBox->addWidget(updateButton);
 
+    // Warning
+    _warningWidget = new QWidget(this);
+    _warningWidget->setVisible(false);
+    mainLayout->addWidget(_warningWidget);
+    mainLayout->addStretch();
+
+    QVBoxLayout *warningVBox = new QVBoxLayout();
+    warningVBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
+    _warningWidget->setLayout(warningVBox);
+
+    QHBoxLayout *warningHBox = new QHBoxLayout();
+    warningHBox->setContentsMargins(0, 0, 0, 0);
+    warningHBox->setSpacing(warningBoxSpacing);
+    warningVBox->addLayout(warningHBox);
+
+    _warningIconLabel = new QLabel(this);
+    warningHBox->addWidget(_warningIconLabel);
+
+    _warningLabel = new QLabel(this);
+    _warningLabel->setObjectName("largeMediumTextLabel");
+    _warningLabel->setWordWrap(true);
+    warningHBox->addWidget(_warningLabel);
+    warningHBox->setStretchFactor(_warningLabel, 1);
+
     // Add dialog buttons
     QHBoxLayout *buttonsHBox = new QHBoxLayout();
     buttonsHBox->setContentsMargins(boxHMargin, 0, boxHMargin, 0);
@@ -167,6 +210,27 @@ void LocalFolderDialog::updateUI()
     }
     _folderSelectionWidget->setVisible(!ok);
     _folderSelectedWidget->setVisible(ok);
+
+    if (_smartSync) {
+        OCC::Vfs::Mode mode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
+        if (mode == OCC::Vfs::WindowsCfApi) {
+            // Check file system
+            QString fsName(OCC::Utility::fileSystemName(_localFolderPath));
+            _folderCompatibleWithSmartSync = (fsName == "NTFS" && !QDir(_localFolderPath).isRoot());
+            if (!_folderCompatibleWithSmartSync) {
+                _warningLabel->setText(tr("This folder is not compatible with Lite Sync."
+                                          " Please select another folder or if you continue Lite Sync will be disabled."
+                                          " <a style=\"%1\" href=\"%2\">Learn more</a>")
+                                       .arg(OCC::Utility::linkStyle)
+                                       .arg(OCC::Utility::learnMoreLink));
+                _warningWidget->setVisible(true);
+            }
+            else {
+                _warningWidget->setVisible(false);
+            }
+        }
+    }
+
     setOkToContinue(ok);
     forceRedraw();
 }
@@ -193,6 +257,14 @@ void LocalFolderDialog::setFolderIcon()
     if (_folderIconColor != QColor() && _folderIconSize != QSize()) {
         _folderIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/folder.svg", _folderIconColor)
                                    .pixmap(_folderIconSize));
+    }
+}
+
+void LocalFolderDialog::setWarningIcon()
+{
+    if (_warningIconColor != QColor() && _warningIconSize != QSize()) {
+        _warningIconLabel->setPixmap(OCC::Utility::getIconWithColor(":/client/resources/icons/actions/warning.svg", _warningIconColor)
+                                   .pixmap(_warningIconSize));
     }
 }
 
@@ -224,9 +296,20 @@ void LocalFolderDialog::onUpdateFolderButtonTriggered(bool checked)
 
 void LocalFolderDialog::onLinkActivated(const QString &link)
 {
-    Q_UNUSED(link)
-
-    emit openFolder(_localFolderPath);
+    if (link == OCC::Utility::learnMoreLink) {
+        // Learn more: Folder not compatible with Lite Sync
+        if (!QDesktopServices::openUrl(QUrl(LEARNMORE_LITESYNC_COMPATIBILITY_URL))) {
+            qCWarning(lcLocalFolderDialog) << "QDesktopServices::openUrl failed for " << link;
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Unable to open link %1.").arg(link),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
+        }
+    }
+    else {
+        emit openFolder(_localFolderPath);
+    }
 }
 
 }

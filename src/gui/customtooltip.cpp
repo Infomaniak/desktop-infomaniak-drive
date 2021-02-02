@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QLoggingCategory>
 #include <QPainter>
 #include <QStyleOption>
 #include <QTimer>
@@ -37,6 +38,8 @@ static const int shadowBlurRadius = 10;
 static const int boxMargin = 10;
 static const int offsetX = 0;
 static const int offsetY = 10;
+
+Q_LOGGING_CATEGORY(lcCustomToolTip, "gui.customtooltip", QtInfoMsg)
 
 CustomToolTip::CustomToolTip(const QString &text, const QPoint &position, int toolTipDuration, QWidget *parent)
     : QDialog(parent)

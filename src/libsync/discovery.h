@@ -200,6 +200,9 @@ private:
     /** Convenience to detect suffix-vfs modes */
     bool isVfsWithSuffix() const;
 
+    /** Convenience to detect win-vfs modes */
+    bool isVfsWin() const;
+
     /** Start a remote discovery network job
      *
      * It fills _serverNormalQueryEntries and sets _serverQueryDone when done.

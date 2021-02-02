@@ -94,7 +94,7 @@ const std::map<SynthesisPopover::NotificationsDisabled, QString> SynthesisPopove
     { NotificationsDisabled::Always, QString(tr("Always")) }
 };
 
-Q_LOGGING_CATEGORY(lcSynthesisPopover, "synthesispopover", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcSynthesisPopover, "gui.synthesispopover", QtInfoMsg)
 
 SynthesisPopover::SynthesisPopover(bool debugMode, OCC::OwnCloudGui *gui, QWidget *parent)
     : QDialog(parent)
@@ -422,7 +422,16 @@ bool SynthesisPopover::event(QEvent *event)
 {
     bool ret = QDialog::event(event);
     if (event->type() == QEvent::WindowDeactivate) {
+        setGraphicsEffect(nullptr);
         done(QDialog::Accepted);
+    }
+    else if (event->type() == QEvent::Show || event->type() == QEvent::Hide) {
+        // Activate/deactivate quota request
+        auto accountInfoIt = _accountInfoMap.begin();
+        while (accountInfoIt != _accountInfoMap.end()) {
+            accountInfoIt->second._quotaInfoPtr->setActive(event->type() == QEvent::Show);
+            accountInfoIt++;
+        }
     }
     return ret;
 }
@@ -1290,6 +1299,7 @@ void SynthesisPopover::onExit(bool checked)
 {
     Q_UNUSED(checked)
 
+    hide();
     emit exit();
 }
 

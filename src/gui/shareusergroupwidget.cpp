@@ -598,7 +598,7 @@ QSharedPointer<Share> ShareUserLine::share() const
 
 void ShareUserLine::customizeStyle()
 {
-    QIcon icon(Theme::instance()->svgThemeIcon("more"));
+    QIcon icon(":/client/resources/icons/actions/more.svg");
     _ui->permissionToolButton->setIcon(icon);
 }
 

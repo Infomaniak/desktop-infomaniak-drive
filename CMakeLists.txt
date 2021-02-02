@@ -227,3 +227,15 @@ elseif(BUILD_CLIENT)
     endif()
     configure_file(sync-exclude.lst bin/sync-exclude.lst COPYONLY)
 endif()
+
+if (WIN32)
+    # Copy vfs.dll into bin directory
+    set(CMAKE_FIND_LIBRARY_SUFFIXES .dll)
+    find_library(VFS_SHARED_LIBRARY NAMES vfs PATHS ${VFS_DIRECTORY} NO_DEFAULT_PATH)
+
+    file(COPY ${VFS_SHARED_LIBRARY}
+        DESTINATION ${BIN_OUTPUT_DIRECTORY})
+endif()
+
+
+

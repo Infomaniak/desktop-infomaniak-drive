@@ -37,6 +37,11 @@ class CustomMessageBox : public CustomDialog
 
 public:
     explicit CustomMessageBox(QMessageBox::Icon icon, const QString &text,
+                              const QString &warningText, bool warning,
+                              QMessageBox::StandardButtons buttons = QMessageBox::NoButton,
+                              QWidget *parent = nullptr);
+
+    explicit CustomMessageBox(QMessageBox::Icon icon, const QString &text,
                               QMessageBox::StandardButtons buttons = QMessageBox::NoButton,
                               QWidget *parent = nullptr);
 
@@ -45,6 +50,8 @@ public:
 
 private:
     QMessageBox::Icon _icon;
+    QLabel *_warningLabel;
+    QLabel *_textLabel;
     QLabel *_iconLabel;
     QHBoxLayout *_buttonsHBox;
     QColor _backgroundColor;
@@ -58,8 +65,11 @@ private:
     }
 
     void setIcon();
+    QSize sizeHint() const override;
 
 private slots:
+    void showEvent(QShowEvent *event) override;
+
     void onButtonClicked(bool checked = false);
     void onExit();
 };

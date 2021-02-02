@@ -27,6 +27,13 @@
 #include "csync_exclude.h"
 #include "csync_util.h"
 
+#if defined(Q_OS_WIN32)
+#define FORBIDDEN_FILENAME_CHARS "\\/:*?\"<>|"
+#elif defined(Q_OS_LINUX)
+#define FORBIDDEN_FILENAME_CHARS "/\0"
+#elif defined(Q_OS_MAC)
+#define FORBIDDEN_FILENAME_CHARS ":"
+#endif
 
 namespace OCC {
 
@@ -246,19 +253,22 @@ bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &loc
                 item->_errorString = tr("File names ending with a period are not supported on this file system.");
             } else {
                 char invalid = '\0';
-                foreach (char x, QByteArray("\\:?*\"<>|")) {
+                foreach (char x, QByteArray(FORBIDDEN_FILENAME_CHARS)) {
                     if (item->_file.contains(x)) {
                         invalid = x;
                         break;
                     }
                 }
                 if (invalid) {
-                    item->_errorString = tr("File names containing the character '%1' are not supported on this file system.")
-                                             .arg(QLatin1Char(invalid));
+                    item->_errorString =
+                            tr("Your operating system does not support '%1' character in file names."
+                                " Synchronization could not be performed. Please rename the affected file.")
+                            .arg(QLatin1Char(invalid));
                 }
-                if (isInvalidPattern) {
+                else if (isInvalidPattern) {
                     item->_errorString = tr("File name contains at least one invalid character");
-                } else {
+                }
+                else {
                     item->_errorString = tr("The file name is a reserved name on this file system.");
                 }
             }
@@ -697,11 +707,8 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
             qCInfo(lcDisco) << "Stale DB entry";
             _discoveryData->_statedb->deleteFileRecord(path._original, true);
             return;
-        } else if (dbEntry._type == ItemTypeVirtualFile && isVfsWithSuffix()) {
+        } else if (dbEntry._type == ItemTypeVirtualFile && (isVfsWithSuffix() || isVfsWin())) {
             // If the virtual file is removed, recreate it.
-            // This is a precaution since the suffix files don't look like the real ones
-            // and we don't want users to accidentally delete server data because they
-            // might not expect that deleting the placeholder will have a remote effect.
             item->_instruction = CSYNC_INSTRUCTION_NEW;
             item->_direction = SyncFileItem::Down;
             item->_type = ItemTypeVirtualFile;
@@ -1512,6 +1519,11 @@ bool ProcessDirectoryJob::isVfsWithSuffix() const
     return _discoveryData->_syncOptions._vfs->mode() == Vfs::WithSuffix;
 }
 
+bool ProcessDirectoryJob::isVfsWin() const
+{
+    return _discoveryData->_syncOptions._vfs->mode() == Vfs::WindowsCfApi;
+}
+
 void ProcessDirectoryJob::computePinState(PinState parentState)
 {
     _pinState = parentState;
@@ -1525,7 +1537,7 @@ void ProcessDirectoryJob::setupDbPinStateActions(SyncJournalFileRecord &record)
 {
     // Only suffix-vfs uses the db for pin states.
     // Other plugins will set localEntry._type according to the file's pin state.
-    if (!isVfsWithSuffix())
+    if (!isVfsWithSuffix() && !isVfsWin())
         return;
 
     auto pin = _discoveryData->_statedb->internalPinStates().rawForPath(record._path);

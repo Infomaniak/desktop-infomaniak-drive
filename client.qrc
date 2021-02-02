@@ -73,8 +73,8 @@
         <file>resources/icons/theme/white/state-offline.svg</file>
         <file>resources/icons/theme/white/state-ok.svg</file>
         <file>resources/icons/theme/white/state-pause.svg</file>
-        <file>resources/icons/theme/white/state-sync.svg</file>
         <file>resources/icons/theme/white/state-warning.svg</file>
+        <file>resources/icons/theme/white/state-sync.svg</file>
         <file>resources/logos/kdrive.svg</file>
         <file>resources/logos/kdrive-without-text.svg</file>
         <file>resources/fonts/SuisseIntl-Black.otf</file>
@@ -129,5 +129,9 @@
         <file>resources/icons/actions/dark-branch-close.svg</file>
         <file>resources/icons/actions/dark-branch-open.svg</file>
         <file>resources/icons/theme/white/state-information.svg</file>
+        <file>resources/pictures/lite-sync.svg</file>
+        <file>resources/icons/actions/litesync-on.svg</file>
+        <file>resources/icons/actions/litesync-off.svg</file>
+        <file>resources/icons/actions/more.svg</file>
     </qresource>
 </RCC>

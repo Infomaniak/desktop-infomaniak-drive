@@ -29,8 +29,6 @@ class ownCloudTheme : public Theme
 public:
     ownCloudTheme();
 #ifndef TOKEN_AUTH_ONLY
-    QVariant customMedia(CustomMediaType type) Q_DECL_OVERRIDE;
-
     QColor wizardHeaderBackgroundColor() const Q_DECL_OVERRIDE;
     QColor wizardHeaderTitleColor() const Q_DECL_OVERRIDE;
     QPixmap wizardHeaderLogo() const Q_DECL_OVERRIDE;

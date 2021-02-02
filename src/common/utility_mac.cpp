@@ -16,8 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include <QCoreApplication>
+#include <QDir>
+#include <QOperatingSystemVersion>
+#include <QString>
+
 #include <CoreServices/CoreServices.h>
 #include <CoreFoundation/CoreFoundation.h>
+
+namespace KDC {
+bool hasDarkSystray();
+}
 
 namespace OCC {
 
@@ -118,17 +127,22 @@ void setLaunchOnStartup_private(const QString &appName, const QString &guiName, 
 
 static bool hasDarkSystray_private()
 {
-    bool returnValue = false;
-    CFStringRef interfaceStyleKey = CFSTR("AppleInterfaceStyle");
-    CFStringRef interfaceStyle = NULL;
-    CFStringRef darkInterfaceStyle = CFSTR("Dark");
-    interfaceStyle = (CFStringRef)CFPreferencesCopyAppValue(interfaceStyleKey,
-        kCFPreferencesCurrentApplication);
-    if (interfaceStyle != NULL) {
-        returnValue = (kCFCompareEqualTo == CFStringCompare(interfaceStyle, darkInterfaceStyle, 0));
-        CFRelease(interfaceStyle);
+    if (QOperatingSystemVersion::current() >= QOperatingSystemVersion::MacOSMojave) {
+        return KDC::hasDarkSystray();
     }
-    return returnValue;
+    else {
+        bool returnValue = false;
+        CFStringRef interfaceStyleKey = CFSTR("AppleInterfaceStyle");
+        CFStringRef interfaceStyle = NULL;
+        CFStringRef darkInterfaceStyle = CFSTR("Dark");
+        interfaceStyle = (CFStringRef)CFPreferencesCopyAppValue(interfaceStyleKey, kCFPreferencesCurrentApplication);
+        if (interfaceStyle != NULL) {
+            returnValue = (kCFCompareEqualTo == CFStringCompare(interfaceStyle, darkInterfaceStyle, 0));
+            CFRelease(interfaceStyle);
+        }
+        return returnValue;
+    }
 }
 
 } // namespace OCC
+

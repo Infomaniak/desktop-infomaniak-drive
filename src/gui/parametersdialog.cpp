@@ -58,7 +58,7 @@ static const int defaultLogoIconSize = 50;
 static const int maxErrorItems = 1000;
 static const int maxLogFilesToSend = 25;
 
-Q_LOGGING_CATEGORY(lcParametersDialog, "parametersdialog", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcParametersDialog, "gui.parametersdialog", QtInfoMsg)
 
 ParametersDialog::ParametersDialog(QWidget *parent)
     : CustomDialog(false, parent)
@@ -90,6 +90,20 @@ ParametersDialog::ParametersDialog(QWidget *parent)
             this, &ParametersDialog::onUpdateProgress);
     connect(OCC::ProgressDispatcher::instance(), &OCC::ProgressDispatcher::itemCompleted,
             this, &ParametersDialog::onItemCompleted);
+}
+
+bool ParametersDialog::event(QEvent *event)
+{
+    bool ret = QDialog::event(event);
+    if (event->type() == QEvent::Show || event->type() == QEvent::Hide) {
+        // Activate/deactivate quota request
+        auto accountInfoIt = _accountInfoMap.begin();
+        while (accountInfoIt != _accountInfoMap.end()) {
+            accountInfoIt->second._quotaInfoPtr->setActive(event->type() == QEvent::Show);
+            accountInfoIt++;
+        }
+    }
+    return ret;
 }
 
 void ParametersDialog::openPreferencesPage()
@@ -261,7 +275,7 @@ void ParametersDialog::initUI()
     errorsHeaderWidget->setLayout(errorsHeaderVBox);
 
     ActionWidget *sendLogsWidget = new ActionWidget(":/client/resources/icons/actions/help.svg",
-                                                    tr("Need help ? Generate an archive of the application logs to send it to our support"), this);
+                                                    tr("Need help? Generate an application log archive to send to our support team."), this);
     sendLogsWidget->setObjectName("sendLogsWidget");
     errorsHeaderVBox->addWidget(sendLogsWidget);
 
@@ -535,7 +549,7 @@ void ParametersDialog::onItemCompleted(const QString &folderId, const OCC::SyncF
                         if (!(item.data()->_status == OCC::SyncFileItem::NoStatus
                                 || item.data()->_status == OCC::SyncFileItem::FatalError
                                 || item.data()->_status == OCC::SyncFileItem::NormalError
-                                || item.data()->_status == OCC::SyncFileItem::SoftError
+                                //|| item.data()->_status == OCC::SyncFileItem::SoftError
                                 || item.data()->_status == OCC::SyncFileItem::DetailError
                                 || item.data()->_status == OCC::SyncFileItem::BlacklistedError
                                 || item.data()->_status == OCC::SyncFileItem::FileIgnored)) {

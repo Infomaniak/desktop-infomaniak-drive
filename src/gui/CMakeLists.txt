@@ -46,6 +46,7 @@ set(client_SRCS
     shareusergroupwidget.cpp
     sharee.cpp
     socketapi.cpp
+    socketlistener.cpp
     sslerrordialog.cpp
     syncrunfilelog.cpp
     systray.cpp
@@ -78,6 +79,7 @@ set(client_SRCS
     adddrivelocalfolderwidget.cpp
     adddriveloginwidget.cpp
     adddriveserverfolderswidget.cpp
+    adddrivesmartsyncwidget.cpp
     adddrivestartwidget.cpp
     adddrivewizard.cpp
     bandwidthdialog.cpp
@@ -192,7 +194,7 @@ IF( WIN32 )
       ${CMAKE_CURRENT_BINARY_DIR}/version.rc
       @ONLY)
     set(client_version ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
-    IF(NOT MSVC)
+    IF(!MSVC)
         set(client_manifest ${CMAKE_CURRENT_SOURCE_DIR}/manifest-mingw.rc)
     ENDIF()
 ENDIF()

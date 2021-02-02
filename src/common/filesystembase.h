@@ -123,13 +123,6 @@ namespace FileSystem {
      */
     bool OCSYNC_EXPORT openAndSeekFileSharedRead(QFile *file, QString *error, qint64 seek);
 
-#ifdef Q_OS_WIN
-    /**
-     * Returns the file system used at the given path.
-     */
-    QString fileSystemForPath(const QString &path);
-#endif
-
     /**
      * Returns true when a file is locked. (Windows only)
      */

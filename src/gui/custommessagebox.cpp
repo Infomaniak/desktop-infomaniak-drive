@@ -36,9 +36,12 @@ static const int messageVBMargin = 15;
 const std::string buttonTypeProperty = "buttonType";
 
 CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
+                                   const QString &warningText, bool warning,
                                    QMessageBox::StandardButtons buttons, QWidget *parent)
     : CustomDialog(true, parent)
     , _icon(icon)
+    , _warningLabel(nullptr)
+    , _textLabel(nullptr)
     , _iconLabel(nullptr)
     , _buttonsHBox(nullptr)
     , _iconSize(QSize())
@@ -46,9 +49,23 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
 {
     QVBoxLayout *mainLayout = this->mainLayout();
 
+    // Warning text
+    if (!warningText.isEmpty()) {
+        QHBoxLayout *warningHBox = new QHBoxLayout();
+        warningHBox->setContentsMargins(boxHMargin, messageVTMargin, boxHMargin, messageVBMargin);
+        mainLayout->addLayout(warningHBox);
+
+        _warningLabel = new QLabel(this);
+        _warningLabel->setObjectName(warning ? "warningTextLabel" : "okTextLabel");
+        _warningLabel->setText(warningText);
+        _warningLabel->setWordWrap(true);
+        _warningLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+        warningHBox->addWidget(_warningLabel);
+    }
+
     // Icon + text
     QHBoxLayout *messageHBox = new QHBoxLayout();
-    messageHBox->setContentsMargins(boxHMargin, messageVTMargin, boxHMargin, messageVBMargin);
+    messageHBox->setContentsMargins(boxHMargin, 0, boxHMargin, messageVBMargin);
     messageHBox->setSpacing(boxHSpacing);
     mainLayout->addLayout(messageHBox);
 
@@ -58,15 +75,15 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
 
     _iconLabel = new QLabel(this);
     messageVBox->addWidget(_iconLabel);
-    messageVBox->addStretch();
+    messageVBox->setAlignment(Qt::AlignCenter);
 
-    QLabel *textLabel = new QLabel(this);
-    textLabel->setObjectName("textLabel");
-    textLabel->setText(text);
-    textLabel->setWordWrap(true);
-    textLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    messageHBox->addWidget(textLabel);
-    messageHBox->setStretchFactor(textLabel, 1);
+    _textLabel = new QLabel(this);
+    _textLabel->setObjectName("textLabel");
+    _textLabel->setText(text);
+    _textLabel->setWordWrap(true);
+    _textLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    messageHBox->addWidget(_textLabel);
+    messageHBox->setStretchFactor(_textLabel, 1);
 
     mainLayout->addStretch();
 
@@ -121,6 +138,12 @@ CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
     connect(this, &CustomDialog::exit, this, &CustomMessageBox::onExit);
 }
 
+CustomMessageBox::CustomMessageBox(QMessageBox::Icon icon, const QString &text,
+                                   QMessageBox::StandardButtons buttons, QWidget *parent)
+    : CustomMessageBox(icon, text, QString(), false, buttons, parent)
+{
+}
+
 void CustomMessageBox::addButton(const QString &text, QMessageBox::StandardButton buttonType)
 {
     QPushButton *button = new QPushButton(this);
@@ -173,6 +196,23 @@ void CustomMessageBox::setIcon()
 
         _iconLabel->setPixmap(OCC::Utility::getIconWithColor(iconPath, iconColor).pixmap(_iconSize));
     }
+}
+
+QSize CustomMessageBox::sizeHint() const
+{
+    return QSize(contentsMargins().left() + contentsMargins().right()
+                 + 2 * boxHMargin
+                 + (_warningLabel ? _warningLabel->width() : 0),
+                 contentsMargins().top() + contentsMargins().bottom()
+                 + messageVTMargin + 2 * messageVBMargin
+                 + (_warningLabel ? _warningLabel->height() : 0)
+                 + (_textLabel ? _textLabel->height() : 0)
+                 + QPushButton().height());
+}
+
+void CustomMessageBox::showEvent(QShowEvent *event)
+{
+    Q_UNUSED(event)
 }
 
 void CustomMessageBox::onButtonClicked(bool checked)

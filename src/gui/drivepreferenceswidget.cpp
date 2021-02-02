@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "common/vfs.h"
 #include "filesystem.h"
 
+#include <QDesktopServices>
 #include <QDir>
 #include <QIcon>
 #include <QLabel>
@@ -49,7 +50,7 @@ static const int avatarSize = 40;
 
 static const QString folderBlocName("folderBloc");
 
-Q_LOGGING_CATEGORY(lcDrivePreferencesWidget, "drivepreferenceswidget", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcDrivePreferencesWidget, "gui.drivepreferenceswidget", QtInfoMsg)
 
 DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     : QWidget(parent)
@@ -154,7 +155,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     // Synchronization bloc
     //
 
-    if (OCC::Theme::instance()->showVirtualFilesOption() && OCC::bestAvailableVfsMode() != OCC::Vfs::Off) {
+    if (OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions()) != OCC::Vfs::Off) {
         QLabel *synchronizationLabel = new QLabel(tr("Synchronization"), this);
         synchronizationLabel->setObjectName("blocLabel");
         _mainVBox->addWidget(synchronizationLabel);
@@ -169,7 +170,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
         smartSync1HBox->setSpacing(0);
         smartSyncBox->addLayout(smartSync1HBox);
 
-        QLabel *smartSyncLabel = new QLabel(tr("Activate smart synchronization"), this);
+        QLabel *smartSyncLabel = new QLabel(tr("Activate Lite Sync"), this);
         smartSync1HBox->addWidget(smartSyncLabel);
         smartSync1HBox->addStretch();
 
@@ -181,8 +182,9 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
         _smartSyncDescriptionLabel = new QLabel(this);
         _smartSyncDescriptionLabel->setObjectName("description");
         _smartSyncDescriptionLabel->setText(tr("Synchronize all your files without using your computer space."
-                                              " <a style=\"%1\" href=\"ref\">Learn more</a>")
-                                            .arg(OCC::Utility::linkStyle));
+                                              " <a style=\"%1\" href=\"%2\">Learn more</a>")
+                                            .arg(OCC::Utility::linkStyle)
+                                            .arg(OCC::Utility::learnMoreLink));
         _smartSyncDescriptionLabel->setWordWrap(true);
         smartSyncBox->addWidget(_smartSyncDescriptionLabel);
     }
@@ -266,7 +268,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
     connect(addFolderButton, &CustomPushButton::clicked, this, &DrivePreferencesWidget::onAddFolder);
     if (_smartSyncSwitch && _smartSyncDescriptionLabel) {
         connect(_smartSyncSwitch, &CustomSwitch::clicked, this, &DrivePreferencesWidget::onSmartSyncSwitchClicked);
-        connect(_smartSyncDescriptionLabel, &QLabel::linkActivated, this, &DrivePreferencesWidget::onDisplaySmartSyncInfo);
+        connect(_smartSyncDescriptionLabel, &QLabel::linkActivated, this, &DrivePreferencesWidget::onLinkActivated);
     }
     connect(_notificationsSwitch, &CustomSwitch::clicked, this, &DrivePreferencesWidget::onNotificationsSwitchClicked);
     connect(this, &DrivePreferencesWidget::errorAdded, this, &DrivePreferencesWidget::onErrorAdded);
@@ -310,23 +312,28 @@ void DrivePreferencesWidget::reset()
 void DrivePreferencesWidget::updateSmartSyncSwitchState()
 {
     if (_smartSyncSwitch) {
-        bool smartSyncAvailable = false;
-        bool oneDoesntSupportsVirtualFiles = false;
+        bool smartSync = isSmartSyncActivated();
         bool oneHasVfsOnOffSwitchPending = false;
         for (auto folderInfoElt : _accountInfo->_folderMap) {
             OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
             if (folder) {
-                oneDoesntSupportsVirtualFiles |= !folder->supportsVirtualFiles();
                 oneHasVfsOnOffSwitchPending |= folder->isVfsOnOffSwitchPending();
             }
         }
-        smartSyncAvailable = oneDoesntSupportsVirtualFiles && !oneHasVfsOnOffSwitchPending;
-        _smartSyncSwitch->setCheckState(smartSyncAvailable ? Qt::Unchecked : Qt::Checked);
+        _smartSyncSwitch->setCheckState(smartSync ? Qt::Checked : Qt::Unchecked);
         _smartSyncSwitch->setEnabled(!oneHasVfsOnOffSwitchPending);
         if (!oneHasVfsOnOffSwitchPending) {
             _smartSyncSwitch->setToolTip("");
         }
-    }
+
+        QList<PreferencesBlocWidget *> folderBlocList = findChildren<PreferencesBlocWidget *>(folderBlocName);
+        for (PreferencesBlocWidget *folderBloc : folderBlocList) {
+            FolderItemWidget *itemWidget = blocItemWidget(folderBloc);
+            if (itemWidget) {
+                itemWidget->setSmartSync(smartSync);
+            }
+        }
+    }    
 }
 
 bool DrivePreferencesWidget::existUndecidedList()
@@ -357,8 +364,10 @@ void DrivePreferencesWidget::updateAccountInfo()
 {
     OCC::AccountPtr accountPtr = OCC::AccountManager::instance()->getAccountFromId(_accountId);
     if (!accountPtr.isNull()) {
-        _accountAvatarLabel->setPixmap(OCC::Utility::getAvatarFromImage(accountPtr->avatar())
-                                       .scaled(avatarSize, avatarSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        if (!accountPtr->avatar().isNull()) {
+            _accountAvatarLabel->setPixmap(OCC::Utility::getAvatarFromImage(accountPtr->avatar())
+                                           .scaled(avatarSize, avatarSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
 
         _accountNameLabel->setText(accountPtr->davDisplayName());
 
@@ -372,54 +381,56 @@ void DrivePreferencesWidget::updateAccountInfo()
 
 void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)> &callback)
 {
-    const auto bestVfsMode = OCC::bestAvailableVfsMode();
+    const auto bestVfsMode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
     CustomMessageBox *msgBox = nullptr;
-    if (bestVfsMode == OCC::Vfs::WindowsCfApi) {
+    if (bestVfsMode == OCC::Vfs::WindowsCfApi || bestVfsMode == OCC::Vfs::WithSuffix) {
         msgBox = new CustomMessageBox(
-                    QMessageBox::Warning,
-                    tr("When the \"virtual files\" mode is enabled no files will be downloaded initially. "
-                       "Instead a virtual file will be created for each file that exists on the server. "
-                       "When a file is opened its contents will be downloaded automatically. "
-                       "Alternatively, files can be downloaded manually by using their context menu.\n\n"
-                       "The virtual files mode is mutually exclusive with selective sync. "
-                       "Currently unselected folders will be translated to online-only folders "
-                       "and your selective sync settings will be reset."),
+                    QMessageBox::Question,
+                    tr("Do you really want to turn on Lite Sync?"),
                      QMessageBox::NoButton, this);
-        msgBox->addButton(tr("ENABLE VIRTUAL FILES"), QMessageBox::Yes);
-        msgBox->addButton(tr("CONTINUE TO USE SELECTIVE SYNC"), QMessageBox::No);
-    } else {
-        ASSERT(bestVfsMode == OCC::Vfs::WithSuffix)
-        msgBox = new CustomMessageBox(
-                    QMessageBox::Warning,
-                    tr("When the \"virtual files\" mode is enabled no files will be downloaded initially. "
-                       "Instead, a tiny \"%1\" file will be created for each file that exists on the server. "
-                       "The contents can be downloaded by running these files or by using their context menu.\n\n"
-                       "The virtual files mode is mutually exclusive with selective sync. "
-                       "Currently unselected folders will be translated to online-only folders "
-                       "and your selective sync settings will be reset.\n\n"
-                       "Switching to this mode will abort any currently running synchronization.\n\n"
-                       "This is a new, experimental mode. If you decide to use it, please report any "
-                       "issues that come up.").arg(APPLICATION_DOTVIRTUALFILE_SUFFIX),
-                    QMessageBox::NoButton, this);
-        msgBox->addButton(tr("ENABLE EXPERIMENTAL PLACEHOLDER MODE"), QMessageBox::Yes);
-        msgBox->addButton(tr("STAY SAFE"), QMessageBox::No);
+        msgBox->addButton(tr("CONFIRM"), QMessageBox::Yes);
+        msgBox->addButton(tr("CANCEL"), QMessageBox::No);
+        msgBox->setDefaultButton(QMessageBox::Yes);
     }
     int result = msgBox->exec();
     callback(result == QMessageBox::Yes);
 }
 
-void DrivePreferencesWidget::askDisableSmartSync(const std::function<void (bool)> &callback)
+void DrivePreferencesWidget::askDisableSmartSync(const std::function<void (bool, bool)> &callback)
 {
+    // Available space
+    qint64 freeSize = OCC::Utility::freeDiskSpace(dirSeparator);
+
+    // Compute folders size sum
+    qint64 localFoldersSize = 0;
+    qint64 localFoldersDiskSize = 0;
+    for (auto folderInfoElt : _accountInfo->_folderMap) {
+        OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
+        if (folder) {
+            localFoldersSize += OCC::Utility::folderSize(folder->path());
+            localFoldersDiskSize += OCC::Utility::folderDiskSize(folder->path());
+        }
+    }
+
+    qint64 diskSpaceMissing =  localFoldersSize - localFoldersDiskSize - freeSize;
+    bool diskSpaceWarning = diskSpaceMissing > 0;
+
     CustomMessageBox *msgBox = new CustomMessageBox(
                 QMessageBox::Question,
-                tr("This action will disable virtual file support. As a consequence contents of folders that "
-                   "are currently marked as 'available online only' will be downloaded.\n\n"
-                   "This action will abort any currently running synchronization."),
+                tr("Do you really want to turn off Lite Sync?"),
+                diskSpaceWarning
+                ? tr("You don't have enough space to sync all the files on your kDrive (%1 missing)."
+                     " If you turn off Lite Sync, you need to select which folders to sync on your computer."
+                     " In the meantime, the synchronization of your kDrive will be paused.")
+                  .arg(OCC::Utility::octetsToString(diskSpaceMissing))
+                : tr("If you turn off Lite Sync, all files will sync locally on your computer."),
+                diskSpaceWarning,
                 QMessageBox::NoButton, this);
-    msgBox->addButton(tr("DISABLE SUPPORT"), QMessageBox::Yes);
+    msgBox->addButton(tr("CONFIRM"), QMessageBox::Yes);
     msgBox->addButton(tr("CANCEL"), QMessageBox::No);
+    msgBox->setDefaultButton(QMessageBox::Yes);
     int result = msgBox->exec();
-    callback(result == QMessageBox::Yes);
+    callback(result == QMessageBox::Yes, diskSpaceWarning);
 }
 
 void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection)
@@ -429,9 +440,9 @@ void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QM
     }
 
     // Wipe selective sync blacklist
-    bool ok = false;
+    /*bool ok = false;
     auto oldBlacklist = folder->journalDb()->getSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, &ok);
-    folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, {});
+    folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, {});*/
 
     // Change the folder vfs mode and load the plugin
     folder->setSupportsVirtualFiles(true);
@@ -440,10 +451,10 @@ void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QM
     // Setting to Unspecified retains existing data.
     // Selective sync excluded folders become OnlineOnly.
     folder->setRootPinState(OCC::PinState::Unspecified);
-    for (const auto &entry : oldBlacklist) {
+    /*for (const auto &entry : oldBlacklist) {
         folder->journalDb()->schedulePathForRemoteDiscovery(entry);
         folder->vfs().setPinState(entry, OCC::PinState::OnlineOnly);
-    }
+    }*/
     folder->slotNextSyncFullLocalDiscovery();
 
     OCC::FolderMan::instance()->scheduleFolder(folder);
@@ -451,7 +462,7 @@ void DrivePreferencesWidget::switchVfsOn(OCC::Folder *folder, std::shared_ptr<QM
     updateSmartSyncSwitchState();
 }
 
-void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, std::shared_ptr<QMetaObject::Connection> connection)
+void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, bool diskSpaceWarning, std::shared_ptr<QMetaObject::Connection> connection)
 {
     if (*connection) {
         QObject::disconnect(*connection);
@@ -463,12 +474,18 @@ void DrivePreferencesWidget::switchVfsOff(OCC::Folder *folder, std::shared_ptr<Q
 
     // Wipe pin states and selective sync db
     folder->setRootPinState(OCC::PinState::AlwaysLocal);
-    folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, {});
+    //folder->journalDb()->setSelectiveSyncList(OCC::SyncJournalDb::SelectiveSyncBlackList, {});
 
     // Prevent issues with missing local files
     folder->slotNextSyncFullLocalDiscovery();
 
-    OCC::FolderMan::instance()->scheduleFolder(folder);
+    if (diskSpaceWarning) {
+        // Pause sync if disk space warning
+        OCC::Utility::pauseSync(_accountId, QString(), true);
+    }
+    else {
+        OCC::FolderMan::instance()->scheduleFolder(folder);
+    }
 
     updateSmartSyncSwitchState();
 }
@@ -513,6 +530,7 @@ void DrivePreferencesWidget::updateFoldersBlocs()
             }
         }
 
+        bool smartSync = isSmartSyncActivated();
         for (auto folderInfoElt : _accountInfo->_folderMap) {
             if (!folderIdList.contains(folderInfoElt.first)) {
                 // Create folder bloc
@@ -523,6 +541,9 @@ void DrivePreferencesWidget::updateFoldersBlocs()
                 QBoxLayout *folderBox = folderBloc->addLayout(QBoxLayout::Direction::LeftToRight);
 
                 FolderItemWidget *folderItemWidget = new FolderItemWidget(folderInfoElt.first, folderInfoElt.second.get(), this);
+                OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
+                folderItemWidget->setSmartSync(smartSync);
+                folderItemWidget->setFolderCompatibleWithSmartSync(folder->canSupportVirtualFiles());
                 folderBox->addWidget(folderItemWidget);
 
                 QFrame *line = folderBloc->addSeparator();
@@ -711,25 +732,27 @@ bool DrivePreferencesWidget::createMissingFolders(const QString &folderBasePath,
     return true;
 }
 
-bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, const QString &serverFolderPath, QStringList blackList)
+bool DrivePreferencesWidget::addSynchronization(const QString &localFolderPath, bool smartSync, const QString &serverFolderPath, QStringList blackList)
 {
-    bool useVirtualFileSync = OCC::Theme::instance()->showVirtualFilesOption();
-
     qCInfo(lcDrivePreferencesWidget) << "Adding folder definition for" << localFolderPath << serverFolderPath;
 
     OCC::FolderDefinition folderDefinition;
     folderDefinition.localPath = localFolderPath;
     folderDefinition.targetPath = OCC::FolderDefinition::prepareTargetPath(serverFolderPath);
     folderDefinition.ignoreHiddenFiles = OCC::FolderMan::instance()->ignoreHiddenFiles();
-    folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode();
+    if (smartSync) {
+        folderDefinition.virtualFilesMode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
+    }
+#ifdef Q_OS_WIN
     if (OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane()) {
         folderDefinition.navigationPaneClsid = QUuid::createUuid();
     }
+#endif
 
     OCC::AccountStatePtr accountStatePtr = OCC::AccountManager::instance()->getAccountStateFromId(_accountId);
     OCC::Folder *folder = OCC::FolderMan::instance()->addFolder(accountStatePtr.data(), folderDefinition);
     if (folder) {
-        if (folderDefinition.virtualFilesMode != OCC::Vfs::Off && useVirtualFileSync) {
+        if (folderDefinition.virtualFilesMode != OCC::Vfs::Off && smartSync) {
             folder->setRootPinState(OCC::PinState::OnlineOnly);
         }
 
@@ -799,11 +822,34 @@ bool DrivePreferencesWidget::updateSelectiveSyncList(OCC::Folder *folder)
     return true;
 }
 
-void DrivePreferencesWidget::onDisplaySmartSyncInfo(const QString &link)
+bool DrivePreferencesWidget::isSmartSyncActivated()
 {
-    Q_UNUSED(link)
+    // Check if smart sync is activated at least for one folder
+    bool smartSync = false;
+    for (auto folderInfoElt : _accountInfo->_folderMap) {
+        OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
+        if (folder && folder->vfs().mode() != OCC::Vfs::Off) {
+            smartSync = true;
+            break;
+        }
+    }
 
-    // TODO
+    return smartSync;
+}
+
+void DrivePreferencesWidget::onLinkActivated(const QString &link)
+{
+    if (link == OCC::Utility::learnMoreLink) {
+        // Learn more: Lite Sync
+        if (!QDesktopServices::openUrl(QUrl(LEARNMORE_LITESYNC_URL))) {
+            qCWarning(lcDrivePreferencesWidget) << "QDesktopServices::openUrl failed for " << link;
+            CustomMessageBox *msgBox = new CustomMessageBox(
+                        QMessageBox::Warning,
+                        tr("Unable to open link %1.").arg(link),
+                        QMessageBox::Ok, this);
+            msgBox->exec();
+        }
+    }
 }
 
 void DrivePreferencesWidget::onErrorsWidgetClicked()
@@ -847,6 +893,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
 
     const QString addFolderError = tr("New folder synchronization failed!");
     QString localFolderPath = QString();
+    bool smartSync = false;
     QString serverFolderPath = QString();
     QString serverFolderBasePath = QString();
     JobResult folderHasSubfoldersJobResult = JobResult::No;
@@ -860,6 +907,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
     while (true) {
         if (nextStep == SelectLocalFolder) {
             LocalFolderDialog *localFolderDialog = new LocalFolderDialog(localFolderPath, this);
+            localFolderDialog->setSmartSync(isSmartSyncActivated());
             connect(localFolderDialog, &LocalFolderDialog::openFolder, this, &DrivePreferencesWidget::onOpenFolder);
             if (localFolderDialog->exec(OCC::Utility::getTopLevelWidget(this)->pos()) == QDialog::Rejected) {
                 break;
@@ -869,6 +917,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             QFileInfo localFolderInfo(localFolderPath);
             localFolderName = localFolderInfo.baseName();
             localFolderSize = OCC::Utility::folderSize(localFolderPath);
+            smartSync = localFolderDialog->folderCompatibleWithSmartSync();
             qCDebug(lcDrivePreferencesWidget) << "Local folder selected: " << localFolderPath;
             nextStep = SelectServerBaseFolder;
         }
@@ -978,7 +1027,7 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
             }
 
             // Add folder to synchronization
-            if (!addSynchronization(localFolderPath, serverFolderPath, blackList)) {
+            if (!addSynchronization(localFolderPath, smartSync, serverFolderPath, blackList)) {
                 CustomMessageBox *msgBox = new CustomMessageBox(
                             QMessageBox::Warning,
                             addFolderError,
@@ -1002,10 +1051,10 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
             }
 
             _smartSyncSwitch->setEnabled(false);
-            _smartSyncSwitch->setToolTip(tr("Smart synchronization activation in progress"));
+            _smartSyncSwitch->setToolTip(tr("Lite Sync activation in progress"));
             for (auto folderInfoElt : _accountInfo->_folderMap) {
                 OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
-                if (folder) {
+                if (folder && folder->canSupportVirtualFiles()) {
                     // It is unsafe to switch on vfs while a sync is running - wait if necessary.
                     auto connection = std::make_shared<QMetaObject::Connection>();
                     if (folder->isSyncRunning()) {
@@ -1021,14 +1070,14 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
         });
     }
     else {
-        askDisableSmartSync([this](bool enable) {
+        askDisableSmartSync([this](bool enable, bool diskSpaceWarning) {
             if (!enable) {
                 _smartSyncSwitch->setCheckState(Qt::Checked);
                 return;
             }
 
             _smartSyncSwitch->setEnabled(false);
-            _smartSyncSwitch->setToolTip(tr("Smart synchronization deactivation in progress"));
+            _smartSyncSwitch->setToolTip(tr("Lite Sync deactivation in progress"));
             for (auto folderInfoElt : _accountInfo->_folderMap) {
                 OCC::Folder *folder = OCC::FolderMan::instance()->folder(folderInfoElt.first);
                 if (folder) {
@@ -1037,10 +1086,10 @@ void DrivePreferencesWidget::onSmartSyncSwitchClicked(bool checked)
                     if (folder->isSyncRunning()) {
                         folder->setVfsOnOffSwitchPending(true);
                         *connection = connect(folder, &OCC::Folder::syncFinished,
-                                              this, [=](){ switchVfsOff(folder, connection); });
+                                              this, [=](){ switchVfsOff(folder, diskSpaceWarning, connection); });
                         folder->slotTerminateSync();
                     } else {
-                        switchVfsOff(folder, connection);
+                        switchVfsOff(folder, diskSpaceWarning, connection);
                     }
                 }
             }

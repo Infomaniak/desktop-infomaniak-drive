@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QDir>
 #include <QFileInfo>
 #include <QGraphicsDropShadowEffect>
+#include <QLoggingCategory>
 #include <QPainter>
 #include <QPainterPath>
 
@@ -42,6 +43,8 @@ static const int fileErrorLabelMaxWidth = 375;
 static const int fileNameMaxSize = 40;
 static const int filePathMaxSize = 50;
 static const QString dateFormat = "d MMM yyyy - HH:mm";
+
+Q_LOGGING_CATEGORY(lcErrorItemWidget, "gui.erroritemwidget", QtInfoMsg)
 
 ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo &accountInfo, QWidget *parent)
     : QWidget(parent)
@@ -78,6 +81,7 @@ ErrorItemWidget::ErrorItemWidget(const SynchronizedItem &item, const AccountInfo
     hBox->setStretchFactor(vBoxMiddle, 1);
 
     _fileNameLabel = new QLabel(this);
+    _fileNameLabel->setTextFormat(Qt::PlainText);
     _fileNameLabel->setObjectName("fileNameLabel");
     QFileInfo fileInfo(_item.filePath());
     QString fileName = fileInfo.fileName();

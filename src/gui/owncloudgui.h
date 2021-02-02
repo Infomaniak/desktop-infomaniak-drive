@@ -86,7 +86,6 @@ public slots:
     void slotOpenWebview();
     void slotOpenParametersDialog(const QString &accountId = QString());
     void slotHelp();
-    void slotAbout();
     void slotOpenPath(const QString &path);
     void slotAccountStateChanged();
     void slotTrayMessageIfServerUnsupported(Account *account);

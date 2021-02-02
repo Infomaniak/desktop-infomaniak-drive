@@ -142,7 +142,7 @@ std::unique_ptr<csync_file_stat_t> csync_vio_local_readdir(csync_vio_handle_t *h
   file_stat.reset(new csync_file_stat_t);
   file_stat->path = path;
 
-    if (vfs && vfs->statTypeVirtualFile(file_stat.get(), &handle->ffd)) {
+    if (vfs && vfs->statTypeVirtualFile(file_stat.get(), &handle->ffd, handle->path)) {
       // all good
     } else if (handle->ffd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) {
       // Detect symlinks, and treat junctions as symlinks too.
@@ -211,7 +211,7 @@ static int _csync_vio_local_stat_mb(const mbchar_t *wuri, csync_file_stat_t *buf
                      FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT,
                      NULL );
     if( h == INVALID_HANDLE_VALUE ) {
-        qCCritical(lcCSyncVIOLocal, "CreateFileW failed on %ls", wuri);
+        qCDebug(lcCSyncVIOLocal, "CreateFileW failed on %ls", wuri);
         errno = GetLastError();
         return -1;
     }

@@ -42,23 +42,23 @@ public:
 
     void createPlaceholder(const SyncFileItem &item) override;
     void dehydratePlaceholder(const SyncFileItem &item) override;
-    void convertToPlaceholder(const QString &filename, const SyncFileItem &item, const QString &) override;
+    bool convertToPlaceholder(const QString &filename, const SyncFileItem &item, const QString &) override;
 
     bool needsMetadataUpdate(const SyncFileItem &) override { return false; }
-    bool isDehydratedPlaceholder(const QString &filePath) override;
-    bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data) override;
+    bool isDehydratedPlaceholder(const QString &fileRelativePath) override;
+    bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const QString &) override;
 
-    bool setPinState(const QString &folderPath, PinState state) override
-    { return setPinStateInDb(folderPath, state); }
-    Optional<PinState> pinState(const QString &folderPath) override
-    { return pinStateInDb(folderPath); }
-    AvailabilityResult availability(const QString &folderPath) override;
+    bool setPinState(const QString &fileRelativePath, PinState state) override
+    { return setPinStateInDb(fileRelativePath, state); }
+    Optional<PinState> pinState(const QString &fileRelativePath) override
+    { return pinStateInDb(fileRelativePath); }
+    AvailabilityResult availability(const QString &fileRelativePath) override;
 
 public slots:
     void fileStatusChanged(const QString &, SyncFileStatus) override {}
 
 protected:
-    void startImpl(const VfsSetupParams &params) override;
+    void startImpl(const VfsSetupParams &params, QString &namespaceCLSID) override;
 };
 
 class SuffixVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsSuffix>

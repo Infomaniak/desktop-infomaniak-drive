@@ -41,8 +41,10 @@ QString VfsSuffix::fileSuffix() const
     return QStringLiteral(APPLICATION_DOTVIRTUALFILE_SUFFIX);
 }
 
-void VfsSuffix::startImpl(const VfsSetupParams &params)
+void VfsSuffix::startImpl(const VfsSetupParams &params, QString &namespaceCLSID)
 {
+    Q_UNUSED(namespaceCLSID)
+
     // It is unsafe for the database to contain any ".owncloud" file entries
     // that are not marked as a virtual file. These could be real .owncloud
     // files that were synced before vfs was enabled.
@@ -110,20 +112,21 @@ void VfsSuffix::dehydratePlaceholder(const SyncFileItem &item)
         setPinState(item._renameTarget, PinState::Unspecified);
 }
 
-void VfsSuffix::convertToPlaceholder(const QString &, const SyncFileItem &, const QString &)
+bool VfsSuffix::convertToPlaceholder(const QString &, const SyncFileItem &, const QString &)
 {
     // Nothing necessary
+    return true;
 }
 
-bool VfsSuffix::isDehydratedPlaceholder(const QString &filePath)
+bool VfsSuffix::isDehydratedPlaceholder(const QString &fileRelativePath)
 {
-    if (!filePath.endsWith(fileSuffix()))
+    if (!fileRelativePath.endsWith(fileSuffix()))
         return false;
-    QFileInfo fi(filePath);
+    QFileInfo fi(fileRelativePath);
     return fi.exists() && fi.size() == 1;
 }
 
-bool VfsSuffix::statTypeVirtualFile(csync_file_stat_t *stat, void *)
+bool VfsSuffix::statTypeVirtualFile(csync_file_stat_t *stat, void *, const QString &)
 {
     if (stat->path.endsWith(fileSuffix().toUtf8())) {
         stat->type = ItemTypeVirtualFile;
@@ -132,9 +135,9 @@ bool VfsSuffix::statTypeVirtualFile(csync_file_stat_t *stat, void *)
     return false;
 }
 
-Vfs::AvailabilityResult VfsSuffix::availability(const QString &folderPath)
+Vfs::AvailabilityResult VfsSuffix::availability(const QString &fileRelativePath)
 {
-    return availabilityInDb(folderPath);
+    return availabilityInDb(fileRelativePath);
 }
 
 } // namespace OCC

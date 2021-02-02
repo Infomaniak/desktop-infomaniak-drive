@@ -40,7 +40,7 @@ static const int folderTreeBoxVMargin = 20;
 static const int progressBarMin = 0;
 static const int progressBarMax = 4;
 
-Q_LOGGING_CATEGORY(lcAddDriveServerFoldersWidget, "adddriveserverfolderswidget", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcAddDriveServerFoldersWidget, "gui.adddriveserverfolderswidget", QtInfoMsg)
 
 AddDriveServerFoldersWidget::AddDriveServerFoldersWidget(QWidget *parent)
     : QWidget(parent)

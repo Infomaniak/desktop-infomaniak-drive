@@ -29,7 +29,6 @@ class InfomaniakTheme : public Theme
 public:
     InfomaniakTheme();
     bool wizardHideExternalStorageConfirmationCheckbox() const override;
-    QString systrayIconFlavor(bool mono, bool sysTrayMenuVisible = false) const override;
     QString gitSHA1() const override;
     QString helpUrl() const override;
     QString conflictHelpUrl() const override;

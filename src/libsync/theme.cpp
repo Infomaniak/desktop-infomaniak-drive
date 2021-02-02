@@ -124,37 +124,6 @@ QIcon Theme::applicationIcon() const
     return themeIcon(QStringLiteral(APPLICATION_ICON_NAME "-icon"));
 }
 
-QIcon Theme::svgThemeIcon(const QString &name) const
-{
-    QColor bg(qApp->palette().base().color());
-    QString flavor = CommonUtility::colorThresholdCheck(bg.red(), bg.green(), bg.blue())
-            ? QLatin1String("white")
-            : QLatin1String("black");
-
-    QString key = name + "," + flavor;
-    QIcon &cached = _iconCache[key]; // Take reference, this will also "set" the cache entry
-    if (cached.isNull()) {
-        QString pixmapName = QString::fromLatin1(":/client/theme/%1/%2.svg").arg(flavor).arg(name);
-        if (QFile::exists(pixmapName)) {
-            QList<int> sizes;
-            sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
-            foreach (int size, sizes) {
-                cached.addPixmap(QIcon(pixmapName).pixmap(QSize(size, size)));
-            }
-        }
-    }
-
-#ifdef Q_OS_MAC
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    // This defines the icon as a template and enables automatic macOS color handling
-    // See https://bugreports.qt.io/browse/QTBUG-42109
-    cached.setIsMask(false);
-#endif
-#endif
-
-    return cached;
-}
-
 /*
  * helper to load a icon from either the icon theme the desktop provides or from
  * the apps Qt resources.
@@ -219,7 +188,13 @@ QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVis
     QString flavor;
     if (sysTray) {
         if (_mono) {
-            flavor = Utility::hasDarkSystray() ? QString("white") : QString("black");
+            if (QOperatingSystemVersion::current().currentType() == QOperatingSystemVersion::OSType::MacOS
+                    && QOperatingSystemVersion::current() > QOperatingSystemVersion::MacOSCatalina) {
+                flavor = QString("black");
+            }
+            else {
+                flavor = Utility::hasDarkSystray() ? QString("white") : QString("black");
+            }
         } else {
             flavor = QString("colored");
         }
@@ -230,7 +205,7 @@ QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVis
     QString key = name + "," + flavor;
     QIcon &cached = _iconCache[key];
     if (cached.isNull()) {
-        QString pixmapName = QString(":/client/resources/icons/theme/%1/%2.svg").arg(flavor).arg(name);
+        QString pixmapName = QString(":/client/resources/icons/theme/%1/%2.svg").arg(flavor, name);
         if (QFile::exists(pixmapName)) {
             QList<int> sizes;
             sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
@@ -243,7 +218,7 @@ QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVis
 #ifdef Q_OS_MAC
     // This defines the icon as a template and enables automatic macOS color handling
     // See https://bugreports.qt.io/browse/QTBUG-42109
-    cached.setIsMask(false);
+    cached.setIsMask(_mono && sysTray);
 #endif
 
     return cached;
@@ -378,12 +353,6 @@ bool Theme::systrayUseMonoIcons() const
     return _mono;
 }
 
-bool Theme::monoIconsAvailable() const
-{
-    QString themeDir = QString::fromLatin1(":/client/theme/%1/").arg(Theme::instance()->systrayIconFlavor(true));
-    return QDir(themeDir).exists();
-}
-
 void Theme::clearIconCache()
 {
     _iconCache.clear();
@@ -463,7 +432,7 @@ QString Theme::about() const
 
     devString += gitSHA1();
     devString += QString("<p><small>Using virtual files plugin: %1</small></p>")
-        .arg(Vfs::modeToString(bestAvailableVfsMode()));
+        .arg(Vfs::modeToString(bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions())));
 
     return devString;
 }
@@ -474,39 +443,6 @@ bool Theme::aboutShowCopyright() const
 }
 
 #ifndef TOKEN_AUTH_ONLY
-QVariant Theme::customMedia(CustomMediaType type)
-{
-    QVariant re;
-    QString key;
-
-    switch (type) {
-    case oCSetupTop:
-        key = QLatin1String("oCSetupTop");
-        break;
-    case oCSetupSide:
-        key = QLatin1String("oCSetupSide");
-        break;
-    case oCSetupBottom:
-        key = QLatin1String("oCSetupBottom");
-        break;
-    case oCSetupResultTop:
-        key = QLatin1String("oCSetupResultTop");
-        break;
-    }
-
-    QString imgPath = QString::fromLatin1(":/client/theme/colored/%1.png").arg(key);
-    if (QFile::exists(imgPath)) {
-        QPixmap pix(imgPath);
-        if (pix.isNull()) {
-            // pixmap loading hasn't succeeded. We take the text instead.
-            re.setValue(key);
-        } else {
-            re.setValue(pix);
-        }
-    }
-    return re;
-}
-
 QIcon Theme::syncStateIcon(SyncResult::Status status, bool sysTray, bool sysTrayMenuVisible, bool alert) const
 {
     // FIXME: Mind the size!
@@ -677,11 +613,6 @@ QString Theme::versionSwitchOutput() const
     stream << "Using Qt " << qVersion() << ", built against Qt " << QT_VERSION_STR << endl;
     stream << "Using '" << QSslSocket::sslLibraryVersionString() << "'" << endl;
     return helpText;
-}
-
-bool Theme::showVirtualFilesOption() const
-{
-    return ConfigFile().showExperimentalOptions();
 }
 
 bool Theme::noUnauthedRequests() const

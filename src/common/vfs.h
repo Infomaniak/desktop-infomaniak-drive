@@ -67,6 +67,9 @@ struct OCSYNC_EXPORT VfsSetupParams
      * For some plugins that doesn't work well in tests.
      */
     bool enableShellIntegration = true;
+
+    QString folderAlias;
+    QString folderName;
 };
 
 /** Interface describing how to deal with virtual/placeholder files.
@@ -125,14 +128,13 @@ public:
      *
      * The plugin-specific work is done in startImpl().
      */
-    void start(const VfsSetupParams &params);
+    void start(const VfsSetupParams &params, QString &namespaceCLSID);
 
     /// Stop interaction with VFS provider. Like when the client application quits.
     virtual void stop() = 0;
 
     /// Deregister the folder with the sync provider, like when a folder is removed.
     virtual void unregisterFolder() = 0;
-
 
     /** Whether the socket api should show pin state options
      *
@@ -186,13 +188,13 @@ public:
      * new placeholder shall supersede, for rename-replace actions with new downloads,
      * for example.
      */
-    virtual void convertToPlaceholder(
+    virtual bool convertToPlaceholder(
         const QString &filename,
         const SyncFileItem &item,
         const QString &replacesFile = QString()) = 0;
 
     /// Determine whether the file at the given absolute path is a dehydrated placeholder.
-    virtual bool isDehydratedPlaceholder(const QString &filePath) = 0;
+    virtual bool isDehydratedPlaceholder(const QString &fileRelativePath) = 0;
 
     /** Similar to isDehydratedPlaceholder() but used from sync discovery.
      *
@@ -201,7 +203,7 @@ public:
      *
      * Returning true means that type was fully determined.
      */
-    virtual bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data) = 0;
+    virtual bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const QString &fileDirectory) = 0;
 
     /** Sets the pin state for the item at a path.
      *
@@ -210,29 +212,29 @@ public:
      * Usually this would forward to setting the pin state flag in the db table,
      * but some vfs plugins will store the pin state in file attributes instead.
      *
-     * folderPath is relative to the sync folder. Can be "" for root folder.
+     * fileRelativePath is relative to the sync folder. Can be "" for root folder.
      */
-    virtual bool setPinState(const QString &folderPath, PinState state) = 0;
+    virtual bool setPinState(const QString &fileRelativePath, PinState state) = 0;
 
     /** Returns the pin state of an item at a path.
      *
      * Usually backed by the db's effectivePinState() function but some vfs
      * plugins will override it to retrieve the state from elsewhere.
      *
-     * folderPath is relative to the sync folder. Can be "" for root folder.
+     * fileRelativePath is relative to the sync folder. Can be "" for root folder.
      *
      * Returns none on retrieval error.
      */
-    virtual Optional<PinState> pinState(const QString &folderPath) = 0;
+    virtual Optional<PinState> pinState(const QString &fileRelativePath) = 0;
 
     /** Returns availability status of an item at a path.
      *
      * The availability is a condensed user-facing version of PinState. See
      * VfsItemAvailability for details.
      *
-     * folderPath is relative to the sync folder. Can be "" for root folder.
+     * fileRelativePath is relative to the sync folder. Can be "" for root folder.
      */
-    virtual AvailabilityResult availability(const QString &folderPath) = 0;
+    virtual AvailabilityResult availability(const QString &fileRelativePath) = 0;
 
 public slots:
     /** Update in-sync state based on SyncFileStatusTracker signal.
@@ -259,12 +261,12 @@ protected:
      * Usually some registration needs to be done with the backend. This function
      * should take care of it if necessary.
      */
-    virtual void startImpl(const VfsSetupParams &params) = 0;
+    virtual void startImpl(const VfsSetupParams &params, QString &namespaceCLSID) = 0;
 
     // Db-backed pin state handling. Derived classes may use it to implement pin states.
-    bool setPinStateInDb(const QString &folderPath, PinState state);
-    Optional<PinState> pinStateInDb(const QString &folderPath);
-    AvailabilityResult availabilityInDb(const QString &folderPath);
+    bool setPinStateInDb(const QString &fileRelativePath, PinState state);
+    Optional<PinState> pinStateInDb(const QString &fileRelativePath);
+    AvailabilityResult availabilityInDb(const QString &fileRelativePath);
 
     // the parameters passed to start()
     VfsSetupParams _setupParams;
@@ -292,11 +294,11 @@ public:
     bool updateMetadata(const QString &, time_t, qint64, const QByteArray &, QString *) override { return true; }
     void createPlaceholder(const SyncFileItem &) override {}
     void dehydratePlaceholder(const SyncFileItem &) override {}
-    void convertToPlaceholder(const QString &, const SyncFileItem &, const QString &) override {}
+    bool convertToPlaceholder(const QString &, const SyncFileItem &, const QString &) override { return true; }
 
     bool needsMetadataUpdate(const SyncFileItem &) override { return false; }
     bool isDehydratedPlaceholder(const QString &) override { return false; }
-    bool statTypeVirtualFile(csync_file_stat_t *, void *) override { return false; }
+    bool statTypeVirtualFile(csync_file_stat_t *, void *, const QString &) override { return false; }
 
     bool setPinState(const QString &, PinState) override { return true; }
     Optional<PinState> pinState(const QString &) override { return PinState::AlwaysLocal; }
@@ -306,14 +308,14 @@ public slots:
     void fileStatusChanged(const QString &, SyncFileStatus) override {}
 
 protected:
-    void startImpl(const VfsSetupParams &) override {}
+    void startImpl(const VfsSetupParams &, QString &) override {}
 };
 
 /// Check whether the plugin for the mode is available.
 OCSYNC_EXPORT bool isVfsPluginAvailable(Vfs::Mode mode);
 
 /// Return the best available VFS mode.
-OCSYNC_EXPORT Vfs::Mode bestAvailableVfsMode();
+OCSYNC_EXPORT Vfs::Mode bestAvailableVfsMode(bool showExperimentalOptions);
 
 /// Create a VFS instance for the mode, returns nullptr on failure.
 OCSYNC_EXPORT std::unique_ptr<Vfs> createVfsFromPlugin(Vfs::Mode mode);

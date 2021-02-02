@@ -4,7 +4,7 @@
 #include <QWebEngineProfile>
 #include <QWebEngineUrlRequestInterceptor>
 #include <QWebEngineUrlRequestJob>
-#if QT_VERSION >= 0x051200
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
 #include <QWebEngineUrlScheme>
 #endif
 #include <QWebEngineUrlSchemeHandler>
@@ -70,7 +70,7 @@ WebView::WebView(QWidget *parent)
       _ui()
 {
     _ui.setupUi(this);
-#if QT_VERSION >= 0x051200
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
     QWebEngineUrlScheme _ncsheme("nc");
     QWebEngineUrlScheme::registerScheme(_ncsheme);
 #endif

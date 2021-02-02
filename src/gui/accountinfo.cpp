@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 namespace KDC {
 
-Q_LOGGING_CATEGORY(lcAccountInfo, "accountinfo", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcAccountInfo, "gui.accountinfo", QtInfoMsg)
 
 AccountInfo::AccountInfo()
     : _name(QString())
@@ -50,7 +50,7 @@ void AccountInfo::initQuotaInfo(OCC::AccountState *accountState)
 {
     if (accountState) {
         _quotaInfoPtr = std::unique_ptr<OCC::QuotaInfo>(new OCC::QuotaInfo(accountState));
-        _quotaInfoPtr.get()->setActive(true);
+        _quotaInfoPtr.get()->setActive(false);
         _quotaInfoPtr.get()->setProperty(accountIdProperty, accountState->account()->id());
     }
 }

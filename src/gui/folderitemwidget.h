@@ -38,6 +38,8 @@ public:
     inline QString folderId() const { return _folderId; };
     void updateItem(const FolderInfo *folderInfo);
     void setUpdateWidgetVisible(bool visible);
+    void setSmartSync(bool smartSync);
+    void setFolderCompatibleWithSmartSync(bool folderCompatibleWithSmartSync);
 
 signals:
     void runSync(const QString &folderId);
@@ -57,8 +59,11 @@ private:
     CustomToolButton *_menuButton;
     QLabel *_statusIconLabel;
     QLabel *_nameLabel;
+    QLabel *_smartSyncIconLabel;
     QWidget *_updateWidget;
     bool _isExpanded;
+    bool _smartSync;
+    bool _folderCompatibleWithSmartSync;
 
     void setExpandButton();
 

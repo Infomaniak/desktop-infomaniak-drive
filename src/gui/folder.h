@@ -303,6 +303,8 @@ public:
     /** Whether this folder should show selective sync ui */
     bool supportsSelectiveSync() const;
 
+    bool canSupportVirtualFiles() const;
+
 signals:
     void syncStateChange();
     void syncStarted();
@@ -448,7 +450,7 @@ private:
     void createGuiLog(const QString &filename, LogStatus status, int count,
         const QString &renameTarget = QString());
 
-    void startVfs();
+    bool startVfs();
 
     AccountStatePtr _accountState;
     FolderDefinition _definition;

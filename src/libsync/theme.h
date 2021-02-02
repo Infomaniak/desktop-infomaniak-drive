@@ -97,7 +97,6 @@ public:
     virtual QIcon folderDisabledIcon() const;
     virtual QIcon folderOfflineIcon(bool sysTray = false, bool sysTrayMenuVisible = false) const;
     virtual QIcon applicationIcon() const;
-    virtual QIcon svgThemeIcon(QString const &name) const;
 #endif
 
     virtual QString statusHeaderText(SyncResult::Status) const;
@@ -169,13 +168,6 @@ public:
     virtual QString systrayIconFlavor(bool mono, bool sysTrayMenuVisible = false) const;
 
 #ifndef TOKEN_AUTH_ONLY
-    /**
-     * Override to use a string or a custom image name.
-     * The default implementation will try to look up
-     * :/client/theme/<type>.png
-     */
-    virtual QVariant customMedia(CustomMediaType type);
-
     /** @return color for the setup wizard */
     virtual QColor wizardHeaderTitleColor() const;
 
@@ -215,11 +207,6 @@ public:
      * Retrieve wether to use mono icons for systray
      */
     bool systrayUseMonoIcons() const;
-
-    /**
-     * Check if mono icons are available
-     */
-    bool monoIconsAvailable() const;
 
     /**
      * Clean icon cache
@@ -372,7 +359,7 @@ public:
      * By default, the options are not shown unless experimental options are
      * manually enabled in the configuration file.
      */
-    virtual bool showVirtualFilesOption() const;
+    virtual bool showVirtualFilesOption() const { return true; };
 
     /**
      * @brief Open directly the browser for oauth2 without doing any unauthenticated request

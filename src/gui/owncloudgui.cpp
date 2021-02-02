@@ -160,12 +160,12 @@ void OwnCloudGui::slotSyncStateChange(Folder *folder)
 
     qCInfo(lcApplication) << "Sync state changed for folder " << folder->remoteUrl().toString() << ": " << result.statusString();
 
-    if (result.status() == SyncResult::Success
+    /*if (result.status() == SyncResult::Success
         || result.status() == SyncResult::Problem
         || result.status() == SyncResult::SyncAbortRequested
         || result.status() == SyncResult::Error) {
         Logger::instance()->enterNextLogFile();
-    }
+    }*/
 }
 
 void OwnCloudGui::slotFoldersChanged()
@@ -792,31 +792,6 @@ void OwnCloudGui::slotRemoveDestroyedShareDialogs()
             it.remove();
         }
     }
-}
-
-void OwnCloudGui::slotAbout()
-{
-    QString title = tr("About %1").arg(Theme::instance()->appNameGUI());
-    QString about = Theme::instance()->about();
-    QMessageBox *msgBox = new QMessageBox(this->_parametersDialog);
-#ifdef Q_OS_MAC
-    // From Qt doc: "On macOS, the window title is ignored (as required by the macOS Guidelines)."
-    msgBox->setText(title);
-#else
-    msgBox->setWindowTitle(title);
-#endif
-    msgBox->setAttribute(Qt::WA_DeleteOnClose, true);
-    msgBox->setTextFormat(Qt::RichText);
-    msgBox->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    msgBox->setInformativeText("<qt>"+about+"</qt>");
-    msgBox->setStandardButtons(QMessageBox::Ok);
-    QIcon appIcon = Theme::instance()->applicationIcon();
-    // Assume icon is always small enough to fit an about dialog?
-    qDebug() << appIcon.availableSizes().last();
-    QPixmap iconPixmap = appIcon.pixmap(appIcon.availableSizes().last());
-    iconPixmap.setDevicePixelRatio(2);
-    msgBox->setIconPixmap(iconPixmap);
-    msgBox->show();
 }
 
 } // end namespace

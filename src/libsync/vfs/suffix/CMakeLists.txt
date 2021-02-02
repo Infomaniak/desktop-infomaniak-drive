@@ -27,8 +27,11 @@ else()
     set(vfs_installdir "${PLUGINDIR}")
 endif()
 
-INSTALL(TARGETS "${synclib_NAME}_vfs_suffix"
-  LIBRARY DESTINATION "${vfs_installdir}"
-  RUNTIME DESTINATION "${vfs_installdir}"
-)
+if(APPLE OR UNIX)
+    INSTALL(TARGETS "${synclib_NAME}_vfs_suffix"
+      LIBRARY DESTINATION "${vfs_installdir}"
+      RUNTIME DESTINATION "${vfs_installdir}"
+    )
+endif()
+
 

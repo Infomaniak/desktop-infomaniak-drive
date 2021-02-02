@@ -49,6 +49,7 @@ OCClientInterface::ContextMenuInfo OCClientInterface::FetchInfo(const std::wstri
 
     ContextMenuInfo info;
     std::wstring response;
+    bool vfsModeCompatible = false;
     int sleptCount = 0;
     while (sleptCount < 5) {
         if (socket.ReadLine(&response)) {
@@ -62,11 +63,17 @@ OCClientInterface::ContextMenuInfo OCClientInterface::FetchInfo(const std::wstri
                     continue;
                 if (stringName == L"CONTEXT_MENU_TITLE")
                     info.contextMenuTitle = move(stringValue);
+            }
+            else if (StringUtil::begins_with(response, wstring(L"VFS_MODE:"))) {
+                wstring vfsMode = response.substr(9); // length of VFS_MODE
+                vfsModeCompatible = (vfsMode.compare(L"off") == 0 || vfsMode.compare(L"suffix") == 0);
             } else if (StringUtil::begins_with(response, wstring(L"MENU_ITEM:"))) {
-                wstring commandName, flags, title;
-                if (!StringUtil::extractChunks(response, commandName, flags, title))
-                    continue;
-                info.menuItems.push_back({ commandName, flags, title });
+                if (vfsModeCompatible) {
+                    wstring commandName, flags, title;
+                    if (!StringUtil::extractChunks(response, commandName, flags, title))
+                        continue;
+                    info.menuItems.push_back({ commandName, flags, title });
+                }
             } else if (StringUtil::begins_with(response, wstring(L"GET_MENU_ITEMS:END"))) {
                 break; // Stop once we completely received the last sent request
             }

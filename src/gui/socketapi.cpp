@@ -33,6 +33,7 @@
 #include "common/asserts.h"
 #include "guiutility.h"
 #include "getorcreatepubliclinkshare.h"
+#include "thumbnailjob.h"
 
 #include <array>
 #include <QBitArray>
@@ -49,6 +50,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QClipboard>
+#include <QBuffer>
 
 #include <QStandardPaths>
 
@@ -87,81 +89,6 @@ static QString buildMessage(const QString &verb, const QString &path, const QStr
 namespace OCC {
 
 Q_LOGGING_CATEGORY(lcSocketApi, "gui.socketapi", QtInfoMsg)
-
-class BloomFilter
-{
-    // Initialize with m=1024 bits and k=2 (high and low 16 bits of a qHash).
-    // For a client navigating in less than 100 directories, this gives us a probability less than (1-e^(-2*100/1024))^2 = 0.03147872136 false positives.
-    const static int NumBits = 1024;
-
-public:
-    BloomFilter()
-        : hashBits(NumBits)
-    {
-    }
-
-    void storeHash(uint hash)
-    {
-        hashBits.setBit((hash & 0xFFFF) % NumBits);
-        hashBits.setBit((hash >> 16) % NumBits);
-    }
-    bool isHashMaybeStored(uint hash) const
-    {
-        return hashBits.testBit((hash & 0xFFFF) % NumBits)
-            && hashBits.testBit((hash >> 16) % NumBits);
-    }
-
-private:
-    QBitArray hashBits;
-};
-
-class SocketListener
-{
-public:
-    QPointer<QIODevice> socket;
-
-    explicit SocketListener(QIODevice *socket)
-        : socket(socket)
-    {
-    }
-
-    void sendMessage(const QString &message, bool doWait = false) const
-    {
-        if (!socket) {
-            qCInfo(lcSocketApi) << "Not sending message to dead socket:" << message;
-            return;
-        }
-
-        qCInfo(lcSocketApi) << "Sending SocketAPI message -->" << message << "to" << socket;
-        QString localMessage = message;
-        if (!localMessage.endsWith(QLatin1Char('\n'))) {
-            localMessage.append(QLatin1Char('\n'));
-        }
-
-        QByteArray bytesToSend = localMessage.toUtf8();
-        qint64 sent = socket->write(bytesToSend);
-        if (doWait) {
-            socket->waitForBytesWritten(1000);
-        }
-        if (sent != bytesToSend.length()) {
-            qCWarning(lcSocketApi) << "Could not send all data on socket for " << localMessage;
-        }
-    }
-
-    void sendMessageIfDirectoryMonitored(const QString &message, uint systemDirectoryHash) const
-    {
-        if (_monitoredDirectoriesBloomFilter.isHashMaybeStored(systemDirectoryHash))
-            sendMessage(message, false);
-    }
-
-    void registerMonitoredDirectory(uint systemDirectoryHash)
-    {
-        _monitoredDirectoriesBloomFilter.storeHash(systemDirectoryHash);
-    }
-
-private:
-    BloomFilter _monitoredDirectoriesBloomFilter;
-};
 
 struct ListenerHasSocketPred
 {
@@ -323,6 +250,39 @@ void SocketApi::slotReadSocket()
             qCWarning(lcSocketApi) << "The command is not supported by this version of the client:" << command << "with argument:" << argument;
         }
     }
+}
+
+void SocketApi::slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
+                                     unsigned int width, uint64_t iNode, const OCC::SocketListener *listener)
+{
+    if (statusCode != 200) {
+        qCWarning(lcSharing) << "Thumbnail status code: " << statusCode;
+        return;
+    }
+
+    QPixmap pixmap;
+    if (!pixmap.loadFromData(reply)) {
+        qCWarning(lcSharing) << "Error in pixmap.loadFromData for file with iNode " << iNode;
+        return;
+    }
+
+    qCDebug(lcSocketApi) << "Thumbnail fetched - size: " << pixmap.width() << "x" << pixmap.height();
+    if (pixmap.width() > pixmap.height()) {
+        pixmap = pixmap.scaledToWidth(width, Qt::SmoothTransformation);
+    }
+    else {
+        pixmap = pixmap.scaledToHeight(width, Qt::SmoothTransformation);
+    }
+    qCDebug(lcSocketApi) << "Thumbnail scaled - size: " << pixmap.width() << "x" << pixmap.height();
+
+    QBuffer pixmapBuffer;
+    pixmapBuffer.open(QIODevice::WriteOnly);
+    pixmap.save(&pixmapBuffer, "BMP");
+
+    QString pm(pixmapBuffer.data().toBase64());
+    listener->sendMessage(QString("GET_THUMBNAIL:%1:%2")
+                          .arg(QString::number(iNode))
+                          .arg(QString(pixmapBuffer.data().toBase64())));
 }
 
 void SocketApi::slotRegisterPath(const QString &alias)
@@ -682,6 +642,48 @@ void SocketApi::command_GET_STRINGS(const QString &argument, SocketListener *lis
     listener->sendMessage(QString("GET_STRINGS:END"));
 }
 
+void SocketApi::command_GET_THUMBNAIL(const QString &argument, OCC::SocketListener *listener)
+{
+    QStringList argumentList = argument.split(QLatin1Char('\x1e'));
+
+    if (argumentList.size() != 3) {
+        qCCritical(lcSocketApi) << "Invalid argument " << argument;
+        return;
+    }
+
+    // Picture width asked
+    unsigned int width(argumentList[0].toInt());
+    if (width == 0) {
+        qCCritical(lcSocketApi) << "Bad width " << width;
+        return;
+    }
+
+    // File iNode
+    uint64_t iNode(argumentList[1].toULongLong());
+
+    // File path
+    QString filePath(argumentList[2]);
+    if (!QFileInfo(filePath).isFile()) {
+        qCCritical(lcSocketApi) << "Not a file: " << filePath;
+        return;
+    }
+
+    Folder *folder = FolderMan::instance()->folderForPath(filePath);
+    if (!folder) {
+        qCCritical(lcSocketApi) << "Folder not found for " << filePath;
+        return;
+    }
+
+    QString fileRemotePath = folder->remotePathTrailingSlash() + filePath.midRef(folder->path().size()).toUtf8();
+    if (fileRemotePath.startsWith('/')) {
+        fileRemotePath.remove(0, 1);
+    }
+    ThumbnailJob *job = new ThumbnailJob(fileRemotePath, width, iNode, listener,
+                                         folder->accountState()->account(), this);
+    connect(job, &ThumbnailJob::jobFinished, this, &SocketApi::slotThumbnailFetched);
+    job->start();
+}
+
 void SocketApi::sendSharingContextMenuOptions(const FileData &fileData, SocketListener *listener)
 {
     auto record = fileData.journalRecord();
@@ -799,6 +801,10 @@ void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListe
         auto record = fileData.journalRecord();
         bool isOnTheServer = record.isValid();
         auto flagString = isOnTheServer ? QLatin1String("::") : QLatin1String(":d:");
+
+        if (folder) {
+            listener->sendMessage(QLatin1String("VFS_MODE:") + Vfs::modeToString(folder->vfs().mode()));
+        }
 
         if (fileData.folder && fileData.folder->accountState()->isConnected()) {
             sendSharingContextMenuOptions(fileData, listener);

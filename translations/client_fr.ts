@@ -175,12 +175,8 @@
         <translation>Modifier le dossier</translation>
     </message>
     <message>
-        <source>You will find all your files in this folder when the configuration is complete.&lt;br&gt;You can drop new files there to sync them to your kDrive.</source>
-        <translation>Vous retrouverez tous vos fichiers dans ce dossier une fois la configuration terminée.&lt;br&gt;Vous pouvez y glisser de nouveaux fichiers pour les synchroniser avec votre kDrive.</translation>
-    </message>
-    <message>
         <source>END</source>
-        <translation>FIN</translation>
+        <translation>TERMINER</translation>
     </message>
     <message>
         <source>Select folder</source>
@@ -189,6 +185,18 @@
     <message>
         <source>The contents of the &lt;b&gt;%1&lt;/b&gt; folder will be synchronized in your kDrive</source>
         <translation>Le contenu du dossier &lt;b&gt;%1&lt;/b&gt; sera synchronisé sur votre kDrive</translation>
+    </message>
+    <message>
+        <source>You will find all your files in this folder when the configuration is complete. You can drop new files there to sync them to your kDrive.</source>
+        <translation>Vous retrouverez tous vos fichiers dans ce dossier une fois la configuration terminée. Vous pouvez y glisser de nouveaux fichiers pour les synchroniser avec votre kDrive.</translation>
+    </message>
+    <message>
+        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation>Ce dossier n&apos;est pas compatible avec la Lite Sync. Veuillez sélectionner un autre dossier ou, si vous continuez, la Lite Sync ne sera pas activée.  &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;En savoir plus&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>Impossible d’ouvrir le lien %1.</translation>
     </message>
 </context>
 <context>
@@ -212,6 +220,37 @@
     <message>
         <source>No subfolders currently on the server.</source>
         <translation>Aucun sous-dossier sur le serveur.</translation>
+    </message>
+</context>
+<context>
+    <name>KDC::AddDriveSmartSyncWidget</name>
+    <message>
+        <source>Would you like to activate Lite Sync?</source>
+        <translation>Voulez vous activer la Lite Sync ?</translation>
+    </message>
+    <message>
+        <source>Conserve your computer space</source>
+        <translation>Economiser l&apos;espace de votre ordinateur</translation>
+    </message>
+    <message>
+        <source>Decide which files should be available online or locally</source>
+        <translation>Décider quels fichiers doivent être disponibles en ligne ou localement.</translation>
+    </message>
+    <message>
+        <source>LATER</source>
+        <translation>PLUS TARD</translation>
+    </message>
+    <message>
+        <source>YES</source>
+        <translation>OUI</translation>
+    </message>
+    <message>
+        <source>Lite Sync syncs all your files without using your computer space. You can browse the files in your kDrive and download them locally whenever you want. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation>La Lite Sync synchronise tous vos fichiers sans utiliser l&apos;espace de votre ordinateur. Vous pouvez parcourir les fichiers de votre kDrive et les télécharger quand vous le souhaitez. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;En savoir plus&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>Impossible d’ouvrir le lien %1.</translation>
     </message>
 </context>
 <context>
@@ -452,14 +491,6 @@
         <translation>Synchronisation</translation>
     </message>
     <message>
-        <source>Activate smart synchronization</source>
-        <translation>Activer la synchronisation intelligente</translation>
-    </message>
-    <message>
-        <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;Learn more&lt;/a&gt;</source>
-        <translation>Synchronisez tous vos fichiers sans utiliser l’espace de votre ordinateur. &lt;a style=&quot;%1&quot; href=&quot;ref&quot;&gt;En savoir plus&lt;/a&gt;</translation>
-    </message>
-    <message>
         <source>Notifications</source>
         <translation>Notifications</translation>
     </message>
@@ -476,48 +507,8 @@
         <translation>Supprimer la synchronisation</translation>
     </message>
     <message>
-        <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead a virtual file will be created for each file that exists on the server. When a file is opened its contents will be downloaded automatically. Alternatively, files can be downloaded manually by using their context menu.
-
-The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.</source>
-        <translation>Quand le mode &quot;fichiers virtuels&quot; est activé, aucun fichier n’est téléchargé initialement. À la place, un fichier virtuel est créé pour chaque fichier présent sur le serveur. Quand un fichier sera ouvert, son contenu sera téléchargé automatiquement. Il est également possible de télécharger les fichiers manuellement à l’aide de leur menu contextuel.
-
-Le mode &apos;fichiers virtuels&apos; et la synchronisation sélective s’excluent mutuellement. Les dossier non sélectionnés actuellement seront convertis en dossiers disponibles seulement en ligne et vos paramètres de synchronisation sélective seront réinitialisés.</translation>
-    </message>
-    <message>
-        <source>When the &quot;virtual files&quot; mode is enabled no files will be downloaded initially. Instead, a tiny &quot;%1&quot; file will be created for each file that exists on the server. The contents can be downloaded by running these files or by using their context menu.
-
-The virtual files mode is mutually exclusive with selective sync. Currently unselected folders will be translated to online-only folders and your selective sync settings will be reset.
-
-Switching to this mode will abort any currently running synchronization.
-
-This is a new, experimental mode. If you decide to use it, please report any issues that come up.</source>
-        <translation>Quand le mode &quot;fichiers virtuels&quot; est activé, aucun fichier n’est téléchargé initialement. À la place, un petit fichier &quot;%1&quot; est créé pour chaque fichier présent sur le serveur. Les contenus peuvent être téléchargés en exécutant ces fichiers ou à l’aide de leur menu contextuel.
-
-Le mode &apos;fichiers virtuels&apos; et la synchronisation sélective s’excluent mutuellement. Les dossier non sélectionnés actuellement seront convertis en dossiers disponibles seulement en ligne et vos paramètres de synchronisation sélective seront réinitialisés.
-
-Le passage dans ce mode stoppera toute synchronisation en cours.
-
-Il s’agit d’un nouveau mode expérimental. Si vous décidez de l’utiliser, veuillez signaler les problèmes rencontrés.</translation>
-    </message>
-    <message>
-        <source>This action will disable virtual file support. As a consequence contents of folders that are currently marked as &apos;available online only&apos; will be downloaded.
-
-This action will abort any currently running synchronization.</source>
-        <translation>Cette action va désactiver le support des fichiers virtuels. Le contenu des dossiers marqués comme ’disponible seulement en ligne’ sera donc téléchargé.
-
-Cette action stoppera toute synchronisation en cours.</translation>
-    </message>
-    <message>
         <source>New folder synchronization failed!</source>
         <translation>Échec de la nouvelle synchronisation de dossier&#xa0;!</translation>
-    </message>
-    <message>
-        <source>Smart synchronization activation in progress</source>
-        <translation>Activation de la synchronisation intelligente en cours</translation>
-    </message>
-    <message>
-        <source>Smart synchronization deactivation in progress</source>
-        <translation>Désactivation de la synchronisation intelligente en cours</translation>
     </message>
     <message>
         <source>Do you really want to stop syncing the folder &lt;i&gt;%1&lt;/i&gt; ?&lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.</source>
@@ -526,26 +517,6 @@ Cette action stoppera toute synchronisation en cours.</translation>
     <message>
         <source>Some folders were not synchronized because they are too large.</source>
         <translation>Certains dossiers n&apos;ont pas été synchronisés parce qu’ils sont trop volumineux.</translation>
-    </message>
-    <message>
-        <source>ENABLE VIRTUAL FILES</source>
-        <translation>ACTIVER LES FICHIERS VIRTUELS</translation>
-    </message>
-    <message>
-        <source>CONTINUE TO USE SELECTIVE SYNC</source>
-        <translation>CONTINUER À UTILISER LA SYNCHRONISATION SÉLECTIVE</translation>
-    </message>
-    <message>
-        <source>ENABLE EXPERIMENTAL PLACEHOLDER MODE</source>
-        <translation>ACTIVER LE MODE EXPÉRIMENTAL &apos;PLACEHOLDER&apos;</translation>
-    </message>
-    <message>
-        <source>STAY SAFE</source>
-        <translation>RESTER SAUF</translation>
-    </message>
-    <message>
-        <source>DISABLE SUPPORT</source>
-        <translation>DÉSACTIVER LE SUPPORT</translation>
     </message>
     <message>
         <source>CANCEL</source>
@@ -566,6 +537,46 @@ Cette action stoppera toute synchronisation en cours.</translation>
     <message>
         <source>Enable the notifications for this kDrive</source>
         <translation>Activer les notifications pour ce kDrive</translation>
+    </message>
+    <message>
+        <source>CONFIRM</source>
+        <translation>CONFIRMER</translation>
+    </message>
+    <message>
+        <source>Activate Lite Sync</source>
+        <translation>Activer la Lite Sync</translation>
+    </message>
+    <message>
+        <source>Do you really want to turn on Lite Sync?</source>
+        <translation>Voulez-vous vraiment activer la Lite Sync?</translation>
+    </message>
+    <message>
+        <source>Do you really want to turn off Lite Sync?</source>
+        <translation>Voulez vous vraiment désactiver la Lite Sync?</translation>
+    </message>
+    <message>
+        <source>You don&apos;t have enough space to sync all the files on your kDrive (%1 missing). If you turn off Lite Sync, you need to select which folders to sync on your computer. In the meantime, the synchronization of your kDrive will be paused.</source>
+        <translation>Vous n&apos;avez pas assez de place pour synchroniser tous les fichiers sur votre kDrive (manque %1). Si vous désactivez la Lite Sync, vous devrez sélectionner les dossiers à synchroniser sur votre ordinateur. Dans un premier temps, la synchronisation de votre kDrive sera mise en pause.</translation>
+    </message>
+    <message>
+        <source>If you turn off Lite Sync, all files will sync locally on your computer.</source>
+        <translation>Si vous désactivez la Lite Sync, tous les fichiers seront synchronisés localement sur votre ordinateur.</translation>
+    </message>
+    <message>
+        <source>Lite Sync activation in progress</source>
+        <translation>Acrtivation de la Lite Sync en cours</translation>
+    </message>
+    <message>
+        <source>Lite Sync deactivation in progress</source>
+        <translation>Désactivation de la Lite Sync en cours</translation>
+    </message>
+    <message>
+        <source>Synchronize all your files without using your computer space. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation>Synchronisez tous vos fichiers sans utiliser l’espace de votre ordinateur. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;En savoir plus&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>Impossible d’ouvrir le lien %1.</translation>
     </message>
 </context>
 <context>
@@ -743,6 +754,14 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <source>Select folder</source>
         <translation>Sélectionner le dossier</translation>
     </message>
+    <message>
+        <source>This folder is not compatible with Lite Sync. Please select another folder or if you continue Lite Sync will be disabled. &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;Learn more&lt;/a&gt;</source>
+        <translation>Ce dossier n&apos;est pas compatible avec la Lite Sync. Veuillez sélectionner un autre dossier ou, si vous continuez, la Lite Sync ne sera pas activée.  &lt;a style=&quot;%1&quot; href=&quot;%2&quot;&gt;En savoir plus&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Unable to open link %1.</source>
+        <translation>Impossible d’ouvrir le lien %1.</translation>
+    </message>
 </context>
 <context>
     <name>KDC::MainMenuBarWidget</name>
@@ -782,10 +801,6 @@ Cette action stoppera toute synchronisation en cours.</translation>
         <translation>Échec de la transmission !</translation>
     </message>
     <message>
-        <source>Need help ? Generate an archive of the application logs to send it to our support</source>
-        <translation>Besoin d’aide ? Envoyez une archive des journaux de l&apos;application à notre support</translation>
-    </message>
-    <message>
         <source>REMOVE SYNCHRONIZATION</source>
         <translation>SUPPRIMER LA SYNCHRONISATION</translation>
     </message>
@@ -796,6 +811,10 @@ Cette action stoppera toute synchronisation en cours.</translation>
     <message>
         <source>No kDrive configured!</source>
         <translation>Aucun kDrive configuré !</translation>
+    </message>
+    <message>
+        <source>Need help? Generate an application log archive to send to our support team.</source>
+        <translation>Besoin d&apos;aide ? Générez une archive des journaux d&apos;application pour l&apos;envoyer à notre support.</translation>
     </message>
 </context>
 <context>
@@ -1725,6 +1744,10 @@ Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf 
         <source>The local folder %1 is already contained in a folder used in a folder sync connection. Please pick another one!</source>
         <translation>Le dossier local %1 se trouve dans un dossier déjà configuré pour une synchronisation de dossier. Veuillez en choisir un autre !</translation>
     </message>
+    <message>
+        <source>Virtual Files plugin specified in kDrive.cfg is incorrect!</source>
+        <translation>Le plugin Fichiers Virtuels spécifié dans kDrive.cfg est incorrect!</translation>
+    </message>
 </context>
 <context>
     <name>OCC::FolderWatcher</name>
@@ -2052,10 +2075,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
         <source>Unable to open folder path %1.</source>
         <translation>Impossible d’ouvrir le dossier de débogage %1.</translation>
     </message>
-    <message>
-        <source>About %1</source>
-        <translation>À propos de %1</translation>
-    </message>
 </context>
 <context>
     <name>OCC::PollJob</name>
@@ -2077,10 +2096,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     <message>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Les noms de fichier se terminant par un point ne sont pas pris en charge sur votre système.</translation>
-    </message>
-    <message>
-        <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
-        <translation>Les noms de fichier contenant le caractère &apos;%1&apos; ne sont pas pris en charge sur votre système.</translation>
     </message>
     <message>
         <source>File name contains at least one invalid character</source>
@@ -2174,6 +2189,10 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
         <source>Server replied with an error while reading directory &apos;%1&apos; : %2</source>
         <translation>Le serveur à répondu par une erreur lors de la lecture du répertoire %1 : %2</translation>
     </message>
+    <message>
+        <source>Your operating system does not support &apos;%1&apos; character in file names. Synchronization could not be performed. Please rename the affected file.</source>
+        <translation>Votre système d&apos;exploitation ne supporte pas le caractère &apos;%1&apos; dans le nom des fichiers. La synchronisation n&apos;a pas pu être effectuée. Veuillez renommer le fichier concerné.</translation>
+    </message>
 </context>
 <context>
     <name>OCC::PropagateDirectory</name>
@@ -2223,6 +2242,10 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     <message>
         <source>Download slot finished, but there was no reply!</source>
         <translation>Créneau de téléchargement terminé mais aucune réponse reçue!</translation>
+    </message>
+    <message>
+        <source>File conversion to placeholder failed</source>
+        <translation>Echec de la conversion de fichier en fichier creux</translation>
     </message>
 </context>
 <context>

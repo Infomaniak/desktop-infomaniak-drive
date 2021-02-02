@@ -24,6 +24,8 @@
 #include <QTimer>
 #include <qfontmetrics.h>
 
+#define ASK_CREDENTIALS_INTERVAL 30000
+
 namespace OCC {
 
 Q_LOGGING_CATEGORY(lcAccountState, "gui.account.state", QtInfoMsg)
@@ -44,6 +46,8 @@ AccountState::AccountState(AccountPtr account)
         this, &AccountState::slotCredentialsFetched);
     connect(account.data(), &Account::credentialsAsked,
         this, &AccountState::slotCredentialsAsked);
+    connect(account.data(), &Account::credentialsRejected,
+        this, &AccountState::slotCredentialsRejected);
     _timeSinceLastETagCheck.invalidate();
 }
 
@@ -354,6 +358,19 @@ void AccountState::slotCredentialsAsked(AbstractCredentials *credentials)
     }
 
     checkConnectivity();
+}
+
+void AccountState::slotCredentialsRejected(AbstractCredentials *creds)
+{
+    Q_UNUSED(creds)
+
+    qCInfo(lcAccountState) << "Credentials asked for" << _account->url().toString()
+                           << "but rejected";
+
+    _waitingForNewCredentials = false;
+
+    // Retry later
+    QTimer::singleShot(ASK_CREDENTIALS_INTERVAL, this, &AccountState::slotInvalidCredentials);
 }
 
 std::unique_ptr<QSettings> AccountState::settings()

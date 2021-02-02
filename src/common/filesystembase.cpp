@@ -23,6 +23,7 @@
 #include <QUrl>
 #include <QFile>
 #include <QCoreApplication>
+#include <QTemporaryFile>
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -334,29 +335,6 @@ bool FileSystem::fileExists(const QString &filename, const QFileInfo &fileInfo)
     return re;
 }
 
-#ifdef Q_OS_WIN
-QString FileSystem::fileSystemForPath(const QString &path)
-{
-    // See also QStorageInfo (Qt >=5.4) and GetVolumeInformationByHandleW (>= Vista)
-    QString drive = path.left(2);
-    if (!drive.endsWith(":"))
-        return QString();
-    drive.append('\\');
-
-    const size_t fileSystemBufferSize = 4096;
-    TCHAR fileSystemBuffer[fileSystemBufferSize];
-
-    if (!GetVolumeInformationW(
-            reinterpret_cast<LPCWSTR>(drive.utf16()),
-            NULL, 0,
-            NULL, NULL, NULL,
-            fileSystemBuffer, fileSystemBufferSize)) {
-        return QString();
-    }
-    return QString::fromUtf16(reinterpret_cast<const ushort *>(fileSystemBuffer));
-}
-#endif
-
 bool FileSystem::remove(const QString &fileName, QString *errorString)
 {
 #ifdef Q_OS_WIN
@@ -404,7 +382,21 @@ bool FileSystem::moveToTrash(const QString &fileName, QString *errorString)
     }
     return true;
 #elif defined Q_OS_MAC
-    QString cmd = QString("osascript -e 'set theFile to POSIX file \"%1\"' -e 'tell application \"Finder\" to delete theFile'").arg(fileName);
+    QString fileNameEscaped = QString(fileName)
+            .replace(R"(\)", R"(\\)")
+            .replace(R"(")", R"(\")");
+    QTemporaryFile cmdFile;
+    if (!cmdFile.open()) {
+        qCWarning(lcFileSystem) << "Error opening temporary file";
+        return false;
+    }
+    QTextStream cmdFileStream(&cmdFile);
+    cmdFileStream << "tell application \"Finder\"" << endl;
+    cmdFileStream << "  set theFile to POSIX file \"" << fileNameEscaped << "\"" << endl;
+    cmdFileStream << "  delete theFile" << endl;
+    cmdFileStream << "end tell" << endl;
+    cmdFile.close();
+    QString cmd = QString("osascript %1").arg(cmdFile.fileName());
     int status = system(cmd.toLocal8Bit());
     if (status == 0) {
         return true;

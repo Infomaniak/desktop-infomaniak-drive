@@ -27,8 +27,6 @@ WebFlowCredentialsDialog::WebFlowCredentialsDialog(Account *account, QWidget *pa
 
     QVBoxLayout *mainLayout = this->mainLayout();
 
-    //QString msg = tr("You have been logged out of %1 as user %2, please login again")
-    //        .arg(_account->displayName(), _user);
     _infoLabel = new QLabel();
     _infoLabel->setObjectName("largeMediumBoldTextLabel");
     _infoLabel->setContentsMargins(infoHMargin, infoVMargin, infoHMargin, infoVMargin);

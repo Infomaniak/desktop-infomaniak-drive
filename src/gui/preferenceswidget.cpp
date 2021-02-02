@@ -54,7 +54,7 @@ static const int amountLineEditWidth = 85;
 static const QString debuggingFolderLink = "debuggingFolderLink";
 static const QString versionLink = "versionLink";
 
-Q_LOGGING_CATEGORY(lcPerformancesWidget, "performanceswidget", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcPerformancesWidget, "gui.performanceswidget", QtInfoMsg)
 
 PreferencesWidget::PreferencesWidget(QWidget *parent)
     : QWidget(parent)
@@ -220,6 +220,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     launchAtStartupBox->addWidget(launchAtStartupSwitch);
     generalBloc->addSeparator();
 
+#ifdef Q_OS_WIN
     // Drive shortcuts
     CustomSwitch *shortcutsSwitch = nullptr;
     if (OCC::Utility::isWindows()) {
@@ -236,6 +237,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
         shortcutsSwitch->setCheckState(cfg.showInExplorerNavigationPane() ? Qt::Checked : Qt::Unchecked);
         shortcutsBox->addWidget(shortcutsSwitch);
     }
+#endif
 
     //
     // Advanced bloc
@@ -340,7 +342,9 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
     }
     connect(monochromeSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onMonochromeSwitchClicked);
     connect(launchAtStartupSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onLaunchAtStartupSwitchClicked);
+#ifdef Q_OS_WIN
     connect(shortcutsSwitch, &CustomSwitch::clicked, this, &PreferencesWidget::onShortcutsSwitchClicked);
+#endif
     connect(debuggingWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onDebuggingWidgetClicked);
     connect(_debuggingFolderLabel, &QLabel::linkActivated, this, &PreferencesWidget::onLinkActivated);
     connect(filesToExcludeWidget, &ClickableWidget::clicked, this, &PreferencesWidget::onFilesToExcludeWidgetClicked);
@@ -422,12 +426,14 @@ void PreferencesWidget::onLaunchAtStartupSwitchClicked(bool checked)
     OCC::Utility::setLaunchOnStartup(theme->appName(), theme->appNameGUI(), checked);
 }
 
+#ifdef Q_OS_WIN
 void PreferencesWidget::onShortcutsSwitchClicked(bool checked)
 {
     OCC::ConfigFile cfg;
     cfg.setShowInExplorerNavigationPane(checked);
     OCC::FolderMan::instance()->navigationPaneHelper().setShowInExplorerNavigationPane(checked);
 }
+#endif
 
 void PreferencesWidget::onDebuggingWidgetClicked()
 {

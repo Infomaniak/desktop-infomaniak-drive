@@ -267,6 +267,7 @@ signals:
 
     void credentialsFetched(AbstractCredentials *credentials);
     void credentialsAsked(AbstractCredentials *credentials);
+    void credentialsRejected(AbstractCredentials *credentials);
 
     /// Forwards from QNetworkAccessManager::proxyAuthenticationRequired().
     void proxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *);
@@ -285,6 +286,7 @@ signals:
 protected Q_SLOTS:
     void slotCredentialsFetched();
     void slotCredentialsAsked();
+    void slotCredentialsRejected();
 
 private:
     Account(QObject *parent = 0);

@@ -34,14 +34,20 @@
 #include <QDateTime>
 #include <QSysInfo>
 #include <QStandardPaths>
+#include <QStorageInfo>
 #include <QCollator>
 #include <QSysInfo>
-
+#include <QUuid>
+#include <QOperatingSystemVersion>
 
 #ifdef Q_OS_UNIX
 #include <sys/statvfs.h>
 #include <sys/types.h>
 #include <unistd.h>
+#endif
+
+#if defined(Q_OS_WIN)
+#include <fileapi.h>
 #endif
 
 #include <math.h>
@@ -150,25 +156,16 @@ QString Utility::octetsToString(qint64 octets)
     return s.arg(value, 0, 'g', 2);
 }
 
-// Qtified version of get_platforms() in csync_owncloud.c
-static QLatin1String platform()
+static QString platform()
 {
-#if defined(Q_OS_WIN)
-    return QLatin1String("Windows");
-#elif defined(Q_OS_MAC)
-    return QLatin1String("Macintosh");
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
+    return QString("%1 %2.%3.%4")
+            .arg(QOperatingSystemVersion::current().name())
+            .arg(QOperatingSystemVersion::current().majorVersion())
+            .arg(QOperatingSystemVersion::current().minorVersion())
+            .arg(QOperatingSystemVersion::current().microVersion());
 #elif defined(Q_OS_LINUX)
     return QLatin1String("Linux");
-#elif defined(__DragonFly__) // Q_OS_FREEBSD also defined
-    return QLatin1String("DragonFlyBSD");
-#elif defined(Q_OS_FREEBSD) || defined(Q_OS_FREEBSD_KERNEL)
-    return QLatin1String("FreeBSD");
-#elif defined(Q_OS_NETBSD)
-    return QLatin1String("NetBSD");
-#elif defined(Q_OS_OPENBSD)
-    return QLatin1String("OpenBSD");
-#elif defined(Q_OS_SOLARIS)
-    return QLatin1String("Solaris");
 #else
     return QLatin1String("Unknown OS");
 #endif
@@ -176,18 +173,9 @@ static QLatin1String platform()
 
 QByteArray Utility::userAgentString()
 {
-    QString re = QString::fromLatin1("Mozilla/5.0 (%1) mirall/%2")
-                     .arg(platform(), QLatin1String(MIRALL_VERSION_STRING));
+    QString ua = QString("%1-desktop/%2 - %3").arg(APPLICATION_SHORTNAME, MIRALL_VERSION_STRING, platform());
 
-    QLatin1String appName(APPLICATION_SHORTNAME);
-
-    // this constant "ownCloud" is defined in the default OEM theming
-    // that is used for the standard client. If it is changed there,
-    // it needs to be adjusted here.
-    if (appName != QLatin1String("ownCloud")) {
-        re += QString(" (%1)").arg(appName);
-    }
-    return re.toLatin1();
+    return ua.toLatin1();
 }
 
 bool Utility::hasSystemLaunchOnStartup(const QString &appName)
@@ -648,7 +636,7 @@ QString Utility::sanitizeForFileName(const QString &name)
     const auto invalid = QStringLiteral("/?<>\\:*|\"");
     QString result;
     result.reserve(name.size());
-    for (const auto c : name) {
+    for (auto c : name) {
         if (!invalid.contains(c)
             && c.category() != QChar::Other_Control
             && c.category() != QChar::Other_Format) {
@@ -657,5 +645,121 @@ QString Utility::sanitizeForFileName(const QString &name)
     }
     return result;
 }
+
+#ifdef Q_OS_WIN
+// Add legacy sync root keys
+void Utility::addLegacySyncRootKeys(const QUuid &clsid, const QString &folderPath, const QString &folderCleanPath, bool show)
+{
+    QString clsidStr = clsid.toString();
+    QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
+    QString clsidPathWow64 = QString() % "Software\\Classes\\Wow6432Node\\CLSID\\" % clsidStr;
+    QString namespacePath = QString() % "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Desktop\\NameSpace\\" % clsidStr;
+
+    QDir path = QDir(folderPath);
+    QString title = path.dirName();
+    QString iconPath = QDir::toNativeSeparators(qApp->applicationFilePath());
+    QString targetFolderPath = QDir::toNativeSeparators(folderCleanPath);
+
+    qCInfo(lcUtility) << "Explorer Cloud storage provider: saving path" << targetFolderPath << "to CLSID" << clsidStr;
+    // Steps taken from: https://msdn.microsoft.com/en-us/library/windows/desktop/dn889934%28v=vs.85%29.aspx
+    // Step 1: Add your CLSID and name your extension
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, QString(), REG_SZ, title);
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64, QString(), REG_SZ, title);
+    // Step 2: Set the image for your icon
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath + QStringLiteral("\\DefaultIcon"), QString(), REG_SZ, iconPath);
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64 + QStringLiteral("\\DefaultIcon"), QString(), REG_SZ, iconPath);
+    // Step 3: Add your extension to the Navigation Pane and make it visible
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, QStringLiteral("System.IsPinnedToNameSpaceTree"), REG_DWORD, show);
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64, QStringLiteral("System.IsPinnedToNameSpaceTree"), REG_DWORD, show);
+    // Step 4: Set the location for your extension in the Navigation Pane
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, QStringLiteral("SortOrderIndex"), REG_DWORD, 0x41);
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64, QStringLiteral("SortOrderIndex"), REG_DWORD, 0x41);
+    // Step 5: Provide the dll that hosts your extension.
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath + QStringLiteral("\\InProcServer32"), QString(), REG_EXPAND_SZ, QStringLiteral("%systemroot%\\system32\\shell32.dll"));
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64 + QStringLiteral("\\InProcServer32"), QString(), REG_EXPAND_SZ, QStringLiteral("%systemroot%\\system32\\shell32.dll"));
+    // Step 6: Define the instance object
+    // Indicate that your namespace extension should function like other file folder structures in File Explorer.
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath + QStringLiteral("\\Instance"), QStringLiteral("CLSID"), REG_SZ, QStringLiteral("{0E5AAE11-A475-4c5b-AB00-C66DE400274E}"));
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64 + QStringLiteral("\\Instance"), QStringLiteral("CLSID"), REG_SZ, QStringLiteral("{0E5AAE11-A475-4c5b-AB00-C66DE400274E}"));
+    // Step 7: Provide the file system attributes of the target folder
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath + QStringLiteral("\\Instance\\InitPropertyBag"), QStringLiteral("Attributes"), REG_DWORD, 0x11);
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64 + QStringLiteral("\\Instance\\InitPropertyBag"), QStringLiteral("Attributes"), REG_DWORD, 0x11);
+    // Step 8: Set the path for the sync root
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath + QStringLiteral("\\Instance\\InitPropertyBag"), QStringLiteral("TargetFolderPath"), REG_SZ, targetFolderPath);
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64 + QStringLiteral("\\Instance\\InitPropertyBag"), QStringLiteral("TargetFolderPath"), REG_SZ, targetFolderPath);
+    // Step 9: Set appropriate shell flags
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath + QStringLiteral("\\ShellFolder"), QStringLiteral("FolderValueFlags"), REG_DWORD, 0x28);
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64 + QStringLiteral("\\ShellFolder"), QStringLiteral("FolderValueFlags"), REG_DWORD, 0x28);
+    // Step 10: Set the appropriate flags to control your shell behavior
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath + QStringLiteral("\\ShellFolder"), QStringLiteral("Attributes"), REG_DWORD, 0xF080004D);
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64 + QStringLiteral("\\ShellFolder"), QStringLiteral("Attributes"), REG_DWORD, 0xF080004D);
+    // Step 11: Register your extension in the namespace root
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, namespacePath, QString(), REG_SZ, title);
+    // Step 12: Hide your extension from the Desktop
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, QStringLiteral("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel"), clsidStr, REG_DWORD, 0x1);
+
+    // For us, to later be able to iterate and find our own namespace entries and associated CLSID.
+    // Use the macro instead of the theme to make sure it matches with the uninstaller.
+    Utility::registrySetKeyValue(HKEY_CURRENT_USER, namespacePath, QStringLiteral("ApplicationName"), REG_SZ, QLatin1String(APPLICATION_NAME));
+}
+
+// Remove legacy sync root keys
+void Utility::removeLegacySyncRootKeys(const QUuid &clsid)
+{
+    QString clsidStr = clsid.toString();
+    QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
+    QString clsidPathWow64 = QString() % "Software\\Classes\\Wow6432Node\\CLSID\\" % clsidStr;
+    QString namespacePath = QString() % "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Desktop\\NameSpace\\" % clsidStr;
+    QString newstartpanelPath = QString() % "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel";
+
+    if (Utility::registryExistKeyTree(HKEY_CURRENT_USER, clsidPath)) {
+        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, clsidPath);
+    }
+    if (Utility::registryExistKeyTree(HKEY_CURRENT_USER, clsidPathWow64)) {
+        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, clsidPathWow64);
+    }
+    if (Utility::registryExistKeyTree(HKEY_CURRENT_USER, namespacePath)) {
+        Utility::registryDeleteKeyTree(HKEY_CURRENT_USER, namespacePath);
+    }
+    if (Utility::registryExistKeyValue(HKEY_CURRENT_USER, newstartpanelPath, clsidStr)) {
+        Utility::registryDeleteKeyValue(HKEY_CURRENT_USER, newstartpanelPath, clsidStr);
+    }
+}
+#endif
+
+QString Utility::fileSystemName(const QString &dirPath)
+{
+    QDir dir(dirPath);
+    if (dir.exists()) {
+        QStorageInfo info(dirPath);
+        if (info.isValid()) {
+            return info.fileSystemType();
+        }
+    }
+    else {
+        dir.cdUp();
+        return fileSystemName(dir.path());
+    }
+
+    return QString();
+}
+
+#ifdef Q_OS_WIN
+void Utility::setFolderPinState(const QUuid &clsid, bool show)
+{
+    QString clsidStr = clsid.toString();
+    QString clsidPath = QString() % "Software\\Classes\\CLSID\\" % clsidStr;
+    QString clsidPathWow64 = QString() % "Software\\Classes\\Wow6432Node\\CLSID\\" % clsidStr;
+
+    if (Utility::registryExistKeyTree(HKEY_CURRENT_USER, clsidPath)) {
+        Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPath, "System.IsPinnedToNameSpaceTree", REG_DWORD, show);
+    }
+
+    if (Utility::registryExistKeyTree(HKEY_CURRENT_USER, clsidPathWow64)) {
+        Utility::registrySetKeyValue(HKEY_CURRENT_USER, clsidPathWow64, "System.IsPinnedToNameSpaceTree", REG_DWORD, show);
+    }
+}
+
+#endif
 
 } // namespace OCC

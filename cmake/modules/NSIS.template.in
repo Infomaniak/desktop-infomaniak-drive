@@ -14,6 +14,10 @@
 
 !define CRASHREPORTER_EXECUTABLE "@CRASHREPORTER_EXECUTABLE@"
 
+!define VFS_APPX_DIRECTORY "@VFS_APPX_DIRECTORY@"
+!define VFS_APPX_PACKAGE "@VFS_APPX_PACKAGE@"
+!define VFS_APPX_BUNDLE "@VFS_APPX_BUNDLE@"
+
 ;-----------------------------------------------------------------------------
 ; Some installer script options (comment-out options not required)
 ;-----------------------------------------------------------------------------
@@ -27,7 +31,7 @@
 ;!define OPTION_SECTION_SC_QUICK_LAUNCH
 !define OPTION_FINISHPAGE
 !define OPTION_FINISHPAGE_LAUNCHER
-; !define OPTION_FINISHPAGE_RELEASE_NOTES
+;!define OPTION_FINISHPAGE_RELEASE_NOTES
 
 ;-----------------------------------------------------------------------------
 ; Some paths.
@@ -360,13 +364,19 @@ SectionEnd
          !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${BUILD_PATH}\shell_integration\windows\OCOverlays\OCOverlays.dll" "$INSTDIR\shellext\OCOverlays.dll" "$INSTDIR\shellext"
          !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${BUILD_PATH}\shell_integration\windows\OCContextMenu\OCContextMenu.dll" "$INSTDIR\shellext\OCContextMenu.dll" "$INSTDIR\shellext"
          !undef LIBRARY_X64
-     ${Else}
+      ${Else}
          !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${BUILD_PATH}\shell_integration\windows\OCOverlays\OCOverlays.dll" "$INSTDIR\shellext\OCOverlays.dll" "$INSTDIR\shellext"
          !insertmacro InstallLib REGDLL NOTSHARED REBOOT_PROTECTED "${BUILD_PATH}\shell_integration\windows\OCContextMenu\OCContextMenu.dll" "$INSTDIR\shellext\OCContextMenu.dll" "$INSTDIR\shellext"
       ${Endif}
       !undef LIBRARY_COM
       !undef LIBRARY_SHELL_EXTENSION
       !undef LIBRARY_IGNORE_VERSION
+	  
+	  ;Lite Sync extension
+	  CreateDirectory "$INSTDIR\shellext\AppX"
+	  SetOutPath "$INSTDIR\shellext\AppX"
+	  File /nonfatal /a /r "${VFS_APPX_DIRECTORY}\"
+	  nsExec::ExecToLog 'cmd.exe /c "$INSTDIR\shellext\AppX\${VFS_APPX_BUNDLE}"'
    ${MementoSectionEnd}
 !endif
 
@@ -459,6 +469,9 @@ Section -post
 
    SetDetailsPrint textonly
    DetailPrint $UNINSTALLER_FINISHED_Detail
+
+   ;Remove V2 Uninstaller registry entry if it exists
+   DeleteRegKey HKLM "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Infomaniak Drive"
 SectionEnd
 
 ##############################################################################
@@ -498,11 +511,43 @@ Section Uninstall
       deleteClsid:
          DetailPrint "Removing Navigation Pane CLSID $1"
          ; Should match FolderMan::updateCloudStorageRegistry
-         DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\$1"
          DeleteRegKey HKCU "Software\Classes\CLSID\$1"
+         DeleteRegKey HKCU "Software\Classes\\WOW6432Node\CLSID\$1"
+         DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\$1"
          DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" $1
          goto loop
    done:
+
+   ; Delete Vfs keys
+   StrCpy $0 0
+   loop2:
+      ; Look at every registered explorer SyncRootManager for HKLM and check if it was added by our application
+      EnumRegKey $1 HKLM "Software\Microsoft\Windows\CurrentVersion\Explorer\SyncRootManager" $0
+      StrCmp $1 "" done2
+
+      ReadRegStr $R0 HKLM "Software\Microsoft\Windows\CurrentVersion\Explorer\SyncRootManager\$1" ""
+      StrCmp $R0 "${APPLICATION_NAME}" deleteSyncRootManager
+      ; Increment the index when not deleting the enumerated key.
+      IntOp $0 $0 + 1
+      goto loop2
+
+      deleteSyncRootManager:
+         ReadRegStr $R1 HKLM "Software\Microsoft\Windows\CurrentVersion\Explorer\SyncRootManager\$1" "NamespaceCLSID"
+         StrCmp $R1 "" done2
+
+         DetailPrint "Removing SyncRootManager $1"
+         DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Explorer\SyncRootManager\$1"
+
+         DetailPrint "Removing Navigation Pane CLSID $R1"
+         ; Should match FolderMan::updateCloudStorageRegistry
+         DeleteRegKey HKCU "Software\Classes\CLSID\$R1"
+         DeleteRegKey HKCU "Software\Classes\\WOW6432Node\CLSID\$R1"
+         DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\$R1"
+         DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" $R1
+
+         goto loop2
+   done2:
+
    ; Go back to the 32bit registry.
    SetRegView lastused
 
@@ -537,6 +582,8 @@ Section Uninstall
       !undef LIBRARY_COM
       !undef LIBRARY_SHELL_EXTENSION
       !undef LIBRARY_IGNORE_VERSION
+	  
+	  ;Lite Sync extension
   !endif
 
    ;Start menu shortcut

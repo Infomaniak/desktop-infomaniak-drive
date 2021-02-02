@@ -59,7 +59,7 @@ static const char patternProperty[] = "pattern";
 static const char noWarningIndicator = ']';
 static const char deletedIndicator = '[';
 
-Q_LOGGING_CATEGORY(lcFileExclusionDialog, "fileexclusiondialog", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcFileExclusionDialog, "gui.fileexclusiondialog", QtInfoMsg)
 
 FileExclusionDialog::FileExclusionDialog(QWidget *parent)
     : CustomDialog(true, parent)
@@ -194,6 +194,7 @@ void FileExclusionDialog::updateUI()
     _readOnlyPatternMap[".csync_journal.db*"] = PatternInfo();
     _readOnlyPatternMap["._sync_*.db*"] = PatternInfo();
     _readOnlyPatternMap[".sync_*.db*"] = PatternInfo();
+    _readOnlyPatternMap[".thumb_*"] = PatternInfo();
 
     // Default patterns
     OCC::ConfigFile cfgFile;

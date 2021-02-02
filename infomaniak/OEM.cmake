@@ -10,10 +10,16 @@ set( APPLICATION_DOMAIN     "infomaniak.com" )
 set( APPLICATION_VENDOR     "Infomaniak Network SA" )
 set( APPLICATION_UPDATE_URL "https://www.infomaniak.com/drive/update/desktopclient" CACHE STRING "URL for updater" )
 #set( APPLICATION_HELP_URL   "https://faq.infomaniak.com/2366" CACHE STRING "URL for the help menu" )
-set( APPLICATION_ICON_NAME  "infomaniak" )
+if( APPLE )
+    set( APPLICATION_ICON_NAME  "kdrive-mac" )
+else()
+    set( APPLICATION_ICON_NAME  "kdrive-win" )
+endif()
 set( APPLICATION_SERVER_URL "https://connect.drive.infomaniak.com" CACHE STRING "URL for the server to use. If entered the server can only connect to this instance" )
 set( APPLICATION_VIRTUALFILE_SUFFIX "kdrive" CACHE STRING "Virtual file suffix (not including the .)")
 set( APPLICATION_DOWNLOAD_URL "https://drive.infomaniak.com/app/drive/sync" CACHE STRING "App download URL" )
+set( APPLICATION_TRASH_URL "https://drive.infomaniak.com/app/drive/%s/trash" CACHE STRING "App trash URL" )
+set( APPLICATION_THUMBNAIL_URL "index.php/apps/files/api/v1/thumbnail/%1/%1/%2" CACHE STRING "App thumbnail URL" )
 
 set( LINUX_PACKAGE_SHORTNAME "infomaniakdrive" )
 
@@ -32,3 +38,11 @@ set( CRASHREPORTER_SUBMIT_URL "https://www.infomaniak.com/report/drive/crash" CA
 set( CRASHREPORTER_ICON ":/infomaniak.png" )
 
 set( DEBUGREPORTER_SUBMIT_URL "https://www.infomaniak.com/report/drive/logs" CACHE STRING "URL for debug reporter" )
+
+set( LEARNMORE_LITESYNC_URL "https://www.infomaniak.com/fr/support/faq/admin2/kdrive" CACHE STRING "URL for Lite Sync FAQ" )
+set( LEARNMORE_LITESYNC_COMPATIBILITY_URL "https://www.infomaniak.com/fr/support/faq/admin2/kdrive" CACHE STRING "URL for Lite Sync compatibility FAQ" )
+
+set( VFS_DIRECTORY "C:\\Projects\\kdrive-ext-win\\x64\\Release" )
+set( VFS_APPX_DIRECTORY "C:\\Projects\\kdrive-ext-win\\FileExplorerExtensionPackage\\AppPackages\\FileExplorerExtensionPackage_1.0.0.0_Test" )
+set( VFS_APPX_BUNDLE "FileExplorerExtensionPackage_1.0.0.0_x64.msixbundle" )
+set( VFS_APPX_PACKAGE "Infomaniak.kDrive.Extension_1.0.0.0_x64__e4e5bp7s792f4" )

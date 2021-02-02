@@ -313,6 +313,36 @@ KDC--CustomDialog QLabel#textLabel
     font-size: 13px;
 }
 
+KDC--CustomDialog QLabel#okTextLabel
+{
+    background-color: #0098FF;
+    border: 0px;
+    border-radius: 3px;
+    padding-left: 13px;
+    padding-right: 13px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 14px;
+}
+
+KDC--CustomDialog QLabel#warningTextLabel
+{
+    background-color: #FF8500;
+    border: 0px;
+    border-radius: 3px;
+    padding-left: 13px;
+    padding-right: 13px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    color: #FFFFFF;
+    font-family: "Suisse Int'l";
+    font-weight: 450; /* medium */
+    font-size: 14px;
+}
+
 KDC--CustomDialog QLabel#largeNormalTextLabel
 {
     color: #666666;
@@ -1592,6 +1622,8 @@ KDC--LocalFolderDialog
 {
     qproperty-folder_icon_color: #9F9F9F;
     qproperty-folder_icon_size: 20px;
+    qproperty-warning_icon_color: #E9563D;
+    qproperty-warning_icon_size: 20px;
 }
 
 KDC--LocalFolderDialog QWidget#folderSelectionWidget
@@ -1658,6 +1690,34 @@ KDC--ConfirmSynchronizationDialog QLabel#foldername
     font-size: 16px;
 }
 
+/********************************/
+/* KDC--AddDriveSmartSyncWidget */
+/********************************/
+
+KDC--AddDriveSmartSyncWidget
+{
+    qproperty-info_icon_color: #9F9F9F;
+    qproperty-info_icon_size: 20px;
+    qproperty-logo_color: #000000;
+}
+
+KDC--AddDriveSmartSyncWidget QProgressBar
+{
+    background-color: #E0E0E0;
+    min-height: 5px;
+    max-height: 5px;
+    border: 0px;
+    border-radius: 2px;
+    padding: 0px;
+}
+
+KDC--AddDriveSmartSyncWidget QProgressBar::chunk
+{
+    background-color: #0098FF;
+    border: 0px;
+    border-radius: 2px;
+}
+
 /************************************/
 /* KDC--AddDriveServerFoldersWidget */
 /************************************/
@@ -1696,6 +1756,8 @@ KDC--AddDriveLocalFolderWidget
     qproperty-folder_icon_size: 20px;
     qproperty-info_icon_color: #0098FF;
     qproperty-info_icon_size: 20px;
+    qproperty-warning_icon_color: #E9563D;
+    qproperty-warning_icon_size: 20px;
     qproperty-logo_color: #000000;
 }
 

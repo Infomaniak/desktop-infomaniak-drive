@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QFile>
 #include <QFileInfo>
 #include <QGraphicsDropShadowEffect>
+#include <QLoggingCategory>
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QPainter>
@@ -53,6 +54,8 @@ static const int shadowBlurRadius = 20;
 static const QString dateFormat = "d MMM - HH:mm";
 static const int fileNameMaxSize = 32;
 static const int hoverStartTimer = 250;
+
+Q_LOGGING_CATEGORY(lcSynchronizedItemWidget, "gui.synchronizeditemidget", QtInfoMsg)
 
 SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWidget *parent)
     : QWidget(parent)
@@ -81,6 +84,7 @@ SynchronizedItemWidget::SynchronizedItemWidget(const SynchronizedItem &item, QWi
     vboxText->setSpacing(0);
 
     QLabel *fileNameLabel = new QLabel(this);
+    fileNameLabel->setTextFormat(Qt::PlainText);
     fileNameLabel->setObjectName("fileNameLabel");
     QFileInfo fileInfo(_item.filePath());
     QString fileName = fileInfo.fileName();

@@ -375,7 +375,7 @@ void PropagateDownloadFile::start()
         _item->_type = ItemTypeFile;
     }
     if (_item->_type == ItemTypeVirtualFile) {
-        qCDebug(lcPropagateDownload) << "creating virtual file" << _item->_file;
+        qCDebug(lcPropagateDownload) << "creating placeholder" << _item->_file;
         vfs->createPlaceholder(*_item);
         updateMetadata(false);
         return;
@@ -488,12 +488,9 @@ void PropagateDownloadFile::startDownload()
     const auto diskSpaceResult = propagator()->diskSpaceCheck();
     if (diskSpaceResult != OwncloudPropagator::DiskSpaceOk) {
         if (diskSpaceResult == OwncloudPropagator::DiskSpaceFailure) {
-            // Using DetailError here will make the error not pop up in the account
-            // tab: instead we'll generate a general "disk space low" message and show
-            // these detail errors only in the error view.
-            done(SyncFileItem::DetailError,
+            done(SyncFileItem::FatalError,
                 tr("The download would reduce free local disk space below the limit"));
-            emit propagator()->insufficientLocalStorage();
+            //emit propagator()->insufficientLocalStorage();
         } else if (diskSpaceResult == OwncloudPropagator::DiskSpaceCritical) {
             done(SyncFileItem::FatalError,
                 tr("Free space on disk is less than %1").arg(Utility::octetsToString(criticalFreeSpaceLimit())));
@@ -950,6 +947,7 @@ void PropagateDownloadFile::downloadFinished()
     // Accuracy, and we really need the time from the file system. (#3103)
     _item->_modtime = FileSystem::getModTime(_tmpFile.fileName());
 
+    auto vfs = propagator()->syncOptions()._vfs;
     bool previousFileExists = FileSystem::fileExists(fn);
     if (previousFileExists) {
         // Preserve the existing file permissions.
@@ -960,11 +958,16 @@ void PropagateDownloadFile::downloadFinished()
         preserveGroupOwnership(_tmpFile.fileName(), existingFile);
 
         // Make the file a hydrated placeholder if possible
-        propagator()->syncOptions()._vfs->convertToPlaceholder(_tmpFile.fileName(), *_item, fn);
+        if (!vfs->convertToPlaceholder(_tmpFile.fileName(), *_item, fn)) {
+            done(SyncFileItem::SoftError, tr("File conversion to placeholder failed"));
+            return;
+        }
     }
 
     // Apply the remote permissions
-    FileSystem::setFileReadOnlyWeak(_tmpFile.fileName(), !_item->_remotePerm.isNull() && !_item->_remotePerm.hasPermission(RemotePermissions::CanWrite));
+    if (_tmpFile.exists()) {
+        FileSystem::setFileReadOnlyWeak(_tmpFile.fileName(), !_item->_remotePerm.isNull() && !_item->_remotePerm.hasPermission(RemotePermissions::CanWrite));
+    }
 
     bool isConflict = _item->_instruction == CSYNC_INSTRUCTION_CONFLICT
         && (QFileInfo(fn).isDir() || !FileSystem::fileEquals(fn, _tmpFile.fileName()));
@@ -991,9 +994,10 @@ void PropagateDownloadFile::downloadFinished()
         }
     }
 
-    QString error;
     emit propagator()->touchedFile(fn);
+
     // The fileChanged() check is done above to generate better error messages.
+    QString error;
     if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
         qCWarning(lcPropagateDownload) << QString("Rename failed: %1 => %2").arg(_tmpFile.fileName()).arg(fn);
         // If the file is locked, we want to retry this sync when it
@@ -1019,7 +1023,6 @@ void PropagateDownloadFile::downloadFinished()
     if (_conflictRecord.isValid())
         propagator()->_journal->setConflictRecord(_conflictRecord);
 
-    auto vfs = propagator()->syncOptions()._vfs;
     if (vfs && vfs->mode() == Vfs::WithSuffix) {
         // If the virtual file used to have a different name and db
         // entry, remove it transfer its old pin state.

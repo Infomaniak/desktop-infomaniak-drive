@@ -2,7 +2,12 @@
 # that create directories for the build.
 #file(GLOB VIRTUAL_FILE_SYSTEM_PLUGINS RELATIVE ${CMAKE_CURRENT_LIST_DIR} "*")
 
-list(APPEND VIRTUAL_FILE_SYSTEM_PLUGINS "suffix" "win")
+if(MSVC)
+  list(APPEND VIRTUAL_FILE_SYSTEM_PLUGINS "suffix" "win")
+else()
+  list(APPEND VIRTUAL_FILE_SYSTEM_PLUGINS "suffix")
+endif()
+
 
 foreach(vfsPlugin ${VIRTUAL_FILE_SYSTEM_PLUGINS})
     set(vfsPluginPath ${vfsPlugin})

@@ -21,11 +21,6 @@ class QIcon;
 
 namespace OCC {
 
-#ifdef Q_OS_OSX
-bool canOsXSendUserNotification();
-void sendOsXUserNotification(const QString &title, const QString &message);
-#endif
-
 /**
  * @brief The Systray class
  * @ingroup gui

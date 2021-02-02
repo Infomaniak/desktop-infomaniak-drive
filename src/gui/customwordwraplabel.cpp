@@ -50,6 +50,7 @@ QSize CustomWordWrapLabel::sizeHint() const
                      nbLines * textRect.height() + contentsMargins().top() + contentsMargins().bottom());
 
     }
+
     return QLabel::sizeHint();
 }
 

@@ -23,6 +23,9 @@
 
 #include <QPluginLoader>
 #include <QLoggingCategory>
+#include <QOperatingSystemVersion>
+
+#define MIN_WINDOWS10_MICROVERSION_FOR_CFAPI 16299 // Windows 10 version 1709
 
 using namespace OCC;
 
@@ -60,30 +63,30 @@ Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
     return {};
 }
 
-void Vfs::start(const VfsSetupParams &params)
+void Vfs::start(const VfsSetupParams &params, QString &namespaceCLSID)
 {
     _setupParams = params;
-    startImpl(params);
+    startImpl(params, namespaceCLSID);
 }
 
-bool Vfs::setPinStateInDb(const QString &folderPath, PinState state)
+bool Vfs::setPinStateInDb(const QString &fileRelativePath, PinState state)
 {
-    auto path = folderPath.toUtf8();
+    auto path = fileRelativePath.toUtf8();
     _setupParams.journal->internalPinStates().wipeForPathAndBelow(path);
     if (state != PinState::Inherited)
         _setupParams.journal->internalPinStates().setForPath(path, state);
     return true;
 }
 
-Optional<PinState> Vfs::pinStateInDb(const QString &folderPath)
+Optional<PinState> Vfs::pinStateInDb(const QString &fileRelativePath)
 {
-    auto pin = _setupParams.journal->internalPinStates().effectiveForPath(folderPath.toUtf8());
+    auto pin = _setupParams.journal->internalPinStates().effectiveForPath(fileRelativePath.toUtf8());
     return pin;
 }
 
-Vfs::AvailabilityResult Vfs::availabilityInDb(const QString &folderPath)
+Vfs::AvailabilityResult Vfs::availabilityInDb(const QString &fileRelativePath)
 {
-    auto path = folderPath.toUtf8();
+    auto path = fileRelativePath.toUtf8();
     auto pin = _setupParams.journal->internalPinStates().effectiveForPathRecursive(path);
     // not being able to retrieve the pin state isn't too bad
     auto hydrationStatus = _setupParams.journal->hasHydratedOrDehydratedFiles(path);
@@ -128,6 +131,24 @@ bool OCC::isVfsPluginAvailable(Vfs::Mode mode)
 {
     if (mode == Vfs::Off)
         return true;
+
+    if (mode == Vfs::WithSuffix) {
+        if (Utility::isWindows()) {
+            return false;
+        }
+    }
+
+    if (mode == Vfs::WindowsCfApi) {
+        if (QOperatingSystemVersion::current().currentType() == QOperatingSystemVersion::OSType::Windows
+                && QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows10
+                && QOperatingSystemVersion::current().microVersion() >= MIN_WINDOWS10_MICROVERSION_FOR_CFAPI) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     auto name = modeToPluginName(mode);
     if (name.isEmpty())
         return false;
@@ -164,11 +185,11 @@ bool OCC::isVfsPluginAvailable(Vfs::Mode mode)
     return true;
 }
 
-Vfs::Mode OCC::bestAvailableVfsMode()
+Vfs::Mode OCC::bestAvailableVfsMode(bool showExperimentalOptions)
 {
     if (isVfsPluginAvailable(Vfs::WindowsCfApi)) {
         return Vfs::WindowsCfApi;
-    } else if (isVfsPluginAvailable(Vfs::WithSuffix)) {
+    } else if (showExperimentalOptions && isVfsPluginAvailable(Vfs::WithSuffix)) {
         return Vfs::WithSuffix;
     }
     return Vfs::Off;

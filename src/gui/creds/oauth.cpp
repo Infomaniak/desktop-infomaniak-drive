@@ -26,7 +26,7 @@
 
 namespace OCC {
 
-Q_LOGGING_CATEGORY(lcOauth, "sync.credentials.oauth", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcOauth, "gui.credentials.oauth", QtInfoMsg)
 
 OAuth::~OAuth()
 {

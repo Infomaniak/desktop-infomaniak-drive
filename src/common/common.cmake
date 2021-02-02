@@ -14,4 +14,9 @@ set(common_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/syncfilestatus.cpp
 )
 
+if( APPLE )
+    list(APPEND common_SOURCES "${CMAKE_CURRENT_LIST_DIR}/utility_mac.mm")
+endif()
+
 configure_file(${CMAKE_CURRENT_LIST_DIR}/vfspluginmetadata.json.in ${CMAKE_CURRENT_BINARY_DIR}/vfspluginmetadata.json)
+

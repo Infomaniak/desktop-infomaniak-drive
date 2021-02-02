@@ -135,7 +135,16 @@ Folder::Folder(const FolderDefinition &definition,
     }
 
     // Initialize the vfs plugin
-    startVfs();
+    if (!startVfs() && _definition.virtualFilesMode != Vfs::Off) {
+        // Switch to off mode
+        qCWarning(lcFolder) << "Cannot start Vfs plugin, switch to Off mode";
+        _definition.virtualFilesMode = Vfs::Off;
+        _vfs.reset(createVfsFromPlugin(_definition.virtualFilesMode).release());
+        if (!startVfs()) {
+            qCCritical(lcFolder) << "Cannot start Vfs plugin in Off mode";
+            return;
+        }
+    }
 }
 
 Folder::~Folder()
@@ -479,7 +488,7 @@ void Folder::createGuiLog(const QString &filename, LogStatus status, int count,
     }
 }
 
-void Folder::startVfs()
+bool Folder::startVfs()
 {
     ENFORCE(_vfs);
     ENFORCE(_vfs->mode() == _definition.virtualFilesMode);
@@ -491,6 +500,8 @@ void Folder::startVfs()
     vfsParams.journal = &_journal;
     vfsParams.providerName = Theme::instance()->appNameGUI();
     vfsParams.providerVersion = Theme::instance()->version();
+    vfsParams.folderAlias = alias();
+    vfsParams.folderName = shortGuiLocalPath();
 
     connect(_vfs.data(), &Vfs::beginHydrating, this, &Folder::slotHydrationStarts);
     connect(_vfs.data(), &Vfs::doneHydrating, this, &Folder::slotHydrationDone);
@@ -498,7 +509,16 @@ void Folder::startVfs()
     connect(&_engine->syncFileStatusTracker(), &SyncFileStatusTracker::fileStatusChanged,
             _vfs.data(), &Vfs::fileStatusChanged);
 
-    _vfs->start(vfsParams);
+    QString namespaceCLSID = QString();
+    _vfs->start(vfsParams, namespaceCLSID);
+    if (!namespaceCLSID.isEmpty()) {
+        setNavigationPaneClsid(namespaceCLSID);
+    }
+    else if (_vfs->mode() == Vfs::WindowsCfApi) {
+        // Vfs start error
+        _vfs->unregisterFolder();
+        return false;
+    }
 
     // Immediately mark the sqlite temporaries as excluded. They get recreated
     // on db-open and need to get marked again every time.
@@ -506,6 +526,8 @@ void Folder::startVfs()
     _journal.open();
     _vfs->fileStatusChanged(stateDbFile + "-wal", SyncFileStatus::StatusExcluded);
     _vfs->fileStatusChanged(stateDbFile + "-shm", SyncFileStatus::StatusExcluded);
+
+    return true;
 }
 
 int Folder::slotDiscardDownloadProgress()
@@ -633,7 +655,7 @@ void Folder::setSupportsVirtualFiles(bool enabled)
 {
     Vfs::Mode newMode = _definition.virtualFilesMode;
     if (enabled && _definition.virtualFilesMode == Vfs::Off) {
-        newMode = bestAvailableVfsMode();
+        newMode = bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
     } else if (!enabled && _definition.virtualFilesMode != Vfs::Off) {
         newMode = Vfs::Off;
     }
@@ -648,10 +670,37 @@ void Folder::setSupportsVirtualFiles(bool enabled)
         disconnect(_vfs.data(), 0, this, 0);
         disconnect(&_engine->syncFileStatusTracker(), 0, _vfs.data(), 0);
 
-        _vfs.reset(createVfsFromPlugin(newMode).release());
+#ifdef Q_OS_WIN
+        if (newMode == Vfs::Mode::WindowsCfApi) {
+            // Remove legacy sync root keys
+            Utility::removeLegacySyncRootKeys(navigationPaneClsid());
+            setNavigationPaneClsid(QUuid());
+        }
+        else if (_definition.virtualFilesMode == Vfs::Mode::WindowsCfApi) {
+            // Add legacy sync root keys
+            bool show = OCC::FolderMan::instance()->navigationPaneHelper().showInExplorerNavigationPane();
+            if (navigationPaneClsid() == QUuid()) {
+                setNavigationPaneClsid(QUuid::createUuid());
+            }
+            Utility::addLegacySyncRootKeys(navigationPaneClsid(), path(), cleanPath(), show);
+        }
+#endif
 
+        _vfs.reset(createVfsFromPlugin(newMode).release());        
         _definition.virtualFilesMode = newMode;
-        startVfs();
+
+        if (!startVfs() && newMode != Vfs::Off) {
+            // Switch to off mode
+            qCWarning(lcFolder) << "Cannot start Vfs plugin, switch to Off mode";
+            newMode = Vfs::Off;
+            _vfs.reset(createVfsFromPlugin(newMode).release());
+            _definition.virtualFilesMode = newMode;
+            if (!startVfs()) {
+                qCCritical(lcFolder) << "Cannot start Vfs plugin in Off mode";
+                return;
+            }
+        }
+
         if (newMode != Vfs::Off)
             _saveInFoldersWithPlaceholders = true;
         saveToSettings();
@@ -678,6 +727,17 @@ void Folder::setRootPinState(PinState state)
 bool Folder::supportsSelectiveSync() const
 {
     return !supportsVirtualFiles() && !isVfsOnOffSwitchPending();
+}
+
+bool Folder::canSupportVirtualFiles() const
+{
+    OCC::Vfs::Mode mode = OCC::bestAvailableVfsMode(OCC::ConfigFile().showExperimentalOptions());
+    if (mode == OCC::Vfs::WindowsCfApi) {
+        // Check file system
+        QString fsName(OCC::Utility::fileSystemName(path()));
+        return (fsName == "NTFS");
+    }
+    return true;
 }
 
 void Folder::saveToSettings() const
@@ -930,6 +990,9 @@ void Folder::slotSyncFinished(bool success)
     bool syncError = !_syncResult.errorStrings().isEmpty();
     if (syncError) {
         qCWarning(lcFolder) << "SyncEngine finished with ERROR";
+        for (QString error : _syncResult.errorStrings()) {
+            qCWarning(lcFolder) << "Error: " << error;
+        }
     } else {
         qCInfo(lcFolder) << "SyncEngine finished without problem.";
     }
@@ -1205,7 +1268,7 @@ void Folder::registerFolderWatcher()
     connect(_folderWatcher.data(), &FolderWatcher::becameUnreliable,
         this, &Folder::slotWatcherUnreliable);
     _folderWatcher->init(path());
-    _folderWatcher->startNotificatonTest(path() + QLatin1String(".owncloudsync.log"));
+    _folderWatcher->startNotificatonTest(path() + QLatin1String(".notificationTest"));
 }
 
 bool Folder::supportsVirtualFiles() const
@@ -1304,6 +1367,14 @@ bool FolderDefinition::load(QSettings &settings, const QString &alias,
 
     // Target paths also have a convention
     folder->targetPath = prepareTargetPath(folder->targetPath);
+
+    if (folder->virtualFilesMode == Vfs::WithSuffix) {
+        if (Utility::isWindows()) {
+            // Suffix mode doesn't exist anymore
+            folder->virtualFilesMode = Vfs::Off;
+            FolderDefinition::save(settings, *folder);
+        }
+    }
 
     return true;
 }
