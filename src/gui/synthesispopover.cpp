@@ -116,7 +116,8 @@ SynthesisPopover::SynthesisPopover(bool debugMode, OCC::OwnCloudGui *gui, QWidge
     , _notificationsDisabled(NotificationsDisabled::Never)
     , _notificationsDisabledUntilDateTime(QDateTime())
 {
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint
+                   | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
     setMinimumSize(windowSize);

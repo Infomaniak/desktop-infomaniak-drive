@@ -949,24 +949,26 @@ void PropagateDownloadFile::downloadFinished()
 
     auto vfs = propagator()->syncOptions()._vfs;
     bool previousFileExists = FileSystem::fileExists(fn);
-    if (previousFileExists) {
-        // Preserve the existing file permissions.
-        QFileInfo existingFile(fn);
-        if (existingFile.permissions() != _tmpFile.permissions()) {
-            _tmpFile.setPermissions(existingFile.permissions());
-        }
-        preserveGroupOwnership(_tmpFile.fileName(), existingFile);
+    if (vfs && vfs->mode() != Vfs::Mode::WindowsCfApi) {
+        if (previousFileExists) {
+            // Preserve the existing file permissions.
+            QFileInfo existingFile(fn);
+            if (existingFile.permissions() != _tmpFile.permissions()) {
+                _tmpFile.setPermissions(existingFile.permissions());
+            }
+            preserveGroupOwnership(_tmpFile.fileName(), existingFile);
 
-        // Make the file a hydrated placeholder if possible
-        if (!vfs->convertToPlaceholder(_tmpFile.fileName(), *_item, fn)) {
-            done(SyncFileItem::SoftError, tr("File conversion to placeholder failed"));
-            return;
+            // Make the file a hydrated placeholder if possible
+            if (!vfs->convertToPlaceholder(_tmpFile.fileName(), *_item)) {
+                done(SyncFileItem::SoftError, tr("File conversion to placeholder failed"));
+                return;
+            }
         }
-    }
 
-    // Apply the remote permissions
-    if (_tmpFile.exists()) {
-        FileSystem::setFileReadOnlyWeak(_tmpFile.fileName(), !_item->_remotePerm.isNull() && !_item->_remotePerm.hasPermission(RemotePermissions::CanWrite));
+        // Apply the remote permissions
+        if (_tmpFile.exists()) {
+            FileSystem::setFileReadOnlyWeak(_tmpFile.fileName(), !_item->_remotePerm.isNull() && !_item->_remotePerm.hasPermission(RemotePermissions::CanWrite));
+        }
     }
 
     bool isConflict = _item->_instruction == CSYNC_INSTRUCTION_CONFLICT
@@ -998,18 +1000,25 @@ void PropagateDownloadFile::downloadFinished()
 
     // The fileChanged() check is done above to generate better error messages.
     QString error;
-    if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
-        qCWarning(lcPropagateDownload) << QString("Rename failed: %1 => %2").arg(_tmpFile.fileName()).arg(fn);
-        // If the file is locked, we want to retry this sync when it
-        // becomes available again, otherwise try again directly
-        if (FileSystem::isFileLocked(fn)) {
-            emit propagator()->seenLockedFile(fn);
-        } else {
-            propagator()->_anotherSyncNeeded = true;
-        }
+    if (!previousFileExists || (vfs && vfs->mode() != Vfs::Mode::WindowsCfApi)) {
+        if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
+            // If the file is locked, we want to retry this sync when it
+            // becomes available again, otherwise try again directly
+            if (FileSystem::isFileLocked(fn)) {
+                emit propagator()->seenLockedFile(fn);
+            } else {
+                propagator()->_anotherSyncNeeded = true;
+            }
 
-        done(SyncFileItem::SoftError, error);
-        return;
+            done(SyncFileItem::SoftError, error);
+            return;
+        }
+    }
+    else {
+        // Delete the tmp file
+        if (!FileSystem::remove(_tmpFile.fileName(), &error)) {
+            qCWarning(lcPropagateDownload) << QString("Delete of temporary file failed: %1").arg(_tmpFile.fileName());
+        }
     }
 
     FileSystem::setFileHidden(fn, false);
@@ -1083,6 +1092,13 @@ void PropagateDownloadFile::slotDownloadProgress(qint64 received, qint64)
     _downloadProgress = received;
 
     propagator()->reportProgress(*_item, _resumeStart + received);
+
+    // Update VFS fetch status
+    QString filePath = propagator()->getFilePath(_item->_file);
+    auto vfs = propagator()->syncOptions()._vfs;
+    if (!vfs->updateFetchStatus(_tmpFile.fileName(), filePath, _item->_size, received)) {
+        qCWarning(lcPropagateDownload) << "Error in updateFetchStatus";
+    }
 }
 
 

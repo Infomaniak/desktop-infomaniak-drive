@@ -376,9 +376,14 @@ void VfsWin::dehydratePlaceholder(const OCC::SyncFileItem &item)
     dehydrateTask.detach();
 }
 
-bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileItem &item, const QString &replacesFile)
+bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileItem &item)
 {
     qCDebug(lcVfsWin) << "convertToPlaceholder - path = " << filePath;
+
+    if (filePath.isEmpty()) {
+        qCCritical(lcVfsWin) << "Invalid parameters";
+        return false;
+    }
 
     if (!OCC::FileSystem::fileExists(filePath)) {
         // File creation and rename
@@ -392,14 +397,6 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
         return false;
     }
 
-    if (!replacesFile.isEmpty()) {
-        QFileInfo fileInfo(replacesFile);
-        if (fileInfo.isSymLink()) {
-            qCDebug(lcVfsWin) << "Do not manage Symlink!";
-            return false;
-        }
-    }
-
     DWORD dwAttrs = GetFileAttributesW(filePath.toStdWString().c_str());
     if (dwAttrs == INVALID_FILE_ATTRIBUTES) {
         qCCritical(lcVfsWin) << "Error in GetFileAttributesW!";
@@ -411,14 +408,13 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
         return false;
     }
 
-    // Check if file is already a placeholder
+    // Check if the file is already a placeholder
     bool isPlaceholder;
-    bool isSynced;
     if (vfsGetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 &isPlaceholder,
                 nullptr,
-                &isSynced) != S_OK) {
+                nullptr) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsGetPlaceHolderStatus!";
         return false;
     }
@@ -433,15 +429,50 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
         }
     }
 
-    if (!replacesFile.isEmpty()) {
-        // Download finished
-        if (vfsUpdateFetchStatus(
-                    _setupParams.account.get()->driveId().toStdWString().c_str(),
-                    _setupParams.folderAlias.toStdWString().c_str(),
-                    QDir::toNativeSeparators(replacesFile).toStdWString().c_str(),
-                    QDir::toNativeSeparators(filePath).toStdWString().c_str(),
-                    item._size) != S_OK) {
-            qCCritical(lcVfsWin) << "Error in vfsUpdateFetchStatus!";
+    return true;
+}
+
+bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePath, qint64 total, qint64 received)
+{
+    qCInfo(lcVfsWin) << "updateFetchStatus " << filePath << " - " << received;
+
+    if (tmpFilePath.isEmpty() || filePath.isEmpty()) {
+        qCCritical(lcVfsWin) << "Invalid parameters";
+        return false;
+    }
+
+    if (!OCC::FileSystem::fileExists(filePath)) {
+        // Download of a new file
+        return true;
+    }
+
+    // Check if the file is a placeholder
+    bool isPlaceholder;
+    if (vfsGetPlaceHolderStatus(
+                QDir::toNativeSeparators(filePath).toStdWString().c_str(),
+                &isPlaceholder,
+                nullptr,
+                nullptr) != S_OK) {
+        qCCritical(lcVfsWin) << "Error in vfsGetPlaceHolderStatus!";
+        return false;
+    }
+
+    // Update download progress
+    if (vfsUpdateFetchStatus(
+                _setupParams.account.get()->driveId().toStdWString().c_str(),
+                _setupParams.folderAlias.toStdWString().c_str(),
+                QDir::toNativeSeparators(filePath).toStdWString().c_str(),
+                QDir::toNativeSeparators(tmpFilePath).toStdWString().c_str(),
+                received) != S_OK) {
+        qCCritical(lcVfsWin) << "Error in vfsUpdateFetchStatus!";
+        return false;
+    }
+
+    if (received == total) {
+        // End of fetch
+        DWORD dwAttrs = GetFileAttributesW(filePath.toStdWString().c_str());
+        if (dwAttrs == INVALID_FILE_ATTRIBUTES) {
+            qCCritical(lcVfsWin) << "Error in GetFileAttributesW!";
             return false;
         }
 

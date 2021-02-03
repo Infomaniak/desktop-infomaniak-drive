@@ -42,7 +42,8 @@ public:
 
     void createPlaceholder(const SyncFileItem &item) override;
     void dehydratePlaceholder(const SyncFileItem &item) override;
-    bool convertToPlaceholder(const QString &filename, const SyncFileItem &item, const QString &) override;
+    bool convertToPlaceholder(const QString &, const SyncFileItem &) override;
+    bool updateFetchStatus(const QString &, const QString &, qint64, qint64) override;
 
     bool needsMetadataUpdate(const SyncFileItem &) override { return false; }
     bool isDehydratedPlaceholder(const QString &fileRelativePath) override;

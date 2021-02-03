@@ -50,7 +50,8 @@ public:
 
     void createPlaceholder(const OCC::SyncFileItem &item) override;
     void dehydratePlaceholder(const OCC::SyncFileItem &item) override;
-    bool convertToPlaceholder(const QString &filePath, const OCC::SyncFileItem &item, const QString &replacesFile) override;
+    bool convertToPlaceholder(const QString &filePath, const OCC::SyncFileItem &item) override;
+    bool updateFetchStatus(const QString &tmpFilePath, const QString &filePath, qint64 total, qint64 received) override;
 
     bool needsMetadataUpdate(const OCC::SyncFileItem &) override { return true; }
     bool isDehydratedPlaceholder(const QString &fileRelativePath) override;
