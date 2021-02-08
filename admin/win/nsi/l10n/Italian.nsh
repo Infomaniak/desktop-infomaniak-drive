@@ -42,3 +42,4 @@ StrCpy $UAC_ERROR_LOGON_SERVICE "Il servizio di accesso non è in esecuzione, int
 StrCpy $INIT_UNINSTALLER_RUNNING "Il programma di disinstallazione è già in esecuzione."
 StrCpy $SectionGroup_Shortcuts "Scorciatoie"
 StrCpy $InstallRedistributables_MESSAGEBOX_TEXT "L'applicazione kDrive richiede l'installazione di ridistribuibili Microsoft C ++ 2015-2019. Ciò potrebbe causare il riavvio del computer. Continuare con l'installazione ?"
+StrCpy $InstallMsiexec_MESSAGEBOX_TEXT "L'installazione di kDrive richiede Microsoft App Installer!"
