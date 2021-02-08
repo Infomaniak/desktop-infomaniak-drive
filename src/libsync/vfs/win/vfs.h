@@ -52,8 +52,6 @@ extern "C" {
         bool inSync);
 
     DLL_EXP int __cdecl vfsDehydratePlaceHolder(
-        const wchar_t *driveId,
-        const wchar_t *folderId,
         const wchar_t *path);
 
     DLL_EXP int __cdecl vfsHydratePlaceHolder(

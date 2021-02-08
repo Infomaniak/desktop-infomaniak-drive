@@ -1098,6 +1098,7 @@ void PropagateDownloadFile::slotDownloadProgress(qint64 received, qint64)
     auto vfs = propagator()->syncOptions()._vfs;
     if (!vfs->updateFetchStatus(_tmpFile.fileName(), filePath, _item->_size, received)) {
         qCWarning(lcPropagateDownload) << "Error in updateFetchStatus";
+        _job->reply()->abort();
     }
 }
 

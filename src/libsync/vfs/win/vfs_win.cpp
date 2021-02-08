@@ -115,10 +115,9 @@ void VfsWin::dehydrate(const QString &path)
 
     // Dehydrate file
     if (vfsDehydratePlaceHolder(
-                _setupParams.account.get()->driveId().toStdWString().c_str(),
-                _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsDehydratePlaceHolder!";
+        checkAndFixMetadata(path);
         return;
     }
 }
@@ -132,7 +131,7 @@ void VfsWin::hydrate(const QString &path)
                 _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsHydratePlaceHolder!";
-        return;
+        checkAndFixMetadata(path);
     }
 }
 
@@ -469,14 +468,13 @@ bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePa
     }
 
     if (received == total) {
-        // End of fetch
+        // Force pin state to pinned
         DWORD dwAttrs = GetFileAttributesW(filePath.toStdWString().c_str());
         if (dwAttrs == INVALID_FILE_ATTRIBUTES) {
             qCCritical(lcVfsWin) << "Error in GetFileAttributesW!";
             return false;
         }
 
-        // Force pin state to pinned
         if (vfsSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), dwAttrs & FILE_ATTRIBUTE_DIRECTORY, VFS_PIN_STATE_PINNED)) {
             qCCritical(lcVfsWin) << "Error in vfsSetPinState!";
             return false;
@@ -610,7 +608,6 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
 
     if (!OCC::FileSystem::fileExists(path)) {
         // New file
-        qCDebug(lcVfsWin) << "File doesn't exist";
         return;
     }
 
@@ -646,11 +643,7 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
     }
     else if (status.tag() == OCC::SyncFileStatus::StatusWarning ||
             status.tag() == OCC::SyncFileStatus::StatusError) {
-        if (!QDir(path).exists()) {
-            // File
-            qCDebug(lcVfsWin) << "Cancel hydration of file " << path;
-            cancelHydrate(path);
-        }
+        // Nothing to do
     }
 }
 

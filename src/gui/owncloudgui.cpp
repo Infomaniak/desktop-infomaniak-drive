@@ -518,9 +518,8 @@ void OwnCloudGui::slotUpdateProgress(const QString &folder, const ProgressInfo &
 
 void OwnCloudGui::slotItemCompleted(const QString &folder, const SyncFileItemPtr &item)
 {
-    if (_synthesisPopover) {
-         emit _synthesisPopover->itemCompleted(folder, item);
-    }
+    Q_UNUSED(folder)
+    Q_UNUSED(item)
 }
 
 void OwnCloudGui::slotUnpauseAllFolders()
