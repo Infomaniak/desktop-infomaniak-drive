@@ -118,7 +118,6 @@ void VfsWin::dehydrate(const QString &path)
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsDehydratePlaceHolder!";
         checkAndFixMetadata(path);
-        return;
     }
 }
 

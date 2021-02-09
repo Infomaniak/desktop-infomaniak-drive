@@ -526,8 +526,9 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
         data.folder->vfs().setPinState(data.folderRelativePath, PinState::AlwaysLocal);
 
         // Trigger sync
-        data.folder->schedulePathForLocalDiscovery(data.folderRelativePath);
-        data.folder->scheduleThisFolderSoon();
+        //data.folder->schedulePathForLocalDiscovery(data.folderRelativePath);
+        //data.folder->scheduleThisFolderSoon();
+        Utility::runSync(data.folder->accountState()->account()->id(), data.folder->alias());
     }
 }
 
