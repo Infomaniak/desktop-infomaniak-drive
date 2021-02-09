@@ -3355,12 +3355,6 @@ for additional privileges during the process.</source>
         <translation>Ninguna carpeta para sincronizar.</translation>
     </message>
     <message>
-        <source>Synchronization in progress (%1 on %2)
-%3 left...</source>
-        <translation>Sincronización en curso (%1 de %2)
-queda %3...</translation>
-    </message>
-    <message>
         <source>Waiting for synchronization...</source>
         <translation>Esperando por sincronización...</translation>
     </message>
@@ -3391,6 +3385,12 @@ queda %3...</translation>
     <message>
         <source>Setup error.</source>
         <translation>Error en la instalación.</translation>
+    </message>
+    <message>
+        <source>Sync. in progress (%1 on %2)
+%3 left...</source>
+        <translation>Sinc. en curso (%1 de %2)
+queda %3...</translation>
     </message>
 </context>
 </TS>

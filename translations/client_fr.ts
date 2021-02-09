@@ -3360,12 +3360,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
         <translation>Aucun fichier à synchroniser.</translation>
     </message>
     <message>
-        <source>Synchronization in progress (%1 on %2)
-%3 left...</source>
-        <translation>Synchronisation en cours (%1 sur %2)
-%3 restantes...</translation>
-    </message>
-    <message>
         <source>Waiting for synchronization...</source>
         <translation>Attente de la synchronisation...</translation>
     </message>
@@ -3396,6 +3390,12 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     <message>
         <source>Setup error.</source>
         <translation>Erreur d&apos;installation.</translation>
+    </message>
+    <message>
+        <source>Sync. in progress (%1 on %2)
+%3 left...</source>
+        <translation>Sync. en cours (%1 sur %2)
+%3 restantes...</translation>
     </message>
 </context>
 </TS>

@@ -3357,12 +3357,6 @@ for additional privileges during the process.</source>
         <translation>Kein Ordner zum Synchronisieren.</translation>
     </message>
     <message>
-        <source>Synchronization in progress (%1 on %2)
-%3 left...</source>
-        <translation>Synchronisierung läuft (%1 auf %2)
-%3 übrig...</translation>
-    </message>
-    <message>
         <source>Waiting for synchronization...</source>
         <translation>Synchronisierung ausstehend...</translation>
     </message>
@@ -3393,6 +3387,12 @@ for additional privileges during the process.</source>
     <message>
         <source>Setup error.</source>
         <translation>Setup-Fehler.</translation>
+    </message>
+    <message>
+        <source>Sync. in progress (%1 on %2)
+%3 left...</source>
+        <translation>Sync. läuft (%1 auf %2)
+%3 übrig...</translation>
     </message>
 </context>
 </TS>
