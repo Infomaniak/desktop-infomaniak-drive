@@ -377,6 +377,9 @@ public slots:
      */
     void schedulePathForLocalDiscovery(const QString &relativePath);
 
+    inline bool startNextSyncImmediatly() { return _startNextSyncImmediatly; }
+    inline void setStartNextSyncImmediatly(bool value) { _startNextSyncImmediatly = value; }
+
 private slots:
     void slotSyncStarted();
     void slotSyncFinished(bool);
@@ -464,6 +467,7 @@ private:
     QElapsedTimer _timeSinceLastSyncStart;
     QElapsedTimer _timeSinceLastFullLocalDiscovery;
     std::chrono::milliseconds _lastSyncDuration;
+    bool _startNextSyncImmediatly;
 
     /// The number of syncs that failed in a row.
     /// Reset when a sync is successful.

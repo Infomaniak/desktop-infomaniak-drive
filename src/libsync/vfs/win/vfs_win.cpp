@@ -262,7 +262,7 @@ void VfsWin::checkAndFixMetadata(const QString &path)
 
 void VfsWin::stop()
 {
-    qCDebug(lcVfsWin) << "stop";
+    qCDebug(lcVfsWin) << "stop - driveId = " << _setupParams.account.get()->driveId();
 }
 
 void VfsWin::unregisterFolder()
@@ -430,7 +430,7 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
     return true;
 }
 
-bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePath, qint64 total, qint64 received)
+bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePath, qint64 total, qint64 received, bool &canceled)
 {
     qCInfo(lcVfsWin) << "updateFetchStatus " << filePath << " - " << received;
 
@@ -461,12 +461,13 @@ bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePa
                 _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 QDir::toNativeSeparators(tmpFilePath).toStdWString().c_str(),
-                received) != S_OK) {
+                received,
+                &canceled) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsUpdateFetchStatus!";
         return false;
     }
 
-    if (received == total) {
+    if (!canceled && received == total) {
         // Force pin state to pinned
         DWORD dwAttrs = GetFileAttributesW(filePath.toStdWString().c_str());
         if (dwAttrs == INVALID_FILE_ATTRIBUTES) {

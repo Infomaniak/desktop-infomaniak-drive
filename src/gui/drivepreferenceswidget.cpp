@@ -374,9 +374,6 @@ void DrivePreferencesWidget::updateAccountInfo()
         QString email = OCC::AccountManager::instance()->getUserId(accountPtr);
         _accountMailLabel->setText(email);
     }
-    else {
-        qCDebug(lcDrivePreferencesWidget) << "Null pointer!";
-    }
 }
 
 void DrivePreferencesWidget::askEnableSmartSync(const std::function<void (bool)> &callback)

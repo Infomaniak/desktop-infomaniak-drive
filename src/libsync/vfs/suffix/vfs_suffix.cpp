@@ -118,7 +118,7 @@ bool VfsSuffix::convertToPlaceholder(const QString &, const SyncFileItem &)
     return true;
 }
 
-bool VfsSuffix::updateFetchStatus(const QString &, const QString &, qint64, qint64)
+bool VfsSuffix::updateFetchStatus(const QString &, const QString &, qint64, qint64, bool &)
 {
     // Nothing necessary
     return true;

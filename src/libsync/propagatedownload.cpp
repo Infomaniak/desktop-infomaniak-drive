@@ -601,7 +601,6 @@ void PropagateDownloadFile::setDeleteExistingFolder(bool enabled)
     _deleteExisting = enabled;
 }
 
-const char owncloudCustomSoftErrorStringC[] = "owncloud-custom-soft-error-string";
 void PropagateDownloadFile::slotGetFinished()
 {
     propagator()->_activeJobList.removeOne(this);
@@ -671,9 +670,7 @@ void PropagateDownloadFile::slotGetFinished()
         // This gives a custom QNAM (by the user of libowncloudsync) to abort() a QNetworkReply in its metaDataChanged() slot and
         // set a custom error string to make this a soft error. In contrast to the default hard error this won't bring down
         // the whole sync and allows for a custom error message.
-        QNetworkReply *reply = job->reply();
-        if (err == QNetworkReply::OperationCanceledError && reply->property(owncloudCustomSoftErrorStringC).isValid()) {
-            job->setErrorString(reply->property(owncloudCustomSoftErrorStringC).toString());
+        if (err == QNetworkReply::OperationCanceledError) {
             job->setErrorStatus(SyncFileItem::SoftError);
         } else if (badRangeHeader) {
             // Can't do this in classifyError() because 416 without a
@@ -1096,8 +1093,13 @@ void PropagateDownloadFile::slotDownloadProgress(qint64 received, qint64)
     // Update VFS fetch status
     QString filePath = propagator()->getFilePath(_item->_file);
     auto vfs = propagator()->syncOptions()._vfs;
-    if (!vfs->updateFetchStatus(_tmpFile.fileName(), filePath, _item->_size, received)) {
-        qCWarning(lcPropagateDownload) << "Error in updateFetchStatus";
+    bool canceled = false;
+    if (!vfs->updateFetchStatus(_tmpFile.fileName(), filePath, _item->_size, received, canceled)) {
+        qCWarning(lcPropagateDownload) << "Error in updateFetchStatus for file " << filePath;
+        _job->reply()->abort();
+    }
+    else if (canceled) {
+        qCDebug(lcPropagateDownload) << "Update fetch status canceled for file " << filePath;
         _job->reply()->abort();
     }
 }

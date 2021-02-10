@@ -196,7 +196,8 @@ public:
         const QString &tmpFilePath,
         const QString &filePath,
         qint64 total,
-        qint64 received) = 0;
+        qint64 received,
+        bool &canceled) = 0;
 
     /// Determine whether the file at the given absolute path is a dehydrated placeholder.
     virtual bool isDehydratedPlaceholder(const QString &fileRelativePath) = 0;
@@ -300,7 +301,7 @@ public:
     void createPlaceholder(const SyncFileItem &) override {}
     void dehydratePlaceholder(const SyncFileItem &) override {}
     bool convertToPlaceholder(const QString &, const SyncFileItem &) override { return true; }
-    bool updateFetchStatus(const QString &, const QString &, qint64, qint64) override { return true; }
+    bool updateFetchStatus(const QString &, const QString &, qint64, qint64, bool &) override { return true; }
 
     bool needsMetadataUpdate(const SyncFileItem &) override { return false; }
     bool isDehydratedPlaceholder(const QString &) override { return false; }

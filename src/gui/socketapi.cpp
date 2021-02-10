@@ -166,7 +166,6 @@ SocketApi::SocketApi(QObject *parent)
 
 SocketApi::~SocketApi()
 {
-    qCDebug(lcSocketApi) << "dtor";
     _localServer.close();
     // All remaining sockets will be destroyed with _localServer, their parent
     ASSERT(_listeners.isEmpty() || _listeners.first().socket->parent() == &_localServer);
@@ -517,18 +516,29 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
 {
     QStringList files = filesArg.split(QLatin1Char('\x1e')); // Record Separator
 
-    for (const auto &file : files) {
-        auto data = FileData::get(file);
-        if (!data.folder)
-            continue;
+    if (files.count()) {
+        // Terminate and reschedule any running sync
+        OCC::FolderMan *folderMan = OCC::FolderMan::instance();
+        for (auto folder : folderMan->map()) {
+            if (folder->isSyncRunning()) {
+                folder->slotTerminateSync();
+                folder->setStartNextSyncImmediatly(true);
+                folderMan->scheduleFolder(folder);
+            }
+        }
 
-        // Update the pin state on all items
-        data.folder->vfs().setPinState(data.folderRelativePath, PinState::AlwaysLocal);
+        for (const auto &file : files) {
+            auto data = FileData::get(file);
+            if (!data.folder)
+                continue;
 
-        // Trigger sync
-        //data.folder->schedulePathForLocalDiscovery(data.folderRelativePath);
-        //data.folder->scheduleThisFolderSoon();
-        Utility::runSync(data.folder->accountState()->account()->id(), data.folder->alias());
+            // Update the pin state on all items
+            data.folder->vfs().setPinState(data.folderRelativePath, PinState::AlwaysLocal);
+
+            // Trigger sync
+            data.folder->schedulePathForLocalDiscovery(data.folderRelativePath);
+            data.folder->scheduleThisFolderSoon();
+        }
     }
 }
 

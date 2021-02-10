@@ -723,14 +723,19 @@ void FolderMan::startScheduledSyncSoon()
 
     // Require a pause based on the duration of the last sync run.
     if (Folder *lastFolder = _lastSyncFolder) {
-        msSinceLastSync = lastFolder->msecSinceLastSync().count();
+        if (lastFolder->startNextSyncImmediatly()) {
+            lastFolder->setStartNextSyncImmediatly(false);
+        }
+        else {
+            msSinceLastSync = lastFolder->msecSinceLastSync().count();
 
-        //  1s   -> 1.5s pause
-        // 10s   -> 5s pause
-        //  1min -> 12s pause
-        //  1h   -> 90s pause
-        qint64 pause = qSqrt(lastFolder->msecLastSyncDuration().count()) / 20.0 * 1000.0;
-        msDelay = qMax(msDelay, pause);
+            //  1s   -> 1.5s pause
+            // 10s   -> 5s pause
+            //  1min -> 12s pause
+            //  1h   -> 90s pause
+            qint64 pause = qSqrt(lastFolder->msecLastSyncDuration().count()) / 20.0 * 1000.0;
+            msDelay = qMax(msDelay, pause);
+        }
     }
 
     // Delays beyond one minute seem too big, particularly since there
