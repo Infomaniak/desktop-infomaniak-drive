@@ -28,7 +28,6 @@
 #include "folder.h"
 #include "folderman.h"
 #include "logger.h"
-#include "logbrowser.h"
 #include "configfile.h"
 #include "socketapi.h"
 #include "sslerrordialog.h"
@@ -74,7 +73,6 @@ namespace {
         "  -h --help            : show this help screen.\n"
         "  --settings           : show the Settings window (if the application is running).\n"
         "  --synthesis          : show the Synthesis window (if the application is running).\n"
-        "  --logwindow          : open a window to show log output.\n"
         "  --logfile <filename> : write log output to file <filename>.\n"
         "  --logfile -          : write log output to stdout.\n"
         "  --logdir <name>      : write each sync log output in a new file\n"
@@ -166,7 +164,6 @@ Application::Application(int &argc, char **argv)
     , _theme(Theme::instance())
     , _helpOnly(false)
     , _versionOnly(false)
-    , _showLogWindow(false)
     , _logExpire(0)
     , _logFlush(false)
     , _logDebug(false)
@@ -310,9 +307,6 @@ Application::Application(int &argc, char **argv)
     // Setting up the gui class will allow tray notifications for the
     // setup that follows, like folder setup
     _gui = new OwnCloudGui(this);
-    if (_showLogWindow) {
-        _gui->slotToggleLogBrowser(); // _showLogWindow is set in parseOptions.
-    }
 
     FolderMan::instance()->setupFolders();
     _proxy.setupQtProxyFromConfig(); // folders have to be defined first, than we set up the Qt proxy.
@@ -524,9 +518,6 @@ void Application::setupLogging()
     logger->setLogDebug(_logDebug);
     logger->enterNextLogFile();
 
-    // Possibly configure logging from config file
-    LogBrowser::setupLoggingFromConfig();
-
     qCInfo(lcApplication) << QString::fromLatin1("################## %1 locale:[%2] ui_lang:[%3] version:[%4] os:[%5]").arg(_theme->appName()).arg(QLocale::system().name()).arg(property("ui_lang").toString()).arg(_theme->version()).arg(Utility::platformName());
 }
 
@@ -540,12 +531,8 @@ void Application::slotParseMessage(const QString &msg, QObject *)
     if (msg.startsWith(QLatin1String("MSG_PARSEOPTIONS:"))) {
         const int lengthOfMsgPrefix = 17;
         QStringList options = msg.mid(lengthOfMsgPrefix).split(QLatin1Char('|'));
-        _showLogWindow = false;
         parseOptions(options);
         setupLogging();
-        if (_showLogWindow) {
-            _gui->slotToggleLogBrowser(); // _showLogWindow is set in parseOptions.
-        }
     } else if (msg.startsWith(QLatin1String("MSG_SHOWSETTINGS"))) {
         qCInfo(lcApplication) << "Running for" << _startedAt.elapsed() / 1000.0 << "sec";
         if (_startedAt.elapsed() < 10 * 1000) {
@@ -580,8 +567,6 @@ void Application::parseOptions(const QStringList &options)
         if (option == QLatin1String("--help") || option == QLatin1String("-h")) {
             setHelp();
             break;
-        } else if (option == QLatin1String("--logwindow") || option == QLatin1String("-l")) {
-            _showLogWindow = true;
         } else if (option == QLatin1String("--logfile")) {
             if (it.hasNext() && !it.peekNext().startsWith(QLatin1String("--"))) {
                 _logFile = it.next();

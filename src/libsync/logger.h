@@ -74,8 +74,7 @@ public:
      * logdir: a temporary folder
      * logdebug: true
      *
-     * Used in conjunction with ConfigFile::automaticLogDir,
-     * see LogBrowser::setupLoggingFromConfig.
+     * Used in conjunction with ConfigFile::automaticLogDir
      */
     void setupTemporaryFolderLogDir();
 

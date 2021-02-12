@@ -33,7 +33,6 @@ set(client_SRCS
     folderman.cpp
     folderwatcher.cpp
     lockwatcher.cpp
-    logbrowser.cpp
     navigationpanehelper.cpp
     ocsjob.cpp
     ocssharejob.cpp
@@ -58,7 +57,6 @@ set(client_SRCS
     proxyauthdialog.cpp
     notificationwidget.cpp
     notificationconfirmjob.cpp
-    servernotificationhandler.cpp
     guiutility.cpp
     creds/httpcredentialsgui.cpp
     creds/oauth.cpp

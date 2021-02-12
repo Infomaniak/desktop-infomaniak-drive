@@ -30,6 +30,30 @@ namespace KDC {
 class SynchronizedItem
 {
 public:
+#if (QT_VERSION < QT_VERSION_CHECK(5, 13, 0))
+    // For use with QVector
+    SynchronizedItem() = default;
+
+    SynchronizedItem(const SynchronizedItem &item)
+    {
+        *this = item;
+    }
+
+    SynchronizedItem& operator= (const SynchronizedItem& item)
+    {
+        _folderId = item._folderId;
+        _filePath = item._filePath;
+        _fileId = item._fileId;
+        _status = item._status;
+        _direction = item._direction;
+        _type = item._type;
+        _fullFilePath = item._fullFilePath;
+        _dateTime = item._dateTime;
+        _error = item._error;
+        return *this;
+    }
+#endif
+
     SynchronizedItem(const QString &folderId, const QString &filePath, const QByteArray &fileId,
                      OCC::SyncFileItem::Status status, OCC::SyncFileItem::Direction direction,
                      ItemType type, const QString &fullFilePath, const QDateTime &dateTime,
