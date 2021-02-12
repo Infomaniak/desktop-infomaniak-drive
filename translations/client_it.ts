@@ -906,6 +906,10 @@
         <source>Show synchronized folders in File Explorer navigation pane</source>
         <translation>Mostra le cartelle sincronizzate nel riquadro di navigazione di Esplora file</translation>
     </message>
+    <message>
+        <source>You must restart your opened File Explorers for this change to take effect.</source>
+        <translation>È necessario riavviare gli esploratori di file aperti affinché questa modifica abbia effetto.</translation>
+    </message>
 </context>
 <context>
     <name>KDC::ProgressBarWidget</name>
