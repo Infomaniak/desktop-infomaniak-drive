@@ -1,6 +1,6 @@
 /*
 Infomaniak Drive Windows Explorer Extension DLL
-Copyright (C) 2020 christophe.larchier@infomaniak.com
+Copyright (C) 2021 christophe.larchier@infomaniak.com
 */
 
 #pragma once

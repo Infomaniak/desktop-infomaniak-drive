@@ -510,10 +510,7 @@ void OwnCloudGui::slotFolderOpenAction(const QString &alias)
 void OwnCloudGui::slotUpdateProgress(const QString &folder, const ProgressInfo &progress)
 {
     Q_UNUSED(folder);
-
-    if (_synthesisPopover) {
-        emit _synthesisPopover->updateProgress(folder, progress);
-    }
+    Q_UNUSED(progress);
 }
 
 void OwnCloudGui::slotItemCompleted(const QString &folder, const SyncFileItemPtr &item)

@@ -1,6 +1,6 @@
 /*
 Infomaniak Drive
-Copyright (C) 2020 christophe.larchier@infomaniak.com
+Copyright (C) 2021 christophe.larchier@infomaniak.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "common/syncjournaldb.h"
 #include "account.h"
 #include "version.h"
+#include "progressdispatcher.h"
 
 // Vfs dll
 #include "debug.h"

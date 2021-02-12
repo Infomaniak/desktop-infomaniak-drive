@@ -1,6 +1,6 @@
 /*
 Infomaniak Drive
-Copyright (C) 2020 christophe.larchier@infomaniak.com
+Copyright (C) 2021 christophe.larchier@infomaniak.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -70,7 +70,6 @@ public:
     void forceRedraw();
 
 signals:
-    void updateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
     void openParametersDialog(const QString &accountId = QString(), bool errorPage = false);
     void openShareDialogPublicLinks(const QString &sharePath, const QString &localPath);
     void exit();
