@@ -432,6 +432,11 @@ void PreferencesWidget::onShortcutsSwitchClicked(bool checked)
     OCC::ConfigFile cfg;
     cfg.setShowInExplorerNavigationPane(checked);
     OCC::FolderMan::instance()->navigationPaneHelper().setShowInExplorerNavigationPane(checked);
+    CustomMessageBox *msgBox = new CustomMessageBox(
+                QMessageBox::Information,
+                tr("You must restart your opened File Explorers for this change to take effect."),
+                QMessageBox::Ok, this);
+    msgBox->exec();
 }
 #endif
 
