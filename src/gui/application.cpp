@@ -518,6 +518,25 @@ void Application::setupLogging()
     logger->setLogDebug(_logDebug);
     logger->enterNextLogFile();
 
+    ConfigFile config;
+    logger->setMinLogLevel(config.minLogLevel());
+
+    if (config.automaticLogDir()) {
+        // Don't override other configured logging
+        if (logger->isLoggingToFile())
+            return;
+
+        logger->setupTemporaryFolderLogDir();
+        if (auto deleteOldLogsHours = config.automaticDeleteOldLogsAge()) {
+            logger->setLogExpire(*deleteOldLogsHours);
+        } else {
+            logger->setLogExpire(std::chrono::hours(0));
+        }
+        logger->enterNextLogFile();
+    } else {
+        logger->disableTemporaryFolderLogDir();
+    }
+
     qCInfo(lcApplication) << QString::fromLatin1("################## %1 locale:[%2] ui_lang:[%3] version:[%4] os:[%5]").arg(_theme->appName()).arg(QLocale::system().name()).arg(property("ui_lang").toString()).arg(_theme->version()).arg(Utility::platformName());
 }
 
