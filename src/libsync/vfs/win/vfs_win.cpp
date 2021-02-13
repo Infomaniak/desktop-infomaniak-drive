@@ -35,6 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <unordered_map>
 #include <shobjidl_core.h>
 
+#include <QCoreApplication>
 #include <QFile>
 #include <QDir>
 
@@ -456,33 +457,45 @@ bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePa
         return false;
     }
 
-    // Update download progress
-    if (vfsUpdateFetchStatus(
-                _setupParams.account.get()->driveId().toStdWString().c_str(),
-                _setupParams.folderAlias.toStdWString().c_str(),
-                QDir::toNativeSeparators(filePath).toStdWString().c_str(),
-                QDir::toNativeSeparators(tmpFilePath).toStdWString().c_str(),
-                received,
-                &canceled) != S_OK) {
-        qCCritical(lcVfsWin) << "Error in vfsUpdateFetchStatus!";
-        return false;
-    }
-
-    if (!canceled && received == total) {
-        // Force pin state to pinned
-        DWORD dwAttrs = GetFileAttributesW(filePath.toStdWString().c_str());
-        if (dwAttrs == INVALID_FILE_ATTRIBUTES) {
-            qCCritical(lcVfsWin) << "Error in GetFileAttributesW!";
-            return false;
+    auto updateFct = [=](bool &canceled, bool &error) {
+        // Update download progress
+        bool finished = false;
+        if (vfsUpdateFetchStatus(
+                    _setupParams.account.get()->driveId().toStdWString().c_str(),
+                    _setupParams.folderAlias.toStdWString().c_str(),
+                    QDir::toNativeSeparators(filePath).toStdWString().c_str(),
+                    QDir::toNativeSeparators(tmpFilePath).toStdWString().c_str(),
+                    received,
+                    &canceled,
+                    &finished) != S_OK) {
+            qCCritical(lcVfsWin) << "Error in vfsUpdateFetchStatus!";
+            error = true;
+            return;
         }
 
-        if (vfsSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), dwAttrs & FILE_ATTRIBUTE_DIRECTORY, VFS_PIN_STATE_PINNED)) {
-            qCCritical(lcVfsWin) << "Error in vfsSetPinState!";
-            return false;
-        }
-    }
+        if (finished) {
+            // Force pin state to pinned
+            DWORD dwAttrs = GetFileAttributesW(filePath.toStdWString().c_str());
+            if (dwAttrs == INVALID_FILE_ATTRIBUTES) {
+                qCCritical(lcVfsWin) << "Error in GetFileAttributesW!";
+                error = true;
+                return;
+            }
 
-    return true;
+            if (vfsSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), dwAttrs & FILE_ATTRIBUTE_DIRECTORY, VFS_PIN_STATE_PINNED)) {
+                qCCritical(lcVfsWin) << "Error in vfsSetPinState!";
+                error = true;
+                return;
+            }
+        }
+    };
+
+    // Launch update in a separate thread
+    bool error = false;
+    std::thread updateTask(updateFct, std::ref(canceled), std::ref(error));
+    updateTask.join();
+
+    return !error;
 }
 
 bool VfsWin::isDehydratedPlaceholder(const QString &fileRelativePath)
@@ -626,6 +639,7 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
             bool isDehydrated = isDehydratedPlaceholder(fileRelativePath);
             if (*localPinState == OCC::PinState::OnlineOnly && !isDehydrated) {
                 qCDebug(lcVfsWin) << "Dehydrate file " << path;
+                // Launch dehydrate in a separate thread
                 auto dehydrateFct = [=]() {
                     dehydrate(path);
                 };
@@ -634,6 +648,7 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
             }
             else if (*localPinState == OCC::PinState::AlwaysLocal && isDehydrated) {
                 qCDebug(lcVfsWin) << "Hydrate file " << path;
+                // Launch hydrate in a separate thread
                 auto hydrateFct = [=]() {
                     hydrate(path);
                 };

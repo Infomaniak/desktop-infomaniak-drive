@@ -75,7 +75,8 @@ extern "C" {
         const wchar_t *filePath,
         const wchar_t *fromFilePath,
         LONGLONG completed,
-        bool *canceled);
+        bool *canceled,
+        bool *finished);
 
     DLL_EXP int __cdecl vfsCancelFetch(
         const wchar_t *driveId,
