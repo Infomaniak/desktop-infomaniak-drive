@@ -262,6 +262,7 @@ public:
       * The delay doesn't reset with subsequent calls.
       */
     void scheduleThisFolderSoon();
+    void scheduleThisFolderImmediatly();
 
     /**
       * Migration: When this flag is true, this folder will save to

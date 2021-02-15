@@ -537,7 +537,7 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
 
             // Trigger sync
             data.folder->schedulePathForLocalDiscovery(data.folderRelativePath);
-            data.folder->scheduleThisFolderSoon();
+            data.folder->scheduleThisFolderImmediatly();
         }
     }
 }

@@ -1249,6 +1249,13 @@ void Folder::scheduleThisFolderSoon()
     }
 }
 
+void Folder::scheduleThisFolderImmediatly()
+{
+    if (!_scheduleSelfTimer.isActive()) {
+        _scheduleSelfTimer.start(0);
+    }
+}
+
 void Folder::setSaveBackwardsCompatible(bool save)
 {
     _saveBackwardsCompatible = save;
