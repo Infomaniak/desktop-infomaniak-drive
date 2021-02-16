@@ -16,6 +16,7 @@
 #include "owncloudpropagator.h"
 #include "networkjobs.h"
 #include "propagatecommonzsync.h"
+#include "gui/folder.h"
 
 #include <QBuffer>
 #include <QFile>
@@ -34,6 +35,8 @@ protected:
     bool _bandwidthChoked = false; // if download is paused (won't read on readyRead())
     qint64 _bandwidthQuota = 0;
     QPointer<BandwidthManager> _bandwidthManager = nullptr;
+
+    Folder *_folder;
 
 public:
     GETJob(AccountPtr account, const QString &path, QObject *parent = 0)
@@ -63,6 +66,9 @@ public:
     void setBandwidthLimited(bool b);
     void giveBandwidthQuota(qint64 q);
     void onTimedOut();
+
+    inline void setFolder(Folder *folder) { _folder = folder; }
+    inline Folder *folder() const { return _folder; }
 
 signals:
     void finishedSignal();
@@ -184,6 +190,8 @@ public:
     qint64 contentLength() const { return _contentLength; }
     qint64 expectedContentLength() const { return _expectedContentLength; }
     void setExpectedContentLength(qint64 size) { _expectedContentLength = size; }
+
+    inline QIODevice *device() { return _device; }
 
 private slots:
     void slotReadyRead();

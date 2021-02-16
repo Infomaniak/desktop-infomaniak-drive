@@ -66,6 +66,8 @@ private slots:
     void slotReadSocket();
     void slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
                               unsigned int width, uint64_t iNode, const OCC::SocketListener *listener);
+    void slotDownloadProgress(qint64 received, qint64 total);
+    void slotGetFinished();
 
     static void copyUrlToClipboard(const QString &link);
     static void emailPrivateLink(const QString &link);

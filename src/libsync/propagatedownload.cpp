@@ -1091,7 +1091,7 @@ void PropagateDownloadFile::slotDownloadProgress(qint64 received, qint64)
     propagator()->reportProgress(*_item, _resumeStart + received);
 
     // Update VFS fetch status
-    QString filePath = propagator()->getFilePath(_item->_file);
+    /*QString filePath = propagator()->getFilePath(_item->_file);
     auto vfs = propagator()->syncOptions()._vfs;
     bool canceled = false;
     if (!vfs->updateFetchStatus(_tmpFile.fileName(), filePath, _item->_size, received, canceled)) {
@@ -1101,7 +1101,7 @@ void PropagateDownloadFile::slotDownloadProgress(qint64 received, qint64)
     else if (canceled) {
         qCDebug(lcPropagateDownload) << "Update fetch status canceled for file " << filePath;
         _job->reply()->abort();
-    }
+    }*/
 }
 
 

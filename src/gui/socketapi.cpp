@@ -34,6 +34,7 @@
 #include "guiutility.h"
 #include "getorcreatepubliclinkshare.h"
 #include "thumbnailjob.h"
+#include "propagatedownload.h"
 
 #include <array>
 #include <QBitArray>
@@ -518,7 +519,7 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
 
     if (files.count()) {
         // Terminate and reschedule any running sync
-        OCC::FolderMan *folderMan = OCC::FolderMan::instance();
+        /*OCC::FolderMan *folderMan = OCC::FolderMan::instance();
         for (auto folder : folderMan->map()) {
             if (folder->isSyncRunning()) {
                 folder->slotTerminateSync();
@@ -538,8 +539,72 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
             // Trigger sync
             data.folder->schedulePathForLocalDiscovery(data.folderRelativePath);
             data.folder->scheduleThisFolderImmediatly();
+        }*/
+
+        for (const auto &file : files) {
+            auto data = FileData::get(file);
+            if (!data.folder)
+                continue;
+
+            QTemporaryFile *tmpFile = new QTemporaryFile();
+            if (!tmpFile) {
+                qCWarning(lcSocketApi) << "Unable to create temporary file!";
+                continue;
+            }
+            tmpFile->open();
+
+            QMap<QByteArray, QByteArray> headers;
+
+            QPointer<GETJob> job = new GETFileJob(data.folder->accountState()->account(),
+                data.serverRelativePath, tmpFile, headers, "", 0, this);
+            job->setFolder(data.folder);
+            //job->setBandwidthManager(&propagator()->_bandwidthManager);
+            connect(job.data(), &GETJob::finishedSignal, this, &SocketApi::slotGetFinished);
+            connect(qobject_cast<GETFileJob *>(job.data()), &GETFileJob::downloadProgress,
+                this, &SocketApi::slotDownloadProgress);
+            job->start();
         }
     }
+}
+
+void SocketApi::slotDownloadProgress(qint64 received, qint64 total)
+{
+    Q_UNUSED(total)
+
+    GETFileJob *job = qobject_cast<GETFileJob *>(sender());
+    if (!job || !job->folder()) {
+        return;
+    }
+
+    // Update VFS fetch status
+    QTemporaryFile *tmpFile = static_cast<QTemporaryFile *>(job->device());
+    if (!tmpFile) {
+        return;
+    }
+    tmpFile->flush();
+
+    QString filePath = QFileInfo(job->folder()->path() + job->path()).canonicalFilePath();
+    bool canceled = false;
+    if (!job->folder()->vfs().updateFetchStatus(tmpFile->fileName(), filePath,
+                                                job->contentLength(), received, canceled)) {
+        qCWarning(lcSocketApi) << "Error in updateFetchStatus for file " << filePath;
+        job->reply()->abort();
+    }
+    else if (canceled) {
+        qCDebug(lcSocketApi) << "Update fetch status canceled for file " << job->path();
+        job->reply()->abort();
+    }
+}
+
+void SocketApi::slotGetFinished()
+{
+    GETFileJob *job = qobject_cast<GETFileJob *>(sender());
+    if (!job || !job->folder()) {
+        return;
+    }
+
+    job->device()->deleteLater();
+    job->deleteLater();
 }
 
 /* Go over all the files and replace them by a virtual file */
