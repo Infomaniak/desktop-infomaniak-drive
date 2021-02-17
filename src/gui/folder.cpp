@@ -57,7 +57,6 @@ Folder::Folder(const FolderDefinition &definition,
     , _accountState(accountState)
     , _definition(definition)
     , _lastSyncDuration(0)
-    , _startNextSyncImmediatly(false)
     , _consecutiveFailingSyncs(0)
     , _consecutiveFollowUpSyncs(0)
     , _journal(_definition.absoluteJournalPath())
@@ -1246,13 +1245,6 @@ void Folder::scheduleThisFolderSoon()
 {
     if (!_scheduleSelfTimer.isActive()) {
         _scheduleSelfTimer.start();
-    }
-}
-
-void Folder::scheduleThisFolderImmediatly()
-{
-    if (!_scheduleSelfTimer.isActive()) {
-        _scheduleSelfTimer.start(0);
     }
 }
 

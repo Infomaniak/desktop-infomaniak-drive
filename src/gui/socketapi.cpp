@@ -518,29 +518,6 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
     QStringList files = filesArg.split(QLatin1Char('\x1e')); // Record Separator
 
     if (files.count()) {
-        // Terminate and reschedule any running sync
-        /*OCC::FolderMan *folderMan = OCC::FolderMan::instance();
-        for (auto folder : folderMan->map()) {
-            if (folder->isSyncRunning()) {
-                folder->slotTerminateSync();
-                folder->setStartNextSyncImmediatly(true);
-                folderMan->scheduleFolder(folder);
-            }
-        }
-
-        for (const auto &file : files) {
-            auto data = FileData::get(file);
-            if (!data.folder)
-                continue;
-
-            // Update the pin state on all items
-            data.folder->vfs().setPinState(data.folderRelativePath, PinState::AlwaysLocal);
-
-            // Trigger sync
-            data.folder->schedulePathForLocalDiscovery(data.folderRelativePath);
-            data.folder->scheduleThisFolderImmediatly();
-        }*/
-
         for (const auto &file : files) {
             auto data = FileData::get(file);
             if (!data.folder)
@@ -585,8 +562,7 @@ void SocketApi::slotDownloadProgress(qint64 received, qint64 total)
 
     QString filePath = QFileInfo(job->folder()->path() + job->path()).canonicalFilePath();
     bool canceled = false;
-    if (!job->folder()->vfs().updateFetchStatus(tmpFile->fileName(), filePath,
-                                                job->contentLength(), received, canceled)) {
+    if (!job->folder()->vfs().updateFetchStatus(tmpFile->fileName(), filePath, received, canceled)) {
         qCWarning(lcSocketApi) << "Error in updateFetchStatus for file " << filePath;
         job->reply()->abort();
     }
@@ -604,7 +580,6 @@ void SocketApi::slotGetFinished()
     }
 
     job->device()->deleteLater();
-    job->deleteLater();
 }
 
 /* Go over all the files and replace them by a virtual file */

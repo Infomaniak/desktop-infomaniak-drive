@@ -120,6 +120,17 @@ void VfsWin::dehydrate(const QString &path)
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsDehydratePlaceHolder!";
         checkAndFixMetadata(path);
+        return;
+    }
+
+    // Set file type to ItemTypeVirtualFile
+    QString relativePath = path.midRef(_setupParams.filesystemPath.size()).toUtf8();
+    OCC::SyncJournalFileRecord record;
+    if (_setupParams.journal->getFileRecord(relativePath, &record) && record.isValid()) {
+        if (record._type != ItemTypeVirtualFile) {
+            record._type = ItemTypeVirtualFile;
+            _setupParams.journal->setFileRecord(record);
+        }
     }
 }
 
@@ -432,7 +443,7 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
     return true;
 }
 
-bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePath, qint64 total, qint64 received, bool &canceled)
+bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePath, qint64 received, bool &canceled)
 {
     qCInfo(lcVfsWin) << "updateFetchStatus " << filePath << " - " << received;
 
@@ -469,23 +480,20 @@ bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePa
                     &canceled,
                     &finished) != S_OK) {
             qCCritical(lcVfsWin) << "Error in vfsUpdateFetchStatus!";
+            checkAndFixMetadata(filePath);
             error = true;
             return;
         }
 
         if (finished) {
-            // Force pin state to pinned
-            DWORD dwAttrs = GetFileAttributesW(filePath.toStdWString().c_str());
-            if (dwAttrs == INVALID_FILE_ATTRIBUTES) {
-                qCCritical(lcVfsWin) << "Error in GetFileAttributesW!";
-                error = true;
-                return;
-            }
-
-            if (vfsSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), dwAttrs & FILE_ATTRIBUTE_DIRECTORY, VFS_PIN_STATE_PINNED)) {
-                qCCritical(lcVfsWin) << "Error in vfsSetPinState!";
-                error = true;
-                return;
+            // Set file type to ItemTypeFile
+            QString relativePath = filePath.midRef(_setupParams.filesystemPath.size()).toUtf8();
+            OCC::SyncJournalFileRecord record;
+            if (_setupParams.journal->getFileRecord(relativePath, &record) && record.isValid()) {
+                if (record._type != ItemTypeFile) {
+                    record._type = ItemTypeFile;
+                    _setupParams.journal->setFileRecord(record);
+                }
             }
         }
     };
