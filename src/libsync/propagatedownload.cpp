@@ -36,6 +36,9 @@
 #include <unistd.h>
 #endif
 
+#define CHUNKBASESIZE 4096
+#define MAXCHUNKS 1000
+
 namespace OCC {
 
 Q_LOGGING_CATEGORY(lcGetJob, "sync.networkjob.get", QtInfoMsg)
@@ -290,16 +293,19 @@ qint64 GETFileJob::currentDownloadPosition()
 
 void GETFileJob::slotReadyRead()
 {
-    qCDebug(lcGetJob) << "slotReadyRead";
     if (!reply()) {
         qCDebug(lcGetJob) << "no reply";
         return;
     }
-    int bufferSize = qMin(1024 * 8ll, reply()->bytesAvailable());
-    QByteArray buffer(bufferSize, Qt::Uninitialized);
+
+    size_t bufferSize = (reply()->bytesAvailable() > CHUNKBASESIZE
+                ? qMin((qint64) MAXCHUNKS, reply()->bytesAvailable() / CHUNKBASESIZE) * CHUNKBASESIZE
+                : reply()->bytesAvailable());
+    //int bufferSize = qMin(1024 * 8ll, reply()->bytesAvailable());
+    QByteArray buffer((int) bufferSize, Qt::Uninitialized);
 
     while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
-        qCDebug(lcGetJob) << "bytesAvailable: " << reply()->bytesAvailable();
+        qCDebug(lcGetJob) << "Available: " << reply()->bytesAvailable() << " buffer size: " << bufferSize;
 
         if (_bandwidthChoked) {
             qCWarning(lcGetJob) << "Download choked";
@@ -307,7 +313,6 @@ void GETFileJob::slotReadyRead()
         }
         qint64 toRead = bufferSize;
         if (_bandwidthLimited) {
-            qCDebug(lcGetJob) << "bandwidthLimited";
             toRead = qMin(qint64(bufferSize), _bandwidthQuota);
             if (toRead == 0) {
                 qCWarning(lcGetJob) << "Out of quota";
@@ -316,9 +321,7 @@ void GETFileJob::slotReadyRead()
             _bandwidthQuota -= toRead;
         }
 
-        qCDebug(lcGetJob) << "toRead: " << toRead;
         qint64 r = reply()->read(buffer.data(), toRead);
-        qCDebug(lcGetJob) << "read: " << r;
         if (r < 0) {
             _errorString = networkReplyErrorString(*reply());
             _errorStatus = SyncFileItem::NormalError;
@@ -328,7 +331,6 @@ void GETFileJob::slotReadyRead()
         }
 
         qint64 w = _device->write(buffer.constData(), r);
-        qCDebug(lcGetJob) << "write: " << w;
         if (w != r) {
             _errorString = _device->errorString();
             _errorStatus = SyncFileItem::NormalError;
@@ -336,9 +338,11 @@ void GETFileJob::slotReadyRead()
             reply()->abort();
             return;
         }
+
+        break;
+        //Sleep(0);
     }
 
-    qCDebug(lcGetJob) << "finished ? " << (reply()->isFinished() ? "true" : "false");
     if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {
         qCDebug(lcGetJob) << "Actually finished!";
         if (_bandwidthManager) {
