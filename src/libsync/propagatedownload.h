@@ -167,18 +167,7 @@ public:
     qint64 currentDownloadPosition() Q_DECL_OVERRIDE;
 
     void start() Q_DECL_OVERRIDE;
-    bool finished() Q_DECL_OVERRIDE
-    {
-        if (_saveBodyToFile && reply()->bytesAvailable()) {
-            return false;
-        } else {
-            if (!_hasEmittedFinishedSignal) {
-                emit finishedSignal();
-            }
-            _hasEmittedFinishedSignal = true;
-            return true; // discard
-        }
-    }
+    bool finished() Q_DECL_OVERRIDE;
 
     void newReplyHook(QNetworkReply *reply) override;
 
