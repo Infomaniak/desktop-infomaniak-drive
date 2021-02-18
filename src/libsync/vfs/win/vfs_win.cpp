@@ -484,7 +484,6 @@ bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePa
             error = true;
             return;
         }
-        qCDebug(lcVfsWin) << "vfsUpdateFetchStatus done";
 
         if (finished) {
             // Set file type to ItemTypeFile
@@ -503,7 +502,6 @@ bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePa
     bool error = false;
     std::thread updateTask(updateFct, std::ref(canceled), std::ref(error));
     updateTask.join();
-    qCDebug(lcVfsWin) << "update task joined";
 
     return !error;
 }

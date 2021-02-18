@@ -532,13 +532,12 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
 
             QMap<QByteArray, QByteArray> headers;
 
-            QPointer<GETJob> job = new GETFileJob(data.folder->accountState()->account(),
+            QPointer<GETFileJob> job = new GETFileJob(data.folder->accountState()->account(),
                 data.serverRelativePath, tmpFile, headers, "", 0, this);
             job->setFolder(data.folder);
             //job->setBandwidthManager(&propagator()->_bandwidthManager);
             connect(job.data(), &GETJob::finishedSignal, this, &SocketApi::slotGetFinished);
-            connect(qobject_cast<GETFileJob *>(job.data()), &GETFileJob::downloadProgress,
-                this, &SocketApi::slotDownloadProgress);
+            connect(job.data(), &GETFileJob::downloadProgress, this, &SocketApi::slotDownloadProgress);
             job->start();
         }
     }
@@ -560,13 +559,13 @@ void SocketApi::slotDownloadProgress(qint64 received, qint64 total)
     QTemporaryFile *tmpFile = static_cast<QTemporaryFile *>(job->device());
     if (!tmpFile) {
         qCWarning(lcSocketApi) << "Invalid temp file";
+        job->reply()->abort();
         return;
     }
     tmpFile->flush();
 
     QString filePath = QFileInfo(job->folder()->path() + job->path()).canonicalFilePath();
     bool canceled = false;
-    qCDebug(lcSocketApi) << "Run updateFetchStatus for file " << filePath;
     if (!job->folder()->vfs().updateFetchStatus(tmpFile->fileName(), filePath, received, canceled)) {
         qCWarning(lcSocketApi) << "Error in updateFetchStatus for file " << filePath;
         job->reply()->abort();
@@ -575,14 +574,46 @@ void SocketApi::slotDownloadProgress(qint64 received, qint64 total)
         qCDebug(lcSocketApi) << "Update fetch status canceled for file " << job->path();
         job->reply()->abort();
     }
-    qCDebug(lcSocketApi) << "End of updateFetchStatus for file " << filePath;
 }
 
 void SocketApi::slotGetFinished()
 {
+    bool jobDone = true;
+
+    qCDebug(lcSocketApi) << "Download finished";
+
     GETFileJob *job = qobject_cast<GETFileJob *>(sender());
     if (!job || !job->folder()) {
+        qCWarning(lcSocketApi) << "Invalid job";
         return;
+    }
+
+    SyncFileItem::Status status = job->errorStatus();
+    if (!job->reply()) {
+        if (status == SyncFileItem::Success) {
+            qCWarning(lcSocketApi) << "Success";
+        }
+        else if (status != SyncFileItem::NoStatus) {
+            qCWarning(lcSocketApi) << "Error: " << job->errorString();
+            jobDone = false;
+        }
+        else {
+            qCWarning(lcSocketApi) << "No reply";
+            jobDone = false;
+        }
+    }
+
+    QNetworkReply::NetworkError err = job->reply()->error();
+    if (err != QNetworkReply::NoError) {
+        qCWarning(lcSocketApi) << "Network error";
+        jobDone = false;
+    }
+
+    if (jobDone) {
+        slotDownloadProgress(job->contentLength(), job->contentLength());
+    }
+    else {
+        qCWarning(lcSocketApi) << "Error";
     }
 
     qCDebug(lcSocketApi) << "Delete temp file";
