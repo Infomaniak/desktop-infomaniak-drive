@@ -548,20 +548,25 @@ void SocketApi::slotDownloadProgress(qint64 received, qint64 total)
 {
     Q_UNUSED(total)
 
+    qCDebug(lcSocketApi) << "Download progress";
+
     GETFileJob *job = qobject_cast<GETFileJob *>(sender());
     if (!job || !job->folder()) {
+        qCWarning(lcSocketApi) << "Invalid job";
         return;
     }
 
     // Update VFS fetch status
     QTemporaryFile *tmpFile = static_cast<QTemporaryFile *>(job->device());
     if (!tmpFile) {
+        qCWarning(lcSocketApi) << "Invalid temp file";
         return;
     }
     tmpFile->flush();
 
     QString filePath = QFileInfo(job->folder()->path() + job->path()).canonicalFilePath();
     bool canceled = false;
+    qCDebug(lcSocketApi) << "Run updateFetchStatus for file " << filePath;
     if (!job->folder()->vfs().updateFetchStatus(tmpFile->fileName(), filePath, received, canceled)) {
         qCWarning(lcSocketApi) << "Error in updateFetchStatus for file " << filePath;
         job->reply()->abort();
@@ -570,6 +575,7 @@ void SocketApi::slotDownloadProgress(qint64 received, qint64 total)
         qCDebug(lcSocketApi) << "Update fetch status canceled for file " << job->path();
         job->reply()->abort();
     }
+    qCDebug(lcSocketApi) << "End of updateFetchStatus for file " << filePath;
 }
 
 void SocketApi::slotGetFinished()
@@ -579,6 +585,7 @@ void SocketApi::slotGetFinished()
         return;
     }
 
+    qCDebug(lcSocketApi) << "Delete temp file";
     job->device()->deleteLater();
 }
 
