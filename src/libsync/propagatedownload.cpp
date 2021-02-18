@@ -299,12 +299,15 @@ void GETFileJob::slotReadyRead()
     QByteArray buffer(bufferSize, Qt::Uninitialized);
 
     while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
+        qCDebug(lcGetJob) << "bytesAvailable: " << reply()->bytesAvailable();
+
         if (_bandwidthChoked) {
             qCWarning(lcGetJob) << "Download choked";
             break;
         }
         qint64 toRead = bufferSize;
         if (_bandwidthLimited) {
+            qCDebug(lcGetJob) << "bandwidthLimited";
             toRead = qMin(qint64(bufferSize), _bandwidthQuota);
             if (toRead == 0) {
                 qCWarning(lcGetJob) << "Out of quota";
@@ -313,7 +316,9 @@ void GETFileJob::slotReadyRead()
             _bandwidthQuota -= toRead;
         }
 
+        qCDebug(lcGetJob) << "toRead: " << toRead;
         qint64 r = reply()->read(buffer.data(), toRead);
+        qCDebug(lcGetJob) << "read: " << r;
         if (r < 0) {
             _errorString = networkReplyErrorString(*reply());
             _errorStatus = SyncFileItem::NormalError;
@@ -323,6 +328,7 @@ void GETFileJob::slotReadyRead()
         }
 
         qint64 w = _device->write(buffer.constData(), r);
+        qCDebug(lcGetJob) << "write: " << w;
         if (w != r) {
             _errorString = _device->errorString();
             _errorStatus = SyncFileItem::NormalError;
@@ -333,8 +339,6 @@ void GETFileJob::slotReadyRead()
     }
 
     qCDebug(lcGetJob) << "finished ? " << (reply()->isFinished() ? "true" : "false");
-    qCDebug(lcGetJob) << "bytesAvailable: " << reply()->bytesAvailable();
-    qCDebug(lcGetJob) << "saveBodyToFile ? " << (_saveBodyToFile ? "true" : "false");
     if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {
         qCDebug(lcGetJob) << "Actually finished!";
         if (_bandwidthManager) {
