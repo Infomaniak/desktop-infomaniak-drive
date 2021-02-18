@@ -537,18 +537,14 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
             job->setFolder(data.folder);
             //job->setBandwidthManager(&propagator()->_bandwidthManager);
             connect(job.data(), &GETJob::finishedSignal, this, &SocketApi::slotGetFinished);
-            connect(job.data(), &GETFileJob::downloadProgress, this, &SocketApi::slotDownloadProgress);
+            connect(job.data(), &GETFileJob::writeProgress, this, &SocketApi::slotWriteProgress);
             job->start();
         }
     }
 }
 
-void SocketApi::slotDownloadProgress(qint64 received, qint64 total)
+void SocketApi::slotWriteProgress(qint64 received)
 {
-    Q_UNUSED(total)
-
-    qCDebug(lcSocketApi) << "Download progress";
-
     GETFileJob *job = qobject_cast<GETFileJob *>(sender());
     if (!job || !job->folder()) {
         qCWarning(lcSocketApi) << "Invalid job";
@@ -578,46 +574,15 @@ void SocketApi::slotDownloadProgress(qint64 received, qint64 total)
 
 void SocketApi::slotGetFinished()
 {
-    bool jobDone = true;
-
-    qCDebug(lcSocketApi) << "Download finished";
-
     GETFileJob *job = qobject_cast<GETFileJob *>(sender());
     if (!job || !job->folder()) {
         qCWarning(lcSocketApi) << "Invalid job";
         return;
     }
 
-    SyncFileItem::Status status = job->errorStatus();
-    if (!job->reply()) {
-        if (status == SyncFileItem::Success) {
-            qCWarning(lcSocketApi) << "Success";
-        }
-        else if (status != SyncFileItem::NoStatus) {
-            qCWarning(lcSocketApi) << "Error: " << job->errorString();
-            jobDone = false;
-        }
-        else {
-            qCWarning(lcSocketApi) << "No reply";
-            jobDone = false;
-        }
+    if (job->device()) {
+        job->device()->deleteLater();
     }
-
-    QNetworkReply::NetworkError err = job->reply()->error();
-    if (err != QNetworkReply::NoError) {
-        qCWarning(lcSocketApi) << "Network error";
-        jobDone = false;
-    }
-
-    if (jobDone) {
-        slotDownloadProgress(job->contentLength(), job->contentLength());
-    }
-    else {
-        qCWarning(lcSocketApi) << "Error";
-    }
-
-    qCDebug(lcSocketApi) << "Delete temp file";
-    job->device()->deleteLater();
 }
 
 /* Go over all the files and replace them by a virtual file */

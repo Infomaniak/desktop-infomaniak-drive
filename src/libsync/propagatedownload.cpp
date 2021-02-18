@@ -133,15 +133,10 @@ void GETFileJob::start()
 
 bool GETFileJob::finished()
 {
-    qCDebug(lcGetJob) << "Finished";
-
     if (_saveBodyToFile && reply()->bytesAvailable()) {
-        qCDebug(lcGetJob) << "Finished 1";
         return false;
     } else {
-        qCDebug(lcGetJob) << "Finished 2";
         if (!_hasEmittedFinishedSignal) {
-            qCDebug(lcGetJob) << "Finished 3";
             emit finishedSignal();
         }
         _hasEmittedFinishedSignal = true;
@@ -151,7 +146,6 @@ bool GETFileJob::finished()
 
 void GETFileJob::newReplyHook(QNetworkReply *reply)
 {
-    qCDebug(lcGetJob) << "newReplyHook";
     reply->setReadBufferSize(16 * 1024); // keep low so we can easier limit the bandwidth
 
     connect(reply, &QNetworkReply::metaDataChanged, this, &GETFileJob::slotMetaDataChanged);
@@ -162,7 +156,6 @@ void GETFileJob::newReplyHook(QNetworkReply *reply)
 
 void GETFileJob::slotMetaDataChanged()
 {
-    qCDebug(lcGetJob) << "slotMetaDataChanged";
     // For some reason setting the read buffer in GETFileJob::start doesn't seem to go
     // through the HTTP layer thread(?)
     reply()->setReadBufferSize(16 * 1024);
@@ -301,12 +294,9 @@ void GETFileJob::slotReadyRead()
     size_t bufferSize = (reply()->bytesAvailable() > CHUNKBASESIZE
                 ? qMin((qint64) MAXCHUNKS, reply()->bytesAvailable() / CHUNKBASESIZE) * CHUNKBASESIZE
                 : reply()->bytesAvailable());
-    //int bufferSize = qMin(1024 * 8ll, reply()->bytesAvailable());
     QByteArray buffer((int) bufferSize, Qt::Uninitialized);
 
     while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
-        qCDebug(lcGetJob) << "Available: " << reply()->bytesAvailable() << " buffer size: " << bufferSize;
-
         if (_bandwidthChoked) {
             qCWarning(lcGetJob) << "Download choked";
             break;
@@ -339,8 +329,9 @@ void GETFileJob::slotReadyRead()
             return;
         }
 
-        break;
-        //Sleep(0);
+        emit writeProgress(_device->size());
+
+        Sleep(0);
     }
 
     if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {

@@ -1537,7 +1537,7 @@ void ProcessDirectoryJob::setupDbPinStateActions(SyncJournalFileRecord &record)
 {
     // Only suffix-vfs uses the db for pin states.
     // Other plugins will set localEntry._type according to the file's pin state.
-    if (!isVfsWithSuffix() && !isVfsWin())
+    if (!isVfsWithSuffix())
         return;
 
     auto pin = _discoveryData->_statedb->internalPinStates().rawForPath(record._path);

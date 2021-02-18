@@ -508,8 +508,6 @@ bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePa
 
 bool VfsWin::isDehydratedPlaceholder(const QString &fileRelativePath)
 {
-    qCDebug(lcVfsWin) << "isDehydratedPlaceholder - path = " << fileRelativePath;
-
     bool isDehydrated;
     QString filePath(_setupParams.filesystemPath + fileRelativePath);
     if (vfsGetPlaceHolderStatus(
@@ -640,7 +638,6 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
             auto localPinState = pinState(fileRelativePath);
             bool isDehydrated = isDehydratedPlaceholder(fileRelativePath);
             if (*localPinState == OCC::PinState::OnlineOnly && !isDehydrated) {
-                qCDebug(lcVfsWin) << "Dehydrate file " << path;
                 // Launch dehydrate in a separate thread
                 auto dehydrateFct = [=]() {
                     dehydrate(path);
@@ -649,7 +646,6 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
                 dehydrateTask.detach();
             }
             else if (*localPinState == OCC::PinState::AlwaysLocal && isDehydrated) {
-                qCDebug(lcVfsWin) << "Hydrate file " << path;
                 // Launch hydrate in a separate thread
                 auto hydrateFct = [=]() {
                     hydrate(path);

@@ -188,6 +188,7 @@ private slots:
 
 signals:
     void downloadProgress(qint64, qint64);
+    void writeProgress(qint64);
 };
 
 /**
