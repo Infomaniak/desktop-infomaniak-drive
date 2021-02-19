@@ -523,15 +523,6 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
             if (!data.folder)
                 continue;
 
-            // Avoid hydration by the sync engine
-            /*OCC::SyncJournalFileRecord record;
-            if (data.folder->journalDb()->getFileRecord(data.serverRelativePath, &record) && record.isValid()) {
-                if (record._type != ItemTypeFile) {
-                    record._type = ItemTypeFile;
-                    data.folder->journalDb()->setFileRecord(record);
-                }
-            }*/
-
             QTemporaryFile *tmpFile = new QTemporaryFile();
             if (!tmpFile) {
                 qCWarning(lcSocketApi) << "Unable to create temporary file!";
