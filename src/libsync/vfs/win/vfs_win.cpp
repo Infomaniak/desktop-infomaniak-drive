@@ -495,6 +495,15 @@ bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePa
                     _setupParams.journal->setFileRecord(record);
                 }
             }
+
+            // Set pin state in DB
+            auto dbPinState = pinStateInDb(relativePath);
+            if (*dbPinState != OCC::PinState::AlwaysLocal) {
+                if (!setPinStateInDb(relativePath, OCC::PinState::AlwaysLocal)) {
+                    qCCritical(lcVfsWin) << "Error in setPinStateInDb!";
+                    return;
+                }
+            }
         }
     };
 
@@ -567,7 +576,13 @@ bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const
             WIN32_FIND_DATA *ffd = (WIN32_FIND_DATA *) stat_data;
             if (ffd && ffd->dwFileAttributes != INVALID_FILE_ATTRIBUTES) {
                 if ((ffd->dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) && (ffd->dwFileAttributes & FILE_ATTRIBUTE_PINNED)) {
-                    stat->type = ItemTypeVirtualFileDownload;
+                    if (GetCompressedFileSizeW(filePath.toStdWString().c_str(), nullptr) > 0) {
+                        // Fetch already in progress
+                        stat->type = ItemTypeVirtualFile;
+                    }
+                    else {
+                        stat->type = ItemTypeVirtualFileDownload;
+                    }
                     return true;
                 }
                 else if (!(ffd->dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) && (ffd->dwFileAttributes & FILE_ATTRIBUTE_UNPINNED)) {

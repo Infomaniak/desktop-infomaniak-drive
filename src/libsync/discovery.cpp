@@ -187,7 +187,8 @@ void ProcessDirectoryJob::process()
     QTimer::singleShot(0, _discoveryData, &DiscoveryPhase::scheduleMoreJobs);
 }
 
-bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &localName, bool isDirectory, bool isHidden, bool isSymlink)
+bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &localName,
+                                         bool isDirectory, bool isHidden, bool isSymlink)
 {
     auto excluded = _discoveryData->_excludes->traversalPatternMatch(path, isDirectory ? ItemTypeDirectory : ItemTypeFile);
 
@@ -252,9 +253,14 @@ bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &loc
             if (item->_file.endsWith('.')) {
                 item->_errorString = tr("File names ending with a period are not supported on this file system.");
             } else {
+                QStringRef fileNameStr(&item->_file);
+                int lastSlash = item->_file.lastIndexOf('/');
+                if (lastSlash >= 0) {
+                    fileNameStr = item->_file.midRef(lastSlash + 1);
+                }
                 char invalid = '\0';
                 foreach (char x, QByteArray(FORBIDDEN_FILENAME_CHARS)) {
-                    if (item->_file.contains(x)) {
+                    if (fileNameStr.toUtf8().contains(x)) {
                         invalid = x;
                         break;
                     }
@@ -1537,7 +1543,7 @@ void ProcessDirectoryJob::setupDbPinStateActions(SyncJournalFileRecord &record)
 {
     // Only suffix-vfs uses the db for pin states.
     // Other plugins will set localEntry._type according to the file's pin state.
-    if (!isVfsWithSuffix())
+    if (!isVfsWithSuffix() && !isVfsWin())
         return;
 
     auto pin = _discoveryData->_statedb->internalPinStates().rawForPath(record._path);
@@ -1549,8 +1555,20 @@ void ProcessDirectoryJob::setupDbPinStateActions(SyncJournalFileRecord &record)
         record._type = ItemTypeVirtualFileDehydration;
 
     // AlwaysLocal dehydrated files want to be hydrated
-    if (record._type == ItemTypeVirtualFile && *pin == PinState::AlwaysLocal)
+    if (record._type == ItemTypeVirtualFile && *pin == PinState::AlwaysLocal) {
+#ifdef Q_OS_WIN
+        if (GetCompressedFileSizeW(QString(record._path).toStdWString().c_str(), nullptr) > 0) {
+            // Fetch already in progress
+            record._type = ItemTypeVirtualFile;
+        }
+        else {
+            record._type = ItemTypeVirtualFileDownload;
+        }
+#else
         record._type = ItemTypeVirtualFileDownload;
+#endif
+    }
 }
 
 }
+

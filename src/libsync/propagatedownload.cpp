@@ -36,6 +36,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef Q_OS_WIN
+#include "fileapi.h"
+#endif
+
 #define CHUNKBASESIZE 4096
 #define MAXCHUNKS 1000
 
