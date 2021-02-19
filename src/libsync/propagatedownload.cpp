@@ -154,8 +154,8 @@ void GETFileJob::newReplyHook(QNetworkReply *reply)
     reply->setReadBufferSize(16 * 1024); // keep low so we can easier limit the bandwidth
 
     connect(reply, &QNetworkReply::metaDataChanged, this, &GETFileJob::slotMetaDataChanged);
-    connect(reply, &QIODevice::readyRead, this, &GETFileJob::slotReadyRead, Qt::QueuedConnection);
-    connect(reply, &QNetworkReply::finished, this, &GETFileJob::slotReadyRead, Qt::QueuedConnection);
+    connect(reply, &QIODevice::readyRead, this, &GETFileJob::slotReadyRead);
+    connect(reply, &QNetworkReply::finished, this, &GETFileJob::slotReadyRead);
     connect(reply, &QNetworkReply::downloadProgress, this, &GETFileJob::downloadProgress);
 }
 
@@ -335,6 +335,7 @@ void GETFileJob::slotReadyRead()
         }
 
         emit writeProgress(_device->size());
+        Sleep(0);
     }
 
     if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {
