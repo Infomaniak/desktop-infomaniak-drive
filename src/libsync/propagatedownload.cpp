@@ -151,7 +151,7 @@ bool GETFileJob::finished()
 
 void GETFileJob::newReplyHook(QNetworkReply *reply)
 {
-    reply->setReadBufferSize(16 * 1024); // keep low so we can easier limit the bandwidth
+    reply->setReadBufferSize(1000 * 1024); // keep low so we can easier limit the bandwidth
 
     connect(reply, &QNetworkReply::metaDataChanged, this, &GETFileJob::slotMetaDataChanged);
     connect(reply, &QIODevice::readyRead, this, &GETFileJob::slotReadyRead);
@@ -163,7 +163,7 @@ void GETFileJob::slotMetaDataChanged()
 {
     // For some reason setting the read buffer in GETFileJob::start doesn't seem to go
     // through the HTTP layer thread(?)
-    reply()->setReadBufferSize(16 * 1024);
+    reply()->setReadBufferSize(1000 * 1024);
 
     int httpStatus = reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
@@ -301,42 +301,46 @@ void GETFileJob::slotReadyRead()
                 : reply()->bytesAvailable());
     QByteArray buffer((int) bufferSize, Qt::Uninitialized);
 
-    while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
-        if (_bandwidthChoked) {
-            qCWarning(lcGetJob) << "Download choked";
-            break;
-        }
-        qint64 toRead = bufferSize;
-        if (_bandwidthLimited) {
-            toRead = qMin(qint64(bufferSize), _bandwidthQuota);
-            if (toRead == 0) {
-                qCWarning(lcGetJob) << "Out of quota";
+    auto writeFct = [=]() {
+        while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
+            if (_bandwidthChoked) {
+                qCWarning(lcGetJob) << "Download choked";
                 break;
             }
-            _bandwidthQuota -= toRead;
-        }
+            qint64 toRead = bufferSize;
+            if (_bandwidthLimited) {
+                toRead = qMin(qint64(bufferSize), _bandwidthQuota);
+                if (toRead == 0) {
+                    qCWarning(lcGetJob) << "Out of quota";
+                    break;
+                }
+                _bandwidthQuota -= toRead;
+            }
 
-        qint64 r = reply()->read(buffer.data(), toRead);
-        if (r < 0) {
-            _errorString = networkReplyErrorString(*reply());
-            _errorStatus = SyncFileItem::NormalError;
-            qCWarning(lcGetJob) << "Error while reading from device: " << _errorString;
-            reply()->abort();
-            return;
-        }
+            qint64 r = reply()->read(const_cast<char *>(buffer.data()), toRead);
+            if (r < 0) {
+                _errorString = networkReplyErrorString(*reply());
+                _errorStatus = SyncFileItem::NormalError;
+                qCWarning(lcGetJob) << "Error while reading from device: " << _errorString;
+                reply()->abort();
+                return;
+            }
 
-        qint64 w = _device->write(buffer.constData(), r);
-        if (w != r) {
-            _errorString = _device->errorString();
-            _errorStatus = SyncFileItem::NormalError;
-            qCWarning(lcGetJob) << "Error while writing to file" << w << r << _errorString;
-            reply()->abort();
-            return;
-        }
+            qint64 w = _device->write(buffer.constData(), r);
+            if (w != r) {
+                _errorString = _device->errorString();
+                _errorStatus = SyncFileItem::NormalError;
+                qCWarning(lcGetJob) << "Error while writing to file" << w << r << _errorString;
+                reply()->abort();
+                return;
+            }
 
-        emit writeProgress(_device->size());
-        Sleep(0);
-    }
+            emit writeProgress(_device->size());
+        }
+    };
+
+    std::thread writeTask(writeFct);
+    writeTask.join();
 
     if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {
         qCDebug(lcGetJob) << "Actually finished!";
