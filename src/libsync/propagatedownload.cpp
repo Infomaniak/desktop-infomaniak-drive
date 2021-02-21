@@ -298,12 +298,14 @@ void GETFileJob::slotReadyRead()
         return;
     }
 
-    size_t bufferSize = (reply()->bytesAvailable() > CHUNKBASESIZE
-                ? qMin((qint64) MAXCHUNKS, reply()->bytesAvailable() / CHUNKBASESIZE) * CHUNKBASESIZE
-                : reply()->bytesAvailable());
+    qint64 bytesAvailable = reply()->bytesAvailable();
+    bool lastRead = (_device->size() + bytesAvailable == _contentLength);
+    size_t bufferSize = (bytesAvailable > CHUNKBASESIZE
+                ? qMin((qint64) MAXCHUNKS, bytesAvailable / CHUNKBASESIZE) * CHUNKBASESIZE
+                : bytesAvailable);
     QByteArray buffer((int) bufferSize, Qt::Uninitialized);
 
-    while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
+    while (bytesAvailable > 0 && _saveBodyToFile) {
         if (_bandwidthChoked) {
             qCWarning(lcGetJob) << "Download choked";
             break;
@@ -338,14 +340,18 @@ void GETFileJob::slotReadyRead()
 
         emit writeProgress(_device->size());
 
-        if (reply()->isFinished()) {
-            // The current function will not be called anymore
+        bytesAvailable -= r;
+
+        if (lastRead) {
             qCDebug(lcGetJob) << "Request finished!";
             QCoreApplication::processEvents();
         }
+        else {
+            break;
+        }
     }
 
-    if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {
+    if (reply()->isFinished() && (bytesAvailable == 0 || !_saveBodyToFile)) {
         qCDebug(lcGetJob) << "Actually finished!";
         if (_bandwidthManager) {
             _bandwidthManager->unregisterDownloadJob(this);
