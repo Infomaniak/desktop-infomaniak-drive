@@ -151,7 +151,7 @@ bool GETFileJob::finished()
 
 void GETFileJob::newReplyHook(QNetworkReply *reply)
 {
-    reply->setReadBufferSize(1000 * 1024); // keep low so we can easier limit the bandwidth
+    reply->setReadBufferSize(CHUNKBASESIZE * MAXCHUNKS); // keep low so we can easier limit the bandwidth
 
     connect(reply, &QNetworkReply::metaDataChanged, this, &GETFileJob::slotMetaDataChanged);
     connect(reply, &QIODevice::readyRead, this, &GETFileJob::slotReadyRead);
@@ -163,7 +163,7 @@ void GETFileJob::slotMetaDataChanged()
 {
     // For some reason setting the read buffer in GETFileJob::start doesn't seem to go
     // through the HTTP layer thread(?)
-    reply()->setReadBufferSize(1000 * 1024);
+    reply()->setReadBufferSize(CHUNKBASESIZE * MAXCHUNKS);
 
     int httpStatus = reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
@@ -336,6 +336,7 @@ void GETFileJob::slotReadyRead()
             }
 
             emit writeProgress(_device->size());
+            Sleep(0);
         }
     };
 
