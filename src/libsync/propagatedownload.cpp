@@ -292,6 +292,7 @@ qint64 GETFileJob::currentDownloadPosition()
 
 void GETFileJob::slotReadyRead()
 {
+    qCDebug(lcGetJob) << "slotReadyRead begin";
     if (!reply()) {
         qCDebug(lcGetJob) << "no reply";
         return;
@@ -339,6 +340,7 @@ void GETFileJob::slotReadyRead()
 
         if (reply()->isFinished()) {
             // The current function will not be called anymore
+            qCDebug(lcGetJob) << "Request finished!";
             QCoreApplication::processEvents();
         }
     }
@@ -358,6 +360,7 @@ void GETFileJob::slotReadyRead()
         _hasEmittedFinishedSignal = true;
         deleteLater();
     }
+    qCDebug(lcGetJob) << "slotReadyRead end";
 }
 
 void GETJob::onTimedOut()
