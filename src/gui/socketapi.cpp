@@ -536,7 +536,7 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
                 data.serverRelativePath, tmpFile, headers, "", 0, this);
             job->setFolder(data.folder);
             connect(job.data(), &GETJob::finishedSignal, this, &SocketApi::slotGetFinished);
-            connect(job.data(), &GETFileJob::writeProgress, this, &SocketApi::slotWriteProgress, Qt::QueuedConnection);
+            connect(job.data(), &GETFileJob::writeProgress, this, &SocketApi::slotWriteProgress);
             job->start();
         }
     }

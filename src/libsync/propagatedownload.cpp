@@ -291,6 +291,8 @@ qint64 GETFileJob::currentDownloadPosition()
 
 void GETFileJob::slotReadyRead()
 {
+    qCDebug(lcGetJob) << "slotReadyRead begin";
+
     if (!reply()) {
         qCDebug(lcGetJob) << "no reply";
         return;
@@ -301,47 +303,41 @@ void GETFileJob::slotReadyRead()
                 : reply()->bytesAvailable());
     QByteArray buffer((int) bufferSize, Qt::Uninitialized);
 
-    auto writeFct = [=]() {
-        while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
-            if (_bandwidthChoked) {
-                qCWarning(lcGetJob) << "Download choked";
+    while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
+        if (_bandwidthChoked) {
+            qCWarning(lcGetJob) << "Download choked";
+            break;
+        }
+        qint64 toRead = bufferSize;
+        if (_bandwidthLimited) {
+            toRead = qMin(qint64(bufferSize), _bandwidthQuota);
+            if (toRead == 0) {
+                qCWarning(lcGetJob) << "Out of quota";
                 break;
             }
-            qint64 toRead = bufferSize;
-            if (_bandwidthLimited) {
-                toRead = qMin(qint64(bufferSize), _bandwidthQuota);
-                if (toRead == 0) {
-                    qCWarning(lcGetJob) << "Out of quota";
-                    break;
-                }
-                _bandwidthQuota -= toRead;
-            }
-
-            qint64 r = reply()->read(const_cast<char *>(buffer.data()), toRead);
-            if (r < 0) {
-                _errorString = networkReplyErrorString(*reply());
-                _errorStatus = SyncFileItem::NormalError;
-                qCWarning(lcGetJob) << "Error while reading from device: " << _errorString;
-                reply()->abort();
-                return;
-            }
-
-            qint64 w = _device->write(buffer.constData(), r);
-            if (w != r) {
-                _errorString = _device->errorString();
-                _errorStatus = SyncFileItem::NormalError;
-                qCWarning(lcGetJob) << "Error while writing to file" << w << r << _errorString;
-                reply()->abort();
-                return;
-            }
-
-            emit writeProgress(_device->size());
-            Sleep(0);
+            _bandwidthQuota -= toRead;
         }
-    };
 
-    std::thread writeTask(writeFct);
-    writeTask.join();
+        qint64 r = reply()->read(const_cast<char *>(buffer.data()), toRead);
+        if (r < 0) {
+            _errorString = networkReplyErrorString(*reply());
+            _errorStatus = SyncFileItem::NormalError;
+            qCWarning(lcGetJob) << "Error while reading from device: " << _errorString;
+            reply()->abort();
+            return;
+        }
+
+        qint64 w = _device->write(buffer.constData(), r);
+        if (w != r) {
+            _errorString = _device->errorString();
+            _errorStatus = SyncFileItem::NormalError;
+            qCWarning(lcGetJob) << "Error while writing to file" << w << r << _errorString;
+            reply()->abort();
+            return;
+        }
+
+        emit writeProgress(_device->size());
+    }
 
     if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {
         qCDebug(lcGetJob) << "Actually finished!";
@@ -358,6 +354,8 @@ void GETFileJob::slotReadyRead()
         _hasEmittedFinishedSignal = true;
         deleteLater();
     }
+
+    qCDebug(lcGetJob) << "slotReadyRead end";
 }
 
 void GETJob::onTimedOut()
