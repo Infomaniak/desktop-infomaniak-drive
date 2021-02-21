@@ -30,6 +30,7 @@
 #include <QNetworkAccessManager>
 #include <QFileInfo>
 #include <QDir>
+#include <QCoreApplication>
 
 #include <cmath>
 
@@ -291,8 +292,6 @@ qint64 GETFileJob::currentDownloadPosition()
 
 void GETFileJob::slotReadyRead()
 {
-    qCDebug(lcGetJob) << "slotReadyRead begin";
-
     if (!reply()) {
         qCDebug(lcGetJob) << "no reply";
         return;
@@ -337,6 +336,11 @@ void GETFileJob::slotReadyRead()
         }
 
         emit writeProgress(_device->size());
+
+        if (reply()->isFinished()) {
+            // The current function will not be called anymore
+            QCoreApplication::processEvents();
+        }
     }
 
     if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {
@@ -354,8 +358,6 @@ void GETFileJob::slotReadyRead()
         _hasEmittedFinishedSignal = true;
         deleteLater();
     }
-
-    qCDebug(lcGetJob) << "slotReadyRead end";
 }
 
 void GETJob::onTimedOut()
