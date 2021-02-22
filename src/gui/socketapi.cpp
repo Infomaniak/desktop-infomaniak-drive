@@ -518,10 +518,20 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
     QStringList files = filesArg.split(QLatin1Char('\x1e')); // Record Separator
 
     if (files.count()) {
-        for (const auto &file : files) {
-            auto data = FileData::get(file);
-            if (!data.folder)
+        for (const auto &filePath : files) {
+            auto data = FileData::get(filePath);
+            if (!data.folder) {
+                qCWarning(lcSocketApi) << "No file data";
                 continue;
+            }
+
+            auto record = data.journalRecord();
+            if (!record.isValid()) {
+                qCWarning(lcSocketApi) << "Invalid journal record";
+                continue;
+            }
+
+            record.setHydrating(true);
 
             QTemporaryFile *tmpFile = new QTemporaryFile();
             if (!tmpFile) {
@@ -578,6 +588,22 @@ void SocketApi::slotGetFinished()
         qCWarning(lcSocketApi) << "Invalid job";
         return;
     }
+
+    QString filePath = QFileInfo(job->folder()->path() + job->path()).canonicalFilePath();
+
+    auto data = FileData::get(filePath);
+    if (!data.folder) {
+        qCWarning(lcSocketApi) << "No file data";
+        return;
+    }
+
+    auto record = data.journalRecord();
+    if (!record.isValid()) {
+        qCWarning(lcSocketApi) << "Invalid journal record";
+        return;
+    }
+
+    record.setHydrating(false);
 
     if (job->device()) {
         job->device()->deleteLater();

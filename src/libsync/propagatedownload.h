@@ -154,6 +154,8 @@ class OWNCLOUDSYNC_EXPORT GETFileJob : public GETJob
     /// Will be set to true once we've seen a 2xx response header
     bool _saveBodyToFile = false;
 
+    bool _isReading = false;
+
 public:
     // DOES NOT take ownership of the device.
     explicit GETFileJob(AccountPtr account, const QString &path, QIODevice *device,

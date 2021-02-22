@@ -324,8 +324,8 @@ void VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
 
     // Create placeholder
     WIN32_FIND_DATA findData;
-    findData.nFileSizeHigh = (DWORD) (item._size & 0xFFFFFFFF00000000);
-    findData.nFileSizeLow = (DWORD) (item._size);
+    findData.nFileSizeHigh = (DWORD) (item._size >> 32);
+    findData.nFileSizeLow = (DWORD) (item._size & 0xFFFFFFFF);
     OCC::Utility::UnixTimeToFiletime(item._modtime, &findData.ftLastWriteTime);
     findData.ftCreationTime = findData.ftLastWriteTime;
     findData.ftLastAccessTime = findData.ftLastWriteTime;
@@ -576,8 +576,17 @@ bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const
             WIN32_FIND_DATA *ffd = (WIN32_FIND_DATA *) stat_data;
             if (ffd && ffd->dwFileAttributes != INVALID_FILE_ATTRIBUTES) {
                 if ((ffd->dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) && (ffd->dwFileAttributes & FILE_ATTRIBUTE_PINNED)) {
-                    if (GetCompressedFileSizeW(filePath.toStdWString().c_str(), nullptr) > 0) {
-                        // Fetch already in progress
+                    QString fileRelativePath = filePath.midRef(_setupParams.filesystemPath.size()).toUtf8();
+                    OCC::SyncJournalFileRecord record;
+                    if (_setupParams.journal->getFileRecord(fileRelativePath, &record) && record.isValid()) {
+                        if (record._type != ItemTypeVirtualFile) {
+                            record._type = ItemTypeVirtualFile;
+                            _setupParams.journal->setFileRecord(record);
+                        }
+                    }
+
+                    if (record.hydrating()) {
+                        // Hydration in progress
                         stat->type = ItemTypeVirtualFile;
                     }
                     else {
