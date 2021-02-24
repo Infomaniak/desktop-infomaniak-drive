@@ -569,7 +569,12 @@ void SocketApi::slotWriteProgress(qint64 received)
     }
     tmpFile->flush();
 
-    QString filePath = QFileInfo(job->folder()->path() + job->path()).canonicalFilePath();
+    QString folderPath = job->folder()->path();
+    QString fileRelativePath = job->path().midRef(job->folder()->remotePathTrailingSlash().size()).toUtf8();
+    if (fileRelativePath.startsWith('/')) {
+        fileRelativePath.remove(0, 1);
+    }
+    QString filePath = QFileInfo(folderPath + fileRelativePath).canonicalFilePath();
     bool canceled = false;
     if (!job->folder()->vfs().updateFetchStatus(tmpFile->fileName(), filePath, received, canceled)) {
         qCWarning(lcSocketApi) << "Error in updateFetchStatus for file " << filePath;
