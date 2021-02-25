@@ -19,6 +19,7 @@ class WebFlowCredentialsDialog : public KDC::CustomDialog
     Q_OBJECT
 public:
     WebFlowCredentialsDialog(Account *account, QWidget *parent = nullptr);
+    ~WebFlowCredentialsDialog();
 
     void setUrl(const QUrl &url);
     void setInfo(const QString &msg);
