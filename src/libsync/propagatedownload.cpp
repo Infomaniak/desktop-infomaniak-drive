@@ -303,7 +303,6 @@ void GETFileJob::slotReadyRead()
     }
 
     if (_isReading) {
-        qCDebug(lcGetJob) << "Already reading";
         return;
     }
 
