@@ -143,6 +143,10 @@ WebView::~WebView() {
      * [1] https://doc.qt.io/qt-5/qwebenginepage.html#QWebEnginePage-1
      */
     delete _page;
+    delete _profile;
+    delete _webview;
+    delete _interceptor;
+    delete _schemeHandler;
 }
 
 WebViewPageUrlRequestInterceptor::WebViewPageUrlRequestInterceptor(QObject *parent)
@@ -153,6 +157,7 @@ WebViewPageUrlRequestInterceptor::WebViewPageUrlRequestInterceptor(QObject *pare
 void WebViewPageUrlRequestInterceptor::interceptRequest(QWebEngineUrlRequestInfo &info) {
     qCInfo(lcWizardWebiew()) << info.requestUrl();
     info.setHttpHeader("OCS-APIREQUEST", "true");
+    //info.setHttpHeader("X-Force-Double-Auth", "1");
 }
 
 WebViewPageUrlSchemeHandler::WebViewPageUrlSchemeHandler(QObject *parent)
