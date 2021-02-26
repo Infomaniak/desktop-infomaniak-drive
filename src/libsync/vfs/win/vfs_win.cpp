@@ -119,19 +119,9 @@ void VfsWin::dehydrate(const QString &path)
     if (vfsDehydratePlaceHolder(
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsDehydratePlaceHolder!";
-        checkAndFixMetadata(path);
-        return;
     }
 
-    // Set file type to ItemTypeVirtualFile
-    QString relativePath = path.midRef(_setupParams.filesystemPath.size()).toUtf8();
-    OCC::SyncJournalFileRecord record;
-    if (_setupParams.journal->getFileRecord(relativePath, &record) && record.isValid()) {
-        if (record._type != ItemTypeVirtualFile) {
-            record._type = ItemTypeVirtualFile;
-            _setupParams.journal->setFileRecord(record);
-        }
-    }
+    checkAndFixMetadata(path);
 }
 
 void VfsWin::hydrate(const QString &path)
@@ -143,8 +133,9 @@ void VfsWin::hydrate(const QString &path)
                 _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsHydratePlaceHolder!";
-        checkAndFixMetadata(path);
     }
+
+    checkAndFixMetadata(path);
 }
 
 void VfsWin::cancelHydrate(const QString &path)
@@ -576,22 +567,18 @@ bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const
             WIN32_FIND_DATA *ffd = (WIN32_FIND_DATA *) stat_data;
             if (ffd && ffd->dwFileAttributes != INVALID_FILE_ATTRIBUTES) {
                 if ((ffd->dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) && (ffd->dwFileAttributes & FILE_ATTRIBUTE_PINNED)) {
-                    QString fileRelativePath = filePath.midRef(_setupParams.filesystemPath.size()).toUtf8();
+                    QString fileRelativePath = fileInfo.canonicalFilePath().midRef(_setupParams.filesystemPath.size()).toUtf8();
                     OCC::SyncJournalFileRecord record;
                     if (_setupParams.journal->getFileRecord(fileRelativePath, &record) && record.isValid()) {
-                        if (record._type != ItemTypeVirtualFile) {
-                            record._type = ItemTypeVirtualFile;
-                            _setupParams.journal->setFileRecord(record);
+                        if (record._hydrating) {
+                            // Hydration in progress
+                            stat->type = ItemTypeVirtualFile;
+                        }
+                        else {
+                            stat->type = ItemTypeVirtualFileDownload;
                         }
                     }
 
-                    if (record.hydrating()) {
-                        // Hydration in progress
-                        stat->type = ItemTypeVirtualFile;
-                    }
-                    else {
-                        stat->type = ItemTypeVirtualFileDownload;
-                    }
                     return true;
                 }
                 else if (!(ffd->dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) && (ffd->dwFileAttributes & FILE_ATTRIBUTE_UNPINNED)) {

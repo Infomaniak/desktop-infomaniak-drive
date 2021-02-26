@@ -302,13 +302,12 @@ void GETFileJob::slotReadyRead()
         return;
     }
 
-    if (_isReading) {
+    /*if (_isReading) {
         return;
     }
 
-    _isReading = true;
+    _isReading = true;*/
 
-    QByteArray buffer;
     while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
         if (_bandwidthChoked) {
             qCWarning(lcGetJob) << "Download choked";
@@ -330,8 +329,14 @@ void GETFileJob::slotReadyRead()
             _bandwidthQuota -= toRead;
         }
 
-        buffer.resize((int) bufferSize);
-        qint64 r = reply()->read(const_cast<char *>(buffer.data()), toRead);
+        char *buffer = new char[bufferSize];
+        if (!buffer) {
+            qCWarning(lcGetJob) << "Memory allocation error";
+            reply()->abort();
+            return;
+        }
+
+        qint64 r = reply()->read(buffer, toRead);
         if (r < 0) {
             _errorString = networkReplyErrorString(*reply());
             _errorStatus = SyncFileItem::NormalError;
@@ -340,7 +345,7 @@ void GETFileJob::slotReadyRead()
             return;
         }
 
-        qint64 w = _device->write(buffer.constData(), r);
+        qint64 w = _device->write(buffer, r);
         if (w != r) {
             _errorString = _device->errorString();
             _errorStatus = SyncFileItem::NormalError;
@@ -348,10 +353,11 @@ void GETFileJob::slotReadyRead()
             reply()->abort();
             return;
         }
+        delete[] buffer;
 
         emit writeProgress(_device->size());
 
-        QCoreApplication::processEvents();
+        //QCoreApplication::processEvents();
     }
 
     if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {

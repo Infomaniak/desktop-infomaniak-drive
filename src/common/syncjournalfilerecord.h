@@ -61,9 +61,6 @@ public:
     bool isFile() const { return _type == ItemTypeFile || _type == ItemTypeVirtualFileDehydration; }
     bool isVirtualFile() const { return _type == ItemTypeVirtualFile || _type == ItemTypeVirtualFileDownload; }
 
-    inline void setHydrating(bool value) { _hydrating = value; }
-    inline bool hydrating() { return _hydrating; }
-
     QByteArray _path;
     quint64 _inode = 0;
     qint64 _modtime = 0;
@@ -74,9 +71,7 @@ public:
     RemotePermissions _remotePerm;
     bool _serverHasIgnoredFiles = false;
     QByteArray _checksumHeader;
-
-private:
-    bool _hydrating;
+    bool _hydrating = false;
 };
 
 bool OCSYNC_EXPORT

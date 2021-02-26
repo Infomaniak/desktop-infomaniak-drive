@@ -517,38 +517,57 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
 {
     QStringList files = filesArg.split(QLatin1Char('\x1e')); // Record Separator
 
-    if (files.count()) {
-        for (const auto &filePath : files) {
-            auto data = FileData::get(filePath);
-            if (!data.folder) {
-                qCWarning(lcSocketApi) << "No file data";
-                continue;
-            }
-
-            auto record = data.journalRecord();
-            if (!record.isValid()) {
-                qCWarning(lcSocketApi) << "Invalid journal record";
-                continue;
-            }
-
-            record.setHydrating(true);
-
-            QTemporaryFile *tmpFile = new QTemporaryFile();
-            if (!tmpFile) {
-                qCWarning(lcSocketApi) << "Unable to create temporary file!";
-                continue;
-            }
-            tmpFile->open();
-
-            QMap<QByteArray, QByteArray> headers;
-
-            QPointer<GETFileJob> job = new GETFileJob(data.folder->accountState()->account(),
-                data.serverRelativePath, tmpFile, headers, "", 0, this);
-            job->setFolder(data.folder);
-            connect(job.data(), &GETJob::finishedSignal, this, &SocketApi::slotGetFinished);
-            connect(job.data(), &GETFileJob::writeProgress, this, &SocketApi::slotWriteProgress);
-            job->start();
+    for (const auto &filePath : files) {
+        auto data = FileData::get(filePath);
+        if (!data.folder) {
+            qCWarning(lcSocketApi) << "No file data";
+            continue;
         }
+
+        // Update the pin state on all items
+        data.folder->vfs().setPinState(data.folderRelativePath, PinState::AlwaysLocal);
+
+        // Trigger sync
+        data.folder->schedulePathForLocalDiscovery(data.folderRelativePath);
+        data.folder->scheduleThisFolderSoon();
+    }
+}
+
+void SocketApi::command_MAKE_AVAILABLE_LOCALLY_DIRECT(const QString &filesArg, SocketListener *)
+{
+    QStringList files = filesArg.split(QLatin1Char('\x1e')); // Record Separator
+
+    for (const auto &filePath : files) {
+        auto data = FileData::get(filePath);
+        if (!data.folder) {
+            qCWarning(lcSocketApi) << "No file data";
+            continue;
+        }
+
+        // Set direct hydration in progress
+        qCDebug(lcSocketApi) << "Make available locally direct" << filePath;
+        OCC::SyncJournalFileRecord record;
+        if (data.folder->journalDb()->getFileRecord(data.folderRelativePath, &record) && record.isValid()) {
+            record._hydrating = true;
+            data.folder->journalDb()->setFileRecord(record);
+        }
+
+        // Create a tmp file for download
+        QTemporaryFile *tmpFile = new QTemporaryFile();
+        if (!tmpFile) {
+            qCWarning(lcSocketApi) << "Unable to create temporary file!";
+            continue;
+        }
+        tmpFile->open();
+
+        // Run GETFileJob
+        QMap<QByteArray, QByteArray> headers;
+        QPointer<GETFileJob> job = new GETFileJob(data.folder->accountState()->account(),
+            data.serverRelativePath, tmpFile, headers, "", 0, this);
+        job->setFolder(data.folder);
+        connect(job.data(), &GETJob::finishedSignal, this, &SocketApi::slotGetFinished);
+        connect(job.data(), &GETFileJob::writeProgress, this, &SocketApi::slotWriteProgress);
+        job->start();
     }
 }
 
@@ -602,13 +621,12 @@ void SocketApi::slotGetFinished()
         return;
     }
 
-    auto record = data.journalRecord();
-    if (!record.isValid()) {
-        qCWarning(lcSocketApi) << "Invalid journal record";
-        return;
+    // Set direct hydration ended
+    OCC::SyncJournalFileRecord record;
+    if (data.folder->journalDb()->getFileRecord(data.folderRelativePath, &record) && record.isValid()) {
+        record._hydrating = false;
+        data.folder->journalDb()->setFileRecord(record);
     }
-
-    record.setHydrating(false);
 
     if (job->device()) {
         job->device()->deleteLater();
