@@ -21,6 +21,11 @@
 #include <QBuffer>
 #include <QFile>
 
+#ifdef Q_OS_WIN
+#include <QMutex>
+#include <QWaitCondition>
+#endif
+
 namespace OCC {
 
 class OWNCLOUDSYNC_EXPORT GETJob : public AbstractNetworkJob
@@ -154,8 +159,6 @@ class OWNCLOUDSYNC_EXPORT GETFileJob : public GETJob
     /// Will be set to true once we've seen a 2xx response header
     bool _saveBodyToFile = false;
 
-    bool _isReading = false;
-
 public:
     // DOES NOT take ownership of the device.
     explicit GETFileJob(AccountPtr account, const QString &path, QIODevice *device,
@@ -173,15 +176,10 @@ public:
 
     void newReplyHook(QNetworkReply *reply) override;
 
-    qint64 resumeStart() Q_DECL_OVERRIDE
-    {
-        return _resumeStart;
-    }
-
-    qint64 contentLength() const { return _contentLength; }
-    qint64 expectedContentLength() const { return _expectedContentLength; }
-    void setExpectedContentLength(qint64 size) { _expectedContentLength = size; }
-
+    inline qint64 resumeStart() Q_DECL_OVERRIDE { return _resumeStart; }
+    inline qint64 contentLength() const { return _contentLength; }
+    inline qint64 expectedContentLength() const { return _expectedContentLength; }
+    inline void setExpectedContentLength(qint64 size) { _expectedContentLength = size; }
     inline QIODevice *device() { return _device; }
 
 private slots:

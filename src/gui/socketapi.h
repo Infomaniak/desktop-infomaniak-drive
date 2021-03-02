@@ -21,6 +21,7 @@
 #include "sharedialog.h" // for the ShareDialogStartPage
 #include "common/syncjournalfilerecord.h"
 #include "socketlistener.h"
+#include "propagatedownload.h"
 
 #if defined(Q_OS_MAC)
 #include "socketapisocket_mac.h"
@@ -28,6 +29,19 @@
 #include <QLocalServer>
 typedef QLocalServer SocketApiServer;
 #endif
+
+#ifdef Q_OS_WIN
+#include <deque>
+#include <unordered_map>
+
+#include <QList>
+#include <QMutex>
+#include <QThread>
+#include <QWaitCondition>
+#endif
+
+#define WORKER_GETFILE 0
+#define NB_WORKERS 1
 
 class QUrl;
 class QLocalSocket;
@@ -38,6 +52,60 @@ namespace OCC {
 class SyncFileStatus;
 class Folder;
 
+#ifdef Q_OS_WIN
+struct GetFileJobInfo
+{
+    GetFileJobInfo() = default;
+    GetFileJobInfo(QNetworkReply *reply, Vfs *vfs, QTemporaryFile *tmpFile, qint64 received)
+        : _reply(reply)
+        , _vfs(vfs)
+        , _tmpFile(tmpFile)
+        , _received(received)
+    {}
+
+    QNetworkReply *_reply;
+    Vfs *_vfs;
+    QTemporaryFile *_tmpFile;
+    qint64 _received;
+    bool _toProcess = true;
+    bool _processing = false;
+    bool _toFinish = false;
+};
+
+struct WorkerInfo
+{
+    QMutex _mutex;
+    std::deque<QString> _queue;
+    QWaitCondition _queueWC;
+    bool _stop = false;
+    QWaitCondition _stopWC;
+    int _nbRunningThreads = 0;
+    QList<QThread *> _threadList;
+};
+#endif
+
+// Helper structure for getting information on a file
+// based on its local path - used for nearly all remote
+// actions.
+struct FileData
+{
+    static FileData get(const QString &localFile);
+    SyncFileStatus syncFileStatus() const;
+    SyncJournalFileRecord journalRecord() const;
+    FileData parentFolder() const;
+
+    // Relative path of the file locally, without any vfs suffix
+    QString folderRelativePathNoVfsSuffix() const;
+
+    Folder *folder;
+    // Absolute path of the file locally. (May be a virtual file)
+    QString localPath;
+    // Relative path of the file locally, as in the DB. (May be a virtual file)
+    QString folderRelativePath;
+    // Path of the file on the server (In case of virtual file, it points to the actual file)
+    QString serverRelativePath;
+};
+
 /**
  * @brief The SocketApi class
  * @ingroup gui
@@ -47,8 +115,17 @@ class SocketApi : public QObject
     Q_OBJECT
 
 public:
+#ifdef Q_OS_WIN
+    WorkerInfo _workerInfo[NB_WORKERS];
+
+    std::unordered_map<QString, GetFileJobInfo> _getFileJobMap;
+    QMutex _getFileJobMapMutex;
+#endif
+
     explicit SocketApi(QObject *parent = 0);
     virtual ~SocketApi();
+
+    static QString getJobFilePath(const GETJob *job);
 
 public slots:
     void slotUpdateFolderView(Folder *f);
@@ -66,6 +143,7 @@ private slots:
     void slotReadSocket();
     void slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
                               unsigned int width, uint64_t iNode, const OCC::SocketListener *listener);
+
     void slotWriteProgress(qint64 received);
     void slotGetFinished();
 
@@ -74,28 +152,6 @@ private slots:
     static void openPrivateLink(const QString &link);
 
 private:
-    // Helper structure for getting information on a file
-    // based on its local path - used for nearly all remote
-    // actions.
-    struct FileData
-    {
-        static FileData get(const QString &localFile);
-        SyncFileStatus syncFileStatus() const;
-        SyncJournalFileRecord journalRecord() const;
-        FileData parentFolder() const;
-
-        // Relative path of the file locally, without any vfs suffix
-        QString folderRelativePathNoVfsSuffix() const;
-
-        Folder *folder;
-        // Absolute path of the file locally. (May be a virtual file)
-        QString localPath;
-        // Relative path of the file locally, as in the DB. (May be a virtual file)
-        QString folderRelativePath;
-        // Path of the file on the server (In case of virtual file, it points to the actual file)
-        QString serverRelativePath;
-    };
-
     void broadcastMessage(const QString &msg, bool doWait = false);
 
     // opens share dialog, sends reply
@@ -117,6 +173,9 @@ private:
     Q_INVOKABLE void command_OPEN_PRIVATE_LINK(const QString &localFile, SocketListener *listener);
     Q_INVOKABLE void command_OPEN_PRIVATE_LINK_VERSIONS(const QString &localFile, SocketListener *listener);
     Q_INVOKABLE void command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketListener *listener);
+#ifdef Q_OS_WIN
+    Q_INVOKABLE void command_MAKE_AVAILABLE_LOCALLY_DIRECT(const QString &filesArg, SocketListener *listener);
+#endif
     Q_INVOKABLE void command_MAKE_ONLINE_ONLY(const QString &filesArg, SocketListener *listener);
     Q_INVOKABLE void command_DELETE_ITEM(const QString &localFile, SocketListener *listener);
     Q_INVOKABLE void command_MOVE_ITEM(const QString &localFile, SocketListener *listener);
@@ -148,5 +207,20 @@ private:
     QList<SocketListener> _listeners;
     SocketApiServer _localServer;
 };
+
+class Worker : public QObject
+{
+    Q_OBJECT
+
+public:
+    Worker(SocketApi *socketApi, int type, int num);
+    void start();
+
+private:
+    SocketApi *_socketApi;
+    int _type;
+    int _num;
+};
+
 }
 #endif // SOCKETAPI_H

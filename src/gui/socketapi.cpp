@@ -34,7 +34,6 @@
 #include "guiutility.h"
 #include "getorcreatepubliclinkshare.h"
 #include "thumbnailjob.h"
-#include "propagatedownload.h"
 
 #include <array>
 #include <QBitArray>
@@ -63,6 +62,10 @@
 // The first number should be changed if there is an incompatible change that breaks old clients.
 // The second number should be changed when there are new features.
 #define MIRALL_SOCKET_API_VERSION "1.1"
+
+#ifdef Q_OS_WIN
+const int s_nb_threads[NB_WORKERS] = {5};
+#endif
 
 static inline QString removeTrailingSlash(QString path)
 {
@@ -163,14 +166,71 @@ SocketApi::SocketApi(QObject *parent)
 
     // folder watcher
     connect(FolderMan::instance(), &FolderMan::folderSyncStateChange, this, &SocketApi::slotUpdateFolderView);
+
+#ifdef Q_OS_WIN
+    // Start worker threads
+    for (int i = 0; i < NB_WORKERS; i++) {
+        for (int j = 0; j < s_nb_threads[i]; j++) {
+            QThread *workerThread = new QThread();
+            _workerInfo[i]._threadList.append(workerThread);
+            Worker *worker = new Worker(this, i, j);
+            worker->moveToThread(workerThread);
+            connect(workerThread, &QThread::started, worker, &Worker::start);
+            connect(workerThread, &QThread::finished, worker, &QObject::deleteLater);
+            connect(workerThread, &QThread::finished, workerThread, &QObject::deleteLater);
+            workerThread->start();
+        }
+    }
+#endif
 }
 
 SocketApi::~SocketApi()
 {
+#ifdef Q_OS_WIN
+    // Stop worker threads
+    for (int i = 0; i < NB_WORKERS; i++) {
+        _workerInfo[i]._mutex.lock();
+        _workerInfo[i]._stop = true;
+        _workerInfo[i]._mutex.unlock();
+        _workerInfo[i]._queueWC.wakeAll();
+    }
+
+    for (int i = 0; i < NB_WORKERS; i++) {
+        _workerInfo[i]._mutex.lock();
+        if (_workerInfo[i]._nbRunningThreads > 0) {
+            _workerInfo[i]._stopWC.wait(&_workerInfo[i]._mutex, 0);
+        }
+        _workerInfo[i]._mutex.unlock();
+    }
+
+    for (int i = 0; i < NB_WORKERS; i++) {
+        for (QThread *thread : _workerInfo[i]._threadList) {
+            if (thread) {
+                thread->quit();
+                thread->wait(0);
+            }
+        }
+    }
+#endif
+
     _localServer.close();
     // All remaining sockets will be destroyed with _localServer, their parent
     ASSERT(_listeners.isEmpty() || _listeners.first().socket->parent() == &_localServer);
     _listeners.clear();
+}
+
+QString SocketApi::getJobFilePath(const GETJob *job)
+{
+    if (!job || !job->folder()) {
+        return QString();
+    }
+
+    QString folderPath = job->folder()->path();
+    QString fileRelativePath = job->path().midRef(job->folder()->remotePathTrailingSlash().size()).toUtf8();
+    if (fileRelativePath.startsWith('/')) {
+        fileRelativePath.remove(0, 1);
+    }
+    return QFileInfo(folderPath + fileRelativePath).canonicalFilePath();
 }
 
 void SocketApi::slotNewConnection()
@@ -517,73 +577,82 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
 {
     QStringList files = filesArg.split(QLatin1Char('\x1e')); // Record Separator
 
-    if (files.count()) {
-        for (const auto &filePath : files) {
-            auto data = FileData::get(filePath);
-            if (!data.folder) {
-                qCWarning(lcSocketApi) << "No file data";
-                continue;
-            }
-
-            auto record = data.journalRecord();
-            if (!record.isValid()) {
-                qCWarning(lcSocketApi) << "Invalid journal record";
-                continue;
-            }
-
-            record.setHydrating(true);
-
-            QTemporaryFile *tmpFile = new QTemporaryFile();
-            if (!tmpFile) {
-                qCWarning(lcSocketApi) << "Unable to create temporary file!";
-                continue;
-            }
-            tmpFile->open();
-
-            QMap<QByteArray, QByteArray> headers;
-
-            QPointer<GETFileJob> job = new GETFileJob(data.folder->accountState()->account(),
-                data.serverRelativePath, tmpFile, headers, "", 0, this);
-            job->setFolder(data.folder);
-            connect(job.data(), &GETJob::finishedSignal, this, &SocketApi::slotGetFinished);
-            connect(job.data(), &GETFileJob::writeProgress, this, &SocketApi::slotWriteProgress);
-            job->start();
+    for (const auto &filePath : files) {
+        auto data = FileData::get(filePath);
+        if (!data.folder) {
+            qCWarning(lcSocketApi) << "No file data";
+            continue;
         }
+
+        // Update the pin state on all items
+        data.folder->vfs().setPinState(data.folderRelativePath, PinState::AlwaysLocal);
+
+        // Trigger sync
+        data.folder->schedulePathForLocalDiscovery(data.folderRelativePath);
+        data.folder->scheduleThisFolderSoon();
+    }
+}
+
+#ifdef Q_OS_WIN
+void SocketApi::command_MAKE_AVAILABLE_LOCALLY_DIRECT(const QString &filesArg, SocketListener *)
+{
+    QStringList files = filesArg.split(QLatin1Char('\x1e')); // Record Separator
+
+    for (const auto &filePath : files) {        
+        // Run GETFileJob
+        auto data = FileData::get(filePath);
+        if (!data.folder) {
+            qCWarning(lcSocketApi) << "No file data";
+            continue;
+        }
+
+        QTemporaryFile *tmpFile = new QTemporaryFile();
+        if (!tmpFile) {
+            qCWarning(lcSocketApi) << "Unable to create temporary file!";
+            continue;
+        }
+        tmpFile->open();
+
+        QMap<QByteArray, QByteArray> headers;
+        QPointer<GETFileJob> job = new GETFileJob(data.folder->accountState()->account(),
+            data.serverRelativePath, tmpFile, headers, "", 0, this);
+        job->setFolder(data.folder);
+        connect(job.data(), &GETJob::finishedSignal, this, &SocketApi::slotGetFinished);
+        connect(job.data(), &GETFileJob::writeProgress, this, &SocketApi::slotWriteProgress);
+        job->start();
     }
 }
 
 void SocketApi::slotWriteProgress(qint64 received)
 {
     GETFileJob *job = qobject_cast<GETFileJob *>(sender());
-    if (!job || !job->folder()) {
+    if (!job || !job->reply() || !job->folder() || !job->device()) {
         qCWarning(lcSocketApi) << "Invalid job";
         return;
     }
 
-    // Update VFS fetch status
     QTemporaryFile *tmpFile = static_cast<QTemporaryFile *>(job->device());
-    if (!tmpFile) {
-        qCWarning(lcSocketApi) << "Invalid temp file";
-        job->reply()->abort();
-        return;
-    }
     tmpFile->flush();
 
-    QString folderPath = job->folder()->path();
-    QString fileRelativePath = job->path().midRef(job->folder()->remotePathTrailingSlash().size()).toUtf8();
-    if (fileRelativePath.startsWith('/')) {
-        fileRelativePath.remove(0, 1);
+    QString filePath = getJobFilePath(job);
+
+    // Add/update job info in GETFileJob map
+    _getFileJobMapMutex.lock();
+    if (_getFileJobMap.find(filePath) == _getFileJobMap.end()) {
+        GetFileJobInfo info(job->reply(), &job->folder()->vfs(), tmpFile, received);
+        _getFileJobMap[filePath] = std::move(info);
     }
-    QString filePath = QFileInfo(folderPath + fileRelativePath).canonicalFilePath();
-    bool canceled = false;
-    if (!job->folder()->vfs().updateFetchStatus(tmpFile->fileName(), filePath, received, canceled)) {
-        qCWarning(lcSocketApi) << "Error in updateFetchStatus for file " << filePath;
-        job->reply()->abort();
+    else {
+        _getFileJobMap[filePath]._received = received;
+        _getFileJobMap[filePath]._toProcess = true;
     }
-    else if (canceled) {
-        qCDebug(lcSocketApi) << "Update fetch status canceled for file " << job->path();
-        job->reply()->abort();
-    }
+    _getFileJobMapMutex.unlock();
+
+    // Add file path to worker queue
+    _workerInfo[WORKER_GETFILE]._mutex.lock();
+    _workerInfo[WORKER_GETFILE]._queue.push_front(filePath);
+    _workerInfo[WORKER_GETFILE]._mutex.unlock();
+    _workerInfo[WORKER_GETFILE]._queueWC.wakeOne();
 }
 
 void SocketApi::slotGetFinished()
@@ -594,26 +663,26 @@ void SocketApi::slotGetFinished()
         return;
     }
 
-    QString filePath = QFileInfo(job->folder()->path() + job->path()).canonicalFilePath();
+    QString filePath = getJobFilePath(job);
 
-    auto data = FileData::get(filePath);
-    if (!data.folder) {
-        qCWarning(lcSocketApi) << "No file data";
-        return;
+    // Update job info in GETFileJob map
+    _getFileJobMapMutex.lock();
+    if (_getFileJobMap.find(filePath) == _getFileJobMap.end()) {
+        qCWarning(lcSocketApi) << "Job not found in map";
     }
-
-    auto record = data.journalRecord();
-    if (!record.isValid()) {
-        qCWarning(lcSocketApi) << "Invalid journal record";
-        return;
+    else {
+        _getFileJobMap[filePath]._toProcess = true;
+        _getFileJobMap[filePath]._toFinish = true;
     }
+    _getFileJobMapMutex.unlock();
 
-    record.setHydrating(false);
-
-    if (job->device()) {
-        job->device()->deleteLater();
-    }
+    // Add file path to worker queue
+    _workerInfo[WORKER_GETFILE]._mutex.lock();
+    _workerInfo[WORKER_GETFILE]._queue.push_front(filePath);
+    _workerInfo[WORKER_GETFILE]._mutex.unlock();
+    _workerInfo[WORKER_GETFILE]._queueWC.wakeOne();
 }
+#endif
 
 /* Go over all the files and replace them by a virtual file */
 void SocketApi::command_MAKE_ONLINE_ONLY(const QString &filesArg, SocketListener *)
@@ -808,57 +877,6 @@ void SocketApi::sendSharingContextMenuOptions(const FileData &fileData, SocketLi
     //listener->sendMessage(QLatin1String("MENU_ITEM:EMAIL_PRIVATE_LINK") + flagString + tr("Send private link by email..."));
 }
 
-SocketApi::FileData SocketApi::FileData::get(const QString &localFile)
-{
-    FileData data;
-
-    data.localPath = QDir::cleanPath(localFile);
-    if (data.localPath.endsWith(QLatin1Char('/')))
-        data.localPath.chop(1);
-
-    data.folder = FolderMan::instance()->folderForPath(data.localPath, &data.folderRelativePath);
-    if (!data.folder)
-        return data;
-
-    data.serverRelativePath = QDir(data.folder->remotePath()).filePath(data.folderRelativePath);
-    QString virtualFileExt = QStringLiteral(APPLICATION_DOTVIRTUALFILE_SUFFIX);
-    if (data.serverRelativePath.endsWith(virtualFileExt)) {
-        data.serverRelativePath.chop(virtualFileExt.size());
-    }
-    return data;
-}
-
-QString SocketApi::FileData::folderRelativePathNoVfsSuffix() const
-{
-    auto result = folderRelativePath;
-    QString virtualFileExt = QStringLiteral(APPLICATION_DOTVIRTUALFILE_SUFFIX);
-    if (result.endsWith(virtualFileExt)) {
-        result.chop(virtualFileExt.size());
-    }
-    return result;
-}
-
-SyncFileStatus SocketApi::FileData::syncFileStatus() const
-{
-    if (!folder)
-        return SyncFileStatus::StatusNone;
-    return folder->syncEngine().syncFileStatusTracker().fileStatus(folderRelativePath);
-}
-
-SyncJournalFileRecord SocketApi::FileData::journalRecord() const
-{
-    SyncJournalFileRecord record;
-    if (!folder)
-        return record;
-    folder->journalDb()->getFileRecord(folderRelativePath, &record);
-    return record;
-}
-
-SocketApi::FileData SocketApi::FileData::parentFolder() const
-{
-    return FileData::get(QFileInfo(localPath).dir().path().toUtf8());
-}
-
 void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListener *listener)
 {
     listener->sendMessage(QString("GET_MENU_ITEMS:BEGIN"));
@@ -1023,6 +1041,182 @@ QString SocketApi::buildRegisterPathMessage(const QString &path)
     message.append(QDir::toNativeSeparators(fi.absoluteFilePath()));
     return message;
 }
+
+FileData FileData::get(const QString &localFile)
+{
+    FileData data;
+
+    data.localPath = QDir::cleanPath(localFile);
+    if (data.localPath.endsWith(QLatin1Char('/')))
+        data.localPath.chop(1);
+
+    data.folder = FolderMan::instance()->folderForPath(data.localPath, &data.folderRelativePath);
+    if (!data.folder)
+        return data;
+
+    data.serverRelativePath = QDir(data.folder->remotePath()).filePath(data.folderRelativePath);
+    QString virtualFileExt = QStringLiteral(APPLICATION_DOTVIRTUALFILE_SUFFIX);
+    if (data.serverRelativePath.endsWith(virtualFileExt)) {
+        data.serverRelativePath.chop(virtualFileExt.size());
+    }
+    return data;
+}
+
+QString FileData::folderRelativePathNoVfsSuffix() const
+{
+    auto result = folderRelativePath;
+    QString virtualFileExt = QStringLiteral(APPLICATION_DOTVIRTUALFILE_SUFFIX);
+    if (result.endsWith(virtualFileExt)) {
+        result.chop(virtualFileExt.size());
+    }
+    return result;
+}
+
+SyncFileStatus FileData::syncFileStatus() const
+{
+    if (!folder)
+        return SyncFileStatus::StatusNone;
+    return folder->syncEngine().syncFileStatusTracker().fileStatus(folderRelativePath);
+}
+
+SyncJournalFileRecord FileData::journalRecord() const
+{
+    SyncJournalFileRecord record;
+    if (!folder)
+        return record;
+    folder->journalDb()->getFileRecord(folderRelativePath, &record);
+    return record;
+}
+
+FileData FileData::parentFolder() const
+{
+    return FileData::get(QFileInfo(localPath).dir().path().toUtf8());
+}
+
+#ifdef Q_OS_WIN
+
+Worker::Worker(SocketApi *socketApi, int type, int num)
+    : _socketApi(socketApi)
+    , _type(type)
+    , _num(num)
+{
+}
+
+void Worker::start()
+{
+    qCDebug(lcSocketApi) << "Worker" << _type << _num << "started";
+
+    WorkerInfo &workerInfo = _socketApi->_workerInfo[_type];
+
+    workerInfo._mutex.lock();
+    workerInfo._nbRunningThreads++;
+    workerInfo._mutex.unlock();
+
+    forever {
+        workerInfo._mutex.lock();
+        while (workerInfo._queue.empty() && !workerInfo._stop) {
+            qCDebug(lcSocketApi) << "Worker" << _type << _num << "waiting";
+            workerInfo._queueWC.wait(&workerInfo._mutex);
+        }
+
+        if (workerInfo._stop) {
+            break;
+        }
+
+        QString filePath = workerInfo._queue.back();
+        workerInfo._queue.pop_back();
+        workerInfo._mutex.unlock();
+
+        qCDebug(lcSocketApi) << "Worker" << _type << _num << "working";
+
+        switch (_type) {
+            case WORKER_GETFILE:
+            {
+                _socketApi->_getFileJobMapMutex.lock();
+                if (_socketApi->_getFileJobMap.find(filePath) == _socketApi->_getFileJobMap.end()) {
+                    qCDebug(lcSocketApi) << "Worker" << _type << _num << "job doesn't exist anymore";
+                    _socketApi->_getFileJobMapMutex.unlock();
+                    continue;
+                }
+
+                GetFileJobInfo &info = _socketApi->_getFileJobMap[filePath];
+                if (info._processing) {
+                    qCDebug(lcSocketApi) << "Worker" << _type << _num << "work already in progress";
+                    _socketApi->_getFileJobMapMutex.unlock();
+                    continue;
+                }
+
+                if (info._toProcess){
+                    info._processing = true;
+                    Vfs *vfs = info._vfs;
+                    QTemporaryFile *tmpFile = info._tmpFile;
+                    if (!vfs || !tmpFile) {
+                        qCWarning(lcSocketApi) << "Corrupted job";
+                        _socketApi->_getFileJobMap.erase(filePath);
+                        continue;
+                    }
+
+                    bool processAgain;
+                    do {
+                        processAgain = false;
+                        info._toProcess = false;
+                        qint64 received = info._received;
+                        bool toFinish = info._toFinish;
+
+                        _socketApi->_getFileJobMapMutex.unlock();
+
+                        // Update fetch status
+                        bool canceled = false;
+                        bool abort = false;
+                        if (!vfs->updateFetchStatus(tmpFile->fileName(), filePath, received, canceled)) {
+                            qCWarning(lcSocketApi) << "Error in updateFetchStatus for file " << filePath;
+                            abort = true;
+                        }
+                        else if (canceled) {
+                            qCDebug(lcSocketApi) << "Update fetch status canceled for file " << filePath;
+                            abort = true;
+                        }
+
+                        _socketApi->_getFileJobMapMutex.lock();
+                        if (_socketApi->_getFileJobMap.find(filePath) != _socketApi->_getFileJobMap.end()) {
+                            info = _socketApi->_getFileJobMap[filePath];
+                            processAgain = !toFinish && info._toProcess;
+                            if (!processAgain) {
+                                info._processing = false;
+                            }
+
+                            if (abort && !info._toFinish) {
+                                if (info._reply) {
+                                    info._reply->abort();
+                                }
+                            }
+
+                            if (abort || toFinish) {
+                                _socketApi->_getFileJobMap.erase(filePath);
+                            }
+                        }
+
+                        if (abort || toFinish) {
+                            tmpFile->deleteLater();
+                        }
+                    } while (processAgain);
+                }
+                _socketApi->_getFileJobMapMutex.unlock();
+                break;
+            }
+        }
+    }
+
+    int count = --workerInfo._nbRunningThreads;
+    workerInfo._mutex.unlock();
+    if (count == 0) {
+        workerInfo._stopWC.wakeAll();
+    }
+
+    qCDebug(lcSocketApi) << "Worker" << _type << _num << "ended";
+}
+
+#endif
 
 } // namespace OCC
 

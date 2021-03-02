@@ -1557,7 +1557,7 @@ void ProcessDirectoryJob::setupDbPinStateActions(SyncJournalFileRecord &record)
     // AlwaysLocal dehydrated files want to be hydrated
     if (record._type == ItemTypeVirtualFile && *pin == PinState::AlwaysLocal) {
 #ifdef Q_OS_WIN
-        if (record.hydrating()) {
+        if (record._hydrating) {
             // Hydration in progress
             record._type = ItemTypeVirtualFile;
         }
