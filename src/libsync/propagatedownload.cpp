@@ -302,12 +302,6 @@ void GETFileJob::slotReadyRead()
         return;
     }
 
-    /*if (_isReading) {
-        return;
-    }
-
-    _isReading = true;*/
-
     while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
         if (_bandwidthChoked) {
             qCWarning(lcGetJob) << "Download choked";
@@ -356,8 +350,6 @@ void GETFileJob::slotReadyRead()
         delete[] buffer;
 
         emit writeProgress(_device->size());
-
-        //QCoreApplication::processEvents();
     }
 
     if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {
@@ -375,8 +367,6 @@ void GETFileJob::slotReadyRead()
         _hasEmittedFinishedSignal = true;
         deleteLater();
     }
-
-    _isReading = false;
 }
 
 void GETJob::onTimedOut()

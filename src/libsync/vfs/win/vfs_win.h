@@ -22,18 +22,43 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "common/vfs.h"
 #include "common/plugin.h"
 
+#include <deque>
+
 #include <windows.h>
 
+#include <QList>
+#include <QMutex>
 #include <QObject>
 #include <QScopedPointer>
+#include <QThread>
+#include <QWaitCondition>
+
+#define WORKER_HYDRATION 0
+#define WORKER_DEHYDRATION 1
+#define NB_WORKERS 2
 
 namespace KDC {
+
+class Worker;
+
+struct WorkerInfo
+{
+    QMutex _mutex;
+    std::deque<QString> _queue;
+    QWaitCondition _queueWC;
+    bool _stop = false;
+    QWaitCondition _stopWC;
+    int _nbRunningThreads = 0;
+    QList<QThread *> _threadList;
+};
 
 class VfsWin : public OCC::Vfs
 {
     Q_OBJECT
 
 public:
+    WorkerInfo _workerInfo[NB_WORKERS];
+
     explicit VfsWin(QObject *parent = nullptr);
     ~VfsWin();
 
@@ -61,6 +86,9 @@ public:
     OCC::Optional<OCC::PinState> pinState(const QString &relativePath) override;
     AvailabilityResult availability(const QString &fileRelativePath) override;
 
+    void dehydrate(const QString &path);
+    void hydrate(const QString &path);
+
 public slots:
     void fileStatusChanged(const QString &path, OCC::SyncFileStatus status) override;
 
@@ -68,13 +96,26 @@ protected:
     void startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSID) override;
 
 private:
-    void dehydrate(const QString &path);
-    void hydrate(const QString &path);
     void cancelHydrate(const QString &path);
     void exclude(const QString &path);
     DWORD getPlaceholderAttributes(const QString &path);
     void setPlaceholderStatus(const QString &path, bool directory, bool inSync);
+
     void checkAndFixMetadata(const QString &path);
+};
+
+class Worker : public QObject
+{
+    Q_OBJECT
+
+public:
+    Worker(VfsWin *vfs, int type, int num);
+    void start();
+
+private:
+    VfsWin *_vfs;
+    int _type;
+    int _num;
 };
 
 class WinVfsPluginFactory : public QObject, public OCC::DefaultPluginFactory<VfsWin>
