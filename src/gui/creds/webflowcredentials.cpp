@@ -413,14 +413,18 @@ void WebFlowCredentials::slotAuthentication(QNetworkReply *reply, QAuthenticator
 }
 
 void WebFlowCredentials::slotFinished(QNetworkReply *reply) {
+    static QString s_pwd = QString();
     qCInfo(lcWebFlowCredentials()) << "request finished";
 
     if (reply->error() == QNetworkReply::NoError) {
         _credentialsValid = true;
 
         /// Used later for remote wipe
-        _account->setAppPassword(_password);
-    }
+        if (s_pwd != _password) {
+            s_pwd = _password;
+            _account->setAppPassword(_password);
+        }
+     }
 }
 
 void WebFlowCredentials::fetchFromKeychainHelper() {
