@@ -145,6 +145,14 @@ void VfsWin::dehydrate(const QString &path)
     }
 
     checkAndFixMetadata(path);
+
+    QString relativePath = path.midRef(_setupParams.filesystemPath.size()).toUtf8();
+    OCC::SyncJournalFileRecord record;
+    if (_setupParams.journal->getFileRecord(relativePath, &record) && record.isValid()) {
+        // Unset hydrating indicator
+        record._hydrating = false;
+        _setupParams.journal->setFileRecord(record);
+    }
 }
 
 void VfsWin::hydrate(const QString &path)

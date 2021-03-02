@@ -144,8 +144,10 @@ private slots:
     void slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
                               unsigned int width, uint64_t iNode, const OCC::SocketListener *listener);
 
+#ifdef Q_OS_WIN
     void slotWriteProgress(qint64 received);
     void slotGetFinished();
+#endif
 
     static void copyUrlToClipboard(const QString &link);
     static void emailPrivateLink(const QString &link);
