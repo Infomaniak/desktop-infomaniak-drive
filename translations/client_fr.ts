@@ -3285,10 +3285,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
         <translation>Synchronisation en pause.</translation>
     </message>
     <message>
-        <source>No folder to synchronize.</source>
-        <translation>Aucun fichier à synchroniser.</translation>
-    </message>
-    <message>
         <source>Waiting for synchronization...</source>
         <translation>Attente de la synchronisation...</translation>
     </message>
@@ -3325,6 +3321,12 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
 %3 left...</source>
         <translation>Sync. en cours (%1 sur %2)
 %3 restantes...</translation>
+    </message>
+    <message>
+        <source>No folder to synchronize
+You can add one from the kDrive settings.</source>
+        <translation>Aucun dossier à synchroniser.
+Vous pouvez en ajouter un depuis la configuration du kDrive.</translation>
     </message>
 </context>
 </TS>

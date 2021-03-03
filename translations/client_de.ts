@@ -3282,10 +3282,6 @@ for additional privileges during the process.</source>
         <translation>Synchronisierung pausiert.</translation>
     </message>
     <message>
-        <source>No folder to synchronize.</source>
-        <translation>Kein Ordner zum Synchronisieren.</translation>
-    </message>
-    <message>
         <source>Waiting for synchronization...</source>
         <translation>Synchronisierung ausstehend...</translation>
     </message>
@@ -3322,6 +3318,12 @@ for additional privileges during the process.</source>
 %3 left...</source>
         <translation>Sync. läuft (%1 auf %2)
 %3 übrig...</translation>
+    </message>
+    <message>
+        <source>No folder to synchronize
+You can add one from the kDrive settings.</source>
+        <translation>Kein Ordner zum Synchronisieren.
+Sie können eine aus den kDrive-Einstellungen hinzufügen.</translation>
     </message>
 </context>
 </TS>
