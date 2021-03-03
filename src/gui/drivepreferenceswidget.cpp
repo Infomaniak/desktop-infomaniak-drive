@@ -170,7 +170,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
         smartSync1HBox->setSpacing(0);
         smartSyncBox->addLayout(smartSync1HBox);
 
-        QLabel *smartSyncLabel = new QLabel(tr("Activate Lite Sync"), this);
+        QLabel *smartSyncLabel = new QLabel(tr("Activate Lite Sync (Beta)"), this);
         smartSync1HBox->addWidget(smartSyncLabel);
         smartSync1HBox->addStretch();
 

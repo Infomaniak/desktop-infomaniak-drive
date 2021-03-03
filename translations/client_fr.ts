@@ -225,10 +225,6 @@
 <context>
     <name>KDC::AddDriveSmartSyncWidget</name>
     <message>
-        <source>Would you like to activate Lite Sync?</source>
-        <translation>Voulez vous activer la Lite Sync ?</translation>
-    </message>
-    <message>
         <source>Conserve your computer space</source>
         <translation>Economiser l&apos;espace de votre ordinateur</translation>
     </message>
@@ -251,6 +247,10 @@
     <message>
         <source>Unable to open link %1.</source>
         <translation>Impossible d’ouvrir le lien %1.</translation>
+    </message>
+    <message>
+        <source>Would you like to activate Lite Sync (Beta) ?</source>
+        <translation>Voulez vous activer la Lite Sync (Beta)?</translation>
     </message>
 </context>
 <context>
@@ -543,10 +543,6 @@
         <translation>CONFIRMER</translation>
     </message>
     <message>
-        <source>Activate Lite Sync</source>
-        <translation>Activer la Lite Sync</translation>
-    </message>
-    <message>
         <source>Do you really want to turn on Lite Sync?</source>
         <translation>Voulez-vous vraiment activer la Lite Sync?</translation>
     </message>
@@ -577,6 +573,10 @@
     <message>
         <source>Unable to open link %1.</source>
         <translation>Impossible d’ouvrir le lien %1.</translation>
+    </message>
+    <message>
+        <source>Activate Lite Sync (Beta)</source>
+        <translation>Activer la Lite Sync (Beta)</translation>
     </message>
 </context>
 <context>
@@ -1337,17 +1337,6 @@
     </message>
 </context>
 <context>
-    <name>OCC::ActivityWidget</name>
-    <message>
-        <source>Form</source>
-        <translation>Form</translation>
-    </message>
-    <message>
-        <source>TextLabel</source>
-        <translation>TextLabel</translation>
-    </message>
-</context>
-<context>
     <name>OCC::AddCertificateDialog</name>
     <message>
         <source>SSL client certificate authentication</source>
@@ -1843,43 +1832,6 @@ Si vous décidez de supprimer ces fichiers, ils vous seront inaccessibles, sauf 
     <message>
         <source>Settings</source>
         <translation>Paramètres</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::LogBrowser</name>
-    <message>
-        <source>Log Output</source>
-        <translation>Consigner la sortie dans des fichiers de log</translation>
-    </message>
-    <message>
-        <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
-Since log files can get large, the client will start a new one for each sync run and compress older ones. It is also recommended to enable deleting log files after a couple of hours to avoid consuming too much disk space.
-If enabled, logs will be written to %1</source>
-        <translation>Le client peut enregistrer les journaux de diagnostic dans un dossier temporaire. Ces journaux sont très utiles afin de diagnostiquer les problèmes.
-Puisque les fichiers journaux peuvent devenir très lourd, le client en enregistrera un nouveau pour chaque synchronisation et compressera les anciens. Il est aussi recommandé d’activer la suppression des fichiers journaux après quelques heures afin d’éviter de consommer trop d’espace disque.
-Si cette fonction est activée, les journaux seront enregistrés dans %1</translation>
-    </message>
-    <message>
-        <source>Delete logs older than %1 hours</source>
-        <translation>Supprimer les journaux plus anciens que %1 heures</translation>
-    </message>
-    <message>
-        <source>These settings persist across client restarts.
-Note that using any logging command line options will override the settings.</source>
-        <translation>Ces paramètres sont conservés malgré les redémarrages du client.
-Veuillez noter qu’utiliser les options de journalisation en ligne de commande est prioritaire sur ces paramètres.</translation>
-    </message>
-    <message>
-        <source>Open folder</source>
-        <translation>Ouvrir le dossier local</translation>
-    </message>
-    <message>
-        <source>Enable logging to temporary folder</source>
-        <translation>Activer la journalisation dans un dossier temporaire</translation>
-    </message>
-    <message>
-        <source>Minimum log level: </source>
-        <translation>Niveau minimum de trace: </translation>
     </message>
 </context>
 <context>
@@ -2462,13 +2414,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
     <message>
         <source>TextLabel</source>
         <translation>TextLabel</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ServerNotificationHandler</name>
-    <message>
-        <source>Dismiss</source>
-        <translation>Ignorer</translation>
     </message>
 </context>
 <context>
@@ -3079,26 +3024,6 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1 : %2</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>Info</translation>
-    </message>
-    <message>
-        <source>Debug</source>
-        <translation>Debug</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Warning</translation>
-    </message>
-    <message>
-        <source>Critical</source>
-        <translation>Critical</translation>
-    </message>
-    <message>
-        <source>Fatal</source>
-        <translation>Fatal</translation>
     </message>
 </context>
 <context>

@@ -113,7 +113,7 @@ void AddDriveSmartSyncWidget::initUI()
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
     titleLabel->setContentsMargins(0, 0, 0, 0);
-    titleLabel->setText(tr("Would you like to activate Lite Sync?"));
+    titleLabel->setText(tr("Would you like to activate Lite Sync (Beta) ?"));
     titleLabel->setWordWrap(true);
     mainLayout->addWidget(titleLabel);
     mainLayout->addSpacing(titleBoxVMargin);

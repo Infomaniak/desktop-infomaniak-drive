@@ -225,10 +225,6 @@
 <context>
     <name>KDC::AddDriveSmartSyncWidget</name>
     <message>
-        <source>Would you like to activate Lite Sync?</source>
-        <translation>Möchten Sie Lite Sync aktivieren?</translation>
-    </message>
-    <message>
         <source>Conserve your computer space</source>
         <translation>Bewahren Sie Ihren Rechnerspeicherplatz</translation>
     </message>
@@ -251,6 +247,10 @@
     <message>
         <source>Unable to open link %1.</source>
         <translation>Link %1 kann nicht geöffnet werden.</translation>
+    </message>
+    <message>
+        <source>Would you like to activate Lite Sync (Beta) ?</source>
+        <translation>Möchten Sie Lite Sync aktivieren (Beta)?</translation>
     </message>
 </context>
 <context>
@@ -543,10 +543,6 @@
         <translation>BESTÄTIGEN</translation>
     </message>
     <message>
-        <source>Activate Lite Sync</source>
-        <translation>Lite Sync aktivieren</translation>
-    </message>
-    <message>
         <source>Do you really want to turn on Lite Sync?</source>
         <translation>Wollen Sie Lite Sync wirklich einschalten?</translation>
     </message>
@@ -577,6 +573,10 @@
     <message>
         <source>Unable to open link %1.</source>
         <translation>Link %1 kann nicht geöffnet werden.</translation>
+    </message>
+    <message>
+        <source>Activate Lite Sync (Beta)</source>
+        <translation>Lite Sync aktivieren (Beta)</translation>
     </message>
 </context>
 <context>
@@ -1337,17 +1337,6 @@
     </message>
 </context>
 <context>
-    <name>OCC::ActivityWidget</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>TextLabel</source>
-        <translation>TextLabel</translation>
-    </message>
-</context>
-<context>
     <name>OCC::AddCertificateDialog</name>
     <message>
         <source>SSL client certificate authentication</source>
@@ -1842,43 +1831,6 @@ Wenn Sie Ihre Dateien löschen wollen, sind sie für Sie nicht mehr verfügbar, 
     <message>
         <source>Settings</source>
         <translation>Einstellungen</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::LogBrowser</name>
-    <message>
-        <source>Log Output</source>
-        <translation>Log-Datei</translation>
-    </message>
-    <message>
-        <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
-Since log files can get large, the client will start a new one for each sync run and compress older ones. It is also recommended to enable deleting log files after a couple of hours to avoid consuming too much disk space.
-If enabled, logs will be written to %1</source>
-        <translation>Der Client kann Debug-Logs in einen temporären Ordner schreiben. Diese Logs sind sehr hilfreich bei der Fehlersuche.
-Da Log-Dateien gross werden können, legt der Client für jede Synchronisierungsreihe eine neue Datei an und komprimiert alte Dateien. Es wird ausserdem empfohlen, das Löschen von Log-Dateien nach einigen Stunden zu aktivieren. Dies verhindert unnötigen Verbrauch von Festplattenplatz.
-Logs werden nach %1 geschrieben, wenn aktiviert</translation>
-    </message>
-    <message>
-        <source>Enable logging to temporary folder</source>
-        <translation>Logging in temporärem Ordner aktivieren</translation>
-    </message>
-    <message>
-        <source>Delete logs older than %1 hours</source>
-        <translation>Logs löschen, die älter sind als %1 Stunden</translation>
-    </message>
-    <message>
-        <source>These settings persist across client restarts.
-Note that using any logging command line options will override the settings.</source>
-        <translation>Diese Einstellungen bleiben nach einem Neustart des Clients erhalten.
-Beachten Sie, dass Logging-Kommandozeilenoptionen diese Einstellungen überschreiben.</translation>
-    </message>
-    <message>
-        <source>Open folder</source>
-        <translation>Ordner öffnen</translation>
-    </message>
-    <message>
-        <source>Minimum log level: </source>
-        <translation>Minimaler Log-Level:</translation>
     </message>
 </context>
 <context>
@@ -2460,13 +2412,6 @@ for additional privileges during the process.</source>
     <message>
         <source>TextLabel</source>
         <translation>TextLabel</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ServerNotificationHandler</name>
-    <message>
-        <source>Dismiss</source>
-        <translation>Ausblenden</translation>
     </message>
 </context>
 <context>
@@ -3076,26 +3021,6 @@ for additional privileges during the process.</source>
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>Info</translation>
-    </message>
-    <message>
-        <source>Debug</source>
-        <translation>Debuggen</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Warnung</translation>
-    </message>
-    <message>
-        <source>Critical</source>
-        <translation>Kritisch</translation>
-    </message>
-    <message>
-        <source>Fatal</source>
-        <translation>Schwer</translation>
     </message>
 </context>
 <context>
