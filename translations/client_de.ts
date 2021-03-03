@@ -3323,7 +3323,7 @@ for additional privileges during the process.</source>
         <source>No folder to synchronize
 You can add one from the kDrive settings.</source>
         <translation>Kein Ordner zum Synchronisieren.
-Sie können eine aus den kDrive-Einstellungen hinzufügen.</translation>
+Fügen Sie eine aus der kDrive-Konfiguration hinzu.</translation>
     </message>
 </context>
 </TS>

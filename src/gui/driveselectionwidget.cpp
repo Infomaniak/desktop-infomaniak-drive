@@ -123,6 +123,10 @@ void DriveSelectionWidget::selectDrive(QString id)
         setDriveIcon(_driveMap[id]._color);
         _currentDriveId = id;
         emit driveSelected(id);
+
+        if (_driveMap[id]._folderMap.size() == 0) {
+
+        }
     }
 }
 

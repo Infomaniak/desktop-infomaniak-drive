@@ -3321,7 +3321,7 @@ queda %3...</translation>
         <source>No folder to synchronize
 You can add one from the kDrive settings.</source>
         <translation>Ninguna carpeta para sincronizar.
-Puede agregar uno desde la configuración de kDrive.</translation>
+Agregue uno de la configuración de kDrive.</translation>
     </message>
 </context>
 </TS>

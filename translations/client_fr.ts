@@ -3326,7 +3326,7 @@ L&apos;assistant de mise à jour peut vous demandez des autorisations supplémen
         <source>No folder to synchronize
 You can add one from the kDrive settings.</source>
         <translation>Aucun dossier à synchroniser.
-Vous pouvez en ajouter un depuis la configuration du kDrive.</translation>
+Ajoutez-en un depuis la configuration du kDrive.</translation>
     </message>
 </context>
 </TS>
