@@ -524,7 +524,7 @@
     </message>
     <message>
         <source>REMOVE FOLDER SYNC CONNECTION</source>
-        <translation>SUPPRIMER LA SYNCHRONISATION DU DOSSIER</translation>
+        <translation>SUPPRIMER LA SYNC. DU DOSSIER</translation>
     </message>
     <message>
         <source>An error occurred while loading the list of sub folders.</source>

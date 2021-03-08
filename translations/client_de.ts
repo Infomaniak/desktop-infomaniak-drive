@@ -524,7 +524,7 @@
     </message>
     <message>
         <source>REMOVE FOLDER SYNC CONNECTION</source>
-        <translation>VERBINDUNG FÜR ORDNERSYNCHRONISIERUNG ENTFERNEN</translation>
+        <translation>VERBINDUNG FÜR ORDNERSYNC. ENTFERNEN</translation>
     </message>
     <message>
         <source>An error occurred while loading the list of sub folders.</source>

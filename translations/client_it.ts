@@ -524,7 +524,7 @@
     </message>
     <message>
         <source>REMOVE FOLDER SYNC CONNECTION</source>
-        <translation>RIMUOVI CONNESSIONE DI SINCRONIZZAZIONE CARTELLE</translation>
+        <translation>RIMUOVI CONNESSIONE DI SINC. CARTELLE</translation>
     </message>
     <message>
         <source>An error occurred while loading the list of sub folders.</source>
