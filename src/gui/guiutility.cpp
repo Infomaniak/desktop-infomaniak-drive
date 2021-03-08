@@ -348,12 +348,12 @@ QString Utility::getFolderStatusText(bool paused, bool unresolvedConflicts, Sync
     else {
         switch (status) {
         case OCC::SyncResult::Undefined:
-            text = QCoreApplication::translate("utility", "No folder to synchronize.");
+            text = QCoreApplication::translate("utility", "No folder to synchronize\nYou can add one from the kDrive settings.");
             break;
         case OCC::SyncResult::NotYetStarted:
         case OCC::SyncResult::SyncRunning:
             if (totalFiles > 0) {
-                text = QCoreApplication::translate("utility", "Synchronization in progress (%1 on %2)\n%3 left...")
+                text = QCoreApplication::translate("utility", "Sync. in progress (%1 on %2)\n%3 left...")
                         .arg(currentFile).arg(totalFiles).arg(OCC::Utility::durationToDescriptiveString1(estimatedRemainingTime));
             }
             else if (status == OCC::SyncResult::NotYetStarted) {

@@ -34,7 +34,6 @@ class Folder;
 class SettingsDialog;
 class ShareDialog;
 class Application;
-class LogBrowser;
 class AccountState;
 
 enum class ShareDialogStartPage {
@@ -52,44 +51,19 @@ class OwnCloudGui : public QObject
 public:
     explicit OwnCloudGui(Application *parent = 0);
 
-    bool checkAccountExists(bool openSettings);
-
-    static void raiseDialog(QWidget *raiseWidget);
-    static QSize settingsDialogSize() { return QSize(800, 500); }
-    void setupOverlayIcons();
     void hideAndShowTray();
     void showSynthesisDialog();
     int driveErrorCount(const QString &accountId) const;
 
-signals:
-    void setupProxy();
-
 public slots:
-    void setupSynthesisPopover();
-    void setupParametersDialog();
-    void updatePopover();
-    void updatePopoverNeeded();
-    void onRefreshAccountList();
     void slotComputeOverallSyncStatus();
     void slotShowTrayMessage(const QString &title, const QString &msg);
-    void slotShowOptionalTrayMessage(const QString &title, const QString &msg);
-    void slotFolderOpenAction(const QString &alias);
-    void slotUpdateProgress(const QString &folder, const ProgressInfo &progress);
-    void slotItemCompleted(const QString &folder, const SyncFileItemPtr &item);
     void slotShowGuiMessage(const QString &title, const QString &message);
-    void slotFoldersChanged();
     void slotShowParametersDialog(const QString &accountId = QString(), bool errorPage = false);
     void slotShutdown();
-    void slotSyncStateChange(Folder *);
-    void slotTrayClicked(QSystemTrayIcon::ActivationReason reason);
-    void slotToggleLogBrowser();
-    void slotOpenWebview();
     void slotOpenParametersDialog(const QString &accountId = QString());
-    void slotHelp();
-    void slotOpenPath(const QString &path);
     void slotAccountStateChanged();
     void slotTrayMessageIfServerUnsupported(Account *account);
-    void slotShowErrors();
 
     /**
      * Open a share dialog for a file or folder.
@@ -99,27 +73,24 @@ public slots:
      * to the folder).
      */
     void slotShowShareDialog(const QString &sharePath, const QString &localPath, ShareDialogStartPage startPage);
-    void slotShowShareDialogPublicLinks(const QString &sharePath, const QString &localPath);
-
-    void slotRemoveDestroyedShareDialogs();
 
 private slots:
-    void slotUnpauseAllFolders();
-    void slotPauseAllFolders();
+    void slotUpdateSystray();
+    void onRefreshAccountList();
+    void slotShowOptionalTrayMessage(const QString &title, const QString &msg);
+    void slotSyncStateChange(Folder *);
+    void slotTrayClicked(QSystemTrayIcon::ActivationReason reason);
+    void slotShowShareDialogPublicLinks(const QString &sharePath, const QString &localPath);
+    void slotRemoveDestroyedShareDialogs();
     void slotNewAccountWizard();
     void slotDisableNotifications(KDC::SynthesisPopover::NotificationsDisabled type, QDateTime value);
     void slotApplyStyle();
     void slotSetStyle(bool darkTheme);
 
 private:
-    void setPauseOnAllFoldersHelper(bool pause);
-
-    QPointer<Systray> _tray;
-    QPointer<LogBrowser> _logBrowser;
+    QScopedPointer<Systray> _tray;
     QScopedPointer<KDC::SynthesisPopover> _synthesisPopover;
-    QPointer<KDC::ParametersDialog> _parametersDialog;
-    QMenu *_recentActionsMenu;
-    QVector<QMenu *> _accountMenus;
+    QScopedPointer<KDC::ParametersDialog> _parametersDialog;
     bool _workaroundShowAndHideTray = false;
     bool _workaroundNoAboutToShowUpdate = false;
     bool _workaroundFakeDoubleClick = false;
@@ -128,24 +99,12 @@ private:
     QMap<QString, QPointer<ShareDialog>> _shareDialogs;
     QDateTime _notificationEnableDate;
     bool _addDriveWizardRunning;
-
-    QAction *_actionLogin;
-    QAction *_actionLogout;
-    QAction *_actionNewAccountWizard;
-    QAction *_actionSettings;
-    QAction *_actionShowErrors;
-    QAction *_actionStatus;
-    QAction *_actionEstimate;
-    QAction *_actionRecent;
-    QAction *_actionHelp;
-    QAction *_actionAbout;
-    QAction *_actionQuit;
-    QAction *_actionCrash;
-    QAction *_actionCrashEnforce;
-    QAction *_actionCrashFatal;
-
-    QList<QAction *> _recentItemsActions;
     Application *_app;
+
+    static void raiseDialog(QWidget *raiseWidget);
+    void setupSynthesisPopover();
+    void setupParametersDialog();
+    void updateSystrayNeeded();
 };
 
 } // namespace OCC

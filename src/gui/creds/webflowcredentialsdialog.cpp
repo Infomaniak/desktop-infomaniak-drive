@@ -47,6 +47,13 @@ WebFlowCredentialsDialog::WebFlowCredentialsDialog(Account *account, QWidget *pa
     connect(this, &CustomDialog::exit, this, &WebFlowCredentialsDialog::onExit);
 }
 
+WebFlowCredentialsDialog::~WebFlowCredentialsDialog()
+{
+    if (_webView) {
+        delete _webView;
+    }
+}
+
 void WebFlowCredentialsDialog::closeEvent(QCloseEvent* e) {
     Q_UNUSED(e)
 

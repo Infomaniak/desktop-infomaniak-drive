@@ -42,3 +42,5 @@ Var UAC_ERROR_LOGON_SERVICE
 Var INIT_UNINSTALLER_RUNNING
 Var SectionGroup_Shortcuts
 Var InstallRedistributables_MESSAGEBOX_TEXT
+Var InstallMsiexec_MESSAGEBOX_TEXT
+

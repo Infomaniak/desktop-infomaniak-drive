@@ -1,6 +1,6 @@
 /*
 Infomaniak Drive
-Copyright (C) 2020 christophe.larchier@infomaniak.com
+Copyright (C) 2021 christophe.larchier@infomaniak.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -113,7 +113,7 @@ void AddDriveSmartSyncWidget::initUI()
     QLabel *titleLabel = new QLabel(this);
     titleLabel->setObjectName("titleLabel");
     titleLabel->setContentsMargins(0, 0, 0, 0);
-    titleLabel->setText(tr("Would you like to activate Lite Sync?"));
+    titleLabel->setText(tr("Would you like to activate Lite Sync (Beta) ?"));
     titleLabel->setWordWrap(true);
     mainLayout->addWidget(titleLabel);
     mainLayout->addSpacing(titleBoxVMargin);

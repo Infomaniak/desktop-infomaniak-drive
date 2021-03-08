@@ -235,6 +235,13 @@ void FolderMan::setupFoldersHelper(QSettings &settings, AccountStatePtr account,
         FolderDefinition folderDefinition;
         settings.beginGroup(folderAlias);
         if (FolderDefinition::load(settings, folderAlias, &folderDefinition)) {
+            QFileInfo dbFileInfo(folderDefinition.absoluteJournalPath());
+            if (!dbFileInfo.exists()) {
+                qCInfo(lcFolderMan) << "Folder" << folderAlias << "db doesn't exist";
+                settings.remove("");
+                continue;
+            }
+
             auto defaultJournalPath = folderDefinition.defaultJournalPath(account->account());
 
             // Migration: Old settings don't have journalPath

@@ -1,6 +1,6 @@
 /*
 Infomaniak Drive Windows Explorer Extension DLL
-Copyright (C) 2020 christophe.larchier@infomaniak.com
+Copyright (C) 2021 christophe.larchier@infomaniak.com
 */
 
 #pragma once
@@ -52,8 +52,6 @@ extern "C" {
         bool inSync);
 
     DLL_EXP int __cdecl vfsDehydratePlaceHolder(
-        const wchar_t *driveId,
-        const wchar_t *folderId,
         const wchar_t *path);
 
     DLL_EXP int __cdecl vfsHydratePlaceHolder(
@@ -76,7 +74,9 @@ extern "C" {
         const wchar_t *folderId,
         const wchar_t *filePath,
         const wchar_t *fromFilePath,
-        LONGLONG completed);
+        LONGLONG completed,
+        bool *canceled,
+        bool *finished);
 
     DLL_EXP int __cdecl vfsCancelFetch(
         const wchar_t *driveId,

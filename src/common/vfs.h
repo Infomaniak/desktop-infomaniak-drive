@@ -189,9 +189,14 @@ public:
      * for example.
      */
     virtual bool convertToPlaceholder(
-        const QString &filename,
-        const SyncFileItem &item,
-        const QString &replacesFile = QString()) = 0;
+        const QString &filePath,
+        const SyncFileItem &item) = 0;
+
+    virtual bool updateFetchStatus(
+        const QString &tmpFilePath,
+        const QString &filePath,
+        qint64 received,
+        bool &canceled) = 0;
 
     /// Determine whether the file at the given absolute path is a dehydrated placeholder.
     virtual bool isDehydratedPlaceholder(const QString &fileRelativePath) = 0;
@@ -294,7 +299,8 @@ public:
     bool updateMetadata(const QString &, time_t, qint64, const QByteArray &, QString *) override { return true; }
     void createPlaceholder(const SyncFileItem &) override {}
     void dehydratePlaceholder(const SyncFileItem &) override {}
-    bool convertToPlaceholder(const QString &, const SyncFileItem &, const QString &) override { return true; }
+    bool convertToPlaceholder(const QString &, const SyncFileItem &) override { return true; }
+    bool updateFetchStatus(const QString &, const QString &, qint64, bool &) override { return true; }
 
     bool needsMetadataUpdate(const SyncFileItem &) override { return false; }
     bool isDehydratedPlaceholder(const QString &) override { return false; }

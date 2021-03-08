@@ -16,9 +16,15 @@
 #include "owncloudpropagator.h"
 #include "networkjobs.h"
 #include "propagatecommonzsync.h"
+#include "gui/folder.h"
 
 #include <QBuffer>
 #include <QFile>
+
+#ifdef Q_OS_WIN
+#include <QMutex>
+#include <QWaitCondition>
+#endif
 
 namespace OCC {
 
@@ -34,6 +40,8 @@ protected:
     bool _bandwidthChoked = false; // if download is paused (won't read on readyRead())
     qint64 _bandwidthQuota = 0;
     QPointer<BandwidthManager> _bandwidthManager = nullptr;
+
+    Folder *_folder;
 
 public:
     GETJob(AccountPtr account, const QString &path, QObject *parent = 0)
@@ -63,6 +71,9 @@ public:
     void setBandwidthLimited(bool b);
     void giveBandwidthQuota(qint64 q);
     void onTimedOut();
+
+    inline void setFolder(Folder *folder) { _folder = folder; }
+    inline Folder *folder() const { return _folder; }
 
 signals:
     void finishedSignal();
@@ -161,29 +172,15 @@ public:
     qint64 currentDownloadPosition() Q_DECL_OVERRIDE;
 
     void start() Q_DECL_OVERRIDE;
-    bool finished() Q_DECL_OVERRIDE
-    {
-        if (_saveBodyToFile && reply()->bytesAvailable()) {
-            return false;
-        } else {
-            if (!_hasEmittedFinishedSignal) {
-                emit finishedSignal();
-            }
-            _hasEmittedFinishedSignal = true;
-            return true; // discard
-        }
-    }
+    bool finished() Q_DECL_OVERRIDE;
 
     void newReplyHook(QNetworkReply *reply) override;
 
-    qint64 resumeStart() Q_DECL_OVERRIDE
-    {
-        return _resumeStart;
-    }
-
-    qint64 contentLength() const { return _contentLength; }
-    qint64 expectedContentLength() const { return _expectedContentLength; }
-    void setExpectedContentLength(qint64 size) { _expectedContentLength = size; }
+    inline qint64 resumeStart() Q_DECL_OVERRIDE { return _resumeStart; }
+    inline qint64 contentLength() const { return _contentLength; }
+    inline qint64 expectedContentLength() const { return _expectedContentLength; }
+    inline void setExpectedContentLength(qint64 size) { _expectedContentLength = size; }
+    inline QIODevice *device() { return _device; }
 
 private slots:
     void slotReadyRead();
@@ -191,6 +188,7 @@ private slots:
 
 signals:
     void downloadProgress(qint64, qint64);
+    void writeProgress(qint64);
 };
 
 /**

@@ -30,11 +30,20 @@
 #include <QNetworkAccessManager>
 #include <QFileInfo>
 #include <QDir>
+#include <QCoreApplication>
+
 #include <cmath>
 
 #ifdef Q_OS_UNIX
 #include <unistd.h>
 #endif
+
+#ifdef Q_OS_WIN
+#include "fileapi.h"
+#endif
+
+#define CHUNKBASESIZE 4096
+#define MAXCHUNKS 1000
 
 namespace OCC {
 
@@ -128,9 +137,22 @@ void GETFileJob::start()
     AbstractNetworkJob::start();
 }
 
+bool GETFileJob::finished()
+{
+    if (_saveBodyToFile && reply()->bytesAvailable()) {
+        return false;
+    } else {
+        if (!_hasEmittedFinishedSignal) {
+            emit finishedSignal();
+        }
+        _hasEmittedFinishedSignal = true;
+        return true; // discard
+    }
+}
+
 void GETFileJob::newReplyHook(QNetworkReply *reply)
 {
-    reply->setReadBufferSize(16 * 1024); // keep low so we can easier limit the bandwidth
+    reply->setReadBufferSize(CHUNKBASESIZE * MAXCHUNKS); // keep low so we can easier limit the bandwidth
 
     connect(reply, &QNetworkReply::metaDataChanged, this, &GETFileJob::slotMetaDataChanged);
     connect(reply, &QIODevice::readyRead, this, &GETFileJob::slotReadyRead);
@@ -142,7 +164,7 @@ void GETFileJob::slotMetaDataChanged()
 {
     // For some reason setting the read buffer in GETFileJob::start doesn't seem to go
     // through the HTTP layer thread(?)
-    reply()->setReadBufferSize(16 * 1024);
+    reply()->setReadBufferSize(CHUNKBASESIZE * MAXCHUNKS);
 
     int httpStatus = reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
@@ -270,16 +292,27 @@ qint64 GETFileJob::currentDownloadPosition()
 
 void GETFileJob::slotReadyRead()
 {
-    if (!reply())
+    if (!reply()) {
+        qCDebug(lcGetJob) << "no reply";
         return;
-    int bufferSize = qMin(1024 * 8ll, reply()->bytesAvailable());
-    QByteArray buffer(bufferSize, Qt::Uninitialized);
+    }
+
+    if (reply()->isFinished()) {
+        qCDebug(lcGetJob) << "Finished";
+        return;
+    }
 
     while (reply()->bytesAvailable() > 0 && _saveBodyToFile) {
         if (_bandwidthChoked) {
             qCWarning(lcGetJob) << "Download choked";
             break;
         }
+
+        qint64 bytesAvailable = reply()->bytesAvailable();
+        size_t bufferSize = (bytesAvailable > CHUNKBASESIZE
+                    ? qMin((qint64) MAXCHUNKS, bytesAvailable / CHUNKBASESIZE) * CHUNKBASESIZE
+                    : bytesAvailable);
+
         qint64 toRead = bufferSize;
         if (_bandwidthLimited) {
             toRead = qMin(qint64(bufferSize), _bandwidthQuota);
@@ -290,7 +323,14 @@ void GETFileJob::slotReadyRead()
             _bandwidthQuota -= toRead;
         }
 
-        qint64 r = reply()->read(buffer.data(), toRead);
+        char *buffer = new char[bufferSize];
+        if (!buffer) {
+            qCWarning(lcGetJob) << "Memory allocation error";
+            reply()->abort();
+            return;
+        }
+
+        qint64 r = reply()->read(buffer, toRead);
         if (r < 0) {
             _errorString = networkReplyErrorString(*reply());
             _errorStatus = SyncFileItem::NormalError;
@@ -299,7 +339,7 @@ void GETFileJob::slotReadyRead()
             return;
         }
 
-        qint64 w = _device->write(buffer.constData(), r);
+        qint64 w = _device->write(buffer, r);
         if (w != r) {
             _errorString = _device->errorString();
             _errorStatus = SyncFileItem::NormalError;
@@ -307,6 +347,9 @@ void GETFileJob::slotReadyRead()
             reply()->abort();
             return;
         }
+        delete[] buffer;
+
+        emit writeProgress(_device->size());
     }
 
     if (reply()->isFinished() && (reply()->bytesAvailable() == 0 || !_saveBodyToFile)) {
@@ -601,7 +644,6 @@ void PropagateDownloadFile::setDeleteExistingFolder(bool enabled)
     _deleteExisting = enabled;
 }
 
-const char owncloudCustomSoftErrorStringC[] = "owncloud-custom-soft-error-string";
 void PropagateDownloadFile::slotGetFinished()
 {
     propagator()->_activeJobList.removeOne(this);
@@ -671,9 +713,7 @@ void PropagateDownloadFile::slotGetFinished()
         // This gives a custom QNAM (by the user of libowncloudsync) to abort() a QNetworkReply in its metaDataChanged() slot and
         // set a custom error string to make this a soft error. In contrast to the default hard error this won't bring down
         // the whole sync and allows for a custom error message.
-        QNetworkReply *reply = job->reply();
-        if (err == QNetworkReply::OperationCanceledError && reply->property(owncloudCustomSoftErrorStringC).isValid()) {
-            job->setErrorString(reply->property(owncloudCustomSoftErrorStringC).toString());
+        if (err == QNetworkReply::OperationCanceledError) {
             job->setErrorStatus(SyncFileItem::SoftError);
         } else if (badRangeHeader) {
             // Can't do this in classifyError() because 416 without a
@@ -949,24 +989,26 @@ void PropagateDownloadFile::downloadFinished()
 
     auto vfs = propagator()->syncOptions()._vfs;
     bool previousFileExists = FileSystem::fileExists(fn);
-    if (previousFileExists) {
-        // Preserve the existing file permissions.
-        QFileInfo existingFile(fn);
-        if (existingFile.permissions() != _tmpFile.permissions()) {
-            _tmpFile.setPermissions(existingFile.permissions());
-        }
-        preserveGroupOwnership(_tmpFile.fileName(), existingFile);
+    if (vfs && vfs->mode() != Vfs::Mode::WindowsCfApi) {
+        if (previousFileExists) {
+            // Preserve the existing file permissions.
+            QFileInfo existingFile(fn);
+            if (existingFile.permissions() != _tmpFile.permissions()) {
+                _tmpFile.setPermissions(existingFile.permissions());
+            }
+            preserveGroupOwnership(_tmpFile.fileName(), existingFile);
 
-        // Make the file a hydrated placeholder if possible
-        if (!vfs->convertToPlaceholder(_tmpFile.fileName(), *_item, fn)) {
-            done(SyncFileItem::SoftError, tr("File conversion to placeholder failed"));
-            return;
+            // Make the file a hydrated placeholder if possible
+            if (!vfs->convertToPlaceholder(_tmpFile.fileName(), *_item)) {
+                done(SyncFileItem::SoftError, tr("File conversion to placeholder failed"));
+                return;
+            }
         }
-    }
 
-    // Apply the remote permissions
-    if (_tmpFile.exists()) {
-        FileSystem::setFileReadOnlyWeak(_tmpFile.fileName(), !_item->_remotePerm.isNull() && !_item->_remotePerm.hasPermission(RemotePermissions::CanWrite));
+        // Apply the remote permissions
+        if (_tmpFile.exists()) {
+            FileSystem::setFileReadOnlyWeak(_tmpFile.fileName(), !_item->_remotePerm.isNull() && !_item->_remotePerm.hasPermission(RemotePermissions::CanWrite));
+        }
     }
 
     bool isConflict = _item->_instruction == CSYNC_INSTRUCTION_CONFLICT
@@ -998,18 +1040,25 @@ void PropagateDownloadFile::downloadFinished()
 
     // The fileChanged() check is done above to generate better error messages.
     QString error;
-    if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
-        qCWarning(lcPropagateDownload) << QString("Rename failed: %1 => %2").arg(_tmpFile.fileName()).arg(fn);
-        // If the file is locked, we want to retry this sync when it
-        // becomes available again, otherwise try again directly
-        if (FileSystem::isFileLocked(fn)) {
-            emit propagator()->seenLockedFile(fn);
-        } else {
-            propagator()->_anotherSyncNeeded = true;
-        }
+    if (!previousFileExists || (vfs && vfs->mode() != Vfs::Mode::WindowsCfApi)) {
+        if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
+            // If the file is locked, we want to retry this sync when it
+            // becomes available again, otherwise try again directly
+            if (FileSystem::isFileLocked(fn)) {
+                emit propagator()->seenLockedFile(fn);
+            } else {
+                propagator()->_anotherSyncNeeded = true;
+            }
 
-        done(SyncFileItem::SoftError, error);
-        return;
+            done(SyncFileItem::SoftError, error);
+            return;
+        }
+    }
+    else {
+        // Delete the tmp file
+        if (!FileSystem::remove(_tmpFile.fileName(), &error)) {
+            qCWarning(lcPropagateDownload) << QString("Delete of temporary file failed: %1").arg(_tmpFile.fileName());
+        }
     }
 
     FileSystem::setFileHidden(fn, false);

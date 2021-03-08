@@ -1,6 +1,6 @@
 /*
 Infomaniak Drive
-Copyright (C) 2020 christophe.larchier@infomaniak.com
+Copyright (C) 2021 christophe.larchier@infomaniak.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -170,7 +170,7 @@ DrivePreferencesWidget::DrivePreferencesWidget(QWidget *parent)
         smartSync1HBox->setSpacing(0);
         smartSyncBox->addLayout(smartSync1HBox);
 
-        QLabel *smartSyncLabel = new QLabel(tr("Activate Lite Sync"), this);
+        QLabel *smartSyncLabel = new QLabel(tr("Activate Lite Sync (Beta)"), this);
         smartSync1HBox->addWidget(smartSyncLabel);
         smartSync1HBox->addStretch();
 
@@ -373,9 +373,6 @@ void DrivePreferencesWidget::updateAccountInfo()
 
         QString email = OCC::AccountManager::instance()->getUserId(accountPtr);
         _accountMailLabel->setText(email);
-    }
-    else {
-        qCDebug(lcDrivePreferencesWidget) << "Null pointer!";
     }
 }
 

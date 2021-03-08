@@ -1,6 +1,6 @@
 /*
 Infomaniak Drive
-Copyright (C) 2020 christophe.larchier@infomaniak.com
+Copyright (C) 2021 christophe.larchier@infomaniak.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "common/syncjournaldb.h"
 #include "account.h"
 #include "version.h"
+#include "progressdispatcher.h"
 
 // Vfs dll
 #include "debug.h"
@@ -30,16 +31,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <Windows.h>
 #include <iostream>
-#include <thread>
 #include <unordered_map>
 #include <shobjidl_core.h>
 
-#include <QFile>
+#include <QCoreApplication>
 #include <QDir>
+#include <QFile>
 
 namespace KDC {
 
 Q_LOGGING_CATEGORY(lcVfsWin, "vfs.win", QtInfoMsg)
+
+const int s_nb_threads[NB_WORKERS] = {5, 5};
 
 std::unordered_map<QString, OCC::SyncFileStatus::SyncFileStatusTag> s_fetchMap;
 
@@ -75,6 +78,14 @@ VfsWin::VfsWin(QObject *parent)
 
 VfsWin::~VfsWin()
 {
+    for (int i = 0; i < NB_WORKERS; i++) {
+        for (QThread *thread : _workerInfo[i]._threadList) {
+            if (thread) {
+                thread->quit();
+                thread->wait(0);
+            }
+        }
+    }
 }
 
 OCC::Vfs::Mode VfsWin::mode() const
@@ -107,6 +118,20 @@ void VfsWin::startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSI
     }
 
     namespaceCLSID = QString::fromStdWString(clsid);
+
+    // Start worker threads
+    for (int i = 0; i < NB_WORKERS; i++) {
+        for (int j = 0; j < s_nb_threads[i]; j++) {
+            QThread *workerThread = new QThread();
+            _workerInfo[i]._threadList.append(workerThread);
+            Worker *worker = new Worker(this, i, j);
+            worker->moveToThread(workerThread);
+            connect(workerThread, &QThread::started, worker, &Worker::start);
+            connect(workerThread, &QThread::finished, worker, &QObject::deleteLater);
+            connect(workerThread, &QThread::finished, workerThread, &QObject::deleteLater);
+            workerThread->start();
+        }
+    }
 }
 
 void VfsWin::dehydrate(const QString &path)
@@ -115,11 +140,18 @@ void VfsWin::dehydrate(const QString &path)
 
     // Dehydrate file
     if (vfsDehydratePlaceHolder(
-                _setupParams.account.get()->driveId().toStdWString().c_str(),
-                _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsDehydratePlaceHolder!";
-        return;
+    }
+
+    checkAndFixMetadata(path);
+
+    QString relativePath = path.midRef(_setupParams.filesystemPath.size()).toUtf8();
+    OCC::SyncJournalFileRecord record;
+    if (_setupParams.journal->getFileRecord(relativePath, &record) && record.isValid()) {
+        // Unset hydrating indicator
+        record._hydrating = false;
+        _setupParams.journal->setFileRecord(record);
     }
 }
 
@@ -132,7 +164,16 @@ void VfsWin::hydrate(const QString &path)
                 _setupParams.folderAlias.toStdWString().c_str(),
                 QDir::toNativeSeparators(path).toStdWString().c_str()) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsHydratePlaceHolder!";
-        return;
+    }
+
+    checkAndFixMetadata(path);
+
+    QString relativePath = path.midRef(_setupParams.filesystemPath.size()).toUtf8();
+    OCC::SyncJournalFileRecord record;
+    if (_setupParams.journal->getFileRecord(relativePath, &record) && record.isValid()) {
+        // Unset hydrating indicator
+        record._hydrating = false;
+        _setupParams.journal->setFileRecord(record);
     }
 }
 
@@ -264,7 +305,23 @@ void VfsWin::checkAndFixMetadata(const QString &path)
 
 void VfsWin::stop()
 {
-    qCDebug(lcVfsWin) << "stop";
+    qCDebug(lcVfsWin) << "stop - driveId = " << _setupParams.account.get()->driveId();
+
+    // Stop worker threads
+    for (int i = 0; i < NB_WORKERS; i++) {
+        _workerInfo[i]._mutex.lock();
+        _workerInfo[i]._stop = true;
+        _workerInfo[i]._mutex.unlock();
+        _workerInfo[i]._queueWC.wakeAll();
+    }
+
+    for (int i = 0; i < NB_WORKERS; i++) {
+        _workerInfo[i]._mutex.lock();
+        if (_workerInfo[i]._nbRunningThreads > 0) {
+            _workerInfo[i]._stopWC.wait(&_workerInfo[i]._mutex, 0);
+        }
+        _workerInfo[i]._mutex.unlock();
+    }
 }
 
 void VfsWin::unregisterFolder()
@@ -313,8 +370,8 @@ void VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
 
     // Create placeholder
     WIN32_FIND_DATA findData;
-    findData.nFileSizeHigh = (DWORD) (item._size & 0xFFFFFFFF00000000);
-    findData.nFileSizeLow = (DWORD) (item._size);
+    findData.nFileSizeHigh = (DWORD) (item._size >> 32);
+    findData.nFileSizeLow = (DWORD) (item._size & 0xFFFFFFFF);
     OCC::Utility::UnixTimeToFiletime(item._modtime, &findData.ftLastWriteTime);
     findData.ftCreationTime = findData.ftLastWriteTime;
     findData.ftLastAccessTime = findData.ftLastWriteTime;
@@ -376,9 +433,14 @@ void VfsWin::dehydratePlaceholder(const OCC::SyncFileItem &item)
     dehydrateTask.detach();
 }
 
-bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileItem &item, const QString &replacesFile)
+bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileItem &item)
 {
     qCDebug(lcVfsWin) << "convertToPlaceholder - path = " << filePath;
+
+    if (filePath.isEmpty()) {
+        qCCritical(lcVfsWin) << "Invalid parameters";
+        return false;
+    }
 
     if (!OCC::FileSystem::fileExists(filePath)) {
         // File creation and rename
@@ -392,14 +454,6 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
         return false;
     }
 
-    if (!replacesFile.isEmpty()) {
-        QFileInfo fileInfo(replacesFile);
-        if (fileInfo.isSymLink()) {
-            qCDebug(lcVfsWin) << "Do not manage Symlink!";
-            return false;
-        }
-    }
-
     DWORD dwAttrs = GetFileAttributesW(filePath.toStdWString().c_str());
     if (dwAttrs == INVALID_FILE_ATTRIBUTES) {
         qCCritical(lcVfsWin) << "Error in GetFileAttributesW!";
@@ -411,14 +465,13 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
         return false;
     }
 
-    // Check if file is already a placeholder
+    // Check if the file is already a placeholder
     bool isPlaceholder;
-    bool isSynced;
     if (vfsGetPlaceHolderStatus(
                 QDir::toNativeSeparators(filePath).toStdWString().c_str(),
                 &isPlaceholder,
                 nullptr,
-                &isSynced) != S_OK) {
+                nullptr) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsGetPlaceHolderStatus!";
         return false;
     }
@@ -433,32 +486,83 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
         }
     }
 
-    if (!replacesFile.isEmpty()) {
-        // Download finished
+    return true;
+}
+
+bool VfsWin::updateFetchStatus(const QString &tmpFilePath, const QString &filePath, qint64 received, bool &canceled)
+{
+    qCInfo(lcVfsWin) << "updateFetchStatus " << filePath << " - " << received;
+
+    if (tmpFilePath.isEmpty() || filePath.isEmpty()) {
+        qCCritical(lcVfsWin) << "Invalid parameters";
+        return false;
+    }
+
+    if (!OCC::FileSystem::fileExists(filePath)) {
+        // Download of a new file
+        return true;
+    }
+
+    // Check if the file is a placeholder
+    bool isPlaceholder;
+    if (vfsGetPlaceHolderStatus(
+                QDir::toNativeSeparators(filePath).toStdWString().c_str(),
+                &isPlaceholder,
+                nullptr,
+                nullptr) != S_OK) {
+        qCCritical(lcVfsWin) << "Error in vfsGetPlaceHolderStatus!";
+        return false;
+    }
+
+    auto updateFct = [=](bool &canceled, bool &error) {
+        // Update download progress
+        bool finished = false;
         if (vfsUpdateFetchStatus(
                     _setupParams.account.get()->driveId().toStdWString().c_str(),
                     _setupParams.folderAlias.toStdWString().c_str(),
-                    QDir::toNativeSeparators(replacesFile).toStdWString().c_str(),
                     QDir::toNativeSeparators(filePath).toStdWString().c_str(),
-                    item._size) != S_OK) {
+                    QDir::toNativeSeparators(tmpFilePath).toStdWString().c_str(),
+                    received,
+                    &canceled,
+                    &finished) != S_OK) {
             qCCritical(lcVfsWin) << "Error in vfsUpdateFetchStatus!";
-            return false;
+            checkAndFixMetadata(filePath);
+            error = true;
+            return;
         }
 
-        // Force pin state to pinned
-        if (vfsSetPinState(QDir::toNativeSeparators(filePath).toStdWString().c_str(), dwAttrs & FILE_ATTRIBUTE_DIRECTORY, VFS_PIN_STATE_PINNED)) {
-            qCCritical(lcVfsWin) << "Error in vfsSetPinState!";
-            return false;
-        }
-    }
+        if (finished) {
+            // Set file type to ItemTypeFile
+            QString relativePath = filePath.midRef(_setupParams.filesystemPath.size()).toUtf8();
+            OCC::SyncJournalFileRecord record;
+            if (_setupParams.journal->getFileRecord(relativePath, &record) && record.isValid()) {
+                if (record._type != ItemTypeFile) {
+                    record._type = ItemTypeFile;
+                    _setupParams.journal->setFileRecord(record);
+                }
+            }
 
-    return true;
+            // Set pin state in DB
+            auto dbPinState = pinStateInDb(relativePath);
+            if (*dbPinState != OCC::PinState::AlwaysLocal) {
+                if (!setPinStateInDb(relativePath, OCC::PinState::AlwaysLocal)) {
+                    qCCritical(lcVfsWin) << "Error in setPinStateInDb!";
+                    return;
+                }
+            }
+        }
+    };
+
+    // Launch update in a separate thread
+    bool error = false;
+    std::thread updateTask(updateFct, std::ref(canceled), std::ref(error));
+    updateTask.join();
+
+    return !error;
 }
 
 bool VfsWin::isDehydratedPlaceholder(const QString &fileRelativePath)
 {
-    qCDebug(lcVfsWin) << "isDehydratedPlaceholder - path = " << fileRelativePath;
-
     bool isDehydrated;
     QString filePath(_setupParams.filesystemPath + fileRelativePath);
     if (vfsGetPlaceHolderStatus(
@@ -475,8 +579,6 @@ bool VfsWin::isDehydratedPlaceholder(const QString &fileRelativePath)
 
 bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const QString &fileDirectory)
 {
-    qCDebug(lcVfsWin) << "statTypeVirtualFile - path = " << stat->path;
-
     QString filePath(fileDirectory + stat->path);
 
     QFileInfo fileInfo(filePath);
@@ -512,7 +614,6 @@ bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const
 
         if (dwAttrs & FILE_ATTRIBUTE_DIRECTORY) {
             // Directory
-            qCDebug(lcVfsWin) << "Status type Directory";
             stat->type = ItemTypeDirectory;
             return true;
         }
@@ -521,19 +622,27 @@ bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const
             WIN32_FIND_DATA *ffd = (WIN32_FIND_DATA *) stat_data;
             if (ffd && ffd->dwFileAttributes != INVALID_FILE_ATTRIBUTES) {
                 if ((ffd->dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) && (ffd->dwFileAttributes & FILE_ATTRIBUTE_PINNED)) {
-                    qCDebug(lcVfsWin) << "Status type VirtualFileDownload";
-                    stat->type = ItemTypeVirtualFileDownload;
+                    QString fileRelativePath = fileInfo.canonicalFilePath().midRef(_setupParams.filesystemPath.size()).toUtf8();
+                    OCC::SyncJournalFileRecord record;
+                    if (_setupParams.journal->getFileRecord(fileRelativePath, &record) && record.isValid()) {
+                        if (record._hydrating) {
+                            // Hydration in progress
+                            stat->type = ItemTypeVirtualFile;
+                        }
+                        else {
+                            stat->type = ItemTypeVirtualFileDownload;
+                        }
+                    }
+
                     return true;
                 }
                 else if (!(ffd->dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) && (ffd->dwFileAttributes & FILE_ATTRIBUTE_UNPINNED)) {
-                    qCDebug(lcVfsWin) << "Status type VirtualFileDehydration";
                     stat->type = ItemTypeVirtualFileDehydration;
                     return true;
                 }
             }
 
             if (isDehydrated) {
-                qCDebug(lcVfsWin) << "Status type VirtualFile";
                 stat->type = ItemTypeVirtualFile;
                 return true;
             }
@@ -579,7 +688,6 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
 
     if (!OCC::FileSystem::fileExists(path)) {
         // New file
-        qCDebug(lcVfsWin) << "File doesn't exist";
         return;
     }
 
@@ -596,31 +704,87 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
             auto localPinState = pinState(fileRelativePath);
             bool isDehydrated = isDehydratedPlaceholder(fileRelativePath);
             if (*localPinState == OCC::PinState::OnlineOnly && !isDehydrated) {
-                qCDebug(lcVfsWin) << "Dehydrate file " << path;
-                auto dehydrateFct = [=]() {
-                    dehydrate(path);
-                };
-                std::thread dehydrateTask(dehydrateFct);
-                dehydrateTask.detach();
+                // Add file path to dehydration queue
+                _workerInfo[WORKER_DEHYDRATION]._mutex.lock();
+                _workerInfo[WORKER_DEHYDRATION]._queue.push_front(path);
+                _workerInfo[WORKER_DEHYDRATION]._mutex.unlock();
+                _workerInfo[WORKER_DEHYDRATION]._queueWC.wakeOne();
             }
             else if (*localPinState == OCC::PinState::AlwaysLocal && isDehydrated) {
-                qCDebug(lcVfsWin) << "Hydrate file " << path;
-                auto hydrateFct = [=]() {
-                    hydrate(path);
-                };
-                std::thread hydrateTask(hydrateFct);
-                hydrateTask.detach();
+                OCC::SyncJournalFileRecord record;
+                if (_setupParams.journal->getFileRecord(fileRelativePath, &record) && record.isValid()) {
+                    if (!record._hydrating) {
+                        // Set hydrating indicator (avoid double hydration)
+                        record._hydrating = true;
+                        _setupParams.journal->setFileRecord(record);
+
+                        // Add file path to hydration queue
+                        _workerInfo[WORKER_HYDRATION]._mutex.lock();
+                        _workerInfo[WORKER_HYDRATION]._queue.push_front(path);
+                        _workerInfo[WORKER_HYDRATION]._mutex.unlock();
+                        _workerInfo[WORKER_HYDRATION]._queueWC.wakeOne();
+                    }
+                }
             }
         }
     }
     else if (status.tag() == OCC::SyncFileStatus::StatusWarning ||
             status.tag() == OCC::SyncFileStatus::StatusError) {
-        if (!QDir(path).exists()) {
-            // File
-            qCDebug(lcVfsWin) << "Cancel hydration of file " << path;
-            cancelHydrate(path);
+        // Nothing to do
+    }
+}
+
+Worker::Worker(VfsWin *vfs, int type, int num)
+    : _vfs(vfs)
+    , _type(type)
+    , _num(num)
+{
+}
+
+void Worker::start()
+{
+    qCDebug(lcVfsWin) << "Worker" << _type << _num << "started";
+
+    WorkerInfo &workerInfo = _vfs->_workerInfo[_type];
+
+    workerInfo._mutex.lock();
+    workerInfo._nbRunningThreads++;
+    workerInfo._mutex.unlock();
+
+    forever {
+        workerInfo._mutex.lock();
+        while (workerInfo._queue.empty() && !workerInfo._stop) {
+            qCDebug(lcVfsWin) << "Worker" << _type << _num << "waiting";
+            workerInfo._queueWC.wait(&workerInfo._mutex);
+        }
+
+        if (workerInfo._stop) {
+            break;
+        }
+
+        QString path = workerInfo._queue.back();
+        workerInfo._queue.pop_back();
+        workerInfo._mutex.unlock();
+
+        qCDebug(lcVfsWin) << "Worker" << _type << _num << "working";
+
+        switch (_type) {
+        case WORKER_HYDRATION:
+            _vfs->hydrate(path);
+            break;
+        case WORKER_DEHYDRATION:
+            _vfs->dehydrate(path);
+            break;
         }
     }
+
+    int count = --workerInfo._nbRunningThreads;
+    workerInfo._mutex.unlock();
+    if (count == 0) {
+        workerInfo._stopWC.wakeAll();
+    }
+
+    qCDebug(lcVfsWin) << "Worker" << _type << _num << "ended";
 }
 
 } // namespace OCC

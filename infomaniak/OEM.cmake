@@ -39,10 +39,9 @@ set( CRASHREPORTER_ICON ":/infomaniak.png" )
 
 set( DEBUGREPORTER_SUBMIT_URL "https://www.infomaniak.com/report/drive/logs" CACHE STRING "URL for debug reporter" )
 
-set( LEARNMORE_LITESYNC_URL "https://www.infomaniak.com/fr/support/faq/admin2/kdrive" CACHE STRING "URL for Lite Sync FAQ" )
-set( LEARNMORE_LITESYNC_COMPATIBILITY_URL "https://www.infomaniak.com/fr/support/faq/admin2/kdrive" CACHE STRING "URL for Lite Sync compatibility FAQ" )
+set( LEARNMORE_LITESYNC_URL "https://faq.infomaniak.com/2523" CACHE STRING "URL for Lite Sync FAQ" )
+set( LEARNMORE_LITESYNC_COMPATIBILITY_URL "https://faq.infomaniak.com/2523" CACHE STRING "URL for Lite Sync compatibility FAQ" )
 
 set( VFS_DIRECTORY "C:\\Projects\\kdrive-ext-win\\x64\\Release" )
-set( VFS_APPX_DIRECTORY "C:\\Projects\\kdrive-ext-win\\FileExplorerExtensionPackage\\AppPackages\\FileExplorerExtensionPackage_1.0.0.0_Test" )
-set( VFS_APPX_BUNDLE "FileExplorerExtensionPackage_1.0.0.0_x64.msixbundle" )
-set( VFS_APPX_PACKAGE "Infomaniak.kDrive.Extension_1.0.0.0_x64__e4e5bp7s792f4" )
+set( VFS_APPX_DIRECTORY "C:\\Projects\\kdrive-ext-win\\FileExplorerExtensionPackage\\AppPackages\\FileExplorerExtensionPackage_3.1.0.0_Test" )
+set( VFS_APPX_BUNDLE "FileExplorerExtensionPackage_3.1.0.0_x64.msixbundle" )

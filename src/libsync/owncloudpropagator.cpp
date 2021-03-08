@@ -209,13 +209,13 @@ static void blacklistUpdate(SyncJournalDb *journal, SyncFileItem &item)
     }
 
     // Some soft errors might become louder on repeat occurrence
-    if (item._status == SyncFileItem::SoftError
+    /*if (item._status == SyncFileItem::SoftError
         && newEntry._retryCount > 1) {
         qCWarning(lcPropagator) << "escalating soft error on " << item._file
                                 << " to normal error, " << item._httpErrorCode;
         item._status = SyncFileItem::NormalError;
         return;
-    }
+    }*/
 }
 
 void PropagateItemJob::done(SyncFileItem::Status statusArg, const QString &errorString)
@@ -608,7 +608,7 @@ void OwncloudPropagator::scheduleNextJob()
 {
     if (_jobScheduled) return; // don't schedule more than 1
     _jobScheduled = true;
-    QTimer::singleShot(3, this, &OwncloudPropagator::scheduleNextJobImpl);
+    QTimer::singleShot(0, this, &OwncloudPropagator::scheduleNextJobImpl);
 }
 
 void OwncloudPropagator::scheduleNextJobImpl()

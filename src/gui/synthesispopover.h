@@ -1,6 +1,6 @@
 /*
 Infomaniak Drive
-Copyright (C) 2020 christophe.larchier@infomaniak.com
+Copyright (C) 2021 christophe.larchier@infomaniak.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -64,13 +64,12 @@ public:
     static const std::map<NotificationsDisabled, QString> _notificationsDisabledForPeriodMap;
 
     explicit SynthesisPopover(bool debugMode, OCC::OwnCloudGui *gui, QWidget *parent = nullptr);
+    ~SynthesisPopover();
 
     void setPosition(const QRect &sysTrayIconRect);
     void forceRedraw();
 
 signals:
-    void updateProgress(const QString &folderId, const OCC::ProgressInfo &progress);
-    void itemCompleted(const QString &folderId, const OCC::SyncFileItemPtr &syncFileItemPtr);
     void openParametersDialog(const QString &accountId = QString(), bool errorPage = false);
     void openShareDialogPublicLinks(const QString &sharePath, const QString &localPath);
     void exit();
@@ -81,6 +80,7 @@ signals:
     void crashEnforce();
     void crashFatal();
     void cannotSelect(bool cannotSelect);
+    void updateItemList();
 
 private:
     enum StackedWidget {
@@ -92,6 +92,7 @@ private:
     struct AccountInfoSynthesis : public AccountInfo {
         StackedWidget _stackedWidget;
         QListWidget *_synchronizedListWidget;
+        QVector<SynchronizedItem> _synchronizedItemList;
         int _synchronizedListStackPosition;
         int _favoritesListStackPosition;
         int _activityListStackPosition;
@@ -139,6 +140,7 @@ private:
     void setSynchronizedDefaultPage(QWidget **widget, QWidget *parent);
     void displayErrors(const QString &accountId);
     void reset();
+    void addSynchronizedListWidgetItem(AccountInfoSynthesis &accountInfoSynthesis, int row = 0);
 
 private slots:
     void onRefreshAccountList();
@@ -174,6 +176,7 @@ private slots:
     void onSelectionChanged(bool isSelected);
     void onCopyUrlToClipboard(const QString &url);
     void onLinkActivated(const QString &link);
+    void onUpdateSynchronizedListWidget();
 };
 
 }

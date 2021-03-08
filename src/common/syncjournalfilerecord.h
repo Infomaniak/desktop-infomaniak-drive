@@ -71,6 +71,7 @@ public:
     RemotePermissions _remotePerm;
     bool _serverHasIgnoredFiles = false;
     QByteArray _checksumHeader;
+    bool _hydrating = false;
 };
 
 bool OCSYNC_EXPORT

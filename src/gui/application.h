@@ -25,7 +25,6 @@
 #include "qtsingleapplication.h"
 
 #include "syncresult.h"
-#include "logbrowser.h"
 #include "owncloudgui.h"
 #include "connectionvalidator.h"
 #include "progressdispatcher.h"
@@ -124,7 +123,6 @@ private:
     QElapsedTimer _startedAt;
 
     // options from command line:
-    bool _showLogWindow;
     QString _logFile;
     QString _logDir;
     std::chrono::hours _logExpire;

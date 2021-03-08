@@ -1,6 +1,6 @@
 ﻿/*
 Infomaniak Drive
-Copyright (C) 2020 christophe.larchier@infomaniak.com
+Copyright (C) 2021 christophe.larchier@infomaniak.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -56,6 +56,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QPainter>
 #include <QPainterPath>
 #include <QScreen>
+#include <QScrollBar>
+#include <QThread>
 #include <QWidgetAction>
 
 namespace KDC {
@@ -74,7 +76,7 @@ static const int driveBoxVMargin = 10;
 static const int defaultPageSpacing = 20;
 static const int logoIconSize = 30;
 static const int defaultLogoIconSize = 50;
-static const int maxSynchronizedItems = 1000;
+static const int maxSynchronizedItems = 50;
 
 const std::map<SynthesisPopover::NotificationsDisabled, QString> SynthesisPopover::_notificationsDisabledMap = {
     { NotificationsDisabled::Never, QString(tr("Never")) },
@@ -116,7 +118,8 @@ SynthesisPopover::SynthesisPopover(bool debugMode, OCC::OwnCloudGui *gui, QWidge
     , _notificationsDisabled(NotificationsDisabled::Never)
     , _notificationsDisabledUntilDateTime(QDateTime())
 {
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint
+                   | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
     setMinimumSize(windowSize);
@@ -142,6 +145,12 @@ SynthesisPopover::SynthesisPopover(bool debugMode, OCC::OwnCloudGui *gui, QWidge
             this, &SynthesisPopover::onUpdateProgress);
     connect(OCC::ProgressDispatcher::instance(), &OCC::ProgressDispatcher::itemCompleted,
             this, &SynthesisPopover::onItemCompleted);
+    connect(this, &SynthesisPopover::updateItemList, this, &SynthesisPopover::onUpdateSynchronizedListWidget,
+            Qt::QueuedConnection);
+}
+
+SynthesisPopover::~SynthesisPopover()
+{
 }
 
 void SynthesisPopover::setPosition(const QRect &sysTrayIconRect)
@@ -431,6 +440,11 @@ bool SynthesisPopover::event(QEvent *event)
         while (accountInfoIt != _accountInfoMap.end()) {
             accountInfoIt->second._quotaInfoPtr->setActive(event->type() == QEvent::Show);
             accountInfoIt++;
+        }
+        if (event->type() == QEvent::Show) {
+            // Update the list of synchronized items
+            qCDebug(lcSynthesisPopover) << "onChow";
+            emit updateItemList();
         }
     }
     return ret;
@@ -1018,6 +1032,7 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                             accountInfoIt->second._synchronizedListWidget->setSpacing(0);
                             accountInfoIt->second._synchronizedListWidget->setSelectionMode(QAbstractItemView::NoSelection);
                             accountInfoIt->second._synchronizedListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+                            accountInfoIt->second._synchronizedListWidget->setUniformItemSizes(true);
                             accountInfoIt->second._synchronizedListStackPosition =
                                     _stackedWidget->addWidget(accountInfoIt->second._synchronizedListWidget);
                             if (_currentAccountId == accountInfoIt->first
@@ -1027,7 +1042,6 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                         }
 
                         // Add item to synchronized list
-                        QListWidgetItem *widgetItem = new QListWidgetItem();
                         SynchronizedItem synchronizedItem(folderId,
                                                           item.data()->_file,
                                                           item.data()->_fileId,
@@ -1036,24 +1050,19 @@ void SynthesisPopover::onItemCompleted(const QString &folderId, const OCC::SyncF
                                                           item.data()->_type,
                                                           folderPath(folderId, item.data()->_file),
                                                           QDateTime::currentDateTime());
-                        accountInfoIt->second._synchronizedListWidget->insertItem(0, widgetItem);
-                        SynchronizedItemWidget *widget = new SynchronizedItemWidget(synchronizedItem,
-                                                                                    accountInfoIt->second._synchronizedListWidget);
-                        accountInfoIt->second._synchronizedListWidget->setItemWidget(widgetItem, widget);
-                        connect(widget, &SynchronizedItemWidget::openFolder, this, &SynthesisPopover::onOpenFolderItem);
-                        connect(widget, &SynchronizedItemWidget::open, this, &SynthesisPopover::onOpenItem);
-                        connect(widget, &SynchronizedItemWidget::addToFavourites, this, &SynthesisPopover::onAddToFavouriteItem);
-                        connect(widget, &SynchronizedItemWidget::manageRightAndSharing, this, &SynthesisPopover::onManageRightAndSharingItem);
-                        connect(widget, &SynchronizedItemWidget::copyLink, this, &SynthesisPopover::onCopyLinkItem);
-                        connect(widget, &SynchronizedItemWidget::displayOnWebview, this, &SynthesisPopover::onOpenWebviewItem);
-                        connect(widget, &SynchronizedItemWidget::selectionChanged, this, &SynthesisPopover::onSelectionChanged);
-                        connect(this, &SynthesisPopover::cannotSelect, widget, &SynchronizedItemWidget::onCannotSelect);
+
+                        accountInfoIt->second._synchronizedItemList.prepend(std::move(synchronizedItem));
+
+                        if (accountInfoIt->second._synchronizedItemList.count() > maxSynchronizedItems) {
+                            accountInfoIt->second._synchronizedItemList.removeLast();
+                        }
 
                         if (accountInfoIt->second._synchronizedListWidget->count() > maxSynchronizedItems) {
-                            // Remove last row
-                            QListWidgetItem *lastWidgetItem = accountInfoIt->second._synchronizedListWidget->takeItem(
-                                        accountInfoIt->second._synchronizedListWidget->count() - 1);
-                            delete lastWidgetItem;
+                            delete accountInfoIt->second._synchronizedListWidget->takeItem(maxSynchronizedItems);
+                        }
+
+                        if (this->isVisible() && account->id() == _currentAccountId) {
+                            addSynchronizedListWidgetItem(accountInfoIt->second);
                         }
                     }
                 }
@@ -1120,6 +1129,46 @@ void SynthesisPopover::reset()
     _progressBarWidget->reset();
     _statusBarWidget->reset();
     _stackedWidget->setCurrentIndex(StackedWidget::Synchronized);
+}
+
+void SynthesisPopover::addSynchronizedListWidgetItem(AccountInfoSynthesis &accountInfoSynthesis, int row)
+{
+    if (row >= accountInfoSynthesis._synchronizedItemList.count()) {
+        return;
+    }
+
+    SynchronizedItemWidget *widget = new SynchronizedItemWidget(
+                accountInfoSynthesis._synchronizedItemList[row],
+                accountInfoSynthesis._synchronizedListWidget);
+
+    QListWidgetItem *widgetItem = new QListWidgetItem();
+    accountInfoSynthesis._synchronizedListWidget->insertItem(row, widgetItem);
+    accountInfoSynthesis._synchronizedListWidget->setItemWidget(widgetItem, widget);
+
+    connect(widget, &SynchronizedItemWidget::openFolder, this, &SynthesisPopover::onOpenFolderItem);
+    connect(widget, &SynchronizedItemWidget::open, this, &SynthesisPopover::onOpenItem);
+    connect(widget, &SynchronizedItemWidget::addToFavourites, this, &SynthesisPopover::onAddToFavouriteItem);
+    connect(widget, &SynchronizedItemWidget::manageRightAndSharing, this, &SynthesisPopover::onManageRightAndSharingItem);
+    connect(widget, &SynchronizedItemWidget::copyLink, this, &SynthesisPopover::onCopyLinkItem);
+    connect(widget, &SynchronizedItemWidget::displayOnWebview, this, &SynthesisPopover::onOpenWebviewItem);
+    connect(widget, &SynchronizedItemWidget::selectionChanged, this, &SynthesisPopover::onSelectionChanged);
+    connect(this, &SynthesisPopover::cannotSelect, widget, &SynchronizedItemWidget::onCannotSelect);
+}
+
+void SynthesisPopover::onUpdateSynchronizedListWidget()
+{
+    const auto accountInfoIt = _accountInfoMap.find(_currentAccountId);
+    if (accountInfoIt != _accountInfoMap.end()) {
+        if (!accountInfoIt->second._synchronizedListWidget) {
+            return;
+        }
+
+        accountInfoIt->second._synchronizedListWidget->clear();
+
+        for (int row = 0; row < accountInfoIt->second._synchronizedItemList.count(); row++) {
+            addSynchronizedListWidgetItem(accountInfoIt->second, row);
+        }
+    }
 }
 
 void SynthesisPopover::onOpenFolderMenu(bool checked)
@@ -1373,6 +1422,7 @@ void SynthesisPopover::onAccountSelected(QString id)
 {
     const auto accountInfoIt = _accountInfoMap.find(id);
     if (accountInfoIt != _accountInfoMap.end()) {
+        bool newAccountSelected = (_currentAccountId != id);
         _currentAccountId = id;
 
         std::size_t currentFolderMapSize = accountInfoIt->second._folderMap.size();
@@ -1382,6 +1432,11 @@ void SynthesisPopover::onAccountSelected(QString id)
         refreshStatusBar(accountInfoIt);
         setSynchronizedDefaultPage(&_defaultSynchronizedPageWidget, this);
         _buttonsBarWidget->selectButton(int(accountInfoIt->second._stackedWidget));
+
+        if (this->isVisible() && newAccountSelected) {
+            qCDebug(lcSynthesisPopover) << "onAccountSelected";
+            emit updateItemList();
+        }
     }
 }
 
@@ -1595,7 +1650,6 @@ SynthesisPopover::AccountInfoSynthesis::AccountInfoSynthesis(OCC::AccountState *
 
 SynthesisPopover::AccountInfoSynthesis::~AccountInfoSynthesis()
 {
-    delete _synchronizedListWidget;
 }
 
 }

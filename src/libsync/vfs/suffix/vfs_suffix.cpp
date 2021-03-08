@@ -112,7 +112,13 @@ void VfsSuffix::dehydratePlaceholder(const SyncFileItem &item)
         setPinState(item._renameTarget, PinState::Unspecified);
 }
 
-bool VfsSuffix::convertToPlaceholder(const QString &, const SyncFileItem &, const QString &)
+bool VfsSuffix::convertToPlaceholder(const QString &, const SyncFileItem &)
+{
+    // Nothing necessary
+    return true;
+}
+
+bool VfsSuffix::updateFetchStatus(const QString &, const QString &, qint64, bool &)
 {
     // Nothing necessary
     return true;

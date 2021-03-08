@@ -35,7 +35,7 @@ void SocketListener::sendMessage(const QString &message, bool doWait) const
         return;
     }
 
-    qCInfo(lcSocketListener) << "Sending SocketAPI message -->" << message << "to" << socket;
+    //qCInfo(lcSocketListener) << "Sending SocketAPI message -->" << message << "to" << socket;
     QString localMessage = message;
     if (!localMessage.endsWith(QLatin1Char('\n'))) {
         localMessage.append(QLatin1Char('\n'));

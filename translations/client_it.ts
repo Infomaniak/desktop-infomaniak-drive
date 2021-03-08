@@ -225,10 +225,6 @@
 <context>
     <name>KDC::AddDriveSmartSyncWidget</name>
     <message>
-        <source>Would you like to activate Lite Sync?</source>
-        <translation>Desideri attivare Lite Sync?</translation>
-    </message>
-    <message>
         <source>Conserve your computer space</source>
         <translation>Risparmia spazio sul tuo computer</translation>
     </message>
@@ -251,6 +247,10 @@
     <message>
         <source>Unable to open link %1.</source>
         <translation>Impossibile aprire il link %1.</translation>
+    </message>
+    <message>
+        <source>Would you like to activate Lite Sync (Beta) ?</source>
+        <translation>Desideri attivare Lite Sync (Beta)?</translation>
     </message>
 </context>
 <context>
@@ -543,10 +543,6 @@
         <translation>CONFERMA</translation>
     </message>
     <message>
-        <source>Activate Lite Sync</source>
-        <translation>Attiva Lite Sync</translation>
-    </message>
-    <message>
         <source>Do you really want to turn on Lite Sync?</source>
         <translation>Desideri davvero abilitare Lite Sync?</translation>
     </message>
@@ -577,6 +573,10 @@
     <message>
         <source>Unable to open link %1.</source>
         <translation>Impossibile aprire il link %1.</translation>
+    </message>
+    <message>
+        <source>Activate Lite Sync (Beta)</source>
+        <translation>Attiva Lite Sync (Beta)</translation>
     </message>
 </context>
 <context>
@@ -905,6 +905,10 @@
     <message>
         <source>Show synchronized folders in File Explorer navigation pane</source>
         <translation>Mostra le cartelle sincronizzate nel riquadro di navigazione di Esplora file</translation>
+    </message>
+    <message>
+        <source>You must restart your opened File Explorers for this change to take effect.</source>
+        <translation>È necessario riavviare gli esploratori di file aperti affinché questa modifica abbia effetto.</translation>
     </message>
 </context>
 <context>
@@ -1330,17 +1334,6 @@
     <message>
         <source>Unknown account state</source>
         <translation>Stato dell&apos;account sconosciuto</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ActivityWidget</name>
-    <message>
-        <source>Form</source>
-        <translation>Modulo</translation>
-    </message>
-    <message>
-        <source>TextLabel</source>
-        <translation>EtichettaTesto</translation>
     </message>
 </context>
 <context>
@@ -1837,43 +1830,6 @@ Se decidi di eliminare i file, non saranno più a tua disposizione, a meno che t
     <message>
         <source>Settings</source>
         <translation>Impostazioni</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::LogBrowser</name>
-    <message>
-        <source>Log Output</source>
-        <translation>Risultato log</translation>
-    </message>
-    <message>
-        <source>Open folder</source>
-        <translation>Apri cartella</translation>
-    </message>
-    <message>
-        <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
-Since log files can get large, the client will start a new one for each sync run and compress older ones. It is also recommended to enable deleting log files after a couple of hours to avoid consuming too much disk space.
-If enabled, logs will be written to %1</source>
-        <translation>Il client non è in grado di creare log di debug in una cartella temporanea. Questi log sono molto utili per la diagnostica di problemi.
-Poiché i file di log possono avere grandi dimensioni, il client ne inizierà uno nuovo per ogni ciclo di sincronizzazione e comprimerà quelli precedenti. Si raccomanda anche di abilitare l&apos;eliminazione dei file di log dopo alcune ore per evitare di occupare troppo spazio sul disco.
-Se abilitati, i log verranno memorizzati in %1</translation>
-    </message>
-    <message>
-        <source>Enable logging to temporary folder</source>
-        <translation>Abilita la memorizzazione dei log in una cartella temporanea</translation>
-    </message>
-    <message>
-        <source>Delete logs older than %1 hours</source>
-        <translation>Elimina i log meno recenti di %1 ore</translation>
-    </message>
-    <message>
-        <source>These settings persist across client restarts.
-Note that using any logging command line options will override the settings.</source>
-        <translation>Queste impostazioni si conservano anche in caso di riavvio del client.
-L&apos;utilizzo di qualsiasi opzione per i log tramite linea di comando sovrascriverà le impostazioni.</translation>
-    </message>
-    <message>
-        <source>Minimum log level: </source>
-        <translation>Livello log minimo:</translation>
     </message>
 </context>
 <context>
@@ -2455,13 +2411,6 @@ for additional privileges during the process.</source>
     <message>
         <source>TextLabel</source>
         <translation>EtichettaTesto</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::ServerNotificationHandler</name>
-    <message>
-        <source>Dismiss</source>
-        <translation>Annulla</translation>
     </message>
 </context>
 <context>
@@ -3072,26 +3021,6 @@ for additional privileges during the process.</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
     </message>
-    <message>
-        <source>Info</source>
-        <translation>Info</translation>
-    </message>
-    <message>
-        <source>Debug</source>
-        <translation>Debug</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Avviso</translation>
-    </message>
-    <message>
-        <source>Critical</source>
-        <translation>Critico</translation>
-    </message>
-    <message>
-        <source>Fatal</source>
-        <translation>Irreversibile</translation>
-    </message>
 </context>
 <context>
     <name>Utility</name>
@@ -3352,16 +3281,6 @@ for additional privileges during the process.</source>
         <translation>Sincronizzazione sospesa.</translation>
     </message>
     <message>
-        <source>No folder to synchronize.</source>
-        <translation>Nessuna cartella da sincronizzare.</translation>
-    </message>
-    <message>
-        <source>Synchronization in progress (%1 on %2)
-%3 left...</source>
-        <translation>Sincronizzazione in corso (%1 su %2)
-%3 rimasti...</translation>
-    </message>
-    <message>
         <source>Waiting for synchronization...</source>
         <translation>In attesa della sincronizzazione...</translation>
     </message>
@@ -3392,6 +3311,18 @@ for additional privileges during the process.</source>
     <message>
         <source>Setup error.</source>
         <translation>Errore di configurazione.</translation>
+    </message>
+    <message>
+        <source>Sync. in progress (%1 on %2)
+%3 left...</source>
+        <translation>Sinc. in corso (%1 su %2)
+%3 rimasti...</translation>
+    </message>
+    <message>
+        <source>No folder to synchronize
+You can add one from the kDrive settings.</source>
+        <translation>Nessuna cartella da sincronizzare.
+Aggiungine uno dalla configurazione di kDrive.</translation>
     </message>
 </context>
 </TS>

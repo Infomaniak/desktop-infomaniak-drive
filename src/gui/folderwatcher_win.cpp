@@ -129,7 +129,7 @@ void WatcherThread::watchChanges(size_t fileNotifyBufferSize,
                 if (longNameSize > 0) {
                     longfile = QString::fromUtf16(reinterpret_cast<const ushort *>(fileNameBuffer), static_cast<int>(longNameSize));
                 } else {
-                    qCWarning(lcFolderWatcher) << "Error converting file name to full length, keeping original name.";
+                    qCWarning(lcFolderWatcher) << "Error converting file name to full length, keeping original name:" << file;
                 }
             }
             longfile = QDir::cleanPath(longfile);
