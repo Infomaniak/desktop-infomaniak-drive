@@ -190,7 +190,7 @@ SocketApi::SocketApi(QObject *parent)
 SocketApi::~SocketApi()
 {
 #ifdef Q_OS_WIN
-    // Stop worker threads
+    // Ask worker threads to stop
     for (int i = 0; i < NB_WORKERS; i++) {
         _workerInfo[i]._mutex.lock();
         _workerInfo[i]._stop = true;
@@ -198,19 +198,15 @@ SocketApi::~SocketApi()
         _workerInfo[i]._queueWC.wakeAll();
     }
 
-    for (int i = 0; i < NB_WORKERS; i++) {
-        _workerInfo[i]._mutex.lock();
-        if (_workerInfo[i]._nbRunningThreads > 0) {
-            _workerInfo[i]._stopWC.wait(&_workerInfo[i]._mutex, 0);
-        }
-        _workerInfo[i]._mutex.unlock();
-    }
-
+    // Force threads to stop if needed
     for (int i = 0; i < NB_WORKERS; i++) {
         for (QThread *thread : qAsConst(_workerInfo[i]._threadList)) {
             if (thread) {
                 thread->quit();
-                thread->wait(0);
+                if (!thread->wait(1000)) {
+                    thread->terminate();
+                    thread->wait();
+                }
             }
         }
     }
@@ -1381,10 +1377,6 @@ void Worker::start()
 
     WorkerInfo &workerInfo = _socketApi->_workerInfo[_type];
 
-    workerInfo._mutex.lock();
-    workerInfo._nbRunningThreads++;
-    workerInfo._mutex.unlock();
-
     forever {
         workerInfo._mutex.lock();
         while (workerInfo._queue.empty() && !workerInfo._stop) {
@@ -1393,6 +1385,7 @@ void Worker::start()
         }
 
         if (workerInfo._stop) {
+            workerInfo._mutex.unlock();
             break;
         }
 
@@ -1478,12 +1471,6 @@ void Worker::start()
                 break;
             }
         }
-    }
-
-    int count = --workerInfo._nbRunningThreads;
-    workerInfo._mutex.unlock();
-    if (count == 0) {
-        workerInfo._stopWC.wakeAll();
     }
 
     qCDebug(lcSocketApi) << "Worker" << _type << _num << "ended";

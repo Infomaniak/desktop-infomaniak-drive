@@ -47,8 +47,6 @@ struct WorkerInfo
     std::deque<QString> _queue;
     QWaitCondition _queueWC;
     bool _stop = false;
-    QWaitCondition _stopWC;
-    int _nbRunningThreads = 0;
     QList<QThread *> _threadList;
 };
 

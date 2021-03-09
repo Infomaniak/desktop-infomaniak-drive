@@ -74,15 +74,41 @@ VfsWin::VfsWin(QObject *parent)
         qCCritical(lcVfsWin) << "Error in vfsInit!";
         return;
     }
+
+    // Start worker threads
+    for (int i = 0; i < NB_WORKERS; i++) {
+        for (int j = 0; j < s_nb_threads[i]; j++) {
+            QThread *workerThread = new QThread();
+            _workerInfo[i]._threadList.append(workerThread);
+            Worker *worker = new Worker(this, i, j);
+            worker->moveToThread(workerThread);
+            connect(workerThread, &QThread::started, worker, &Worker::start);
+            connect(workerThread, &QThread::finished, worker, &QObject::deleteLater);
+            connect(workerThread, &QThread::finished, workerThread, &QObject::deleteLater);
+            workerThread->start();
+        }
+    }
 }
 
 VfsWin::~VfsWin()
 {
+    // Ask worker threads to stop
     for (int i = 0; i < NB_WORKERS; i++) {
-        for (QThread *thread : _workerInfo[i]._threadList) {
+        _workerInfo[i]._mutex.lock();
+        _workerInfo[i]._stop = true;
+        _workerInfo[i]._mutex.unlock();
+        _workerInfo[i]._queueWC.wakeAll();
+    }
+
+    // Force threads to stop if needed
+    for (int i = 0; i < NB_WORKERS; i++) {
+        for (QThread *thread : qAsConst(_workerInfo[i]._threadList)) {
             if (thread) {
                 thread->quit();
-                thread->wait(0);
+                if (!thread->wait(1000)) {
+                    thread->terminate();
+                    thread->wait();
+                }
             }
         }
     }
@@ -118,20 +144,6 @@ void VfsWin::startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSI
     }
 
     namespaceCLSID = QString::fromStdWString(clsid);
-
-    // Start worker threads
-    for (int i = 0; i < NB_WORKERS; i++) {
-        for (int j = 0; j < s_nb_threads[i]; j++) {
-            QThread *workerThread = new QThread();
-            _workerInfo[i]._threadList.append(workerThread);
-            Worker *worker = new Worker(this, i, j);
-            worker->moveToThread(workerThread);
-            connect(workerThread, &QThread::started, worker, &Worker::start);
-            connect(workerThread, &QThread::finished, worker, &QObject::deleteLater);
-            connect(workerThread, &QThread::finished, workerThread, &QObject::deleteLater);
-            workerThread->start();
-        }
-    }
 }
 
 void VfsWin::dehydrate(const QString &path)
@@ -306,22 +318,6 @@ void VfsWin::checkAndFixMetadata(const QString &path)
 void VfsWin::stop()
 {
     qCDebug(lcVfsWin) << "stop - driveId = " << _setupParams.account.get()->driveId();
-
-    // Stop worker threads
-    for (int i = 0; i < NB_WORKERS; i++) {
-        _workerInfo[i]._mutex.lock();
-        _workerInfo[i]._stop = true;
-        _workerInfo[i]._mutex.unlock();
-        _workerInfo[i]._queueWC.wakeAll();
-    }
-
-    for (int i = 0; i < NB_WORKERS; i++) {
-        _workerInfo[i]._mutex.lock();
-        if (_workerInfo[i]._nbRunningThreads > 0) {
-            _workerInfo[i]._stopWC.wait(&_workerInfo[i]._mutex, 0);
-        }
-        _workerInfo[i]._mutex.unlock();
-    }
 }
 
 void VfsWin::unregisterFolder()
@@ -655,7 +651,6 @@ bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const
 bool VfsWin::setPinState(const QString &fileRelativePath, OCC::PinState state)
 {
     // Write pin state to database
-    QString filePath(_setupParams.filesystemPath + fileRelativePath);
     return setPinStateInDb(fileRelativePath, state);
 }
 
@@ -747,10 +742,6 @@ void Worker::start()
 
     WorkerInfo &workerInfo = _vfs->_workerInfo[_type];
 
-    workerInfo._mutex.lock();
-    workerInfo._nbRunningThreads++;
-    workerInfo._mutex.unlock();
-
     forever {
         workerInfo._mutex.lock();
         while (workerInfo._queue.empty() && !workerInfo._stop) {
@@ -759,6 +750,7 @@ void Worker::start()
         }
 
         if (workerInfo._stop) {
+            workerInfo._mutex.unlock();
             break;
         }
 
@@ -776,12 +768,6 @@ void Worker::start()
             _vfs->dehydrate(path);
             break;
         }
-    }
-
-    int count = --workerInfo._nbRunningThreads;
-    workerInfo._mutex.unlock();
-    if (count == 0) {
-        workerInfo._stopWC.wakeAll();
     }
 
     qCDebug(lcVfsWin) << "Worker" << _type << _num << "ended";
