@@ -142,7 +142,7 @@ private slots:
     void slotSocketDestroyed(QObject *obj);
     void slotReadSocket();
     void slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
-                              unsigned int width, uint64_t iNode, const OCC::SocketListener *listener);
+                              unsigned int width, uint64_t msgId, const OCC::SocketListener *listener);
 
 #ifdef Q_OS_WIN
     void slotWriteProgress(qint64 received);
@@ -192,7 +192,8 @@ private:
     Q_INVOKABLE void command_GET_THUMBNAIL(const QString &localFile, SocketListener *listener);
 
     // Sends the context menu options relating to sharing to listener
-    void sendSharingContextMenuOptions(const FileData &argument, SocketListener *listener);
+    void sendSharingContextMenuOptions(const FileData &fileData, SocketListener *listener);
+    void addSharingContextMenuOptions(const FileData &fileData, QTextStream &response);
 
     /** Send the list of menu item. (added in version 1.1)
      * argument is a list of files for which the menu should be shown, separated by '\x1e'
@@ -202,6 +203,9 @@ private:
      * and ends with GET_MENU_ITEMS:END
      */
     Q_INVOKABLE void command_GET_MENU_ITEMS(const QString &argument, SocketListener *listener);
+
+    /** Send the list of menu items */
+    Q_INVOKABLE void command_GET_ALL_MENU_ITEMS(const QString &argument, SocketListener *listener);
 
     QString buildRegisterPathMessage(const QString &path);
 

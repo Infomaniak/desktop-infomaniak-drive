@@ -21,7 +21,7 @@
 
 namespace OCC {
 
-ThumbnailJob::ThumbnailJob(const QString &fileRemotePath, unsigned int width, uint64_t iNode,
+ThumbnailJob::ThumbnailJob(const QString &fileRemotePath, unsigned int width, uint64_t msgId,
                            const OCC::SocketListener *listener,
                            AccountPtr account, QObject *parent)
     : AbstractNetworkJob(
@@ -30,7 +30,7 @@ ThumbnailJob::ThumbnailJob(const QString &fileRemotePath, unsigned int width, ui
           parent)
     , _fileRelativePath(fileRemotePath)
     , _width(width)
-    , _iNode(iNode)
+    , _msgId(msgId)
     , _listener(listener)
 {
     setIgnoreCredentialFailure(true);
@@ -45,7 +45,7 @@ void ThumbnailJob::start()
 bool ThumbnailJob::finished()
 {
     emit jobFinished(reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(), reply()->readAll(),
-                     _width, _iNode, _listener);
+                     _width, _msgId, _listener);
     return true;
 }
 }
