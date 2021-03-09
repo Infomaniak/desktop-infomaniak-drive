@@ -120,7 +120,7 @@ void AddDriveSmartSyncWidget::initUI()
 
     // Text
     QLabel *textLabel = new QLabel(this);
-    textLabel->setObjectName("largeNormalTextLabel");
+    textLabel->setObjectName("largeMediumTextLabel");
     textLabel->setContentsMargins(0, 0, 0, 0);
     textLabel->setText(tr("Lite Sync syncs all your files without using your computer space."
                           " You can browse the files in your kDrive and download them locally whenever you want."
