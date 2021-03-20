@@ -345,23 +345,24 @@ bool VfsWin::updateMetadata(const QString &filePath, time_t modtime, qint64, con
     return true;
 }
 
-void VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
+bool VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
 {
     qCDebug(lcVfsWin) << "createPlaceholder - file = " << item._file;
 
     if (item._file.isEmpty()) {
         qCCritical(lcVfsWin) << "Empty file!";
-        return;
+        return false;
     }
 
-    if (item._type == ItemTypeSoftLink) {
-        qCDebug(lcVfsWin) << "Cannot create a placeholder for a link file!";
-        return;
-    }
-
-    if (OCC::FileSystem::fileExists(_setupParams.filesystemPath + item._file)) {
+    QString filePath(_setupParams.filesystemPath + item._file);
+    if (OCC::FileSystem::fileExists(filePath)) {
         qCWarning(lcVfsWin) << "File/directory " << item._file << " already exists!";
-        return;
+        return false;
+    }
+
+    if (QFileInfo(filePath).isSymLink()) {
+        qCDebug(lcVfsWin) << "Symbolic links are not supported";
+        return false;
     }
 
     // Create placeholder
@@ -375,7 +376,7 @@ void VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
     if (item._type == ItemTypeDirectory) {
         findData.dwFileAttributes |= FILE_ATTRIBUTE_DIRECTORY;
     }
-    else if (item._type == ItemTypeFile) {
+    else {
         findData.dwFileAttributes |= FILE_ATTRIBUTE_ARCHIVE;
     }
 
@@ -386,6 +387,8 @@ void VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
                 &findData) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsCreatePlaceHolder!";
     }
+
+    return true;
 }
 
 void VfsWin::dehydratePlaceholder(const OCC::SyncFileItem &item)
@@ -444,9 +447,8 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
         return false;
     }
 
-    QFileInfo fileInfo(filePath);
-    if (fileInfo.isSymLink()) {
-        qCDebug(lcVfsWin) << "Do not manage Symlink!";
+    if (QFileInfo(filePath).isSymLink()) {
+        qCDebug(lcVfsWin) << "Symbolic links are not supported";
         return false;
     }
 
@@ -686,7 +688,7 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
         return;
     }
 
-    if (status.tag() == OCC::SyncFileStatus::StatusExcluded) {
+    if (status.tag() == OCC::SyncFileStatus::StatusExcluded || QFileInfo(path).isSymLink()) {
         exclude(path);
     }
     else if (status.tag() == OCC::SyncFileStatus::StatusUpToDate) {

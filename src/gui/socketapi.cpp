@@ -229,7 +229,7 @@ QString SocketApi::getJobFilePath(const GETJob *job)
     if (fileRelativePath.startsWith('/')) {
         fileRelativePath.remove(0, 1);
     }
-    return QFileInfo(folderPath + fileRelativePath).canonicalFilePath();
+    return folderPath + fileRelativePath;
 }
 
 void SocketApi::slotNewConnection()
@@ -649,9 +649,17 @@ void SocketApi::slotWriteProgress(qint64 received)
     }
 
     QTemporaryFile *tmpFile = static_cast<QTemporaryFile *>(job->device());
+    if (!tmpFile) {
+        qCWarning(lcSocketApi) << "Invalid job";
+        return;
+    }
     tmpFile->flush();
 
     QString filePath = getJobFilePath(job);
+    if (filePath.isEmpty()) {
+        qCWarning(lcSocketApi) << "Invalid job";
+        return;
+    }
 
     // Add/update job info in GETFileJob map
     _getFileJobMapMutex.lock();

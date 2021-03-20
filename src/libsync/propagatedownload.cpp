@@ -419,9 +419,13 @@ void PropagateDownloadFile::start()
     }
     if (_item->_type == ItemTypeVirtualFile) {
         qCDebug(lcPropagateDownload) << "creating placeholder" << _item->_file;
-        vfs->createPlaceholder(*_item);
-        updateMetadata(false);
-        return;
+        if (vfs->createPlaceholder(*_item)) {
+            updateMetadata(false);
+            return;
+        }
+        else {
+            _item->_type = ItemTypeFile;
+        }
     }
 
     if (_deleteExisting) {
