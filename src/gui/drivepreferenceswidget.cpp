@@ -920,7 +920,8 @@ void DrivePreferencesWidget::onAddFolder(bool checked)
         }
 
         if (nextStep == SelectServerBaseFolder) {
-            ServerBaseFolderDialog *serverBaseFolderDialog = new ServerBaseFolderDialog(_accountId, localFolderName, this);
+            ServerBaseFolderDialog *serverBaseFolderDialog =
+                    new ServerBaseFolderDialog(_accountId, localFolderName, localFolderPath, this);
             int ret = serverBaseFolderDialog->exec(OCC::Utility::getTopLevelWidget(this)->pos());
             if (ret == QDialog::Rejected) {
                 qCDebug(lcDrivePreferencesWidget) << "Cancel: " << nextStep;
