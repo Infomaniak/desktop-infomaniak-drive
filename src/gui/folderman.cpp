@@ -239,7 +239,7 @@ void FolderMan::setupFoldersHelper(QSettings &settings, AccountStatePtr account,
             if (!pathInfo.exists()) {
                 qCInfo(lcFolderMan) << "Folder" << folderAlias << "doesn't exist";
                 //settings.remove("");
-                continue;
+                //continue;
             }
 
             auto defaultJournalPath = folderDefinition.defaultJournalPath(account->account());
