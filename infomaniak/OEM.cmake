@@ -43,5 +43,5 @@ set( LEARNMORE_LITESYNC_URL "https://faq.infomaniak.com/2523" CACHE STRING "URL 
 set( LEARNMORE_LITESYNC_COMPATIBILITY_URL "https://faq.infomaniak.com/2523" CACHE STRING "URL for Lite Sync compatibility FAQ" )
 
 set( VFS_DIRECTORY "C:\\Projects\\kdrive-ext-win\\x64\\Release" )
-set( VFS_APPX_DIRECTORY "C:\\Projects\\kdrive-ext-win\\FileExplorerExtensionPackage\\AppPackages\\FileExplorerExtensionPackage_3.1.1.0_Test" )
-set( VFS_APPX_BUNDLE "FileExplorerExtensionPackage_3.1.1.0_x64.msixbundle" )
+set( VFS_APPX_DIRECTORY "C:\\Projects\\kdrive-ext-win\\FileExplorerExtensionPackage\\AppPackages\\FileExplorerExtensionPackage_${MIRALL_VERSION_MAJOR}.${MIRALL_VERSION_MINOR}.${MIRALL_VERSION_PATCH}.0_Test" )
+set( VFS_APPX_BUNDLE "FileExplorerExtensionPackage_${MIRALL_VERSION_MAJOR}.${MIRALL_VERSION_MINOR}.${MIRALL_VERSION_PATCH}.0_x64.msixbundle" )
