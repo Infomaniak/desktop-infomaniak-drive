@@ -185,7 +185,17 @@ QIcon Theme::themeIcon(const QString &name, bool sysTray, bool sysTrayMenuVisibl
 QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVisible) const
 {
     Q_UNUSED(sysTrayMenuVisible)
+    QString osType;
     QString flavor;
+
+    if (QOperatingSystemVersion::current().currentType() == QOperatingSystemVersion::OSType::MacOS) {
+        osType = "mac";
+    }
+    else {
+        osType = "windows";
+    }
+
+
     if (sysTray) {
         if (_mono) {
             if (QOperatingSystemVersion::current().currentType() == QOperatingSystemVersion::OSType::MacOS
@@ -205,7 +215,7 @@ QIcon Theme::newThemeIcon(const QString &name, bool sysTray, bool sysTrayMenuVis
     QString key = name + "," + flavor;
     QIcon &cached = _iconCache[key];
     if (cached.isNull()) {
-        QString pixmapName = QString(":/client/resources/icons/theme/%1/%2.svg").arg(flavor, name);
+        QString pixmapName = QString(":/client/resources/icons/theme/%1/%2/%3.svg").arg(osType, flavor, name);
         if (QFile::exists(pixmapName)) {
             QList<int> sizes;
             sizes << 16 << 22 << 32 << 48 << 64 << 128 << 256 << 512 << 1024;
