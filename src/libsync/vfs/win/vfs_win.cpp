@@ -336,11 +336,35 @@ bool VfsWin::isHydrating() const
     return false;
 }
 
-bool VfsWin::updateMetadata(const QString &filePath, time_t modtime, qint64, const QByteArray &, QString *)
+bool VfsWin::updateMetadata(const QString &filePath, time_t modtime, qint64 size, const QByteArray &, QString *)
 {
     qCDebug(lcVfsWin) << "updateMetadata - path = " << filePath;
 
-    OCC::FileSystem::setModTime(filePath, modtime);
+    if (!OCC::FileSystem::fileExists(filePath)) {
+        qCWarning(lcVfsWin) << "File " << filePath << " doesn't exist!";
+        return false;
+    }
+
+    if (QFileInfo(filePath).isSymLink()) {
+        qCDebug(lcVfsWin) << "Symbolic links are not supported";
+        return false;
+    }
+
+    // Create placeholder
+    WIN32_FIND_DATA findData;
+    findData.nFileSizeHigh = (DWORD) (size >> 32);
+    findData.nFileSizeLow = (DWORD) (size & 0xFFFFFFFF);
+    OCC::Utility::UnixTimeToFiletime(modtime, &findData.ftLastWriteTime);
+    findData.ftCreationTime = findData.ftLastWriteTime;
+    findData.ftLastAccessTime = findData.ftLastWriteTime;
+    findData.dwFileAttributes = getPlaceholderAttributes(filePath);
+    findData.dwFileAttributes |= FILE_ATTRIBUTE_ARCHIVE;
+
+    if (vfsUpdatePlaceHolder(
+                QDir::toNativeSeparators(filePath).toStdWString().c_str(),
+                &findData) != S_OK) {
+        qCCritical(lcVfsWin) << "Error in vfsUpdatePlaceHolder!";
+    }
 
     return true;
 }
