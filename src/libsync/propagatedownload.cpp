@@ -1044,25 +1044,17 @@ void PropagateDownloadFile::downloadFinished()
 
     // The fileChanged() check is done above to generate better error messages.
     QString error;
-    if (!previousFileExists || (vfs && vfs->mode() != Vfs::Mode::WindowsCfApi)) {
-        if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
-            // If the file is locked, we want to retry this sync when it
-            // becomes available again, otherwise try again directly
-            if (FileSystem::isFileLocked(fn)) {
-                emit propagator()->seenLockedFile(fn);
-            } else {
-                propagator()->_anotherSyncNeeded = true;
-            }
+    if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
+        // If the file is locked, we want to retry this sync when it
+        // becomes available again, otherwise try again directly
+        if (FileSystem::isFileLocked(fn)) {
+            emit propagator()->seenLockedFile(fn);
+        } else {
+            propagator()->_anotherSyncNeeded = true;
+        }
 
-            done(SyncFileItem::SoftError, error);
-            return;
-        }
-    }
-    else {
-        // Delete the tmp file
-        if (!FileSystem::remove(_tmpFile.fileName(), &error)) {
-            qCWarning(lcPropagateDownload) << QString("Delete of temporary file failed: %1").arg(_tmpFile.fileName());
-        }
+        done(SyncFileItem::SoftError, error);
+        return;
     }
 
     FileSystem::setFileHidden(fn, false);
