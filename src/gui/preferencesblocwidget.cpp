@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <QGraphicsDropShadowEffect>
 #include <QLoggingCategory>
 #include <QPainter>
+#include <QPainterPath>
 #include <QScrollBar>
 
 namespace KDC {
