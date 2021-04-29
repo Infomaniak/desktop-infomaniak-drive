@@ -122,9 +122,6 @@ option(BUILD_SHELL_INTEGRATION_DOLPHIN "BUILD_SHELL_INTEGRATION_DOLPHIN" ON)
 # this options builds the nautilus (like) integration plugins
 option(BUILD_SHELL_INTEGRATION_NAUTILUS "BUILD_SHELL_INTEGRATION_NAUTILUS" ON)
 
-# this option builds the tests
-option(BUILD_TESTING "BUILD_TESTING" OFF)
-
 # this option builds the client
 option(BUILD_CLIENT "BUILD_CLIENT" ON)
 
