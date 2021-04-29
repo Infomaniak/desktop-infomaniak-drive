@@ -63,11 +63,15 @@ extern "C" {
         const wchar_t *fileId,
         const wchar_t *relativePath,
         const wchar_t *destPath,
-        WIN32_FIND_DATA *findData);
+        const WIN32_FIND_DATA *findData);
 
     DLL_EXP int __cdecl vfsConvertToPlaceHolder(
         const wchar_t *fileId,
         const wchar_t *filePath);
+
+    DLL_EXP int __cdecl vfsUpdatePlaceHolder(
+        const wchar_t *filePath,
+        const WIN32_FIND_DATA *findData);
 
     DLL_EXP int __cdecl vfsUpdateFetchStatus(
         const wchar_t *driveId,

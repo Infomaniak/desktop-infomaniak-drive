@@ -76,13 +76,13 @@ bool VfsSuffix::updateMetadata(const QString &filePath, time_t modtime, qint64, 
     return true;
 }
 
-void VfsSuffix::createPlaceholder(const SyncFileItem &item)
+bool VfsSuffix::createPlaceholder(const SyncFileItem &item)
 {
     // The concrete shape of the placeholder is also used in isDehydratedPlaceholder() below
     QString fn = _setupParams.filesystemPath + item._file;
     if (!fn.endsWith(fileSuffix())) {
         ASSERT_2(false, "vfs file isn't ending with suffix");
-        return;
+        return false;
     }
 
     QFile file(fn);
@@ -90,6 +90,8 @@ void VfsSuffix::createPlaceholder(const SyncFileItem &item)
     file.write(" ");
     file.close();
     FileSystem::setModTime(fn, item._modtime);
+
+    return true;
 }
 
 void VfsSuffix::dehydratePlaceholder(const SyncFileItem &item)
@@ -97,7 +99,9 @@ void VfsSuffix::dehydratePlaceholder(const SyncFileItem &item)
     QFile::remove(_setupParams.filesystemPath + item._file);
     SyncFileItem virtualItem(item);
     virtualItem._file = item._renameTarget;
-    createPlaceholder(virtualItem);
+    if (!createPlaceholder(virtualItem)) {
+        return;
+    }
 
     // Move the item's pin state
     auto pin = _setupParams.journal->internalPinStates().rawForPath(item._file.toUtf8());

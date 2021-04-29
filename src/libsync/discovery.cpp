@@ -200,6 +200,9 @@ bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &loc
             isInvalidPattern = true;
         }
     }
+    if (excluded == CSYNC_NOT_EXCLUDED && isSymlink) {
+        excluded = CSYNC_FILE_SILENTLY_EXCLUDED;
+    }
     if (excluded == CSYNC_NOT_EXCLUDED && _discoveryData->_ignoreHiddenFiles && isHidden) {
         //excluded = CSYNC_FILE_EXCLUDE_HIDDEN;
         excluded = CSYNC_FILE_SILENTLY_EXCLUDED;

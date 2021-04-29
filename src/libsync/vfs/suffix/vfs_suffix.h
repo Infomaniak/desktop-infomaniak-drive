@@ -40,7 +40,7 @@ public:
 
     bool updateMetadata(const QString &filePath, time_t modtime, qint64 size, const QByteArray &fileId, QString *error) override;
 
-    void createPlaceholder(const SyncFileItem &item) override;
+    bool createPlaceholder(const SyncFileItem &item) override;
     void dehydratePlaceholder(const SyncFileItem &item) override;
     bool convertToPlaceholder(const QString &, const SyncFileItem &) override;
     bool updateFetchStatus(const QString &, const QString &, qint64, bool &) override;

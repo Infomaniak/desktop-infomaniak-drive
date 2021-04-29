@@ -38,6 +38,12 @@
 #include <QDialog>
 #include <QHBoxLayout>
 
+#if defined(Q_OS_MAC)
+#include <objc/objc.h>
+#include <objc/runtime.h>
+#include <objc/message.h>
+#endif
+
 #if defined(Q_OS_X11)
 #include <QX11Info>
 #endif
@@ -565,13 +571,22 @@ void OwnCloudGui::raiseDialog(QWidget *raiseWidget)
         activeWindow->hide();
     }
     if (raiseWidget && !raiseWidget->parentWidget()) {
+#if defined(Q_OS_MAC)
+        // Open the widget on the current desktop
+        WId windowObject = raiseWidget->winId();
+        objc_object *nsviewObject = reinterpret_cast<objc_object *>(windowObject);
+        objc_object *nsWindowObject = ((id (*)(id, SEL))objc_msgSend)(nsviewObject, sel_registerName("window"));
+        int NSWindowCollectionBehaviorCanJoinAllSpaces = 1 << 0;
+        ((id (*)(id, SEL, int))objc_msgSend)(nsWindowObject, sel_registerName("setCollectionBehavior:"), NSWindowCollectionBehaviorCanJoinAllSpaces);
+#endif
+
         // Qt has a bug which causes parent-less dialogs to pop-under.
         raiseWidget->showNormal();
         raiseWidget->raise();
         raiseWidget->activateWindow();
 
 #if defined(Q_OS_X11)
-        WId wid = widget->winId();
+        WId wid = raiseWidget->winId();
         NETWM::init();
 
         XEvent e;

@@ -47,8 +47,6 @@ struct WorkerInfo
     std::deque<QString> _queue;
     QWaitCondition _queueWC;
     bool _stop = false;
-    QWaitCondition _stopWC;
-    int _nbRunningThreads = 0;
     QList<QThread *> _threadList;
 };
 
@@ -73,7 +71,7 @@ public:
 
     bool updateMetadata(const QString &filePath, time_t modtime, qint64 size, const QByteArray &fileId, QString *error) override;
 
-    void createPlaceholder(const OCC::SyncFileItem &item) override;
+    bool createPlaceholder(const OCC::SyncFileItem &item) override;
     void dehydratePlaceholder(const OCC::SyncFileItem &item) override;
     bool convertToPlaceholder(const QString &filePath, const OCC::SyncFileItem &item) override;
     bool updateFetchStatus(const QString &tmpFilePath, const QString &filePath, qint64 received, bool &canceled) override;

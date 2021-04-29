@@ -353,6 +353,9 @@ void PropagateUploadFileV1::slotUploadProgress(qint64 sent, qint64 total)
 
 void PropagateUploadFileV1::abort(PropagatorJob::AbortType abortType)
 {
+    // Generate a new transfer Id
+    _transferId = uint(qrand()) ^ uint(_item->_modtime) ^ (uint(_item->_size) << 16);
+
     abortNetworkJobs(
         abortType,
         [this, abortType](AbstractNetworkJob *job) {

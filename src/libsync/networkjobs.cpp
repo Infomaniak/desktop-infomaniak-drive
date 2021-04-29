@@ -32,6 +32,7 @@
 #ifndef TOKEN_AUTH_ONLY
 #include <QPainter>
 #endif
+#include <QPainterPath>
 
 #include "networkjobs.h"
 #include "account.h"

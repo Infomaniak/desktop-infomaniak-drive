@@ -51,6 +51,7 @@ WebFlowCredentialsDialog::~WebFlowCredentialsDialog()
 {
     if (_webView) {
         delete _webView;
+        _webView = nullptr;
     }
 }
 
@@ -61,6 +62,7 @@ void WebFlowCredentialsDialog::closeEvent(QCloseEvent* e) {
         // Force calling WebView::~WebView() earlier so that _profile and _page are
         // deleted in the correct order.
         delete _webView;
+        _webView = nullptr;
     }
 }
 

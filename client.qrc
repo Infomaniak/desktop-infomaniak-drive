@@ -52,29 +52,6 @@
         <file>resources/icons/statuts/sync-slow.svg</file>
         <file>resources/icons/statuts/sync.svg</file>
         <file>resources/icons/statuts/warning.svg</file>
-        <file>resources/icons/theme/black/state-download.svg</file>
-        <file>resources/icons/theme/black/state-error.svg</file>
-        <file>resources/icons/theme/black/state-information.svg</file>
-        <file>resources/icons/theme/black/state-offline.svg</file>
-        <file>resources/icons/theme/black/state-ok.svg</file>
-        <file>resources/icons/theme/black/state-pause.svg</file>
-        <file>resources/icons/theme/black/state-warning.svg</file>
-        <file>resources/icons/theme/black/state-sync.svg</file>
-        <file>resources/icons/theme/colored/state-download.svg</file>
-        <file>resources/icons/theme/colored/state-error.svg</file>
-        <file>resources/icons/theme/colored/state-information.svg</file>
-        <file>resources/icons/theme/colored/state-offline.svg</file>
-        <file>resources/icons/theme/colored/state-ok.svg</file>
-        <file>resources/icons/theme/colored/state-pause.svg</file>
-        <file>resources/icons/theme/colored/state-sync.svg</file>
-        <file>resources/icons/theme/colored/state-warning.svg</file>
-        <file>resources/icons/theme/white/state-download.svg</file>
-        <file>resources/icons/theme/white/state-error.svg</file>
-        <file>resources/icons/theme/white/state-offline.svg</file>
-        <file>resources/icons/theme/white/state-ok.svg</file>
-        <file>resources/icons/theme/white/state-pause.svg</file>
-        <file>resources/icons/theme/white/state-warning.svg</file>
-        <file>resources/icons/theme/white/state-sync.svg</file>
         <file>resources/logos/kdrive.svg</file>
         <file>resources/logos/kdrive-without-text.svg</file>
         <file>resources/fonts/SuisseIntl-Black.otf</file>
@@ -128,10 +105,57 @@
         <file>resources/icons/actions/dark-switch-off.svg</file>
         <file>resources/icons/actions/dark-branch-close.svg</file>
         <file>resources/icons/actions/dark-branch-open.svg</file>
-        <file>resources/icons/theme/white/state-information.svg</file>
         <file>resources/pictures/lite-sync.svg</file>
         <file>resources/icons/actions/litesync-on.svg</file>
         <file>resources/icons/actions/litesync-off.svg</file>
         <file>resources/icons/actions/more.svg</file>
+        <file>resources/icons/theme/mac/black/state-download.svg</file>
+        <file>resources/icons/theme/mac/black/state-error.svg</file>
+        <file>resources/icons/theme/mac/black/state-information.svg</file>
+        <file>resources/icons/theme/mac/black/state-offline.svg</file>
+        <file>resources/icons/theme/mac/black/state-ok.svg</file>
+        <file>resources/icons/theme/mac/black/state-pause.svg</file>
+        <file>resources/icons/theme/mac/black/state-sync.svg</file>
+        <file>resources/icons/theme/mac/black/state-warning.svg</file>
+        <file>resources/icons/theme/mac/colored/state-download.svg</file>
+        <file>resources/icons/theme/mac/colored/state-error.svg</file>
+        <file>resources/icons/theme/mac/colored/state-information.svg</file>
+        <file>resources/icons/theme/mac/colored/state-offline.svg</file>
+        <file>resources/icons/theme/mac/colored/state-ok.svg</file>
+        <file>resources/icons/theme/mac/colored/state-pause.svg</file>
+        <file>resources/icons/theme/mac/colored/state-sync.svg</file>
+        <file>resources/icons/theme/mac/colored/state-warning.svg</file>
+        <file>resources/icons/theme/mac/white/state-download.svg</file>
+        <file>resources/icons/theme/mac/white/state-error.svg</file>
+        <file>resources/icons/theme/mac/white/state-information.svg</file>
+        <file>resources/icons/theme/mac/white/state-offline.svg</file>
+        <file>resources/icons/theme/mac/white/state-ok.svg</file>
+        <file>resources/icons/theme/mac/white/state-pause.svg</file>
+        <file>resources/icons/theme/mac/white/state-sync.svg</file>
+        <file>resources/icons/theme/mac/white/state-warning.svg</file>
+        <file>resources/icons/theme/windows/black/state-download.svg</file>
+        <file>resources/icons/theme/windows/black/state-error.svg</file>
+        <file>resources/icons/theme/windows/black/state-information.svg</file>
+        <file>resources/icons/theme/windows/black/state-offline.svg</file>
+        <file>resources/icons/theme/windows/black/state-ok.svg</file>
+        <file>resources/icons/theme/windows/black/state-pause.svg</file>
+        <file>resources/icons/theme/windows/black/state-sync.svg</file>
+        <file>resources/icons/theme/windows/black/state-warning.svg</file>
+        <file>resources/icons/theme/windows/colored/state-download.svg</file>
+        <file>resources/icons/theme/windows/colored/state-error.svg</file>
+        <file>resources/icons/theme/windows/colored/state-information.svg</file>
+        <file>resources/icons/theme/windows/colored/state-offline.svg</file>
+        <file>resources/icons/theme/windows/colored/state-ok.svg</file>
+        <file>resources/icons/theme/windows/colored/state-pause.svg</file>
+        <file>resources/icons/theme/windows/colored/state-sync.svg</file>
+        <file>resources/icons/theme/windows/colored/state-warning.svg</file>
+        <file>resources/icons/theme/windows/white/state-download.svg</file>
+        <file>resources/icons/theme/windows/white/state-error.svg</file>
+        <file>resources/icons/theme/windows/white/state-information.svg</file>
+        <file>resources/icons/theme/windows/white/state-offline.svg</file>
+        <file>resources/icons/theme/windows/white/state-ok.svg</file>
+        <file>resources/icons/theme/windows/white/state-pause.svg</file>
+        <file>resources/icons/theme/windows/white/state-sync.svg</file>
+        <file>resources/icons/theme/windows/white/state-warning.svg</file>
     </qresource>
 </RCC>

@@ -120,13 +120,12 @@ void AddDriveSmartSyncWidget::initUI()
 
     // Text
     QLabel *textLabel = new QLabel(this);
-    textLabel->setObjectName("largeNormalTextLabel");
+    textLabel->setObjectName("largeMediumTextLabel");
     textLabel->setContentsMargins(0, 0, 0, 0);
     textLabel->setText(tr("Lite Sync syncs all your files without using your computer space."
                           " You can browse the files in your kDrive and download them locally whenever you want."
                           " <a style=\"%1\" href=\"%2\">Learn more</a>")
-                        .arg(OCC::Utility::linkStyle)
-                        .arg(OCC::Utility::learnMoreLink));
+                        .arg(OCC::Utility::linkStyle, OCC::Utility::learnMoreLink));
     textLabel->setWordWrap(true);
     mainLayout->addWidget(textLabel);
     mainLayout->addSpacing(textBoxVMargin);
@@ -144,10 +143,11 @@ void AddDriveSmartSyncWidget::initUI()
     point1HBox->addWidget(point1IconLabel);
 
     QLabel *point1TextLabel = new QLabel(this);
-    point1TextLabel->setObjectName("largeNormalTextLabel");
+    point1TextLabel->setObjectName("largeMediumTextLabel");
     point1TextLabel->setText(tr("Conserve your computer space"));
+    point1TextLabel->setWordWrap(true);
     point1HBox->addWidget(point1TextLabel);
-    point1HBox->addStretch();
+    point1HBox->setStretchFactor(point1TextLabel, 1);
 
     // Point 2
     QHBoxLayout *point2HBox = new QHBoxLayout();
@@ -163,10 +163,11 @@ void AddDriveSmartSyncWidget::initUI()
     point2HBox->addWidget(point2IconLabel);
 
     QLabel *point2TextLabel = new QLabel(this);
-    point2TextLabel->setObjectName("largeNormalTextLabel");
+    point2TextLabel->setObjectName("largeMediumTextLabel");
     point2TextLabel->setText(tr("Decide which files should be available online or locally"));
+    point2TextLabel->setWordWrap(true);
     point2HBox->addWidget(point2TextLabel);
-    point2HBox->addStretch();
+    point2HBox->setStretchFactor(point2TextLabel, 1);
 
     // Add dialog buttons
     QHBoxLayout *buttonsHBox = new QHBoxLayout();

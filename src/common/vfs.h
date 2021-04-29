@@ -159,7 +159,7 @@ public:
     virtual bool updateMetadata(const QString &filePath, time_t modtime, qint64 size, const QByteArray &fileId, QString *error) = 0;
 
     /// Create a new dehydrated placeholder. Called from PropagateDownload.
-    virtual void createPlaceholder(const SyncFileItem &item) = 0;
+    virtual bool createPlaceholder(const SyncFileItem &item) = 0;
 
     /** Convert a hydrated placeholder to a dehydrated one. Called from PropagateDownlaod.
      *
@@ -297,7 +297,7 @@ public:
     bool isHydrating() const override { return false; }
 
     bool updateMetadata(const QString &, time_t, qint64, const QByteArray &, QString *) override { return true; }
-    void createPlaceholder(const SyncFileItem &) override {}
+    bool createPlaceholder(const SyncFileItem &) override { return true; }
     void dehydratePlaceholder(const SyncFileItem &) override {}
     bool convertToPlaceholder(const QString &, const SyncFileItem &) override { return true; }
     bool updateFetchStatus(const QString &, const QString &, qint64, bool &) override { return true; }

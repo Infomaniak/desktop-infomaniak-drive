@@ -74,15 +74,41 @@ VfsWin::VfsWin(QObject *parent)
         qCCritical(lcVfsWin) << "Error in vfsInit!";
         return;
     }
+
+    // Start worker threads
+    for (int i = 0; i < NB_WORKERS; i++) {
+        for (int j = 0; j < s_nb_threads[i]; j++) {
+            QThread *workerThread = new QThread();
+            _workerInfo[i]._threadList.append(workerThread);
+            Worker *worker = new Worker(this, i, j);
+            worker->moveToThread(workerThread);
+            connect(workerThread, &QThread::started, worker, &Worker::start);
+            connect(workerThread, &QThread::finished, worker, &QObject::deleteLater);
+            connect(workerThread, &QThread::finished, workerThread, &QObject::deleteLater);
+            workerThread->start();
+        }
+    }
 }
 
 VfsWin::~VfsWin()
 {
+    // Ask worker threads to stop
     for (int i = 0; i < NB_WORKERS; i++) {
-        for (QThread *thread : _workerInfo[i]._threadList) {
+        _workerInfo[i]._mutex.lock();
+        _workerInfo[i]._stop = true;
+        _workerInfo[i]._mutex.unlock();
+        _workerInfo[i]._queueWC.wakeAll();
+    }
+
+    // Force threads to stop if needed
+    for (int i = 0; i < NB_WORKERS; i++) {
+        for (QThread *thread : qAsConst(_workerInfo[i]._threadList)) {
             if (thread) {
                 thread->quit();
-                thread->wait(0);
+                if (!thread->wait(1000)) {
+                    thread->terminate();
+                    thread->wait();
+                }
             }
         }
     }
@@ -118,20 +144,6 @@ void VfsWin::startImpl(const OCC::VfsSetupParams &params, QString &namespaceCLSI
     }
 
     namespaceCLSID = QString::fromStdWString(clsid);
-
-    // Start worker threads
-    for (int i = 0; i < NB_WORKERS; i++) {
-        for (int j = 0; j < s_nb_threads[i]; j++) {
-            QThread *workerThread = new QThread();
-            _workerInfo[i]._threadList.append(workerThread);
-            Worker *worker = new Worker(this, i, j);
-            worker->moveToThread(workerThread);
-            connect(workerThread, &QThread::started, worker, &Worker::start);
-            connect(workerThread, &QThread::finished, worker, &QObject::deleteLater);
-            connect(workerThread, &QThread::finished, workerThread, &QObject::deleteLater);
-            workerThread->start();
-        }
-    }
 }
 
 void VfsWin::dehydrate(const QString &path)
@@ -306,22 +318,6 @@ void VfsWin::checkAndFixMetadata(const QString &path)
 void VfsWin::stop()
 {
     qCDebug(lcVfsWin) << "stop - driveId = " << _setupParams.account.get()->driveId();
-
-    // Stop worker threads
-    for (int i = 0; i < NB_WORKERS; i++) {
-        _workerInfo[i]._mutex.lock();
-        _workerInfo[i]._stop = true;
-        _workerInfo[i]._mutex.unlock();
-        _workerInfo[i]._queueWC.wakeAll();
-    }
-
-    for (int i = 0; i < NB_WORKERS; i++) {
-        _workerInfo[i]._mutex.lock();
-        if (_workerInfo[i]._nbRunningThreads > 0) {
-            _workerInfo[i]._stopWC.wait(&_workerInfo[i]._mutex, 0);
-        }
-        _workerInfo[i]._mutex.unlock();
-    }
 }
 
 void VfsWin::unregisterFolder()
@@ -340,32 +336,57 @@ bool VfsWin::isHydrating() const
     return false;
 }
 
-bool VfsWin::updateMetadata(const QString &filePath, time_t modtime, qint64, const QByteArray &, QString *)
+bool VfsWin::updateMetadata(const QString &filePath, time_t modtime, qint64 size, const QByteArray &, QString *)
 {
     qCDebug(lcVfsWin) << "updateMetadata - path = " << filePath;
 
-    OCC::FileSystem::setModTime(filePath, modtime);
+    if (!OCC::FileSystem::fileExists(filePath)) {
+        qCWarning(lcVfsWin) << "File " << filePath << " doesn't exist!";
+        return false;
+    }
+
+    if (QFileInfo(filePath).isSymLink()) {
+        qCDebug(lcVfsWin) << "Symbolic links are not supported";
+        return false;
+    }
+
+    // Create placeholder
+    WIN32_FIND_DATA findData;
+    findData.nFileSizeHigh = (DWORD) (size >> 32);
+    findData.nFileSizeLow = (DWORD) (size & 0xFFFFFFFF);
+    OCC::Utility::UnixTimeToFiletime(modtime, &findData.ftLastWriteTime);
+    findData.ftCreationTime = findData.ftLastWriteTime;
+    findData.ftLastAccessTime = findData.ftLastWriteTime;
+    findData.dwFileAttributes = getPlaceholderAttributes(filePath);
+    findData.dwFileAttributes |= FILE_ATTRIBUTE_ARCHIVE;
+
+    if (vfsUpdatePlaceHolder(
+                QDir::toNativeSeparators(filePath).toStdWString().c_str(),
+                &findData) != S_OK) {
+        qCCritical(lcVfsWin) << "Error in vfsUpdatePlaceHolder!";
+    }
 
     return true;
 }
 
-void VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
+bool VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
 {
     qCDebug(lcVfsWin) << "createPlaceholder - file = " << item._file;
 
     if (item._file.isEmpty()) {
         qCCritical(lcVfsWin) << "Empty file!";
-        return;
+        return false;
     }
 
-    if (item._type == ItemTypeSoftLink) {
-        qCDebug(lcVfsWin) << "Cannot create a placeholder for a link file!";
-        return;
-    }
-
-    if (OCC::FileSystem::fileExists(_setupParams.filesystemPath + item._file)) {
+    QString filePath(_setupParams.filesystemPath + item._file);
+    if (OCC::FileSystem::fileExists(filePath)) {
         qCWarning(lcVfsWin) << "File/directory " << item._file << " already exists!";
-        return;
+        return false;
+    }
+
+    if (QFileInfo(filePath).isSymLink()) {
+        qCDebug(lcVfsWin) << "Symbolic links are not supported";
+        return false;
     }
 
     // Create placeholder
@@ -379,7 +400,7 @@ void VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
     if (item._type == ItemTypeDirectory) {
         findData.dwFileAttributes |= FILE_ATTRIBUTE_DIRECTORY;
     }
-    else if (item._type == ItemTypeFile) {
+    else {
         findData.dwFileAttributes |= FILE_ATTRIBUTE_ARCHIVE;
     }
 
@@ -390,6 +411,8 @@ void VfsWin::createPlaceholder(const OCC::SyncFileItem &item)
                 &findData) != S_OK) {
         qCCritical(lcVfsWin) << "Error in vfsCreatePlaceHolder!";
     }
+
+    return true;
 }
 
 void VfsWin::dehydratePlaceholder(const OCC::SyncFileItem &item)
@@ -448,9 +471,8 @@ bool VfsWin::convertToPlaceholder(const QString &filePath, const OCC::SyncFileIt
         return false;
     }
 
-    QFileInfo fileInfo(filePath);
-    if (fileInfo.isSymLink()) {
-        qCDebug(lcVfsWin) << "Do not manage Symlink!";
+    if (QFileInfo(filePath).isSymLink()) {
+        qCDebug(lcVfsWin) << "Symbolic links are not supported";
         return false;
     }
 
@@ -655,7 +677,6 @@ bool VfsWin::statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data, const
 bool VfsWin::setPinState(const QString &fileRelativePath, OCC::PinState state)
 {
     // Write pin state to database
-    QString filePath(_setupParams.filesystemPath + fileRelativePath);
     return setPinStateInDb(fileRelativePath, state);
 }
 
@@ -691,7 +712,7 @@ void VfsWin::fileStatusChanged(const QString &path, OCC::SyncFileStatus status)
         return;
     }
 
-    if (status.tag() == OCC::SyncFileStatus::StatusExcluded) {
+    if (status.tag() == OCC::SyncFileStatus::StatusExcluded || QFileInfo(path).isSymLink()) {
         exclude(path);
     }
     else if (status.tag() == OCC::SyncFileStatus::StatusUpToDate) {
@@ -747,10 +768,6 @@ void Worker::start()
 
     WorkerInfo &workerInfo = _vfs->_workerInfo[_type];
 
-    workerInfo._mutex.lock();
-    workerInfo._nbRunningThreads++;
-    workerInfo._mutex.unlock();
-
     forever {
         workerInfo._mutex.lock();
         while (workerInfo._queue.empty() && !workerInfo._stop) {
@@ -759,6 +776,7 @@ void Worker::start()
         }
 
         if (workerInfo._stop) {
+            workerInfo._mutex.unlock();
             break;
         }
 
@@ -776,12 +794,6 @@ void Worker::start()
             _vfs->dehydrate(path);
             break;
         }
-    }
-
-    int count = --workerInfo._nbRunningThreads;
-    workerInfo._mutex.unlock();
-    if (count == 0) {
-        workerInfo._stopWC.wakeAll();
     }
 
     qCDebug(lcVfsWin) << "Worker" << _type << _num << "ended";

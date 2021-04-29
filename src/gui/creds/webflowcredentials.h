@@ -8,6 +8,8 @@
 
 #include "creds/abstractcredentials.h"
 
+#include <unordered_map>
+
 class QDialog;
 class QLabel;
 class QNetworkReply;
@@ -91,6 +93,7 @@ private:
      */
     static constexpr int _clientSslCaCertificatesMaxCount = 10;
     QQueue<QSslCertificate> _clientSslCaCertificatesWriteQueue;
+    QHash<QString, QString> _pwdMap;
 
 protected:
     /** Reads data from keychain locations

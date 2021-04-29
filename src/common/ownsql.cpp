@@ -89,6 +89,9 @@ bool SqlDatabase::openHelper(const QString &filename, int sqliteFlags)
 
     sqlite3_busy_timeout(_db, 5000);
 
+    // Reduce the .db-wal file size (default = 1000)
+    sqlite3_wal_autocheckpoint(_db, 100);
+
     return true;
 }
 

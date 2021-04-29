@@ -63,6 +63,9 @@
 // The second number should be changed when there are new features.
 #define MIRALL_SOCKET_API_VERSION "1.1"
 
+#define MSG_CDE_SEPARATOR QChar(L':')
+#define MSG_ARG_SEPARATOR QChar(L'\x1e')
+
 #ifdef Q_OS_WIN
 const int s_nb_threads[NB_WORKERS] = {5};
 #endif
@@ -79,11 +82,11 @@ static QString buildMessage(const QString &verb, const QString &path, const QStr
     QString msg(verb);
 
     if (!status.isEmpty()) {
-        msg.append(QLatin1Char(':'));
+        msg.append(MSG_CDE_SEPARATOR);
         msg.append(status);
     }
     if (!path.isEmpty()) {
-        msg.append(QLatin1Char(':'));
+        msg.append(MSG_CDE_SEPARATOR);
         QFileInfo fi(path);
         msg.append(QDir::toNativeSeparators(fi.absoluteFilePath()));
     }
@@ -110,9 +113,9 @@ SocketApi::SocketApi(QObject *parent)
     QString socketPath;
 
     if (Utility::isWindows()) {
-        socketPath = QLatin1String("\\\\.\\pipe\\")
-            + QLatin1String(APPLICATION_SHORTNAME)
-            + QLatin1String("-")
+        socketPath = QString("\\\\.\\pipe\\")
+            + QString(APPLICATION_SHORTNAME)
+            + QString("-")
             + QString::fromLocal8Bit(qgetenv("USERNAME"));
         // TODO: once the windows extension supports multiple
         // client connections, switch back to the theme name
@@ -187,7 +190,7 @@ SocketApi::SocketApi(QObject *parent)
 SocketApi::~SocketApi()
 {
 #ifdef Q_OS_WIN
-    // Stop worker threads
+    // Ask worker threads to stop
     for (int i = 0; i < NB_WORKERS; i++) {
         _workerInfo[i]._mutex.lock();
         _workerInfo[i]._stop = true;
@@ -195,19 +198,15 @@ SocketApi::~SocketApi()
         _workerInfo[i]._queueWC.wakeAll();
     }
 
+    // Force threads to stop if needed
     for (int i = 0; i < NB_WORKERS; i++) {
-        _workerInfo[i]._mutex.lock();
-        if (_workerInfo[i]._nbRunningThreads > 0) {
-            _workerInfo[i]._stopWC.wait(&_workerInfo[i]._mutex, 0);
-        }
-        _workerInfo[i]._mutex.unlock();
-    }
-
-    for (int i = 0; i < NB_WORKERS; i++) {
-        for (QThread *thread : _workerInfo[i]._threadList) {
+        for (QThread *thread : qAsConst(_workerInfo[i]._threadList)) {
             if (thread) {
                 thread->quit();
-                thread->wait(0);
+                if (!thread->wait(1000)) {
+                    thread->terminate();
+                    thread->wait();
+                }
             }
         }
     }
@@ -230,7 +229,7 @@ QString SocketApi::getJobFilePath(const GETJob *job)
     if (fileRelativePath.startsWith('/')) {
         fileRelativePath.remove(0, 1);
     }
-    return QFileInfo(folderPath + fileRelativePath).canonicalFilePath();
+    return folderPath + fileRelativePath;
 }
 
 void SocketApi::slotNewConnection()
@@ -299,13 +298,13 @@ void SocketApi::slotReadSocket()
         QString line = QString::fromUtf8(socket->readLine()).normalized(QString::NormalizationForm_C);
         line.chop(1); // remove the '\n'
         qCInfo(lcSocketApi) << "Received SocketAPI message <--" << line << "from" << socket;
-        QByteArray command = line.split(":").value(0).toLatin1();
+        QByteArray command = line.split(MSG_CDE_SEPARATOR).value(0).toLatin1();
         QByteArray functionWithArguments = "command_" + command + "(QString,SocketListener*)";
         int indexOfMethod = staticMetaObject.indexOfMethod(functionWithArguments);
 
         QString argument = line.remove(0, command.length() + 1);
         if (indexOfMethod != -1) {
-            staticMetaObject.method(indexOfMethod).invoke(this, Q_ARG(QString, argument), Q_ARG(SocketListener *, listener));
+            staticMetaObject.method(indexOfMethod).invoke(this, Q_ARG(QString, argument), Q_ARG(SocketListener*, listener));
         } else {
             qCWarning(lcSocketApi) << "The command is not supported by this version of the client:" << command << "with argument:" << argument;
         }
@@ -313,7 +312,7 @@ void SocketApi::slotReadSocket()
 }
 
 void SocketApi::slotThumbnailFetched(const int &statusCode, const QByteArray &reply,
-                                     unsigned int width, uint64_t iNode, const OCC::SocketListener *listener)
+                                     unsigned int width, uint64_t msgId, const OCC::SocketListener *listener)
 {
     if (statusCode != 200) {
         qCWarning(lcSharing) << "Thumbnail status code: " << statusCode;
@@ -322,7 +321,7 @@ void SocketApi::slotThumbnailFetched(const int &statusCode, const QByteArray &re
 
     QPixmap pixmap;
     if (!pixmap.loadFromData(reply)) {
-        qCWarning(lcSharing) << "Error in pixmap.loadFromData for file with iNode " << iNode;
+        qCWarning(lcSharing) << "Error in pixmap.loadFromData for file with msgId " << msgId;
         return;
     }
 
@@ -339,9 +338,9 @@ void SocketApi::slotThumbnailFetched(const int &statusCode, const QByteArray &re
     pixmapBuffer.open(QIODevice::WriteOnly);
     pixmap.save(&pixmapBuffer, "BMP");
 
-    QString pm(pixmapBuffer.data().toBase64());
-    listener->sendMessage(QString("GET_THUMBNAIL:%1:%2")
-                          .arg(QString::number(iNode))
+    listener->sendMessage(QString("%1%2%3")
+                          .arg(QString::number(msgId))
+                          .arg(MSG_CDE_SEPARATOR)
                           .arg(QString(pixmapBuffer.data().toBase64())));
 }
 
@@ -369,7 +368,7 @@ void SocketApi::slotUnregisterPath(const QString &alias)
 
     Folder *f = FolderMan::instance()->folder(alias);
     if (f)
-        broadcastMessage(buildMessage(QLatin1String("UNREGISTER_PATH"), removeTrailingSlash(f->path()), QString()), true);
+        broadcastMessage(buildMessage(QString("UNREGISTER_PATH"), removeTrailingSlash(f->path()), QString()), true);
 
     _registeredAliases.remove(alias);
 }
@@ -391,7 +390,7 @@ void SocketApi::slotUpdateFolderView(Folder *f)
             QString rootPath = removeTrailingSlash(f->path());
             broadcastStatusPushMessage(rootPath, f->syncEngine().syncFileStatusTracker().fileStatus(""));
 
-            broadcastMessage(buildMessage(QLatin1String("UPDATE_VIEW"), rootPath));
+            broadcastMessage(buildMessage(QString("UPDATE_VIEW"), rootPath));
         } else {
             qCDebug(lcSocketApi) << "Not sending UPDATE_VIEW for" << f->alias() << "because status() is" << f->syncResult().status();
         }
@@ -412,20 +411,28 @@ void SocketApi::processShareRequest(const QString &localFile, SocketListener *li
     auto fileData = FileData::get(localFile);
     auto shareFolder = fileData.folder;
     if (!shareFolder) {
-        const QString message = QLatin1String("SHARE:NOP:") + QDir::toNativeSeparators(localFile);
+        const QString message = QString("SHARE%1NOP%1%2")
+                .arg(MSG_CDE_SEPARATOR)
+                .arg(QDir::toNativeSeparators(localFile));
         // files that are not within a sync folder are not synced.
         listener->sendMessage(message);
     } else if (!shareFolder->accountState()->isConnected()) {
-        const QString message = QLatin1String("SHARE:NOTCONNECTED:") + QDir::toNativeSeparators(localFile);
+        const QString message = QString("SHARE%1NOTCONNECTED%1%2")
+                .arg(MSG_CDE_SEPARATOR)
+                .arg(QDir::toNativeSeparators(localFile));
         // if the folder isn't connected, don't open the share dialog
         listener->sendMessage(message);
     } else if (!theme->linkSharing() && (!theme->userGroupSharing() || shareFolder->accountState()->account()->serverVersionInt() < Account::makeServerVersion(8, 2, 0))) {
-        const QString message = QLatin1String("SHARE:NOP:") + QDir::toNativeSeparators(localFile);
+        const QString message = QString("SHARE%1NOP%1%2")
+                .arg(MSG_CDE_SEPARATOR)
+                .arg(QDir::toNativeSeparators(localFile));
         listener->sendMessage(message);
     } else {
         // If the file doesn't have a journal record, it might not be uploaded yet
         if (!fileData.journalRecord().isValid()) {
-            const QString message = QLatin1String("SHARE:NOTSYNCED:") + QDir::toNativeSeparators(localFile);
+            const QString message = QString("SHARE%1NOTSYNCED%1%2")
+                    .arg(MSG_CDE_SEPARATOR)
+                    .arg(QDir::toNativeSeparators(localFile));
             listener->sendMessage(message);
             return;
         }
@@ -434,12 +441,16 @@ void SocketApi::processShareRequest(const QString &localFile, SocketListener *li
 
         // Can't share root folder
         if (remotePath == "/") {
-            const QString message = QLatin1String("SHARE:CANNOTSHAREROOT:") + QDir::toNativeSeparators(localFile);
+            const QString message = QString("SHARE%1CANNOTSHAREROOT%1%2")
+                    .arg(MSG_CDE_SEPARATOR)
+                    .arg(QDir::toNativeSeparators(localFile));
             listener->sendMessage(message);
             return;
         }
 
-        const QString message = QLatin1String("SHARE:OK:") + QDir::toNativeSeparators(localFile);
+        const QString message = QString("SHARE%1OK%1%2")
+                .arg(MSG_CDE_SEPARATOR)
+                .arg(QDir::toNativeSeparators(localFile));
         listener->sendMessage(message);
 
         emit shareCommandReceived(remotePath, fileData.localPath, startPage);
@@ -448,7 +459,7 @@ void SocketApi::processShareRequest(const QString &localFile, SocketListener *li
 
 void SocketApi::broadcastStatusPushMessage(const QString &systemPath, SyncFileStatus fileStatus)
 {
-    QString msg = buildMessage(QLatin1String("STATUS"), systemPath, fileStatus.toSocketAPIString());
+    QString msg = buildMessage(QString("STATUS"), systemPath, fileStatus.toSocketAPIString());
     Q_ASSERT(!systemPath.endsWith('/'));
     uint directoryHash = qHash(systemPath.left(systemPath.lastIndexOf('/')));
     foreach (auto &listener, _listeners) {
@@ -469,7 +480,7 @@ void SocketApi::command_RETRIEVE_FILE_STATUS(const QString &argument, SocketList
     auto fileData = FileData::get(argument);
     if (!fileData.folder) {
         // this can happen in offline mode e.g.: nothing to worry about
-        statusString = QLatin1String("NOP");
+        statusString = QString("NOP");
     } else {
         // The user probably visited this directory in the file shell.
         // Let the listener know that it should now send status pushes for sibblings of this file.
@@ -480,7 +491,9 @@ void SocketApi::command_RETRIEVE_FILE_STATUS(const QString &argument, SocketList
         statusString = fileStatus.toSocketAPIString();
     }
 
-    const QString message = QLatin1String("STATUS:") % statusString % QLatin1Char(':') % QDir::toNativeSeparators(argument);
+    const QString message = QString("STATUS%1%2%1%3")
+            .arg(MSG_CDE_SEPARATOR)
+            .arg(statusString, QDir::toNativeSeparators(argument));
     listener->sendMessage(message);
 }
 
@@ -496,12 +509,16 @@ void SocketApi::command_MANAGE_PUBLIC_LINKS(const QString &localFile, SocketList
 
 void SocketApi::command_VERSION(const QString &, SocketListener *listener)
 {
-    listener->sendMessage(QLatin1String("VERSION:" MIRALL_VERSION_STRING ":" MIRALL_SOCKET_API_VERSION));
+    listener->sendMessage(QString("VERSION%1%2%1%3")
+                          .arg(MSG_CDE_SEPARATOR)
+                          .arg(MIRALL_VERSION_STRING, MIRALL_SOCKET_API_VERSION));
 }
 
 void SocketApi::command_SHARE_MENU_TITLE(const QString &, SocketListener *listener)
 {
-    listener->sendMessage(QLatin1String("SHARE_MENU_TITLE:") + tr("Share with %1", "parameter is ownCloud").arg(Theme::instance()->appNameGUI()));
+    listener->sendMessage(QString("SHARE_MENU_TITLE%1%2")
+                          .arg(MSG_CDE_SEPARATOR)
+                          .arg(tr("Share with %1", "parameter is ownCloud").arg(Theme::instance()->appNameGUI())));
 }
 
 
@@ -575,9 +592,9 @@ void SocketApi::copyUrlToClipboard(const QString &link)
 
 void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketListener *)
 {
-    QStringList files = filesArg.split(QLatin1Char('\x1e')); // Record Separator
+    const QStringList files = filesArg.split(MSG_ARG_SEPARATOR);
 
-    for (const auto &filePath : files) {
+    for (const auto &filePath : qAsConst(files)) {
         auto data = FileData::get(filePath);
         if (!data.folder) {
             qCWarning(lcSocketApi) << "No file data";
@@ -596,9 +613,9 @@ void SocketApi::command_MAKE_AVAILABLE_LOCALLY(const QString &filesArg, SocketLi
 #ifdef Q_OS_WIN
 void SocketApi::command_MAKE_AVAILABLE_LOCALLY_DIRECT(const QString &filesArg, SocketListener *)
 {
-    QStringList files = filesArg.split(QLatin1Char('\x1e')); // Record Separator
+    const QStringList files = filesArg.split(MSG_ARG_SEPARATOR);
 
-    for (const auto &filePath : files) {        
+    for (const auto &filePath : qAsConst(files)) {
         // Run GETFileJob
         auto data = FileData::get(filePath);
         if (!data.folder) {
@@ -632,9 +649,17 @@ void SocketApi::slotWriteProgress(qint64 received)
     }
 
     QTemporaryFile *tmpFile = static_cast<QTemporaryFile *>(job->device());
+    if (!tmpFile) {
+        qCWarning(lcSocketApi) << "Invalid job";
+        return;
+    }
     tmpFile->flush();
 
     QString filePath = getJobFilePath(job);
+    if (filePath.isEmpty()) {
+        qCWarning(lcSocketApi) << "Invalid job";
+        return;
+    }
 
     // Add/update job info in GETFileJob map
     _getFileJobMapMutex.lock();
@@ -687,9 +712,9 @@ void SocketApi::slotGetFinished()
 /* Go over all the files and replace them by a virtual file */
 void SocketApi::command_MAKE_ONLINE_ONLY(const QString &filesArg, SocketListener *)
 {
-    QStringList files = filesArg.split(QLatin1Char('\x1e')); // Record Separator
+    const QStringList files = filesArg.split(MSG_ARG_SEPARATOR);
 
-    for (const auto &file : files) {
+    for (const auto &file : qAsConst(files)) {
         auto data = FileData::get(file);
         if (!data.folder)
             continue;
@@ -759,18 +784,13 @@ void SocketApi::command_MOVE_ITEM(const QString &localFile, SocketListener *)
     QString error;
     if (!FileSystem::uncheckedRenameReplace(localFile, target, &error)) {
         qCWarning(lcSocketApi) << "Rename error:" << error;
-        QMessageBox::warning(
-            nullptr, tr("Error"),
-            tr("Moving file failed:\n\n%1").arg(error));
+        QMessageBox::warning(nullptr, tr("Error"), tr("Moving file failed:\n\n%1").arg(error));
     }
 }
 
 void SocketApi::emailPrivateLink(const QString &link)
 {
-    Utility::openEmailComposer(
-        tr("I shared something with you"),
-        link,
-        nullptr);
+    Utility::openEmailComposer(tr("I shared something with you"), link, nullptr);
 }
 
 void OCC::SocketApi::openPrivateLink(const QString &link)
@@ -786,33 +806,35 @@ void SocketApi::command_GET_STRINGS(const QString &argument, SocketListener *lis
         { "COPY_PRIVATE_LINK_MENU_TITLE", tr("Copy private link to clipboard") },
         { "EMAIL_PRIVATE_LINK_MENU_TITLE", tr("Send private link by email...") },
     } };
-    listener->sendMessage(QString("GET_STRINGS:BEGIN"));
+    listener->sendMessage(QString("GET_STRINGS%1BEGIN").arg(MSG_CDE_SEPARATOR));
     for (auto key_value : strings) {
-        if (argument.isEmpty() || argument == QLatin1String(key_value.first)) {
-            listener->sendMessage(QString("STRING:%1:%2").arg(key_value.first, key_value.second));
+        if (argument.isEmpty() || argument == QString(key_value.first)) {
+            listener->sendMessage(QString("STRING%1%2%1%3")
+                                  .arg(MSG_CDE_SEPARATOR)
+                                  .arg(key_value.first, key_value.second));
         }
     }
-    listener->sendMessage(QString("GET_STRINGS:END"));
+    listener->sendMessage(QString("GET_STRINGS%1END").arg(MSG_CDE_SEPARATOR));
 }
 
 void SocketApi::command_GET_THUMBNAIL(const QString &argument, OCC::SocketListener *listener)
 {
-    QStringList argumentList = argument.split(QLatin1Char('\x1e'));
+    QStringList argumentList = argument.split(MSG_ARG_SEPARATOR);
 
     if (argumentList.size() != 3) {
         qCCritical(lcSocketApi) << "Invalid argument " << argument;
         return;
     }
 
+    // Msg Id
+    uint64_t msgId(argumentList[0].toULongLong());
+
     // Picture width asked
-    unsigned int width(argumentList[0].toInt());
+    unsigned int width(argumentList[1].toInt());
     if (width == 0) {
         qCCritical(lcSocketApi) << "Bad width " << width;
         return;
     }
-
-    // File iNode
-    uint64_t iNode(argumentList[1].toULongLong());
 
     // File path
     QString filePath(argumentList[2]);
@@ -831,7 +853,7 @@ void SocketApi::command_GET_THUMBNAIL(const QString &argument, OCC::SocketListen
     if (fileRemotePath.startsWith('/')) {
         fileRemotePath.remove(0, 1);
     }
-    ThumbnailJob *job = new ThumbnailJob(fileRemotePath, width, iNode, listener,
+    ThumbnailJob *job = new ThumbnailJob(fileRemotePath, width, msgId, listener,
                                          folder->accountState()->account(), this);
     connect(job, &ThumbnailJob::jobFinished, this, &SocketApi::slotThumbnailFetched);
     job->start();
@@ -841,7 +863,9 @@ void SocketApi::sendSharingContextMenuOptions(const FileData &fileData, SocketLi
 {
     auto record = fileData.journalRecord();
     bool isOnTheServer = record.isValid();
-    auto flagString = isOnTheServer ? QLatin1String("::") : QLatin1String(":d:");
+    auto flagString = QString("%1%2%1")
+            .arg(MSG_CDE_SEPARATOR)
+            .arg(isOnTheServer ? QString() : QString("d"));
 
     auto capabilities = fileData.folder->accountState()->account()->capabilities();
     auto theme = Theme::instance();
@@ -851,11 +875,10 @@ void SocketApi::sendSharingContextMenuOptions(const FileData &fileData, SocketLi
     // If sharing is globally disabled, do not show any sharing entries.
     // If there is no permission to share for this file, add a disabled entry saying so
     if (isOnTheServer && !record._remotePerm.isNull() && !record._remotePerm.hasPermission(RemotePermissions::CanReshare)) {
-        listener->sendMessage(QLatin1String("MENU_ITEM:DISABLED:d:") + (!record.isDirectory()
-            ? tr("Resharing this file is not allowed") : tr("Resharing this folder is not allowed")));
+        listener->sendMessage(QString("MENU_ITEM%1DISABLED%1d%1%2")
+                              .arg(MSG_CDE_SEPARATOR)
+                              .arg(!record.isDirectory() ? tr("Resharing this file is not allowed") : tr("Resharing this folder is not allowed")));
     } else {
-        //listener->sendMessage(QLatin1String("MENU_ITEM:SHARE") + flagString + tr("Share..."));
-
         // Do we have public links?
         bool publicLinksEnabled = theme->linkSharing() && capabilities.sharePublicLink();
 
@@ -864,28 +887,73 @@ void SocketApi::sendSharingContextMenuOptions(const FileData &fileData, SocketLi
             && !capabilities.sharePublicLinkEnforcePassword();
 
         if (canCreateDefaultPublicLink) {
-            listener->sendMessage(QLatin1String("MENU_ITEM:COPY_PUBLIC_LINK") + flagString + tr("Copy public link to clipboard"));
+            listener->sendMessage(QString("MENU_ITEM%1COPY_PUBLIC_LINK%2")
+                                  .arg(MSG_CDE_SEPARATOR)
+                                  .arg(flagString + tr("Copy public link to clipboard")));
         } else if (publicLinksEnabled) {
-            listener->sendMessage(QLatin1String("MENU_ITEM:MANAGE_PUBLIC_LINKS") + flagString + tr("Copy public link to clipboard"));
+            listener->sendMessage(QString("MENU_ITEM%1MANAGE_PUBLIC_LINKS%2")
+                                  .arg(MSG_CDE_SEPARATOR)
+                                  .arg(flagString + tr("Copy public link to clipboard")));
         }
     }
 
-    listener->sendMessage(QLatin1String("MENU_ITEM:COPY_PRIVATE_LINK") + flagString + tr("Copy private link to clipboard"));
+    listener->sendMessage(QString("MENU_ITEM%1COPY_PRIVATE_LINK%2")
+                          .arg(MSG_CDE_SEPARATOR)
+                          .arg(flagString + tr("Copy private link to clipboard")));
+}
 
-    // Disabled: only providing email option for private links would look odd,
-    // and the copy option is more general.
-    //listener->sendMessage(QLatin1String("MENU_ITEM:EMAIL_PRIVATE_LINK") + flagString + tr("Send private link by email..."));
+void SocketApi::addSharingContextMenuOptions(const FileData &fileData, QTextStream &response)
+{
+    auto record = fileData.journalRecord();
+    bool isOnTheServer = record.isValid();
+    auto flagString = QString("%1%2%1")
+            .arg(MSG_CDE_SEPARATOR)
+            .arg(isOnTheServer ? QString() : QString("d"));
+
+    auto capabilities = fileData.folder->accountState()->account()->capabilities();
+    auto theme = Theme::instance();
+    if (!capabilities.shareAPI() || !(theme->userGroupSharing() || (theme->linkSharing() && capabilities.sharePublicLink())))
+        return;
+
+    // If sharing is globally disabled, do not show any sharing entries.
+    // If there is no permission to share for this file, add a disabled entry saying so
+    if (isOnTheServer && !record._remotePerm.isNull() && !record._remotePerm.hasPermission(RemotePermissions::CanReshare)) {
+        response << QString("%1DISABLED%1d%1%2")
+                              .arg(MSG_CDE_SEPARATOR)
+                              .arg(!record.isDirectory() ? tr("Resharing this file is not allowed") : tr("Resharing this folder is not allowed"));
+    } else {
+        // Do we have public links?
+        bool publicLinksEnabled = theme->linkSharing() && capabilities.sharePublicLink();
+
+        // Is is possible to create a public link without user choices?
+        bool canCreateDefaultPublicLink = publicLinksEnabled
+            && !capabilities.sharePublicLinkEnforcePassword();
+
+        if (canCreateDefaultPublicLink) {
+            response << QString("%1COPY_PUBLIC_LINK%2")
+                                  .arg(MSG_CDE_SEPARATOR)
+                                  .arg(flagString + tr("Copy public link to clipboard"));
+        } else if (publicLinksEnabled) {
+            response << QString("%1MANAGE_PUBLIC_LINKS%2")
+                                  .arg(MSG_CDE_SEPARATOR)
+                                  .arg(flagString + tr("Copy public link to clipboard"));
+        }
+    }
+
+    response << QString("%1COPY_PRIVATE_LINK%2")
+                          .arg(MSG_CDE_SEPARATOR)
+                          .arg(flagString + tr("Copy private link to clipboard"));
 }
 
 void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListener *listener)
 {
-    listener->sendMessage(QString("GET_MENU_ITEMS:BEGIN"));
-    QStringList files = argument.split(QLatin1Char('\x1e')); // Record Separator
+    listener->sendMessage(QString("GET_MENU_ITEMS%1BEGIN").arg(MSG_CDE_SEPARATOR));
+    const QStringList files = argument.split(MSG_ARG_SEPARATOR);
 
     // Find the common sync folder.
     // syncFolder will be null if files are in different folders.
     Folder *folder = nullptr;
-    for (const auto &file : files) {
+    for (const auto &file : qAsConst(files)) {
         auto f = FolderMan::instance()->folderForPath(file);
         if (f != folder) {
             if (!folder) {
@@ -902,15 +970,21 @@ void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListe
         FileData fileData = FileData::get(files.first());
         auto record = fileData.journalRecord();
         bool isOnTheServer = record.isValid();
-        auto flagString = isOnTheServer ? QLatin1String("::") : QLatin1String(":d:");
+        auto flagString = QString("%1%2%1")
+                .arg(MSG_CDE_SEPARATOR)
+                .arg(isOnTheServer ? QString() : QString("d"));
 
         if (folder) {
-            listener->sendMessage(QLatin1String("VFS_MODE:") + Vfs::modeToString(folder->vfs().mode()));
+            listener->sendMessage(QString("VFS_MODE%1%2")
+                                  .arg(MSG_CDE_SEPARATOR)
+                                  .arg(Vfs::modeToString(folder->vfs().mode())));
         }
 
         if (fileData.folder && fileData.folder->accountState()->isConnected()) {
             sendSharingContextMenuOptions(fileData, listener);
-            listener->sendMessage(QLatin1String("MENU_ITEM:OPEN_PRIVATE_LINK") + flagString + tr("Open in browser"));
+            listener->sendMessage(QString("MENU_ITEM%1OPEN_PRIVATE_LINK%2")
+                                  .arg(MSG_CDE_SEPARATOR)
+                                  .arg(flagString + tr("Open in browser")));
 
             // Add link to versions pane if possible
             auto &capabilities = folder->accountState()->account()->capabilities();
@@ -918,7 +992,9 @@ void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListe
                 && capabilities.privateLinkDetailsParamAvailable()
                 && isOnTheServer
                 && !record.isDirectory()) {
-                listener->sendMessage(QLatin1String("MENU_ITEM:OPEN_PRIVATE_LINK_VERSIONS") + flagString + tr("Show file versions in browser"));
+                listener->sendMessage(QString("MENU_ITEM%1OPEN_PRIVATE_LINK_VERSIONS%2")
+                                      .arg(MSG_CDE_SEPARATOR)
+                                      .arg(flagString + tr("Show file versions in browser")));
             }
 
             // Conflict files get conflict resolution actions
@@ -941,27 +1017,41 @@ void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListe
                     if (canAddToDir) {
                         if (isOnTheServer) {
                             // Conflict file that is already uploaded
-                            listener->sendMessage(QLatin1String("MENU_ITEM:MOVE_ITEM::") + tr("Rename..."));
+                            listener->sendMessage(QString("MENU_ITEM%1MOVE_ITEM%1%1%2")
+                                                  .arg(MSG_CDE_SEPARATOR)
+                                                  .arg(tr("Rename...")));
                         } else {
                             // Local-only conflict file
-                            listener->sendMessage(QLatin1String("MENU_ITEM:MOVE_ITEM::") + tr("Rename and upload..."));
+                            listener->sendMessage(QString("MENU_ITEM%1MOVE_ITEM%1%1%2")
+                                                  .arg(MSG_CDE_SEPARATOR)
+                                                  .arg(tr("Rename and upload...")));
                         }
                     } else {
                         if (isOnTheServer) {
                             // Uploaded conflict file in read-only directory
-                            listener->sendMessage(QLatin1String("MENU_ITEM:MOVE_ITEM::") + tr("Move and rename..."));
+                            listener->sendMessage(QString("MENU_ITEM%1MOVE_ITEM%1%1%2")
+                                                  .arg(MSG_CDE_SEPARATOR)
+                                                  .arg(tr("Move and rename...")));
                         } else {
                             // Local-only conflict file in a read-only dir
-                            listener->sendMessage(QLatin1String("MENU_ITEM:MOVE_ITEM::") + tr("Move, rename and upload..."));
+                            listener->sendMessage(QString("MENU_ITEM%1MOVE_ITEM%1%1%2")
+                                                  .arg(MSG_CDE_SEPARATOR)
+                                                  .arg(tr("Move, rename and upload...")));
                         }
                     }
-                    listener->sendMessage(QLatin1String("MENU_ITEM:DELETE_ITEM::") + tr("Delete local changes"));
+                    listener->sendMessage(QString("MENU_ITEM%1DELETE_ITEM%1%1")
+                                          .arg(MSG_CDE_SEPARATOR)
+                                          .arg(tr("Delete local changes")));
                 }
 
                 // File in a read-only directory?
                 if (!isConflict && !isOnTheServer && !canAddToDir) {
-                    listener->sendMessage(QLatin1String("MENU_ITEM:MOVE_ITEM::") + tr("Move and upload..."));
-                    listener->sendMessage(QLatin1String("MENU_ITEM:DELETE_ITEM::") + tr("Delete"));
+                    listener->sendMessage(QString("MENU_ITEM%1MOVE_ITEM%1%1")
+                                          .arg(MSG_CDE_SEPARATOR)
+                                          .arg(tr("Move and upload...")));
+                    listener->sendMessage(QString("MENU_ITEM%1DELETE_ITEM%1%1")
+                                          .arg(MSG_CDE_SEPARATOR)
+                                          .arg(tr("Delete")));
                 }
             }
         }
@@ -986,7 +1076,7 @@ void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListe
                 return VfsItemAvailability::AllDehydrated;
             return VfsItemAvailability::Mixed;
         };
-        for (const auto &file : files) {
+        for (const auto &file : qAsConst(files)) {
             auto fileData = FileData::get(file);
             auto availability = folder->vfs().availability(fileData.folderRelativePath);
             if (!availability) {
@@ -1004,14 +1094,17 @@ void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListe
 
         // TODO: Should be a submenu, should use icons
         auto makePinContextMenu = [&](bool makeAvailableLocally, bool freeSpace) {
-            listener->sendMessage(QLatin1String("MENU_ITEM:CURRENT_PIN:d:")
-                                  + Utility::vfsCurrentAvailabilityText(*combined));
-            listener->sendMessage(QLatin1String("MENU_ITEM:MAKE_AVAILABLE_LOCALLY:")
-                                  + (makeAvailableLocally ? QLatin1String(":") : QLatin1String("d:"))
-                                  + Utility::vfsPinActionText());
-            listener->sendMessage(QLatin1String("MENU_ITEM:MAKE_ONLINE_ONLY:")
-                                  + (freeSpace ? QLatin1String(":") : QLatin1String("d:"))
-                                  + Utility::vfsFreeSpaceActionText());
+            listener->sendMessage(QString("MENU_ITEM%1CURRENT_PIN%1d%1%2")
+                                  .arg(MSG_CDE_SEPARATOR)
+                                  .arg(Utility::vfsCurrentAvailabilityText(*combined)));
+            listener->sendMessage(QString("MENU_ITEM%1MAKE_AVAILABLE_LOCALLY%1%2%1%3")
+                                  .arg(MSG_CDE_SEPARATOR)
+                                  .arg(makeAvailableLocally ? QString() : QString("d"))
+                                  .arg(Utility::vfsPinActionText()));
+            listener->sendMessage(QString("MENU_ITEM%1MAKE_ONLINE_ONLY%1%2%1%3")
+                                  .arg(MSG_CDE_SEPARATOR)
+                                  .arg(freeSpace ? QString() : QString("d"))
+                                  .arg(Utility::vfsFreeSpaceActionText()));
         };
 
         if (combined) {
@@ -1031,13 +1124,197 @@ void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListe
         }
     }
 
-    listener->sendMessage(QString("GET_MENU_ITEMS:END"));
+    listener->sendMessage(QString("GET_MENU_ITEMS%1END").arg(MSG_CDE_SEPARATOR));
+}
+
+void SocketApi::command_GET_ALL_MENU_ITEMS(const QString &argument, OCC::SocketListener *listener)
+{
+    QStringList argumentList = argument.split(MSG_ARG_SEPARATOR);
+
+    QString msgId = argumentList[0];
+    argumentList.removeFirst();
+
+    // Find the common sync folder.
+    // syncFolder will be null if files are in different folders.
+    Folder *folder = nullptr;
+    for (const auto &file : qAsConst(argumentList)) {
+        auto f = FolderMan::instance()->folderForPath(file);
+        if (f != folder) {
+            if (!folder) {
+                folder = f;
+            } else {
+                folder = nullptr;
+                break;
+            }
+        }
+    }
+
+    QString responseStr;
+    QTextStream response(&responseStr);
+    response << msgId
+             << MSG_CDE_SEPARATOR << Theme::instance()->appNameGUI()
+             << MSG_CDE_SEPARATOR << (folder ? Vfs::modeToString(folder->vfs().mode()) : QString());
+
+    // Some options only show for single files
+    if (argumentList.size() == 1) {
+        FileData fileData = FileData::get(argumentList.first());
+        auto record = fileData.journalRecord();
+        bool isOnTheServer = record.isValid();
+        auto flagString = QString("%1%2%1")
+                .arg(MSG_CDE_SEPARATOR)
+                .arg(isOnTheServer ? QString() : QString("d"));
+
+        if (fileData.folder && fileData.folder->accountState()->isConnected()) {
+            addSharingContextMenuOptions(fileData, response);
+            response << QString("%1OPEN_PRIVATE_LINK%2")
+                        .arg(MSG_CDE_SEPARATOR)
+                        .arg(flagString + tr("Open in browser"));
+
+            // Add link to versions pane if possible
+            auto &capabilities = folder->accountState()->account()->capabilities();
+            if (capabilities.versioningEnabled()
+                && capabilities.privateLinkDetailsParamAvailable()
+                && isOnTheServer
+                && !record.isDirectory()) {
+                response << QString("%1OPEN_PRIVATE_LINK_VERSIONS%2")
+                            .arg(MSG_CDE_SEPARATOR)
+                            .arg(flagString + tr("Show file versions in browser"));
+            }
+
+            // Conflict files get conflict resolution actions
+            bool isConflict = Utility::isConflictFile(fileData.folderRelativePath);
+            if (isConflict || !isOnTheServer) {
+                // Check whether this new file is in a read-only directory
+                QFileInfo fileInfo(fileData.localPath);
+                auto parentDir = fileData.parentFolder();
+                auto parentRecord = parentDir.journalRecord();
+                bool canAddToDir =
+                    (fileInfo.isFile() && !parentRecord._remotePerm.hasPermission(RemotePermissions::CanAddFile))
+                    || (fileInfo.isDir() && !parentRecord._remotePerm.hasPermission(RemotePermissions::CanAddSubDirectories));
+                bool canChangeFile =
+                    !isOnTheServer
+                    || (record._remotePerm.hasPermission(RemotePermissions::CanDelete)
+                           && record._remotePerm.hasPermission(RemotePermissions::CanMove)
+                           && record._remotePerm.hasPermission(RemotePermissions::CanRename));
+
+                if (isConflict && canChangeFile) {
+                    if (canAddToDir) {
+                        if (isOnTheServer) {
+                            // Conflict file that is already uploaded
+                            response << QString("%1MOVE_ITEM%1%1%2")
+                                        .arg(MSG_CDE_SEPARATOR)
+                                        .arg(tr("Rename..."));
+                        } else {
+                            // Local-only conflict file
+                            response << QString("%1MOVE_ITEM%1%1%2")
+                                        .arg(MSG_CDE_SEPARATOR)
+                                        .arg(tr("Rename and upload..."));
+                        }
+                    } else {
+                        if (isOnTheServer) {
+                            // Uploaded conflict file in read-only directory
+                            response << QString("%1MOVE_ITEM%1%1%2")
+                                        .arg(MSG_CDE_SEPARATOR)
+                                        .arg(tr("Move and rename..."));
+                        } else {
+                            // Local-only conflict file in a read-only dir
+                            response << QString("%1MOVE_ITEM%1%1%2")
+                                        .arg(MSG_CDE_SEPARATOR)
+                                        .arg(tr("Move, rename and upload..."));
+                        }
+                    }
+                    response << QString("%1MENU_ITEM%1DELETE_ITEM%1%1%2")
+                                .arg(MSG_CDE_SEPARATOR)
+                                .arg(tr("Delete local changes"));
+                }
+
+                // File in a read-only directory?
+                if (!isConflict && !isOnTheServer && !canAddToDir) {
+                    response << QString("%1MOVE_ITEM%1%1%2")
+                                .arg(MSG_CDE_SEPARATOR)
+                                .arg(tr("Move and upload..."));
+                    response << QString("%1DELETE_ITEM%1%1%2")
+                                .arg(MSG_CDE_SEPARATOR)
+                                .arg(tr("Delete"));
+                }
+            }
+        }
+    }
+
+    // File availability actions
+    if (folder
+        && folder->supportsVirtualFiles()
+        && folder->vfs().socketApiPinStateActionsShown()) {
+        ENFORCE(!argumentList.isEmpty());
+
+        // Determine the combined availability status of the files
+        auto combined = Optional<VfsItemAvailability>();
+        auto merge = [](VfsItemAvailability lhs, VfsItemAvailability rhs) {
+            if (lhs == rhs)
+                return lhs;
+            if (int(lhs) > int(rhs))
+                std::swap(lhs, rhs); // reduce cases ensuring lhs < rhs
+            if (lhs == VfsItemAvailability::AlwaysLocal && rhs == VfsItemAvailability::AllHydrated)
+                return VfsItemAvailability::AllHydrated;
+            if (lhs == VfsItemAvailability::AllDehydrated && rhs == VfsItemAvailability::OnlineOnly)
+                return VfsItemAvailability::AllDehydrated;
+            return VfsItemAvailability::Mixed;
+        };
+        for (const auto &file : qAsConst(argumentList)) {
+            auto fileData = FileData::get(file);
+            auto availability = folder->vfs().availability(fileData.folderRelativePath);
+            if (!availability) {
+                if (availability.error() == Vfs::AvailabilityError::DbError)
+                    availability = VfsItemAvailability::Mixed;
+                if (availability.error() == Vfs::AvailabilityError::NoSuchItem)
+                    continue;
+            }
+            if (!combined) {
+                combined = *availability;
+            } else {
+                combined = merge(*combined, *availability);
+            }
+        }
+
+        // TODO: Should be a submenu, should use icons
+        auto makePinContextMenu = [&](bool makeAvailableLocally, bool freeSpace) {
+            response << QString("%1MENU_ITEM%1CURRENT_PIN%1d%1%2")
+                        .arg(MSG_CDE_SEPARATOR)
+                        .arg(Utility::vfsCurrentAvailabilityText(*combined));
+            response << QString("%1MENU_ITEM%1MAKE_AVAILABLE_LOCALLY%1%2%1%3")
+                        .arg(MSG_CDE_SEPARATOR)
+                        .arg(makeAvailableLocally ? QString() : QString("d"))
+                        .arg(Utility::vfsPinActionText());
+            response << QString("%1MENU_ITEM%1MAKE_ONLINE_ONLY%1%2%1%3")
+                        .arg(MSG_CDE_SEPARATOR)
+                        .arg(freeSpace ? QString() : QString("d"))
+                        .arg(Utility::vfsFreeSpaceActionText());
+        };
+
+        if (combined) {
+            switch (*combined) {
+            case VfsItemAvailability::AlwaysLocal:
+                makePinContextMenu(false, true);
+                break;
+            case VfsItemAvailability::AllHydrated:
+            case VfsItemAvailability::Mixed:
+                makePinContextMenu(true, true);
+                break;
+            case VfsItemAvailability::AllDehydrated:
+            case VfsItemAvailability::OnlineOnly:
+                makePinContextMenu(true, false);
+                break;
+            }
+        }
+    }
+
+    listener->sendMessage(responseStr);
 }
 
 QString SocketApi::buildRegisterPathMessage(const QString &path)
 {
     QFileInfo fi(path);
-    QString message = QLatin1String("REGISTER_PATH:");
+    QString message = QString("REGISTER_PATH%1").arg(MSG_CDE_SEPARATOR);
     message.append(QDir::toNativeSeparators(fi.absoluteFilePath()));
     return message;
 }
@@ -1108,10 +1385,6 @@ void Worker::start()
 
     WorkerInfo &workerInfo = _socketApi->_workerInfo[_type];
 
-    workerInfo._mutex.lock();
-    workerInfo._nbRunningThreads++;
-    workerInfo._mutex.unlock();
-
     forever {
         workerInfo._mutex.lock();
         while (workerInfo._queue.empty() && !workerInfo._stop) {
@@ -1120,6 +1393,7 @@ void Worker::start()
         }
 
         if (workerInfo._stop) {
+            workerInfo._mutex.unlock();
             break;
         }
 
@@ -1205,12 +1479,6 @@ void Worker::start()
                 break;
             }
         }
-    }
-
-    int count = --workerInfo._nbRunningThreads;
-    workerInfo._mutex.unlock();
-    if (count == 0) {
-        workerInfo._stopWC.wakeAll();
     }
 
     qCDebug(lcSocketApi) << "Worker" << _type << _num << "ended";
